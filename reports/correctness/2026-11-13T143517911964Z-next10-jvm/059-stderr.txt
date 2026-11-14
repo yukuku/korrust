@@ -1,0 +1,3 @@
+target/checks/2026-11-13T143517911964Z-next10-jvm/inline-private-constructor.kt:1:74: error: public-API inline function cannot access non-public-API constructor.
+class C private constructor() { companion object { inline fun bad(): C = C() } }
+                                                                         ^

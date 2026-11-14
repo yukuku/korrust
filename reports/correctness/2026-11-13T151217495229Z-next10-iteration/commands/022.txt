@@ -1,0 +1,4 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /workspace/korrust/target/checks/2026-11-13T151217495229Z-next10-iteration/iterator_modifier.kt -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -module-name iteration -cp /workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/korrust/target/checks/2026-11-13T151217495229Z-next10-iteration/oracle-iterator_modifier
+target/checks/2026-11-13T151217495229Z-next10-iteration/iterator_modifier.kt:1:120: error: 'operator' modifier is required on 'fun iterator(): C' defined in 'C'.
+class C { fun iterator():C=this; operator fun hasNext():Boolean=false; operator fun next():Int=0 }; fun f() { for(n in C()) {} }
+                                                                                                                       ^^^

@@ -222,6 +222,7 @@ fn covariant_wildcard(ty: &Type) -> &'static str {
         | Type::Unit
         | Type::IntArray
         | Type::ByteArray
+        | Type::ShortArray
         | Type::CharArray
         | Type::StringArray => "",
         _ => "+",
@@ -499,24 +500,17 @@ fn generic_function(function: &crate::check::Function) -> Option<String> {
     (signature != function.descriptor()).then_some(signature)
 }
 
-fn add_method_attribute(method: &mut Vec<u8>, attribute: Vec<u8>) {
-    let count = u16::from_be_bytes([method[6], method[7]]) + 1;
-    method[6..8].copy_from_slice(&count.to_be_bytes());
-    method.extend(attribute);
-}
-
 fn nullable_result(pool: &mut Pool, method: &mut Vec<u8>, ty: &Type) -> Result<()> {
     if ty.is_reference() && ty.is_nullable() {
-        let mut attribute = Vec::new();
-        u2(&mut attribute, pool.utf8("RuntimeInvisibleAnnotations")?);
-        u4(&mut attribute, 6);
-        u2(&mut attribute, 1);
-        u2(
-            &mut attribute,
-            pool.utf8("Lorg/jetbrains/annotations/Nullable;")?,
-        );
-        u2(&mut attribute, 0);
-        add_method_attribute(method, attribute);
+        annotations::append_annotations(
+            pool,
+            method,
+            &[crate::check::DeclarationAnnotation {
+                descriptor: "Lorg/jetbrains/annotations/Nullable;".into(),
+                runtime: false,
+                values: Vec::new(),
+            }],
+        )?;
     }
     Ok(())
 }
@@ -554,6 +548,7 @@ fn cast_type_name(ty: &Type) -> String {
         Type::Java(name) | Type::Parameterized { name, .. } => name.replace('/', "."),
         Type::IntArray => "kotlin.IntArray".into(),
         Type::ByteArray => "kotlin.ByteArray".into(),
+        Type::ShortArray => "kotlin.ShortArray".into(),
         Type::CharArray => "kotlin.CharArray".into(),
         Type::LongArray => "kotlin.LongArray".into(),
         Type::BooleanArray => "kotlin.BooleanArray".into(),
@@ -574,6 +569,7 @@ fn primitive_array_type(ty: &Type) -> Result<u8> {
         Some(Type::Float) => Ok(6),
         Some(Type::Double) => Ok(7),
         Some(Type::Byte) => Ok(8),
+        Some(Type::Short) => Ok(9),
         Some(Type::Int) => Ok(10),
         Some(Type::Long) => Ok(11),
         _ => Err(failure("Unsupported primitive array type")),
@@ -586,7 +582,8 @@ fn array_load_opcode(array: &Type) -> Result<u8> {
         Some(Type::Long) => Ok(0x2f),
         Some(Type::Float) => Ok(0x30),
         Some(Type::Double) => Ok(0x31),
-        Some(Type::Byte | Type::Short | Type::Boolean) => Ok(0x33),
+        Some(Type::Byte | Type::Boolean) => Ok(0x33),
+        Some(Type::Short) => Ok(0x35),
         Some(Type::Char) => Ok(0x34),
         _ if matches!(array.base(), Type::Array(_) | Type::StringArray) => Ok(0x32),
         _ => Err(failure("Unsupported array component")),
@@ -3326,6 +3323,7 @@ fn private_method_bridge(
 
 fn classifier_signature(
     parameters: &[crate::syntax::TypeParameter],
+    interface_bounds: &HashSet<String>,
     supertypes: &[Type],
     parent: &str,
     interfaces: &[String],
@@ -3343,6 +3341,9 @@ fn classifier_signature(
         for parameter in parameters {
             signature.push_str(&parameter.name);
             signature.push(':');
+            if interface_bounds.contains(&parameter.name) {
+                signature.push(':');
+            }
             signature.push_str(
                 &parameter
                     .bounds
@@ -4326,7 +4327,11 @@ fn emit_class_with(
             .into_iter()
             .zip(&class.params)
         {
-            if !(class.sealed_ || class.inner && name == "this$0") && nonnull(ty) {
+            if !(class.sealed_
+                || class.constructor_visibility == 2
+                || class.inner && name == "this$0")
+                && nonnull(ty)
+            {
                 code.bytes.extend([0x19, slot as u8]);
                 let name = code.pool.string(name)?;
                 code.reference(0x13, name);
@@ -4411,6 +4416,8 @@ fn emit_class_with(
             } else {
                 2
             }
+        } else if class.constructor_visibility == 2 {
+            2
         } else {
             constructor_flags
         };
@@ -4474,6 +4481,8 @@ fn emit_class_with(
         )?;
         methods.push(constructor);
         if class.sealed_
+            || class.constructor_visibility == 2
+                && (class.companion.is_some() || class.lexical_bridges || !lambdas.is_empty())
             || enum_data.is_some_and(|enumeration| {
                 enumeration
                     .entry_classes
@@ -4808,6 +4817,7 @@ fn emit_class_with(
     if enum_data.is_none() {
         if let Some(signature) = classifier_signature(
             &class.type_params,
+            &class.interface_bound_parameters,
             &class.super_types,
             &class.super_class,
             &class.interfaces,

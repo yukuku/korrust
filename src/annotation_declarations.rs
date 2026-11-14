@@ -135,7 +135,7 @@ pub(crate) fn element_descriptor(ty: &Type, cp: &Classpath, offset: usize) -> Re
         | Type::Boolean
         | Type::Char
         | Type::String => Ok(ty.descriptor()),
-        Type::Byte | Type::Short | Type::ByteArray => Err(unsupported(
+        Type::Byte | Type::Short | Type::ByteArray | Type::ShortArray => Err(unsupported(
             offset,
             "Byte and Short annotation elements are unsupported",
             "ANNOTATION_BYTE_SHORT_UNSUPPORTED",

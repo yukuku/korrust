@@ -35,8 +35,8 @@ fn classifier_bound_and_override_failures_do_not_return_artifacts() {
 fn unsupported_classifier_shapes_have_structured_boundaries() {
     for (source, code) in [
         (
-            "class Box<out T>(val value: T)",
-            "TYPE_PARAMETER_MODIFIER_UNSUPPORTED",
+            "class Box<out T>(private var value: T)",
+            "PRIVATE_VARIANCE_UNSUPPORTED",
         ),
         (
             "class Box<T>(val value: T)\nfun valid(): Box<String> = Box(\"x\")",

@@ -134,6 +134,7 @@ impl<'a> Signature<'a> {
             b'[' => match self.ty()? {
                 Type::Int => Type::IntArray,
                 Type::Byte => Type::ByteArray,
+                Type::Short => Type::ShortArray,
                 Type::Char => Type::CharArray,
                 Type::Long => Type::LongArray,
                 Type::Boolean => Type::BooleanArray,

@@ -1,0 +1,767 @@
+$ /workspace/korrust-setup/jdk-21/bin/javap -c -p -classpath /workspace/korrust/target/checks/2026-11-13T151217495229Z-next10-iteration/candidate iteration.ModelsKt
+Compiled from "Models.kt"
+public final class iteration.ModelsKt {
+  public static final iteration.Sequence fresh();
+    Code:
+       0: ldc_w         #8                  // String f
+       3: iconst_0
+       4: invokestatic  #14                 // Method iteration/Trace.record:(Ljava/lang/String;I)I
+       7: pop
+       8: new           #16                 // class iteration/Sequence
+      11: dup
+      12: iconst_5
+      13: invokespecial #20                 // Method iteration/Sequence."<init>":(I)V
+      16: areturn
+      17: aconst_null
+      18: athrow
+
+  public static final int custom();
+    Code:
+       0: iconst_0
+       1: istore        0
+       3: invokestatic  #27                 // Method fresh:()Literation/Sequence;
+       6: checkcast     #16                 // class iteration/Sequence
+       9: invokevirtual #31                 // Method iteration/Sequence.iterator:()Literation/Cursor;
+      12: checkcast     #33                 // class iteration/Cursor
+      15: astore        1
+      17: aload         1
+      19: checkcast     #33                 // class iteration/Cursor
+      22: invokevirtual #37                 // Method iteration/Cursor.hasNext:()Z
+      25: ifeq          90
+      28: aload         1
+      30: checkcast     #33                 // class iteration/Cursor
+      33: invokevirtual #41                 // Method iteration/Cursor.next:()I
+      36: istore        2
+      38: iload         2
+      40: iconst_1
+      41: if_icmpeq     48
+      44: iconst_0
+      45: goto          49
+      48: iconst_1
+      49: ifeq          55
+      52: goto          17
+      55: iload         2
+      57: iconst_3
+      58: if_icmpeq     65
+      61: iconst_0
+      62: goto          66
+      65: iconst_1
+      66: ifeq          72
+      69: goto          90
+      72: iload         0
+      74: istore        3
+      76: iload         3
+      78: iload         2
+      80: iadd
+      81: istore        4
+      83: iload         4
+      85: istore        0
+      87: goto          17
+      90: iload         0
+      92: ireturn
+      93: aconst_null
+      94: athrow
+
+  public static final int destructured();
+    Code:
+       0: iconst_0
+       1: istore        0
+       3: new           #44                 // class iteration/Entries
+       6: dup
+       7: invokespecial #47                 // Method iteration/Entries."<init>":()V
+      10: checkcast     #44                 // class iteration/Entries
+      13: invokevirtual #50                 // Method iteration/Entries.iterator:()Literation/EntryCursor;
+      16: checkcast     #52                 // class iteration/EntryCursor
+      19: astore        1
+      21: aload         1
+      23: checkcast     #52                 // class iteration/EntryCursor
+      26: invokevirtual #53                 // Method iteration/EntryCursor.hasNext:()Z
+      29: ifeq          93
+      32: aload         1
+      34: checkcast     #52                 // class iteration/EntryCursor
+      37: invokevirtual #56                 // Method iteration/EntryCursor.next:()Literation/Entry;
+      40: checkcast     #58                 // class iteration/Entry
+      43: astore        2
+      45: aload         2
+      47: checkcast     #58                 // class iteration/Entry
+      50: astore        3
+      52: aload         3
+      54: checkcast     #58                 // class iteration/Entry
+      57: invokevirtual #61                 // Method iteration/Entry.component1:()I
+      60: istore        4
+      62: aload         3
+      64: checkcast     #58                 // class iteration/Entry
+      67: invokevirtual #64                 // Method iteration/Entry.component2:()I
+      70: istore        5
+      72: iload         0
+      74: istore        6
+      76: iload         6
+      78: iload         4
+      80: iload         5
+      82: iadd
+      83: iadd
+      84: istore        7
+      86: iload         7
+      88: istore        0
+      90: goto          21
+      93: iload         0
+      95: ireturn
+      96: aconst_null
+      97: athrow
+
+  public static final long compiled();
+    Code:
+       0: lconst_0
+       1: lstore        0
+       3: new           #67                 // class iteration/dep/External
+       6: dup
+       7: iconst_4
+       8: invokespecial #68                 // Method iteration/dep/External."<init>":(I)V
+      11: checkcast     #67                 // class iteration/dep/External
+      14: invokevirtual #71                 // Method iteration/dep/External.iterator:()Literation/dep/ExternalCursor;
+      17: checkcast     #73                 // class iteration/dep/ExternalCursor
+      20: astore        2
+      22: aload         2
+      24: checkcast     #73                 // class iteration/dep/ExternalCursor
+      27: invokevirtual #74                 // Method iteration/dep/ExternalCursor.hasNext:()Z
+      30: ifeq          61
+      33: aload         2
+      35: checkcast     #73                 // class iteration/dep/ExternalCursor
+      38: invokevirtual #77                 // Method iteration/dep/ExternalCursor.next:()J
+      41: lstore        3
+      43: lload         0
+      45: lstore        5
+      47: lload         5
+      49: lload         3
+      51: ladd
+      52: lstore        7
+      54: lload         7
+      56: lstore        0
+      58: goto          22
+      61: lload         0
+      63: lreturn
+      64: aconst_null
+      65: athrow
+
+  public static final long extension();
+    Code:
+       0: lconst_0
+       1: lstore        0
+       3: new           #80                 // class iteration/dep/ExtensionBox
+       6: dup
+       7: iconst_4
+       8: invokespecial #81                 // Method iteration/dep/ExtensionBox."<init>":(I)V
+      11: checkcast     #80                 // class iteration/dep/ExtensionBox
+      14: astore        2
+      16: aload         2
+      18: invokestatic  #86                 // Method iteration/dep/DependencyKt.iterator:(Literation/dep/ExtensionBox;)Literation/dep/ExternalCursor;
+      21: checkcast     #73                 // class iteration/dep/ExternalCursor
+      24: astore        3
+      26: aload         3
+      28: checkcast     #73                 // class iteration/dep/ExternalCursor
+      31: invokevirtual #74                 // Method iteration/dep/ExternalCursor.hasNext:()Z
+      34: ifeq          65
+      37: aload         3
+      39: checkcast     #73                 // class iteration/dep/ExternalCursor
+      42: invokevirtual #77                 // Method iteration/dep/ExternalCursor.next:()J
+      45: lstore        4
+      47: lload         0
+      49: lstore        6
+      51: lload         6
+      53: lload         4
+      55: ladd
+      56: lstore        8
+      58: lload         8
+      60: lstore        0
+      62: goto          26
+      65: lload         0
+      67: lreturn
+      68: aconst_null
+      69: athrow
+
+  public static final iteration.Cursor iterator(iteration.SourceBox);
+    Code:
+       0: aload         0
+       2: ldc_w         #89                 // String <this>
+       5: invokestatic  #95                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+       8: new           #33                 // class iteration/Cursor
+      11: dup
+      12: iconst_0
+      13: aload         0
+      15: checkcast     #97                 // class iteration/SourceBox
+      18: invokevirtual #100                // Method iteration/SourceBox.getEnd:()I
+      21: invokespecial #103                // Method iteration/Cursor."<init>":(II)V
+      24: areturn
+      25: aconst_null
+      26: athrow
+
+  public static final int sourceExtension();
+    Code:
+       0: iconst_0
+       1: istore        0
+       3: new           #97                 // class iteration/SourceBox
+       6: dup
+       7: iconst_4
+       8: invokespecial #106                // Method iteration/SourceBox."<init>":(I)V
+      11: checkcast     #97                 // class iteration/SourceBox
+      14: astore        1
+      16: aload         1
+      18: invokestatic  #108                // Method iterator:(Literation/SourceBox;)Literation/Cursor;
+      21: checkcast     #33                 // class iteration/Cursor
+      24: astore        2
+      26: aload         2
+      28: checkcast     #33                 // class iteration/Cursor
+      31: invokevirtual #37                 // Method iteration/Cursor.hasNext:()Z
+      34: ifeq          65
+      37: aload         2
+      39: checkcast     #33                 // class iteration/Cursor
+      42: invokevirtual #41                 // Method iteration/Cursor.next:()I
+      45: istore        3
+      47: iload         0
+      49: istore        4
+      51: iload         4
+      53: iload         3
+      55: iadd
+      56: istore        5
+      58: iload         5
+      60: istore        0
+      62: goto          26
+      65: iload         0
+      67: ireturn
+      68: aconst_null
+      69: athrow
+
+  public static final int memberRange();
+    Code:
+       0: iconst_0
+       1: istore        0
+       3: new           #111                // class iteration/Edge
+       6: dup
+       7: iconst_2
+       8: invokespecial #112                // Method iteration/Edge."<init>":(I)V
+      11: checkcast     #111                // class iteration/Edge
+      14: new           #111                // class iteration/Edge
+      17: dup
+      18: bipush        6
+      20: invokespecial #112                // Method iteration/Edge."<init>":(I)V
+      23: invokevirtual #116                // Method iteration/Edge.rangeUntil:(Literation/Edge;)Literation/Sequence;
+      26: checkcast     #16                 // class iteration/Sequence
+      29: invokevirtual #31                 // Method iteration/Sequence.iterator:()Literation/Cursor;
+      32: checkcast     #33                 // class iteration/Cursor
+      35: astore        1
+      37: aload         1
+      39: checkcast     #33                 // class iteration/Cursor
+      42: invokevirtual #37                 // Method iteration/Cursor.hasNext:()Z
+      45: ifeq          76
+      48: aload         1
+      50: checkcast     #33                 // class iteration/Cursor
+      53: invokevirtual #41                 // Method iteration/Cursor.next:()I
+      56: istore        2
+      58: iload         0
+      60: istore        3
+      62: iload         3
+      64: iload         2
+      66: iadd
+      67: istore        4
+      69: iload         4
+      71: istore        0
+      73: goto          37
+      76: iload         0
+      78: ireturn
+      79: aconst_null
+      80: athrow
+
+  public static final long compiledRange();
+    Code:
+       0: lconst_0
+       1: lstore        0
+       3: new           #119                // class iteration/dep/Boundary
+       6: dup
+       7: iconst_2
+       8: invokespecial #120                // Method iteration/dep/Boundary."<init>":(I)V
+      11: checkcast     #119                // class iteration/dep/Boundary
+      14: astore        2
+      16: aload         2
+      18: new           #119                // class iteration/dep/Boundary
+      21: dup
+      22: bipush        6
+      24: invokespecial #120                // Method iteration/dep/Boundary."<init>":(I)V
+      27: invokestatic  #123                // Method iteration/dep/DependencyKt.rangeUntil:(Literation/dep/Boundary;Literation/dep/Boundary;)Literation/dep/External;
+      30: checkcast     #67                 // class iteration/dep/External
+      33: invokevirtual #71                 // Method iteration/dep/External.iterator:()Literation/dep/ExternalCursor;
+      36: checkcast     #73                 // class iteration/dep/ExternalCursor
+      39: astore        3
+      41: aload         3
+      43: checkcast     #73                 // class iteration/dep/ExternalCursor
+      46: invokevirtual #74                 // Method iteration/dep/ExternalCursor.hasNext:()Z
+      49: ifeq          80
+      52: aload         3
+      54: checkcast     #73                 // class iteration/dep/ExternalCursor
+      57: invokevirtual #77                 // Method iteration/dep/ExternalCursor.next:()J
+      60: lstore        4
+      62: lload         0
+      64: lstore        6
+      66: lload         6
+      68: lload         4
+      70: ladd
+      71: lstore        8
+      73: lload         8
+      75: lstore        0
+      77: goto          41
+      80: lload         0
+      82: lreturn
+      83: aconst_null
+      84: athrow
+
+  public static final iteration.Sequence rangeUntil(iteration.Endpoint, iteration.Endpoint);
+    Code:
+       0: aload         0
+       2: ldc_w         #89                 // String <this>
+       5: invokestatic  #95                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+       8: aload         1
+      10: ldc_w         #126                // String other
+      13: invokestatic  #95                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+      16: new           #16                 // class iteration/Sequence
+      19: dup
+      20: aload         1
+      22: checkcast     #128                // class iteration/Endpoint
+      25: invokevirtual #131                // Method iteration/Endpoint.getValue:()I
+      28: aload         0
+      30: checkcast     #128                // class iteration/Endpoint
+      33: invokevirtual #131                // Method iteration/Endpoint.getValue:()I
+      36: isub
+      37: invokespecial #20                 // Method iteration/Sequence."<init>":(I)V
+      40: areturn
+      41: aconst_null
+      42: athrow
+
+  public static final int extensionRange();
+    Code:
+       0: iconst_0
+       1: istore        0
+       3: new           #128                // class iteration/Endpoint
+       6: dup
+       7: iconst_2
+       8: invokespecial #133                // Method iteration/Endpoint."<init>":(I)V
+      11: checkcast     #128                // class iteration/Endpoint
+      14: astore        1
+      16: aload         1
+      18: new           #128                // class iteration/Endpoint
+      21: dup
+      22: bipush        6
+      24: invokespecial #133                // Method iteration/Endpoint."<init>":(I)V
+      27: invokestatic  #135                // Method rangeUntil:(Literation/Endpoint;Literation/Endpoint;)Literation/Sequence;
+      30: checkcast     #16                 // class iteration/Sequence
+      33: invokevirtual #31                 // Method iteration/Sequence.iterator:()Literation/Cursor;
+      36: checkcast     #33                 // class iteration/Cursor
+      39: astore        2
+      41: aload         2
+      43: checkcast     #33                 // class iteration/Cursor
+      46: invokevirtual #37                 // Method iteration/Cursor.hasNext:()Z
+      49: ifeq          80
+      52: aload         2
+      54: checkcast     #33                 // class iteration/Cursor
+      57: invokevirtual #41                 // Method iteration/Cursor.next:()I
+      60: istore        3
+      62: iload         0
+      64: istore        4
+      66: iload         4
+      68: iload         3
+      70: iadd
+      71: istore        5
+      73: iload         5
+      75: istore        0
+      77: goto          41
+      80: iload         0
+      82: ireturn
+      83: aconst_null
+      84: athrow
+
+  public static final kotlin.ranges.IntRange intRange(int, int);
+    Code:
+       0: iload         0
+       2: istore        2
+       4: iload         1
+       6: istore        3
+       8: iload         2
+      10: iload         3
+      12: invokestatic  #142                // Method kotlin/ranges/RangesKt.until:(II)Lkotlin/ranges/IntRange;
+      15: areturn
+      16: aconst_null
+      17: athrow
+
+  public static final kotlin.ranges.LongRange longRange(long, long);
+    Code:
+       0: lload         0
+       2: lstore        4
+       4: lload         2
+       6: lstore        6
+       8: lload         4
+      10: lload         6
+      12: invokestatic  #146                // Method kotlin/ranges/RangesKt.until:(JJ)Lkotlin/ranges/LongRange;
+      15: areturn
+      16: aconst_null
+      17: athrow
+
+  public static final kotlin.ranges.CharRange charRange(char, char);
+    Code:
+       0: iload         0
+       2: istore        2
+       4: iload         1
+       6: istore        3
+       8: iload         2
+      10: iload         3
+      12: invokestatic  #150                // Method kotlin/ranges/RangesKt.until:(CC)Lkotlin/ranges/CharRange;
+      15: areturn
+      16: aconst_null
+      17: athrow
+
+  public static final kotlin.ranges.IntRange rangeEvaluation();
+    Code:
+       0: ldc_w         #153                // String a
+       3: iconst_2
+       4: invokestatic  #14                 // Method iteration/Trace.record:(Ljava/lang/String;I)I
+       7: istore        0
+       9: ldc_w         #155                // String b
+      12: iconst_5
+      13: invokestatic  #14                 // Method iteration/Trace.record:(Ljava/lang/String;I)I
+      16: istore        1
+      18: iload         0
+      20: iload         1
+      22: invokestatic  #142                // Method kotlin/ranges/RangesKt.until:(II)Lkotlin/ranges/IntRange;
+      25: areturn
+      26: aconst_null
+      27: athrow
+
+  public static final int intSum(int, int);
+    Code:
+       0: iconst_0
+       1: istore        2
+       3: iload         0
+       5: istore        3
+       7: iload         1
+       9: istore        4
+      11: iload         3
+      13: iload         4
+      15: invokestatic  #142                // Method kotlin/ranges/RangesKt.until:(II)Lkotlin/ranges/IntRange;
+      18: invokeinterface #162,  1          // InterfaceMethod java/lang/Iterable.iterator:()Ljava/util/Iterator;
+      23: astore        6
+      25: aload         6
+      27: invokeinterface #165,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      32: ifeq          68
+      35: aload         6
+      37: invokeinterface #168,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      42: checkcast     #170                // class java/lang/Number
+      45: invokevirtual #173                // Method java/lang/Number.intValue:()I
+      48: istore        5
+      50: iload         2
+      52: istore        7
+      54: iload         7
+      56: iload         5
+      58: iadd
+      59: istore        8
+      61: iload         8
+      63: istore        2
+      65: goto          25
+      68: iload         2
+      70: ireturn
+      71: aconst_null
+      72: athrow
+
+  public static final long longSum(long, long);
+    Code:
+       0: lconst_0
+       1: lstore        4
+       3: lload         0
+       5: lstore        6
+       7: lload         2
+       9: lstore        8
+      11: lload         6
+      13: lload         8
+      15: invokestatic  #146                // Method kotlin/ranges/RangesKt.until:(JJ)Lkotlin/ranges/LongRange;
+      18: invokeinterface #162,  1          // InterfaceMethod java/lang/Iterable.iterator:()Ljava/util/Iterator;
+      23: astore        12
+      25: aload         12
+      27: invokeinterface #165,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      32: ifeq          68
+      35: aload         12
+      37: invokeinterface #168,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      42: checkcast     #170                // class java/lang/Number
+      45: invokevirtual #178                // Method java/lang/Number.longValue:()J
+      48: lstore        10
+      50: lload         4
+      52: lstore        13
+      54: lload         13
+      56: lload         10
+      58: ladd
+      59: lstore        15
+      61: lload         15
+      63: lstore        4
+      65: goto          25
+      68: lload         4
+      70: lreturn
+      71: aconst_null
+      72: athrow
+
+  public static final int charSum(char, char);
+    Code:
+       0: iconst_0
+       1: istore        2
+       3: iload         0
+       5: istore        3
+       7: iload         1
+       9: istore        4
+      11: iload         3
+      13: iload         4
+      15: invokestatic  #150                // Method kotlin/ranges/RangesKt.until:(CC)Lkotlin/ranges/CharRange;
+      18: invokeinterface #162,  1          // InterfaceMethod java/lang/Iterable.iterator:()Ljava/util/Iterator;
+      23: astore        6
+      25: aload         6
+      27: invokeinterface #165,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      32: ifeq          68
+      35: aload         6
+      37: invokeinterface #168,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      42: checkcast     #182                // class java/lang/Character
+      45: invokevirtual #186                // Method java/lang/Character.charValue:()C
+      48: istore        5
+      50: iload         2
+      52: istore        7
+      54: iload         7
+      56: iload         5
+      58: iadd
+      59: istore        8
+      61: iload         8
+      63: istore        2
+      65: goto          25
+      68: iload         2
+      70: ireturn
+      71: aconst_null
+      72: athrow
+
+  public static final java.lang.String nullableElements();
+    Code:
+       0: ldc_w         #190                // String
+       3: checkcast     #192                // class java/lang/String
+       6: astore        0
+       8: new           #194                // class iteration/Nullables
+      11: dup
+      12: invokespecial #195                // Method iteration/Nullables."<init>":()V
+      15: checkcast     #194                // class iteration/Nullables
+      18: invokevirtual #198                // Method iteration/Nullables.iterator:()Literation/NullableCursor;
+      21: checkcast     #200                // class iteration/NullableCursor
+      24: astore        1
+      26: aload         1
+      28: checkcast     #200                // class iteration/NullableCursor
+      31: invokevirtual #201                // Method iteration/NullableCursor.hasNext:()Z
+      34: ifeq          118
+      37: aload         1
+      39: checkcast     #200                // class iteration/NullableCursor
+      42: invokevirtual #204                // Method iteration/NullableCursor.next:()Ljava/lang/String;
+      45: checkcast     #192                // class java/lang/String
+      48: astore        2
+      50: aload         0
+      52: checkcast     #192                // class java/lang/String
+      55: astore        3
+      57: new           #206                // class java/lang/StringBuilder
+      60: dup
+      61: invokespecial #207                // Method java/lang/StringBuilder."<init>":()V
+      64: aload         3
+      66: invokevirtual #211                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      69: aload         2
+      71: checkcast     #192                // class java/lang/String
+      74: astore        4
+      76: aload         4
+      78: ifnull        85
+      81: iconst_0
+      82: goto          86
+      85: iconst_1
+      86: ifeq          95
+      89: ldc_w         #213                // String null
+      92: goto          97
+      95: aload         4
+      97: invokevirtual #211                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     100: invokevirtual #216                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     103: checkcast     #192                // class java/lang/String
+     106: astore        5
+     108: aload         5
+     110: checkcast     #192                // class java/lang/String
+     113: astore        0
+     115: goto          26
+     118: aload         0
+     120: areturn
+     121: aconst_null
+     122: athrow
+
+  public static final int protocolFailure();
+    Code:
+       0: iconst_0
+       1: istore        0
+       3: new           #219                // class iteration/ThrowingValues
+       6: dup
+       7: invokespecial #220                // Method iteration/ThrowingValues."<init>":()V
+      10: checkcast     #219                // class iteration/ThrowingValues
+      13: invokevirtual #223                // Method iteration/ThrowingValues.iterator:()Literation/ThrowingCursor;
+      16: checkcast     #225                // class iteration/ThrowingCursor
+      19: astore        1
+      21: aload         1
+      23: checkcast     #225                // class iteration/ThrowingCursor
+      26: invokevirtual #226                // Method iteration/ThrowingCursor.hasNext:()Z
+      29: ifeq          60
+      32: aload         1
+      34: checkcast     #225                // class iteration/ThrowingCursor
+      37: invokevirtual #227                // Method iteration/ThrowingCursor.next:()I
+      40: istore        2
+      42: iload         0
+      44: istore        3
+      46: iload         3
+      48: iload         2
+      50: iadd
+      51: istore        4
+      53: iload         4
+      55: istore        0
+      57: goto          21
+      60: iload         0
+      62: ireturn
+      63: aconst_null
+      64: athrow
+
+  public static final int nestedLabels();
+    Code:
+       0: iconst_0
+       1: istore        0
+       3: new           #16                 // class iteration/Sequence
+       6: dup
+       7: iconst_3
+       8: invokespecial #20                 // Method iteration/Sequence."<init>":(I)V
+      11: checkcast     #16                 // class iteration/Sequence
+      14: invokevirtual #31                 // Method iteration/Sequence.iterator:()Literation/Cursor;
+      17: checkcast     #33                 // class iteration/Cursor
+      20: astore        1
+      22: aload         1
+      24: checkcast     #33                 // class iteration/Cursor
+      27: invokevirtual #37                 // Method iteration/Cursor.hasNext:()Z
+      30: ifeq          120
+      33: aload         1
+      35: checkcast     #33                 // class iteration/Cursor
+      38: invokevirtual #41                 // Method iteration/Cursor.next:()I
+      41: istore        2
+      43: new           #16                 // class iteration/Sequence
+      46: dup
+      47: iconst_3
+      48: invokespecial #20                 // Method iteration/Sequence."<init>":(I)V
+      51: checkcast     #16                 // class iteration/Sequence
+      54: invokevirtual #31                 // Method iteration/Sequence.iterator:()Literation/Cursor;
+      57: checkcast     #33                 // class iteration/Cursor
+      60: astore        3
+      62: aload         3
+      64: checkcast     #33                 // class iteration/Cursor
+      67: invokevirtual #37                 // Method iteration/Cursor.hasNext:()Z
+      70: ifeq          117
+      73: aload         3
+      75: checkcast     #33                 // class iteration/Cursor
+      78: invokevirtual #41                 // Method iteration/Cursor.next:()I
+      81: istore        4
+      83: iload         4
+      85: iconst_1
+      86: if_icmpeq     93
+      89: iconst_0
+      90: goto          94
+      93: iconst_1
+      94: ifeq          100
+      97: goto          22
+     100: iload         0
+     102: istore        5
+     104: iload         5
+     106: iconst_1
+     107: iadd
+     108: istore        6
+     110: iload         6
+     112: istore        0
+     114: goto          62
+     117: goto          22
+     120: iload         0
+     122: ireturn
+     123: aconst_null
+     124: athrow
+
+  public static final iteration.Cursor iterator(iteration.dep.External);
+    Code:
+       0: aload         0
+       2: ldc_w         #89                 // String <this>
+       5: invokestatic  #95                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+       8: new           #33                 // class iteration/Cursor
+      11: dup
+      12: iconst_0
+      13: iconst_1
+      14: invokespecial #103                // Method iteration/Cursor."<init>":(II)V
+      17: areturn
+      18: aconst_null
+      19: athrow
+
+  public static final int initializerLabel(boolean);
+    Code:
+       0: iconst_0
+       1: istore        1
+       3: iload         0
+       5: ifeq          53
+       8: iconst_0
+       9: istore        2
+      11: iload         2
+      13: iconst_2
+      14: if_icmplt     21
+      17: iconst_0
+      18: goto          22
+      21: iconst_1
+      22: ifeq          42
+      25: iload         2
+      27: istore        3
+      29: iload         3
+      31: iconst_1
+      32: iadd
+      33: istore        4
+      35: iload         4
+      37: istore        2
+      39: goto          11
+      42: new           #16                 // class iteration/Sequence
+      45: dup
+      46: iconst_3
+      47: invokespecial #20                 // Method iteration/Sequence."<init>":(I)V
+      50: goto          61
+      53: new           #16                 // class iteration/Sequence
+      56: dup
+      57: iconst_3
+      58: invokespecial #20                 // Method iteration/Sequence."<init>":(I)V
+      61: checkcast     #16                 // class iteration/Sequence
+      64: invokevirtual #31                 // Method iteration/Sequence.iterator:()Literation/Cursor;
+      67: checkcast     #33                 // class iteration/Cursor
+      70: astore        5
+      72: aload         5
+      74: checkcast     #33                 // class iteration/Cursor
+      77: invokevirtual #37                 // Method iteration/Cursor.hasNext:()Z
+      80: ifeq          127
+      83: aload         5
+      85: checkcast     #33                 // class iteration/Cursor
+      88: invokevirtual #41                 // Method iteration/Cursor.next:()I
+      91: istore        6
+      93: iload         1
+      95: istore        7
+      97: iload         7
+      99: iconst_1
+     100: iadd
+     101: istore        8
+     103: iload         8
+     105: istore        1
+     107: iload         6
+     109: iconst_2
+     110: if_icmplt     117
+     113: iconst_0
+     114: goto          118
+     117: iconst_1
+     118: ifeq          124
+     121: goto          72
+     124: goto          72
+     127: iload         1
+     129: ireturn
+     130: aconst_null
+     131: athrow
+}

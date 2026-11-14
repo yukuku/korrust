@@ -10,7 +10,7 @@ use crate::{
     syntax::{self, Expr, ExprKind, StatementKind, Type},
 };
 pub(crate) use annotation_placements::{
-    annotation_placements, file_annotations, preflight_file_annotation_semantics,
+    annotation_placements, file_annotations, file_jvm_name, preflight_file_annotation_semantics,
 };
 use std::collections::{HashMap, HashSet};
 use std::{cell::RefCell, rc::Rc};
@@ -22,8 +22,14 @@ mod delegates;
 #[path = "check_enums.rs"]
 pub(crate) mod enums;
 use declarations::check_class;
+#[path = "check_variant_signatures.rs"]
+mod variant_signatures;
 pub use declarations::{
     infer_source_results, source_inference_error, unresolved_source_dependencies,
+};
+pub(crate) use variant_signatures::{
+    validate_class as validate_variant_class_signatures,
+    validate_module as validate_variant_signatures,
 };
 #[path = "check_anonymous.rs"]
 mod anonymous;
@@ -150,9 +156,11 @@ pub struct ObjectMethod {
     pub inline: bool,
 }
 pub struct InterfaceDecl {
+    pub operator_offsets: HashSet<usize>,
     pub sealed_: bool,
     pub sealed_subclasses: Vec<String>,
     pub type_params: Vec<syntax::TypeParameter>,
+    pub interface_bound_parameters: HashSet<String>,
     pub super_types: Vec<Type>,
     pub owner: String,
     pub interfaces: Vec<String>,
@@ -233,6 +241,7 @@ pub struct InterfaceDelegatedMember {
     pub jvm_descriptor: String,
 }
 pub struct ClassDecl {
+    pub operator_offsets: HashSet<usize>,
     pub lexical_bridges: bool,
     pub inner: bool,
     pub value_: bool,
@@ -241,11 +250,13 @@ pub struct ClassDecl {
     pub sealed_: bool,
     pub sealed_subclasses: Vec<String>,
     pub type_params: Vec<syntax::TypeParameter>,
+    pub interface_bound_parameters: HashSet<String>,
     pub super_types: Vec<Type>,
     pub generic_bridges: Vec<GenericBridge>,
     pub exposed_fields: HashMap<String, u16>,
     pub delegated_properties: Vec<(String, Value)>,
     pub primary_constructor: bool,
+    pub constructor_visibility: u16,
     pub constructor_annotations: Vec<DeclarationAnnotation>,
     pub abstract_: bool,
     pub open_methods: HashSet<String>,
@@ -667,6 +678,7 @@ struct Checker<'a> {
     inline_argument_modes: Vec<syntax::InlineParameterMode>,
     inline_analysis: bool,
     public_inline_body: bool,
+    constructor_bridge_context: bool,
     reified_parameters: Vec<syntax::TypeParameter>,
     exhaustiveness_flow: bool,
     lambdas: Rc<RefCell<Vec<LambdaDecl>>>,
@@ -1236,6 +1248,30 @@ impl Checker<'_> {
             }
         }
         if applicable.is_empty() {
+            if let Some(error) = failures.iter().find(|error| {
+                matches!(
+                    error.code,
+                    "INACCESSIBLE_CONSTRUCTOR" | "PUBLIC_INLINE_NON_PUBLIC_ACCESS"
+                )
+            }) && failures
+                .iter()
+                .filter(|other| {
+                    matches!(
+                        other.code,
+                        "INACCESSIBLE_CONSTRUCTOR" | "PUBLIC_INLINE_NON_PUBLIC_ACCESS"
+                    )
+                })
+                .all(|other| {
+                    other.kind == error.kind
+                        && other.code == error.code
+                        && other.offset == error.offset
+                })
+                && !failures
+                    .iter()
+                    .any(|other| other.kind == crate::DiagnosticKind::UnsupportedLanguage)
+            {
+                return Err(error.clone());
+            }
             if failures.len() == 1 {
                 return Err(failures.pop().unwrap());
             }
@@ -1622,6 +1658,46 @@ impl Checker<'_> {
         offset: usize,
     ) -> Result<Value> {
         let (mut values, lets, mask) = self.arguments(params, defaults, args, named, offset)?;
+        let raw_descriptor = format!(
+            "({})V",
+            params.iter().map(|p| p.1.descriptor()).collect::<String>()
+        );
+        let constructor = self.classpath.load(owner).ok().and_then(|class| {
+            class
+                .methods
+                .into_iter()
+                .find(|m| m.name == "<init>" && m.descriptor == raw_descriptor)
+        });
+        if constructor.as_ref().is_some_and(|method| {
+            !self
+                .classpath
+                .constructor_visible(&self.lambda_owner, method)
+        }) {
+            return Err(
+                Diagnostic::new(offset, "Constructor is inaccessible").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "INACCESSIBLE_CONSTRUCTOR",
+                ),
+            );
+        }
+        if self.public_inline_body
+            && constructor
+                .as_ref()
+                .is_some_and(|method| method.access & 1 == 0 || method.kotlin_internal)
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Public inline functions cannot access nonpublic constructors",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "PUBLIC_INLINE_NON_PUBLIC_ACCESS",
+            ));
+        }
+        let private_bridge = constructor.as_ref().is_some_and(|method| {
+            method.access & 2 != 0
+                && (method.owner != self.lambda_owner || self.constructor_bridge_context)
+        });
         let mut descriptor = format!(
             "({}",
             params.iter().map(|p| p.1.descriptor()).collect::<String>()
@@ -1635,6 +1711,13 @@ impl Checker<'_> {
                     kind: ValueKind::Int((mask >> (index * 32)) as i32),
                 });
             }
+            values.push(Value {
+                ty: Type::Java("kotlin/jvm/internal/DefaultConstructorMarker".into()),
+                kind: ValueKind::Null,
+            });
+        }
+        if private_bridge {
+            descriptor.push_str("Lkotlin/jvm/internal/DefaultConstructorMarker;");
             values.push(Value {
                 ty: Type::Java("kotlin/jvm/internal/DefaultConstructorMarker".into()),
                 kind: ValueKind::Null,
@@ -2540,6 +2623,10 @@ impl Checker<'_> {
             Some(b'[') if bytes.get(*cursor) == Some(&b'B') => {
                 *cursor += 1;
                 Type::ByteArray
+            }
+            Some(b'[') if bytes.get(*cursor) == Some(&b'S') => {
+                *cursor += 1;
+                Type::ShortArray
             }
             Some(b'[') if bytes.get(*cursor) == Some(&b'C') => {
                 *cursor += 1;
@@ -4467,23 +4554,42 @@ impl Checker<'_> {
                     });
                 }
                 let inner = self.value(inner)?;
-                if op == "!" {
-                    self.require(&inner, Type::Boolean, offset)?;
-                    (Type::Boolean, ValueKind::Not(Box::new(inner)))
+                let inner = if op != "!" && matches!(inner.ty, Type::Byte | Type::Short) {
+                    Value {
+                        ty: Type::Int,
+                        kind: ValueKind::Convert(Type::Int, Box::new(inner)),
+                    }
                 } else {
-                    if !matches!(
-                        inner.ty,
-                        Type::Int | Type::Long | Type::Float | Type::Double
-                    ) {
+                    inner
+                };
+                if (op == "!" && inner.ty != Type::Boolean)
+                    || (op != "!"
+                        && !matches!(
+                            inner.ty,
+                            Type::Int | Type::Long | Type::Float | Type::Double
+                        ))
+                {
+                    if inner.ty.is_nullable() {
                         return Err(Diagnostic::new(
                             offset,
-                            "Nominal unary arithmetic requires operator resolution",
+                            "Nullable unary operator resolution is unsupported",
                         )
                         .with_kind(
                             crate::DiagnosticKind::UnsupportedLanguage,
-                            "NOMINAL_UNARY_OPERATOR_UNSUPPORTED",
+                            "NOMINAL_NULLABLE_UNARY_OPERATOR_UNSUPPORTED",
                         ));
                     }
+                    let name = match op.as_str() {
+                        "+" => "unaryPlus",
+                        "-" => "unaryMinus",
+                        "!" => "not",
+                        _ => return Err(Diagnostic::new(offset, "Unsupported unary operator")),
+                    };
+                    return self.operator_call(inner, name, &[], offset);
+                }
+                if op == "!" {
+                    (Type::Boolean, ValueKind::Not(Box::new(inner)))
+                } else {
                     if op == "+" {
                         return Ok(inner);
                     }
@@ -4505,6 +4611,9 @@ impl Checker<'_> {
                     } else {
                         value
                     });
+                }
+                if op == "..<" {
+                    return self.check_open_range(a, b, offset);
                 }
                 if op == ".." {
                     let start = self.value(a)?;
@@ -4593,26 +4702,23 @@ impl Checker<'_> {
                         "NOMINAL_NULLABLE_OPERATOR_UNSUPPORTED",
                     ));
                 }
+                if a.ty.is_nullable() && matches!(op.as_str(), "<" | ">" | "<=" | ">=") {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Nullable comparison operator resolution is unsupported",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "NOMINAL_NULLABLE_OPERATOR_UNSUPPORTED",
+                    ));
+                }
                 if a.ty.is_nullable() || b.ty.is_nullable() {
                     return Err(Diagnostic::new(
                         offset,
                         "Nullable operands support only equality with null and Elvis",
                     ));
                 }
-                if matches!(
-                    (&a.ty, &b.ty),
-                    (Type::Int, Type::Long) | (Type::Long, Type::Int)
-                ) && matches!(op.as_str(), "+" | "-" | "*" | "/" | "%")
-                {
-                    return Err(Diagnostic::new(
-                        offset,
-                        "Mixed signed integer arithmetic is unsupported",
-                    )
-                    .with_kind(
-                        crate::DiagnosticKind::UnsupportedLanguage,
-                        "MIXED_INTEGER_ARITHMETIC_UNSUPPORTED",
-                    ));
-                }
+                let (a, b) = self.promote_integral_operands(op, a, b);
                 if matches!(a.ty, Type::Unit | Type::Float)
                     || matches!(b.ty, Type::Unit | Type::Float)
                     || matches!(
@@ -4884,19 +4990,24 @@ impl Checker<'_> {
                     if let Some(owner) = library::type_owner(&receiver.ty).map(str::to_owned) {
                         let loaded = self.classpath.load(&owner).ok();
                         if let Some(class) = self.classes.get(&owner).or(loaded.as_ref()) {
-                            if let Some(method) = self
-                                .classpath
-                                .methods(&owner)
-                                .unwrap_or_else(|_| class.methods.clone())
-                                .into_iter()
-                                .find(|m| {
-                                    m.source_property.as_deref() == Some(name)
-                                        && m.library
-                                            .as_ref()
-                                            .is_none_or(|library| library.receiver.is_none())
-                                        && m.kotlin_params.as_ref().is_some_and(Vec::is_empty)
-                                })
+                            if let Some(method) =
+                                library::ordinary_member_methods(self.classpath, &owner, name, 0)
+                                    .unwrap_or_else(|_| class.methods.clone())
+                                    .into_iter()
+                                    .find(|m| {
+                                        m.source_property.as_deref() == Some(name)
+                                            && m.library
+                                                .as_ref()
+                                                .is_none_or(|library| library.receiver.is_none())
+                                            && m.kotlin_params.as_ref().is_some_and(Vec::is_empty)
+                                    })
                             {
+                                let method = library::specialize_receiver(
+                                    method,
+                                    &receiver.ty,
+                                    class,
+                                    self.classpath,
+                                );
                                 return self.member_call(method, receiver, &[], offset);
                             }
                             if self
@@ -4937,6 +5048,7 @@ impl Checker<'_> {
                             receiver.ty.base(),
                             Type::IntArray
                                 | Type::ByteArray
+                                | Type::ShortArray
                                 | Type::CharArray
                                 | Type::LongArray
                                 | Type::BooleanArray
@@ -5179,12 +5291,26 @@ impl Checker<'_> {
                                 .iter()
                                 .filter(|m| {
                                     m.name == "<init>"
-                                        && m.access & 1 != 0
+                                        && self.classpath.constructor_visible(&self.lambda_owner, m)
                                         && !m.unsupported
                                         && (!class.kotlin_class || m.kotlin_params.is_some())
                                 })
                                 .cloned()
                                 .collect();
+                            if constructors.is_empty()
+                                && class.methods.iter().any(|m| {
+                                    m.name == "<init>"
+                                        && !self
+                                            .classpath
+                                            .constructor_visible(&self.lambda_owner, m)
+                                })
+                            {
+                                return Err(Diagnostic::new(offset, "Constructor is inaccessible")
+                                    .with_kind(
+                                        crate::DiagnosticKind::InvalidKotlin,
+                                        "INACCESSIBLE_CONSTRUCTOR",
+                                    ));
+                            }
                             let method = self.select_method(&constructors, args, offset)?;
                             let normalized = self.vararg_arguments(&method, args, offset)?;
                             let args = normalized.as_slice();
@@ -5247,16 +5373,6 @@ impl Checker<'_> {
                         if let Ok(call) = self.implicit_receiver_call(name, args, offset) {
                             return Ok(call);
                         }
-                    }
-                    if name == "ShortArray" && self.unshadowed(name) {
-                        return Err(Diagnostic::new(
-                            offset,
-                            "ShortArray semantics are unsupported",
-                        )
-                        .with_kind(
-                            crate::DiagnosticKind::UnsupportedLanguage,
-                            "SHORT_UNSUPPORTED",
-                        ));
                     }
                     if let Some(array) =
                         Type::primitive_array_named(name).filter(|_| self.unshadowed(name))
@@ -6310,10 +6426,20 @@ pub fn check_with_owner(
             }
             if let Some((package, member)) = name.rsplit_once('/') {
                 let mut found = false;
-                for class in classpath.package_classes(package)? {
+                for class in classpath
+                    .package_classes(package)?
+                    .into_iter()
+                    .filter(|class| {
+                        class
+                            .library
+                            .as_ref()
+                            .is_some_and(|library| library.package.is_some())
+                    })
+                {
                     if class.methods.iter().any(|m| {
-                        m.source_property.as_deref() == Some(member)
-                            || m.library.as_ref().is_some_and(|l| l.source_name == member)
+                        m.access & 8 != 0
+                            && (m.source_property.as_deref() == Some(member)
+                                || m.library.as_ref().is_some_and(|l| l.source_name == member))
                     }) || class
                         .fields
                         .iter()
@@ -6384,7 +6510,9 @@ pub fn check_with_owner(
                 "Imports shadowing builtin types are not supported",
             ));
         }
-        if let Some(code) = annotations::unsupported_lowering(name) {
+        if name != "kotlin/jvm/JvmName"
+            && let Some(code) = annotations::unsupported_lowering(name)
+        {
             return Err(Diagnostic::new(
                 *offset,
                 format!("Annotation {name} requires unsupported compiler JVM semantics"),
@@ -6952,6 +7080,7 @@ pub fn check_with_owner(
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
             public_inline_body: function.inline && !function.private && !function.internal,
+            constructor_bridge_context: false,
             reified_parameters: function.type_params.clone(),
             exhaustiveness_flow: false,
             extension_receivers: Vec::new(),

@@ -1,0 +1,4 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /workspace/korrust/tests/next10_shorts/invalid/overflow_store.kt -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -module-name next10_shorts -cp /workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/korrust/target/checks/2026-11-13T151222903185Z-next10-shorts/invalid-official-overflow_store
+tests/next10_shorts/invalid/overflow_store.kt:1:33: error: argument type mismatch: actual type is 'Int', but 'Short' was expected.
+fun bad(v: ShortArray) { v[0] = 32768 }
+                                ^^^^^

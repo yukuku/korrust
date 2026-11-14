@@ -271,8 +271,26 @@ impl Checker<'_> {
                         mutable: false,
                     },
                 )]));
-                let (body, _) = self.block(std::slice::from_ref(statement))?;
+                let (mut body, _) = self.block(std::slice::from_ref(statement))?;
                 self.scopes.pop();
+                match body.as_mut_slice() {
+                    [
+                        Statement::Expression(Value {
+                            kind: ValueKind::Block(statements, _),
+                            ..
+                        }),
+                    ] if matches!(statement.kind, StatementKind::ForEach(..))
+                        && matches!(statements.last(), Some(Statement::While(..))) =>
+                    {
+                        let iteration = statements.pop().unwrap();
+                        statements.push(Statement::Labeled {
+                            label: label.clone(),
+                            body: vec![iteration],
+                        });
+                        return Ok((body, false));
+                    }
+                    _ => {}
+                }
                 Ok((
                     vec![Statement::Labeled {
                         label: label.clone(),

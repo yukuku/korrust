@@ -1,0 +1,1691 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-13T14:44:50.752202+00:00",
+  "status": "pass",
+  "compiler": {
+    "path": "target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+    "sha256": "a794c0691be7b07df8201cba5c8d489ef06c62f554aeac37d7bb94d6c5ca9f28",
+    "source_revision": "720c490c97d4730e465b6024c4ddbac961c435cc"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "frozen_input_hashes": {
+    "src/annotation_declarations.rs": "b7ba6c2401dd4090052753fcc5ccfea5ba1cc9fdcb080ba5aea8c5528cf4dbbb",
+    "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+    "src/bytecode/annotation_files.rs": "4f3c136aaa2ed30b85d2a4cc2a9be8331b2da9682d450f6a4dcc135ef04ab86a",
+    "src/bytecode/annotations.rs": "397e6b298ce180be4f6e733e2240da2f23f36bc975be46e5700ced1162d9741c",
+    "src/bytecode/class_companion.rs": "a5756a0c46cc33fa449bebe330ef5748789da70b4b941c21c7f72aa923802fc2",
+    "src/bytecode/data.rs": "c99cb60546cbe8873ef99d1ab057aa7439f4239fce13927d324dfea078dbe98c",
+    "src/bytecode/defaults.rs": "89f6967a6689b515d7b86e06bcf59f1bf036a690de083b525af28ad03e27ea8e",
+    "src/bytecode/enums.rs": "25fe788c54554741347ba6bb4b84cbee7c324db6925209a434fb139ceb66b2b1",
+    "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+    "src/bytecode/inline.rs": "cf4c6be5860614d14d0d73e8b555aeaba4e8ef8158aee3876fce450171a98740",
+    "src/bytecode/interfaces.rs": "f56b5c0666e9647fddc5b3d1f5fd39e6d5a155c588201ed590639cfe624f31de",
+    "src/bytecode/lambdas.rs": "8549a0b7885e8a2ee4fcdf1786da263f7a4614755a90a7770a87e69ec81704fd",
+    "src/bytecode/objects.rs": "142f8e5c70f0ac61423c3887447c54865b7b657768cf683fc553fde398a17e7e",
+    "src/bytecode/suspend.rs": "79e1064dd35da268956f91b167a779ce0957cefa8fef629789a2fb3afee987b7",
+    "src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+    "src/bytecode.rs": "a55bc1890322cc755388800544ba2bfd985692d5cb31f0aa5361b7a6623c9f28",
+    "src/check.rs": "7e2e5685c172dd5a6b6435703c0ed9b84f59db284e2002e973de5615b6183903",
+    "src/check_annotation_placements.rs": "123f45e4d08f40c4c0690a8efe0661fee5856b5592e39966e8e7e3e1eb0e75df",
+    "src/check_annotations.rs": "08c9bea49b58b8733f83af8d97a7f78f0f248b375fa78219ef213cc056ad724e",
+    "src/check_anonymous.rs": "9cc85a53a05a45b5778e4a9eb0f4c7f373759dac4315714b087c8a6930aca6af",
+    "src/check_captures.rs": "39e01f723eeed492e9de7917db479f811b745130fb469cfb82b6052393f2be6c",
+    "src/check_class_delegation.rs": "28e66569cf5785ba2518003200e741627a2f83090743b6d0952ed54691bdcfc9",
+    "src/check_classes.rs": "942b008b2ecd2d7db9644dddef7e0907d292f4a9c399d82e814819f47d3e1667",
+    "src/check_control.rs": "20217036bb5211fa30e7a3b675f494d9987fa9bc9b47ff02e0e8a718ccd73f85",
+    "src/check_declarations.rs": "e2b73e5c3190265a3a15da5b56bc6421502bdce7f8e18a7ee7b6c7972d388689",
+    "src/check_delegates.rs": "094b9bdc43d4cecb0fb3dcef1681181f8e7737804f3808582192b3190d01dc92",
+    "src/check_enums.rs": "2a16c9e4dbae29a8c479ab5cddefad66f0bdd09143e2a0cde8428d2d0c174d8b",
+    "src/check_functions.rs": "d6a2197838ef8c26afc6eacdbfaf95a36f45bb35972bf3fff80a0c8515d1db55",
+    "src/check_inner_classes.rs": "60a4cdbfef5b069e0312c3ea7511b0de6a862d20ff393c464ea080968aa233cd",
+    "src/check_interfaces.rs": "f624d8decf0846fd48d3a1178068af6468c10abe594dec62d310772893444d3c",
+    "src/check_ir_walk.rs": "e9ebf5f463c133576ccdaca026b716abda1381caeb72f409e90461d4f652c535",
+    "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+    "src/check_library.rs": "47598d38f3bd79280dbbdb28cb662057cbc21f047a7fb7e37d7eaff31692ac48",
+    "src/check_member_extensions.rs": "c97b70cbd56da4588817a5cdd294cb724009feee3abbcb29a5dde2846bb8d3f9",
+    "src/check_objects.rs": "f04db0150cc0022c27261afbce0c09ed8d75e67da7e97add354ea33be0cfd255",
+    "src/check_operations.rs": "4ad0420e8958bf548c703c7a7b2c24a4075f22053f302d3e472784f8bd15ae9d",
+    "src/check_overloads.rs": "d418fb5ed0880483b5d6ac58ce8093d0eb13804ff1b4176e19abd4b1a3e589cd",
+    "src/check_references.rs": "3a4fd327b7a13f48e69d5fbd059c76cbb8d2ce50ae2e140a762a06d9e1e6eab8",
+    "src/check_relations.rs": "6b1dea3cc13ceb6d435680504f8eda2eb4002be8b3f3b37f728ec19f7892167e",
+    "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+    "src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+    "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+    "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+    "src/check_variant_signatures.rs": "3c4105a50dc37f7102176ffe5a6cba014b65ca1d655bb33aad6e2d030f70b529",
+    "src/classpath/aliases.rs": "745fa67edb3216b77ce5e65f63b75c51ac221f5b49d3e08a4327990bd9e6f4c5",
+    "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+    "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+    "src/classpath/metadata.rs": "40d0d0fba0a23ae2b26c7b67975843038c9032c9326bdc1e09ad3f29f5c46bf2",
+    "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+    "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+    "src/classpath/signature.rs": "657d42ef3c16ac5fb01ae3748e19e814c9ccbc4b9487366f950a04ed639b0e46",
+    "src/classpath/source.rs": "fa9d2391fd63c75f8f18c604cb0be346e45a26375ddf7d7535fb6db4c714cc6e",
+    "src/classpath/source_enums.rs": "3366b5ad4fc96e61e95b398e72dbb6c6a3de8e734247b6e7cdba7d937ef527f4",
+    "src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+    "src/classpath.rs": "d107b7dadf4a15cbe07f20584b7de32aec6e01eab5041f7bb67475ff6b978e91",
+    "src/compiled_inline.rs": "06250c79ae618989985360ced0235cca4628f0f7c4d92630a00295d217310102",
+    "src/const_eval.rs": "6714c1d6296d1c3f60fab09891a492f66a9850b3ff3ee2b5a7df42400dfdcdaa",
+    "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+    "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+    "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+    "src/lib.rs": "08ad23d77457218fb1cb36b1bd1cfd779e76095d04e606f80a8e1ea675b65aa5",
+    "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+    "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+    "src/metadata.rs": "521a188de65380a7bacb3a4882d664483b2ae6131a44b178516f5f4e69ae1777",
+    "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+    "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+    "src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+    "src/syntax.rs": "7b49182679134a78a3e598c948cc78167a6819cc01714c21453def2fe7568e57",
+    "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+    "src/visibility.rs": "0268165a314fe1a169d5604fdda38968b0bbda07f11c60db92d36a7247f879c7",
+    "tests/next10_shorts/AliasedFactory.kt": "68052463551223e5ca16d42ed33452ff06e9bbe15da874be43d94e1bb9b95ec6",
+    "tests/next10_shorts/Calls.java": "68aaa5b466e18c4fac6f90e703e19efb03f275d01fe2dce2a234be977dcdfd03",
+    "tests/next10_shorts/Consumer.kt": "ba42a03c80c1c327512b38a5ad0b8fddc15d0f7e6988b48c55c97f8eaf701943",
+    "tests/next10_shorts/Effects.java": "04af2e11ed9c27fa9b86b4b30c444934e9ccd36e42f2251060d2a76c6a40f53b",
+    "tests/next10_shorts/Library.kt": "21eb3e75379b62255e7ddbe76f4f12c4e7b9a552fbe781099740e717b52d4821",
+    "tests/next10_shorts/Values.kt": "96b5c6e299a71bad03ceed9b37d7812dbb4d798903ee03ff6c680870ca9758ba",
+    "tests/next10_shorts/baseline/integral_comparison.kt": "fe6d8db3401b859b084134d1ef37235e3d8e9464c8efada50ea54104adbba639",
+    "tests/next10_shorts/baseline/mixed_integral_arithmetic.kt": "430224185dbd27fd7ee415788506a14dc950135113dc95d64bd5ffdd5da20bde",
+    "tests/next10_shorts/baseline/short_arithmetic.kt": "8839a0a93a3590eae70bbc65f3bbbfc9b928c4ae87fe3a0923d7e30956d1f3b7",
+    "tests/next10_shorts/baseline/short_array.kt": "44635847e5e76f2afccea327e7b8865b5e40708e5c5d24a7f77a269fc3c306a8",
+    "tests/next10_shorts/baseline/short_unary.kt": "4c95d9e6740326b5cac975d267f39ccf3ba867236637a96f112547103e48a27b",
+    "tests/next10_shorts/invalid/arithmetic_narrowing.kt": "baf2db39b18efac89bf3d16c0c70bb4727241679cf52a65aaa8080e600920b59",
+    "tests/next10_shorts/invalid/boxed_to_primitive.kt": "6287e99fca04536b7ab105aac256516bdb7e0acb1f83618be59e34caaf2b3afe",
+    "tests/next10_shorts/invalid/float_direct_short.kt": "e2dc84ee3ec5e2560fc5e892671ccd26459754a47882bbdfea3ae6a44f3afb2d",
+    "tests/next10_shorts/invalid/mixed_equality.kt": "66cd492cf4a8ab1b925d46ce887055f2f7463aa825d18bfd5e0fd29960cdce98",
+    "tests/next10_shorts/invalid/mixed_result_narrowing.kt": "bdffc77fcdeafac66efc6061361d6807f3ccd55fad59130ffeacb4723cb1a2d9",
+    "tests/next10_shorts/invalid/nonliteral_narrowing.kt": "0bdf7069dfb42499110e80c50fa9628b6a879e7af46a259d670a7d219d4d981c",
+    "tests/next10_shorts/invalid/nonliteral_store.kt": "fc2169da17d3ddb309a216e104498fc2a8ff32e41ef44cd0ef1451297f7786ce",
+    "tests/next10_shorts/invalid/nullable_index.kt": "4fd36d4d6c7e314fbac58f1cee338de1345a575a56016e9b4927c9ddaabec6e4",
+    "tests/next10_shorts/invalid/overflow_negative.kt": "0efc49cf9028b5f0f3f7c36f12ce384d5cc47f73ccc5ac8c3939763667e1dc0f",
+    "tests/next10_shorts/invalid/overflow_positive.kt": "b7677875f55ea1cf9eab6fd8df1fee9aaae16efd69945d408960090b19677690",
+    "tests/next10_shorts/invalid/overflow_store.kt": "ba61e00dc08ca29ef5d9990915db019c317a648a2515e54613f22e4e82d4b4c3",
+    "tests/next10_shorts/invalid/primitive_to_boxed.kt": "5500418ebff7bb1f7dfe431820a826e68d79e9f210727ac37c3d3f85d817b781",
+    "tests/next10_shorts/invalid/shift_short.kt": "1d7815a362afd4898ccd173363a7300c2cebb80c9077594aab001cab4a0cac1e",
+    "tests/next10_shorts/invalid/wrong_initializer.kt": "bd2914aed6f7ba56c162df36b6c4b683fed16e3cb43464a76cce2b3cec7eabf6",
+    "tests/next10_shorts/invalid/wrong_spread.kt": "9a8b260c9e1e229d05cfcf110217ccfbbbb9fbc19aa27e1d1f1ee8daea14e4af",
+    "tests/next10_shorts/unsupported/effectful_initializer.kt": "5a53614725ce2f1cac9a3b9225320a86b61096a6c1f3518fea3a61a0ab7de8ba",
+    "tests/next10_shorts/unsupported/short_annotation.kt": "35e69a42796ea58def02a8b87fc41f02cd613b5660909d6b98dca0a26bfdf9d4",
+    "tests/next10_shorts.rs": "91baaac3c6b37af85ea51e7f0fbe7e80b9ef852878802ff67b0ee1127633cea9",
+    "tests/primitive_arrays.rs": "7607a3a8fabbe1d02b90f8e26d23734bbb159443d31d0053903b24bf1e291e6a",
+    "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+    "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+    "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "references/kotlin/libraries/stdlib/jvm/builtins/Primitives.kt": "4756213176e84e9b8fa6e952660cc4f14e40b0a0055211eb39f8a7c2551dfcd6",
+    "references/kotlin/compiler/testData/codegen/box/arrays/forEachShortArray.kt": "2aacb7e5ce61ac5129a1d705ae828bace7abba5edd432963d4f3b0c2164763d7",
+    "references/kotlin-spec/docs/src/md/kotlin.core/builtins.md": "d2ca66211662303c91c853556004673543a0469c5f7847350ad7b8bd62f7fac6",
+    "tools/check_next10_shorts.py": "5732cfbc6ee12420f9c2d9c8dda9f1cff3b16876e231b288970ab0777b9cdea5",
+    "tools/upstream_jvm.py": "10a550964853b0b4bfdcbdc48f3522b6b3122d36dde2bb5d5bda26a9855a6674",
+    "target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen": "a794c0691be7b07df8201cba5c8d489ef06c62f554aeac37d7bb94d6c5ca9f28",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "input_bundle": {
+    "path": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/inputs.zip",
+    "sha256": "e430335532bbd8b02ba9759b8384cda8c46d5a8c1a3ed8000bd6b2d6a9371a34"
+  },
+  "commands": [
+    {
+      "label": "Pinned compiler identity",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/000.txt"
+    },
+    {
+      "label": "JVM identity",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-version"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/001.txt"
+    },
+    {
+      "label": "Baseline integral_comparison",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/baseline-frozen",
+        "/workspace/korrust/tests/next10_shorts/baseline/integral_comparison.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/baseline-integral_comparison"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/002.txt"
+    },
+    {
+      "label": "Baseline mixed_integral_arithmetic",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/baseline-frozen",
+        "/workspace/korrust/tests/next10_shorts/baseline/mixed_integral_arithmetic.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/baseline-mixed_integral_arithmetic"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/003.txt"
+    },
+    {
+      "label": "Baseline short_arithmetic",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/baseline-frozen",
+        "/workspace/korrust/tests/next10_shorts/baseline/short_arithmetic.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/baseline-short_arithmetic"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/004.txt"
+    },
+    {
+      "label": "Baseline short_array",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/baseline-frozen",
+        "/workspace/korrust/tests/next10_shorts/baseline/short_array.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/baseline-short_array"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/005.txt"
+    },
+    {
+      "label": "Baseline short_unary",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/baseline-frozen",
+        "/workspace/korrust/tests/next10_shorts/baseline/short_unary.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/baseline-short_unary"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/006.txt"
+    },
+    {
+      "label": "Compile Java effect helper",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/helpers",
+        "/workspace/korrust/tests/next10_shorts/Effects.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/007.txt"
+    },
+    {
+      "label": "Compile official/library",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/Library.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/library"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/008.txt"
+    },
+    {
+      "label": "Compile official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/Values.kt",
+        "/workspace/korrust/tests/next10_shorts/AliasedFactory.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/helpers:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/009.txt"
+    },
+    {
+      "label": "Compile candidate/candidate",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/Values.kt",
+        "/workspace/korrust/tests/next10_shorts/AliasedFactory.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/helpers:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/010.txt"
+    },
+    {
+      "label": "Compile fixed Java caller against official output",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/official:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/library:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/callers",
+        "/workspace/korrust/tests/next10_shorts/Calls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/011.txt"
+    },
+    {
+      "label": "Verified Java boundaries official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/callers:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/official:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/library:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "next10.shorts.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/012.txt"
+    },
+    {
+      "label": "Compile official/consumer-official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/official:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/library:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/consumer-official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/013.txt"
+    },
+    {
+      "label": "Verified Kotlin metadata consumer official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/consumer-official:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/official:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/library:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/014.txt"
+    },
+    {
+      "label": "Verified Java boundaries candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/callers:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/candidate:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/library:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "next10.shorts.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/015.txt"
+    },
+    {
+      "label": "Compile official/consumer-candidate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/candidate:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/library:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/consumer-candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/016.txt"
+    },
+    {
+      "label": "Verified Kotlin metadata consumer candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/consumer-candidate:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/candidate:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/library:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/017.txt"
+    },
+    {
+      "label": "JVM signatures official/next10.shorts.ValuesKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/official",
+        "next10.shorts.ValuesKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/018.txt"
+    },
+    {
+      "label": "JVM signatures candidate/next10.shorts.ValuesKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/candidate",
+        "next10.shorts.ValuesKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/019.txt"
+    },
+    {
+      "label": "JVM signatures official/next10.shorts.Holder",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/official",
+        "next10.shorts.Holder"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/020.txt"
+    },
+    {
+      "label": "JVM signatures candidate/next10.shorts.Holder",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/candidate",
+        "next10.shorts.Holder"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/021.txt"
+    },
+    {
+      "label": "JVM signatures official/next10.shorts.AliasedFactoryKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/official",
+        "next10.shorts.AliasedFactoryKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/022.txt"
+    },
+    {
+      "label": "JVM signatures candidate/next10.shorts.AliasedFactoryKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/candidate",
+        "next10.shorts.AliasedFactoryKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/023.txt"
+    },
+    {
+      "label": "Compile official/official-new-integral_comparison",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/baseline/integral_comparison.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/official-new-integral_comparison"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/024.txt"
+    },
+    {
+      "label": "Compile candidate/candidate-new-integral_comparison",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/baseline/integral_comparison.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/candidate-new-integral_comparison"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/025.txt"
+    },
+    {
+      "label": "Compile official/official-new-mixed_integral_arithmetic",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/baseline/mixed_integral_arithmetic.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/official-new-mixed_integral_arithmetic"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/026.txt"
+    },
+    {
+      "label": "Compile candidate/candidate-new-mixed_integral_arithmetic",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/baseline/mixed_integral_arithmetic.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/candidate-new-mixed_integral_arithmetic"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/027.txt"
+    },
+    {
+      "label": "Compile official/official-new-short_arithmetic",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/baseline/short_arithmetic.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/official-new-short_arithmetic"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/028.txt"
+    },
+    {
+      "label": "Compile candidate/candidate-new-short_arithmetic",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/baseline/short_arithmetic.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/candidate-new-short_arithmetic"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/029.txt"
+    },
+    {
+      "label": "Compile official/official-new-short_array",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/baseline/short_array.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/official-new-short_array"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/030.txt"
+    },
+    {
+      "label": "Compile candidate/candidate-new-short_array",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/baseline/short_array.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/candidate-new-short_array"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/031.txt"
+    },
+    {
+      "label": "Compile official/official-new-short_unary",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/baseline/short_unary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/official-new-short_unary"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/032.txt"
+    },
+    {
+      "label": "Compile candidate/candidate-new-short_unary",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/baseline/short_unary.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/candidate-new-short_unary"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/033.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-arithmetic_narrowing",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/invalid/arithmetic_narrowing.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-official-arithmetic_narrowing"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/034.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-arithmetic_narrowing",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/invalid/arithmetic_narrowing.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-candidate-arithmetic_narrowing"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/035.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-boxed_to_primitive",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/invalid/boxed_to_primitive.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-official-boxed_to_primitive"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/036.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-boxed_to_primitive",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/invalid/boxed_to_primitive.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-candidate-boxed_to_primitive"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/037.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-float_direct_short",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/invalid/float_direct_short.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-official-float_direct_short"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/038.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-float_direct_short",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/invalid/float_direct_short.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-candidate-float_direct_short"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/039.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-mixed_equality",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/invalid/mixed_equality.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-official-mixed_equality"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/040.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-mixed_equality",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/invalid/mixed_equality.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-candidate-mixed_equality"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/041.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-mixed_result_narrowing",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/invalid/mixed_result_narrowing.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-official-mixed_result_narrowing"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/042.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-mixed_result_narrowing",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/invalid/mixed_result_narrowing.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-candidate-mixed_result_narrowing"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/043.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-nonliteral_narrowing",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/invalid/nonliteral_narrowing.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-official-nonliteral_narrowing"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/044.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-nonliteral_narrowing",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/invalid/nonliteral_narrowing.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-candidate-nonliteral_narrowing"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/045.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-nonliteral_store",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/invalid/nonliteral_store.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-official-nonliteral_store"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/046.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-nonliteral_store",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/invalid/nonliteral_store.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-candidate-nonliteral_store"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/047.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-nullable_index",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/invalid/nullable_index.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-official-nullable_index"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/048.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-nullable_index",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/invalid/nullable_index.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-candidate-nullable_index"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/049.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-overflow_negative",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/invalid/overflow_negative.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-official-overflow_negative"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/050.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-overflow_negative",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/invalid/overflow_negative.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-candidate-overflow_negative"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/051.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-overflow_positive",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/invalid/overflow_positive.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-official-overflow_positive"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/052.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-overflow_positive",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/invalid/overflow_positive.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-candidate-overflow_positive"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/053.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-overflow_store",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/invalid/overflow_store.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-official-overflow_store"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/054.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-overflow_store",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/invalid/overflow_store.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-candidate-overflow_store"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/055.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-primitive_to_boxed",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/invalid/primitive_to_boxed.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-official-primitive_to_boxed"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/056.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-primitive_to_boxed",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/invalid/primitive_to_boxed.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-candidate-primitive_to_boxed"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/057.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-shift_short",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/invalid/shift_short.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-official-shift_short"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/058.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-shift_short",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/invalid/shift_short.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-candidate-shift_short"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/059.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-wrong_initializer",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/invalid/wrong_initializer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-official-wrong_initializer"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/060.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-wrong_initializer",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/invalid/wrong_initializer.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-candidate-wrong_initializer"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/061.txt"
+    },
+    {
+      "label": "Compile official/invalid-official-wrong_spread",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/invalid/wrong_spread.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-official-wrong_spread"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/062.txt"
+    },
+    {
+      "label": "Compile candidate/invalid-candidate-wrong_spread",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/invalid/wrong_spread.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-candidate-wrong_spread"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/063.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-effectful_initializer",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/unsupported/effectful_initializer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/boundary-official-effectful_initializer"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/064.txt"
+    },
+    {
+      "label": "Compile candidate/boundary-candidate-effectful_initializer",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/unsupported/effectful_initializer.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/boundary-candidate-effectful_initializer"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/065.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-short_annotation",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_shorts/unsupported/short_annotation.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/boundary-official-short_annotation"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/066.txt"
+    },
+    {
+      "label": "Compile candidate/boundary-candidate-short_annotation",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/tests/next10_shorts/unsupported/short_annotation.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/boundary-candidate-short_annotation"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/067.txt"
+    },
+    {
+      "label": "Compile official/upstream-official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/references/kotlin/compiler/testData/codegen/box/arrays/forEachShortArray.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_shorts",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/upstream-official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/068.txt"
+    },
+    {
+      "label": "Compile candidate/upstream-candidate",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/korrust-frozen",
+        "/workspace/korrust/references/kotlin/compiler/testData/codegen/box/arrays/forEachShortArray.kt",
+        "--module-name",
+        "next10_shorts",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/upstream-candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/069.txt"
+    },
+    {
+      "label": "Compile original fixture Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/upstream-official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/upstream-java",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/Upstream.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/070.txt"
+    },
+    {
+      "label": "Original pinned fixture official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/upstream-java:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/upstream-official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Upstream"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/071.txt"
+    },
+    {
+      "label": "Original pinned fixture candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/upstream-java:/workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/upstream-candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Upstream"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands/072.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "baseline/integral_comparison",
+      "outcome": "baseline_unsupported",
+      "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/next10_shorts/baseline/integral_comparison.kt\",\"offset\":42,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Ordered comparisons require Int or Char\",\"path\":\"/workspace/korrust/tests/next10_shorts/baseline/integral_comparison.kt\",\"line\":1,\"column\":43}\n"
+    },
+    {
+      "id": "baseline/mixed_integral_arithmetic",
+      "outcome": "baseline_unsupported",
+      "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/next10_shorts/baseline/mixed_integral_arithmetic.kt\",\"offset\":33,\"category\":\"unsupported_language\",\"code\":\"MIXED_INTEGER_ARITHMETIC_UNSUPPORTED\",\"message\":\"Mixed signed integer arithmetic is unsupported\",\"path\":\"/workspace/korrust/tests/next10_shorts/baseline/mixed_integral_arithmetic.kt\",\"line\":1,\"column\":34}\n"
+    },
+    {
+      "id": "baseline/short_arithmetic",
+      "outcome": "baseline_unsupported",
+      "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/next10_shorts/baseline/short_arithmetic.kt\",\"offset\":35,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Arithmetic requires Int or Long\",\"path\":\"/workspace/korrust/tests/next10_shorts/baseline/short_arithmetic.kt\",\"line\":1,\"column\":36}\n"
+    },
+    {
+      "id": "baseline/short_array",
+      "outcome": "baseline_unsupported",
+      "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/next10_shorts/baseline/short_array.kt\",\"offset\":33,\"category\":\"unsupported_language\",\"code\":\"SHORT_UNSUPPORTED\",\"message\":\"ShortArray semantics are unsupported\",\"path\":\"/workspace/korrust/tests/next10_shorts/baseline/short_array.kt\",\"line\":1,\"column\":34}\n"
+    },
+    {
+      "id": "baseline/short_unary",
+      "outcome": "baseline_unsupported",
+      "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/next10_shorts/baseline/short_unary.kt\",\"offset\":28,\"category\":\"unsupported_language\",\"code\":\"NOMINAL_UNARY_OPERATOR_UNSUPPORTED\",\"message\":\"Nominal unary arithmetic requires operator resolution\",\"path\":\"/workspace/korrust/tests/next10_shorts/baseline/short_unary.kt\",\"line\":1,\"column\":29}\n"
+    },
+    {
+      "id": "dependency/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass",
+      "independent_assertions": 57,
+      "fixed_official_java_caller": true,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "metadata/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass",
+      "independent_assertions": 57,
+      "fixed_official_java_caller": true,
+      "jvm_verification": "all"
+    },
+    {
+      "id": "metadata/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/next10.shorts.ValuesKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/next10.shorts.Holder",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/next10.shorts.AliasedFactoryKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "newly_supported/integral_comparison",
+      "outcome": "pass"
+    },
+    {
+      "id": "newly_supported/mixed_integral_arithmetic",
+      "outcome": "pass"
+    },
+    {
+      "id": "newly_supported/short_arithmetic",
+      "outcome": "pass"
+    },
+    {
+      "id": "newly_supported/short_array",
+      "outcome": "pass"
+    },
+    {
+      "id": "newly_supported/short_unary",
+      "outcome": "pass"
+    },
+    {
+      "id": "invalid/arithmetic_narrowing",
+      "outcome": "invalid_kotlin",
+      "diagnostics": {
+        "official": "tests/next10_shorts/invalid/arithmetic_narrowing.kt:1:38: error: return type mismatch: expected 'Short', actual 'Int'.\nfun bad(a: Short, b: Short): Short = a + b\n                                     ^^^^^\n",
+        "candidate": "{\"source_identity\":\"/workspace/korrust/tests/next10_shorts/invalid/arithmetic_narrowing.kt\",\"offset\":37,\"category\":\"invalid_kotlin\",\"code\":\"TYPE_MISMATCH\",\"message\":\"Type mismatch: expected Short, found Int\",\"path\":\"/workspace/korrust/tests/next10_shorts/invalid/arithmetic_narrowing.kt\",\"line\":1,\"column\":38}\n"
+      }
+    },
+    {
+      "id": "invalid/boxed_to_primitive",
+      "outcome": "invalid_kotlin",
+      "diagnostics": {
+        "official": "tests/next10_shorts/invalid/boxed_to_primitive.kt:1:40: error: return type mismatch: expected 'ShortArray', actual 'Array<Short>'.\nfun bad(v: Array<Short>): ShortArray = v\n                                       ^\n",
+        "candidate": "{\"source_identity\":\"/workspace/korrust/tests/next10_shorts/invalid/boxed_to_primitive.kt\",\"offset\":39,\"category\":\"invalid_kotlin\",\"code\":\"TYPE_MISMATCH\",\"message\":\"Type mismatch: expected ShortArray, found Array(Short)\",\"path\":\"/workspace/korrust/tests/next10_shorts/invalid/boxed_to_primitive.kt\",\"line\":1,\"column\":40}\n"
+      }
+    },
+    {
+      "id": "invalid/float_direct_short",
+      "outcome": "invalid_kotlin",
+      "diagnostics": {
+        "official": "tests/next10_shorts/invalid/float_direct_short.kt:1:31: error: 'fun toShort(): Short' is deprecated. Unclear conversion. To achieve the same result convert to Int explicitly and then to Short.\nfun bad(a: Double): Short = a.toShort()\n                              ^^^^^^^\n",
+        "candidate": "{\"source_identity\":\"/workspace/korrust/tests/next10_shorts/invalid/float_direct_short.kt\",\"offset\":28,\"category\":\"invalid_kotlin\",\"code\":\"DEPRECATED_FLOATING_SHORT_CONVERSION\",\"message\":\"Direct floating-point conversions to Short are deprecated; convert to Int first\",\"path\":\"/workspace/korrust/tests/next10_shorts/invalid/float_direct_short.kt\",\"line\":1,\"column\":29}\n"
+      }
+    },
+    {
+      "id": "invalid/mixed_equality",
+      "outcome": "invalid_kotlin",
+      "diagnostics": {
+        "official": "tests/next10_shorts/invalid/mixed_equality.kt:1:38: error: operator '==' cannot be applied to 'Short' and 'Int'.\nfun bad(a: Short, b: Int): Boolean = a == b\n                                     ^^^^^^\n",
+        "candidate": "{\"source_identity\":\"/workspace/korrust/tests/next10_shorts/invalid/mixed_equality.kt\",\"offset\":37,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Type mismatch: expected Short, found Int\",\"path\":\"/workspace/korrust/tests/next10_shorts/invalid/mixed_equality.kt\",\"line\":1,\"column\":38}\n"
+      }
+    },
+    {
+      "id": "invalid/mixed_result_narrowing",
+      "outcome": "invalid_kotlin",
+      "diagnostics": {
+        "official": "tests/next10_shorts/invalid/mixed_result_narrowing.kt:1:33: error: return type mismatch: expected 'Int', actual 'Long'.\nfun bad(a: Int, b: Long): Int = a + b\n                                ^^^^^\n",
+        "candidate": "{\"source_identity\":\"/workspace/korrust/tests/next10_shorts/invalid/mixed_result_narrowing.kt\",\"offset\":32,\"category\":\"invalid_kotlin\",\"code\":\"TYPE_MISMATCH\",\"message\":\"Type mismatch: expected Int, found Long\",\"path\":\"/workspace/korrust/tests/next10_shorts/invalid/mixed_result_narrowing.kt\",\"line\":1,\"column\":33}\n"
+      }
+    },
+    {
+      "id": "invalid/nonliteral_narrowing",
+      "outcome": "invalid_kotlin",
+      "diagnostics": {
+        "official": "tests/next10_shorts/invalid/nonliteral_narrowing.kt:1:26: error: return type mismatch: expected 'Short', actual 'Int'.\nfun bad(v: Int): Short = v\n                         ^\n",
+        "candidate": "{\"source_identity\":\"/workspace/korrust/tests/next10_shorts/invalid/nonliteral_narrowing.kt\",\"offset\":25,\"category\":\"invalid_kotlin\",\"code\":\"TYPE_MISMATCH\",\"message\":\"Type mismatch: expected Short, found Int\",\"path\":\"/workspace/korrust/tests/next10_shorts/invalid/nonliteral_narrowing.kt\",\"line\":1,\"column\":26}\n"
+      }
+    },
+    {
+      "id": "invalid/nonliteral_store",
+      "outcome": "invalid_kotlin",
+      "diagnostics": {
+        "official": "tests/next10_shorts/invalid/nonliteral_store.kt:1:41: error: argument type mismatch: actual type is 'Int', but 'Short' was expected.\nfun bad(v: ShortArray, n: Int) { v[0] = n }\n                                        ^\n",
+        "candidate": "{\"source_identity\":\"/workspace/korrust/tests/next10_shorts/invalid/nonliteral_store.kt\",\"offset\":40,\"category\":\"invalid_kotlin\",\"code\":\"TYPE_MISMATCH\",\"message\":\"Type mismatch: expected Short, found Int\",\"path\":\"/workspace/korrust/tests/next10_shorts/invalid/nonliteral_store.kt\",\"line\":1,\"column\":41}\n"
+      }
+    },
+    {
+      "id": "invalid/nullable_index",
+      "outcome": "invalid_kotlin",
+      "diagnostics": {
+        "official": "tests/next10_shorts/invalid/nullable_index.kt:1:34: error: only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'ShortArray?'.\nfun bad(v: ShortArray?): Short = v[0]\n                                 ^^^^\n",
+        "candidate": "{\"source_identity\":\"/workspace/korrust/tests/next10_shorts/invalid/nullable_index.kt\",\"offset\":33,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Nullable indexing requires a not-null assertion\",\"path\":\"/workspace/korrust/tests/next10_shorts/invalid/nullable_index.kt\",\"line\":1,\"column\":34}\n"
+      }
+    },
+    {
+      "id": "invalid/overflow_negative",
+      "outcome": "invalid_kotlin",
+      "diagnostics": {
+        "official": "tests/next10_shorts/invalid/overflow_negative.kt:1:20: error: return type mismatch: expected 'Short', actual 'Int'.\nfun bad(): Short = -32769\n                   ^^^^^^\n",
+        "candidate": "{\"source_identity\":\"/workspace/korrust/tests/next10_shorts/invalid/overflow_negative.kt\",\"offset\":19,\"category\":\"invalid_kotlin\",\"code\":\"TYPE_MISMATCH\",\"message\":\"Type mismatch: expected Short, found Int\",\"path\":\"/workspace/korrust/tests/next10_shorts/invalid/overflow_negative.kt\",\"line\":1,\"column\":20}\n"
+      }
+    },
+    {
+      "id": "invalid/overflow_positive",
+      "outcome": "invalid_kotlin",
+      "diagnostics": {
+        "official": "tests/next10_shorts/invalid/overflow_positive.kt:1:20: error: return type mismatch: expected 'Short', actual 'Int'.\nfun bad(): Short = 32768\n                   ^^^^^\n",
+        "candidate": "{\"source_identity\":\"/workspace/korrust/tests/next10_shorts/invalid/overflow_positive.kt\",\"offset\":19,\"category\":\"invalid_kotlin\",\"code\":\"TYPE_MISMATCH\",\"message\":\"Type mismatch: expected Short, found Int\",\"path\":\"/workspace/korrust/tests/next10_shorts/invalid/overflow_positive.kt\",\"line\":1,\"column\":20}\n"
+      }
+    },
+    {
+      "id": "invalid/overflow_store",
+      "outcome": "invalid_kotlin",
+      "diagnostics": {
+        "official": "tests/next10_shorts/invalid/overflow_store.kt:1:33: error: argument type mismatch: actual type is 'Int', but 'Short' was expected.\nfun bad(v: ShortArray) { v[0] = 32768 }\n                                ^^^^^\n",
+        "candidate": "{\"source_identity\":\"/workspace/korrust/tests/next10_shorts/invalid/overflow_store.kt\",\"offset\":32,\"category\":\"invalid_kotlin\",\"code\":\"TYPE_MISMATCH\",\"message\":\"Type mismatch: expected Short, found Int\",\"path\":\"/workspace/korrust/tests/next10_shorts/invalid/overflow_store.kt\",\"line\":1,\"column\":33}\n"
+      }
+    },
+    {
+      "id": "invalid/primitive_to_boxed",
+      "outcome": "invalid_kotlin",
+      "diagnostics": {
+        "official": "tests/next10_shorts/invalid/primitive_to_boxed.kt:1:40: error: return type mismatch: expected 'Array<Short>', actual 'ShortArray'.\nfun bad(v: ShortArray): Array<Short> = v\n                                       ^\n",
+        "candidate": "{\"source_identity\":\"/workspace/korrust/tests/next10_shorts/invalid/primitive_to_boxed.kt\",\"offset\":39,\"category\":\"invalid_kotlin\",\"code\":\"TYPE_MISMATCH\",\"message\":\"Type mismatch: expected Array(Short), found ShortArray\",\"path\":\"/workspace/korrust/tests/next10_shorts/invalid/primitive_to_boxed.kt\",\"line\":1,\"column\":40}\n"
+      }
+    },
+    {
+      "id": "invalid/shift_short",
+      "outcome": "invalid_kotlin",
+      "diagnostics": {
+        "official": "tests/next10_shorts/invalid/shift_short.kt:1:28: error: unresolved reference 'shl'.\nfun bad(a: Short): Int = a shl 1\n                           ^^^\n",
+        "candidate": "{\"source_identity\":\"/workspace/korrust/tests/next10_shorts/invalid/shift_short.kt\",\"offset\":25,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Arithmetic requires Int or Long\",\"path\":\"/workspace/korrust/tests/next10_shorts/invalid/shift_short.kt\",\"line\":1,\"column\":26}\n"
+      }
+    },
+    {
+      "id": "invalid/wrong_initializer",
+      "outcome": "invalid_kotlin",
+      "diagnostics": {
+        "official": "tests/next10_shorts/invalid/wrong_initializer.kt:1:29: error: return type mismatch: expected 'Short', actual 'Int'.\nfun bad() = ShortArray(1) { 32768 }\n                            ^^^^^\n",
+        "candidate": "{\"source_identity\":\"/workspace/korrust/tests/next10_shorts/invalid/wrong_initializer.kt\",\"offset\":28,\"category\":\"invalid_kotlin\",\"code\":\"TYPE_MISMATCH\",\"message\":\"Type mismatch: expected Short, found Int\",\"path\":\"/workspace/korrust/tests/next10_shorts/invalid/wrong_initializer.kt\",\"line\":1,\"column\":29}\n"
+      }
+    },
+    {
+      "id": "invalid/wrong_spread",
+      "outcome": "invalid_kotlin",
+      "diagnostics": {
+        "official": "tests/next10_shorts/invalid/wrong_spread.kt:1:60: error: argument type mismatch: actual type is 'IntArray', but 'ShortArray' was expected.\nfun pack(vararg v: Short) {}; fun bad(v: IntArray) { pack(*v) }\n                                                           ^\n",
+        "candidate": "{\"source_identity\":\"/workspace/korrust/tests/next10_shorts/invalid/wrong_spread.kt\",\"offset\":59,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Spread array component type mismatch\",\"path\":\"/workspace/korrust/tests/next10_shorts/invalid/wrong_spread.kt\",\"line\":1,\"column\":60}\n"
+      }
+    },
+    {
+      "id": "boundary/effectful_initializer",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/next10_shorts/unsupported/effectful_initializer.kt",
+          "offset": 67,
+          "category": "unsupported_language",
+          "code": "ARRAY_INITIALIZER_EVALUATION_UNSUPPORTED",
+          "message": "Array initializer evaluation order has a specification/oracle discrepancy; effectful initializer expressions are unsupported",
+          "path": "/workspace/korrust/tests/next10_shorts/unsupported/effectful_initializer.kt",
+          "line": 1,
+          "column": 68
+        }
+      ]
+    },
+    {
+      "id": "boundary/short_annotation",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/next10_shorts/unsupported/short_annotation.kt",
+          "offset": 24,
+          "category": "unsupported_language",
+          "code": "ANNOTATION_BYTE_SHORT_UNSUPPORTED",
+          "message": "Byte and Short annotation elements are unsupported",
+          "path": "/workspace/korrust/tests/next10_shorts/unsupported/short_annotation.kt",
+          "line": 1,
+          "column": 25
+        }
+      ]
+    },
+    {
+      "id": "original/forEachShortArray",
+      "outcome": "pass",
+      "path": "references/kotlin/compiler/testData/codegen/box/arrays/forEachShortArray.kt",
+      "sha256": "2aacb7e5ce61ac5129a1d705ae828bace7abba5edd432963d4f3b0c2164763d7",
+      "directives": [],
+      "unchanged": true
+    }
+  ],
+  "evidence": {
+    "work_directory": "target/checks/2026-11-13T144450752202Z-next10-shorts",
+    "logs": "reports/correctness/2026-11-13T144450752202Z-next10-shorts/commands"
+  },
+  "effective_options": {
+    "jvm_target": "1.8",
+    "language_version": "2.3",
+    "api_version": "2.3",
+    "module_name": "next10_shorts"
+  },
+  "scope": "Integral arithmetic and ordering promotion across Byte/Short/Int/Long, unary Byte/Short promotion; ShortArray allocation, stable initializer construction, indexing, writes, iteration, vararg/spread, factories, JVM signatures and source/compiled Kotlin metadata",
+  "limitations": [
+    "Short source types, contextual literals, conversions and boxing predate this milestone and are regression checks, not new feature claims.",
+    "Integral equality retains Kotlin operand-type restrictions; bitwise/shift operators do not gain implicit narrowing or Short receivers.",
+    "Effectful initializer-producing expressions retain the existing explicit specification/oracle evaluation-order rejection boundary.",
+    "Inherited import-resolution boundary: an explicit alias of a default-imported function and its original implicit name do not freely coexist in one source file; positive alias and original-name checks use separate source files.",
+    "Short annotation elements, const declarations, complete standard library APIs, Android/full-app compatibility and performance are not claimed."
+  ],
+  "reproduction_command": [
+    "python3",
+    "tools/check_next10_shorts.py",
+    "--candidate",
+    "target/next10-final-v2/korrust",
+    "--source-root",
+    "/workspace/korrust",
+    "--baseline",
+    "target/next10-baseline/korrust"
+  ],
+  "counts": {
+    "baseline_unsupported": 5,
+    "invalid_kotlin": 15,
+    "pass": 16,
+    "unsupported_language": 2
+  },
+  "baseline_compiler": {
+    "path": "target/checks/2026-11-13T144450752202Z-next10-shorts/baseline-frozen",
+    "sha256": "e7a1117c34adc40b4bec275319ea3f68ec242be88ed3fe936d374336247a7062"
+  },
+  "official_compiled_java_callers_sha256": {
+    "target/checks/2026-11-13T144450752202Z-next10-shorts/callers/next10/shorts/Calls.class": "33b25aa63d0deaf8b816f6c0314f518cda9d18b9abc2be2a88d2601caf748739"
+  }
+}

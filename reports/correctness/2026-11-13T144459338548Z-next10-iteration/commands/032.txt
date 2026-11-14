@@ -1,0 +1,4 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /workspace/korrust/target/checks/2026-11-13T144459338548Z-next10-iteration/range_modifier.kt -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -module-name iteration -cp /workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/korrust/target/checks/2026-11-13T144459338548Z-next10-iteration/oracle-range_modifier
+target/checks/2026-11-13T144459338548Z-next10-iteration/range_modifier.kt:1:59: error: 'operator' modifier is required on 'fun rangeUntil(other: C): Int' defined in 'C'.
+class C { fun rangeUntil(other:C):Int=1 }; fun f():Int=C()..<C()
+                                                          ^^^

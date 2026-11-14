@@ -1,0 +1,248 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-13T14:45:35.738491+00:00",
+  "status": "complete",
+  "compiler": {
+    "path": "target/next10-final-v2/korrust",
+    "sha256": "a794c0691be7b07df8201cba5c8d489ef06c62f554aeac37d7bb94d6c5ca9f28"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8",
+      "-module-name",
+      "next10_generics"
+    ],
+    "launcher_sha256": "90750c977cc043dd2b05c69dd4e052c10377554925dd5a155e74ef732be28c7d",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "frozen_input_hashes": {
+    "target/next10-final-v2/korrust": "a794c0691be7b07df8201cba5c8d489ef06c62f554aeac37d7bb94d6c5ca9f28",
+    "reports/correctness/2026-11-13-next-ten-final-v2/frozen-inputs.json": "20bc4acbfa1d0ef9e11545758eea99c67e7decee8c3e83d05b52708edcd3ac63",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/Direct.kt": "0a6001f90dd3d0ee57eee8be591485be54f038efc4757840c02dadaae74ecef6",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/Consumer.kt": "b4a54374010140967764825e75e7b2242cc214350ae38061377a5625f54adda1",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/Calls.java": "04486369bacfb1c0eaf622d3fd74615af81886bb9ab1a07fdb358174b21a1631",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/replay.py": "f39d63baa76411f148e1a0234e11975482faacffb780296ae42217b5ae63f500"
+  },
+  "commands": [
+    {
+      "label": "Compile official Direct.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/Direct.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144535089781Z-next10-final-direct-classes/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/000-stderr.txt"
+    },
+    {
+      "label": "Compile official Consumer.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144535089781Z-next10-final-direct-classes/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144535089781Z-next10-final-direct-classes/official-consumer"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/001-stderr.txt"
+    },
+    {
+      "label": "Compile candidate Direct.kt",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/Direct.kt",
+        "--module-name",
+        "next10_generics",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144535089781Z-next10-final-direct-classes/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/002-stderr.txt"
+    },
+    {
+      "label": "Compile official Consumer.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144535089781Z-next10-final-direct-classes/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144535089781Z-next10-final-direct-classes/candidate-consumer"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/003-stderr.txt"
+    },
+    {
+      "label": "Compile fixed direct-class Java assertions once",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144535089781Z-next10-final-direct-classes/official:/workspace/korrust/target/checks/2026-11-13T144535089781Z-next10-final-direct-classes/official-consumer:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144535089781Z-next10-final-direct-classes/callers",
+        "/workspace/korrust/reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/Calls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/004-stderr.txt"
+    },
+    {
+      "label": "Verify direct class variance source and metadata official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144535089781Z-next10-final-direct-classes/callers:/workspace/korrust/target/checks/2026-11-13T144535089781Z-next10-final-direct-classes/official-consumer:/workspace/korrust/target/checks/2026-11-13T144535089781Z-next10-final-direct-classes/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/005-stderr.txt"
+    },
+    {
+      "label": "Verify direct class variance source and metadata candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144535089781Z-next10-final-direct-classes/callers:/workspace/korrust/target/checks/2026-11-13T144535089781Z-next10-final-direct-classes/candidate-consumer:/workspace/korrust/target/checks/2026-11-13T144535089781Z-next10-final-direct-classes/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/006-stderr.txt"
+    },
+    {
+      "label": "Compile candidate Consumer.kt",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/Consumer.kt",
+        "--module-name",
+        "next10_generics",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144535089781Z-next10-final-direct-classes/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144535089781Z-next10-final-direct-classes/candidate-compiler-consumer"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/007-stderr.txt"
+    },
+    {
+      "label": "Verify direct class metadata candidate consumer",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144535089781Z-next10-final-direct-classes/callers:/workspace/korrust/target/checks/2026-11-13T144535089781Z-next10-final-direct-classes/candidate-compiler-consumer:/workspace/korrust/target/checks/2026-11-13T144535089781Z-next10-final-direct-classes/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/008-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "Verify direct class variance source and metadata official",
+      "outcome": "pass",
+      "stdout": "OK"
+    },
+    {
+      "id": "Verify direct class variance source and metadata candidate",
+      "outcome": "pass",
+      "stdout": "OK"
+    },
+    {
+      "id": "Verify direct class metadata candidate consumer",
+      "outcome": "pass",
+      "stdout": "OK"
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "pass",
+      "changed": []
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/000-stdout.txt",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/000-stderr.txt",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/001-stdout.txt",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/001-stderr.txt",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/002-stdout.txt",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/002-stderr.txt",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/003-stdout.txt",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/003-stderr.txt",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/004-stdout.txt",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/004-stderr.txt",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/005-stdout.txt",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/005-stderr.txt",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/006-stdout.txt",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/006-stderr.txt",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/007-stdout.txt",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/007-stderr.txt",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/008-stdout.txt",
+    "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/008-stderr.txt"
+  ],
+  "scope": "Final combined compiler replay of direct source-class declaration variance and compiled class metadata proof. Fixed Java caller asserts source and Kotlin consumer results, compiled once against official output; all executions use -Xverify:all.",
+  "limitations": [
+    "Supplementary positive proof for direct source class declaration variance and compiled class metadata; no new feature family or broad JVM wildcard claim."
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "reports/correctness/2026-11-13T144535089781Z-next10-final-direct-classes/replay.py",
+      "--candidate",
+      "/workspace/korrust/target/next10-final-v2/korrust",
+      "--snapshot",
+      "/workspace/korrust/reports/correctness/2026-11-13-next-ten-final-v2/frozen-inputs.json"
+    ]
+  ],
+  "counts": {
+    "pass": 4
+  }
+}

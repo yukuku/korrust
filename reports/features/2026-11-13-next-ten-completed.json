@@ -1,0 +1,401 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-13T15:40:53.761281+00:00",
+  "status": "completed",
+  "selection": "Ten bounded reusable language/JVM additions selected from the prior completed milestone and unchanged AndroidBible assessment. Existing Short scalar infrastructure and compiled comparison machinery are prerequisites; correctness repairs add no feature count.",
+  "accepted_new_features": 10,
+  "compiler": {
+    "path": "target/next10-final-v3/korrust",
+    "sha256": "58990f36b6aba59d2b92c5417cbde8a3daff1396ea3eda01c1e85c4b5c3dc574",
+    "source_revision": "720c490c97d4730e465b6024c4ddbac961c435cc",
+    "frozen_input_manifest": "reports/correctness/2026-11-13-next-ten-final-v4/frozen-inputs.json",
+    "frozen_input_manifest_sha256": "3c4638e57400ca61bf7cf28cb688bd30fad8bafc4ee0422fa386966be7c06b14",
+    "source_archive": "reports/correctness/2026-11-13-next-ten-final-v4/frozen-sources.zip",
+    "source_archive_sha256": "ad60473b3f0333dea3222f26624621a4bcae729c1b8883c29bf8c9c826be7a0f"
+  },
+  "features": [
+    {
+      "name": "custom_unary_operators",
+      "status": "supported",
+      "scope": "Source and compiled unaryPlus, unaryMinus and not conventions through ordinary member/extension resolution, with ordered evaluation, virtual dispatch and effective inherited operator metadata.",
+      "restrictions": [
+        "Nullable unary/comparison extension receivers and source covariant overrides requiring JVM bridges remain explicitly unsupported; compiled covariance is tested.",
+        "The existing ordinary overload-resolution and generic/inline call boundaries apply.",
+        "Unchanged QueryTokenizer is assessed but candidate compilation remains blocked; official JVM caller evidence is retained. Android runtime and full-application compatibility remain unassessed."
+      ],
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "supporting_cases": [
+        "compile/official",
+        "compile/candidate",
+        "runtime/official",
+        "runtime/candidate",
+        "abi/operators.Measure",
+        "abi/operators.Shifted",
+        "abi/operators.Plain",
+        "abi/operators.Origin",
+        "abi/operators.Middle",
+        "abi/operators.Descendant",
+        "abi/operators.BaseFlag",
+        "abi/operators.DerivedFlag",
+        "abi/operators.Switch",
+        "abi/operators.OperatorsKt",
+        "abi/imported.ImportedKt",
+        "kotlin_consumer/official/official",
+        "kotlin_consumer/official/candidate",
+        "kotlin_consumer/candidate/official",
+        "kotlin_consumer/candidate/candidate",
+        "app/compile/official",
+        "app/runtime/official",
+        "app/fixed_caller_integrity",
+        "recursiveCompareTo",
+        "fixed_caller_integrity"
+      ]
+    },
+    {
+      "name": "source_comparison_operators",
+      "status": "supported",
+      "scope": "Source compareTo declarations with checked Int results and signatures, used by ordinary ordered comparisons; existing compiled comparison support is a prerequisite.",
+      "restrictions": [
+        "Nullable unary/comparison extension receivers and source covariant overrides requiring JVM bridges remain explicitly unsupported; compiled covariance is tested.",
+        "The existing ordinary overload-resolution and generic/inline call boundaries apply.",
+        "Unchanged QueryTokenizer is assessed but candidate compilation remains blocked; official JVM caller evidence is retained. Android runtime and full-application compatibility remain unassessed."
+      ],
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "supporting_cases": [
+        "compile/official",
+        "compile/candidate",
+        "runtime/official",
+        "runtime/candidate",
+        "abi/operators.Measure",
+        "abi/operators.Shifted",
+        "abi/operators.Plain",
+        "abi/operators.Origin",
+        "abi/operators.Middle",
+        "abi/operators.Descendant",
+        "abi/operators.BaseFlag",
+        "abi/operators.DerivedFlag",
+        "abi/operators.Switch",
+        "abi/operators.OperatorsKt",
+        "abi/imported.ImportedKt",
+        "kotlin_consumer/official/official",
+        "kotlin_consumer/official/candidate",
+        "kotlin_consumer/candidate/official",
+        "kotlin_consumer/candidate/candidate",
+        "app/compile/official",
+        "app/runtime/official",
+        "app/fixed_caller_integrity",
+        "recursiveCompareTo",
+        "fixed_caller_integrity"
+      ]
+    },
+    {
+      "name": "operator_iteration_protocol",
+      "status": "supported",
+      "scope": "Custom iterator, hasNext and next conventions in for loops, preserving receiver evaluation, loop control and supported element types.",
+      "restrictions": [
+        "Mixed integral, Byte/Short, unsigned and nullable primitive open ranges are unsupported",
+        "No additional AndroidBible unchanged-file or Android/device compatibility claim",
+        "Unit/Null iterator element types remain unsupported",
+        "No generic source/imported operator precedence equivalence claim"
+      ],
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "supporting_cases": [
+        "compile/official",
+        "compile/candidate",
+        "runtime/official",
+        "verification/official",
+        "runtime/candidate",
+        "verification/candidate",
+        "builtin_primitive_runtime_dispatch",
+        "public_signatures",
+        "kotlin_consumer/official",
+        "kotlin_consumer/candidate",
+        "frozen_inputs"
+      ]
+    },
+    {
+      "name": "open_ended_ranges",
+      "status": "supported",
+      "scope": "Open-ended range syntax, ordinary nominal rangeUntil resolution, and Int/Long/Char primitive ranges calling the actual standard library as the pinned compiler intrinsic does.",
+      "restrictions": [
+        "Mixed integral, Byte/Short, unsigned and nullable primitive open ranges are unsupported",
+        "No additional AndroidBible unchanged-file or Android/device compatibility claim",
+        "Unit/Null iterator element types remain unsupported",
+        "No generic source/imported operator precedence equivalence claim"
+      ],
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "supporting_cases": [
+        "compile/official",
+        "compile/candidate",
+        "runtime/official",
+        "verification/official",
+        "runtime/candidate",
+        "verification/candidate",
+        "builtin_primitive_runtime_dispatch",
+        "public_signatures",
+        "kotlin_consumer/official",
+        "kotlin_consumer/candidate",
+        "frozen_inputs"
+      ]
+    },
+    {
+      "name": "source_declaration_variance",
+      "status": "supported",
+      "scope": "Declaration-site covariance and contravariance on supported source classes and interfaces, checked use positions and assignments, and Kotlin metadata.",
+      "restrictions": [
+        "Declaration-site in/out on ordinary supported source generic classes/interfaces; nested generic and function-type polarity, constructor properties, supertypes, source and compiled substitution. Private-to-this variance exceptions remain explicitly unsupported.",
+        "One independent non-null class/interface parameter upper bound, including interface method/property resolution and parameterized interface bounds. Nullable interface bounds, dependent/recursive/multiple bounds, generic data classes, generic member functions, generic interface bodies, function-type bounds and parameter shadowing remain unsupported.",
+        "Official Java callers are compiled once and reused against both outputs with -Xverify:all; official Kotlin consumers check metadata. Exposed inputs requiring contextual declaration-variance JVM wildcards are explicitly unsupported; exact final out arguments, Any contravariant inputs, local subtyping and ordinary returned variant types are covered. Projected exposed variant signatures are unsupported. No whole-app or general-generics claim."
+      ],
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "supporting_cases": [
+        "runtime/official",
+        "consumer/official/official",
+        "consumer/official/candidate",
+        "signature/official/Holder",
+        "signature/official/Bounded",
+        "signature/official/Chars",
+        "runtime/candidate",
+        "consumer/candidate/official",
+        "consumer/candidate/candidate",
+        "signature/candidate/Holder",
+        "signature/candidate/Bounded",
+        "signature/candidate/Chars",
+        "frozen_inputs"
+      ]
+    },
+    {
+      "name": "classifier_interface_bounds",
+      "status": "supported",
+      "scope": "Independent non-null interface upper bounds on supported source classifier parameters, including JVM erasure/signatures and Kotlin metadata.",
+      "restrictions": [
+        "Declaration-site in/out on ordinary supported source generic classes/interfaces; nested generic and function-type polarity, constructor properties, supertypes, source and compiled substitution. Private-to-this variance exceptions remain explicitly unsupported.",
+        "One independent non-null class/interface parameter upper bound, including interface method/property resolution and parameterized interface bounds. Nullable interface bounds, dependent/recursive/multiple bounds, generic data classes, generic member functions, generic interface bodies, function-type bounds and parameter shadowing remain unsupported.",
+        "Official Java callers are compiled once and reused against both outputs with -Xverify:all; official Kotlin consumers check metadata. Exposed inputs requiring contextual declaration-variance JVM wildcards are explicitly unsupported; exact final out arguments, Any contravariant inputs, local subtyping and ordinary returned variant types are covered. Projected exposed variant signatures are unsupported. No whole-app or general-generics claim."
+      ],
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "supporting_cases": [
+        "runtime/official",
+        "consumer/official/official",
+        "consumer/official/candidate",
+        "signature/official/Holder",
+        "signature/official/Bounded",
+        "signature/official/Chars",
+        "runtime/candidate",
+        "consumer/candidate/official",
+        "consumer/candidate/candidate",
+        "signature/candidate/Holder",
+        "signature/candidate/Bounded",
+        "signature/candidate/Chars",
+        "frozen_inputs"
+      ]
+    },
+    {
+      "name": "integral_numeric_promotion",
+      "status": "supported",
+      "scope": "Arithmetic and ordering promotion across Byte, Short, Int and Long, plus Byte/Short unary arithmetic promotion to Int.",
+      "restrictions": [
+        "Short source types, contextual literals, conversions and boxing predate this milestone and are regression checks, not new feature claims.",
+        "Integral equality retains Kotlin operand-type restrictions; bitwise/shift operators do not gain implicit narrowing or Short receivers.",
+        "Effectful initializer-producing expressions retain the existing explicit specification/oracle evaluation-order rejection boundary.",
+        "Inherited import-resolution boundary: an explicit alias of a default-imported function and its original implicit name do not freely coexist in one source file; positive alias and original-name checks use separate source files.",
+        "Short annotation elements, const declarations, complete standard library APIs, Android/full-app compatibility and performance are not claimed."
+      ],
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "supporting_cases": [
+        "dependency/official",
+        "compile/official",
+        "compile/candidate",
+        "runtime/official",
+        "metadata/official",
+        "runtime/candidate",
+        "metadata/candidate",
+        "signature/next10.shorts.ValuesKt",
+        "signature/next10.shorts.Holder",
+        "signature/next10.shorts.AliasedFactoryKt",
+        "newly_supported/integral_comparison",
+        "newly_supported/mixed_integral_arithmetic",
+        "newly_supported/short_arithmetic",
+        "newly_supported/short_array",
+        "newly_supported/short_unary",
+        "original/forEachShortArray"
+      ]
+    },
+    {
+      "name": "short_arrays",
+      "status": "supported",
+      "scope": "ShortArray JVM representation, allocation, stable initializer construction, indexing, writes, iteration, supported factories, vararg/spread and Kotlin/Java consumers.",
+      "restrictions": [
+        "Short source types, contextual literals, conversions and boxing predate this milestone and are regression checks, not new feature claims.",
+        "Integral equality retains Kotlin operand-type restrictions; bitwise/shift operators do not gain implicit narrowing or Short receivers.",
+        "Effectful initializer-producing expressions retain the existing explicit specification/oracle evaluation-order rejection boundary.",
+        "Inherited import-resolution boundary: an explicit alias of a default-imported function and its original implicit name do not freely coexist in one source file; positive alias and original-name checks use separate source files.",
+        "Short annotation elements, const declarations, complete standard library APIs, Android/full-app compatibility and performance are not claimed."
+      ],
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "supporting_cases": [
+        "dependency/official",
+        "compile/official",
+        "compile/candidate",
+        "runtime/official",
+        "metadata/official",
+        "runtime/candidate",
+        "metadata/candidate",
+        "signature/next10.shorts.ValuesKt",
+        "signature/next10.shorts.Holder",
+        "signature/next10.shorts.AliasedFactoryKt",
+        "newly_supported/integral_comparison",
+        "newly_supported/mixed_integral_arithmetic",
+        "newly_supported/short_arithmetic",
+        "newly_supported/short_array",
+        "newly_supported/short_unary",
+        "original/forEachShortArray"
+      ]
+    },
+    {
+      "name": "file_jvm_name",
+      "status": "supported",
+      "scope": "Canonical file-level JvmName facade naming, folded String arguments, package metadata and owned-output lifecycle.",
+      "restrictions": [
+        "File JvmName consumes canonical annotation identity and folded String arguments; bounded ASCII identifier JVM facade names. Existing non-ASCII source filename boundary remains even with an explicit facade name. Multifile facades, source annotation type aliases and member JvmName remain unsupported.",
+        "Private/internal primary constructors of ordinary final nongeneric classes, without defaults, constructor annotations or secondary constructors. Protected, inner, value, sealed, data and open combinations retain explicit boundaries. Ordinary constructor callable references retain their existing explicit unsupported boundary.",
+        "Java callers compile once against official output and run unchanged against both providers with -Xverify:all. Kotlin consumers are compiled against each provider separately; candidate consumers are also compiled against both providers.",
+        "Custom marks.JvmName source probes expose a documented official short-name lowering discrepancy; those results are excluded from differential passes. No full Android application or performance claim. DownloadMapper and SongFilter motivate visibility but contain broader unsupported semantics."
+      ],
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "supporting_cases": [
+        "provider/source-compilation",
+        "provider/jvm-signatures-facade-mapping",
+        "provider/official/java-runtime-metadata",
+        "consumer/official-against-official",
+        "consumer/candidate-against-official",
+        "consumer/friend-official-against-official",
+        "consumer/friend-candidate-against-official",
+        "provider/candidate/java-runtime-metadata",
+        "consumer/official-against-candidate",
+        "consumer/candidate-against-candidate",
+        "consumer/friend-official-against-candidate",
+        "consumer/friend-candidate-against-candidate",
+        "facade/canonical-folded-official",
+        "facade/canonical-shadow-folded-candidate",
+        "facade/owned-rename-removal-matches-clean"
+      ]
+    },
+    {
+      "name": "nonpublic_primary_constructors",
+      "status": "supported",
+      "scope": "Private and internal primary constructors on ordinary final nongeneric classes, with lexical/module accessibility, friend paths, metadata and JVM bridges.",
+      "restrictions": [
+        "File JvmName consumes canonical annotation identity and folded String arguments; bounded ASCII identifier JVM facade names. Existing non-ASCII source filename boundary remains even with an explicit facade name. Multifile facades, source annotation type aliases and member JvmName remain unsupported.",
+        "Private/internal primary constructors of ordinary final nongeneric classes, without defaults, constructor annotations or secondary constructors. Protected, inner, value, sealed, data and open combinations retain explicit boundaries. Ordinary constructor callable references retain their existing explicit unsupported boundary.",
+        "Java callers compile once against official output and run unchanged against both providers with -Xverify:all. Kotlin consumers are compiled against each provider separately; candidate consumers are also compiled against both providers.",
+        "Custom marks.JvmName source probes expose a documented official short-name lowering discrepancy; those results are excluded from differential passes. No full Android application or performance claim. DownloadMapper and SongFilter motivate visibility but contain broader unsupported semantics."
+      ],
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "supporting_cases": [
+        "provider/source-compilation",
+        "provider/jvm-signatures-facade-mapping",
+        "provider/official/java-runtime-metadata",
+        "consumer/official-against-official",
+        "consumer/candidate-against-official",
+        "consumer/friend-official-against-official",
+        "consumer/friend-candidate-against-official",
+        "provider/candidate/java-runtime-metadata",
+        "consumer/official-against-candidate",
+        "consumer/candidate-against-candidate",
+        "consumer/friend-official-against-candidate",
+        "consumer/friend-candidate-against-candidate",
+        "facade/canonical-folded-official",
+        "facade/canonical-shadow-folded-candidate",
+        "facade/owned-rename-removal-matches-clean"
+      ]
+    }
+  ],
+  "family_counts": {
+    "iteration": {
+      "pass": 11,
+      "invalid_rejected": 7,
+      "unsupported_language": 3,
+      "not_assessed": 1
+    },
+    "generics": {
+      "pass": 13,
+      "invalid_rejected": 12,
+      "unsupported_language": 14
+    },
+    "shorts": {
+      "baseline_unsupported": 5,
+      "pass": 16,
+      "invalid_kotlin": 15,
+      "unsupported_language": 2
+    },
+    "operators": {
+      "pass": 24,
+      "unsupported_language": 5,
+      "not_run": 1,
+      "invalid_kotlin": 14
+    },
+    "jvm": {
+      "pass": 15,
+      "invalid_kotlin": 16,
+      "oracle_discrepancy": 1,
+      "unsupported_language": 13
+    }
+  },
+  "primary_case_counts": {
+    "pass": 79,
+    "invalid_rejected": 19,
+    "unsupported_language": 37,
+    "not_assessed": 1,
+    "baseline_unsupported": 5,
+    "invalid_kotlin": 45,
+    "not_run": 1,
+    "oracle_discrepancy": 1
+  },
+  "checks_report": "reports/correctness/2026-11-13-next-ten-final-v4.json",
+  "application_assessment": {
+    "report": "reports/correctness/2026-11-13T151142311962Z-next10-app-assessment.json",
+    "selection_size": 33,
+    "provider_counts": {
+      "baseline": {
+        "compiled": 21,
+        "rejected": 12
+      },
+      "candidate": {
+        "compiled": 22,
+        "rejected": 11
+      }
+    },
+    "counts": {
+      "unchanged": 32,
+      "newly_compiled": 1
+    },
+    "runtime_report": "reports/correctness/2026-11-13T151142200474Z-next10-formatted-verse-text.json"
+  },
+  "uncounted_repairs": [
+    "Inherited operator flags in class/interface metadata and anonymous-owner lookup.",
+    "Ordinary top-level extension discovery and fallback resolution.",
+    "Public compiled-inline access during inferred result analysis.",
+    "Nullable annotation attribute merging and canonical JvmStatic retention."
+  ],
+  "limitations": [
+    "Support is bounded by each feature-family report; explicit unsupported and invalid-input outcomes are not positive language passes.",
+    "The selected AndroidBible survey compiles files individually with Kotlin/JDK dependencies only. Runtime evidence for unchanged FormattedVerseText is separate; no whole-application, Android-device or performance claim.",
+    "One pinned-official custom JvmName short-name lowering discrepancy is recorded separately. Canonical annotation identity is preserved and this discrepancy is excluded from differential passes.",
+    "The final full-suite snapshot differs from V3 only in an obsolete enum test expectation. Compiler sources, binary and every accepted differential input are unchanged."
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-13-next-ten-final-v4.json",
+    "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+    "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+    "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+    "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+    "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+    "reports/correctness/2026-11-13T151142200474Z-next10-formatted-verse-text.json",
+    "reports/correctness/2026-11-13T151142283998Z-next10-final-direct-classes.json",
+    "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge.json",
+    "reports/correctness/2026-11-13T151649845422Z-nullable-jvmstatic-reflection.json",
+    "reports/correctness/2026-11-13T151142311962Z-next10-app-assessment.json"
+  ]
+}

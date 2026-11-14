@@ -1,0 +1,2112 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-13T14:45:06.607769+00:00",
+  "status": "completed",
+  "compiler": {
+    "binary": "target/next10-final-v2/korrust",
+    "binary_sha256": "a794c0691be7b07df8201cba5c8d489ef06c62f554aeac37d7bb94d6c5ca9f28",
+    "source_root": "."
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8",
+      "-module-name",
+      "next10_generics"
+    ],
+    "launcher_sha256": "90750c977cc043dd2b05c69dd4e052c10377554925dd5a155e74ef732be28c7d",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "inputs": {
+    "files_sha256": {
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "references/kotlin/compiler/testData/diagnostics/tests/variance/FunctionTypes.kt": "506c168ede9a64bb83e3f612a056241b2efb266283b684a02289b959e0e987db",
+      "references/kotlin/compiler/testData/diagnostics/tests/variance/PrimaryConstructor.kt": "b41c00ffdc61379dd3e4f48f4304b8bb4bd0c0b4e05807540332acfc5bddba4e",
+      "references/kotlin/compiler/testData/diagnostics/tests/variance/VarProperty.kt": "3bfe4dc98b4eec0aef724b33712d7ab7885de21dd5187d90831e3c90d0ba51fc",
+      "references/kotlin-spec/docs/src/md/kotlin.core/type-system.md": "f0b9a51178b98ff722b8a2f77fee0c2c2ab0b777f92ca5784c0c9167c047fd62",
+      "references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+      "src/annotation_declarations.rs": "b7ba6c2401dd4090052753fcc5ccfea5ba1cc9fdcb080ba5aea8c5528cf4dbbb",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/annotation_files.rs": "4f3c136aaa2ed30b85d2a4cc2a9be8331b2da9682d450f6a4dcc135ef04ab86a",
+      "src/bytecode/annotations.rs": "397e6b298ce180be4f6e733e2240da2f23f36bc975be46e5700ced1162d9741c",
+      "src/bytecode/class_companion.rs": "a5756a0c46cc33fa449bebe330ef5748789da70b4b941c21c7f72aa923802fc2",
+      "src/bytecode/data.rs": "c99cb60546cbe8873ef99d1ab057aa7439f4239fce13927d324dfea078dbe98c",
+      "src/bytecode/defaults.rs": "89f6967a6689b515d7b86e06bcf59f1bf036a690de083b525af28ad03e27ea8e",
+      "src/bytecode/enums.rs": "25fe788c54554741347ba6bb4b84cbee7c324db6925209a434fb139ceb66b2b1",
+      "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+      "src/bytecode/inline.rs": "cf4c6be5860614d14d0d73e8b555aeaba4e8ef8158aee3876fce450171a98740",
+      "src/bytecode/interfaces.rs": "f56b5c0666e9647fddc5b3d1f5fd39e6d5a155c588201ed590639cfe624f31de",
+      "src/bytecode/lambdas.rs": "8549a0b7885e8a2ee4fcdf1786da263f7a4614755a90a7770a87e69ec81704fd",
+      "src/bytecode/objects.rs": "142f8e5c70f0ac61423c3887447c54865b7b657768cf683fc553fde398a17e7e",
+      "src/bytecode/suspend.rs": "79e1064dd35da268956f91b167a779ce0957cefa8fef629789a2fb3afee987b7",
+      "src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+      "src/bytecode.rs": "a55bc1890322cc755388800544ba2bfd985692d5cb31f0aa5361b7a6623c9f28",
+      "src/check.rs": "7e2e5685c172dd5a6b6435703c0ed9b84f59db284e2002e973de5615b6183903",
+      "src/check_annotation_placements.rs": "123f45e4d08f40c4c0690a8efe0661fee5856b5592e39966e8e7e3e1eb0e75df",
+      "src/check_annotations.rs": "08c9bea49b58b8733f83af8d97a7f78f0f248b375fa78219ef213cc056ad724e",
+      "src/check_anonymous.rs": "9cc85a53a05a45b5778e4a9eb0f4c7f373759dac4315714b087c8a6930aca6af",
+      "src/check_captures.rs": "39e01f723eeed492e9de7917db479f811b745130fb469cfb82b6052393f2be6c",
+      "src/check_class_delegation.rs": "28e66569cf5785ba2518003200e741627a2f83090743b6d0952ed54691bdcfc9",
+      "src/check_classes.rs": "942b008b2ecd2d7db9644dddef7e0907d292f4a9c399d82e814819f47d3e1667",
+      "src/check_control.rs": "20217036bb5211fa30e7a3b675f494d9987fa9bc9b47ff02e0e8a718ccd73f85",
+      "src/check_declarations.rs": "e2b73e5c3190265a3a15da5b56bc6421502bdce7f8e18a7ee7b6c7972d388689",
+      "src/check_delegates.rs": "094b9bdc43d4cecb0fb3dcef1681181f8e7737804f3808582192b3190d01dc92",
+      "src/check_enums.rs": "2a16c9e4dbae29a8c479ab5cddefad66f0bdd09143e2a0cde8428d2d0c174d8b",
+      "src/check_functions.rs": "d6a2197838ef8c26afc6eacdbfaf95a36f45bb35972bf3fff80a0c8515d1db55",
+      "src/check_inner_classes.rs": "60a4cdbfef5b069e0312c3ea7511b0de6a862d20ff393c464ea080968aa233cd",
+      "src/check_interfaces.rs": "f624d8decf0846fd48d3a1178068af6468c10abe594dec62d310772893444d3c",
+      "src/check_ir_walk.rs": "e9ebf5f463c133576ccdaca026b716abda1381caeb72f409e90461d4f652c535",
+      "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+      "src/check_library.rs": "47598d38f3bd79280dbbdb28cb662057cbc21f047a7fb7e37d7eaff31692ac48",
+      "src/check_member_extensions.rs": "c97b70cbd56da4588817a5cdd294cb724009feee3abbcb29a5dde2846bb8d3f9",
+      "src/check_objects.rs": "f04db0150cc0022c27261afbce0c09ed8d75e67da7e97add354ea33be0cfd255",
+      "src/check_operations.rs": "4ad0420e8958bf548c703c7a7b2c24a4075f22053f302d3e472784f8bd15ae9d",
+      "src/check_overloads.rs": "d418fb5ed0880483b5d6ac58ce8093d0eb13804ff1b4176e19abd4b1a3e589cd",
+      "src/check_references.rs": "3a4fd327b7a13f48e69d5fbd059c76cbb8d2ce50ae2e140a762a06d9e1e6eab8",
+      "src/check_relations.rs": "6b1dea3cc13ceb6d435680504f8eda2eb4002be8b3f3b37f728ec19f7892167e",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+      "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+      "src/check_variant_signatures.rs": "3c4105a50dc37f7102176ffe5a6cba014b65ca1d655bb33aad6e2d030f70b529",
+      "src/classpath/aliases.rs": "745fa67edb3216b77ce5e65f63b75c51ac221f5b49d3e08a4327990bd9e6f4c5",
+      "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+      "src/classpath/metadata.rs": "40d0d0fba0a23ae2b26c7b67975843038c9032c9326bdc1e09ad3f29f5c46bf2",
+      "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/signature.rs": "657d42ef3c16ac5fb01ae3748e19e814c9ccbc4b9487366f950a04ed639b0e46",
+      "src/classpath/source.rs": "fa9d2391fd63c75f8f18c604cb0be346e45a26375ddf7d7535fb6db4c714cc6e",
+      "src/classpath/source_enums.rs": "3366b5ad4fc96e61e95b398e72dbb6c6a3de8e734247b6e7cdba7d937ef527f4",
+      "src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+      "src/classpath.rs": "d107b7dadf4a15cbe07f20584b7de32aec6e01eab5041f7bb67475ff6b978e91",
+      "src/compiled_inline.rs": "06250c79ae618989985360ced0235cca4628f0f7c4d92630a00295d217310102",
+      "src/const_eval.rs": "6714c1d6296d1c3f60fab09891a492f66a9850b3ff3ee2b5a7df42400dfdcdaa",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+      "src/lib.rs": "08ad23d77457218fb1cb36b1bd1cfd779e76095d04e606f80a8e1ea675b65aa5",
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/metadata.rs": "521a188de65380a7bacb3a4882d664483b2ae6131a44b178516f5f4e69ae1777",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+      "src/syntax.rs": "7b49182679134a78a3e598c948cc78167a6819cc01714c21453def2fe7568e57",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/visibility.rs": "0268165a314fe1a169d5604fdda38968b0bbda07f11c60db92d36a7247f879c7",
+      "tests/next10_generics/Calls.java": "cdecdaa311f6517ca84cf1ced59e64bcbe3226a1841e07130f3ec00ad44b819a",
+      "tests/next10_generics/Consumer.kt": "dbd1b5a6cd13d4c4d2d0f99d149ae4db2546141b328e7779fa11dce95e920a7e",
+      "tests/next10_generics/ConsumerCalls.java": "d050f68a33d44be96a91012e993d510289133eef930c6b6beeeb87b875e7b540",
+      "tests/next10_generics/Rejections.json": "c09c68f56166819f893e61bb6adef84422c73bb8a4496c1890d3dcae6bc72836",
+      "tests/next10_generics/Use.kt": "bea296db6e9a3d744e4898fde9d8fe9983f153ce8dd34f93f74ff9e4db714567",
+      "tools/check_next10_generics.py": "84a9b084a3bba196f1f099140cebfc3e582a31bb73504404bb302f24fa0c623b"
+    },
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_next10_generics.py",
+      "--candidate",
+      "target/next10-final-v2/korrust",
+      "--source-root",
+      "/workspace/korrust",
+      "--reference-root",
+      "/workspace/korrust"
+    ]
+  ],
+  "commands": [
+    {
+      "label": "Compile official Use.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_generics/Use.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/000-stderr.txt"
+    },
+    {
+      "label": "Compile candidate Use.kt",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/tests/next10_generics/Use.kt",
+        "--module-name",
+        "next10_generics",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/001-stderr.txt"
+    },
+    {
+      "label": "Compile Java caller against official output",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/callers",
+        "/workspace/korrust/tests/next10_generics/Calls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/002-stderr.txt"
+    },
+    {
+      "label": "Java generic signature compile official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/java-official",
+        "/workspace/korrust/tests/next10_generics/Calls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/003-stderr.txt"
+    },
+    {
+      "label": "Verified fixed Java caller official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/callers:/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/004-stderr.txt"
+    },
+    {
+      "label": "Compile official Consumer.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_generics/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official-official-consumer"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/005-stderr.txt"
+    },
+    {
+      "label": "Compile consumer launcher",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official-official-consumer:/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official-official-launcher",
+        "/workspace/korrust/tests/next10_generics/ConsumerCalls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/006-stderr.txt"
+    },
+    {
+      "label": "Verified metadata consumer official/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official-official-launcher:/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official-official-consumer:/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCalls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/007-stderr.txt"
+    },
+    {
+      "label": "Compile candidate Consumer.kt",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/tests/next10_generics/Consumer.kt",
+        "--module-name",
+        "next10_generics",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official-candidate-consumer"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/008-stderr.txt"
+    },
+    {
+      "label": "Compile consumer launcher",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official-candidate-consumer:/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official-candidate-launcher",
+        "/workspace/korrust/tests/next10_generics/ConsumerCalls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/009-stderr.txt"
+    },
+    {
+      "label": "Verified metadata consumer official/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official-candidate-launcher:/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official-candidate-consumer:/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCalls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/010-stderr.txt"
+    },
+    {
+      "label": "Class bound signature official/Holder",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official",
+        "generics.Holder"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/011-stderr.txt"
+    },
+    {
+      "label": "Class bound signature official/Bounded",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official",
+        "generics.Bounded"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/012-stderr.txt"
+    },
+    {
+      "label": "Class bound signature official/Chars",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/official",
+        "generics.Chars"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/013-stderr.txt"
+    },
+    {
+      "label": "Java generic signature compile candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/java-candidate",
+        "/workspace/korrust/tests/next10_generics/Calls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/014-stderr.txt"
+    },
+    {
+      "label": "Verified fixed Java caller candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/callers:/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/015-stderr.txt"
+    },
+    {
+      "label": "Compile official Consumer.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_generics/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate-official-consumer"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/016-stderr.txt"
+    },
+    {
+      "label": "Compile consumer launcher",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate-official-consumer:/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate-official-launcher",
+        "/workspace/korrust/tests/next10_generics/ConsumerCalls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/017-stderr.txt"
+    },
+    {
+      "label": "Verified metadata consumer candidate/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate-official-launcher:/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate-official-consumer:/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCalls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/018-stderr.txt"
+    },
+    {
+      "label": "Compile candidate Consumer.kt",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/tests/next10_generics/Consumer.kt",
+        "--module-name",
+        "next10_generics",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate-candidate-consumer"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/019-stderr.txt"
+    },
+    {
+      "label": "Compile consumer launcher",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate-candidate-consumer:/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate-candidate-launcher",
+        "/workspace/korrust/tests/next10_generics/ConsumerCalls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/020-stderr.txt"
+    },
+    {
+      "label": "Verified metadata consumer candidate/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate-candidate-launcher:/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate-candidate-consumer:/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCalls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/021-stderr.txt"
+    },
+    {
+      "label": "Class bound signature candidate/Holder",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate",
+        "generics.Holder"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/022-stderr.txt"
+    },
+    {
+      "label": "Class bound signature candidate/Bounded",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate",
+        "generics.Bounded"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/023-stderr.txt"
+    },
+    {
+      "label": "Class bound signature candidate/Chars",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/candidate",
+        "generics.Chars"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/024-stderr.txt"
+    },
+    {
+      "label": "Official boundary out_input",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/out_input/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/out_input/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/025-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary out_input",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/out_input/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/out_input/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/026-stderr.txt"
+    },
+    {
+      "label": "Official boundary in_output",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/in_output/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/in_output/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/027-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary in_output",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/in_output/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/in_output/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/028-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/028-stderr.txt"
+    },
+    {
+      "label": "Official boundary out_var",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/out_var/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/out_var/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/029-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/029-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary out_var",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/out_var/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/out_var/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/030-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/030-stderr.txt"
+    },
+    {
+      "label": "Official boundary in_val",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/in_val/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/in_val/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/031-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/031-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary in_val",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/in_val/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/in_val/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/032-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/032-stderr.txt"
+    },
+    {
+      "label": "Official boundary invariant_nested",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/invariant_nested/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/invariant_nested/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/033-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/033-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary invariant_nested",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/invariant_nested/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/invariant_nested/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/034-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/034-stderr.txt"
+    },
+    {
+      "label": "Official boundary function_polarity",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/function_polarity/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/function_polarity/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/035-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/035-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary function_polarity",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/function_polarity/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/function_polarity/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/036-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/036-stderr.txt"
+    },
+    {
+      "label": "Official boundary function_output_polarity",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/function_output_polarity/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/function_output_polarity/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/037-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/037-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary function_output_polarity",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/function_output_polarity/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/function_output_polarity/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/038-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/038-stderr.txt"
+    },
+    {
+      "label": "Official boundary supertype_polarity",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/supertype_polarity/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/supertype_polarity/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/039-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/039-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary supertype_polarity",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/supertype_polarity/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/supertype_polarity/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/040-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/040-stderr.txt"
+    },
+    {
+      "label": "Official boundary wrong_bound",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wrong_bound/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wrong_bound/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/041-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/041-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary wrong_bound",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wrong_bound/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wrong_bound/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/042-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/042-stderr.txt"
+    },
+    {
+      "label": "Official boundary nullable_bound_argument",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/nullable_bound_argument/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/nullable_bound_argument/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/043-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/043-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary nullable_bound_argument",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/nullable_bound_argument/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/nullable_bound_argument/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/044-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/044-stderr.txt"
+    },
+    {
+      "label": "Official boundary variance_reverse",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/variance_reverse/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/variance_reverse/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/045-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/045-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary variance_reverse",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/variance_reverse/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/variance_reverse/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/046-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/046-stderr.txt"
+    },
+    {
+      "label": "Official boundary private_to_this",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/private_to_this/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/private_to_this/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/047-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/047-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary private_to_this",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/private_to_this/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/private_to_this/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/048-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/048-stderr.txt"
+    },
+    {
+      "label": "Official boundary recursive_bound",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/recursive_bound/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/recursive_bound/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/049-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/049-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary recursive_bound",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/recursive_bound/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/recursive_bound/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/050-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/050-stderr.txt"
+    },
+    {
+      "label": "Official boundary generic_member",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/generic_member/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/generic_member/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/051-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/051-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary generic_member",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/generic_member/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/generic_member/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/052-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/052-stderr.txt"
+    },
+    {
+      "label": "Official boundary generic_data",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/generic_data/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/generic_data/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/053-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/053-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary generic_data",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/generic_data/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/generic_data/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/054-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/054-stderr.txt"
+    },
+    {
+      "label": "Official boundary shadowing",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/shadowing/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/shadowing/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/055-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/055-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary shadowing",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/shadowing/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/shadowing/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/056-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/056-stderr.txt"
+    },
+    {
+      "label": "Official boundary nullable_interface_bound",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/nullable_interface_bound/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/nullable_interface_bound/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/057-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/057-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary nullable_interface_bound",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/nullable_interface_bound/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/nullable_interface_bound/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/058-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/058-stderr.txt"
+    },
+    {
+      "label": "Official boundary variance_reverse_input",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/variance_reverse_input/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/variance_reverse_input/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/059-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/059-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary variance_reverse_input",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/variance_reverse_input/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/variance_reverse_input/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/060-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/060-stderr.txt"
+    },
+    {
+      "label": "Official boundary wildcard_out_any",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_out_any/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_out_any/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/061-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/061-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary wildcard_out_any",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_out_any/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_out_any/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/062-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/062-stderr.txt"
+    },
+    {
+      "label": "Official boundary wildcard_in_string",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_in_string/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_in_string/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/063-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/063-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary wildcard_in_string",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_in_string/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_in_string/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/064-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/064-stderr.txt"
+    },
+    {
+      "label": "Official boundary wildcard_constructor",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_constructor/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_constructor/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/065-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/065-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary wildcard_constructor",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_constructor/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_constructor/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/066-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/066-stderr.txt"
+    },
+    {
+      "label": "Official boundary wildcard_method",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_method/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_method/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/067-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/067-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary wildcard_method",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_method/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_method/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/068-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/068-stderr.txt"
+    },
+    {
+      "label": "Official boundary wildcard_redundant_projection",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_redundant_projection/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_redundant_projection/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/069-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/069-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary wildcard_redundant_projection",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_redundant_projection/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_redundant_projection/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/070-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/070-stderr.txt"
+    },
+    {
+      "label": "Official boundary wildcard_return_projection",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_return_projection/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_return_projection/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/071-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/071-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary wildcard_return_projection",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_return_projection/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_return_projection/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/072-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/072-stderr.txt"
+    },
+    {
+      "label": "Official boundary wildcard_property_projection",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_property_projection/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_property_projection/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/073-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/073-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary wildcard_property_projection",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_property_projection/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_property_projection/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/074-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/074-stderr.txt"
+    },
+    {
+      "label": "Official boundary wildcard_bound_projection",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_bound_projection/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_bound_projection/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/075-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/075-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary wildcard_bound_projection",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_bound_projection/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_bound_projection/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T144506607769Z-next10-generics/076-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T144506607769Z-next10-generics/076-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "runtime/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/official/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/official/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/official/Holder",
+      "outcome": "pass",
+      "expected_bound": "Lgenerics/Label;"
+    },
+    {
+      "id": "signature/official/Bounded",
+      "outcome": "pass",
+      "expected_bound": "Lgenerics/Label;"
+    },
+    {
+      "id": "signature/official/Chars",
+      "outcome": "pass",
+      "expected_bound": "Ljava/lang/CharSequence;"
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/candidate/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/candidate/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/candidate/Holder",
+      "outcome": "pass",
+      "expected_bound": "Lgenerics/Label;"
+    },
+    {
+      "id": "signature/candidate/Bounded",
+      "outcome": "pass",
+      "expected_bound": "Lgenerics/Label;"
+    },
+    {
+      "id": "signature/candidate/Chars",
+      "outcome": "pass",
+      "expected_bound": "Ljava/lang/CharSequence;"
+    },
+    {
+      "id": "boundary/out_input",
+      "outcome": "invalid_rejected",
+      "source_sha256": "a2dc50596b80f4a75a26f728898f272ebb72299c7d61697ba9e64b31541be87d",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/out_input/Boundary.kt",
+          "offset": 19,
+          "category": "invalid_kotlin",
+          "code": "TYPE_VARIANCE_CONFLICT",
+          "message": "Type parameter occurs in a position conflicting with its declaration-site variance",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/out_input/Boundary.kt",
+          "line": 1,
+          "column": 20
+        }
+      ],
+      "official_accepted": false
+    },
+    {
+      "id": "boundary/in_output",
+      "outcome": "invalid_rejected",
+      "source_sha256": "afd1c1a03cef5a80752c7a93f57e8c169dd5bb7c70db926cd6f45d62993feee5",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/in_output/Boundary.kt",
+          "offset": 22,
+          "category": "invalid_kotlin",
+          "code": "TYPE_VARIANCE_CONFLICT",
+          "message": "Type parameter occurs in a position conflicting with its declaration-site variance",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/in_output/Boundary.kt",
+          "line": 1,
+          "column": 23
+        }
+      ],
+      "official_accepted": false
+    },
+    {
+      "id": "boundary/out_var",
+      "outcome": "invalid_rejected",
+      "source_sha256": "9f5b55989e1dd4540fdcbe65091eb6df47ace795152e7f0ed44f47e954448cbc",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/out_var/Boundary.kt",
+          "offset": 0,
+          "category": "invalid_kotlin",
+          "code": "TYPE_VARIANCE_CONFLICT",
+          "message": "Type parameter occurs in a position conflicting with its declaration-site variance",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/out_var/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": false
+    },
+    {
+      "id": "boundary/in_val",
+      "outcome": "invalid_rejected",
+      "source_sha256": "3ac8abc3274950d6a0c004891982bd4c68bacb96b2953cae88e487fc3afa050f",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/in_val/Boundary.kt",
+          "offset": 0,
+          "category": "invalid_kotlin",
+          "code": "TYPE_VARIANCE_CONFLICT",
+          "message": "Type parameter occurs in a position conflicting with its declaration-site variance",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/in_val/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": false
+    },
+    {
+      "id": "boundary/invariant_nested",
+      "outcome": "invalid_rejected",
+      "source_sha256": "f69afc88887a7efc863909c93265fdda749e88d4db7a51cbeced151e2ddc9b1b",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/invariant_nested/Boundary.kt",
+          "offset": 40,
+          "category": "invalid_kotlin",
+          "code": "TYPE_VARIANCE_CONFLICT",
+          "message": "Type parameter occurs in a position conflicting with its declaration-site variance",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/invariant_nested/Boundary.kt",
+          "line": 2,
+          "column": 24
+        }
+      ],
+      "official_accepted": false
+    },
+    {
+      "id": "boundary/function_polarity",
+      "outcome": "invalid_rejected",
+      "source_sha256": "3791ed1b144d629b7442c530429fb97e76301b76a8862415416f771e9b9d9b0a",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/function_polarity/Boundary.kt",
+          "offset": 23,
+          "category": "invalid_kotlin",
+          "code": "TYPE_VARIANCE_CONFLICT",
+          "message": "Type parameter occurs in a position conflicting with its declaration-site variance",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/function_polarity/Boundary.kt",
+          "line": 1,
+          "column": 24
+        }
+      ],
+      "official_accepted": false
+    },
+    {
+      "id": "boundary/function_output_polarity",
+      "outcome": "invalid_rejected",
+      "source_sha256": "4c601a87d97f5660eba54dca5ccc985a10f809fde7d267f7d0edfc2de444b41d",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/function_output_polarity/Boundary.kt",
+          "offset": 23,
+          "category": "invalid_kotlin",
+          "code": "TYPE_VARIANCE_CONFLICT",
+          "message": "Type parameter occurs in a position conflicting with its declaration-site variance",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/function_output_polarity/Boundary.kt",
+          "line": 1,
+          "column": 24
+        }
+      ],
+      "official_accepted": false
+    },
+    {
+      "id": "boundary/supertype_polarity",
+      "outcome": "invalid_rejected",
+      "source_sha256": "c9d3b849644d88d10c3f378c6ea1ab871579a007d50989026796758da1d87591",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/supertype_polarity/Boundary.kt",
+          "offset": 22,
+          "category": "invalid_kotlin",
+          "code": "TYPE_VARIANCE_CONFLICT",
+          "message": "Type parameter occurs in a position conflicting with its declaration-site variance",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/supertype_polarity/Boundary.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "official_accepted": false
+    },
+    {
+      "id": "boundary/wrong_bound",
+      "outcome": "invalid_rejected",
+      "source_sha256": "6495e3f4666487bd12791d670f2867257e4a065fa864099c26aa35738a6fe978",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wrong_bound/Boundary.kt",
+          "offset": 75,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Type argument violates upper bound of T",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wrong_bound/Boundary.kt",
+          "line": 3,
+          "column": 1
+        }
+      ],
+      "official_accepted": false
+    },
+    {
+      "id": "boundary/nullable_bound_argument",
+      "outcome": "invalid_rejected",
+      "source_sha256": "cd22c09c595da2e04493dddf05e967aecc804a25ea255ec67a4cd8977f985826",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/nullable_bound_argument/Boundary.kt",
+          "offset": 43,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Type argument violates upper bound of T",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/nullable_bound_argument/Boundary.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "official_accepted": false
+    },
+    {
+      "id": "boundary/variance_reverse",
+      "outcome": "invalid_rejected",
+      "source_sha256": "11408ffee6d3f77d773ed88e639f6c8115c80fd4f46075cf775cd6315dd2db5c",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/variance_reverse/Boundary.kt",
+          "offset": 70,
+          "category": "invalid_kotlin",
+          "code": "TYPE_MISMATCH",
+          "message": "Type mismatch: expected Parameterized { name: \"Producer\", arguments: [TypeArgument { variance: Invariant, ty: Some(String) }] }, found Parameterized { name: \"Producer\", arguments: [TypeArgument { variance: Invariant, ty: Some(Java(\"java/lang/Object\")) }] }",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/variance_reverse/Boundary.kt",
+          "line": 2,
+          "column": 45
+        }
+      ],
+      "official_accepted": false
+    },
+    {
+      "id": "boundary/private_to_this",
+      "outcome": "unsupported_language",
+      "source_sha256": "add831d856a061480f005160d01f3298643ae4980e121efd8942b39aa7177ba0",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/private_to_this/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "PRIVATE_VARIANCE_UNSUPPORTED",
+          "message": "Private-to-this declaration variance exceptions are unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/private_to_this/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/recursive_bound",
+      "outcome": "unsupported_language",
+      "source_sha256": "b0c2aab97fceb43a93ce111b0ea25effb70af86326f08c1b7e9eb9091cabe6b8",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/recursive_bound/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "DEPENDENT_GENERIC_BOUND_UNSUPPORTED",
+          "message": "Dependent and recursive classifier bounds are unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/recursive_bound/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/generic_member",
+      "outcome": "unsupported_language",
+      "source_sha256": "9fd7ad2a3df5fe57fe420931ba7eea72cb5adcbbebc36364400197a0fd9989fa",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/generic_member/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "GENERIC_CLASS_MEMBER_TYPE_PARAMETERS_UNSUPPORTED",
+          "message": "Generic members inside source generic classes are unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/generic_member/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/generic_data",
+      "outcome": "unsupported_language",
+      "source_sha256": "a814ec45dc6f99e61cf47d3c9863a33e94ce848331fb21a9c5fafaff8e68c76e",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/generic_data/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "GENERIC_CLASS_NESTED_UNSUPPORTED",
+          "message": "Generic data classes, companions, and nested declarations are unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/generic_data/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/shadowing",
+      "outcome": "unsupported_language",
+      "source_sha256": "b131828fa3c75d9faaedccd70e426c8624cf2641319d600d9834e4b80ae0b71f",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/shadowing/Boundary.kt",
+          "offset": 28,
+          "category": "unsupported_language",
+          "code": "TYPE_PARAMETER_SHADOW_UNSUPPORTED",
+          "message": "Shadowing an enclosing type parameter is unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/shadowing/Boundary.kt",
+          "line": 1,
+          "column": 29
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/nullable_interface_bound",
+      "outcome": "unsupported_language",
+      "source_sha256": "8ed4432b03547e3c730dd1837fc70cf81f8426fb0eda5f2cc9b966f6a602bc11",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/nullable_interface_bound/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "CLASSIFIER_NULLABLE_INTERFACE_BOUND_UNSUPPORTED",
+          "message": "Nullable interface bounds on source classifiers are unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/nullable_interface_bound/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/variance_reverse_input",
+      "outcome": "invalid_rejected",
+      "source_sha256": "740a3555fddc9622c663bd4b431f4bbb1e64cdae1c7b7ec79844e44af231b3c5",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/variance_reverse_input/Boundary.kt",
+          "offset": 64,
+          "category": "invalid_kotlin",
+          "code": "TYPE_MISMATCH",
+          "message": "Type mismatch: expected Parameterized { name: \"Input\", arguments: [TypeArgument { variance: Invariant, ty: Some(Java(\"java/lang/Object\")) }] }, found Parameterized { name: \"Input\", arguments: [TypeArgument { variance: Invariant, ty: Some(String) }] }",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/variance_reverse_input/Boundary.kt",
+          "line": 2,
+          "column": 43
+        }
+      ],
+      "official_accepted": false
+    },
+    {
+      "id": "boundary/wildcard_out_any",
+      "outcome": "unsupported_language",
+      "source_sha256": "dccecbed89b0e4ab7b485e246deb33c3445352584ea53b5dc09c321cf4bf9762",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_out_any/Boundary.kt",
+          "offset": 26,
+          "category": "unsupported_language",
+          "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED",
+          "message": "Exposed declaration variance requires unsupported JVM wildcard signature lowering",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_out_any/Boundary.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/wildcard_in_string",
+      "outcome": "unsupported_language",
+      "source_sha256": "861d37016bd4bff7b76465de0e7c169554dba8316a71a639ed9e290135d748cc",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_in_string/Boundary.kt",
+          "offset": 25,
+          "category": "unsupported_language",
+          "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED",
+          "message": "Exposed declaration variance requires unsupported JVM wildcard signature lowering",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_in_string/Boundary.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/wildcard_constructor",
+      "outcome": "unsupported_language",
+      "source_sha256": "a69475a734951111dda78e3ccec8364c9291de5abf80128ab0f87e99deccf438",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_constructor/Boundary.kt",
+          "offset": 26,
+          "category": "unsupported_language",
+          "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED",
+          "message": "Exposed declaration variance requires unsupported JVM wildcard signature lowering",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_constructor/Boundary.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/wildcard_method",
+      "outcome": "unsupported_language",
+      "source_sha256": "bf165695677db38e39a8e556b6b9f77878e7f45ec4d64cfef507113d2075b427",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_method/Boundary.kt",
+          "offset": 26,
+          "category": "unsupported_language",
+          "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED",
+          "message": "Exposed declaration variance requires unsupported JVM wildcard signature lowering",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_method/Boundary.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/wildcard_redundant_projection",
+      "outcome": "unsupported_language",
+      "source_sha256": "756cb77b79923188f9065e70c14f7370fb45e928b1c868fb6f02d255ad5e58a0",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_redundant_projection/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED",
+          "message": "Exposed declaration variance requires unsupported JVM wildcard signature lowering",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_redundant_projection/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/wildcard_return_projection",
+      "outcome": "unsupported_language",
+      "source_sha256": "bebfbf9ad2c4667fa1035fcf5c9950f7b7800c359ab7995fb1bd537a32bdc822",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_return_projection/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED",
+          "message": "Exposed declaration variance requires unsupported JVM wildcard signature lowering",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_return_projection/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/wildcard_property_projection",
+      "outcome": "unsupported_language",
+      "source_sha256": "2598b3585581d1dcc07e48a512ed35a93743edc75bc4601822439d36e5f16647",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_property_projection/Boundary.kt",
+          "offset": 26,
+          "category": "unsupported_language",
+          "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED",
+          "message": "Exposed declaration variance requires unsupported JVM wildcard signature lowering",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_property_projection/Boundary.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/wildcard_bound_projection",
+      "outcome": "unsupported_language",
+      "source_sha256": "fe33d3264f85e61ccff6bbae19ab1b5b86265365d840c1ef950a5baf19633aae",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_bound_projection/Boundary.kt",
+          "offset": 26,
+          "category": "unsupported_language",
+          "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED",
+          "message": "Exposed declaration variance requires unsupported JVM wildcard signature lowering",
+          "path": "/workspace/korrust/target/checks/2026-11-13T144506607769Z-next10-generics/boundaries/wildcard_bound_projection/Boundary.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "pass",
+      "changed": []
+    }
+  ],
+  "evidence": [],
+  "limitations": [
+    "Declaration-site in/out on ordinary supported source generic classes/interfaces; nested generic and function-type polarity, constructor properties, supertypes, source and compiled substitution. Private-to-this variance exceptions remain explicitly unsupported.",
+    "One independent non-null class/interface parameter upper bound, including interface method/property resolution and parameterized interface bounds. Nullable interface bounds, dependent/recursive/multiple bounds, generic data classes, generic member functions, generic interface bodies, function-type bounds and parameter shadowing remain unsupported.",
+    "Official Java callers are compiled once and reused against both outputs with -Xverify:all; official Kotlin consumers check metadata. Exposed inputs requiring contextual declaration-variance JVM wildcards are explicitly unsupported; exact final out arguments, Any contravariant inputs, local subtyping and ordinary returned variant types are covered. Projected exposed variant signatures are unsupported. No whole-app or general-generics claim."
+  ],
+  "emitted_classes_sha256": {
+    "official": {
+      "target/checks/2026-11-13T144506607769Z-next10-generics/official/generics/Sink.class": "5da4f0127891601cd7d1dcf9ec2a8b0d390980f353806667702cf4aa9476b046",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/official/generics/Bounded.class": "9d0cb278bf4dc12ff80c4e9aa8d56123f305ea26d3afd1d6d4faafaba8e65481",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/official/generics/NamedSink.class": "7a0a8fa7c94e7011cdd10584566a5cb9ee801150299dbf6d8066e86ee3c4fdcd",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/official/generics/Named.class": "2392fbdadb34c41aa018d84e97945aaa4ba2264eecd90339d76c9a8a8646fd00",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/official/generics/Consumer.class": "7be4dfaa611fe5c25353749fcb9118327cd591e01e8e4acd686b16e12bbb398e",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/official/generics/Marked.class": "839a1d5eac159a835cdb494fe92031c8031a38bd54e810a8bf72f76811235dd2",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/official/generics/Chars.class": "fbb813a9563be7001bb9d6a7bfc594f220ddab882f6c4d5c867cbebfa803b9a7",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/official/generics/BoundSink.class": "a5e044ba2b2845749e252eb60edaad06873a5537120c92dfe0b61d2db713a427",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/official/generics/Tag.class": "e6478b35e730576a962d23a614c2b5248c73f4675a9d430075bd9a22997953ef",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/official/generics/Box.class": "bff745fc313a714ca2a0a934b725719e7fb40458abbd7afd2c6f9c87ed45170b",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/official/generics/OtherLabel.class": "e3558f4e15944bb2227b3bf56c3ebdea034901473976c8befb9acebabfa2355d",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/official/generics/Transform.class": "fb79d858370ea92e5b6a6cca991ab3b6ffe18dcd10af7087162bb68161dcb612",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/official/generics/Tagged.class": "0103f3e35ce5c3da306b5d5f7770a62c3d105a386872164a679bcb3626dbf898",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/official/generics/Holder.class": "27b681c7bb8d3b62125851b29de16bca3a6e2437cf9d5798bf292d422b3c8b6e",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/official/generics/UseKt.class": "6eb24cc4fe979d867213fbde9d84c5d6612665a175bccf27394603b46db8098a",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/official/generics/Producer.class": "38157cfa40ac0bed9c930b3cec4459de7ba71c30b02c7529ec9935fba5331a10",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/official/generics/Label.class": "fd75871fa53eae35b9db241beeedfdfb71fc8fc18107608d614bb4e28f425303"
+    },
+    "candidate": {
+      "target/checks/2026-11-13T144506607769Z-next10-generics/candidate/generics/Sink.class": "a96aef08b545cfd2b649f10e8dda1b77d3f21774e126328cf8016289e74949ca",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/candidate/generics/Bounded.class": "034cc173103639e4e6690196a58f0e20a443b7425afdf0491293b61514ed248e",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/candidate/generics/NamedSink.class": "d99704b8698f8401e775a273f956646ed2fd4f74c4ba7c3cd24ff39d5cc71a59",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/candidate/generics/Named.class": "85887c655c5cdba90f91104d784d43740862a79f275f1b116d341d6de6e66bbe",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/candidate/generics/Consumer.class": "e896422ac0440e19aa151dc2d44ebdc6f1244a4201fbec07e539a078dae4ee83",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/candidate/generics/Marked.class": "114c258fe2cb2c690f7597a0227cf717c640715671e2bdb60ccc76434893d9cf",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/candidate/generics/Chars.class": "95b41e04edb711fd2028959f866c24a477805ea65432391374654db9171cedb5",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/candidate/generics/BoundSink.class": "705fa9bf8ebd75427d2c16fa686946752b54b5c3259ae84e9a0670015f8edc2c",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/candidate/generics/Tag.class": "864b56e9798e835bad54caacb66d4adda854e5acff29221d6a444bd320cd769b",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/candidate/generics/Box.class": "453714e95de363e9dd495500090ce5478a45f709a10262576456f2bf72927d91",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/candidate/generics/OtherLabel.class": "1164bef98e5a6f3b85c7488bd4a2eb3ed32ea0eb151da9350b131cb4dd338f4c",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/candidate/generics/Transform.class": "d0ed6abdf810b487df052a37796e5e6402866b3fd9bdef6ebbf184c8e051ac92",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/candidate/generics/Tagged.class": "ef225bc3846a8f53e43404b3a4df1024f0ad8645570a71865d66a4e53a88b53a",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/candidate/generics/Holder.class": "f34c833bc4d4db4826c9bc193bca00b975fbc347b745ad7388901737e8e48ad0",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/candidate/generics/UseKt.class": "35f216481b0015806e1c2dafdd4aecfc4b0bf5e6f8aa84a1a2e22444a1c82cea",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/candidate/generics/Producer.class": "02587aef1487bcff6b197f721144bd5a4bf87fd8e7d647fb5673d23338d9ce8b",
+      "target/checks/2026-11-13T144506607769Z-next10-generics/candidate/generics/Label.class": "8dba255ca600844d3796970405f5ac7609f3edf869ae5799e03655f14437ea7c"
+    }
+  },
+  "counts": {
+    "pass": 13,
+    "invalid_rejected": 12,
+    "unsupported_language": 14
+  },
+  "feature_acceptance": {
+    "family": "source_classifier_variance_and_interface_bounds",
+    "status": "passed",
+    "derived_counts": {
+      "pass": 13,
+      "invalid_rejected": 12,
+      "unsupported_language": 14
+    }
+  }
+}

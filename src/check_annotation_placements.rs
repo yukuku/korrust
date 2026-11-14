@@ -1,6 +1,83 @@
 use super::*;
 use crate::bytecode::annotation_files::{ClassAnnotations, MemberAnnotations};
 
+pub(crate) fn validated_jvm_name(annotation: &syntax::AnnotationUse) -> Result<String> {
+    let invalid = || {
+        Diagnostic::new(
+            annotation.offset,
+            "JvmName requires one String name argument",
+        )
+        .with_kind(
+            crate::DiagnosticKind::InvalidKotlin,
+            "JVM_NAME_ARGUMENT_INVALID",
+        )
+    };
+    let [(argument, expression)] = annotation.arguments.as_slice() else {
+        return Err(invalid());
+    };
+    if argument.as_deref().is_some_and(|name| name != "name") {
+        return Err(invalid());
+    }
+    let ExprKind::String(units) = &expression.kind else {
+        return Err(invalid());
+    };
+    let name = String::from_utf16(units).map_err(|_| invalid())?;
+    if name.is_empty() || name.contains(['.', ';', '[', '/', '<', '>', ':', '\\']) {
+        return Err(
+            Diagnostic::new(annotation.offset, "Invalid JVM facade name")
+                .with_kind(crate::DiagnosticKind::InvalidKotlin, "JVM_NAME_INVALID"),
+        );
+    }
+    if !name.bytes().enumerate().all(|(index, byte)| {
+        byte.is_ascii_alphabetic()
+            || matches!(byte, b'_' | b'$')
+            || index != 0 && byte.is_ascii_digit()
+    }) {
+        return Err(Diagnostic::new(
+            annotation.offset,
+            "Nonidentifier JVM facade names are unsupported",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "JVM_NAME_UNSUPPORTED",
+        ));
+    }
+    Ok(name)
+}
+
+pub(crate) fn file_jvm_name(
+    module: &syntax::Module,
+    classpath: &Classpath,
+) -> Result<Option<String>> {
+    let imports = crate::annotation_declarations::imports(module, classpath)?;
+    let mut result = None;
+    for annotation in &module.file_annotations {
+        let owner = annotations::annotation_owner(&annotation.name, classpath, &imports);
+        if owner == "kotlin/jvm/JvmMultifileClass"
+            || owner == "JvmMultifileClass" && !imports.contains_key("JvmMultifileClass")
+        {
+            return Err(
+                Diagnostic::new(annotation.offset, "Multifile facades are unsupported").with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "ANNOTATION_JVM_LOWERING_UNSUPPORTED",
+                ),
+            );
+        }
+        if owner == "kotlin/jvm/JvmName" || owner == "JvmName" && !imports.contains_key("JvmName") {
+            if result.is_some() {
+                return Err(
+                    Diagnostic::new(annotation.offset, "Repeated JvmName annotation").with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "REPEATED_ANNOTATION_INVALID",
+                    ),
+                );
+            }
+            result = Some(validated_jvm_name(annotation)?);
+        }
+    }
+    Ok(result)
+}
+
 pub(super) fn preflight_property_visibility(
     module: &syntax::Module,
     classpath: &Classpath,
@@ -102,6 +179,10 @@ pub(crate) fn preflight_file_annotation_semantics(
                 "FILE_ANNOTATION_SEMANTICS_UNSUPPORTED",
             ));
         }
+        if canonical == "kotlin/jvm/JvmName" {
+            validated_jvm_name(annotation)?;
+            continue;
+        }
         if let Some(code) = annotations::unsupported_lowering(&canonical) {
             return Err(Diagnostic::new(
                 annotation.offset,
@@ -123,8 +204,17 @@ pub(crate) fn file_annotations(
         return Ok(Vec::new());
     }
     let imports = crate::annotation_declarations::imports(module, classpath)?;
+    let mut file_annotations = module.file_annotations.clone();
+    for annotation in &mut file_annotations {
+        if annotation.name == "JvmName"
+            && !imports.contains_key("JvmName")
+            && classpath.load("JvmName").is_err()
+        {
+            annotation.name = "kotlin/jvm/JvmName".into();
+        }
+    }
     annotations::declaration_annotations(
-        &module.file_annotations,
+        &file_annotations,
         classpath,
         &imports,
         "FILE",

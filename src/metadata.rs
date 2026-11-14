@@ -599,6 +599,7 @@ fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<
         Type::Double => "kotlin/Double",
         Type::IntArray => "kotlin/IntArray",
         Type::ByteArray => "kotlin/ByteArray",
+        Type::ShortArray => "kotlin/ShortArray",
         Type::CharArray => "kotlin/CharArray",
         Type::LongArray => "kotlin/LongArray",
         Type::BooleanArray => "kotlin/BooleanArray",
@@ -1063,8 +1064,15 @@ fn class_metadata(
         let mut constructor = Proto::default();
         constructor.number(
             1,
-            (if class.sealed_ { 4 } else { 6 })
-                | u32::from(!class.constructor_annotations.is_empty()),
+            (if class.sealed_ {
+                4
+            } else {
+                match class.constructor_visibility {
+                    0 => 0,
+                    2 => 2,
+                    _ => 6,
+                }
+            }) | u32::from(!class.constructor_annotations.is_empty()),
         );
         let mut constructor_desc = String::from("(");
         if class.inner {
@@ -1147,7 +1155,11 @@ fn class_metadata(
                 } else {
                     0
                 },
-                0,
+                u32::from(
+                    checked.is_some_and(|class| {
+                        class.operator_offsets.contains(&method.function.offset)
+                    }),
+                ) * 256,
                 checked_method_name(
                     &method.function,
                     checked.into_iter().flat_map(|class| class.methods.iter()),
@@ -1944,7 +1956,14 @@ fn classifier_parameters(
         let mut declaration = Proto::default();
         declaration.number(1, index as u32);
         declaration.number(2, strings.id(&parameter.name)?);
-        declaration.number(4, 2);
+        declaration.number(
+            4,
+            match parameter.variance {
+                Variance::In => 0,
+                Variance::Out => 1,
+                Variance::Invariant => 2,
+            },
+        );
         for bound in &parameter.bounds {
             declaration.message(5, &type_proto(bound, imports, strings)?);
         }
@@ -2015,7 +2034,9 @@ fn interface_metadata(
             &function_with_jvm_name(
                 &method.function,
                 if method.has_body { 16 } else { 32 },
-                0,
+                u32::from(checked.is_some_and(|interface| {
+                    interface.operator_offsets.contains(&method.function.offset)
+                })) * 256,
                 checked_method_name(
                     &method.function,
                     checked.into_iter().flat_map(|interface| {
@@ -3034,6 +3055,7 @@ fn annotation_value_proto(
                             Type::Unit => "kotlin/Unit",
                             Type::IntArray => "kotlin/IntArray",
                             Type::ByteArray => "kotlin/ByteArray",
+                            Type::ShortArray => "kotlin/ShortArray",
                             Type::CharArray => "kotlin/CharArray",
                             Type::LongArray => "kotlin/LongArray",
                             Type::FloatArray => "kotlin/FloatArray",

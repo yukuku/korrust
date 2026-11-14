@@ -346,7 +346,8 @@ impl Checker<'_> {
         let mut checker = Checker {
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
-            public_inline_body: false,
+            public_inline_body: self.public_inline_body,
+            constructor_bridge_context: true,
             reified_parameters: self.reified_parameters.clone(),
             exhaustiveness_flow: false,
             extension_receivers: Vec::new(),
@@ -874,6 +875,7 @@ mod shadowing_tests {
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
             public_inline_body: false,
+            constructor_bridge_context: false,
             reified_parameters: Vec::new(),
             exhaustiveness_flow: false,
             extension_receivers: Vec::new(),

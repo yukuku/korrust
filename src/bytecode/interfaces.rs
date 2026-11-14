@@ -1026,6 +1026,7 @@ fn interface_classes(
     let mut builder = Builder::new(&interface.owner, 52, 0x0601, &interface.interfaces)?;
     if let Some(signature) = classifier_signature(
         &interface.type_params,
+        &interface.interface_bound_parameters,
         &interface.super_types,
         "java/lang/Object",
         &interface.interfaces,

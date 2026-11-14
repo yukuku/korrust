@@ -1,0 +1,2181 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-13T14:35:17.911964+00:00",
+  "status": "pass_with_oracle_discrepancy",
+  "compiler": {
+    "path": "/workspace/korrust/target/next10-final/korrust",
+    "sha256": "9801a13f169d58c664840a35a798a36fbb508a1ab86cb96a4343bfe94ec7575c",
+    "source_root": "/workspace/korrust"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "frozen_input_hashes": {
+    "src/annotation_declarations.rs": "b7ba6c2401dd4090052753fcc5ccfea5ba1cc9fdcb080ba5aea8c5528cf4dbbb",
+    "src/bytecode.rs": "a55bc1890322cc755388800544ba2bfd985692d5cb31f0aa5361b7a6623c9f28",
+    "src/check.rs": "7e2e5685c172dd5a6b6435703c0ed9b84f59db284e2002e973de5615b6183903",
+    "src/check_annotation_placements.rs": "123f45e4d08f40c4c0690a8efe0661fee5856b5592e39966e8e7e3e1eb0e75df",
+    "src/check_annotations.rs": "08c9bea49b58b8733f83af8d97a7f78f0f248b375fa78219ef213cc056ad724e",
+    "src/check_anonymous.rs": "9cc85a53a05a45b5778e4a9eb0f4c7f373759dac4315714b087c8a6930aca6af",
+    "src/check_captures.rs": "39e01f723eeed492e9de7917db479f811b745130fb469cfb82b6052393f2be6c",
+    "src/check_class_delegation.rs": "28e66569cf5785ba2518003200e741627a2f83090743b6d0952ed54691bdcfc9",
+    "src/check_classes.rs": "942b008b2ecd2d7db9644dddef7e0907d292f4a9c399d82e814819f47d3e1667",
+    "src/check_control.rs": "20217036bb5211fa30e7a3b675f494d9987fa9bc9b47ff02e0e8a718ccd73f85",
+    "src/check_declarations.rs": "5b9a20fd44e443319f6ba9a939ab038a86f7ab5ccae40db654410eb941f06d52",
+    "src/check_delegates.rs": "094b9bdc43d4cecb0fb3dcef1681181f8e7737804f3808582192b3190d01dc92",
+    "src/check_enums.rs": "2a16c9e4dbae29a8c479ab5cddefad66f0bdd09143e2a0cde8428d2d0c174d8b",
+    "src/check_functions.rs": "d6a2197838ef8c26afc6eacdbfaf95a36f45bb35972bf3fff80a0c8515d1db55",
+    "src/check_inner_classes.rs": "60a4cdbfef5b069e0312c3ea7511b0de6a862d20ff393c464ea080968aa233cd",
+    "src/check_interfaces.rs": "f624d8decf0846fd48d3a1178068af6468c10abe594dec62d310772893444d3c",
+    "src/check_ir_walk.rs": "e9ebf5f463c133576ccdaca026b716abda1381caeb72f409e90461d4f652c535",
+    "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+    "src/check_library.rs": "47598d38f3bd79280dbbdb28cb662057cbc21f047a7fb7e37d7eaff31692ac48",
+    "src/check_member_extensions.rs": "c97b70cbd56da4588817a5cdd294cb724009feee3abbcb29a5dde2846bb8d3f9",
+    "src/check_objects.rs": "f04db0150cc0022c27261afbce0c09ed8d75e67da7e97add354ea33be0cfd255",
+    "src/check_operations.rs": "02cfbebb8d991ea01e6c622b51e9f2687b9849edd1e488a7a5697b91fafe94ef",
+    "src/check_overloads.rs": "d418fb5ed0880483b5d6ac58ce8093d0eb13804ff1b4176e19abd4b1a3e589cd",
+    "src/check_references.rs": "3a4fd327b7a13f48e69d5fbd059c76cbb8d2ce50ae2e140a762a06d9e1e6eab8",
+    "src/check_relations.rs": "6b1dea3cc13ceb6d435680504f8eda2eb4002be8b3f3b37f728ec19f7892167e",
+    "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+    "src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+    "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+    "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+    "src/classpath.rs": "d107b7dadf4a15cbe07f20584b7de32aec6e01eab5041f7bb67475ff6b978e91",
+    "src/compiled_inline.rs": "06250c79ae618989985360ced0235cca4628f0f7c4d92630a00295d217310102",
+    "src/const_eval.rs": "6714c1d6296d1c3f60fab09891a492f66a9850b3ff3ee2b5a7df42400dfdcdaa",
+    "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+    "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+    "src/jvm_descriptor.rs": "e927f44c7912679ce22ad08ff5734dfd8a496047f0e56d35f891c317fb65dff3",
+    "src/lib.rs": "08ad23d77457218fb1cb36b1bd1cfd779e76095d04e606f80a8e1ea675b65aa5",
+    "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+    "src/metadata.rs": "521a188de65380a7bacb3a4882d664483b2ae6131a44b178516f5f4e69ae1777",
+    "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+    "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+    "src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+    "src/syntax.rs": "7b49182679134a78a3e598c948cc78167a6819cc01714c21453def2fe7568e57",
+    "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+    "src/visibility.rs": "0268165a314fe1a169d5604fdda38968b0bbda07f11c60db92d36a7247f879c7",
+    "src/check_variant_signatures.rs": "3c4105a50dc37f7102176ffe5a6cba014b65ca1d655bb33aad6e2d030f70b529",
+    "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+    "src/bytecode/annotation_files.rs": "4f3c136aaa2ed30b85d2a4cc2a9be8331b2da9682d450f6a4dcc135ef04ab86a",
+    "src/bytecode/annotations.rs": "397e6b298ce180be4f6e733e2240da2f23f36bc975be46e5700ced1162d9741c",
+    "src/bytecode/class_companion.rs": "a5756a0c46cc33fa449bebe330ef5748789da70b4b941c21c7f72aa923802fc2",
+    "src/bytecode/data.rs": "c99cb60546cbe8873ef99d1ab057aa7439f4239fce13927d324dfea078dbe98c",
+    "src/bytecode/defaults.rs": "89f6967a6689b515d7b86e06bcf59f1bf036a690de083b525af28ad03e27ea8e",
+    "src/bytecode/enums.rs": "25fe788c54554741347ba6bb4b84cbee7c324db6925209a434fb139ceb66b2b1",
+    "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+    "src/bytecode/inline.rs": "cf4c6be5860614d14d0d73e8b555aeaba4e8ef8158aee3876fce450171a98740",
+    "src/bytecode/interfaces.rs": "f56b5c0666e9647fddc5b3d1f5fd39e6d5a155c588201ed590639cfe624f31de",
+    "src/bytecode/lambdas.rs": "8549a0b7885e8a2ee4fcdf1786da263f7a4614755a90a7770a87e69ec81704fd",
+    "src/bytecode/objects.rs": "142f8e5c70f0ac61423c3887447c54865b7b657768cf683fc553fde398a17e7e",
+    "src/bytecode/suspend.rs": "79e1064dd35da268956f91b167a779ce0957cefa8fef629789a2fb3afee987b7",
+    "src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+    "src/classpath/aliases.rs": "745fa67edb3216b77ce5e65f63b75c51ac221f5b49d3e08a4327990bd9e6f4c5",
+    "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+    "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+    "src/classpath/metadata.rs": "40d0d0fba0a23ae2b26c7b67975843038c9032c9326bdc1e09ad3f29f5c46bf2",
+    "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+    "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+    "src/classpath/signature.rs": "657d42ef3c16ac5fb01ae3748e19e814c9ccbc4b9487366f950a04ed639b0e46",
+    "src/classpath/source.rs": "fa9d2391fd63c75f8f18c604cb0be346e45a26375ddf7d7535fb6db4c714cc6e",
+    "src/classpath/source_enums.rs": "3366b5ad4fc96e61e95b398e72dbb6c6a3de8e734247b6e7cdba7d937ef527f4",
+    "src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+    "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+    "tests/next10_jvm/MetadataCheck.java": "290db36498134f31ed98c07784e15e77b5fec194f8c046b04ee7183217b4627c",
+    "tests/next10_jvm/PrivateAliasBad.kt": "573b9b7b79688a6ba486046fd54c59074f0759e3fb5d3a01cc5276b537165f62",
+    "tests/next10_jvm/PrivateBad.kt": "6af002444206c7607d000ca580224907dc672030c65bae823593e2df2fd22c77",
+    "tests/next10_jvm/Rename.kt": "a7e90593ad38851ee737e6553faf0b292834f8f894c633fd5a9a11e3ab08aef7",
+    "tests/next10_jvm/ShadowAlias.kt": "8d084a34b4136da1db2c5464ccfb84dfbf8d2d69758712fd94c238f674679074",
+    "tests/next10_jvm/Classes.kt": "ee9bc8cc75720c33e04a94f9cebf2f2820e67f079fcf7887cb25d10ff6fec80b",
+    "tests/next10_jvm/Rejections.json": "0ecc2f85d84ddeee14c62eeca6d181f0cc33e7708b7955b3c9c860b5f93c764c",
+    "tests/next10_jvm/CrossFile.kt": "1ca6a5d5ab62bf2430958016ab171f062a40c5412e15c0c42c349a331bde19d6",
+    "tests/next10_jvm/ShadowDefinition.kt": "290b568b615c24239a1ed4a4520d685c860429b68e9398f47b2713744e1ae36a",
+    "tests/next10_jvm/ShadowUse.kt": "33124e9e2b582034c33502d96fbe926d7037a6cd909d3b919dfdd277f82dda78",
+    "tests/next10_jvm/JavaCaller.java": "8237349582da98b806ab7332eea0b0772ff38a02d0d93c7ec7ea1dcb93265fb9",
+    "tests/next10_jvm/Named.kt": "3bc4a17d4e867a279b763d37f306dfa352abe097f5a4af859dbf7bcaf789c33b",
+    "tests/next10_jvm/Folded.kt": "8103db8f16f4a55a81967d70134f780758606e90aa358b74c82025133a48960e",
+    "tests/next10_jvm/Friend.kt": "cbbf0a2144f5c946bfdc7ca05c0ee5f656f27e9308cde2818206f133b7cb34fe",
+    "tests/next10_jvm/ShadowWildcard.kt": "674d812f8d90c9093c9bbe24ab751a06f99c1144f49082932f6460f78dffb950",
+    "tests/next10_jvm/Consumer.kt": "03364dd74c293cdab1edc0c67f8e22f95a5db65e806039c7edbc78fd7ce66ac4",
+    "tests/next10_jvm.rs": "72e4a85f13ccc2b2096f53b1d4435ccb17e5ad792e82a8a77a36d4210894eb7b",
+    "tools/check_next10_jvm.py": "852ff47fc91d5d9c95df31812ae0775c928e56e88725b3a52ea13523baadb2bd",
+    "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+    "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+    "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "references/kotlin/compiler/ir/backend.jvm/lower/src/org/jetbrains/kotlin/backend/jvm/lower/FileClassLowering.kt": "15521a7a38139c07d5f7270603220c0e6de9b7a093aa75bd80d8a0bea51d2d9f",
+    "references/kotlin/compiler/frontend.common.jvm/src/org/jetbrains/kotlin/fileClasses/JvmFileClassUtil.kt": "c90792a3d3760e48a185c6fba439353f797e2eac6d45bfbe52214667efcf4469",
+    "references/kotlin-spec/docs/src/md/kotlin.core/declarations.md": "2ed0769a437144f01c290e6a11688a2b846bdb7babcbb16d1ee2c5d26fe2b404",
+    "target/next10-final/korrust": "9801a13f169d58c664840a35a798a36fbb508a1ab86cb96a4343bfe94ec7575c",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "environment": {
+    "JAVA_HOME": "/workspace/korrust-setup/jdk-21"
+  },
+  "commands": [
+    {
+      "label": "JDK identity",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-version"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/000-stderr.txt"
+    },
+    {
+      "label": "Pinned Kotlin identity",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/001-stderr.txt"
+    },
+    {
+      "label": "Official provider",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_jvm/Named.kt",
+        "/workspace/korrust/tests/next10_jvm/Classes.kt",
+        "/workspace/korrust/tests/next10_jvm/CrossFile.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next_jvm"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/002-stderr.txt"
+    },
+    {
+      "label": "Candidate provider",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/tests/next10_jvm/Named.kt",
+        "/workspace/korrust/tests/next10_jvm/Classes.kt",
+        "/workspace/korrust/tests/next10_jvm/CrossFile.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/003-stderr.txt"
+    },
+    {
+      "label": "official facade annotation",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official",
+        "nextjvm.api.StableApi"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/004-stderr.txt"
+    },
+    {
+      "label": "candidate facade annotation",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate",
+        "nextjvm.api.StableApi"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/005-stderr.txt"
+    },
+    {
+      "label": "official public signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official",
+        "nextjvm.api.StableApi",
+        "nextjvm.api.Secret",
+        "nextjvm.api.Secret$Companion",
+        "nextjvm.api.Secret$Nested",
+        "nextjvm.api.ModuleOnly",
+        "nextjvm.cross.CrossFileKt"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/006-stderr.txt"
+    },
+    {
+      "label": "candidate public signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate",
+        "nextjvm.api.StableApi",
+        "nextjvm.api.Secret",
+        "nextjvm.api.Secret$Companion",
+        "nextjvm.api.Secret$Nested",
+        "nextjvm.api.ModuleOnly",
+        "nextjvm.cross.CrossFileKt"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/007-stderr.txt"
+    },
+    {
+      "label": "Compile Java caller once against official provider",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-compiler.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/java",
+        "/workspace/korrust/tests/next10_jvm/JavaCaller.java",
+        "/workspace/korrust/tests/next10_jvm/MetadataCheck.java"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/008-stderr.txt"
+    },
+    {
+      "label": "official Java runtime",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/java:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "JavaCaller"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/009-stderr.txt"
+    },
+    {
+      "label": "official metadata assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/java:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-compiler.jar",
+        "MetadataCheck"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/010-stderr.txt"
+    },
+    {
+      "label": "Official Kotlin consumer of official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_jvm/Consumer.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/011-stderr.txt"
+    },
+    {
+      "label": "official consumer run with official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-consumer-official:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "nextjvm.consumer.ConsumerKt"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/012-stderr.txt"
+    },
+    {
+      "label": "Candidate Kotlin consumer of official",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/tests/next10_jvm/Consumer.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-consumer-official",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/013-stderr.txt"
+    },
+    {
+      "label": "candidate consumer run with official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-consumer-official:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "nextjvm.consumer.ConsumerKt"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/014-stderr.txt"
+    },
+    {
+      "label": "Official friend consumer of official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_jvm/Friend.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-friend-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official",
+        "-Xfriend-paths=/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/015-stderr.txt"
+    },
+    {
+      "label": "official friend run with official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-friend-official:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "nextjvm.consumer.FriendKt"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/016-stderr.txt"
+    },
+    {
+      "label": "Candidate friend consumer of official",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/tests/next10_jvm/Friend.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-friend-official",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official",
+        "--diagnostic-format",
+        "json",
+        "--friend-paths",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/017-stderr.txt"
+    },
+    {
+      "label": "candidate friend run with official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-friend-official:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "nextjvm.consumer.FriendKt"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/018-stderr.txt"
+    },
+    {
+      "label": "Official nonfriend access official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_jvm/Friend.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/reject-official-official"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/019-stderr.txt"
+    },
+    {
+      "label": "Candidate nonfriend access official",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/tests/next10_jvm/Friend.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/reject-candidate-official",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/020-stderr.txt"
+    },
+    {
+      "label": "Official compiled private access official/PrivateBad.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_jvm/PrivateBad.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-official-officialPrivateBad.kt"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/021-stderr.txt"
+    },
+    {
+      "label": "Candidate compiled private access official/PrivateBad.kt",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/tests/next10_jvm/PrivateBad.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-candidate-officialPrivateBad.kt",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/022-stderr.txt"
+    },
+    {
+      "label": "Official compiled private access official/PrivateAliasBad.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_jvm/PrivateAliasBad.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-official-officialPrivateAliasBad.kt"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/023-stderr.txt"
+    },
+    {
+      "label": "Candidate compiled private access official/PrivateAliasBad.kt",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/tests/next10_jvm/PrivateAliasBad.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-candidate-officialPrivateAliasBad.kt",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/024-stderr.txt"
+    },
+    {
+      "label": "candidate Java runtime",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/java:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "JavaCaller"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/025-stderr.txt"
+    },
+    {
+      "label": "candidate metadata assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/java:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-compiler.jar",
+        "MetadataCheck"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/026-stderr.txt"
+    },
+    {
+      "label": "Official Kotlin consumer of candidate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_jvm/Consumer.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/027-stderr.txt"
+    },
+    {
+      "label": "official consumer run with candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-consumer-candidate:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "nextjvm.consumer.ConsumerKt"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/028-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/028-stderr.txt"
+    },
+    {
+      "label": "Candidate Kotlin consumer of candidate",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/tests/next10_jvm/Consumer.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-consumer-candidate",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/029-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/029-stderr.txt"
+    },
+    {
+      "label": "candidate consumer run with candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-consumer-candidate:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "nextjvm.consumer.ConsumerKt"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/030-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/030-stderr.txt"
+    },
+    {
+      "label": "Official friend consumer of candidate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_jvm/Friend.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-friend-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate",
+        "-Xfriend-paths=/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/031-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/031-stderr.txt"
+    },
+    {
+      "label": "official friend run with candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-friend-candidate:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "nextjvm.consumer.FriendKt"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/032-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/032-stderr.txt"
+    },
+    {
+      "label": "Candidate friend consumer of candidate",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/tests/next10_jvm/Friend.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-friend-candidate",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate",
+        "--diagnostic-format",
+        "json",
+        "--friend-paths",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/033-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/033-stderr.txt"
+    },
+    {
+      "label": "candidate friend run with candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-friend-candidate:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "nextjvm.consumer.FriendKt"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/034-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/034-stderr.txt"
+    },
+    {
+      "label": "Official nonfriend access candidate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_jvm/Friend.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/reject-official-candidate"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/035-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/035-stderr.txt"
+    },
+    {
+      "label": "Candidate nonfriend access candidate",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/tests/next10_jvm/Friend.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/reject-candidate-candidate",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/036-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/036-stderr.txt"
+    },
+    {
+      "label": "Official compiled private access candidate/PrivateBad.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_jvm/PrivateBad.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-official-candidatePrivateBad.kt"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/037-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/037-stderr.txt"
+    },
+    {
+      "label": "Candidate compiled private access candidate/PrivateBad.kt",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/tests/next10_jvm/PrivateBad.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-candidate-candidatePrivateBad.kt",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/038-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/038-stderr.txt"
+    },
+    {
+      "label": "Official compiled private access candidate/PrivateAliasBad.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_jvm/PrivateAliasBad.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-official-candidatePrivateAliasBad.kt"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/039-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/039-stderr.txt"
+    },
+    {
+      "label": "Candidate compiled private access candidate/PrivateAliasBad.kt",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/tests/next10_jvm/PrivateAliasBad.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-candidate-candidatePrivateAliasBad.kt",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/040-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/040-stderr.txt"
+    },
+    {
+      "label": "Official canonical and shadowed annotations",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_jvm/ShadowDefinition.kt",
+        "/workspace/korrust/tests/next10_jvm/ShadowUse.kt",
+        "/workspace/korrust/tests/next10_jvm/ShadowAlias.kt",
+        "/workspace/korrust/tests/next10_jvm/ShadowWildcard.kt",
+        "/workspace/korrust/tests/next10_jvm/Folded.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/shadow-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next_jvm"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/041-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/041-stderr.txt"
+    },
+    {
+      "label": "official custom JvmName identity marks.NotAFacade",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/shadow-official",
+        "marks.NotAFacade"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/042-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/042-stderr.txt"
+    },
+    {
+      "label": "official custom JvmName identity shadowalias.NotAFacadeEither",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/shadow-official",
+        "shadowalias.NotAFacadeEither"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/043-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/043-stderr.txt"
+    },
+    {
+      "label": "official custom JvmName identity shadowwildcard.NotAWildcardFacade",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/shadow-official",
+        "shadowwildcard.NotAWildcardFacade"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/044-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/044-stderr.txt"
+    },
+    {
+      "label": "Candidate canonical and shadowed annotations",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/tests/next10_jvm/ShadowDefinition.kt",
+        "/workspace/korrust/tests/next10_jvm/ShadowUse.kt",
+        "/workspace/korrust/tests/next10_jvm/ShadowAlias.kt",
+        "/workspace/korrust/tests/next10_jvm/ShadowWildcard.kt",
+        "/workspace/korrust/tests/next10_jvm/Folded.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/shadow-candidate",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/045-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/045-stderr.txt"
+    },
+    {
+      "label": "candidate custom JvmName identity marks.ShadowUseKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/shadow-candidate",
+        "marks.ShadowUseKt"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/046-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/046-stderr.txt"
+    },
+    {
+      "label": "candidate custom JvmName identity shadowalias.ShadowAliasKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/shadow-candidate",
+        "shadowalias.ShadowAliasKt"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/047-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/047-stderr.txt"
+    },
+    {
+      "label": "candidate custom JvmName identity shadowwildcard.ShadowWildcardKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/shadow-candidate",
+        "shadowwildcard.ShadowWildcardKt"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/048-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/048-stderr.txt"
+    },
+    {
+      "label": "Facade initial owned output",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/Rename.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/incremental",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/049-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/049-stderr.txt"
+    },
+    {
+      "label": "Facade renamed owned output",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/Rename.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/incremental",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/050-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/050-stderr.txt"
+    },
+    {
+      "label": "Facade renamed clean output",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/Rename.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/clean",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/051-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/051-stderr.txt"
+    },
+    {
+      "label": "Facade annotation removed owned output",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/Rename.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/incremental",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/052-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/052-stderr.txt"
+    },
+    {
+      "label": "Official boundary private-outside",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-outside.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-private-outside"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/053-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/053-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary private-outside",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-outside.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-private-outside",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/054-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/054-stderr.txt"
+    },
+    {
+      "label": "Official boundary private-alias",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-alias.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-private-alias"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/055-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/055-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary private-alias",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-alias.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-private-alias",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/056-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/056-stderr.txt"
+    },
+    {
+      "label": "Official boundary outer-cannot-construct-nested",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/outer-cannot-construct-nested.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-outer-cannot-construct-nested"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/057-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/057-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary outer-cannot-construct-nested",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/outer-cannot-construct-nested.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-outer-cannot-construct-nested",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/058-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/058-stderr.txt"
+    },
+    {
+      "label": "Official boundary inline-private-constructor",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/inline-private-constructor.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-inline-private-constructor"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/059-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/059-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary inline-private-constructor",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/inline-private-constructor.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-inline-private-constructor",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/060-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/060-stderr.txt"
+    },
+    {
+      "label": "Official boundary inline-private-lambda",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/inline-private-lambda.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-inline-private-lambda"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/061-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/061-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary inline-private-lambda",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/inline-private-lambda.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-inline-private-lambda",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/062-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/062-stderr.txt"
+    },
+    {
+      "label": "Official boundary private-default",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-default.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-private-default"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/063-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/063-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary private-default",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-default.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-private-default",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/064-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/064-stderr.txt"
+    },
+    {
+      "label": "Official boundary internal-default",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/internal-default.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-internal-default"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/065-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/065-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary internal-default",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/internal-default.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-internal-default",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/066-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/066-stderr.txt"
+    },
+    {
+      "label": "Official boundary protected",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/protected.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-protected"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/067-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/067-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary protected",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/protected.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-protected",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/068-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/068-stderr.txt"
+    },
+    {
+      "label": "Official boundary private-generic",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-generic.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-private-generic"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/069-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/069-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary private-generic",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-generic.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-private-generic",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/070-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/070-stderr.txt"
+    },
+    {
+      "label": "Official boundary constructor-reference",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/constructor-reference.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-constructor-reference"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/071-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/071-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary constructor-reference",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/constructor-reference.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-constructor-reference",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/072-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/072-stderr.txt"
+    },
+    {
+      "label": "Official boundary multifile",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/multifile.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-multifile"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/073-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/073-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary multifile",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/multifile.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-multifile",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/074-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/074-stderr.txt"
+    },
+    {
+      "label": "Official boundary member-name",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/member-name.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-member-name"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/075-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/075-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary member-name",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/member-name.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-member-name",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/076-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/076-stderr.txt"
+    },
+    {
+      "label": "Official boundary name-wrong-type",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/name-wrong-type.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-name-wrong-type"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/077-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/077-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary name-wrong-type",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/name-wrong-type.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-name-wrong-type",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/078-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/078-stderr.txt"
+    },
+    {
+      "label": "Official boundary name-wrong-argument",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/name-wrong-argument.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-name-wrong-argument"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/079-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/079-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary name-wrong-argument",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/name-wrong-argument.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-name-wrong-argument",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/080-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/080-stderr.txt"
+    },
+    {
+      "label": "Official boundary name-duplicate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/name-duplicate.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-name-duplicate"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/081-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/081-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary name-duplicate",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/name-duplicate.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-name-duplicate",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/082-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/082-stderr.txt"
+    },
+    {
+      "label": "Official boundary name-nonidentifier",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/name-nonidentifier.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-name-nonidentifier"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/083-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/083-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary name-nonidentifier",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/name-nonidentifier.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-name-nonidentifier",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/084-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/084-stderr.txt"
+    },
+    {
+      "label": "Official boundary conflicting-constructor-visibility",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/conflicting-constructor-visibility.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-conflicting-constructor-visibility"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/085-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/085-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary conflicting-constructor-visibility",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/conflicting-constructor-visibility.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-conflicting-constructor-visibility",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/086-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/086-stderr.txt"
+    },
+    {
+      "label": "Official boundary explicit-enum-constructor",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/explicit-enum-constructor.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-explicit-enum-constructor"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/087-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/087-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary explicit-enum-constructor",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/explicit-enum-constructor.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-explicit-enum-constructor",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/088-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/088-stderr.txt"
+    },
+    {
+      "label": "Official boundary private-value-parameter",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-value-parameter.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-private-value-parameter"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/089-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/089-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary private-value-parameter",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-value-parameter.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-private-value-parameter",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/090-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/090-stderr.txt"
+    },
+    {
+      "label": "Official boundary annotation-source-typealias",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/annotation-source-typealias.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-annotation-source-typealias"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/091-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/091-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary annotation-source-typealias",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/annotation-source-typealias.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-annotation-source-typealias",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/092-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/092-stderr.txt"
+    },
+    {
+      "label": "Official boundary inline-internal-constructor",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/inline-internal-constructor.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-inline-internal-constructor"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/093-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/093-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary inline-internal-constructor",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/inline-internal-constructor.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-inline-internal-constructor",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/094-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/094-stderr.txt"
+    },
+    {
+      "label": "Official boundary inline-internal-lambda",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/inline-internal-lambda.kt",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/official-boundary-inline-internal-lambda"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/095-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/095-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary inline-internal-lambda",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/inline-internal-lambda.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/candidate-boundary-inline-internal-lambda",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/096-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/096-stderr.txt"
+    },
+    {
+      "label": "Official duplicate facade",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/A.kt",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/B.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/collision-official"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/097-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/097-stderr.txt"
+    },
+    {
+      "label": "Candidate duplicate facade",
+      "argv": [
+        "/workspace/korrust/target/next10-final/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/A.kt",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/B.kt",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/collision-candidate",
+        "--module-name",
+        "next_jvm",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json"
+      ],
+      "returncode": 1,
+      "stdout": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/098-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T143517911964Z-next10-jvm/098-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "provider/source-compilation",
+      "outcome": "pass"
+    },
+    {
+      "id": "provider/jvm-signatures-facade-mapping",
+      "outcome": "pass"
+    },
+    {
+      "id": "provider/official/java-runtime-metadata",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/official-against-official",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/candidate-against-official",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/friend-official-against-official",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/friend-candidate-against-official",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/nonfriend-official",
+      "outcome": "invalid_kotlin",
+      "code": "INACCESSIBLE_CONSTRUCTOR"
+    },
+    {
+      "id": "consumer/private-official/PrivateBad.kt",
+      "outcome": "invalid_kotlin",
+      "code": "INACCESSIBLE_CONSTRUCTOR"
+    },
+    {
+      "id": "consumer/private-official/PrivateAliasBad.kt",
+      "outcome": "invalid_kotlin",
+      "code": "INACCESSIBLE_CONSTRUCTOR"
+    },
+    {
+      "id": "provider/candidate/java-runtime-metadata",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/official-against-candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/candidate-against-candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/friend-official-against-candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/friend-candidate-against-candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/nonfriend-candidate",
+      "outcome": "invalid_kotlin",
+      "code": "INACCESSIBLE_CONSTRUCTOR"
+    },
+    {
+      "id": "consumer/private-candidate/PrivateBad.kt",
+      "outcome": "invalid_kotlin",
+      "code": "INACCESSIBLE_CONSTRUCTOR"
+    },
+    {
+      "id": "consumer/private-candidate/PrivateAliasBad.kt",
+      "outcome": "invalid_kotlin",
+      "code": "INACCESSIBLE_CONSTRUCTOR"
+    },
+    {
+      "id": "facade/canonical-folded-official",
+      "outcome": "pass"
+    },
+    {
+      "id": "facade/custom-name-oracle-discrepancy",
+      "outcome": "oracle_discrepancy",
+      "official_facades": [
+        "marks/NotAFacade.class",
+        "shadowalias/NotAFacadeEither.class",
+        "shadowwildcard/NotAWildcardFacade.class"
+      ],
+      "canonical_identity_expected_facades": [
+        "marks/ShadowUseKt.class",
+        "shadowalias/ShadowAliasKt.class",
+        "shadowwildcard/ShadowWildcardKt.class"
+      ],
+      "evidence": "Official javap records marks.JvmName on each renamed class, including import aliases and wildcard imports.",
+      "resolution": "Preserve canonical identity and ordinary annotation retention; exclude this case from differential pass counts. Pinned IR FileClassLowering.kt:194-197 compares the annotation constructor parent class name only; the emitted annotation descriptor proves marks.JvmName identity. This is recorded as a suspected oracle bug, not adopted as language behavior."
+    },
+    {
+      "id": "facade/canonical-shadow-folded-candidate",
+      "outcome": "pass",
+      "verification": "Independent canonical annotation identity and facade-name assertions"
+    },
+    {
+      "id": "facade/owned-rename-removal-matches-clean",
+      "outcome": "pass"
+    },
+    {
+      "id": "boundary/private-outside",
+      "outcome": "invalid_kotlin",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-outside.kt",
+        "offset": 45,
+        "category": "invalid_kotlin",
+        "code": "INACCESSIBLE_CONSTRUCTOR",
+        "message": "Constructor is inaccessible",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-outside.kt",
+        "line": 2,
+        "column": 16
+      },
+      "oracle": "reject"
+    },
+    {
+      "id": "boundary/private-alias",
+      "outcome": "invalid_kotlin",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-alias.kt",
+        "offset": 61,
+        "category": "invalid_kotlin",
+        "code": "INACCESSIBLE_CONSTRUCTOR",
+        "message": "Constructor is inaccessible",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-alias.kt",
+        "line": 3,
+        "column": 16
+      },
+      "oracle": "reject"
+    },
+    {
+      "id": "boundary/outer-cannot-construct-nested",
+      "outcome": "invalid_kotlin",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/outer-cannot-construct-nested.kt",
+        "offset": 70,
+        "category": "invalid_kotlin",
+        "code": "INACCESSIBLE_CONSTRUCTOR",
+        "message": "Constructor is inaccessible",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/outer-cannot-construct-nested.kt",
+        "line": 1,
+        "column": 71
+      },
+      "oracle": "reject"
+    },
+    {
+      "id": "boundary/inline-private-constructor",
+      "outcome": "unsupported_language",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/inline-private-constructor.kt",
+        "offset": 51,
+        "category": "unsupported_language",
+        "code": "SOURCE_INLINE_CONTEXT_UNSUPPORTED",
+        "message": "Source member inline functions are unsupported",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/inline-private-constructor.kt",
+        "line": 1,
+        "column": 52
+      },
+      "oracle": "reject"
+    },
+    {
+      "id": "boundary/inline-private-lambda",
+      "outcome": "unsupported_language",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/inline-private-lambda.kt",
+        "offset": 51,
+        "category": "unsupported_language",
+        "code": "SOURCE_INLINE_CONTEXT_UNSUPPORTED",
+        "message": "Source member inline functions are unsupported",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/inline-private-lambda.kt",
+        "line": 1,
+        "column": 52
+      },
+      "oracle": "reject"
+    },
+    {
+      "id": "boundary/private-default",
+      "outcome": "unsupported_language",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-default.kt",
+        "offset": 0,
+        "category": "unsupported_language",
+        "code": "NONPUBLIC_CONSTRUCTOR_SHAPE_UNSUPPORTED",
+        "message": "Nonpublic constructors with defaults, annotations or secondary constructors are unsupported",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-default.kt",
+        "line": 1,
+        "column": 1
+      },
+      "oracle": "accept"
+    },
+    {
+      "id": "boundary/internal-default",
+      "outcome": "unsupported_language",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/internal-default.kt",
+        "offset": 0,
+        "category": "unsupported_language",
+        "code": "NONPUBLIC_CONSTRUCTOR_SHAPE_UNSUPPORTED",
+        "message": "Nonpublic constructors with defaults, annotations or secondary constructors are unsupported",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/internal-default.kt",
+        "line": 1,
+        "column": 1
+      },
+      "oracle": "accept"
+    },
+    {
+      "id": "boundary/protected",
+      "outcome": "unsupported_language",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/protected.kt",
+        "offset": 13,
+        "category": "unsupported_language",
+        "code": "CONSTRUCTOR_VISIBILITY_UNSUPPORTED",
+        "message": "Protected primary constructors are unsupported",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/protected.kt",
+        "line": 1,
+        "column": 14
+      },
+      "oracle": "accept"
+    },
+    {
+      "id": "boundary/private-generic",
+      "outcome": "unsupported_language",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-generic.kt",
+        "offset": 19,
+        "category": "unsupported_language",
+        "code": "NONPUBLIC_CONSTRUCTOR_SHAPE_UNSUPPORTED",
+        "message": "Nonpublic primary constructors require ordinary final nongeneric classes",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-generic.kt",
+        "line": 1,
+        "column": 20
+      },
+      "oracle": "accept"
+    },
+    {
+      "id": "boundary/constructor-reference",
+      "outcome": "unsupported_language",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/constructor-reference.kt",
+        "offset": 76,
+        "category": "unsupported_language",
+        "code": "CONSTRUCTOR_REFERENCE_UNSUPPORTED",
+        "message": "Constructor callable references are unsupported",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/constructor-reference.kt",
+        "line": 1,
+        "column": 77
+      },
+      "oracle": "accept"
+    },
+    {
+      "id": "boundary/multifile",
+      "outcome": "unsupported_language",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/multifile.kt",
+        "offset": 24,
+        "category": "unsupported_language",
+        "code": "ANNOTATION_JVM_LOWERING_UNSUPPORTED",
+        "message": "Multifile facades are unsupported",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/multifile.kt",
+        "line": 2,
+        "column": 1
+      },
+      "oracle": "accept"
+    },
+    {
+      "id": "boundary/member-name",
+      "outcome": "unsupported_language",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/member-name.kt",
+        "offset": 0,
+        "category": "unsupported_language",
+        "code": "ANNOTATION_JVM_LOWERING_UNSUPPORTED",
+        "message": "Annotation kotlin/jvm/JvmName requires unsupported Kotlin compiler annotation semantics",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/member-name.kt",
+        "line": 1,
+        "column": 1
+      },
+      "oracle": "accept"
+    },
+    {
+      "id": "boundary/name-wrong-type",
+      "outcome": "invalid_kotlin",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/name-wrong-type.kt",
+        "offset": 0,
+        "category": "invalid_kotlin",
+        "code": "JVM_NAME_ARGUMENT_INVALID",
+        "message": "JvmName requires one String name argument",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/name-wrong-type.kt",
+        "line": 1,
+        "column": 1
+      },
+      "oracle": "reject"
+    },
+    {
+      "id": "boundary/name-wrong-argument",
+      "outcome": "invalid_kotlin",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/name-wrong-argument.kt",
+        "offset": 0,
+        "category": "invalid_kotlin",
+        "code": "JVM_NAME_ARGUMENT_INVALID",
+        "message": "JvmName requires one String name argument",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/name-wrong-argument.kt",
+        "line": 1,
+        "column": 1
+      },
+      "oracle": "reject"
+    },
+    {
+      "id": "boundary/name-duplicate",
+      "outcome": "invalid_kotlin",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/name-duplicate.kt",
+        "offset": 21,
+        "category": "invalid_kotlin",
+        "code": "REPEATED_ANNOTATION_INVALID",
+        "message": "Repeated JvmName annotation",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/name-duplicate.kt",
+        "line": 2,
+        "column": 1
+      },
+      "oracle": "reject"
+    },
+    {
+      "id": "boundary/name-nonidentifier",
+      "outcome": "unsupported_language",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/name-nonidentifier.kt",
+        "offset": 0,
+        "category": "unsupported_language",
+        "code": "JVM_NAME_UNSUPPORTED",
+        "message": "Nonidentifier JVM facade names are unsupported",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/name-nonidentifier.kt",
+        "line": 1,
+        "column": 1
+      },
+      "oracle": "accept"
+    },
+    {
+      "id": "boundary/conflicting-constructor-visibility",
+      "outcome": "invalid_kotlin",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/conflicting-constructor-visibility.kt",
+        "offset": 15,
+        "category": "invalid_kotlin",
+        "code": "CONSTRUCTOR_VISIBILITY_INVALID",
+        "message": "Conflicting or repeated constructor visibility",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/conflicting-constructor-visibility.kt",
+        "line": 1,
+        "column": 16
+      },
+      "oracle": "reject"
+    },
+    {
+      "id": "boundary/explicit-enum-constructor",
+      "outcome": "unsupported_language",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/explicit-enum-constructor.kt",
+        "offset": 35,
+        "category": "unsupported_language",
+        "code": "ENUM_CONSTRUCTOR_VISIBILITY_UNSUPPORTED",
+        "message": "Explicit nonpublic enum constructors are unsupported",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/explicit-enum-constructor.kt",
+        "line": 1,
+        "column": 36
+      },
+      "oracle": "accept"
+    },
+    {
+      "id": "boundary/private-value-parameter",
+      "outcome": "unsupported_language",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-value-parameter.kt",
+        "offset": 41,
+        "category": "unsupported_language",
+        "code": "NONPUBLIC_CONSTRUCTOR_SHAPE_UNSUPPORTED",
+        "message": "Nonpublic constructors with value class parameter carriers are unsupported",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/private-value-parameter.kt",
+        "line": 2,
+        "column": 1
+      },
+      "oracle": "accept"
+    },
+    {
+      "id": "boundary/annotation-source-typealias",
+      "outcome": "unsupported_language",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/annotation-source-typealias.kt",
+        "offset": 0,
+        "category": "unsupported_language",
+        "code": "FILE_ANNOTATION_TYPE_ALIAS_UNSUPPORTED",
+        "message": "File annotations through source type aliases are unsupported",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/annotation-source-typealias.kt",
+        "line": 1,
+        "column": 1
+      },
+      "oracle": "accept"
+    },
+    {
+      "id": "boundary/inline-internal-constructor",
+      "outcome": "invalid_kotlin",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/inline-internal-constructor.kt",
+        "offset": 53,
+        "category": "invalid_kotlin",
+        "code": "PUBLIC_INLINE_NON_PUBLIC_ACCESS",
+        "message": "Public inline functions cannot access nonpublic constructors",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/inline-internal-constructor.kt",
+        "line": 2,
+        "column": 23
+      },
+      "oracle": "reject"
+    },
+    {
+      "id": "boundary/inline-internal-lambda",
+      "outcome": "invalid_kotlin",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/inline-internal-lambda.kt",
+        "offset": 61,
+        "category": "invalid_kotlin",
+        "code": "PUBLIC_INLINE_NON_PUBLIC_ACCESS",
+        "message": "Public inline functions cannot access nonpublic constructors",
+        "path": "/workspace/korrust/target/checks/2026-11-13T143517911964Z-next10-jvm/inline-internal-lambda.kt",
+        "line": 2,
+        "column": 31
+      },
+      "oracle": "reject"
+    },
+    {
+      "id": "boundary/duplicate-facade",
+      "outcome": "invalid_kotlin"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-13T143517911964Z-next10-jvm/source.zip"
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_next10_jvm.py",
+      "--candidate",
+      "/workspace/korrust/target/next10-final/korrust",
+      "--source-root",
+      "/workspace/korrust"
+    ]
+  ],
+  "limitations": [
+    "File JvmName consumes canonical annotation identity and folded String arguments; bounded ASCII identifier JVM facade names. Existing non-ASCII source filename boundary remains even with an explicit facade name. Multifile facades, source annotation type aliases and member JvmName remain unsupported.",
+    "Private/internal primary constructors of ordinary final nongeneric classes, without defaults, constructor annotations or secondary constructors. Protected, inner, value, sealed, data and open combinations retain explicit boundaries. Ordinary constructor callable references retain their existing explicit unsupported boundary.",
+    "Java callers compile once against official output and run unchanged against both providers with -Xverify:all. Kotlin consumers are compiled against each provider separately; candidate consumers are also compiled against both providers.",
+    "Custom marks.JvmName source probes expose a documented official short-name lowering discrepancy; those results are excluded from differential passes. No full Android application or performance claim. DownloadMapper and SongFilter motivate visibility but contain broader unsupported semantics."
+  ],
+  "counts": {
+    "pass": 15,
+    "invalid_kotlin": 16,
+    "oracle_discrepancy": 1,
+    "unsupported_language": 13
+  },
+  "completed_at": "2026-11-13T14:40:08.394610+00:00"
+}

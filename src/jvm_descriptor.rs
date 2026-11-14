@@ -41,6 +41,7 @@ pub(crate) fn method_types(descriptor: &str) -> Result<(Vec<Type>, Type)> {
                 match &bytes[start..*cursor] {
                     b"[I" => Type::IntArray,
                     b"[B" => Type::ByteArray,
+                    b"[S" => Type::ShortArray,
                     b"[C" => Type::CharArray,
                     b"[J" => Type::LongArray,
                     b"[Z" => Type::BooleanArray,
@@ -107,6 +108,11 @@ mod tests {
             result,
             Type::Array(Box::new(Type::Java("java/lang/Object".into())))
         );
+        assert_eq!(
+            method_types("([S)[S").unwrap(),
+            (vec![Type::ShortArray], Type::ShortArray)
+        );
+        assert_eq!(Type::ShortArray.descriptor(), "[S");
     }
 
     #[test]
@@ -134,7 +140,6 @@ mod tests {
             method_types("(S)S").unwrap(),
             (vec![Type::Short], Type::Short)
         );
-        assert!(method_types("()[S").is_err());
     }
 
     #[test]

@@ -48,11 +48,11 @@ def main():
     logs.mkdir()
     commands = Commands(logs, environment)
     report = {'schema_version': 1, 'kind': 'correctness', 'created_at': datetime.now(timezone.utc).isoformat(), 'status': 'running',
-        'selection': 'LongArray, BooleanArray, FloatArray and DoubleArray as one representation family; construction/initialization/indexing/store/iteration/vararg/spread, structural builtin factories, ordinary Java calls, Kotlin metadata and unchanged AndroidBible AudioHighlightColor with real dependencies. Byte/Int/Char arrays are regressions. ShortArray remains unsupported.',
+        'selection': 'LongArray, BooleanArray, FloatArray and DoubleArray as one representation family; construction/initialization/indexing/store/iteration/vararg/spread, structural builtin factories, ordinary Java calls, Kotlin metadata and unchanged AndroidBible AudioHighlightColor with real dependencies. Byte/Int/Char arrays and direct ShortArray signatures/allocation are regressions.',
         'compiler': {'path': relative(compiler), 'sha256': sha(compiler)},
         'reference_compiler': {'version': '2.3.21', 'compiler_jar_sha256': sha(reference / 'lib/kotlin-compiler.jar'), 'stdlib_sha256': sha(stdlib)},
         'environment': {'JAVA_HOME': jdk_home}, 'inputs': {}, 'commands': [], 'cases': [],
-        'limitations': ['ShortArray is explicitly unsupported. Scalar Short is validated separately.', 'Effectful initializer-producing expressions retain the existing specification/oracle evaluation-order rejection boundary.', 'No source inline expansion, complete stdlib array API, Android device/full-app or performance claim.', 'JVM method return/formal parameter type-use nullability supports empty type paths only; unsupported targets/nested paths are preserved as unsupported.']}
+        'limitations': ['Scalar Short and ShortArray representation have dedicated coverage; direct ShortArray signatures/allocation are regressions here.', 'Effectful initializer-producing expressions retain the existing specification/oracle evaluation-order rejection boundary.', 'No source inline expansion, complete stdlib array API, Android device/full-app or performance claim.', 'JVM method return/formal parameter type-use nullability supports empty type paths only; unsupported targets/nested paths are preserved as unsupported.']}
     upstream = [ROOT / ('references/kotlin/compiler/testData/codegen/box/arrays/forEach' + name + 'Array.kt') for name in ['Long', 'Boolean', 'Float', 'Double', 'Int', 'Byte', 'Char']]
     frozen_paths = [ROOT / 'tests/fixtures/compatibility_enums_numeric/UnsupportedDoubleArray.kt', ROOT / 'tests/fixtures/compatibility_enums_numeric/rejections.json', ROOT / 'tests/primitive_arrays.rs', *sorted((ROOT / 'src').rglob('*.rs')), ROOT / 'Cargo.toml', ROOT / 'Cargo.lock', Path(__file__), ROOT / 'tools/upstream_jvm.py', *sorted(FIXTURES.glob('*')), *upstream, compiler, oracle, stdlib, reference / 'lib/kotlin-compiler.jar']
     frozen = {relative(path): sha(path) for path in frozen_paths}
@@ -136,8 +136,16 @@ def main():
             case('invalid/' + name, outcome='invalid_kotlin')
         for name, source in {
             'short_type': 'fun bad(value: ShortArray): Int = 1',
-            'builtin_classifier_shadow': 'class DoubleArray',
             'short_array': 'fun bad() = ShortArray(2)',
+        }.items():
+            path = work / (name + '.kt')
+            path.write_text(source + '\n')
+            for provider in ['official', 'candidate']:
+                actual = compile(provider, [path], work / ('regression-' + provider + '-' + name), [])
+                assert actual.returncode == 0, actual.stderr
+            case('regression/' + name)
+        for name, source in {
+            'builtin_classifier_shadow': 'class DoubleArray',
             'effectful_initializer': 'fun init(): (Int) -> Double = { it.toDouble() }; fun bad() = DoubleArray(2, init())',
         }.items():
             path = work / (name + '.kt')

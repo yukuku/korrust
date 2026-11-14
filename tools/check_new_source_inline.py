@@ -35,7 +35,7 @@ def main():
     created = datetime.now(timezone.utc)
     output = (args.output or ROOT / 'target/checks' / (created.strftime('%Y-%m-%dT%H%M%S%fZ') + '-source-inline')).resolve()
     output.mkdir(parents=True, exist_ok=False)
-    report = dict(schema_version=1, kind='correctness', created_at=created.isoformat(), status='running', cases=[], commands=[], limits='Bounded static source inline bodies, real JVM reification, parameter modes, direct lambda expansion and caller-side cleanup. Source body exception tables, captured/generated inline closures, receivers, defaults, varargs, complex reified bounds/classifiers remain explicit boundaries. Scalar Short is a prerequisite; ShortArray remains unsupported. No Android/full app or speed claim.')
+    report = dict(schema_version=1, kind='correctness', created_at=created.isoformat(), status='running', cases=[], commands=[], limits='Bounded static source inline bodies, real JVM reification, parameter modes, direct lambda expansion and caller-side cleanup. Source body exception tables, captured/generated inline closures, receivers, defaults, varargs, complex reified bounds/classifiers remain explicit boundaries. Scalar Short and direct ShortArray signatures are prerequisite regressions; dedicated integral-promotion and ShortArray coverage is separate. No Android/full app or speed claim.')
     reference = ROOT / json.loads((ROOT / 'references/compiler.json').read_text())['path']
     stdlib = reference / 'lib/kotlin-stdlib.jar'
     jdk = Path(os.environ['JAVA_HOME']) / 'bin'
@@ -107,6 +107,11 @@ def main():
         for folder, expected in [('invalid', 'invalid_kotlin'), ('boundary', 'unsupported_language')]:
             for source in sorted((FIXTURES / folder).glob('*.kt')):
                 name = folder + '_' + source.stem
+                if folder == 'boundary' and source.stem == 'short_array':
+                    for provider, command in [('official', reference / 'bin/kotlinc'), ('candidate', compiler)]:
+                        run('regression_short_array ' + provider, [command, source, '-cp', stdlib, '-d', output / ('regression-short-array-' + provider)])
+                    case('regression_short_array', 'pass', source=str(source.relative_to(ROOT)), historical_fixture_path_retained=True)
+                    continue
                 run(name + ' official', [reference / 'bin/kotlinc', source, '-cp', stdlib, '-d', output / (name + '-official')], success=False)
                 oracle = report['commands'][-1]['exit_code']
                 if (folder == 'invalid') != (oracle != 0):

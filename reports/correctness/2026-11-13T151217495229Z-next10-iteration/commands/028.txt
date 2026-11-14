@@ -1,0 +1,7 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /workspace/korrust/target/checks/2026-11-13T151217495229Z-next10-iteration/hasNext_type.kt -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -module-name iteration -cp /workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/korrust/target/checks/2026-11-13T151217495229Z-next10-iteration/oracle-hasNext_type
+target/checks/2026-11-13T151217495229Z-next10-iteration/hasNext_type.kt:1:43: error: 'operator' modifier is not applicable to function: must return 'Boolean'.
+class C { operator fun iterator():C=this; operator fun hasNext()=1; operator fun next():Int=0 }; fun f() { for(n in C()) {} }
+                                          ^^^^^^^^
+target/checks/2026-11-13T151217495229Z-next10-iteration/hasNext_type.kt:1:117: error: the 'iterator().hasNext()' function of the loop range must return 'Boolean', but returns 'Int'.
+class C { operator fun iterator():C=this; operator fun hasNext()=1; operator fun next():Int=0 }; fun f() { for(n in C()) {} }
+                                                                                                                    ^^^

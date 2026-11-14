@@ -85,6 +85,7 @@ fn enum_members_cannot_hide_the_final_core_contract() {
     for source in [
         "enum class E(val name: String) { A(\"bad\") }",
         "enum class E { A; fun compareTo(other: E): Int = 0 }",
+        "enum class E { A; operator fun compareTo(other: E): Int = 0 }",
     ] {
         let error = compile_all_with_classpath(source, "Enum.kt", std::slice::from_ref(&standard))
             .err()
@@ -96,17 +97,6 @@ fn enum_members_cannot_hide_the_final_core_contract() {
             error.message
         );
     }
-    // The operator form is also invalid Kotlin. The existing unsupported
-    // operator-convention boundary rejects it before enum finality checking.
-    let operator = "enum class E { A; operator fun compareTo(other: E): Int = 0 }";
-    let error = compile_all_with_classpath(operator, "Enum.kt", std::slice::from_ref(&standard))
-        .err()
-        .expect("Unsupported operator convention must reject without outputs");
-    assert!(
-        error.message.contains("Unsupported operator convention"),
-        "{}",
-        error.message
-    );
 }
 
 #[test]
