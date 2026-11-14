@@ -781,7 +781,6 @@ fn rejects_unsupported_class_surface_and_mixed_declarations() {
         "data class E(private val x: Int)",
         "public internal class E()",
         "final final class E()",
-        "class E private constructor()",
         "class E(private val x: Int, private val x: Int)",
         "class E() { constructor(x: Int) {} }",
         "class E() { var x: Int get() = 1 }",

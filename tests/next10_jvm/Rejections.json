@@ -1,0 +1,157 @@
+[
+  {
+    "id": "private-outside",
+    "source": "class C private constructor()\nfun bad(): C = C()",
+    "official_accepts": false,
+    "category": "invalid_kotlin",
+    "code": "INACCESSIBLE_CONSTRUCTOR"
+  },
+  {
+    "id": "private-alias",
+    "source": "class C private constructor()\ntypealias A = C\nfun bad(): C = A()",
+    "official_accepts": false,
+    "category": "invalid_kotlin",
+    "code": "INACCESSIBLE_CONSTRUCTOR"
+  },
+  {
+    "id": "outer-cannot-construct-nested",
+    "source": "class Outer { class Nested private constructor(); fun bad(): Nested = Nested() }",
+    "official_accepts": false,
+    "category": "invalid_kotlin",
+    "code": "INACCESSIBLE_CONSTRUCTOR"
+  },
+  {
+    "id": "inline-private-constructor",
+    "source": "class C private constructor() { companion object { inline fun bad(): C = C() } }",
+    "official_accepts": false,
+    "category": "unsupported_language",
+    "code": "SOURCE_INLINE_CONTEXT_UNSUPPORTED",
+    "limitation": "The oracle-invalid call is blocked by the existing unsupported source member-inline context before body access validation."
+  },
+  {
+    "id": "inline-private-lambda",
+    "source": "class C private constructor() { companion object { inline fun bad(): () -> C = { C() } } }",
+    "official_accepts": false,
+    "category": "unsupported_language",
+    "code": "SOURCE_INLINE_CONTEXT_UNSUPPORTED",
+    "limitation": "The oracle-invalid call is blocked by the existing unsupported source member-inline context before body access validation."
+  },
+  {
+    "id": "private-default",
+    "source": "class C private constructor(val value: Int = 1)",
+    "official_accepts": true,
+    "category": "unsupported_language",
+    "code": "NONPUBLIC_CONSTRUCTOR_SHAPE_UNSUPPORTED"
+  },
+  {
+    "id": "internal-default",
+    "source": "class C internal constructor(val value: Int = 1)",
+    "official_accepts": true,
+    "category": "unsupported_language",
+    "code": "NONPUBLIC_CONSTRUCTOR_SHAPE_UNSUPPORTED"
+  },
+  {
+    "id": "protected",
+    "source": "open class C protected constructor()",
+    "official_accepts": true,
+    "category": "unsupported_language",
+    "code": "CONSTRUCTOR_VISIBILITY_UNSUPPORTED"
+  },
+  {
+    "id": "private-generic",
+    "source": "class C<T> private constructor(val value: T)",
+    "official_accepts": true,
+    "category": "unsupported_language",
+    "code": "NONPUBLIC_CONSTRUCTOR_SHAPE_UNSUPPORTED"
+  },
+  {
+    "id": "constructor-reference",
+    "source": "class C private constructor() { companion object { fun factory(): () -> C = ::C } }",
+    "official_accepts": true,
+    "category": "unsupported_language"
+  },
+  {
+    "id": "multifile",
+    "source": "@file:JvmName(\"Chosen\")\n@file:JvmMultifileClass\nfun answer(): Int = 42",
+    "official_accepts": true,
+    "category": "unsupported_language",
+    "code": "ANNOTATION_JVM_LOWERING_UNSUPPORTED"
+  },
+  {
+    "id": "member-name",
+    "source": "@kotlin.jvm.JvmName(\"renamed\")\nfun answer(): Int = 42",
+    "official_accepts": true,
+    "category": "unsupported_language",
+    "code": "ANNOTATION_JVM_LOWERING_UNSUPPORTED"
+  },
+  {
+    "id": "name-wrong-type",
+    "source": "@file:JvmName(3)\nfun answer(): Int = 42",
+    "official_accepts": false,
+    "category": "invalid_kotlin",
+    "code": "JVM_NAME_ARGUMENT_INVALID"
+  },
+  {
+    "id": "name-wrong-argument",
+    "source": "@file:JvmName(value = \"Chosen\")\nfun answer(): Int = 42",
+    "official_accepts": false,
+    "category": "invalid_kotlin",
+    "code": "JVM_NAME_ARGUMENT_INVALID"
+  },
+  {
+    "id": "name-duplicate",
+    "source": "@file:JvmName(\"One\")\n@file:JvmName(\"Two\")\nfun answer(): Int = 42",
+    "official_accepts": false,
+    "category": "invalid_kotlin",
+    "code": "REPEATED_ANNOTATION_INVALID"
+  },
+  {
+    "id": "name-nonidentifier",
+    "source": "@file:JvmName(\"chosen-name\")\nfun answer(): Int = 42",
+    "official_accepts": true,
+    "category": "unsupported_language",
+    "code": "JVM_NAME_UNSUPPORTED"
+  },
+  {
+    "id": "conflicting-constructor-visibility",
+    "source": "class C public private constructor()",
+    "official_accepts": false,
+    "category": "invalid_kotlin",
+    "code": "CONSTRUCTOR_VISIBILITY_INVALID"
+  },
+  {
+    "id": "explicit-enum-constructor",
+    "source": "enum class E private constructor() { A }",
+    "official_accepts": true,
+    "category": "unsupported_language",
+    "code": "ENUM_CONSTRUCTOR_VISIBILITY_UNSUPPORTED"
+  },
+  {
+    "id": "private-value-parameter",
+    "source": "@JvmInline value class V(val value: Int)\nclass C private constructor(val value: V)",
+    "official_accepts": true,
+    "category": "unsupported_language",
+    "code": "NONPUBLIC_CONSTRUCTOR_SHAPE_UNSUPPORTED"
+  },
+  {
+    "id": "annotation-source-typealias",
+    "source": "@file:Renamer(\"Chosen\")\ntypealias Renamer = kotlin.jvm.JvmName\nfun answer(): Int = 42",
+    "official_accepts": true,
+    "category": "unsupported_language",
+    "code": "FILE_ANNOTATION_TYPE_ALIAS_UNSUPPORTED"
+  },
+  {
+    "id": "inline-internal-constructor",
+    "source": "class C internal constructor()\ninline fun bad(): C = C()",
+    "official_accepts": false,
+    "category": "invalid_kotlin",
+    "code": "PUBLIC_INLINE_NON_PUBLIC_ACCESS"
+  },
+  {
+    "id": "inline-internal-lambda",
+    "source": "class C internal constructor()\ninline fun bad(): () -> C = { C() }",
+    "official_accepts": false,
+    "category": "invalid_kotlin",
+    "code": "PUBLIC_INLINE_NON_PUBLIC_ACCESS"
+  }
+]

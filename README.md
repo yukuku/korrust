@@ -181,6 +181,16 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 141. JVM overloads for supported primary constructors, with interleaved defaults, checked signatures, annotation retention and Java/Kotlin consumers.
 142. Single-interface anonymous object expressions with fresh instances, multiple methods, shared mutable captures, own/outer receivers and bounded inline method returns.
 143. Bounded suspend interface and abstract members plus final-class implementations, with saved receiver state, delayed resumption, default dispatch and verified continuation ABI.
+144. Source and compiled unaryPlus, unaryMinus and not operators with ordinary member/extension resolution and virtual dispatch.
+145. Source compareTo operator declarations with checked Int results and ordered comparison evaluation.
+146. Custom iterator, hasNext and next operator protocols for bounded for-loop iteration.
+147. Open-ended range syntax with ordinary nominal operator resolution and standard-library-backed primitive ranges.
+148. Declaration-site covariance and contravariance on supported source classes and interfaces, with checked member positions and Kotlin metadata.
+149. Independent non-null interface bounds on source classifiers, with JVM generic signatures and Kotlin metadata.
+150. Integral arithmetic and comparison promotion across Byte, Short, Int and Long, including Byte/Short unary promotion.
+151. ShortArray construction, indexing, mutation, iteration and supported JVM/Kotlin interoperation.
+152. File-level JvmName facade naming with annotation validation, package metadata and output ownership.
+153. Private and internal primary constructors on supported ordinary final classes, with access checks and JVM/Kotlin visibility.
 
 ## Project contract
 

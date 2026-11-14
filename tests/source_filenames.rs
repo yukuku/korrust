@@ -73,10 +73,8 @@ fn unsupported_filename_forms_and_file_annotations_reject_explicitly() {
         assert_eq!(error.kind, DiagnosticKind::Setup);
         assert_eq!(error.code, "INVALID_SOURCE_FILENAME");
     }
-    for source in [
-        "@file:JvmName(\"Chosen\")\nfun answer(): Int = 42",
-        "@file:JvmMultifileClass\n@file:JvmName(\"Chosen\")\nfun answer(): Int = 42",
-    ] {
+    {
+        let source = "@file:JvmMultifileClass\n@file:JvmName(\"Chosen\")\nfun answer(): Int = 42";
         let error = compile_outputs_with_classpath(source, "1.kt", &[])
             .err()
             .unwrap();

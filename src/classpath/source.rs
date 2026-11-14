@@ -338,15 +338,19 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
             .find(|(n, _)| n == name)
             .map(|(_, t)| {
                 t.descriptor()
-                    .trim_start_matches('L')
-                    .trim_end_matches(';')
+                    .strip_prefix('L')
+                    .unwrap()
+                    .strip_suffix(';')
+                    .unwrap()
                     .into()
             })
             .unwrap_or_else(|| {
                 resolve(&Type::Java(name.into()), module, cp)
                     .descriptor()
-                    .trim_start_matches('L')
-                    .trim_end_matches(';')
+                    .strip_prefix('L')
+                    .unwrap()
+                    .strip_suffix(';')
+                    .unwrap()
                     .into()
             })
     };
@@ -462,12 +466,16 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                         .map(|(_, t, _)| t.descriptor())
                         .collect::<String>()
                 ),
-                access: if source.sealed_ { 4 } else { 1 },
+                access: if source.sealed_ {
+                    4
+                } else {
+                    source.constructor_visibility.max(1)
+                },
                 unsupported: false,
                 source_property: None,
                 kotlin_params: Some(params),
                 kotlin_result: Some(Type::Unit),
-                kotlin_internal: source.internal,
+                kotlin_internal: source.internal || source.constructor_visibility == 0,
             });
         }
         for ctor in &source.secondary_constructors {

@@ -1,0 +1,1 @@
+public class Calls { public static void main(String[] args) { if (!direct.DirectKt.source().equals("OK17")) throw new AssertionError(); if (!directconsumer.ConsumerKt.compiled().equals("OK17")) throw new AssertionError(); System.out.println("OK"); } }

@@ -1,0 +1,993 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-13T15:12:58.131096+00:00",
+  "status": "pass",
+  "compiler": {
+    "path": "/workspace/korrust/target/next10-final-v3/korrust",
+    "sha256": "58990f36b6aba59d2b92c5417cbde8a3daff1396ea3eda01c1e85c4b5c3dc574",
+    "source_root": "/workspace/korrust"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "frozen_input_hashes": {
+    "/workspace/korrust/src/annotation_declarations.rs": "b7ba6c2401dd4090052753fcc5ccfea5ba1cc9fdcb080ba5aea8c5528cf4dbbb",
+    "/workspace/korrust/src/bytecode.rs": "8cae99df202f3aaca76ede997b05fea33d5e952df284311d610cc05bc85bc415",
+    "/workspace/korrust/src/check.rs": "7e2e5685c172dd5a6b6435703c0ed9b84f59db284e2002e973de5615b6183903",
+    "/workspace/korrust/src/check_annotation_placements.rs": "123f45e4d08f40c4c0690a8efe0661fee5856b5592e39966e8e7e3e1eb0e75df",
+    "/workspace/korrust/src/check_annotations.rs": "c38109454b96a66a24b4c4fcd9d0581e4768a8856afa0d56f0ef8cf635be0c3f",
+    "/workspace/korrust/src/check_anonymous.rs": "9cc85a53a05a45b5778e4a9eb0f4c7f373759dac4315714b087c8a6930aca6af",
+    "/workspace/korrust/src/check_captures.rs": "39e01f723eeed492e9de7917db479f811b745130fb469cfb82b6052393f2be6c",
+    "/workspace/korrust/src/check_class_delegation.rs": "28e66569cf5785ba2518003200e741627a2f83090743b6d0952ed54691bdcfc9",
+    "/workspace/korrust/src/check_classes.rs": "942b008b2ecd2d7db9644dddef7e0907d292f4a9c399d82e814819f47d3e1667",
+    "/workspace/korrust/src/check_control.rs": "20217036bb5211fa30e7a3b675f494d9987fa9bc9b47ff02e0e8a718ccd73f85",
+    "/workspace/korrust/src/check_declarations.rs": "e2b73e5c3190265a3a15da5b56bc6421502bdce7f8e18a7ee7b6c7972d388689",
+    "/workspace/korrust/src/check_delegates.rs": "094b9bdc43d4cecb0fb3dcef1681181f8e7737804f3808582192b3190d01dc92",
+    "/workspace/korrust/src/check_enums.rs": "2a16c9e4dbae29a8c479ab5cddefad66f0bdd09143e2a0cde8428d2d0c174d8b",
+    "/workspace/korrust/src/check_functions.rs": "d6a2197838ef8c26afc6eacdbfaf95a36f45bb35972bf3fff80a0c8515d1db55",
+    "/workspace/korrust/src/check_inner_classes.rs": "60a4cdbfef5b069e0312c3ea7511b0de6a862d20ff393c464ea080968aa233cd",
+    "/workspace/korrust/src/check_interfaces.rs": "f624d8decf0846fd48d3a1178068af6468c10abe594dec62d310772893444d3c",
+    "/workspace/korrust/src/check_ir_walk.rs": "e9ebf5f463c133576ccdaca026b716abda1381caeb72f409e90461d4f652c535",
+    "/workspace/korrust/src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+    "/workspace/korrust/src/check_library.rs": "47598d38f3bd79280dbbdb28cb662057cbc21f047a7fb7e37d7eaff31692ac48",
+    "/workspace/korrust/src/check_member_extensions.rs": "c97b70cbd56da4588817a5cdd294cb724009feee3abbcb29a5dde2846bb8d3f9",
+    "/workspace/korrust/src/check_objects.rs": "f04db0150cc0022c27261afbce0c09ed8d75e67da7e97add354ea33be0cfd255",
+    "/workspace/korrust/src/check_operations.rs": "4ad0420e8958bf548c703c7a7b2c24a4075f22053f302d3e472784f8bd15ae9d",
+    "/workspace/korrust/src/check_overloads.rs": "d418fb5ed0880483b5d6ac58ce8093d0eb13804ff1b4176e19abd4b1a3e589cd",
+    "/workspace/korrust/src/check_references.rs": "3a4fd327b7a13f48e69d5fbd059c76cbb8d2ce50ae2e140a762a06d9e1e6eab8",
+    "/workspace/korrust/src/check_relations.rs": "6b1dea3cc13ceb6d435680504f8eda2eb4002be8b3f3b37f728ec19f7892167e",
+    "/workspace/korrust/src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+    "/workspace/korrust/src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+    "/workspace/korrust/src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+    "/workspace/korrust/src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+    "/workspace/korrust/src/classpath.rs": "d107b7dadf4a15cbe07f20584b7de32aec6e01eab5041f7bb67475ff6b978e91",
+    "/workspace/korrust/src/compiled_inline.rs": "06250c79ae618989985360ced0235cca4628f0f7c4d92630a00295d217310102",
+    "/workspace/korrust/src/const_eval.rs": "6714c1d6296d1c3f60fab09891a492f66a9850b3ff3ee2b5a7df42400dfdcdaa",
+    "/workspace/korrust/src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+    "/workspace/korrust/src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+    "/workspace/korrust/src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+    "/workspace/korrust/src/lib.rs": "08ad23d77457218fb1cb36b1bd1cfd779e76095d04e606f80a8e1ea675b65aa5",
+    "/workspace/korrust/src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+    "/workspace/korrust/src/metadata.rs": "521a188de65380a7bacb3a4882d664483b2ae6131a44b178516f5f4e69ae1777",
+    "/workspace/korrust/src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+    "/workspace/korrust/src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+    "/workspace/korrust/src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+    "/workspace/korrust/src/syntax.rs": "7b49182679134a78a3e598c948cc78167a6819cc01714c21453def2fe7568e57",
+    "/workspace/korrust/src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+    "/workspace/korrust/src/visibility.rs": "0268165a314fe1a169d5604fdda38968b0bbda07f11c60db92d36a7247f879c7",
+    "/workspace/korrust/src/check_variant_signatures.rs": "3c4105a50dc37f7102176ffe5a6cba014b65ca1d655bb33aad6e2d030f70b529",
+    "/workspace/korrust/src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+    "/workspace/korrust/src/bytecode/annotation_files.rs": "4f3c136aaa2ed30b85d2a4cc2a9be8331b2da9682d450f6a4dcc135ef04ab86a",
+    "/workspace/korrust/src/bytecode/annotations.rs": "cb07b777dda6a4dc4f4fcd0c77486bf6473d8559b421e9578bb8f0dec7892186",
+    "/workspace/korrust/src/bytecode/class_companion.rs": "a5756a0c46cc33fa449bebe330ef5748789da70b4b941c21c7f72aa923802fc2",
+    "/workspace/korrust/src/bytecode/data.rs": "c99cb60546cbe8873ef99d1ab057aa7439f4239fce13927d324dfea078dbe98c",
+    "/workspace/korrust/src/bytecode/defaults.rs": "89f6967a6689b515d7b86e06bcf59f1bf036a690de083b525af28ad03e27ea8e",
+    "/workspace/korrust/src/bytecode/enums.rs": "25fe788c54554741347ba6bb4b84cbee7c324db6925209a434fb139ceb66b2b1",
+    "/workspace/korrust/src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+    "/workspace/korrust/src/bytecode/inline.rs": "cf4c6be5860614d14d0d73e8b555aeaba4e8ef8158aee3876fce450171a98740",
+    "/workspace/korrust/src/bytecode/interfaces.rs": "f56b5c0666e9647fddc5b3d1f5fd39e6d5a155c588201ed590639cfe624f31de",
+    "/workspace/korrust/src/bytecode/lambdas.rs": "8549a0b7885e8a2ee4fcdf1786da263f7a4614755a90a7770a87e69ec81704fd",
+    "/workspace/korrust/src/bytecode/objects.rs": "142f8e5c70f0ac61423c3887447c54865b7b657768cf683fc553fde398a17e7e",
+    "/workspace/korrust/src/bytecode/suspend.rs": "79e1064dd35da268956f91b167a779ce0957cefa8fef629789a2fb3afee987b7",
+    "/workspace/korrust/src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+    "/workspace/korrust/src/classpath/aliases.rs": "745fa67edb3216b77ce5e65f63b75c51ac221f5b49d3e08a4327990bd9e6f4c5",
+    "/workspace/korrust/src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+    "/workspace/korrust/src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+    "/workspace/korrust/src/classpath/metadata.rs": "40d0d0fba0a23ae2b26c7b67975843038c9032c9326bdc1e09ad3f29f5c46bf2",
+    "/workspace/korrust/src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+    "/workspace/korrust/src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+    "/workspace/korrust/src/classpath/signature.rs": "657d42ef3c16ac5fb01ae3748e19e814c9ccbc4b9487366f950a04ed639b0e46",
+    "/workspace/korrust/src/classpath/source.rs": "fa9d2391fd63c75f8f18c604cb0be346e45a26375ddf7d7535fb6db4c714cc6e",
+    "/workspace/korrust/src/classpath/source_enums.rs": "3366b5ad4fc96e61e95b398e72dbb6c6a3de8e734247b6e7cdba7d937ef527f4",
+    "/workspace/korrust/src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+    "/workspace/korrust/src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+    "/workspace/korrust/Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+    "/workspace/korrust/Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+    "/workspace/korrust/tests/nullable_annotations/BinaryMark.java": "b682facaebd7dfe5639be65d3c50bdd174d1cafe2361aa251f1e868ddf4194a8",
+    "/workspace/korrust/tests/nullable_annotations/RuntimeMark.java": "a586cf98e6f5c8edf3f3ce7d4c3afa310e47fc14853e355924c9d34f15daaf73",
+    "/workspace/korrust/tests/nullable_annotations/Calls.java": "2bd473ffa602ec63ca452546541ea5b282388f31f85d5c588bb626225642ec84",
+    "/workspace/korrust/tests/nullable_annotations/Methods.kt": "393748e864dd321aaec98d2354c350d4570eb21112c71ff18cdb30e8bce20609",
+    "/workspace/korrust/tools/check_nullable_annotations.py": "4a9ffef678dadc497f0540e9b49d64c2129ec2b639b556fc112f38236807889a",
+    "/workspace/korrust/references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "/workspace/korrust/references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "/workspace/korrust/target/next10-final-v3/korrust": "58990f36b6aba59d2b92c5417cbde8a3daff1396ea3eda01c1e85c4b5c3dc574",
+    "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "selection": "Nullable String result methods with RUNTIME/CLASS Java markers and JvmOverloads/JvmStatic across top-level, class, object and companion emitters. Independent classfile parsing checks annotation attribute uniqueness, descriptors, payloads and retention; a fixed Java caller compiles once against official output and runs against both providers with -Xverify:all.",
+  "limitations": [
+    "Focused generic annotation attribute merging regression; no broader annotation, app or performance claim."
+  ],
+  "commands": [
+    {
+      "label": "Compile common annotation definitions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/dependencies",
+        "/workspace/korrust/tests/nullable_annotations/RuntimeMark.java",
+        "/workspace/korrust/tests/nullable_annotations/BinaryMark.java"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge/000-stderr.txt"
+    },
+    {
+      "label": "Compile official nullable annotation methods",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nullable_annotations/Methods.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/dependencies",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-module-name",
+        "nullable_annotations",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/official"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge/001-stderr.txt"
+    },
+    {
+      "label": "Compile candidate nullable annotation methods",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/nullable_annotations/Methods.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "nullable_annotations",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/candidate"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge/002-stderr.txt"
+    },
+    {
+      "label": "Compile Java caller once against official output",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/official:/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/caller",
+        "/workspace/korrust/tests/nullable_annotations/Calls.java"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge/003-stderr.txt"
+    },
+    {
+      "label": "Verify fixed caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/caller:/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/official:/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "nullableannotations.Calls"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge/004-stderr.txt"
+    },
+    {
+      "label": "Verify fixed caller against candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/caller:/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/candidate:/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "nullableannotations.Calls"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge/005-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "matching-provider-compilations",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass",
+      "independent_assertions": 77
+    },
+    {
+      "id": "annotation-attribute-uniqueness-retention/official",
+      "outcome": "pass",
+      "checked_source_methods": 21
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass",
+      "independent_assertions": 77
+    },
+    {
+      "id": "annotation-attribute-uniqueness-retention/candidate",
+      "outcome": "pass",
+      "checked_source_methods": 21
+    },
+    {
+      "id": "matching-signatures-and-annotation-contracts",
+      "outcome": "pass",
+      "contracts": {
+        "nullableannotations/Member$Companion.class": {
+          "companion(Ljava/lang/String;Z)Ljava/lang/String;": {
+            "access": 17,
+            "visible": [
+              [
+                "Lkotlin/jvm/JvmStatic;",
+                []
+              ],
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "companion"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "companion"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          },
+          "plain(Ljava/lang/String;Z)Ljava/lang/String;": {
+            "access": 17,
+            "visible": [
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "plain"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "plain"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          },
+          "companion(Ljava/lang/String;)Ljava/lang/String;": {
+            "access": 17,
+            "visible": [
+              [
+                "Lkotlin/jvm/JvmStatic;",
+                []
+              ],
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "companion"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "companion"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          },
+          "companion()Ljava/lang/String;": {
+            "access": 17,
+            "visible": [
+              [
+                "Lkotlin/jvm/JvmStatic;",
+                []
+              ],
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "companion"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "companion"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          },
+          "plain(Ljava/lang/String;)Ljava/lang/String;": {
+            "access": 17,
+            "visible": [
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "plain"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "plain"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          },
+          "plain()Ljava/lang/String;": {
+            "access": 17,
+            "visible": [
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "plain"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "plain"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          }
+        },
+        "nullableannotations/Member.class": {
+          "member(Ljava/lang/String;Z)Ljava/lang/String;": {
+            "access": 17,
+            "visible": [
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "member"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "member"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          },
+          "member(Ljava/lang/String;)Ljava/lang/String;": {
+            "access": 17,
+            "visible": [
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "member"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "member"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          },
+          "member()Ljava/lang/String;": {
+            "access": 17,
+            "visible": [
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "member"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "member"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          },
+          "companion(Ljava/lang/String;Z)Ljava/lang/String;": {
+            "access": 25,
+            "visible": [
+              [
+                "Lkotlin/jvm/JvmStatic;",
+                []
+              ],
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "companion"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "companion"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          },
+          "companion(Ljava/lang/String;)Ljava/lang/String;": {
+            "access": 25,
+            "visible": [
+              [
+                "Lkotlin/jvm/JvmStatic;",
+                []
+              ],
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "companion"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "companion"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          },
+          "companion()Ljava/lang/String;": {
+            "access": 25,
+            "visible": [
+              [
+                "Lkotlin/jvm/JvmStatic;",
+                []
+              ],
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "companion"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "companion"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          }
+        },
+        "nullableannotations/Holder.class": {
+          "static(Ljava/lang/String;Z)Ljava/lang/String;": {
+            "access": 25,
+            "visible": [
+              [
+                "Lkotlin/jvm/JvmStatic;",
+                []
+              ],
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "static"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "static"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          },
+          "instance(Ljava/lang/String;Z)Ljava/lang/String;": {
+            "access": 17,
+            "visible": [
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "instance"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "instance"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          },
+          "static(Ljava/lang/String;)Ljava/lang/String;": {
+            "access": 25,
+            "visible": [
+              [
+                "Lkotlin/jvm/JvmStatic;",
+                []
+              ],
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "static"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "static"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          },
+          "static()Ljava/lang/String;": {
+            "access": 25,
+            "visible": [
+              [
+                "Lkotlin/jvm/JvmStatic;",
+                []
+              ],
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "static"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "static"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          },
+          "instance(Ljava/lang/String;)Ljava/lang/String;": {
+            "access": 17,
+            "visible": [
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "instance"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "instance"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          },
+          "instance()Ljava/lang/String;": {
+            "access": 17,
+            "visible": [
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "instance"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "instance"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          }
+        },
+        "nullableannotations/MethodsKt.class": {
+          "top(Ljava/lang/String;Z)Ljava/lang/String;": {
+            "access": 25,
+            "visible": [
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "top"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "top"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          },
+          "top(Ljava/lang/String;)Ljava/lang/String;": {
+            "access": 25,
+            "visible": [
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "top"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "top"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          },
+          "top()Ljava/lang/String;": {
+            "access": 25,
+            "visible": [
+              [
+                "Lnullableannotations/RuntimeMark;",
+                [
+                  [
+                    "value",
+                    "top"
+                  ]
+                ]
+              ]
+            ],
+            "invisible": [
+              [
+                "Lkotlin/jvm/JvmOverloads;",
+                []
+              ],
+              [
+                "Lnullableannotations/BinaryMark;",
+                [
+                  [
+                    "value",
+                    "top"
+                  ]
+                ]
+              ],
+              [
+                "Lorg/jetbrains/annotations/Nullable;",
+                []
+              ]
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "fixed-java-caller-integrity",
+      "outcome": "pass",
+      "class_hashes": {
+        "/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/caller/nullableannotations/Calls.class": "64614dc7da09af8cefcfee816ef87b73f05334113a39e890dd76d2c476f528fd"
+      }
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge/source.zip"
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_nullable_annotations.py",
+      "--candidate",
+      "/workspace/korrust/target/next10-final-v3/korrust",
+      "--source-root",
+      "/workspace/korrust",
+      "--skip-html"
+    ]
+  ],
+  "counts": {
+    "pass": 7
+  }
+}

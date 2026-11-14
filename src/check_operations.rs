@@ -10,6 +10,37 @@ pub(super) enum ExtensionKind {
 }
 
 impl Checker<'_> {
+    pub(super) fn promote_integral_operands(
+        &self,
+        op: &str,
+        left: Value,
+        right: Value,
+    ) -> (Value, Value) {
+        let integral = |ty: &Type| matches!(ty, Type::Byte | Type::Short | Type::Int | Type::Long);
+        if !matches!(op, "+" | "-" | "*" | "/" | "%" | "<" | ">" | "<=" | ">=")
+            || !integral(&left.ty)
+            || !integral(&right.ty)
+        {
+            return (left, right);
+        }
+        let target = if left.ty == Type::Long || right.ty == Type::Long {
+            Type::Long
+        } else {
+            Type::Int
+        };
+        let promote = |value: Value| {
+            if value.ty == target {
+                value
+            } else {
+                Value {
+                    ty: target.clone(),
+                    kind: ValueKind::Convert(target.clone(), Box::new(value)),
+                }
+            }
+        };
+        (promote(left), promote(right))
+    }
+
     pub(super) fn check_for_iteration(
         &mut self,
         name: &str,
@@ -60,12 +91,7 @@ impl Checker<'_> {
         let element = match iterable.ty.base() {
             Type::String => Type::Char,
             array if array.array_element().is_some() => array.array_element().unwrap(),
-            _ => {
-                return Err(Diagnostic::new(
-                    offset,
-                    "Iteration supports primitive arrays, String, and non-null Iterable types with resolvable element metadata",
-                ));
-            }
+            _ => return self.check_operator_iteration(name, iterable, source_body, offset),
         };
         if matches!(element, Type::Unit | Type::Null) {
             return Err(Diagnostic::new(offset, "Unsupported array element type"));
@@ -95,6 +121,151 @@ impl Checker<'_> {
             index_slot,
             body,
         })
+    }
+
+    fn check_operator_iteration(
+        &mut self,
+        name: &str,
+        iterable: Value,
+        source_body: &[syntax::Statement],
+        offset: usize,
+    ) -> Result<Statement> {
+        let before = self.initialized.clone();
+        let refinements = self.refinements.clone();
+        let iterator = self.operator_call(iterable, "iterator", &[], offset)?;
+        let iterator_slot = self.allocate_typed_slot(&iterator.ty, offset)?;
+        let receiver = Value {
+            ty: iterator.ty.clone(),
+            kind: ValueKind::Local(iterator_slot),
+        };
+        let condition = self.operator_call(receiver.clone(), "hasNext", &[], offset)?;
+        self.require(&condition, Type::Boolean, offset)?;
+        let next = self.operator_call(receiver, "next", &[], offset)?;
+        if matches!(next.ty, Type::Unit | Type::Null) {
+            return Err(
+                Diagnostic::new(offset, "Unsupported iterator element type").with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "ITERATOR_ELEMENT_UNSUPPORTED",
+                ),
+            );
+        }
+        self.scopes.push(HashMap::new());
+        let slot = self.declare(name, next.ty.clone(), false, offset)?;
+        self.loop_depth += 1;
+        let (mut body, _) = self.block(source_body)?;
+        self.loop_depth -= 1;
+        self.scopes.pop();
+        self.initialized = before;
+        self.refinements = refinements;
+        body.insert(0, Statement::Store(slot, next));
+        Ok(Statement::Expression(Value {
+            ty: Type::Unit,
+            kind: ValueKind::Block(
+                vec![
+                    Statement::Store(iterator_slot, iterator),
+                    Statement::While(condition, body),
+                ],
+                Box::new(Value {
+                    ty: Type::Unit,
+                    kind: ValueKind::Unit,
+                }),
+            ),
+        }))
+    }
+
+    pub(super) fn check_open_range(
+        &mut self,
+        start: &Expr,
+        end: &Expr,
+        offset: usize,
+    ) -> Result<Value> {
+        let start = self.value(start)?;
+        if matches!(start.ty, Type::Byte | Type::Short) || unsigned::owner(&start.ty).is_some() {
+            return Err(Diagnostic::new(
+                offset,
+                "Open ranges currently support same-type Int, Long, and Char primitive operands",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "OPEN_RANGE_PRIMITIVE_UNSUPPORTED",
+            ));
+        }
+        if !matches!(start.ty, Type::Int | Type::Long | Type::Char) {
+            return self.operator_call(start, "rangeUntil", std::slice::from_ref(end), offset);
+        }
+        let end = self.value(end)?;
+        if start.ty != end.ty
+            && matches!(end.ty, Type::Byte | Type::Short | Type::Int | Type::Long)
+            && start.ty != Type::Char
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Mixed integral open range operand types are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "OPEN_RANGE_MIXED_INTEGRAL_UNSUPPORTED",
+            ));
+        }
+        self.require(&end, start.ty.clone(), offset)?;
+        let descriptor = match start.ty {
+            Type::Int => "(II)Lkotlin/ranges/IntRange;",
+            Type::Long => "(JJ)Lkotlin/ranges/LongRange;",
+            Type::Char => "(CC)Lkotlin/ranges/CharRange;",
+            _ => unreachable!(),
+        };
+        let mut method = self
+            .classpath
+            .methods("kotlin/ranges/RangesKt")?
+            .into_iter()
+            .find(|method| {
+                method.name == "until" && method.descriptor == descriptor && method.access & 9 == 9
+            })
+            .ok_or_else(|| {
+                Diagnostic::new(
+                    offset,
+                    "Primitive rangeUntil runtime implementation is unavailable",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::MissingDependency,
+                    "OPEN_RANGE_RUNTIME_MISSING",
+                )
+            })?;
+        method.owner = "kotlin/ranges/RangesKt".into();
+        if let (Some(params), Some(receiver)) = (
+            &mut method.kotlin_params,
+            method
+                .library
+                .as_ref()
+                .and_then(|library| library.receiver.clone()),
+        ) {
+            params.insert(0, ("<receiver>".into(), receiver, false));
+        }
+        let mut bindings = HashMap::new();
+        let mut arguments = Vec::new();
+        let mut lets = Vec::new();
+        for value in [start, end] {
+            let slot = self.allocate_typed_slot(&value.ty, offset)?;
+            let name = format!("<openRange{slot}>");
+            bindings.insert(
+                name.clone(),
+                Local {
+                    slot,
+                    ty: value.ty.clone(),
+                    mutable: false,
+                },
+            );
+            self.initialized.insert(slot);
+            arguments.push(Expr {
+                offset,
+                kind: ExprKind::Name(name),
+            });
+            lets.push((slot, value));
+        }
+        self.scopes.push(bindings);
+        let result = self.library_static_call(method, &arguments, offset);
+        self.scopes.pop();
+        result.map(|value| Self::wrap_lets(value, lets))
     }
 
     pub(super) fn check_do_while(
@@ -463,6 +634,7 @@ impl Checker<'_> {
                 | Type::Double
                 | Type::IntArray
                 | Type::ByteArray
+                | Type::ShortArray
                 | Type::CharArray
                 | Type::LongArray
                 | Type::BooleanArray
@@ -1394,6 +1566,55 @@ impl Checker<'_> {
 }
 
 impl Checker<'_> {
+    pub(super) fn inherited_operator(&self, method: &JavaMethod, class: &JavaClass) -> bool {
+        self.inherited_operator_from(
+            method,
+            class.super_name.iter().chain(class.interfaces.iter()),
+        )
+    }
+
+    pub(super) fn inherited_operator_from<'a>(
+        &self,
+        method: &JavaMethod,
+        parents: impl IntoIterator<Item = &'a String>,
+    ) -> bool {
+        let mut pending = parents.into_iter().cloned().collect::<Vec<_>>();
+        let mut visited = HashSet::new();
+        while let Some(owner) = pending.pop() {
+            if !visited.insert(owner.clone()) || visited.len() > 256 {
+                continue;
+            }
+            let Ok(parent) = self
+                .classes
+                .get(&owner)
+                .cloned()
+                .map(Ok)
+                .unwrap_or_else(|| self.classpath.load(&owner))
+            else {
+                continue;
+            };
+            if parent.methods.iter().any(|inherited| {
+                inherited.source_name() == method.source_name()
+                    && inherited.access & 2 == 0
+                    && inherited.instance_dispatch()
+                    && inherited
+                        .library
+                        .as_ref()
+                        .is_some_and(|library| library.operator)
+                    && class_method_types(inherited)
+                        .ok()
+                        .zip(class_method_types(method).ok())
+                        .is_some_and(|((base_params, base_result), (params, result))| {
+                            base_params == params && self.subtype(&result, &base_result)
+                        })
+            }) {
+                return true;
+            }
+            pending.extend(parent.super_name.into_iter().chain(parent.interfaces));
+        }
+        false
+    }
+
     pub(super) fn operator_call(
         &mut self,
         receiver: Value,
@@ -1420,6 +1641,7 @@ impl Checker<'_> {
                 let inherited =
                     library::ordinary_member_methods(self.classpath, owner, name, args.len())
                         .unwrap_or_else(|_| class.methods.clone());
+                let inherited = library::remove_overridden(inherited, self.classpath);
                 let mut eligible = Vec::new();
                 let mut ordinary = Vec::new();
                 for method in inherited.into_iter().filter(|m| {
@@ -1430,15 +1652,21 @@ impl Checker<'_> {
                     let kotlin = self
                         .classes
                         .get(&method.owner)
-                        .map(|c| c.kotlin_class)
+                        .map(|c| c.kotlin_class || c.kotlin_interface)
                         .or_else(|| {
                             self.classpath
                                 .load(&method.owner)
                                 .ok()
-                                .map(|c| c.kotlin_class)
+                                .map(|c| c.kotlin_class || c.kotlin_interface)
                         })
-                        .unwrap_or(class.kotlin_class);
-                    if kotlin && !method.library.as_ref().is_some_and(|l| l.operator) {
+                        .unwrap_or(class.kotlin_class || class.kotlin_interface);
+                    let inherited_operator = kotlin
+                        && !method.library.as_ref().is_some_and(|l| l.operator)
+                        && self.inherited_operator(&method, &class);
+                    if kotlin
+                        && !method.library.as_ref().is_some_and(|l| l.operator)
+                        && !inherited_operator
+                    {
                         ordinary.push(method);
                     } else {
                         eligible.push(method);
@@ -1471,6 +1699,11 @@ impl Checker<'_> {
                 candidate == name
                     && self.extensions.contains(&id)
                     && self.source_operator.contains(&id)
+                    && (!self.source_type_params[id].is_empty()
+                        || self.signatures[id]
+                            .0
+                            .first()
+                            .is_some_and(|(_, ty)| self.subtype(&receiver.ty, ty)))
             })
         {
             return self.source_operator_call(receiver, name, args, offset);
@@ -1505,6 +1738,10 @@ impl Checker<'_> {
             Err(_) if missing_operator => Err(Diagnostic::new(
                 offset,
                 format!("The operator modifier is required on {name}"),
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "OPERATOR_MODIFIER_REQUIRED",
             )),
             Err(_) if member_failure.is_some() => Err(member_failure.unwrap()),
             result => result,
@@ -2028,7 +2265,12 @@ impl Checker<'_> {
                             let candidates = class
                                 .methods
                                 .iter()
-                                .filter(|method| method.name == "<init>" && method.access & 1 != 0)
+                                .filter(|method| {
+                                    method.name == "<init>"
+                                        && self
+                                            .classpath
+                                            .constructor_visible(&self.lambda_owner, method)
+                                })
                                 .cloned()
                                 .collect::<Vec<_>>();
                             let method = self.select_method(&candidates, args, offset)?;

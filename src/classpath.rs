@@ -751,6 +751,12 @@ impl Classpath {
         Ok(())
     }
 
+    pub(crate) fn constructor_visible(&self, caller: &str, method: &JavaMethod) -> bool {
+        (!method.kotlin_internal || self.internal_visible(&method.owner))
+            && (method.access & 1 != 0
+                || method.access & 2 != 0 && self.lexically_within(caller, &method.owner))
+    }
+
     pub(crate) fn internal_visible(&self, owner: &str) -> bool {
         self.is_source(owner)
             || self
@@ -2077,6 +2083,7 @@ fn metadata_type<'a>(bytes: &[u8], strings: &'a [String]) -> Result<&'a str> {
         "kotlin/String" => Ok("Ljava/lang/String;"),
         "kotlin/IntArray" => Ok("[I"),
         "kotlin/ByteArray" => Ok("[B"),
+        "kotlin/ShortArray" => Ok("[S"),
         "kotlin/CharArray" => Ok("[C"),
         "kotlin/LongArray" => Ok("[J"),
         "kotlin/BooleanArray" => Ok("[Z"),
@@ -2415,6 +2422,7 @@ fn typed_metadata_type(bytes: &[u8], strings: &[String]) -> Result<Type> {
                 "kotlin/String" => Type::String,
                 "kotlin/IntArray" => Type::IntArray,
                 "kotlin/ByteArray" => Type::ByteArray,
+                "kotlin/ShortArray" => Type::ShortArray,
                 "kotlin/CharArray" => Type::CharArray,
                 "kotlin/LongArray" => Type::LongArray,
                 "kotlin/BooleanArray" => Type::BooleanArray,

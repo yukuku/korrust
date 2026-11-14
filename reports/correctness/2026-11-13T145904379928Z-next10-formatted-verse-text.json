@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-13T14:59:04.874234+00:00",
+  "status": "complete",
+  "compiler": {
+    "path": "/workspace/korrust/target/nullable-annotation-combined/debug/korrust",
+    "sha256": "bebb2105c982000751f1c53e605e47010c13e83eb37621306ec8327ff81e73aa"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "frozen_input_hashes": {
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/FormattedVerseText.kt": "c0bd140e97d28b74a41d28af81e49a955564dc13df469c7a3e0c1058cc3888a2",
+    "target/nullable-annotation-combined/debug/korrust": "bebb2105c982000751f1c53e605e47010c13e83eb37621306ec8327ff81e73aa",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "/workspace/work/next10/jvm/work/nullable-annotation-combined-source-sha256.json": "e63d5f32a2bb032ee6008734a565fed562c3967c40c20c035cdc303875d1157d",
+    "/workspace/korrust-setup/jdk-21/jmods/java.base.jmod": "f8d258a856a691c81ad9dd16964635bbc8a8fdd7f40edec37dcf3d904feb7ae1",
+    "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/FormattedVerseTextCaller.java": "a85f55a679d3b0ab7c6c7e9add5f3e4be03fe5e371a0b812aed61c3b0c763f0d",
+    "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/replay.py": "b9b172eb310e0f1ca918c34d5064b50ba0337ee3b5efd9e4fb76df28fae55556"
+  },
+  "cases": [
+    {
+      "id": "official_compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate_compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass",
+      "assertions": 18,
+      "stdout": "java.lang.IndexOutOfBoundsException:Range [7, 6) out of bounds for length 6\nOK:18\n"
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass",
+      "assertions": 18,
+      "stdout": "java.lang.IndexOutOfBoundsException:Range [7, 6) out of bounds for length 6\nOK:18\n"
+    },
+    {
+      "id": "runtime_and_public_abi_agree",
+      "outcome": "pass"
+    },
+    {
+      "id": "fixed_caller_integrity",
+      "outcome": "pass",
+      "class_hashes": {
+        "caller/FormattedVerseTextCaller.class": "1ac4847acd5a689344459c147a8e8ac8e57479901ef975ed7c6e20066c71fb15"
+      }
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "pass",
+      "changed": []
+    }
+  ],
+  "commands": [
+    {
+      "label": "Compile unchanged official source",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/FormattedVerseText.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "next10_formatter",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T145904379928Z-next10-formatted-verse-text/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/00-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/00-stderr.txt"
+    },
+    {
+      "label": "Compile unchanged candidate source",
+      "argv": [
+        "/workspace/korrust/target/nullable-annotation-combined/debug/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/FormattedVerseText.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "next10_formatter",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T145904379928Z-next10-formatted-verse-text/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/01-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/01-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java caller against official output",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T145904379928Z-next10-formatted-verse-text/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T145904379928Z-next10-formatted-verse-text/caller",
+        "/workspace/korrust/reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/FormattedVerseTextCaller.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/02-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/02-stderr.txt"
+    },
+    {
+      "label": "Verify Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T145904379928Z-next10-formatted-verse-text/caller:/workspace/korrust/target/checks/2026-11-13T145904379928Z-next10-formatted-verse-text/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "FormattedVerseTextCaller"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/03-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/03-stderr.txt"
+    },
+    {
+      "label": "Inspect public ABI official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T145904379928Z-next10-formatted-verse-text/official",
+        "yuku.alkitab.base.util.FormattedVerseText"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/04-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/04-stderr.txt"
+    },
+    {
+      "label": "Verify Java caller against candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T145904379928Z-next10-formatted-verse-text/caller:/workspace/korrust/target/checks/2026-11-13T145904379928Z-next10-formatted-verse-text/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "FormattedVerseTextCaller"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/05-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/05-stderr.txt"
+    },
+    {
+      "label": "Inspect public ABI candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T145904379928Z-next10-formatted-verse-text/candidate",
+        "yuku.alkitab.base.util.FormattedVerseText"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/06-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/06-stderr.txt"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/00-stdout.txt",
+    "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/00-stderr.txt",
+    "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/01-stdout.txt",
+    "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/01-stderr.txt",
+    "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/02-stdout.txt",
+    "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/02-stderr.txt",
+    "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/03-stdout.txt",
+    "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/03-stderr.txt",
+    "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/04-stdout.txt",
+    "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/04-stderr.txt",
+    "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/05-stdout.txt",
+    "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/05-stderr.txt",
+    "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/06-stdout.txt",
+    "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/06-stderr.txt"
+  ],
+  "selection": "Unchanged AndroidBible FormattedVerseText.kt, newly accepted in the next-ten milestone. Fixed Java caller compiles against official output and runs against both providers with JVM verification and 18 independent assertions covering nulls, empty input, identity, force/default overloads, marker removal, whitespace, UTF-16, and original trailing-marker exception behavior.",
+  "limitations": [
+    "Single unchanged file and tested behavior only; no full Android module/application or performance claim."
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "reports/correctness/2026-11-13T145904379928Z-next10-formatted-verse-text/replay.py",
+      "--candidate",
+      "/workspace/korrust/target/nullable-annotation-combined/debug/korrust",
+      "--snapshot",
+      "/workspace/work/next10/jvm/work/nullable-annotation-combined-source-sha256.json"
+    ]
+  ],
+  "counts": {
+    "pass": 7
+  }
+}

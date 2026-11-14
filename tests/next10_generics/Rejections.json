@@ -1,0 +1,158 @@
+[
+  {
+    "id": "out_input",
+    "official": "reject",
+    "source": "class Bad<out T> { fun consume(x: T): Int = 0 }",
+    "code": "TYPE_VARIANCE_CONFLICT"
+  },
+  {
+    "id": "in_output",
+    "official": "reject",
+    "source": "interface Bad<in T> { fun produce(): T }",
+    "code": "TYPE_VARIANCE_CONFLICT"
+  },
+  {
+    "id": "out_var",
+    "official": "reject",
+    "source": "class Bad<out T>(var value: T)",
+    "code": "TYPE_VARIANCE_CONFLICT"
+  },
+  {
+    "id": "in_val",
+    "official": "reject",
+    "source": "class Bad<in T>(val value: T)",
+    "code": "TYPE_VARIANCE_CONFLICT"
+  },
+  {
+    "id": "invariant_nested",
+    "official": "reject",
+    "source": "interface Inv<T>\ninterface Bad<out T> { fun produce(): Inv<T> }",
+    "code": "TYPE_VARIANCE_CONFLICT"
+  },
+  {
+    "id": "function_polarity",
+    "official": "reject",
+    "source": "interface Bad<out T> { fun apply(f: () -> T): Int }",
+    "code": "TYPE_VARIANCE_CONFLICT"
+  },
+  {
+    "id": "function_output_polarity",
+    "official": "reject",
+    "source": "interface Bad<out T> { fun apply(): (T) -> Int }",
+    "code": "TYPE_VARIANCE_CONFLICT"
+  },
+  {
+    "id": "supertype_polarity",
+    "official": "reject",
+    "source": "interface Input<in T>\ninterface Bad<out T>: Input<T>",
+    "code": "TYPE_VARIANCE_CONFLICT"
+  },
+  {
+    "id": "wrong_bound",
+    "official": "reject",
+    "source": "interface Label { fun text(): String }\nclass Holder<T: Label>(val value:T)\nfun bad(): Holder<String> = Holder<String>(\"bad\")",
+    "diagnostic": "upper bound"
+  },
+  {
+    "id": "nullable_bound_argument",
+    "official": "reject",
+    "source": "class Holder<T: CharSequence>(val value:T)\nfun bad(): Holder<String?> = Holder<String?>(null)",
+    "diagnostic": "upper bound"
+  },
+  {
+    "id": "variance_reverse",
+    "official": "reject",
+    "source": "interface Producer<out T>\nfun bad(p:Producer<Any>):Producer<String> = p",
+    "code": "TYPE_MISMATCH"
+  },
+  {
+    "id": "private_to_this",
+    "official": "accept",
+    "source": "class Holder<out T>(private var value: T)",
+    "code": "PRIVATE_VARIANCE_UNSUPPORTED"
+  },
+  {
+    "id": "recursive_bound",
+    "official": "accept",
+    "source": "interface Rec<T:Comparable<T>>",
+    "code": "DEPENDENT_GENERIC_BOUND_UNSUPPORTED"
+  },
+  {
+    "id": "generic_member",
+    "official": "accept",
+    "source": "class Holder<out T> { fun <U> id(x: U): U = x }",
+    "code": "GENERIC_CLASS_MEMBER_TYPE_PARAMETERS_UNSUPPORTED"
+  },
+  {
+    "id": "generic_data",
+    "official": "accept",
+    "source": "data class Holder<out T>(val value:T)",
+    "code": "GENERIC_CLASS_NESTED_UNSUPPORTED"
+  },
+  {
+    "id": "shadowing",
+    "official": "accept",
+    "source": "class Holder<out T> { fun <T> id(x:T):T=x }",
+    "code": "TYPE_PARAMETER_SHADOW_UNSUPPORTED"
+  },
+  {
+    "id": "nullable_interface_bound",
+    "official": "accept",
+    "source": "class Holder<T:CharSequence?>(val value:T)",
+    "code": "CLASSIFIER_NULLABLE_INTERFACE_BOUND_UNSUPPORTED"
+  },
+  {
+    "id": "variance_reverse_input",
+    "official": "reject",
+    "source": "interface Input<in T>\nfun bad(value:Input<String>):Input<Any> = value",
+    "code": "TYPE_MISMATCH"
+  },
+  {
+    "id": "wildcard_out_any",
+    "official": "accept",
+    "source": "interface Producer<out T>\nfun consume(value:Producer<Any>):Int=1",
+    "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED"
+  },
+  {
+    "id": "wildcard_in_string",
+    "official": "accept",
+    "source": "interface Consumer<in T>\nfun consume(value:Consumer<String>):Int=1",
+    "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED"
+  },
+  {
+    "id": "wildcard_constructor",
+    "official": "accept",
+    "source": "interface Producer<out T>\nclass Holder(val value:Producer<Any>)",
+    "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED"
+  },
+  {
+    "id": "wildcard_method",
+    "official": "accept",
+    "source": "interface Producer<out T>\ninterface Api { fun consume(value:Producer<Any>):Int }",
+    "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED"
+  },
+  {
+    "id": "wildcard_redundant_projection",
+    "official": "accept",
+    "source": "interface Producer<out T>\nfun consume(value:Producer<out String>):Int=1",
+    "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED"
+  },
+  {
+    "id": "wildcard_return_projection",
+    "official": "accept",
+    "source": "interface Producer<out T>\nfun value(p:Producer<String>):Producer<out String> = p",
+    "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED"
+  },
+  {
+    "id": "wildcard_property_projection",
+    "official": "accept",
+    "source": "interface Producer<out T>\ninterface Api { val value:Producer<out String> }",
+    "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED"
+  },
+  {
+    "id": "wildcard_bound_projection",
+    "official": "accept",
+    "source": "interface Producer<out T>\nclass Api<T:Producer<out String>>(val value:T)",
+    "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED"
+  }
+]

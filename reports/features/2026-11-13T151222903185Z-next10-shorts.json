@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-13T15:12:22.903185+00:00",
+  "status": "pass",
+  "compiler": {
+    "path": "target/checks/2026-11-13T151222903185Z-next10-shorts/korrust-frozen",
+    "sha256": "58990f36b6aba59d2b92c5417cbde8a3daff1396ea3eda01c1e85c4b5c3dc574",
+    "source_revision": "720c490c97d4730e465b6024c4ddbac961c435cc"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_next10_shorts.py",
+      "--candidate",
+      "target/next10-final-v3/korrust",
+      "--source-root",
+      "/workspace/korrust",
+      "--baseline",
+      "target/next10-baseline/korrust"
+    ]
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json"
+  ],
+  "features": [
+    {
+      "name": "Integral numeric arithmetic and ordering promotion",
+      "status": "supported",
+      "scope": "Byte/Short arithmetic and unary results promote to Int; mixed integral arithmetic and comparisons promote to Long when either operand is Long; existing floating operand promotion is regression-tested",
+      "restrictions": [
+        "No implicit assignment narrowing or new integral equality/bitwise conversions"
+      ],
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "evidence_cases": [
+        "runtime/candidate",
+        "newly_supported/mixed_integral_arithmetic"
+      ]
+    },
+    {
+      "name": "ShortArray representation and operations",
+      "status": "supported",
+      "scope": "Construction, stable initializer lambdas, indexing, signed 16-bit writes/reads, iteration, primitive varargs and spread, ordinary library factories, Java and Kotlin metadata contracts",
+      "restrictions": [
+        "Effectful initializer-producing expressions retain the existing explicit specification/oracle evaluation-order rejection boundary.",
+        "Inherited import-resolution boundary: an explicit alias of a default-imported function and its original implicit name do not freely coexist in one source file; positive alias and original-name checks use separate source files.",
+        "Short annotation elements, const declarations, complete standard library APIs, Android/full-app compatibility and performance are not claimed."
+      ],
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "evidence_cases": [
+        "runtime/candidate",
+        "metadata/candidate"
+      ]
+    }
+  ]
+}

@@ -16,6 +16,7 @@ pub enum Type {
     Double,
     IntArray,
     ByteArray,
+    ShortArray,
     CharArray,
     LongArray,
     BooleanArray,
@@ -104,6 +105,7 @@ impl Type {
         match name.strip_prefix("kotlin/").unwrap_or(name) {
             "IntArray" => Some(Self::IntArray),
             "ByteArray" => Some(Self::ByteArray),
+            "ShortArray" => Some(Self::ShortArray),
             "CharArray" => Some(Self::CharArray),
             "LongArray" => Some(Self::LongArray),
             "BooleanArray" => Some(Self::BooleanArray),
@@ -116,6 +118,7 @@ impl Type {
         match self.base() {
             Self::IntArray => Some(Self::Int),
             Self::ByteArray => Some(Self::Byte),
+            Self::ShortArray => Some(Self::Short),
             Self::CharArray => Some(Self::Char),
             Self::LongArray => Some(Self::Long),
             Self::BooleanArray => Some(Self::Boolean),
@@ -136,6 +139,7 @@ impl Type {
         match element {
             Self::Int => Some(Self::IntArray),
             Self::Byte => Some(Self::ByteArray),
+            Self::Short => Some(Self::ShortArray),
             Self::Char => Some(Self::CharArray),
             Self::Long => Some(Self::LongArray),
             Self::Boolean => Some(Self::BooleanArray),
@@ -171,6 +175,7 @@ impl Type {
             self.base(),
             Self::IntArray
                 | Self::ByteArray
+                | Self::ShortArray
                 | Self::CharArray
                 | Self::LongArray
                 | Self::BooleanArray
@@ -215,6 +220,7 @@ impl Type {
             Self::Double => "D".into(),
             Self::IntArray => "[I".into(),
             Self::ByteArray => "[B".into(),
+            Self::ShortArray => "[S".into(),
             Self::CharArray => "[C".into(),
             Self::LongArray => "[J".into(),
             Self::BooleanArray => "[Z".into(),
@@ -503,6 +509,7 @@ pub struct ClassDecl {
     pub param_annotations: Vec<Vec<AnnotationUse>>,
     pub annotations: Vec<AnnotationUse>,
     pub primary_constructor: bool,
+    pub constructor_visibility: u16,
     pub constructor_annotations: Vec<AnnotationUse>,
     pub name: String,
     pub offset: usize,
@@ -1727,6 +1734,9 @@ fn lex(source: &str) -> Result<Vec<Token>> {
             {
                 i += 1;
             }
+            if &bytes[start..i] == b".." && bytes.get(i) == Some(&b'<') {
+                i += 1;
+            }
             if matches!(&bytes[start..i], b"==" | b"!=") && bytes.get(i) == Some(&b'=') {
                 i += 1;
             }
@@ -2170,11 +2180,6 @@ impl Parser {
             "Float" => Type::Float,
             "Double" => Type::Double,
             "kotlin/Short" => Type::Short,
-            "ShortArray" | "kotlin/ShortArray" => {
-                return Err(self
-                    .error("ShortArray semantics are unsupported")
-                    .with_kind(DiagnosticKind::UnsupportedLanguage, "SHORT_UNSUPPORTED"));
-            }
             "String" => Type::String,
             "Unit" => Type::Unit,
             "Any" => Type::Java("java/lang/Object".into()),
@@ -2182,7 +2187,11 @@ impl Parser {
             _ => Type::Java(name),
         })
     }
-    fn type_parameters(&mut self, reified_allowed: bool) -> Result<Vec<TypeParameter>> {
+    fn type_parameters(
+        &mut self,
+        reified_allowed: bool,
+        variance_allowed: bool,
+    ) -> Result<Vec<TypeParameter>> {
         if !self.take("<") {
             return Ok(Vec::new());
         }
@@ -2195,6 +2204,13 @@ impl Parser {
                     .with_kind(DiagnosticKind::InvalidKotlin, "REIFIED_OUTSIDE_INLINE"));
             }
             let reified = reified_allowed && self.take("reified");
+            let variance = if variance_allowed && self.take("in") {
+                Variance::In
+            } else if variance_allowed && self.take("out") {
+                Variance::Out
+            } else {
+                Variance::Invariant
+            };
             if matches!(self.token().text.as_str(), "in" | "out" | "reified") {
                 return Err(self.error("Variance and reified modifiers on function type parameters are unsupported").with_kind(DiagnosticKind::UnsupportedLanguage, "TYPE_PARAMETER_MODIFIER_UNSUPPORTED"));
             }
@@ -2221,7 +2237,7 @@ impl Parser {
                 only_input_types: false,
                 reified,
                 name,
-                variance: Variance::Invariant,
+                variance,
                 bounds: Vec::new(),
             };
             self.type_parameters.push(parameter.clone());
@@ -2545,7 +2561,7 @@ impl Parser {
         let name = self.declaration_name()?;
         let scope = self.type_parameters.len();
         let result = (|| {
-            let type_params = self.type_parameters(false).map_err(|error| {
+            let type_params = self.type_parameters(false, false).map_err(|error| {
                 if error.message.contains("Variance and reified") {
                     error.with_kind(
                         DiagnosticKind::InvalidKotlin,
@@ -2636,6 +2652,14 @@ impl Parser {
                 .with_kind(
                     DiagnosticKind::InvalidKotlin,
                     "ENUM_TYPE_PARAMETERS_INVALID",
+                ));
+        }
+        if body.constructor_visibility != 1 {
+            return Err(self
+                .error("Explicit nonpublic enum constructors are unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "ENUM_CONSTRUCTOR_VISIBILITY_UNSUPPORTED",
                 ));
         }
         if !body.interface_delegates.is_empty() {
@@ -2834,6 +2858,7 @@ impl Parser {
                 | "FloatArray"
                 | "DoubleArray"
                 | "ByteArray"
+                | "ShortArray"
                 | "ThreadLocal"
                 | "CharArray"
                 | "Array"
@@ -3661,7 +3686,7 @@ impl Parser {
         }
         self.lines();
         let name = self.classifier_name()?;
-        let type_params = self.type_parameters(false)?;
+        let type_params = self.type_parameters(false, true)?;
         if sealed_ && !type_params.is_empty() {
             return Err(self
                 .error("Source generic sealed classifiers are unsupported")
@@ -3732,6 +3757,7 @@ impl Parser {
                 self.annotations()?;
             }
         }
+        let mut constructor_visibility = 1;
         let constructor_start = self.pos;
         while matches!(
             self.token().text.as_str(),
@@ -3745,16 +3771,41 @@ impl Parser {
         if !constructor_annotations.is_empty() || explicit_constructor {
             if self.take("public") {
                 self.lines();
-            }
-            if matches!(
-                self.token().text.as_str(),
-                "private" | "protected" | "internal"
-            ) {
+            } else if self.take("private") {
+                constructor_visibility = 2;
+                self.lines();
+            } else if self.take("internal") {
+                constructor_visibility = 0;
+                self.lines();
+            } else if self.at("protected") {
                 return Err(self
-                    .error("Nonpublic primary constructor visibility is unsupported")
+                    .error("Protected primary constructors are unsupported")
                     .with_kind(
                         DiagnosticKind::UnsupportedLanguage,
                         "CONSTRUCTOR_VISIBILITY_UNSUPPORTED",
+                    ));
+            }
+            if matches!(
+                self.token().text.as_str(),
+                "public" | "private" | "internal" | "protected"
+            ) {
+                return Err(self
+                    .error("Conflicting or repeated constructor visibility")
+                    .with_kind(
+                        DiagnosticKind::InvalidKotlin,
+                        "CONSTRUCTOR_VISIBILITY_INVALID",
+                    ));
+            }
+            if constructor_visibility != 1
+                && (inner || data || open || abstract_ || !type_params.is_empty())
+            {
+                return Err(self
+                    .error(
+                        "Nonpublic primary constructors require ordinary final nongeneric classes",
+                    )
+                    .with_kind(
+                        DiagnosticKind::UnsupportedLanguage,
+                        "NONPUBLIC_CONSTRUCTOR_SHAPE_UNSUPPORTED",
                     ));
             }
             if !self.take("constructor") {
@@ -3932,6 +3983,7 @@ impl Parser {
             annotations,
             param_annotations,
             primary_constructor: true,
+            constructor_visibility,
             constructor_annotations,
             name,
             offset,
@@ -4543,6 +4595,7 @@ impl Parser {
             annotations: Vec::new(),
             param_annotations: Vec::new(),
             primary_constructor: true,
+            constructor_visibility: 1,
             constructor_annotations: Vec::new(),
             name: "Companion".into(),
             offset: self.token().offset,
@@ -4647,7 +4700,7 @@ impl Parser {
         }
         self.lines();
         let name = self.classifier_name()?;
-        let type_params = self.type_parameters(false)?;
+        let type_params = self.type_parameters(false, true)?;
         if sealed_ && !type_params.is_empty() {
             return Err(self
                 .error("Source generic sealed classifiers are unsupported")
@@ -5101,6 +5154,7 @@ impl Parser {
                     annotations: Vec::new(),
                     param_annotations: Vec::new(),
                     primary_constructor: true,
+                    constructor_visibility: 1,
                     constructor_annotations: Vec::new(),
                     name: String::new(),
                     offset,
@@ -5234,7 +5288,7 @@ impl Parser {
         let internal = visibility.as_deref() == Some("internal");
         self.expect("fun")?;
         let type_parameter_count = self.type_parameters.len();
-        let type_params = self.type_parameters(inline)?;
+        let type_params = self.type_parameters(inline, false)?;
         let type_offset = self.token().offset;
         let first = self.name()?;
         let (receiver, name) = if self.at("<") || self.at("?") || self.at(".") || self.at("?.") {
@@ -5299,12 +5353,6 @@ impl Parser {
                 self.expect(":")?;
                 self.lines();
                 let ty = self.ty()?;
-                if parameter_vararg && ty == Type::Short {
-                    return Err(self.error("ShortArray varargs are unsupported").with_kind(
-                        DiagnosticKind::UnsupportedLanguage,
-                        "SHORT_ARRAY_UNSUPPORTED",
-                    ));
-                }
                 let ty = if parameter_vararg {
                     Type::primitive_array_for(&ty).unwrap_or_else(|| Type::Array(Box::new(ty)))
                 } else {
@@ -7382,7 +7430,7 @@ fn precedence(op: &str) -> Option<u8> {
         "<" | ">" | "<=" | ">=" => Some(4),
         "in" | "!in" | "is" | "!is" => Some(5),
         "?:" => Some(6),
-        ".." => Some(8),
+        ".." | "..<" => Some(8),
         "+" | "-" => Some(9),
         "*" | "/" | "%" => Some(10),
         "as" => Some(11),
@@ -8431,6 +8479,7 @@ mod tests {
         for (element, array) in [
             ("Int", Type::IntArray),
             ("Byte", Type::ByteArray),
+            ("Short", Type::ShortArray),
             ("Char", Type::CharArray),
             ("Long", Type::LongArray),
             ("Boolean", Type::BooleanArray),
@@ -8452,7 +8501,6 @@ mod tests {
         }
         assert!(!parse("fun plain(value: Int) {}").unwrap().functions[0].vararg);
         for source in [
-            "fun bad(vararg values: Short) {}",
             "fun bad(vararg first: Int, vararg second: Int) {}",
             "fun bad(vararg first: Int, second: Int) {}",
             "fun bad(vararg first: Int = 1) {}",

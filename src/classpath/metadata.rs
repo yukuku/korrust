@@ -191,6 +191,7 @@ impl<'a> Context<'a> {
                         | "kotlin/Unit"
                         | "kotlin/IntArray"
                         | "kotlin/ByteArray"
+                        | "kotlin/ShortArray"
                         | "kotlin/CharArray"
                 )
             {
@@ -209,6 +210,7 @@ impl<'a> Context<'a> {
                 "kotlin/Unit" => Type::Unit,
                 "kotlin/IntArray" => Type::IntArray,
                 "kotlin/ByteArray" => Type::ByteArray,
+                "kotlin/ShortArray" => Type::ShortArray,
                 "kotlin/CharArray" => Type::CharArray,
                 "kotlin/LongArray" => Type::LongArray,
                 "kotlin/BooleanArray" => Type::BooleanArray,
@@ -1243,7 +1245,10 @@ fn attach_member(
         return Err(invalid());
     }
     let method = &mut class.methods[*index];
-    if flags & (1 << 14 | 1 << 12) != 0 || flags & 14 == 2 || attributes[*index].unsupported {
+    if flags & (1 << 14 | 1 << 12) != 0
+        || flags & 14 == 2 && name != "<init>"
+        || attributes[*index].unsupported
+    {
         return Err(invalid());
     }
     method.kotlin_params = Some(params);
@@ -2121,7 +2126,8 @@ mod tests {
                 "doubleArrayOf",
                 "floatArrayOf",
                 "intArrayOf",
-                "longArrayOf"
+                "longArrayOf",
+                "shortArrayOf"
             ]
         );
         for method in &methods {
@@ -2142,14 +2148,16 @@ mod tests {
             matches!(methods[0].kotlin_result.as_ref().unwrap(), Type::Array(element)
             if matches!(element.as_ref(), Type::Parameter { name, .. } if name == "T"))
         );
-        assert_eq!(
-            methods
-                .iter()
-                .find(|method| method.name == "intArrayOf")
-                .unwrap()
-                .descriptor,
-            "([I)[I"
-        );
+        for (name, descriptor) in [("intArrayOf", "([I)[I"), ("shortArrayOf", "([S)[S")] {
+            assert_eq!(
+                methods
+                    .iter()
+                    .find(|method| method.name == name)
+                    .unwrap()
+                    .descriptor,
+                descriptor
+            );
+        }
     }
 
     #[test]

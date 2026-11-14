@@ -177,6 +177,34 @@ fn register_classes(
         }
         interfaces.push(name.clone());
     }
+    for ty in &source.super_types {
+        declarations::validate_variance(
+            &source.type_params,
+            ty,
+            1,
+            classpath,
+            imports,
+            source.offset,
+        )?;
+    }
+    for property in &source.properties {
+        declarations::validate_variance(
+            &source.type_params,
+            &property.ty,
+            if property.mutable { 0 } else { 1 },
+            classpath,
+            imports,
+            property.offset,
+        )?;
+    }
+    for method in &source.methods {
+        declarations::validate_function_variance(
+            &source.type_params,
+            &method.function,
+            classpath,
+            imports,
+        )?;
+    }
     let imports = body_imports(source, owner, imports);
     let mut methods = Vec::new();
     let mut names = HashSet::new();
@@ -622,6 +650,10 @@ fn check_interface(
         }
     }
     let mut methods = Vec::new();
+    let mut operator_offsets = HashSet::new();
+    let context =
+        declarations::DeclarationContext::new(owner, classpath, &imports, classes, lambdas);
+    let operator_checker = context.checker(true, 1, Type::Unit);
     for property in &source.properties {
         let name = getter_name(&property.name);
         let setter = setter_name(&property.name);
@@ -723,6 +755,9 @@ fn check_interface(
             classes,
         )?;
         function.suspend_ = source_function.suspend_;
+        if method.is_override && operator_checker.inherited_operator(signature, class) {
+            operator_offsets.insert(source_function.offset);
+        }
         if function.suspend_ {
             function.jvm_result = Some(Type::Nullable(Box::new(Type::Java(
                 "java/lang/Object".into(),
@@ -836,9 +871,26 @@ fn check_interface(
         )?;
     }
     Ok(InterfaceDecl {
+        operator_offsets,
         sealed_: source.sealed_,
         sealed_subclasses: class.sealed_subclasses.clone(),
-        type_params: source.type_params.clone(),
+        type_params: resolve_parameters(
+            &source.type_params,
+            &imports,
+            classpath,
+            source.offset,
+            classes,
+        )?,
+        interface_bound_parameters: declarations::interface_bound_parameters(
+            &resolve_parameters(
+                &source.type_params,
+                &imports,
+                classpath,
+                source.offset,
+                classes,
+            )?,
+            classpath,
+        ),
         super_types: source
             .super_types
             .iter()
@@ -901,6 +953,7 @@ fn check_function(
         inline_argument_modes: Vec::new(),
         inline_analysis: false,
         public_inline_body: false,
+        constructor_bridge_context: false,
         reified_parameters: Vec::new(),
         exhaustiveness_flow: false,
         extension_receivers: Vec::new(),
@@ -1272,6 +1325,7 @@ interface Catalog {
                 inline_argument_modes: Vec::new(),
                 inline_analysis: false,
                 public_inline_body: false,
+                constructor_bridge_context: false,
                 reified_parameters: Vec::new(),
                 exhaustiveness_flow: false,
                 extension_receivers: Vec::new(),

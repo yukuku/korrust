@@ -136,10 +136,7 @@ fn loop_scopes_and_continue_initialization_are_checked() {
         "fun f(): Int { for(n in IntArray(2)) {}; return n }",
         "Unresolved local",
     );
-    rejects(
-        "fun f(a: IntArray?) { for(n in a) {} }",
-        "Iteration supports",
-    );
+    rejects("fun f(a: IntArray?) { for(n in a) {} }", "non-null");
 }
 
 #[test]

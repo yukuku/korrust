@@ -149,6 +149,10 @@ impl Checker<'_> {
                 return Err(Diagnostic::new(
                     offset,
                     "Constructor callable references are unsupported",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "CONSTRUCTOR_REFERENCE_UNSUPPORTED",
                 ));
             }
             if self.constants.contains_key(name)

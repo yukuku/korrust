@@ -1,0 +1,1517 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-13T14:45:35.507934+00:00",
+  "status": "complete",
+  "selection": "Unchanged AndroidBible production Kotlin files with at most 180 lines and only Kotlin/JDK explicit imports, compiled individually with the pinned standard library and JDK. Same-package/application dependencies are not supplied. Compile acceptance only; rejection is not classified as invalid Kotlin or a correctness failure.",
+  "compiler": {
+    "baseline": {
+      "path": "/workspace/korrust/target/next10-baseline/korrust",
+      "sha256": "e7a1117c34adc40b4bec275319ea3f68ec242be88ed3fe936d374336247a7062"
+    },
+    "candidate": {
+      "path": "/workspace/korrust/target/next10-final-v2/korrust",
+      "sha256": "a794c0691be7b07df8201cba5c8d489ef06c62f554aeac37d7bb94d6c5ca9f28"
+    }
+  },
+  "source_revision": "720c490c97d4730e465b6024c4ddbac961c435cc",
+  "environment": {
+    "JAVA_HOME": "/workspace/korrust-setup/jdk-21"
+  },
+  "frozen_input_hashes": {
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/actionmode/RibkaEligibility.kt": "20d3ad45466d50f8ac82be12efd5973c95275f74622399a17b0c5121113d5022",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioErrorCode.kt": "2a5e79d26cef180c4f40542dd94f81bada672a4c755f01f0187bedef24e50098",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt": "0f8bd02878e33edeca3d9e08a65b6ed96a44e6266c11053696816d69ca51db55",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogEntry.kt": "ad8a96509404079595da548ba9ea602b7d17ccc6459c527f73f34f6864bc51db",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt": "02c130ca13174deadca40c9054bc0e612bb50579ec3285178bca832b8bda99e3",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/GotoTab.kt": "8c684c8b766e51cfe8b033bfdde4e394ec4d9b8aa2a6490ea87b1787b89f502d",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/feedback/PrereleaseVersion.kt": "d4c09caf8a85b2f5f2d8e94404fd80b04386bb39b9734f6a2a3fe3a2f6193bc8",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/pdbconvert/PdbBookNumberToBookIdMapping.kt": "9c519725139a73738e4e8305ca53e8837b0d749ee7ddce81adee45534a323925",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/services/AppServices.kt": "3f7bbff9d0a56264a13a705c1ee8e27f350d60ba949162a2f1be8d09dae41159",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/InternalDbTxWrapper.kt": "b53c86c2c6d2286876e5c441cc5a8b4420c3cf042e4feb98714cb946b9a39c46",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt": "527b8dfff07dcaa3dd7fcc4ee852c9707fc2765587ffb2374c75a04ef102106c",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/sync/SyncUtils.kt": "8989169cfb0def01dc4a4abc8854a1138e1b6419f84b90597c2e644a2a5168c0",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/AlphanumComparator.kt": "56326e90eba0626a340aaf73c3f4f539e7000c5b6b2242b45a81beb0319fcd33",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardList.kt": "bfce6040eacbff475ddeabd04f33503361e1be9fea03aaf68a6fddb9698de684",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookColorUtil.kt": "9251854fdc0168549fd0afb3e007589a22145d817cc49f6a264fdf8148355c76",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/FormattedVerseText.kt": "c0bd140e97d28b74a41d28af81e49a955564dc13df469c7a3e0c1058cc3888a2",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Levenshtein.kt": "60ab1eee8d1efce538932c839371259b22eec6db1dcf6faf2ca46b2ce5071e51",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/LidToAri.kt": "4d9e7f15f0bfa998059e2ad48fbfe1031db5d1bac60d9c09b0baf8de66929cf7",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/QueryTokenizer.kt": "f28172f76561e583bd046a5d28e65468f8c8f358fec3a5553c4399b537b8e7f1",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/RequestCodes.kt": "61f910f2db36e4bd8ff62432388caa0a4250ba9ef6d36f4f7af4e479fc8f475a",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesUiModel.kt": "ccf88eafbd377bad4a4d6d89f13ce1e1722caa8900e98770ebb5ffec188bf55d",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ReaderGestureActions.kt": "de818317815f6f3c8602ff5c5aac7b50ea5c663a756e719104c2f97fca9b94b2",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/VerseNumberPlacement.kt": "957ed0e7cae7251aeb4d44abf8418959e7757601670e81178257a4b289dfa9cd",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Gid.kt": "487b8ecadfe52f276154df2c2fabe3d4bdea0deb550ad5cd7400dd63fe0ddc0c",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Rpp.kt": "edaa027f6e6f053e85ae87a9afe7e9a6ded54e0fb09f98a1fe2db12391ecf37d",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/LogInterface.kt": "75c396bc84cab536f47925e2f2f4b99744e7eed08e4df6b3800b2ba4fbd8f6bb",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/MediaStateListener.kt": "135550d4f742c138eab62085d70500277440227647bec6c0a34c85433392cc10",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongPlaybackState.kt": "1e66ca9032335bb8b418b286f2045cf8d1efa66108b9407786bdaef87167c0bb",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongTextZoomable.kt": "e97b1f80db7c221c201af3ff01aae4947facdcffb20f0645ad3a07a79cee9211",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt": "f0d62b37a07ae8d538805f8daea3052945f0d57dd81624d05d66e817c60ab485",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentText.kt": "6392a4452b7723e2fe889a545bd945ae0426414fd806c467fa0b6bde13f99ee2",
+    "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt": "1ffdebcffa174e2c119205b2ed7698fc9d47a0dd2deaf9e816eb84faa388ab02",
+    "benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt": "d6345596424c054ee8abe3c9c7ba28f21a7ea8615f71462ec8a6c0dafe1e9031",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "/workspace/korrust-setup/jdk-21/jmods/java.base.jmod": "f8d258a856a691c81ad9dd16964635bbc8a8fdd7f40edec37dcf3d904feb7ae1",
+    "tools/check_next10_app.py": "d693be67141484e027a994765187eb7e54632a717946da1bafc264486c014749",
+    "target/next10-baseline/korrust": "e7a1117c34adc40b4bec275319ea3f68ec242be88ed3fe936d374336247a7062",
+    "target/next10-final-v2/korrust": "a794c0691be7b07df8201cba5c8d489ef06c62f554aeac37d7bb94d6c5ca9f28"
+  },
+  "cases": [
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/actionmode/RibkaEligibility.kt",
+      "sha256": "20d3ad45466d50f8ac82be12efd5973c95275f74622399a17b0c5121113d5022",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/00-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/00-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioErrorCode.kt",
+      "sha256": "2a5e79d26cef180c4f40542dd94f81bada672a4c755f01f0187bedef24e50098",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/01-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/01-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt",
+      "sha256": "0f8bd02878e33edeca3d9e08a65b6ed96a44e6266c11053696816d69ca51db55",
+      "providers": {
+        "baseline": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/02-baseline.log"
+        },
+        "candidate": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/02-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogEntry.kt",
+      "sha256": "ad8a96509404079595da548ba9ea602b7d17ccc6459c527f73f34f6864bc51db",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/03-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/03-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt",
+      "sha256": "02c130ca13174deadca40c9054bc0e612bb50579ec3285178bca832b8bda99e3",
+      "providers": {
+        "baseline": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/04-baseline.log"
+        },
+        "candidate": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/04-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/GotoTab.kt",
+      "sha256": "8c684c8b766e51cfe8b033bfdde4e394ec4d9b8aa2a6490ea87b1787b89f502d",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/05-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/05-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/feedback/PrereleaseVersion.kt",
+      "sha256": "d4c09caf8a85b2f5f2d8e94404fd80b04386bb39b9734f6a2a3fe3a2f6193bc8",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/06-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/06-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/pdbconvert/PdbBookNumberToBookIdMapping.kt",
+      "sha256": "9c519725139a73738e4e8305ca53e8837b0d749ee7ddce81adee45534a323925",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/07-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/07-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/services/AppServices.kt",
+      "sha256": "3f7bbff9d0a56264a13a705c1ee8e27f350d60ba949162a2f1be8d09dae41159",
+      "providers": {
+        "baseline": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/08-baseline.log"
+        },
+        "candidate": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/08-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/InternalDbTxWrapper.kt",
+      "sha256": "b53c86c2c6d2286876e5c441cc5a8b4420c3cf042e4feb98714cb946b9a39c46",
+      "providers": {
+        "baseline": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/09-baseline.log"
+        },
+        "candidate": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/09-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt",
+      "sha256": "527b8dfff07dcaa3dd7fcc4ee852c9707fc2765587ffb2374c75a04ef102106c",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/10-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/10-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/sync/SyncUtils.kt",
+      "sha256": "8989169cfb0def01dc4a4abc8854a1138e1b6419f84b90597c2e644a2a5168c0",
+      "providers": {
+        "baseline": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/11-baseline.log"
+        },
+        "candidate": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/11-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/AlphanumComparator.kt",
+      "sha256": "56326e90eba0626a340aaf73c3f4f539e7000c5b6b2242b45a81beb0319fcd33",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/12-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/12-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardList.kt",
+      "sha256": "bfce6040eacbff475ddeabd04f33503361e1be9fea03aaf68a6fddb9698de684",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/13-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/13-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookColorUtil.kt",
+      "sha256": "9251854fdc0168549fd0afb3e007589a22145d817cc49f6a264fdf8148355c76",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/14-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/14-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/FormattedVerseText.kt",
+      "sha256": "c0bd140e97d28b74a41d28af81e49a955564dc13df469c7a3e0c1058cc3888a2",
+      "providers": {
+        "baseline": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/15-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/15-candidate.log"
+        }
+      },
+      "outcome": "newly_compiled"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Levenshtein.kt",
+      "sha256": "60ab1eee8d1efce538932c839371259b22eec6db1dcf6faf2ca46b2ce5071e51",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/16-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/16-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/LidToAri.kt",
+      "sha256": "4d9e7f15f0bfa998059e2ad48fbfe1031db5d1bac60d9c09b0baf8de66929cf7",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/17-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/17-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/QueryTokenizer.kt",
+      "sha256": "f28172f76561e583bd046a5d28e65468f8c8f358fec3a5553c4399b537b8e7f1",
+      "providers": {
+        "baseline": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/18-baseline.log"
+        },
+        "candidate": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/18-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/RequestCodes.kt",
+      "sha256": "61f910f2db36e4bd8ff62432388caa0a4250ba9ef6d36f4f7af4e479fc8f475a",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/19-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/19-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesUiModel.kt",
+      "sha256": "ccf88eafbd377bad4a4d6d89f13ce1e1722caa8900e98770ebb5ffec188bf55d",
+      "providers": {
+        "baseline": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/20-baseline.log"
+        },
+        "candidate": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/20-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ReaderGestureActions.kt",
+      "sha256": "de818317815f6f3c8602ff5c5aac7b50ea5c663a756e719104c2f97fca9b94b2",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/21-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/21-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/VerseNumberPlacement.kt",
+      "sha256": "957ed0e7cae7251aeb4d44abf8418959e7757601670e81178257a4b289dfa9cd",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/22-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/22-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Gid.kt",
+      "sha256": "487b8ecadfe52f276154df2c2fabe3d4bdea0deb550ad5cd7400dd63fe0ddc0c",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/23-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/23-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Rpp.kt",
+      "sha256": "edaa027f6e6f053e85ae87a9afe7e9a6ded54e0fb09f98a1fe2db12391ecf37d",
+      "providers": {
+        "baseline": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/24-baseline.log"
+        },
+        "candidate": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/24-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/LogInterface.kt",
+      "sha256": "75c396bc84cab536f47925e2f2f4b99744e7eed08e4df6b3800b2ba4fbd8f6bb",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/25-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/25-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/MediaStateListener.kt",
+      "sha256": "135550d4f742c138eab62085d70500277440227647bec6c0a34c85433392cc10",
+      "providers": {
+        "baseline": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/26-baseline.log"
+        },
+        "candidate": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/26-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongPlaybackState.kt",
+      "sha256": "1e66ca9032335bb8b418b286f2045cf8d1efa66108b9407786bdaef87167c0bb",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/27-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/27-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongTextZoomable.kt",
+      "sha256": "e97b1f80db7c221c201af3ff01aae4947facdcffb20f0645ad3a07a79cee9211",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/28-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/28-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt",
+      "sha256": "f0d62b37a07ae8d538805f8daea3052945f0d57dd81624d05d66e817c60ab485",
+      "providers": {
+        "baseline": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/29-baseline.log"
+        },
+        "candidate": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/29-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentText.kt",
+      "sha256": "6392a4452b7723e2fe889a545bd945ae0426414fd806c467fa0b6bde13f99ee2",
+      "providers": {
+        "baseline": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/30-baseline.log"
+        },
+        "candidate": {
+          "outcome": "rejected",
+          "exit_code": 1,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/30-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt",
+      "sha256": "1ffdebcffa174e2c119205b2ed7698fc9d47a0dd2deaf9e816eb84faa388ab02",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/31-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/31-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    },
+    {
+      "id": "benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt",
+      "sha256": "d6345596424c054ee8abe3c9c7ba28f21a7ea8615f71462ec8a6c0dafe1e9031",
+      "providers": {
+        "baseline": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/32-baseline.log"
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/32-candidate.log"
+        }
+      },
+      "outcome": "unchanged"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/actionmode/RibkaEligibility.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/0"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/00-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/actionmode/RibkaEligibility.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/0"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/00-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioErrorCode.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/1"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/01-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioErrorCode.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/1"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/01-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/2"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/02-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/2"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/02-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogEntry.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/3"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/03-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioLogEntry.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/3"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/03-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/4"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/04-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/PlaybackState.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/4"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/04-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/GotoTab.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/5"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/05-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/compose/goto/GotoTab.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/5"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/05-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/feedback/PrereleaseVersion.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/6"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/06-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/feedback/PrereleaseVersion.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/6"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/06-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/pdbconvert/PdbBookNumberToBookIdMapping.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/7"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/07-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/pdbconvert/PdbBookNumberToBookIdMapping.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/7"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/07-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/services/AppServices.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/08-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/services/AppServices.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/08-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/InternalDbTxWrapper.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/9"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/09-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/InternalDbTxWrapper.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/9"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/09-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/10"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/10-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/10"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/10-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/sync/SyncUtils.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/11"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/11-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/sync/SyncUtils.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/11"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/11-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/AlphanumComparator.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/12"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/12-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/AlphanumComparator.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/12"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/12-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardList.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/13"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/13-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardList.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/13"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/13-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookColorUtil.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/14"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/14-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/BookColorUtil.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/14"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/14-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/FormattedVerseText.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/15"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/15-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/FormattedVerseText.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/15"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/15-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Levenshtein.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/16"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/16-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/Levenshtein.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/16"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/16-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/LidToAri.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/17"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/17-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/LidToAri.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/17"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/17-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/QueryTokenizer.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/18"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/18-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/QueryTokenizer.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/18"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/18-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/RequestCodes.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/19"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/19-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/RequestCodes.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/19"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/19-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesUiModel.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/20"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/20-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/verses/VersesUiModel.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/20"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/20-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ReaderGestureActions.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/21"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/21-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/ReaderGestureActions.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/21"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/21-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/VerseNumberPlacement.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/22"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/22-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/widget/VerseNumberPlacement.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/22"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/22-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Gid.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/23"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/23-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Gid.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/23"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/23-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Rpp.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/24"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/24-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/model/Rpp.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/24"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/24-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/LogInterface.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/25"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/25-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/LogInterface.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/25"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/25-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/MediaStateListener.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/26"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/26-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/MediaStateListener.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/26"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/26-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongPlaybackState.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/27"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/27-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongPlaybackState.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/27"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/27-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongTextZoomable.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/28"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/28-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/SongTextZoomable.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/28"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/28-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/29"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/29-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/29"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/29-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentText.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/30"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/30-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentText.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/30"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/30-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/31"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/31-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/31"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/31-candidate.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-baseline/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/baseline/32"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/32-baseline.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/next10-final-v2/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/util/unsignedBinarySearch.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T144534946610Z-next10-app-assessment/candidate/32"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/32-candidate.log"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/00-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/00-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/01-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/01-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/02-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/02-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/03-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/03-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/04-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/04-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/05-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/05-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/06-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/06-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/07-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/07-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/08-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/08-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/09-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/09-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/10-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/10-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/11-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/11-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/12-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/12-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/13-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/13-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/14-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/14-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/15-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/15-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/16-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/16-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/17-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/17-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/18-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/18-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/19-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/19-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/20-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/20-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/21-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/21-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/22-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/22-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/23-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/23-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/24-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/24-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/25-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/25-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/26-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/26-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/27-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/27-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/28-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/28-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/29-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/29-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/30-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/30-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/31-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/31-candidate.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/32-baseline.log",
+    "reports/correctness/2026-11-13T144534946610Z-next10-app-assessment/32-candidate.log"
+  ],
+  "limitations": [
+    "This survey does not establish runtime, Kotlin metadata, Android-device, full-module or whole-application compatibility. QueryTokenizer runtime and fixed Java caller evidence is recorded separately by the operators harness."
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_next10_app.py",
+      "--baseline",
+      "/workspace/korrust/target/next10-baseline/korrust",
+      "--candidate",
+      "/workspace/korrust/target/next10-final-v2/korrust"
+    ]
+  ],
+  "counts": {
+    "unchanged": 32,
+    "newly_compiled": 1
+  },
+  "provider_counts": {
+    "baseline": {
+      "compiled": 21,
+      "rejected": 12
+    },
+    "candidate": {
+      "compiled": 22,
+      "rejected": 11
+    }
+  },
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": []
+  }
+}

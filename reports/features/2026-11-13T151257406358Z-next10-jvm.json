@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-13T15:25:34.686188+00:00",
+  "status": "completed_with_oracle_discrepancy",
+  "compiler": {
+    "path": "/workspace/korrust/target/next10-final-v3/korrust",
+    "sha256": "58990f36b6aba59d2b92c5417cbde8a3daff1396ea3eda01c1e85c4b5c3dc574",
+    "source_root": "/workspace/korrust"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "reference_source_revisions": {
+    "kotlin": "fea1ad8c18995b80d1ca0e3917056104613d23db",
+    "kotlin-spec": "0f762a2314a9304e4b3fc386b1aceef1d56c7e4c"
+  },
+  "inputs": {
+    "frozen_source_and_fixture_evidence": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+    "source_archive": "reports/correctness/2026-11-13T151257406358Z-next10-jvm/source.zip"
+  },
+  "features": [
+    {
+      "name": "canonical_file_jvm_name_facades",
+      "status": "supported",
+      "scope": "Canonical kotlin.jvm.JvmName file annotations, including qualified/import-alias forms and folded constant String names, select the JVM facade owner. Source and compiled module imports, package metadata, annotation retention, duplicate facade diagnostics, and owned-output facade rename/removal are checked.",
+      "restrictions": [
+        "ASCII identifier facade names; existing source filename restrictions remain. Multifile facades, member JvmName, and source annotation type aliases remain explicit unsupported boundaries.",
+        "Custom marks.JvmName annotations retain ordinary annotation behavior. The pinned compiler instead renames these facades using short-name matching, including alias and wildcard imports; this observed discrepancy is explicitly separated from differential passes.",
+        "No full application, Android runtime, or performance claim."
+      ],
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_ids": [
+        "provider/source-compilation",
+        "provider/jvm-signatures-facade-mapping",
+        "consumer/official-against-official",
+        "consumer/candidate-against-official",
+        "consumer/official-against-candidate",
+        "consumer/candidate-against-candidate",
+        "facade/canonical-folded-official",
+        "facade/custom-name-oracle-discrepancy",
+        "facade/canonical-shadow-folded-candidate",
+        "facade/owned-rename-removal-matches-clean",
+        "boundary/multifile",
+        "boundary/member-name",
+        "boundary/name-wrong-type",
+        "boundary/name-wrong-argument",
+        "boundary/name-duplicate",
+        "boundary/name-nonidentifier",
+        "boundary/annotation-source-typealias",
+        "boundary/duplicate-facade"
+      ]
+    },
+    {
+      "name": "private_internal_primary_constructors",
+      "status": "supported",
+      "scope": "Private/internal primary constructors of ordinary final nongeneric classes, with source/compiled access checks, same-module and friend-module calls, Kotlin metadata visibility and JVM flags. Private companion, instance, lambda, nested-class and nested-object factories execute under -Xverify:all. Identical nested constructor-access diagnostics survive failed outer overload resolution.",
+      "restrictions": [
+        "Protected, open/abstract, data, inner, value, sealed and explicit enum constructor combinations remain unsupported. Defaults, constructor annotations, secondary constructors and value-class parameter carriers remain unsupported.",
+        "Ordinary constructor callable references retain their explicit unsupported boundary. Existing source member-inline rejection can precede validation of oracle-invalid private constructor calls; top-level public-inline/internal constructor leakage is independently rejected.",
+        "Java callers compile once against official provider output and execute unchanged against both providers; Kotlin consumers compile independently against each provider, including friend and nonfriend checks. No full application or performance claim."
+      ],
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_ids": [
+        "provider/source-compilation",
+        "provider/jvm-signatures-facade-mapping",
+        "provider/official/java-runtime-metadata",
+        "consumer/official-against-official",
+        "consumer/candidate-against-official",
+        "consumer/friend-official-against-official",
+        "consumer/friend-candidate-against-official",
+        "consumer/nonfriend-official",
+        "consumer/private-official/PrivateBad.kt",
+        "consumer/private-official/PrivateAliasBad.kt",
+        "provider/candidate/java-runtime-metadata",
+        "consumer/official-against-candidate",
+        "consumer/candidate-against-candidate",
+        "consumer/friend-official-against-candidate",
+        "consumer/friend-candidate-against-candidate",
+        "consumer/nonfriend-candidate",
+        "consumer/private-candidate/PrivateBad.kt",
+        "consumer/private-candidate/PrivateAliasBad.kt",
+        "boundary/private-outside",
+        "boundary/private-alias",
+        "boundary/outer-cannot-construct-nested",
+        "boundary/inline-private-constructor",
+        "boundary/inline-private-lambda",
+        "boundary/private-default",
+        "boundary/internal-default",
+        "boundary/protected",
+        "boundary/private-generic",
+        "boundary/constructor-reference",
+        "boundary/conflicting-constructor-visibility",
+        "boundary/explicit-enum-constructor",
+        "boundary/private-value-parameter",
+        "boundary/inline-internal-constructor",
+        "boundary/inline-internal-lambda"
+      ]
+    }
+  ],
+  "oracle_discrepancies": [
+    {
+      "id": "facade/custom-name-oracle-discrepancy",
+      "outcome": "oracle_discrepancy",
+      "official_facades": [
+        "marks/NotAFacade.class",
+        "shadowalias/NotAFacadeEither.class",
+        "shadowwildcard/NotAWildcardFacade.class"
+      ],
+      "canonical_identity_expected_facades": [
+        "marks/ShadowUseKt.class",
+        "shadowalias/ShadowAliasKt.class",
+        "shadowwildcard/ShadowWildcardKt.class"
+      ],
+      "evidence": "Official javap records marks.JvmName on each renamed class, including import aliases and wildcard imports.",
+      "resolution": "Preserve canonical identity and ordinary annotation retention; exclude this case from differential pass counts. Pinned IR FileClassLowering.kt:194-197 compares the annotation constructor parent class name only; the emitted annotation descriptor proves marks.JvmName identity. This is recorded as a suspected oracle bug, not adopted as language behavior."
+    }
+  ],
+  "counts": {
+    "pass": 15,
+    "invalid_kotlin": 16,
+    "oracle_discrepancy": 1,
+    "unsupported_language": 13
+  },
+  "evidence": [
+    "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+    "reports/correctness/2026-11-13T151257406358Z-next10-jvm/source.zip",
+    "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge.json",
+    "reports/correctness/2026-11-13T151649845422Z-nullable-jvmstatic-reflection.json"
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_next10_jvm.py",
+      "--candidate",
+      "target/next10-final-v3/korrust",
+      "--source-root",
+      "/workspace/korrust",
+      "--skip-html"
+    ],
+    [
+      "python3",
+      "tools/check_nullable_annotations.py",
+      "--candidate",
+      "target/next10-final-v3/korrust",
+      "--source-root",
+      "/workspace/korrust",
+      "--skip-html"
+    ]
+  ],
+  "html_generation": "Deferred to parent combined report regeneration.",
+  "supersedes_feature_report": "reports/features/2026-11-13T143517911964Z-next10-jvm.json",
+  "correctness_repairs": [
+    {
+      "name": "nullable_method_annotation_attributes",
+      "counted_as_feature": false,
+      "scope": "Nullable result annotations use the existing member annotation merger, preserving one attribute per retention and existing parameter/Code attributes.",
+      "evidence_report": "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge.json"
+    },
+    {
+      "name": "canonical_jvmstatic_runtime_retention",
+      "counted_as_feature": false,
+      "scope": "Canonical JvmStatic remains RUNTIME while JvmOverloads remains BINARY. Exact complete annotation contracts and separate reflection counts check originals, generated overloads and companion bridges.",
+      "evidence_reports": [
+        "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge.json",
+        "reports/correctness/2026-11-13T151649845422Z-nullable-jvmstatic-reflection.json"
+      ]
+    }
+  ]
+}

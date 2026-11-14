@@ -211,10 +211,81 @@ pub fn compile_batch_with_options(
     }
     const_eval::resolve(&mut modules, &classpath)
         .map_err(|(index, error)| error.for_source(&sources[index].identity))?;
+    let mut facades = Vec::new();
+    for (input, module) in sources.iter().zip(&modules) {
+        let mut context = module.clone();
+        for peer in modules.iter().filter(|peer| {
+            peer.package == module.package
+                || module.imports.iter().any(|(alias, path, _)| {
+                    alias == "*" && path == &format!("{}/*", peer.package.replace('.', "/"))
+                })
+        }) {
+            for name in peer
+                .annotation_decl
+                .iter()
+                .map(|decl| decl.name.as_str())
+                .chain(peer.class_decl.iter().map(|decl| decl.name.as_str()))
+                .chain(peer.object_decl.iter().map(|decl| decl.name.as_str()))
+                .chain(peer.interface_decl.iter().map(|decl| decl.name.as_str()))
+                .chain(peer.enum_decl.iter().map(|decl| decl.name.as_str()))
+                .chain(peer.declarations.iter().map(declaration_name))
+                .chain(peer.type_aliases.iter().map(|decl| decl.name.as_str()))
+            {
+                if !context
+                    .imports
+                    .iter()
+                    .any(|(binding, _, _)| binding == name)
+                {
+                    context.imports.push((
+                        name.to_owned(),
+                        if module.package.is_empty() {
+                            name.to_owned()
+                        } else {
+                            format!("{}/{}", module.package.replace('.', "/"), name)
+                        },
+                        0,
+                    ));
+                }
+            }
+        }
+        for annotation in &context.file_annotations {
+            let name = context
+                .imports
+                .iter()
+                .find(|(alias, _, _)| alias == &annotation.name)
+                .map_or(annotation.name.as_str(), |(_, path, _)| path.as_str());
+            if modules.iter().any(|peer| {
+                peer.type_aliases.iter().any(|alias| {
+                    name == if peer.package.is_empty() {
+                        alias.name.clone()
+                    } else {
+                        format!("{}/{}", peer.package.replace('.', "/"), alias.name)
+                    }
+                })
+            }) {
+                return Err(Diagnostic::new(
+                    annotation.offset,
+                    "File annotations through source type aliases are unsupported",
+                )
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "FILE_ANNOTATION_TYPE_ALIAS_UNSUPPORTED",
+                )
+                .for_source(&input.identity));
+            }
+        }
+        facades.push(
+            check::file_jvm_name(&context, &classpath)
+                .map_err(|error| error.for_source(&input.identity))?
+                .unwrap_or(
+                    source_facade_name(&input.file_name)
+                        .map_err(|error| error.for_source(&input.identity))?,
+                ),
+        );
+    }
     for (source_index, (input, module)) in sources.iter().zip(&modules).enumerate() {
         let first_unit = units.len();
-        let facade = source_facade_name(&input.file_name)
-            .map_err(|error| error.for_source(&input.identity))?;
+        let facade = &facades[source_index];
         let qualify = |name: &str| {
             if module.package.is_empty() {
                 name.into()
@@ -234,7 +305,7 @@ pub fn compile_batch_with_options(
             package.interface_decl = None;
             package.enum_decl = None;
             package.declarations.clear();
-            units.push((qualify(&facade), package));
+            units.push((qualify(facade), package));
         }
         let mut declarations = module.declarations.clone();
         declarations.extend(
@@ -263,6 +334,10 @@ pub fn compile_batch_with_options(
                 return Err(Diagnostic::new(
                     0,
                     format!("Duplicate source declaration: {}", owner.replace('/', ".")),
+                )
+                .with_kind(
+                    DiagnosticKind::InvalidKotlin,
+                    "DUPLICATE_SOURCE_DECLARATION",
                 )
                 .for_source(&input.identity));
             }
@@ -532,12 +607,7 @@ pub fn compile_batch_with_options(
                     continue;
                 }
                 let key = if alias.private {
-                    format!(
-                        "{}#{}",
-                        source_facade_name(&sources[index].file_name)
-                            .map_err(|error| error.for_source(&sources[index].identity))?,
-                        alias.name
-                    )
+                    format!("{}#{}", facades[index], alias.name)
                 } else {
                     alias.name.clone()
                 };
@@ -1233,11 +1303,20 @@ fn check_unit(
     owner: &str,
 ) -> Result<CheckedUnit> {
     if module.enum_decl.is_some() {
-        check::enums::check_enum(module, classpath, owner)
-            .map(|value| CheckedUnit::Enum(Box::new(value)))
+        let value = check::enums::check_enum(module, classpath, owner)?;
+        check::validate_variant_class_signatures(
+            &module.enum_decl.as_ref().unwrap().body,
+            &value.class,
+            classpath,
+        )?;
+        for entry in &value.entry_classes {
+            check::validate_variant_class_signatures(&entry.source, &entry.class, classpath)?;
+        }
+        Ok(CheckedUnit::Enum(Box::new(value)))
     } else {
-        check::check_with_owner(module, classpath, owner)
-            .map(|value| CheckedUnit::Module(Box::new(value)))
+        let value = check::check_with_owner(module, classpath, owner)?;
+        check::validate_variant_signatures(module, &value, classpath)?;
+        Ok(CheckedUnit::Module(Box::new(value)))
     }
 }
 

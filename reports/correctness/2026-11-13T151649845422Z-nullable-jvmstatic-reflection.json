@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-13T15:16:50.226708+00:00",
+  "status": "pass",
+  "compiler": {
+    "path": "target/next10-final-v3/korrust",
+    "sha256": "58990f36b6aba59d2b92c5417cbde8a3daff1396ea3eda01c1e85c4b5c3dc574"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "selection": "Supplementary exact reflection counts for canonical RUNTIME JvmStatic on all 21 annotated nullable fixture methods: nine methods must have exactly one runtime JvmStatic, twelve must have none. Java caller compiles once against official output and is reused unchanged with verification against both frozen providers.",
+  "frozen_input_hashes": {
+    "target/next10-final-v3/korrust": "58990f36b6aba59d2b92c5417cbde8a3daff1396ea3eda01c1e85c4b5c3dc574",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge.json": "6e9706a149eac23821e660be0226e66abb35c1c7a6a85ca0361b9ca679b232b6",
+    "reports/correctness/2026-11-13T151649845422Z-nullable-jvmstatic-reflection/JvmStaticReflectionCaller.java": "65a729a6cee1ad1729d7cc226c5bcdd9fa72ee603a324ff3d4c2c390a2c4e873",
+    "reports/correctness/2026-11-13T151649845422Z-nullable-jvmstatic-reflection/replay.py": "7b74b6b64e381e88b571b78af478875fbc2215a4d6fccdb26a63958f3dfbb7f9",
+    "target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/official/nullableannotations/Holder.class": "7bdca999159b31bd54ed294563057b25a161b086f20551602445185e7ef19ecf",
+    "target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/official/nullableannotations/Member$Companion.class": "9ceb837e34a59d5524c9dd990a76e12dc33aa996ed4781cc3f5cbd96c28ab370",
+    "target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/official/nullableannotations/Member.class": "51420837cf31c6b2892ee7893ca9a95424f5de3cc546ac6b02c651463ba1b554",
+    "target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/official/nullableannotations/MethodsKt.class": "6bd329665e47584ba602c15ec9ad003e4de1abd230c2daf728ec58d18e072c17",
+    "target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/candidate/nullableannotations/Holder.class": "bce0512a58c8478be7f3f896d444a5ae2377c81563c881e7d9462d535dba1727",
+    "target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/candidate/nullableannotations/Member$Companion.class": "9e73e6232e88a3387596ec71fbcab92e7c2e30bb8b0dc5bcb970c2e88e2a0b13",
+    "target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/candidate/nullableannotations/Member.class": "93b9640b397b07fe967d4d5e37dc368839261954f6187b465923586167713731",
+    "target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/candidate/nullableannotations/MethodsKt.class": "9ab0b464e686de6ff824a2f1991765949d16a32440a539aafe416e9b40ed427a",
+    "target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/dependencies/nullableannotations/BinaryMark.class": "8c429dc39a60ee98f6d8ee588d0f9492d54aa546a11a66a7deda363cef9e4d4b",
+    "target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/dependencies/nullableannotations/RuntimeMark.class": "8a869cd49806dfa8150ce9b6a6d20f3b982f0972df44c9681bf60870af3d2e69"
+  },
+  "provider_report": "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge.json",
+  "cases": [
+    {
+      "id": "fixed_official_compilation",
+      "outcome": "pass",
+      "source_sha256": "65a729a6cee1ad1729d7cc226c5bcdd9fa72ee603a324ff3d4c2c390a2c4e873",
+      "caller_class_hashes": {
+        "target/checks/2026-11-13T151649845422Z-nullable-jvmstatic-reflection/caller/nullableannotations/JvmStaticReflectionCaller.class": "0bfdaf26543540e3a44293fd433ff418a44d956c16fb9e072f92bae48be889c4"
+      }
+    },
+    {
+      "id": "reflection/official",
+      "outcome": "pass",
+      "checked_methods": 21,
+      "exactly_one_runtime_jvmstatic": 9,
+      "no_runtime_jvmstatic": 12
+    },
+    {
+      "id": "reflection/candidate",
+      "outcome": "pass",
+      "checked_methods": 21,
+      "exactly_one_runtime_jvmstatic": 9,
+      "no_runtime_jvmstatic": 12
+    },
+    {
+      "id": "fixed_caller_hashes_preserved",
+      "outcome": "pass"
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "pass",
+      "changed": []
+    }
+  ],
+  "commands": [
+    {
+      "label": "JDK identity",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-version"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T151649845422Z-nullable-jvmstatic-reflection/00-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151649845422Z-nullable-jvmstatic-reflection/00-stderr.txt"
+    },
+    {
+      "label": "Compile reflection caller once against official provider",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/official:/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151649845422Z-nullable-jvmstatic-reflection/caller",
+        "/workspace/korrust/reports/correctness/2026-11-13T151649845422Z-nullable-jvmstatic-reflection/JvmStaticReflectionCaller.java"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T151649845422Z-nullable-jvmstatic-reflection/01-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151649845422Z-nullable-jvmstatic-reflection/01-stderr.txt"
+    },
+    {
+      "label": "Exact JvmStatic reflection count against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151649845422Z-nullable-jvmstatic-reflection/caller:/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/official:/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "nullableannotations.JvmStaticReflectionCaller"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T151649845422Z-nullable-jvmstatic-reflection/02-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151649845422Z-nullable-jvmstatic-reflection/02-stderr.txt"
+    },
+    {
+      "label": "Exact JvmStatic reflection count against candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151649845422Z-nullable-jvmstatic-reflection/caller:/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/candidate:/workspace/korrust/target/checks/2026-11-13T151257528873Z-nullable-annotation-merge/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "nullableannotations.JvmStaticReflectionCaller"
+      ],
+      "returncode": 0,
+      "stdout": "reports/correctness/2026-11-13T151649845422Z-nullable-jvmstatic-reflection/03-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151649845422Z-nullable-jvmstatic-reflection/03-stderr.txt"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-13T151649845422Z-nullable-jvmstatic-reflection/JvmStaticReflectionCaller.java",
+    "reports/correctness/2026-11-13T151649845422Z-nullable-jvmstatic-reflection/replay.py"
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "reports/correctness/2026-11-13T151649845422Z-nullable-jvmstatic-reflection/replay.py",
+      "--candidate",
+      "target/next10-final-v3/korrust",
+      "--provider-report",
+      "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge.json"
+    ]
+  ],
+  "counts": {
+    "pass": 5
+  }
+}

@@ -498,6 +498,60 @@ mod tests {
     }
 
     #[test]
+    fn nullable_result_merges_method_annotations_and_preserves_parameter_attributes() {
+        let mut pool = Pool::default();
+        let marks = [
+            marker("Lsample/Runtime;", true),
+            marker("Lsample/Binary;", false),
+            marker("Lkotlin/jvm/JvmOverloads;", false),
+        ];
+        let mut existing = attributes(&mut pool, &marks).unwrap();
+        let code = attribute(pool.utf8("Code").unwrap(), &[9, 8, 7]).unwrap();
+        let parameters = attribute(
+            pool.utf8("RuntimeInvisibleParameterAnnotations").unwrap(),
+            &[1, 0, 0],
+        )
+        .unwrap();
+        existing.extend([code.clone(), parameters.clone()]);
+        let mut value = member(&existing);
+        let before = value.clone();
+        super::super::nullable_result(&mut pool, &mut value, &crate::syntax::Type::String).unwrap();
+        assert_eq!(value, before);
+        super::super::nullable_result(
+            &mut pool,
+            &mut value,
+            &crate::syntax::Type::Nullable(Box::new(crate::syntax::Type::String)),
+        )
+        .unwrap();
+        assert_eq!(u16::from_be_bytes([value[6], value[7]]), 4);
+        assert!(value.windows(code.len()).any(|bytes| bytes == code));
+        assert!(
+            value
+                .windows(parameters.len())
+                .any(|bytes| bytes == parameters)
+        );
+        let visible = pool.utf8("RuntimeVisibleAnnotations").unwrap();
+        let invisible = pool.utf8("RuntimeInvisibleAnnotations").unwrap();
+        let visible_payloads = payloads(&value, visible);
+        assert_eq!(visible_payloads.len(), 1);
+        assert_eq!(&visible_payloads[0][..2], &[0, 1]);
+        let invisible_payloads = payloads(&value, invisible);
+        assert_eq!(invisible_payloads.len(), 1);
+        assert_eq!(&invisible_payloads[0][..2], &[0, 3]);
+        let mut expected = attributes(
+            &mut pool,
+            &[
+                marks[1].clone(),
+                marks[2].clone(),
+                marker("Lorg/jetbrains/annotations/Nullable;", false),
+            ],
+        )
+        .unwrap()
+        .remove(0);
+        assert_eq!(invisible_payloads[0], expected.split_off(6));
+    }
+
+    #[test]
     fn nested_array_enum_class_and_primitive_existing_values_are_preserved() {
         let mut pool = Pool::default();
         let name = pool.utf8("RuntimeVisibleAnnotations").unwrap();

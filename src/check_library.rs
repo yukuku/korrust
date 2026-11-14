@@ -548,12 +548,12 @@ impl Checker<'_> {
             .map(|p| p.iter().map(|p| p.2).collect())
             .unwrap_or_else(|| vec![false; params.len()]);
         let named = self.method_named(&method);
-        let inline = method
+        let inline_declaration = method
             .library
             .as_ref()
-            .is_some_and(|m| m.inline && !m.builtin_array)
-            && !self.inline_analysis;
-        if inline {
+            .is_some_and(|m| m.inline && !m.builtin_array);
+        let inline = inline_declaration && !self.inline_analysis;
+        if inline_declaration {
             crate::compiled_inline::validate_access(&method, self.classpath, &self.lambda_owner)?;
         }
         let old_inline = self.inline_result.clone();
@@ -597,7 +597,7 @@ impl Checker<'_> {
                 .classpath
                 .file_private_visible(&self.lambda_owner, &method)
             && method.owner != self.lambda_owner
-            && (!inline
+            && (!inline_declaration
                 || mask != 0
                 || !method
                     .library
@@ -1078,7 +1078,11 @@ impl Checker<'_> {
             .methods
             .iter()
             .filter(|method| {
-                method.name == "<init>" && method.access & 1 != 0 && !method.unsupported
+                method.name == "<init>"
+                    && self
+                        .classpath
+                        .constructor_visible(&self.lambda_owner, method)
+                    && !method.unsupported
             })
             .filter_map(|method| {
                 let mut method = method.clone();
@@ -1113,6 +1117,18 @@ impl Checker<'_> {
                     "BUILTIN_CONSTRUCTOR_JVM_MISMATCH",
                 ));
             }
+        }
+        if constructors.is_empty()
+            && class.methods.iter().any(|m| {
+                m.name == "<init>" && !self.classpath.constructor_visible(&self.lambda_owner, m)
+            })
+        {
+            return Err(
+                Diagnostic::new(offset, "Constructor is inaccessible").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "INACCESSIBLE_CONSTRUCTOR",
+                ),
+            );
         }
         let method = self.select_method(&constructors, args, offset)?;
         let normalized = self.vararg_arguments(&method, args, offset)?;
@@ -1252,11 +1268,27 @@ impl Checker<'_> {
             .methods
             .iter()
             .filter(|method| {
-                method.name == "<init>" && method.access & 1 != 0 && !method.unsupported
+                method.name == "<init>"
+                    && self
+                        .classpath
+                        .constructor_visible(&self.lambda_owner, method)
+                    && !method.unsupported
             })
             .cloned()
             .map(|method| library::specialize_receiver(method, &ty, &class, self.classpath))
             .collect::<Vec<_>>();
+        if constructors.is_empty()
+            && class.methods.iter().any(|m| {
+                m.name == "<init>" && !self.classpath.constructor_visible(&self.lambda_owner, m)
+            })
+        {
+            return Err(
+                Diagnostic::new(offset, "Constructor is inaccessible").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "INACCESSIBLE_CONSTRUCTOR",
+                ),
+            );
+        }
         let method = self.select_method(&constructors, args, offset)?;
         let normalized = self.vararg_arguments(&method, args, offset)?;
         let args = normalized.as_slice();
@@ -1667,7 +1699,11 @@ impl Checker<'_> {
         let constructors = class
             .methods
             .iter()
-            .filter(|m| m.name == "<init>" && m.access & 1 != 0 && !m.unsupported)
+            .filter(|m| {
+                m.name == "<init>"
+                    && self.classpath.constructor_visible(&self.lambda_owner, m)
+                    && !m.unsupported
+            })
             .cloned()
             .collect::<Vec<_>>();
         if constructors.is_empty() && !class.kotlin_class {
@@ -1692,6 +1728,18 @@ impl Checker<'_> {
                     "JAVA_CONSTRUCTOR_VISIBILITY_UNSUPPORTED"
                 },
             ));
+        }
+        if constructors.is_empty()
+            && class.methods.iter().any(|m| {
+                m.name == "<init>" && !self.classpath.constructor_visible(&self.lambda_owner, m)
+            })
+        {
+            return Err(
+                Diagnostic::new(offset, "Constructor is inaccessible").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "INACCESSIBLE_CONSTRUCTOR",
+                ),
+            );
         }
         let method = self.select_method(&constructors, args, offset)?;
         let normalized = self.vararg_arguments(&method, args, offset)?;

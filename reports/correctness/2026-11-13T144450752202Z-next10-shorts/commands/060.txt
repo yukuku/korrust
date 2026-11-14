@@ -1,0 +1,4 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /workspace/korrust/tests/next10_shorts/invalid/wrong_initializer.kt -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -module-name next10_shorts -cp /workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-official-wrong_initializer
+tests/next10_shorts/invalid/wrong_initializer.kt:1:29: error: return type mismatch: expected 'Short', actual 'Int'.
+fun bad() = ShortArray(1) { 32768 }
+                            ^^^^^

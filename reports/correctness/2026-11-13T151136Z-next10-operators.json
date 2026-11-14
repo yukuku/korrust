@@ -1,0 +1,1989 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-13T15:11:36.855626+00:00",
+  "status": "complete",
+  "cases": [
+    {
+      "id": "compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass",
+      "assertions": 147,
+      "output": "OK 147"
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass",
+      "assertions": 147,
+      "output": "OK 147"
+    },
+    {
+      "id": "abi/operators.Measure",
+      "outcome": "pass"
+    },
+    {
+      "id": "abi/operators.Shifted",
+      "outcome": "pass"
+    },
+    {
+      "id": "abi/operators.Plain",
+      "outcome": "pass"
+    },
+    {
+      "id": "abi/operators.Origin",
+      "outcome": "pass"
+    },
+    {
+      "id": "abi/operators.Middle",
+      "outcome": "pass"
+    },
+    {
+      "id": "abi/operators.Descendant",
+      "outcome": "pass"
+    },
+    {
+      "id": "abi/operators.BaseFlag",
+      "outcome": "pass"
+    },
+    {
+      "id": "abi/operators.DerivedFlag",
+      "outcome": "pass"
+    },
+    {
+      "id": "abi/operators.Switch",
+      "outcome": "pass"
+    },
+    {
+      "id": "abi/operators.OperatorsKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "abi/imported.ImportedKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin_consumer/official/official",
+      "outcome": "pass",
+      "output": "OK"
+    },
+    {
+      "id": "kotlin_consumer/official/candidate",
+      "outcome": "pass",
+      "output": "OK"
+    },
+    {
+      "id": "kotlin_consumer/candidate/official",
+      "outcome": "pass",
+      "output": "OK"
+    },
+    {
+      "id": "kotlin_consumer/candidate/candidate",
+      "outcome": "pass",
+      "output": "OK"
+    },
+    {
+      "id": "app/compile/official",
+      "outcome": "pass",
+      "path": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/QueryTokenizer.kt",
+      "source_sha256": "f28172f76561e583bd046a5d28e65468f8c8f358fec3a5553c4399b537b8e7f1",
+      "unchanged_source": true
+    },
+    {
+      "id": "app/runtime/official",
+      "outcome": "pass",
+      "assertions": 13,
+      "output": "OK:13"
+    },
+    {
+      "id": "app/compile/candidate",
+      "outcome": "unsupported_language",
+      "path": "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/QueryTokenizer.kt",
+      "source_sha256": "f28172f76561e583bd046a5d28e65468f8c8f358fec3a5553c4399b537b8e7f1",
+      "unchanged_source": true,
+      "diagnostic": "{\"source_identity\":\"/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/QueryTokenizer.kt\",\"offset\":1200,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Cannot infer type parameter T\",\"path\":\"/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/QueryTokenizer.kt\",\"line\":21,\"column\":43}",
+      "scope": "Existing expected-result generic inference/contract refinement boundary; no app-file compilation pass claimed."
+    },
+    {
+      "id": "app/runtime/candidate",
+      "outcome": "not_run",
+      "reason": "Unchanged source compilation rejected; see app/compile/candidate."
+    },
+    {
+      "id": "app/fixed_caller_integrity",
+      "outcome": "pass",
+      "class_hashes": {
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/query-caller/QueryTokenizerCaller.class": "e18d10ce38fd918feafb16178fb29806efa35068060b84ebdfb4d25105008059"
+      }
+    },
+    {
+      "id": "boundary/UnaryArity",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "source_sha256": "c4c9358f09424d70b12e8a784a3d22a7e244790dd2eaaa8a518e09e1ccfc32f5"
+    },
+    {
+      "id": "boundary/NotArity",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "source_sha256": "a52444b5217c47174bcdbd0cccdcc154e83bffbcc6600882014579f14ddb3c7f"
+    },
+    {
+      "id": "boundary/CompareResult",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "source_sha256": "8ecc2508680276d3efeb09c761bd29fe652057ad765c5a5341006f95b1774a29"
+    },
+    {
+      "id": "boundary/CompareInferredResult",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "source_sha256": "1184b2b05b2ad3e8fa0b5f74e5f8ee82f65d29695d4953aa4e17a5913f0ee7a2"
+    },
+    {
+      "id": "boundary/CompareArity",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "source_sha256": "9c94deac7d54e6585a48df8f09c32296608fca0b634fe36d898e6e8cac5e7c95"
+    },
+    {
+      "id": "boundary/CompareDefault",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "source_sha256": "877fac5b43ba5011557bf5c201869cc6a6752b05e16c47055460631aefac8dbb"
+    },
+    {
+      "id": "boundary/CompareVararg",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "source_sha256": "79874dd5feb142c7ed2f7f26edb7ac18e73d143b9f599d39b77f705e44e7c51e"
+    },
+    {
+      "id": "boundary/MissingUnaryModifier",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "source_sha256": "86ddf8d1d9d34eeb4bd85eedb30050a2293761ede258507cbeadd34f7cba5a74"
+    },
+    {
+      "id": "boundary/MissingCompareModifier",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "source_sha256": "f95dcf6ca8c778be261a066c82c900bba983e0c404267f1b5c05d71a46ebfe21"
+    },
+    {
+      "id": "boundary/PrivateUnary",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "source_sha256": "743b593c22e7f8e067826c8c3a05e41549bfe7481df2efa36a964f1741f8065e"
+    },
+    {
+      "id": "boundary/PrivateCompare",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "source_sha256": "ef7b65816c4a40d2a98d8d12634afd2fd5abb8be6833a21b648f2d56c8911676"
+    },
+    {
+      "id": "boundary/UnrelatedOverload",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "source_sha256": "80d9de7415cfca8b5a1caa55c198c59fae63c89d0b5c4408a68c69bc94ffaa4d"
+    },
+    {
+      "id": "boundary/PrivateAncestor",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "source_sha256": "fed5bbe4a5b040af098d2835103efccae201e9d1c081b6c527696c88b8621284"
+    },
+    {
+      "id": "boundary/MissingInterfaceModifier",
+      "outcome": "invalid_kotlin",
+      "official_accepts": false,
+      "source_sha256": "41d8bdc8d72abd0a0dd511ab7229959f0a22c95dcf4894100d6e15970ac646a9"
+    },
+    {
+      "id": "boundary/NullableUnary",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "source_sha256": "53983bccf902d199a4fb54cee3a92f4b093628d7b86c2bfcbc009e5ec6a4b4ef"
+    },
+    {
+      "id": "boundary/NullableCompare",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "source_sha256": "6e991772cd1c9a9a07ff79a7d5bc53657cbf66b4e17658f088d0d12f7e314765"
+    },
+    {
+      "id": "boundary/CovariantOverride",
+      "outcome": "unsupported_language",
+      "official_accepts": true,
+      "source_sha256": "21c38e70eafcb826d784a56bf4326f61aafd3cc0a2ed068732f4f596325b8fd0"
+    },
+    {
+      "id": "extensionObject",
+      "family": "custom_operators",
+      "root": "box",
+      "tier": "selected",
+      "kind": "box",
+      "outcome": "unsupported_language",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/operatorConventions/compareTo/extensionObject.kt",
+        "sha256": "00df44446adc37ec77e7cbe7a14a9b00e4aae5e3e4ac842a14186c74a49d5978"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "target/checks/2026-11-13T151136Z-next10-operators/upstream/extensionObject/sources/main/extensionObject.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "candidate_diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/extensionObject/sources/main/extensionObject.kt",
+          "offset": 139,
+          "category": "unsupported_language",
+          "code": "STRING_TEMPLATE_VALUE_UNSUPPORTED",
+          "message": "String templates support only String, supported primitives, their nullable forms, and null",
+          "path": "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/extensionObject/sources/main/extensionObject.kt",
+          "line": 6,
+          "column": 25,
+          "upstream_location": {
+            "path": "references/kotlin/compiler/testData/codegen/box/operatorConventions/compareTo/extensionObject.kt",
+            "char_offset": 139,
+            "byte_offset": 139,
+            "line": 6,
+            "column": 25
+          }
+        }
+      ],
+      "acceptance_scope": "unchanged_original_assessment"
+    },
+    {
+      "id": "recursiveCompareTo",
+      "family": "custom_operators",
+      "root": "box",
+      "tier": "selected",
+      "kind": "box",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/functions/recursiveCompareTo.kt",
+        "sha256": "749def508356f70f41e8100ed464c05fc63871e6c462f7346d87d60af09d2394"
+      },
+      "modules": [
+        {
+          "name": "main",
+          "dependencies": [],
+          "friends": [],
+          "depends_on": [],
+          "directives": []
+        }
+      ],
+      "source_maps": [
+        "target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/sources/main/recursiveCompareTo.kt.source-map.json"
+      ],
+      "candidate_settings": {
+        "main": []
+      },
+      "java_caller_class_hashes": {
+        "target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/caller/UpstreamBox.class": "5088fb632a4ced3117d1bfe70d27a1ba313873a27b2cc6e104fd3ec3c8c6cc63"
+      },
+      "runtime": "Original upstream box() asserts OK with -Xverify:all; identical Java caller bytecode reused",
+      "official_kotlin_consumers": {
+        "official": "compiled with pinned Kotlin and executed with JVM verification",
+        "candidate": "compiled with pinned Kotlin and executed with JVM verification"
+      },
+      "kotlin_consumer_scope": "Top-level box declaration metadata/name resolution and execution only; no complete metadata equivalence claim",
+      "signature_scope": "Top-level public/protected JVM declarations and descriptors; nested and generated class signatures are unassessed",
+      "scope": "Original source execution and top-level JVM descriptors",
+      "acceptance_scope": "unchanged_original_assessment"
+    },
+    {
+      "id": "fixed_caller_integrity",
+      "outcome": "pass",
+      "class_hashes": {
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/java/Check.class": "7d1d129759957a12de885387d4d7d2d75f0a54d61cfd6844d78a02b2f0f1f5e2"
+      }
+    }
+  ],
+  "commands": [
+    {
+      "label": "JDK identity",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0000-stderr.txt"
+    },
+    {
+      "label": "Official compiler identity",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0001-stderr.txt"
+    },
+    {
+      "label": "Compile official/dependency",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/dependency/Library.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/dependency",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0002-stderr.txt"
+    },
+    {
+      "label": "Compile official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/Operators.kt",
+        "/workspace/korrust/tests/next10_operators/Imported.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0003-stderr.txt"
+    },
+    {
+      "label": "Compile candidate/candidate",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/next10_operators/Operators.kt",
+        "/workspace/korrust/tests/next10_operators/Imported.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0004-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java caller against official output",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official:/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/java",
+        "/workspace/korrust/tests/next10_operators/Check.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0005-stderr.txt"
+    },
+    {
+      "label": "Run fixed Java caller/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/java:/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official:/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0006-stderr.txt"
+    },
+    {
+      "label": "Run fixed Java caller/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/java:/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate:/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0007-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/official/operators.Measure",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official",
+        "operators.Measure"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0008-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/candidate/operators.Measure",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate",
+        "operators.Measure"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0009-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/official/operators.Shifted",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official",
+        "operators.Shifted"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0010-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/candidate/operators.Shifted",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate",
+        "operators.Shifted"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0011-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/official/operators.Plain",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official",
+        "operators.Plain"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0012-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/candidate/operators.Plain",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate",
+        "operators.Plain"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0013-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/official/operators.Origin",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official",
+        "operators.Origin"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0014-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/candidate/operators.Origin",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate",
+        "operators.Origin"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0015-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/official/operators.Middle",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official",
+        "operators.Middle"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0016-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/candidate/operators.Middle",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate",
+        "operators.Middle"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0017-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/official/operators.Descendant",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official",
+        "operators.Descendant"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0018-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/candidate/operators.Descendant",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate",
+        "operators.Descendant"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0019-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/official/operators.BaseFlag",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official",
+        "operators.BaseFlag"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0020-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/candidate/operators.BaseFlag",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate",
+        "operators.BaseFlag"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0021-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/official/operators.DerivedFlag",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official",
+        "operators.DerivedFlag"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0022-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/candidate/operators.DerivedFlag",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate",
+        "operators.DerivedFlag"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0023-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/official/operators.Switch",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official",
+        "operators.Switch"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0024-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/candidate/operators.Switch",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate",
+        "operators.Switch"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0025-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/official/operators.OperatorsKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official",
+        "operators.OperatorsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0026-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/candidate/operators.OperatorsKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate",
+        "operators.OperatorsKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0027-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/official/imported.ImportedKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official",
+        "imported.ImportedKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0028-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0028-stderr.txt"
+    },
+    {
+      "label": "Inspect ABI/candidate/imported.ImportedKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate",
+        "imported.ImportedKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0029-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0029-stderr.txt"
+    },
+    {
+      "label": "Compile official/consumer-against-official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/Consumer.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official:/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/consumer-against-official",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0030-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0030-stderr.txt"
+    },
+    {
+      "label": "Run Kotlin consumer compiled against official/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/consumer-against-official:/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official:/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0031-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0031-stderr.txt"
+    },
+    {
+      "label": "Run Kotlin consumer compiled against official/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/consumer-against-official:/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate:/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0032-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0032-stderr.txt"
+    },
+    {
+      "label": "Compile official/consumer-against-candidate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/Consumer.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate:/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/consumer-against-candidate",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0033-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0033-stderr.txt"
+    },
+    {
+      "label": "Run Kotlin consumer compiled against candidate/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/consumer-against-candidate:/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official:/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0034-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0034-stderr.txt"
+    },
+    {
+      "label": "Run Kotlin consumer compiled against candidate/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/consumer-against-candidate:/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate:/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0035-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0035-stderr.txt"
+    },
+    {
+      "label": "Compile official/query-official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/QueryTokenizer.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/query-official",
+        "-jvm-target",
+        "1.8",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0036-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0036-stderr.txt"
+    },
+    {
+      "label": "Compile fixed QueryTokenizer Java caller against official output",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/query-official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/query-caller",
+        "/workspace/korrust/tests/next10_operators/QueryTokenizerCaller.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0037-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0037-stderr.txt"
+    },
+    {
+      "label": "Run unchanged QueryTokenizer/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/query-caller:/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/query-official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "QueryTokenizerCaller"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0038-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0038-stderr.txt"
+    },
+    {
+      "label": "Assess unchanged QueryTokenizer/candidate",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/QueryTokenizer.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/query-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0039-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0039-stderr.txt"
+    },
+    {
+      "label": "Boundary official/UnaryArity",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/boundaries/UnaryArity.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official-UnaryArity"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0040-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0040-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/UnaryArity",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/next10_operators/boundaries/UnaryArity.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate-UnaryArity",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0041-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0041-stderr.txt"
+    },
+    {
+      "label": "Boundary official/NotArity",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/boundaries/NotArity.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official-NotArity"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0042-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0042-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/NotArity",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/next10_operators/boundaries/NotArity.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate-NotArity",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0043-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0043-stderr.txt"
+    },
+    {
+      "label": "Boundary official/CompareResult",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/boundaries/CompareResult.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official-CompareResult"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0044-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0044-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/CompareResult",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/next10_operators/boundaries/CompareResult.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate-CompareResult",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0045-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0045-stderr.txt"
+    },
+    {
+      "label": "Boundary official/CompareInferredResult",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/boundaries/CompareInferredResult.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official-CompareInferredResult"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0046-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0046-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/CompareInferredResult",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/next10_operators/boundaries/CompareInferredResult.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate-CompareInferredResult",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0047-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0047-stderr.txt"
+    },
+    {
+      "label": "Boundary official/CompareArity",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/boundaries/CompareArity.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official-CompareArity"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0048-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0048-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/CompareArity",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/next10_operators/boundaries/CompareArity.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate-CompareArity",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0049-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0049-stderr.txt"
+    },
+    {
+      "label": "Boundary official/CompareDefault",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/boundaries/CompareDefault.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official-CompareDefault"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0050-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0050-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/CompareDefault",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/next10_operators/boundaries/CompareDefault.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate-CompareDefault",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0051-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0051-stderr.txt"
+    },
+    {
+      "label": "Boundary official/CompareVararg",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/boundaries/CompareVararg.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official-CompareVararg"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0052-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0052-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/CompareVararg",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/next10_operators/boundaries/CompareVararg.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate-CompareVararg",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0053-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0053-stderr.txt"
+    },
+    {
+      "label": "Boundary official/MissingUnaryModifier",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/boundaries/MissingUnaryModifier.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official-MissingUnaryModifier"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0054-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0054-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/MissingUnaryModifier",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/next10_operators/boundaries/MissingUnaryModifier.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate-MissingUnaryModifier",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0055-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0055-stderr.txt"
+    },
+    {
+      "label": "Boundary official/MissingCompareModifier",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/boundaries/MissingCompareModifier.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official-MissingCompareModifier"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0056-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0056-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/MissingCompareModifier",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/next10_operators/boundaries/MissingCompareModifier.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate-MissingCompareModifier",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0057-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0057-stderr.txt"
+    },
+    {
+      "label": "Boundary official/PrivateUnary",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/boundaries/PrivateUnary.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official-PrivateUnary"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0058-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0058-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/PrivateUnary",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/next10_operators/boundaries/PrivateUnary.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate-PrivateUnary",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0059-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0059-stderr.txt"
+    },
+    {
+      "label": "Boundary official/PrivateCompare",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/boundaries/PrivateCompare.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official-PrivateCompare"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0060-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0060-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/PrivateCompare",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/next10_operators/boundaries/PrivateCompare.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate-PrivateCompare",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0061-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0061-stderr.txt"
+    },
+    {
+      "label": "Boundary official/UnrelatedOverload",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/boundaries/UnrelatedOverload.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official-UnrelatedOverload"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0062-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0062-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/UnrelatedOverload",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/next10_operators/boundaries/UnrelatedOverload.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate-UnrelatedOverload",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0063-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0063-stderr.txt"
+    },
+    {
+      "label": "Boundary official/PrivateAncestor",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/boundaries/PrivateAncestor.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official-PrivateAncestor"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0064-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0064-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/PrivateAncestor",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/next10_operators/boundaries/PrivateAncestor.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate-PrivateAncestor",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0065-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0065-stderr.txt"
+    },
+    {
+      "label": "Boundary official/MissingInterfaceModifier",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/boundaries/MissingInterfaceModifier.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official-MissingInterfaceModifier"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0066-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0066-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/MissingInterfaceModifier",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/next10_operators/boundaries/MissingInterfaceModifier.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate-MissingInterfaceModifier",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0067-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0067-stderr.txt"
+    },
+    {
+      "label": "Boundary official/NullableUnary",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/boundaries/NullableUnary.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official-NullableUnary"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0068-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0068-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/NullableUnary",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/next10_operators/boundaries/NullableUnary.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate-NullableUnary",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0069-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0069-stderr.txt"
+    },
+    {
+      "label": "Boundary official/NullableCompare",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/boundaries/NullableCompare.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official-NullableCompare"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0070-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0070-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/NullableCompare",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/next10_operators/boundaries/NullableCompare.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate-NullableCompare",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0071-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0071-stderr.txt"
+    },
+    {
+      "label": "Boundary official/CovariantOverride",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/next10_operators/boundaries/CovariantOverride.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/official-CovariantOverride"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0072-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0072-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/CovariantOverride",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/next10_operators/boundaries/CovariantOverride.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/candidate-CovariantOverride",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 600,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0073-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0073-stderr.txt"
+    },
+    {
+      "label": "extensionObject/official/main",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/extensionObject/sources/main/extensionObject.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/extensionObject/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0074-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0074-stderr.txt"
+    },
+    {
+      "label": "extensionObject/candidate/main",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/extensionObject/sources/main/extensionObject.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/extensionObject/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0075-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0075-stderr.txt"
+    },
+    {
+      "label": "recursiveCompareTo/official/main",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/sources/main/recursiveCompareTo.kt",
+        "-module-name",
+        "main",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/official/main",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xrender-internal-diagnostic-names"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0076-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0076-stderr.txt"
+    },
+    {
+      "label": "recursiveCompareTo/candidate/main",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/sources/main/recursiveCompareTo.kt",
+        "--module-name",
+        "main",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/candidate/main",
+        "--diagnostic-format",
+        "json"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0077-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0077-stderr.txt"
+    },
+    {
+      "label": "recursiveCompareTo/compile-box-caller-against-official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/official/main:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/caller",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/UpstreamBox.java"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0078-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0078-stderr.txt"
+    },
+    {
+      "label": "recursiveCompareTo/verify-box/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/caller:/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/official/main:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0079-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0079-stderr.txt"
+    },
+    {
+      "label": "recursiveCompareTo/verify-box/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/caller:/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/candidate/main:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "UpstreamBox"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0080-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0080-stderr.txt"
+    },
+    {
+      "label": "recursiveCompareTo/official-kotlin-consumer-compile/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/UpstreamConsumer.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/official/main:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/kotlin-consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0081-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0081-stderr.txt"
+    },
+    {
+      "label": "recursiveCompareTo/official-kotlin-consumer-verify/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/kotlin-consumer-official:/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/official/main:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0082-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0082-stderr.txt"
+    },
+    {
+      "label": "recursiveCompareTo/official-kotlin-consumer-compile/candidate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/UpstreamConsumer.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/candidate/main:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/kotlin-consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0083-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0083-stderr.txt"
+    },
+    {
+      "label": "recursiveCompareTo/official-kotlin-consumer-verify/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/kotlin-consumer-candidate:/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/candidate/main:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "korrust.consumer.UpstreamConsumerKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0084-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0084-stderr.txt"
+    },
+    {
+      "label": "recursiveCompareTo/signatures/official/C",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/official/main:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "C"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0085-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0085-stderr.txt"
+    },
+    {
+      "label": "recursiveCompareTo/signatures/candidate/C",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/candidate/main:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "C"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0086-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0086-stderr.txt"
+    },
+    {
+      "label": "recursiveCompareTo/signatures/official/RecursiveCompareToKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/official/main:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "RecursiveCompareToKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0087-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0087-stderr.txt"
+    },
+    {
+      "label": "recursiveCompareTo/signatures/candidate/RecursiveCompareToKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-13T151136Z-next10-operators/upstream/recursiveCompareTo/candidate/main:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-test.jar",
+        "RecursiveCompareToKt"
+      ],
+      "cwd": ".",
+      "timeout_seconds": 120,
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0088-stdout.txt",
+      "stderr": "reports/correctness/2026-11-13T151136Z-next10-operators/commands/0088-stderr.txt"
+    }
+  ],
+  "compiler": {
+    "path": "/workspace/korrust/target/next10-final-v3/korrust",
+    "sha256": "58990f36b6aba59d2b92c5417cbde8a3daff1396ea3eda01c1e85c4b5c3dc574"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "environment": {
+    "JAVA_HOME": "/workspace/korrust-setup/jdk-21"
+  },
+  "frozen_input_hashes": {
+    "/workspace/korrust/Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+    "/workspace/korrust/Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+    "/workspace/korrust/src/annotation_declarations.rs": "b7ba6c2401dd4090052753fcc5ccfea5ba1cc9fdcb080ba5aea8c5528cf4dbbb",
+    "/workspace/korrust/src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+    "/workspace/korrust/src/bytecode/annotation_files.rs": "4f3c136aaa2ed30b85d2a4cc2a9be8331b2da9682d450f6a4dcc135ef04ab86a",
+    "/workspace/korrust/src/bytecode/annotations.rs": "cb07b777dda6a4dc4f4fcd0c77486bf6473d8559b421e9578bb8f0dec7892186",
+    "/workspace/korrust/src/bytecode/class_companion.rs": "a5756a0c46cc33fa449bebe330ef5748789da70b4b941c21c7f72aa923802fc2",
+    "/workspace/korrust/src/bytecode/data.rs": "c99cb60546cbe8873ef99d1ab057aa7439f4239fce13927d324dfea078dbe98c",
+    "/workspace/korrust/src/bytecode/defaults.rs": "89f6967a6689b515d7b86e06bcf59f1bf036a690de083b525af28ad03e27ea8e",
+    "/workspace/korrust/src/bytecode/enums.rs": "25fe788c54554741347ba6bb4b84cbee7c324db6925209a434fb139ceb66b2b1",
+    "/workspace/korrust/src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+    "/workspace/korrust/src/bytecode/inline.rs": "cf4c6be5860614d14d0d73e8b555aeaba4e8ef8158aee3876fce450171a98740",
+    "/workspace/korrust/src/bytecode/interfaces.rs": "f56b5c0666e9647fddc5b3d1f5fd39e6d5a155c588201ed590639cfe624f31de",
+    "/workspace/korrust/src/bytecode/lambdas.rs": "8549a0b7885e8a2ee4fcdf1786da263f7a4614755a90a7770a87e69ec81704fd",
+    "/workspace/korrust/src/bytecode/objects.rs": "142f8e5c70f0ac61423c3887447c54865b7b657768cf683fc553fde398a17e7e",
+    "/workspace/korrust/src/bytecode/suspend.rs": "79e1064dd35da268956f91b167a779ce0957cefa8fef629789a2fb3afee987b7",
+    "/workspace/korrust/src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+    "/workspace/korrust/src/bytecode.rs": "8cae99df202f3aaca76ede997b05fea33d5e952df284311d610cc05bc85bc415",
+    "/workspace/korrust/src/check.rs": "7e2e5685c172dd5a6b6435703c0ed9b84f59db284e2002e973de5615b6183903",
+    "/workspace/korrust/src/check_annotation_placements.rs": "123f45e4d08f40c4c0690a8efe0661fee5856b5592e39966e8e7e3e1eb0e75df",
+    "/workspace/korrust/src/check_annotations.rs": "c38109454b96a66a24b4c4fcd9d0581e4768a8856afa0d56f0ef8cf635be0c3f",
+    "/workspace/korrust/src/check_anonymous.rs": "9cc85a53a05a45b5778e4a9eb0f4c7f373759dac4315714b087c8a6930aca6af",
+    "/workspace/korrust/src/check_captures.rs": "39e01f723eeed492e9de7917db479f811b745130fb469cfb82b6052393f2be6c",
+    "/workspace/korrust/src/check_class_delegation.rs": "28e66569cf5785ba2518003200e741627a2f83090743b6d0952ed54691bdcfc9",
+    "/workspace/korrust/src/check_classes.rs": "942b008b2ecd2d7db9644dddef7e0907d292f4a9c399d82e814819f47d3e1667",
+    "/workspace/korrust/src/check_control.rs": "20217036bb5211fa30e7a3b675f494d9987fa9bc9b47ff02e0e8a718ccd73f85",
+    "/workspace/korrust/src/check_declarations.rs": "e2b73e5c3190265a3a15da5b56bc6421502bdce7f8e18a7ee7b6c7972d388689",
+    "/workspace/korrust/src/check_delegates.rs": "094b9bdc43d4cecb0fb3dcef1681181f8e7737804f3808582192b3190d01dc92",
+    "/workspace/korrust/src/check_enums.rs": "2a16c9e4dbae29a8c479ab5cddefad66f0bdd09143e2a0cde8428d2d0c174d8b",
+    "/workspace/korrust/src/check_functions.rs": "d6a2197838ef8c26afc6eacdbfaf95a36f45bb35972bf3fff80a0c8515d1db55",
+    "/workspace/korrust/src/check_inner_classes.rs": "60a4cdbfef5b069e0312c3ea7511b0de6a862d20ff393c464ea080968aa233cd",
+    "/workspace/korrust/src/check_interfaces.rs": "f624d8decf0846fd48d3a1178068af6468c10abe594dec62d310772893444d3c",
+    "/workspace/korrust/src/check_ir_walk.rs": "e9ebf5f463c133576ccdaca026b716abda1381caeb72f409e90461d4f652c535",
+    "/workspace/korrust/src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+    "/workspace/korrust/src/check_library.rs": "47598d38f3bd79280dbbdb28cb662057cbc21f047a7fb7e37d7eaff31692ac48",
+    "/workspace/korrust/src/check_member_extensions.rs": "c97b70cbd56da4588817a5cdd294cb724009feee3abbcb29a5dde2846bb8d3f9",
+    "/workspace/korrust/src/check_objects.rs": "f04db0150cc0022c27261afbce0c09ed8d75e67da7e97add354ea33be0cfd255",
+    "/workspace/korrust/src/check_operations.rs": "4ad0420e8958bf548c703c7a7b2c24a4075f22053f302d3e472784f8bd15ae9d",
+    "/workspace/korrust/src/check_overloads.rs": "d418fb5ed0880483b5d6ac58ce8093d0eb13804ff1b4176e19abd4b1a3e589cd",
+    "/workspace/korrust/src/check_references.rs": "3a4fd327b7a13f48e69d5fbd059c76cbb8d2ce50ae2e140a762a06d9e1e6eab8",
+    "/workspace/korrust/src/check_relations.rs": "6b1dea3cc13ceb6d435680504f8eda2eb4002be8b3f3b37f728ec19f7892167e",
+    "/workspace/korrust/src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+    "/workspace/korrust/src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+    "/workspace/korrust/src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+    "/workspace/korrust/src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+    "/workspace/korrust/src/check_variant_signatures.rs": "3c4105a50dc37f7102176ffe5a6cba014b65ca1d655bb33aad6e2d030f70b529",
+    "/workspace/korrust/src/classpath/aliases.rs": "745fa67edb3216b77ce5e65f63b75c51ac221f5b49d3e08a4327990bd9e6f4c5",
+    "/workspace/korrust/src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+    "/workspace/korrust/src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+    "/workspace/korrust/src/classpath/metadata.rs": "40d0d0fba0a23ae2b26c7b67975843038c9032c9326bdc1e09ad3f29f5c46bf2",
+    "/workspace/korrust/src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+    "/workspace/korrust/src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+    "/workspace/korrust/src/classpath/signature.rs": "657d42ef3c16ac5fb01ae3748e19e814c9ccbc4b9487366f950a04ed639b0e46",
+    "/workspace/korrust/src/classpath/source.rs": "fa9d2391fd63c75f8f18c604cb0be346e45a26375ddf7d7535fb6db4c714cc6e",
+    "/workspace/korrust/src/classpath/source_enums.rs": "3366b5ad4fc96e61e95b398e72dbb6c6a3de8e734247b6e7cdba7d937ef527f4",
+    "/workspace/korrust/src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+    "/workspace/korrust/src/classpath.rs": "d107b7dadf4a15cbe07f20584b7de32aec6e01eab5041f7bb67475ff6b978e91",
+    "/workspace/korrust/src/compiled_inline.rs": "06250c79ae618989985360ced0235cca4628f0f7c4d92630a00295d217310102",
+    "/workspace/korrust/src/const_eval.rs": "6714c1d6296d1c3f60fab09891a492f66a9850b3ff3ee2b5a7df42400dfdcdaa",
+    "/workspace/korrust/src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+    "/workspace/korrust/src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+    "/workspace/korrust/src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+    "/workspace/korrust/src/lib.rs": "08ad23d77457218fb1cb36b1bd1cfd779e76095d04e606f80a8e1ea675b65aa5",
+    "/workspace/korrust/src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+    "/workspace/korrust/src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+    "/workspace/korrust/src/metadata.rs": "521a188de65380a7bacb3a4882d664483b2ae6131a44b178516f5f4e69ae1777",
+    "/workspace/korrust/src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+    "/workspace/korrust/src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+    "/workspace/korrust/src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+    "/workspace/korrust/src/syntax.rs": "7b49182679134a78a3e598c948cc78167a6819cc01714c21453def2fe7568e57",
+    "/workspace/korrust/src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+    "/workspace/korrust/src/visibility.rs": "0268165a314fe1a169d5604fdda38968b0bbda07f11c60db92d36a7247f879c7",
+    "/workspace/korrust/tests/inline_analysis.rs": "702882879412d4e35d66957b7030d102b28f3a0fac1d78376f5678b5e05f7517",
+    "/workspace/korrust/tests/next10_operators/Check.java": "4f75fe064ddc6f7cc60eb550b0b7152a533beee75eee05dbbb8effd1182507da",
+    "/workspace/korrust/tests/next10_operators/Consumer.kt": "3b5eb0ae5a1b3178b7aa074e191c89369aa204b020cc009d917c71f0bdf7df64",
+    "/workspace/korrust/tests/next10_operators/Imported.kt": "20877b1476264cb6d79ee23c099200c3de0b442c90cdb8032cafec9f8db231fa",
+    "/workspace/korrust/tests/next10_operators/Operators.kt": "eca875c31133b2851cc4689481fb6cbb164daa0732d6e580d9a8587818644696",
+    "/workspace/korrust/tests/next10_operators/QueryTokenizerCaller.java": "6e2497602f734b51a3d4d31a4457f55206c9cdab344f737c8476406b2761fea6",
+    "/workspace/korrust/tests/next10_operators/boundaries/CompareArity.kt": "9c94deac7d54e6585a48df8f09c32296608fca0b634fe36d898e6e8cac5e7c95",
+    "/workspace/korrust/tests/next10_operators/boundaries/CompareDefault.kt": "877fac5b43ba5011557bf5c201869cc6a6752b05e16c47055460631aefac8dbb",
+    "/workspace/korrust/tests/next10_operators/boundaries/CompareInferredResult.kt": "1184b2b05b2ad3e8fa0b5f74e5f8ee82f65d29695d4953aa4e17a5913f0ee7a2",
+    "/workspace/korrust/tests/next10_operators/boundaries/CompareResult.kt": "8ecc2508680276d3efeb09c761bd29fe652057ad765c5a5341006f95b1774a29",
+    "/workspace/korrust/tests/next10_operators/boundaries/CompareVararg.kt": "79874dd5feb142c7ed2f7f26edb7ac18e73d143b9f599d39b77f705e44e7c51e",
+    "/workspace/korrust/tests/next10_operators/boundaries/CovariantOverride.kt": "21c38e70eafcb826d784a56bf4326f61aafd3cc0a2ed068732f4f596325b8fd0",
+    "/workspace/korrust/tests/next10_operators/boundaries/MissingCompareModifier.kt": "f95dcf6ca8c778be261a066c82c900bba983e0c404267f1b5c05d71a46ebfe21",
+    "/workspace/korrust/tests/next10_operators/boundaries/MissingInterfaceModifier.kt": "41d8bdc8d72abd0a0dd511ab7229959f0a22c95dcf4894100d6e15970ac646a9",
+    "/workspace/korrust/tests/next10_operators/boundaries/MissingUnaryModifier.kt": "86ddf8d1d9d34eeb4bd85eedb30050a2293761ede258507cbeadd34f7cba5a74",
+    "/workspace/korrust/tests/next10_operators/boundaries/NotArity.kt": "a52444b5217c47174bcdbd0cccdcc154e83bffbcc6600882014579f14ddb3c7f",
+    "/workspace/korrust/tests/next10_operators/boundaries/NullableCompare.kt": "6e991772cd1c9a9a07ff79a7d5bc53657cbf66b4e17658f088d0d12f7e314765",
+    "/workspace/korrust/tests/next10_operators/boundaries/NullableUnary.kt": "53983bccf902d199a4fb54cee3a92f4b093628d7b86c2bfcbc009e5ec6a4b4ef",
+    "/workspace/korrust/tests/next10_operators/boundaries/PrivateAncestor.kt": "fed5bbe4a5b040af098d2835103efccae201e9d1c081b6c527696c88b8621284",
+    "/workspace/korrust/tests/next10_operators/boundaries/PrivateCompare.kt": "ef7b65816c4a40d2a98d8d12634afd2fd5abb8be6833a21b648f2d56c8911676",
+    "/workspace/korrust/tests/next10_operators/boundaries/PrivateUnary.kt": "743b593c22e7f8e067826c8c3a05e41549bfe7481df2efa36a964f1741f8065e",
+    "/workspace/korrust/tests/next10_operators/boundaries/UnaryArity.kt": "c4c9358f09424d70b12e8a784a3d22a7e244790dd2eaaa8a518e09e1ccfc32f5",
+    "/workspace/korrust/tests/next10_operators/boundaries/UnrelatedOverload.kt": "80d9de7415cfca8b5a1caa55c198c59fae63c89d0b5c4408a68c69bc94ffaa4d",
+    "/workspace/korrust/tests/next10_operators/dependency/Library.kt": "f1f314be1ea819fd7b8d4fad3135abe4afb387c9d7b03c9c0764040cd21097a8",
+    "/workspace/korrust/tests/next10_operators.rs": "238be038b2b34f29612541092c37b639fa133d0fbf269e366016437939fa4a79",
+    "/workspace/korrust/tools/check_next10_operators.py": "8779def175aa32876ba4a3c2e1c3666eea4c13b54eb99d18f865dbe62bc84b98",
+    "/workspace/korrust/tools/upstream_jvm.py": "10a550964853b0b4bfdcbdc48f3522b6b3122d36dde2bb5d5bda26a9855a6674",
+    "/workspace/korrust/references/kotlin/compiler/testData/codegen/box/operatorConventions/compareTo/extensionObject.kt": "00df44446adc37ec77e7cbe7a14a9b00e4aae5e3e4ac842a14186c74a49d5978",
+    "/workspace/korrust/references/kotlin/compiler/testData/codegen/box/functions/recursiveCompareTo.kt": "749def508356f70f41e8100ed464c05fc63871e6c462f7346d87d60af09d2394",
+    "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/QueryTokenizer.kt": "f28172f76561e583bd046a5d28e65468f8c8f358fec3a5553c4399b537b8e7f1",
+    "/workspace/korrust/target/next10-final-v3/korrust": "58990f36b6aba59d2b92c5417cbde8a3daff1396ea3eda01c1e85c4b5c3dc574",
+    "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "/workspace/korrust/references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "/workspace/korrust/references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "/workspace/korrust/references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec"
+  },
+  "reproduction_commands": [
+    "python3 tools/check_next10_operators.py --candidate /workspace/korrust/target/next10-final-v3/korrust --source-root /workspace/korrust --output NEW_DIRECTORY"
+  ],
+  "claims": "Custom source and compiled unaryPlus/unaryMinus/not resolved through ordinary operator members/extensions; source compareTo operator declarations and comparisons, with compiled member/extension interoperability. Compiled nominal comparison lowering existed in the baseline.",
+  "limitations": [
+    "Nullable unary/comparison extension receivers and source covariant overrides requiring JVM bridges remain explicitly unsupported; compiled covariance is tested.",
+    "The existing ordinary overload-resolution and generic/inline call boundaries apply.",
+    "Unchanged QueryTokenizer is assessed but candidate compilation remains blocked; official JVM caller evidence is retained. Android runtime and full-application compatibility remain unassessed."
+  ],
+  "reference_rules": [
+    "references/kotlin-spec/docs/src/md/kotlin.core/expressions.md:612-619",
+    "references/kotlin-spec/docs/src/md/kotlin.core/expressions.md:848-870"
+  ],
+  "evidence": {
+    "directory": "reports/correctness/2026-11-13T151136Z-next10-operators",
+    "commands": "reports/correctness/2026-11-13T151136Z-next10-operators/commands",
+    "source_archive": {
+      "path": "reports/correctness/2026-11-13T151136Z-next10-operators/source.zip",
+      "sha256": "f1467f4cb0f6e93d9d4a20ed743b209263d6fe303afb8f903e338ef90c97d372"
+    },
+    "generated_outputs": "target/checks/2026-11-13T151136Z-next10-operators"
+  },
+  "input_integrity": {
+    "status": "unchanged",
+    "changed_paths": []
+  },
+  "counts": {
+    "pass": 24,
+    "unsupported_language": 5,
+    "not_run": 1,
+    "invalid_kotlin": 14
+  }
+}

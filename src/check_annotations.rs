@@ -52,6 +52,26 @@ pub(super) fn declaration_annotations(
     let mut seen = HashSet::new();
     for annotation in annotations {
         let owner = annotation_owner(&annotation.name, classpath, imports);
+        if owner == "kotlin/jvm/JvmName" && target == "FILE" && use_site == Some("file") {
+            if !seen.insert(owner.clone()) {
+                return Err(
+                    Diagnostic::new(annotation.offset, "Repeated JvmName annotation").with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "REPEATED_ANNOTATION_INVALID",
+                    ),
+                );
+            }
+            let name = super::annotation_placements::validated_jvm_name(annotation)?;
+            result.push(DeclarationAnnotation {
+                descriptor: "Lkotlin/jvm/JvmName;".into(),
+                runtime: false,
+                values: vec![(
+                    "name".into(),
+                    DeclarationAnnotationValue::String(name.encode_utf16().collect()),
+                )],
+            });
+            continue;
+        }
         if let Some(code) = unsupported_lowering(&owner) {
             let semantics = if code == "COMPILER_PLUGIN_UNSUPPORTED" {
                 "compiler plugin transformations"
@@ -105,7 +125,7 @@ pub(super) fn declaration_annotations(
             }
             result.push(DeclarationAnnotation {
                 descriptor: format!("L{owner};"),
-                runtime: false,
+                runtime: owner == "kotlin/jvm/JvmStatic",
                 values: Vec::new(),
             });
             continue;
@@ -243,6 +263,33 @@ mod tests {
             "kotlin/Suppress",
         ] {
             assert_eq!(unsupported_lowering(name), None, "{name}");
+        }
+    }
+
+    #[test]
+    fn jvm_method_markers_preserve_distinct_retention() {
+        let classpath = Classpath::new(&[]).unwrap();
+        for (owner, runtime) in [
+            ("kotlin/jvm/JvmStatic", true),
+            ("kotlin/jvm/JvmOverloads", false),
+        ] {
+            let annotations = declaration_annotations(
+                &[syntax::AnnotationUse {
+                    name: owner.into(),
+                    offset: 5,
+                    use_site: None,
+                    arguments: Vec::new(),
+                }],
+                &classpath,
+                &HashMap::new(),
+                "METHOD",
+                None,
+                None,
+            )
+            .unwrap();
+            assert_eq!(annotations.len(), 1);
+            assert_eq!(annotations[0].descriptor, format!("L{owner};"));
+            assert_eq!(annotations[0].runtime, runtime);
         }
     }
 

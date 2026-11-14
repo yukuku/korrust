@@ -1,0 +1,4 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /workspace/korrust/tests/next10_shorts/invalid/nullable_index.kt -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -module-name next10_shorts -cp /workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/korrust/target/checks/2026-11-13T144450752202Z-next10-shorts/invalid-official-nullable_index
+tests/next10_shorts/invalid/nullable_index.kt:1:34: error: only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'ShortArray?'.
+fun bad(v: ShortArray?): Short = v[0]
+                                 ^^^^

@@ -82,6 +82,7 @@ fn normalized_literal_type(ty: &Type) -> Type {
             "kotlin/CharSequence" => Type::Java("java/lang/CharSequence".into()),
             "kotlin/IntArray" => Type::IntArray,
             "kotlin/ByteArray" => Type::ByteArray,
+            "kotlin/ShortArray" => Type::ShortArray,
             "kotlin/CharArray" => Type::CharArray,
             "kotlin/LongArray" => Type::LongArray,
             "kotlin/BooleanArray" => Type::BooleanArray,

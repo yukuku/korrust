@@ -36,6 +36,13 @@ pub(super) fn check_class_with_constants(
     lambdas: &Rc<RefCell<Vec<LambdaDecl>>>,
     constants: &HashMap<String, (Type, Expr)>,
 ) -> Result<ClassDecl> {
+    if source.constructor_visibility != 1
+        && (source.defaults.iter().any(Option::is_some)
+            || !source.secondary_constructors.is_empty()
+            || !source.constructor_annotations.is_empty())
+    {
+        return Err(Diagnostic::new(source.offset, "Nonpublic constructors with defaults, annotations or secondary constructors are unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "NONPUBLIC_CONSTRUCTOR_SHAPE_UNSUPPORTED"));
+    }
     let constructor_annotations = annotations::declaration_annotations(
         &source.constructor_annotations,
         classpath,
@@ -137,6 +144,48 @@ pub(super) fn check_class_with_constants(
         classes,
         source.offset,
     )?;
+    for ty in &source.super_types {
+        validate_variance(
+            &source.type_params,
+            ty,
+            1,
+            classpath,
+            imports,
+            source.offset,
+        )?;
+    }
+    for (name, ty) in &source.params {
+        if source.param_properties.contains(name) {
+            validate_variance(
+                &source.type_params,
+                ty,
+                if source.mutable_params.contains(name) {
+                    0
+                } else {
+                    1
+                },
+                classpath,
+                imports,
+                source.offset,
+            )
+            .map_err(|e| variance_visibility_error(e, !source.public_params.contains(name)))?;
+        }
+    }
+    for property in &source.properties {
+        validate_variance(
+            &source.type_params,
+            &property.ty,
+            if property.mutable { 0 } else { 1 },
+            classpath,
+            imports,
+            property.offset,
+        )
+        .map_err(|e| variance_visibility_error(e, property.private))?;
+    }
+    for method in &source.methods {
+        validate_function_variance(&source.type_params, &method.function, classpath, imports)
+            .map_err(|e| variance_visibility_error(e, method.function.private))?;
+    }
     let initial_lambda_count = lambdas.borrow().len();
     validate_constructor_assignments(source)?;
     for method in &source.methods {
@@ -286,6 +335,20 @@ pub(super) fn check_class_with_constants(
             fields.insert(name.clone(), ty.clone());
         }
         params.push((name.clone(), ty));
+    }
+    if source.constructor_visibility != 1
+        && params
+            .iter()
+            .any(|(_, ty)| crate::value_abi::value_parameter(ty, &classpath.value_classes()))
+    {
+        return Err(Diagnostic::new(
+            source.offset,
+            "Nonpublic constructors with value class parameter carriers are unsupported",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "NONPUBLIC_CONSTRUCTOR_SHAPE_UNSUPPORTED",
+        ));
     }
     if constructor_annotations
         .iter()
@@ -567,6 +630,7 @@ pub(super) fn check_class_with_constants(
         inline_argument_modes: Vec::new(),
         inline_analysis: false,
         public_inline_body: false,
+        constructor_bridge_context: false,
         reified_parameters: Vec::new(),
         exhaustiveness_flow: false,
         extension_receivers: Vec::new(),
@@ -748,6 +812,7 @@ pub(super) fn check_class_with_constants(
                 inline_argument_modes: Vec::new(),
                 inline_analysis: false,
                 public_inline_body: false,
+                constructor_bridge_context: false,
                 reified_parameters: Vec::new(),
                 exhaustiveness_flow: false,
                 extension_receivers: Vec::new(),
@@ -1178,6 +1243,7 @@ pub(super) fn check_class_with_constants(
     let signatures = Vec::new();
     let extensions = HashSet::new();
     let mut methods = delegated_methods;
+    let mut operator_offsets = HashSet::new();
     let mut names = HashSet::new();
     for (name, private, is_override, source_property, source_params, result, body, offset) in
         declarations
@@ -1214,7 +1280,14 @@ pub(super) fn check_class_with_constants(
         let mut checker = Checker {
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
-            public_inline_body: false,
+            public_inline_body: source.methods.iter().any(|method| {
+                method.function.name == name
+                    && method.function.offset == offset
+                    && method.function.inline
+                    && !method.function.private
+                    && !method.function.internal
+            }),
+            constructor_bridge_context: false,
             reified_parameters: Vec::new(),
             exhaustiveness_flow: false,
             extension_receivers: Vec::new(),
@@ -1405,6 +1478,29 @@ pub(super) fn check_class_with_constants(
                             "FINAL_MEMBER_OVERRIDE",
                         ));
                 }
+                let parameters = method
+                    .params
+                    .iter()
+                    .map(|p| p.1.clone())
+                    .collect::<Vec<_>>();
+                if is_override
+                    && !private
+                    && !override_signature(required, &parameters, &method.result)?
+                {
+                    let (inherited_parameters, inherited_result) = class_method_types(required)?;
+                    if inherited_parameters == parameters
+                        && checker.subtype(&method.result, &inherited_result)
+                    {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Covariant source overrides require unsupported JVM bridges",
+                        )
+                        .with_kind(
+                            crate::DiagnosticKind::UnsupportedLanguage,
+                            "COVARIANT_OVERRIDE_UNSUPPORTED",
+                        ));
+                    }
+                }
                 if !is_override
                     || private
                     || !override_signature(
@@ -1432,6 +1528,14 @@ pub(super) fn check_class_with_constants(
                 .with_kind(crate::DiagnosticKind::InvalidKotlin, "NOTHING_TO_OVERRIDE"));
             }
             None => {}
+        }
+        if is_override
+            && checker.inherited_operator_from(
+                &function_method(&method, &owner, 1, None),
+                std::iter::once(&super_class).chain(interfaces.iter()),
+            )
+        {
+            operator_offsets.insert(offset);
         }
         methods.push(method);
     }
@@ -1587,6 +1691,19 @@ pub(super) fn check_class_with_constants(
     )?;
     methods.extend(forwarders);
     for method in &mut methods {
+        for (_, ty) in &method.params {
+            validate_variance(&type_params, ty, -1, classpath, imports, source.offset)
+                .map_err(|e| variance_visibility_error(e, method.private))?;
+        }
+        validate_variance(
+            &type_params,
+            &method.result,
+            1,
+            classpath,
+            imports,
+            source.offset,
+        )
+        .map_err(|e| variance_visibility_error(e, method.private))?;
         method.class_type_params = type_params.iter().map(|p| p.name.clone()).collect();
         if method.suspend_ {
             continue;
@@ -2013,9 +2130,8 @@ pub(super) fn check_class_with_constants(
     }
     let abstract_methods = method_keys(|m| !m.has_body);
     Ok(ClassDecl {
-        lexical_bridges: source.nested.iter().any(
-            |declaration| matches!(declaration, syntax::Declaration::Class(class) if class.inner),
-        ),
+        operator_offsets,
+        lexical_bridges: !source.nested.is_empty(),
         inner: source.inner,
         value_: source.value_,
         interface_delegate_storage,
@@ -2025,6 +2141,7 @@ pub(super) fn check_class_with_constants(
             .load(&owner)
             .map(|c| c.sealed_subclasses)
             .unwrap_or_default(),
+        interface_bound_parameters: interface_bound_parameters(&type_params, classpath),
         type_params,
         super_types,
         generic_bridges,
@@ -2047,6 +2164,7 @@ pub(super) fn check_class_with_constants(
             .collect(),
         delegated_properties,
         primary_constructor: source.primary_constructor,
+        constructor_visibility: source.constructor_visibility,
         constructor_annotations,
         abstract_: source.abstract_,
         open_methods,
@@ -2122,6 +2240,7 @@ impl<'a> DeclarationContext<'a> {
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
             public_inline_body: false,
+            constructor_bridge_context: false,
             reified_parameters: Vec::new(),
             exhaustiveness_flow: false,
             extension_receivers: Vec::new(),
@@ -3464,6 +3583,7 @@ pub(super) fn validate_operator(function: &syntax::Function, member: bool) -> Re
         ));
     }
     if function.vararg
+        && !(function.operator && function.name == "compareTo")
         && function
             .params
             .last()
@@ -3490,12 +3610,17 @@ pub(super) fn validate_operator(function: &syntax::Function, member: bool) -> Re
         ));
     }
     let valid = match function.name.as_str() {
+        "iterator" | "next" => count == 0,
+        "hasNext" => count == 0 && (function.result_inferred || function.result == Type::Boolean),
+        "rangeUntil" => count == 1,
         "contains" => count == 1 && (function.result_inferred || function.result == Type::Boolean),
         "get" => count >= 1,
         "set" => count >= 2 && (function.result_inferred || function.result == Type::Unit),
         "getValue" | "provideDelegate" => count == 2,
         "setValue" => count == 3 && (function.result_inferred || function.result == Type::Unit),
         "plus" | "minus" | "times" | "div" | "rem" => count == 1,
+        "unaryPlus" | "unaryMinus" | "not" => count == 0,
+        "compareTo" => count == 1 && (function.result_inferred || function.result == Type::Int),
         "plusAssign" | "minusAssign" | "timesAssign" | "divAssign" | "remAssign" => {
             count == 1 && (function.result_inferred || function.result == Type::Unit)
         }
@@ -3513,6 +3638,9 @@ pub(super) fn validate_operator(function: &syntax::Function, member: bool) -> Re
             ));
         }
     };
+    let valid = valid
+        && !(function.name == "compareTo"
+            && (function.vararg || function.defaults.iter().any(Option::is_some)));
     if !valid {
         return Err(
             Diagnostic::new(function.offset, "Invalid operator function signature").with_kind(
@@ -4185,10 +4313,20 @@ pub(super) fn validate_classifier_generics(
                     | Type::Platform(t)
                     | Type::Array(t)
                     | Type::List(t)
-                    | Type::MutableList(t) => dependent(t),
+                    | Type::MutableList(t)
+                    | Type::ThreadLocal(t) => dependent(t),
                     Type::Parameterized { arguments, .. } => arguments
                         .iter()
                         .any(|a| a.ty.as_ref().is_some_and(dependent)),
+                    Type::Function { params, result }
+                    | Type::SuspendFunction { params, result } => {
+                        params.iter().any(dependent) || dependent(result)
+                    }
+                    Type::ReceiverFunction {
+                        receiver,
+                        params,
+                        result,
+                    } => dependent(receiver) || params.iter().any(dependent) || dependent(result),
                     _ => false,
                 }
             }
@@ -4203,20 +4341,183 @@ pub(super) fn validate_classifier_generics(
                 ));
             }
             let bound = resolve_type_checked(bound, imports, offset, classpath, classes)?;
-            if library::type_owner(&bound)
-                .and_then(|owner| classpath.load(owner).ok())
-                .is_some_and(|class| class.access & 0x200 != 0)
-            {
+            if matches!(
+                bound.base(),
+                Type::Function { .. }
+                    | Type::ReceiverFunction { .. }
+                    | Type::SuspendFunction { .. }
+            ) {
                 return Err(Diagnostic::new(
                     offset,
-                    "Interface bounds on source classifiers are unsupported",
+                    "Function-type source classifier bounds are unsupported",
                 )
                 .with_kind(
                     crate::DiagnosticKind::UnsupportedLanguage,
-                    "CLASSIFIER_INTERFACE_BOUND_UNSUPPORTED",
+                    "CLASSIFIER_FUNCTION_BOUND_UNSUPPORTED",
                 ));
+            }
+            if let Type::Nullable(inner) = &bound {
+                if library::type_owner(inner)
+                    .and_then(|owner| classpath.load(owner).ok())
+                    .is_some_and(|class| class.access & 0x200 != 0)
+                {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Nullable interface bounds on source classifiers are unsupported",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "CLASSIFIER_NULLABLE_INTERFACE_BOUND_UNSUPPORTED",
+                    ));
+                }
             }
         }
     }
     Ok(())
+}
+
+pub(super) fn interface_bound_parameters(
+    parameters: &[syntax::TypeParameter],
+    classpath: &Classpath,
+) -> HashSet<String> {
+    parameters
+        .iter()
+        .filter(|p| {
+            p.bounds
+                .first()
+                .and_then(library::type_owner)
+                .and_then(|o| classpath.load(o).ok())
+                .is_some_and(|c| c.access & 0x200 != 0)
+        })
+        .map(|p| p.name.clone())
+        .collect()
+}
+
+pub(super) fn validate_variance(
+    parameters: &[syntax::TypeParameter],
+    ty: &Type,
+    polarity: i8,
+    classpath: &Classpath,
+    imports: &HashMap<String, String>,
+    offset: usize,
+) -> Result<()> {
+    use syntax::Variance;
+    if parameters.iter().all(|p| p.variance == Variance::Invariant) {
+        return Ok(());
+    }
+    let expanded = classpath.expand_type_alias(ty, imports, library::DEFAULT_PACKAGES)?;
+    let enriched = library::default_type_imports(&expanded, imports, classpath);
+    let resolved = resolve_type(&expanded, &enriched, offset)?;
+    match &resolved {
+        Type::Parameter { name, .. } => {
+            if parameters.iter().any(|p| {
+                p.name == *name
+                    && match p.variance {
+                        Variance::Out => polarity != 1,
+                        Variance::In => polarity != -1,
+                        Variance::Invariant => false,
+                    }
+            }) {
+                return Err(Diagnostic::new(offset, "Type parameter occurs in a position conflicting with its declaration-site variance").with_kind(crate::DiagnosticKind::InvalidKotlin, "TYPE_VARIANCE_CONFLICT"));
+            }
+        }
+        Type::Nullable(t) | Type::Platform(t) | Type::List(t) => {
+            validate_variance(parameters, t, polarity, classpath, imports, offset)?
+        }
+        Type::Array(t) | Type::MutableList(t) | Type::ThreadLocal(t) => {
+            validate_variance(parameters, t, 0, classpath, imports, offset)?
+        }
+        Type::Parameterized { name, arguments } => {
+            let owner = imports.get(name).map_or(name.as_str(), String::as_str);
+            let declaration = classpath.load(owner).ok().and_then(|c| c.library);
+            for (index, argument) in arguments.iter().enumerate() {
+                if let Some(t) = &argument.ty {
+                    let declared = declaration
+                        .as_ref()
+                        .and_then(|c| c.type_parameters.get(index))
+                        .map_or(Variance::Invariant, |p| p.variance);
+                    if matches!(
+                        (declared, argument.variance),
+                        (Variance::In, Variance::Out) | (Variance::Out, Variance::In)
+                    ) {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Type projection conflicts with declaration-site variance",
+                        )
+                        .with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "TYPE_PROJECTION_CONFLICT",
+                        ));
+                    }
+                    let variance = if argument.variance == Variance::Invariant {
+                        declared
+                    } else {
+                        argument.variance
+                    };
+                    let sign = match variance {
+                        Variance::In => -polarity,
+                        Variance::Out => polarity,
+                        Variance::Invariant => 0,
+                    };
+                    validate_variance(parameters, t, sign, classpath, imports, offset)?;
+                }
+            }
+        }
+        Type::Function { params, result } | Type::SuspendFunction { params, result } => {
+            for t in params {
+                validate_variance(parameters, t, -polarity, classpath, imports, offset)?;
+            }
+            validate_variance(parameters, result, polarity, classpath, imports, offset)?;
+        }
+        Type::ReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => {
+            validate_variance(parameters, receiver, -polarity, classpath, imports, offset)?;
+            for t in params {
+                validate_variance(parameters, t, -polarity, classpath, imports, offset)?;
+            }
+            validate_variance(parameters, result, polarity, classpath, imports, offset)?;
+        }
+        _ => {}
+    }
+    Ok(())
+}
+
+pub(super) fn validate_function_variance(
+    parameters: &[syntax::TypeParameter],
+    function: &syntax::Function,
+    cp: &Classpath,
+    imports: &HashMap<String, String>,
+) -> Result<()> {
+    for (_, ty) in &function.params {
+        validate_variance(parameters, ty, -1, cp, imports, function.offset)?;
+    }
+    if let Some(receiver) = &function.receiver {
+        validate_variance(parameters, receiver, -1, cp, imports, function.offset)?;
+    }
+    validate_variance(
+        parameters,
+        &function.result,
+        1,
+        cp,
+        imports,
+        function.offset,
+    )
+}
+
+fn variance_visibility_error(error: Diagnostic, private: bool) -> Diagnostic {
+    if private && error.code == "TYPE_VARIANCE_CONFLICT" {
+        Diagnostic::new(
+            error.offset,
+            "Private-to-this declaration variance exceptions are unsupported",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "PRIVATE_VARIANCE_UNSUPPORTED",
+        )
+    } else {
+        error
+    }
 }

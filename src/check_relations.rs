@@ -5,6 +5,7 @@ pub(super) fn type_owner(ty: &Type) -> Option<&str> {
     match ty.base() {
         Type::Java(name) | Type::Parameterized { name, .. } => Some(name),
         Type::String => Some("java/lang/String"),
+        Type::Parameter { upper_bound, .. } => type_owner(upper_bound),
         Type::List(_) | Type::MutableList(_) => Some("java/util/List"),
         _ => None,
     }
@@ -225,7 +226,11 @@ fn direct_supertypes(cp: &Classpath, ty: &Type) -> Vec<Type> {
 }
 
 pub(super) fn as_supertype(cp: &Classpath, ty: &Type, target: &str) -> Option<Type> {
-    let mut pending = vec![(ty.clone(), 0)];
+    let initial = match ty.base() {
+        Type::Parameter { upper_bound, .. } => upper_bound.as_ref(),
+        _ => ty,
+    };
+    let mut pending = vec![(initial.clone(), 0)];
     let mut seen = Vec::new();
     while let Some((ty, depth)) = pending.pop() {
         if depth > 64 || seen.len() >= 256 || seen.contains(&ty) {
@@ -1617,6 +1622,7 @@ mod tests {
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
             public_inline_body: false,
+            constructor_bridge_context: false,
             reified_parameters: Vec::new(),
             exhaustiveness_flow: false,
             extension_receivers: Vec::new(),

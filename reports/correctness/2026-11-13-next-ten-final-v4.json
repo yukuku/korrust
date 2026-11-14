@@ -1,0 +1,1479 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-13T15:40:53.761281+00:00",
+  "status": "completed",
+  "selection": "Final acceptance of ten bounded compiler additions. Primary counts derive from the five family reports; Rust/Python tests and supplementary proofs are reported separately without inflating primary language case counts.",
+  "compiler": {
+    "path": "target/next10-final-v3/korrust",
+    "sha256": "58990f36b6aba59d2b92c5417cbde8a3daff1396ea3eda01c1e85c4b5c3dc574",
+    "source_revision": "720c490c97d4730e465b6024c4ddbac961c435cc",
+    "frozen_input_manifest": "reports/correctness/2026-11-13-next-ten-final-v4/frozen-inputs.json",
+    "frozen_input_manifest_sha256": "3c4638e57400ca61bf7cf28cb688bd30fad8bafc4ee0422fa386966be7c06b14",
+    "source_archive": "reports/correctness/2026-11-13-next-ten-final-v4/frozen-sources.zip",
+    "source_archive_sha256": "ad60473b3f0333dea3222f26624621a4bcae729c1b8883c29bf8c9c826be7a0f"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "checks": {
+    "format": {
+      "status": "pass",
+      "log": "reports/correctness/2026-11-13-next-ten-final-v4/fmt.log"
+    },
+    "clippy_all_targets_release": {
+      "status": "pass",
+      "log": "reports/correctness/2026-11-13-next-ten-final-v4/clippy.log"
+    },
+    "release_build": {
+      "status": "pass",
+      "log": "reports/correctness/2026-11-13-next-ten-final-v3/build.log"
+    },
+    "rust_full_suite": {
+      "status": "pass",
+      "log": "reports/correctness/2026-11-13-next-ten-final-v4/rust.log",
+      "counts": {
+        "passed": 518,
+        "failed": 0,
+        "ignored": 0,
+        "measured": 0,
+        "filtered_out": 0
+      },
+      "completed_groups": 51
+    },
+    "python_full_suite": {
+      "status": "pass",
+      "log": "reports/correctness/2026-11-13-next-ten-final-v3/python.log",
+      "tests": 179
+    },
+    "upstream_snapshot_integrity": {
+      "status": "pass",
+      "log": "reports/correctness/2026-11-13-next-ten-final/reference-integrity.log"
+    },
+    "frozen_input_integrity": {
+      "status": "pass",
+      "files_checked": 1131,
+      "changed": []
+    }
+  },
+  "families": {
+    "iteration": {
+      "report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "counts": {
+        "pass": 11,
+        "invalid_rejected": 7,
+        "unsupported_language": 3,
+        "not_assessed": 1
+      },
+      "limitations": [
+        "Mixed integral, Byte/Short, unsigned and nullable primitive open ranges are unsupported",
+        "No additional AndroidBible unchanged-file or Android/device compatibility claim",
+        "Unit/Null iterator element types remain unsupported",
+        "No generic source/imported operator precedence equivalence claim"
+      ],
+      "supporting_cases": [
+        "compile/official",
+        "compile/candidate",
+        "runtime/official",
+        "verification/official",
+        "runtime/candidate",
+        "verification/candidate",
+        "builtin_primitive_runtime_dispatch",
+        "public_signatures",
+        "kotlin_consumer/official",
+        "kotlin_consumer/candidate",
+        "frozen_inputs"
+      ]
+    },
+    "generics": {
+      "report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "counts": {
+        "pass": 13,
+        "invalid_rejected": 12,
+        "unsupported_language": 14
+      },
+      "limitations": [
+        "Declaration-site in/out on ordinary supported source generic classes/interfaces; nested generic and function-type polarity, constructor properties, supertypes, source and compiled substitution. Private-to-this variance exceptions remain explicitly unsupported.",
+        "One independent non-null class/interface parameter upper bound, including interface method/property resolution and parameterized interface bounds. Nullable interface bounds, dependent/recursive/multiple bounds, generic data classes, generic member functions, generic interface bodies, function-type bounds and parameter shadowing remain unsupported.",
+        "Official Java callers are compiled once and reused against both outputs with -Xverify:all; official Kotlin consumers check metadata. Exposed inputs requiring contextual declaration-variance JVM wildcards are explicitly unsupported; exact final out arguments, Any contravariant inputs, local subtyping and ordinary returned variant types are covered. Projected exposed variant signatures are unsupported. No whole-app or general-generics claim."
+      ],
+      "supporting_cases": [
+        "runtime/official",
+        "consumer/official/official",
+        "consumer/official/candidate",
+        "signature/official/Holder",
+        "signature/official/Bounded",
+        "signature/official/Chars",
+        "runtime/candidate",
+        "consumer/candidate/official",
+        "consumer/candidate/candidate",
+        "signature/candidate/Holder",
+        "signature/candidate/Bounded",
+        "signature/candidate/Chars",
+        "frozen_inputs"
+      ]
+    },
+    "shorts": {
+      "report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "counts": {
+        "baseline_unsupported": 5,
+        "pass": 16,
+        "invalid_kotlin": 15,
+        "unsupported_language": 2
+      },
+      "limitations": [
+        "Short source types, contextual literals, conversions and boxing predate this milestone and are regression checks, not new feature claims.",
+        "Integral equality retains Kotlin operand-type restrictions; bitwise/shift operators do not gain implicit narrowing or Short receivers.",
+        "Effectful initializer-producing expressions retain the existing explicit specification/oracle evaluation-order rejection boundary.",
+        "Inherited import-resolution boundary: an explicit alias of a default-imported function and its original implicit name do not freely coexist in one source file; positive alias and original-name checks use separate source files.",
+        "Short annotation elements, const declarations, complete standard library APIs, Android/full-app compatibility and performance are not claimed."
+      ],
+      "supporting_cases": [
+        "dependency/official",
+        "compile/official",
+        "compile/candidate",
+        "runtime/official",
+        "metadata/official",
+        "runtime/candidate",
+        "metadata/candidate",
+        "signature/next10.shorts.ValuesKt",
+        "signature/next10.shorts.Holder",
+        "signature/next10.shorts.AliasedFactoryKt",
+        "newly_supported/integral_comparison",
+        "newly_supported/mixed_integral_arithmetic",
+        "newly_supported/short_arithmetic",
+        "newly_supported/short_array",
+        "newly_supported/short_unary",
+        "original/forEachShortArray"
+      ]
+    },
+    "operators": {
+      "report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "counts": {
+        "pass": 24,
+        "unsupported_language": 5,
+        "not_run": 1,
+        "invalid_kotlin": 14
+      },
+      "limitations": [
+        "Nullable unary/comparison extension receivers and source covariant overrides requiring JVM bridges remain explicitly unsupported; compiled covariance is tested.",
+        "The existing ordinary overload-resolution and generic/inline call boundaries apply.",
+        "Unchanged QueryTokenizer is assessed but candidate compilation remains blocked; official JVM caller evidence is retained. Android runtime and full-application compatibility remain unassessed."
+      ],
+      "supporting_cases": [
+        "compile/official",
+        "compile/candidate",
+        "runtime/official",
+        "runtime/candidate",
+        "abi/operators.Measure",
+        "abi/operators.Shifted",
+        "abi/operators.Plain",
+        "abi/operators.Origin",
+        "abi/operators.Middle",
+        "abi/operators.Descendant",
+        "abi/operators.BaseFlag",
+        "abi/operators.DerivedFlag",
+        "abi/operators.Switch",
+        "abi/operators.OperatorsKt",
+        "abi/imported.ImportedKt",
+        "kotlin_consumer/official/official",
+        "kotlin_consumer/official/candidate",
+        "kotlin_consumer/candidate/official",
+        "kotlin_consumer/candidate/candidate",
+        "app/compile/official",
+        "app/runtime/official",
+        "app/fixed_caller_integrity",
+        "recursiveCompareTo",
+        "fixed_caller_integrity"
+      ]
+    },
+    "jvm": {
+      "report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "counts": {
+        "pass": 15,
+        "invalid_kotlin": 16,
+        "oracle_discrepancy": 1,
+        "unsupported_language": 13
+      },
+      "limitations": [
+        "File JvmName consumes canonical annotation identity and folded String arguments; bounded ASCII identifier JVM facade names. Existing non-ASCII source filename boundary remains even with an explicit facade name. Multifile facades, source annotation type aliases and member JvmName remain unsupported.",
+        "Private/internal primary constructors of ordinary final nongeneric classes, without defaults, constructor annotations or secondary constructors. Protected, inner, value, sealed, data and open combinations retain explicit boundaries. Ordinary constructor callable references retain their existing explicit unsupported boundary.",
+        "Java callers compile once against official output and run unchanged against both providers with -Xverify:all. Kotlin consumers are compiled against each provider separately; candidate consumers are also compiled against both providers.",
+        "Custom marks.JvmName source probes expose a documented official short-name lowering discrepancy; those results are excluded from differential passes. No full Android application or performance claim. DownloadMapper and SongFilter motivate visibility but contain broader unsupported semantics."
+      ],
+      "supporting_cases": [
+        "provider/source-compilation",
+        "provider/jvm-signatures-facade-mapping",
+        "provider/official/java-runtime-metadata",
+        "consumer/official-against-official",
+        "consumer/candidate-against-official",
+        "consumer/friend-official-against-official",
+        "consumer/friend-candidate-against-official",
+        "provider/candidate/java-runtime-metadata",
+        "consumer/official-against-candidate",
+        "consumer/candidate-against-candidate",
+        "consumer/friend-official-against-candidate",
+        "consumer/friend-candidate-against-candidate",
+        "facade/canonical-folded-official",
+        "facade/canonical-shadow-folded-candidate",
+        "facade/owned-rename-removal-matches-clean"
+      ]
+    }
+  },
+  "cases": [
+    {
+      "id": "iteration/compile/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "compile/official"
+    },
+    {
+      "id": "iteration/compile/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "compile/candidate"
+    },
+    {
+      "id": "iteration/runtime/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "runtime/official"
+    },
+    {
+      "id": "iteration/verification/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "verification/official"
+    },
+    {
+      "id": "iteration/runtime/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "runtime/candidate"
+    },
+    {
+      "id": "iteration/verification/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "verification/candidate"
+    },
+    {
+      "id": "iteration/builtin_primitive_runtime_dispatch",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "builtin_primitive_runtime_dispatch"
+    },
+    {
+      "id": "iteration/public_signatures",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "public_signatures"
+    },
+    {
+      "id": "iteration/kotlin_consumer/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "kotlin_consumer/official"
+    },
+    {
+      "id": "iteration/kotlin_consumer/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "kotlin_consumer/candidate"
+    },
+    {
+      "id": "iteration/boundary/iterator_modifier",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "boundary/iterator_modifier"
+    },
+    {
+      "id": "iteration/boundary/hasNext_modifier",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "boundary/hasNext_modifier"
+    },
+    {
+      "id": "iteration/boundary/next_modifier",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "boundary/next_modifier"
+    },
+    {
+      "id": "iteration/boundary/hasNext_type",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "boundary/hasNext_type"
+    },
+    {
+      "id": "iteration/boundary/nullable_container",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "boundary/nullable_container"
+    },
+    {
+      "id": "iteration/boundary/range_modifier",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "boundary/range_modifier"
+    },
+    {
+      "id": "iteration/boundary/source_argument_type",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "boundary/source_argument_type"
+    },
+    {
+      "id": "iteration/boundary/mixed_integral",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "boundary/mixed_integral"
+    },
+    {
+      "id": "iteration/boundary/byte_integral",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "boundary/byte_integral"
+    },
+    {
+      "id": "iteration/boundary/unit_element",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "boundary/unit_element"
+    },
+    {
+      "id": "iteration/androidbible_assessment",
+      "outcome": "not_assessed",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "androidbible_assessment"
+    },
+    {
+      "id": "iteration/frozen_inputs",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+      "case_id": "frozen_inputs"
+    },
+    {
+      "id": "generics/runtime/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "runtime/official"
+    },
+    {
+      "id": "generics/consumer/official/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "consumer/official/official"
+    },
+    {
+      "id": "generics/consumer/official/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "consumer/official/candidate"
+    },
+    {
+      "id": "generics/signature/official/Holder",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "signature/official/Holder"
+    },
+    {
+      "id": "generics/signature/official/Bounded",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "signature/official/Bounded"
+    },
+    {
+      "id": "generics/signature/official/Chars",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "signature/official/Chars"
+    },
+    {
+      "id": "generics/runtime/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "runtime/candidate"
+    },
+    {
+      "id": "generics/consumer/candidate/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "consumer/candidate/official"
+    },
+    {
+      "id": "generics/consumer/candidate/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "consumer/candidate/candidate"
+    },
+    {
+      "id": "generics/signature/candidate/Holder",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "signature/candidate/Holder"
+    },
+    {
+      "id": "generics/signature/candidate/Bounded",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "signature/candidate/Bounded"
+    },
+    {
+      "id": "generics/signature/candidate/Chars",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "signature/candidate/Chars"
+    },
+    {
+      "id": "generics/boundary/out_input",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/out_input"
+    },
+    {
+      "id": "generics/boundary/in_output",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/in_output"
+    },
+    {
+      "id": "generics/boundary/out_var",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/out_var"
+    },
+    {
+      "id": "generics/boundary/in_val",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/in_val"
+    },
+    {
+      "id": "generics/boundary/invariant_nested",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/invariant_nested"
+    },
+    {
+      "id": "generics/boundary/function_polarity",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/function_polarity"
+    },
+    {
+      "id": "generics/boundary/function_output_polarity",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/function_output_polarity"
+    },
+    {
+      "id": "generics/boundary/supertype_polarity",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/supertype_polarity"
+    },
+    {
+      "id": "generics/boundary/wrong_bound",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/wrong_bound"
+    },
+    {
+      "id": "generics/boundary/nullable_bound_argument",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/nullable_bound_argument"
+    },
+    {
+      "id": "generics/boundary/variance_reverse",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/variance_reverse"
+    },
+    {
+      "id": "generics/boundary/private_to_this",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/private_to_this"
+    },
+    {
+      "id": "generics/boundary/recursive_bound",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/recursive_bound"
+    },
+    {
+      "id": "generics/boundary/generic_member",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/generic_member"
+    },
+    {
+      "id": "generics/boundary/generic_data",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/generic_data"
+    },
+    {
+      "id": "generics/boundary/shadowing",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/shadowing"
+    },
+    {
+      "id": "generics/boundary/nullable_interface_bound",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/nullable_interface_bound"
+    },
+    {
+      "id": "generics/boundary/variance_reverse_input",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/variance_reverse_input"
+    },
+    {
+      "id": "generics/boundary/wildcard_out_any",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/wildcard_out_any"
+    },
+    {
+      "id": "generics/boundary/wildcard_in_string",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/wildcard_in_string"
+    },
+    {
+      "id": "generics/boundary/wildcard_constructor",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/wildcard_constructor"
+    },
+    {
+      "id": "generics/boundary/wildcard_method",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/wildcard_method"
+    },
+    {
+      "id": "generics/boundary/wildcard_redundant_projection",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/wildcard_redundant_projection"
+    },
+    {
+      "id": "generics/boundary/wildcard_return_projection",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/wildcard_return_projection"
+    },
+    {
+      "id": "generics/boundary/wildcard_property_projection",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/wildcard_property_projection"
+    },
+    {
+      "id": "generics/boundary/wildcard_bound_projection",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "boundary/wildcard_bound_projection"
+    },
+    {
+      "id": "generics/frozen_inputs",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+      "case_id": "frozen_inputs"
+    },
+    {
+      "id": "shorts/baseline/integral_comparison",
+      "outcome": "baseline_unsupported",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "baseline/integral_comparison"
+    },
+    {
+      "id": "shorts/baseline/mixed_integral_arithmetic",
+      "outcome": "baseline_unsupported",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "baseline/mixed_integral_arithmetic"
+    },
+    {
+      "id": "shorts/baseline/short_arithmetic",
+      "outcome": "baseline_unsupported",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "baseline/short_arithmetic"
+    },
+    {
+      "id": "shorts/baseline/short_array",
+      "outcome": "baseline_unsupported",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "baseline/short_array"
+    },
+    {
+      "id": "shorts/baseline/short_unary",
+      "outcome": "baseline_unsupported",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "baseline/short_unary"
+    },
+    {
+      "id": "shorts/dependency/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "dependency/official"
+    },
+    {
+      "id": "shorts/compile/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "compile/official"
+    },
+    {
+      "id": "shorts/compile/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "compile/candidate"
+    },
+    {
+      "id": "shorts/runtime/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "runtime/official"
+    },
+    {
+      "id": "shorts/metadata/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "metadata/official"
+    },
+    {
+      "id": "shorts/runtime/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "runtime/candidate"
+    },
+    {
+      "id": "shorts/metadata/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "metadata/candidate"
+    },
+    {
+      "id": "shorts/signature/next10.shorts.ValuesKt",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "signature/next10.shorts.ValuesKt"
+    },
+    {
+      "id": "shorts/signature/next10.shorts.Holder",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "signature/next10.shorts.Holder"
+    },
+    {
+      "id": "shorts/signature/next10.shorts.AliasedFactoryKt",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "signature/next10.shorts.AliasedFactoryKt"
+    },
+    {
+      "id": "shorts/newly_supported/integral_comparison",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "newly_supported/integral_comparison"
+    },
+    {
+      "id": "shorts/newly_supported/mixed_integral_arithmetic",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "newly_supported/mixed_integral_arithmetic"
+    },
+    {
+      "id": "shorts/newly_supported/short_arithmetic",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "newly_supported/short_arithmetic"
+    },
+    {
+      "id": "shorts/newly_supported/short_array",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "newly_supported/short_array"
+    },
+    {
+      "id": "shorts/newly_supported/short_unary",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "newly_supported/short_unary"
+    },
+    {
+      "id": "shorts/invalid/arithmetic_narrowing",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "invalid/arithmetic_narrowing"
+    },
+    {
+      "id": "shorts/invalid/boxed_to_primitive",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "invalid/boxed_to_primitive"
+    },
+    {
+      "id": "shorts/invalid/float_direct_short",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "invalid/float_direct_short"
+    },
+    {
+      "id": "shorts/invalid/mixed_equality",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "invalid/mixed_equality"
+    },
+    {
+      "id": "shorts/invalid/mixed_result_narrowing",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "invalid/mixed_result_narrowing"
+    },
+    {
+      "id": "shorts/invalid/nonliteral_narrowing",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "invalid/nonliteral_narrowing"
+    },
+    {
+      "id": "shorts/invalid/nonliteral_store",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "invalid/nonliteral_store"
+    },
+    {
+      "id": "shorts/invalid/nullable_index",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "invalid/nullable_index"
+    },
+    {
+      "id": "shorts/invalid/overflow_negative",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "invalid/overflow_negative"
+    },
+    {
+      "id": "shorts/invalid/overflow_positive",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "invalid/overflow_positive"
+    },
+    {
+      "id": "shorts/invalid/overflow_store",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "invalid/overflow_store"
+    },
+    {
+      "id": "shorts/invalid/primitive_to_boxed",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "invalid/primitive_to_boxed"
+    },
+    {
+      "id": "shorts/invalid/shift_short",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "invalid/shift_short"
+    },
+    {
+      "id": "shorts/invalid/wrong_initializer",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "invalid/wrong_initializer"
+    },
+    {
+      "id": "shorts/invalid/wrong_spread",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "invalid/wrong_spread"
+    },
+    {
+      "id": "shorts/boundary/effectful_initializer",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "boundary/effectful_initializer"
+    },
+    {
+      "id": "shorts/boundary/short_annotation",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "boundary/short_annotation"
+    },
+    {
+      "id": "shorts/original/forEachShortArray",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+      "case_id": "original/forEachShortArray"
+    },
+    {
+      "id": "operators/compile/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "compile/official"
+    },
+    {
+      "id": "operators/compile/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "compile/candidate"
+    },
+    {
+      "id": "operators/runtime/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "runtime/official"
+    },
+    {
+      "id": "operators/runtime/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "runtime/candidate"
+    },
+    {
+      "id": "operators/abi/operators.Measure",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "abi/operators.Measure"
+    },
+    {
+      "id": "operators/abi/operators.Shifted",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "abi/operators.Shifted"
+    },
+    {
+      "id": "operators/abi/operators.Plain",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "abi/operators.Plain"
+    },
+    {
+      "id": "operators/abi/operators.Origin",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "abi/operators.Origin"
+    },
+    {
+      "id": "operators/abi/operators.Middle",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "abi/operators.Middle"
+    },
+    {
+      "id": "operators/abi/operators.Descendant",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "abi/operators.Descendant"
+    },
+    {
+      "id": "operators/abi/operators.BaseFlag",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "abi/operators.BaseFlag"
+    },
+    {
+      "id": "operators/abi/operators.DerivedFlag",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "abi/operators.DerivedFlag"
+    },
+    {
+      "id": "operators/abi/operators.Switch",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "abi/operators.Switch"
+    },
+    {
+      "id": "operators/abi/operators.OperatorsKt",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "abi/operators.OperatorsKt"
+    },
+    {
+      "id": "operators/abi/imported.ImportedKt",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "abi/imported.ImportedKt"
+    },
+    {
+      "id": "operators/kotlin_consumer/official/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "kotlin_consumer/official/official"
+    },
+    {
+      "id": "operators/kotlin_consumer/official/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "kotlin_consumer/official/candidate"
+    },
+    {
+      "id": "operators/kotlin_consumer/candidate/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "kotlin_consumer/candidate/official"
+    },
+    {
+      "id": "operators/kotlin_consumer/candidate/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "kotlin_consumer/candidate/candidate"
+    },
+    {
+      "id": "operators/app/compile/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "app/compile/official"
+    },
+    {
+      "id": "operators/app/runtime/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "app/runtime/official"
+    },
+    {
+      "id": "operators/app/compile/candidate",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "app/compile/candidate"
+    },
+    {
+      "id": "operators/app/runtime/candidate",
+      "outcome": "not_run",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "app/runtime/candidate"
+    },
+    {
+      "id": "operators/app/fixed_caller_integrity",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "app/fixed_caller_integrity"
+    },
+    {
+      "id": "operators/boundary/UnaryArity",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "boundary/UnaryArity"
+    },
+    {
+      "id": "operators/boundary/NotArity",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "boundary/NotArity"
+    },
+    {
+      "id": "operators/boundary/CompareResult",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "boundary/CompareResult"
+    },
+    {
+      "id": "operators/boundary/CompareInferredResult",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "boundary/CompareInferredResult"
+    },
+    {
+      "id": "operators/boundary/CompareArity",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "boundary/CompareArity"
+    },
+    {
+      "id": "operators/boundary/CompareDefault",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "boundary/CompareDefault"
+    },
+    {
+      "id": "operators/boundary/CompareVararg",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "boundary/CompareVararg"
+    },
+    {
+      "id": "operators/boundary/MissingUnaryModifier",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "boundary/MissingUnaryModifier"
+    },
+    {
+      "id": "operators/boundary/MissingCompareModifier",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "boundary/MissingCompareModifier"
+    },
+    {
+      "id": "operators/boundary/PrivateUnary",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "boundary/PrivateUnary"
+    },
+    {
+      "id": "operators/boundary/PrivateCompare",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "boundary/PrivateCompare"
+    },
+    {
+      "id": "operators/boundary/UnrelatedOverload",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "boundary/UnrelatedOverload"
+    },
+    {
+      "id": "operators/boundary/PrivateAncestor",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "boundary/PrivateAncestor"
+    },
+    {
+      "id": "operators/boundary/MissingInterfaceModifier",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "boundary/MissingInterfaceModifier"
+    },
+    {
+      "id": "operators/boundary/NullableUnary",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "boundary/NullableUnary"
+    },
+    {
+      "id": "operators/boundary/NullableCompare",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "boundary/NullableCompare"
+    },
+    {
+      "id": "operators/boundary/CovariantOverride",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "boundary/CovariantOverride"
+    },
+    {
+      "id": "operators/extensionObject",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "extensionObject"
+    },
+    {
+      "id": "operators/recursiveCompareTo",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "recursiveCompareTo"
+    },
+    {
+      "id": "operators/fixed_caller_integrity",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+      "case_id": "fixed_caller_integrity"
+    },
+    {
+      "id": "jvm/provider/source-compilation",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "provider/source-compilation"
+    },
+    {
+      "id": "jvm/provider/jvm-signatures-facade-mapping",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "provider/jvm-signatures-facade-mapping"
+    },
+    {
+      "id": "jvm/provider/official/java-runtime-metadata",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "provider/official/java-runtime-metadata"
+    },
+    {
+      "id": "jvm/consumer/official-against-official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "consumer/official-against-official"
+    },
+    {
+      "id": "jvm/consumer/candidate-against-official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "consumer/candidate-against-official"
+    },
+    {
+      "id": "jvm/consumer/friend-official-against-official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "consumer/friend-official-against-official"
+    },
+    {
+      "id": "jvm/consumer/friend-candidate-against-official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "consumer/friend-candidate-against-official"
+    },
+    {
+      "id": "jvm/consumer/nonfriend-official",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "consumer/nonfriend-official"
+    },
+    {
+      "id": "jvm/consumer/private-official/PrivateBad.kt",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "consumer/private-official/PrivateBad.kt"
+    },
+    {
+      "id": "jvm/consumer/private-official/PrivateAliasBad.kt",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "consumer/private-official/PrivateAliasBad.kt"
+    },
+    {
+      "id": "jvm/provider/candidate/java-runtime-metadata",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "provider/candidate/java-runtime-metadata"
+    },
+    {
+      "id": "jvm/consumer/official-against-candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "consumer/official-against-candidate"
+    },
+    {
+      "id": "jvm/consumer/candidate-against-candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "consumer/candidate-against-candidate"
+    },
+    {
+      "id": "jvm/consumer/friend-official-against-candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "consumer/friend-official-against-candidate"
+    },
+    {
+      "id": "jvm/consumer/friend-candidate-against-candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "consumer/friend-candidate-against-candidate"
+    },
+    {
+      "id": "jvm/consumer/nonfriend-candidate",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "consumer/nonfriend-candidate"
+    },
+    {
+      "id": "jvm/consumer/private-candidate/PrivateBad.kt",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "consumer/private-candidate/PrivateBad.kt"
+    },
+    {
+      "id": "jvm/consumer/private-candidate/PrivateAliasBad.kt",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "consumer/private-candidate/PrivateAliasBad.kt"
+    },
+    {
+      "id": "jvm/facade/canonical-folded-official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "facade/canonical-folded-official"
+    },
+    {
+      "id": "jvm/facade/custom-name-oracle-discrepancy",
+      "outcome": "oracle_discrepancy",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "facade/custom-name-oracle-discrepancy"
+    },
+    {
+      "id": "jvm/facade/canonical-shadow-folded-candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "facade/canonical-shadow-folded-candidate"
+    },
+    {
+      "id": "jvm/facade/owned-rename-removal-matches-clean",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "facade/owned-rename-removal-matches-clean"
+    },
+    {
+      "id": "jvm/boundary/private-outside",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/private-outside"
+    },
+    {
+      "id": "jvm/boundary/private-alias",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/private-alias"
+    },
+    {
+      "id": "jvm/boundary/outer-cannot-construct-nested",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/outer-cannot-construct-nested"
+    },
+    {
+      "id": "jvm/boundary/inline-private-constructor",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/inline-private-constructor"
+    },
+    {
+      "id": "jvm/boundary/inline-private-lambda",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/inline-private-lambda"
+    },
+    {
+      "id": "jvm/boundary/private-default",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/private-default"
+    },
+    {
+      "id": "jvm/boundary/internal-default",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/internal-default"
+    },
+    {
+      "id": "jvm/boundary/protected",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/protected"
+    },
+    {
+      "id": "jvm/boundary/private-generic",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/private-generic"
+    },
+    {
+      "id": "jvm/boundary/constructor-reference",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/constructor-reference"
+    },
+    {
+      "id": "jvm/boundary/multifile",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/multifile"
+    },
+    {
+      "id": "jvm/boundary/member-name",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/member-name"
+    },
+    {
+      "id": "jvm/boundary/name-wrong-type",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/name-wrong-type"
+    },
+    {
+      "id": "jvm/boundary/name-wrong-argument",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/name-wrong-argument"
+    },
+    {
+      "id": "jvm/boundary/name-duplicate",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/name-duplicate"
+    },
+    {
+      "id": "jvm/boundary/name-nonidentifier",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/name-nonidentifier"
+    },
+    {
+      "id": "jvm/boundary/conflicting-constructor-visibility",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/conflicting-constructor-visibility"
+    },
+    {
+      "id": "jvm/boundary/explicit-enum-constructor",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/explicit-enum-constructor"
+    },
+    {
+      "id": "jvm/boundary/private-value-parameter",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/private-value-parameter"
+    },
+    {
+      "id": "jvm/boundary/annotation-source-typealias",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/annotation-source-typealias"
+    },
+    {
+      "id": "jvm/boundary/inline-internal-constructor",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/inline-internal-constructor"
+    },
+    {
+      "id": "jvm/boundary/inline-internal-lambda",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/inline-internal-lambda"
+    },
+    {
+      "id": "jvm/boundary/duplicate-facade",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+      "case_id": "boundary/duplicate-facade"
+    }
+  ],
+  "counts": {
+    "pass": 79,
+    "invalid_rejected": 19,
+    "unsupported_language": 37,
+    "not_assessed": 1,
+    "baseline_unsupported": 5,
+    "invalid_kotlin": 45,
+    "not_run": 1,
+    "oracle_discrepancy": 1
+  },
+  "supplementary_reports": {
+    "formatted_verse_text": {
+      "report": "reports/correctness/2026-11-13T151142200474Z-next10-formatted-verse-text.json",
+      "counts": {
+        "pass": 7
+      }
+    },
+    "direct_class_variance": {
+      "report": "reports/correctness/2026-11-13T151142283998Z-next10-final-direct-classes.json",
+      "counts": {
+        "pass": 4
+      }
+    },
+    "nullable_annotation_merge": {
+      "report": "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge.json",
+      "counts": {
+        "pass": 7
+      }
+    },
+    "jvm_static_reflection": {
+      "report": "reports/correctness/2026-11-13T151649845422Z-nullable-jvmstatic-reflection.json",
+      "counts": {
+        "pass": 5
+      }
+    }
+  },
+  "application_assessment": {
+    "report": "reports/correctness/2026-11-13T151142311962Z-next10-app-assessment.json",
+    "selection_size": 33,
+    "provider_counts": {
+      "baseline": {
+        "compiled": 21,
+        "rejected": 12
+      },
+      "candidate": {
+        "compiled": 22,
+        "rejected": 11
+      }
+    },
+    "counts": {
+      "unchanged": 32,
+      "newly_compiled": 1
+    },
+    "runtime_report": "reports/correctness/2026-11-13T151142200474Z-next10-formatted-verse-text.json"
+  },
+  "fixture_only_correction": {
+    "changed_files": [
+      "tests/enum_frontend.rs"
+    ],
+    "reason": "Operator compareTo is now supported; overriding Enum.compareTo remains invalid because the member is final. The old test expected an unsupported-convention diagnostic. Corrected test passes without changing the compiler.",
+    "prior_snapshot": "reports/correctness/2026-11-13-next-ten-final-v3/frozen-inputs.json"
+  },
+  "earlier_failures": [
+    {
+      "evidence": [
+        "reports/correctness/2026-11-13-next-ten-final/python.log",
+        "reports/correctness/2026-11-13-next-ten-final/rust.log",
+        "reports/correctness/2026-11-13T143342840997Z-next10-app-assessment.json"
+      ],
+      "resolution": "Inherited operator metadata now traverses resolved parents without loading synthetic anonymous owners; obsolete ShortArray descriptor expectation was updated."
+    },
+    {
+      "evidence": [
+        "reports/correctness/2026-11-13T144535418876Z-next10-formatted-verse-text.json"
+      ],
+      "resolution": "Nullable result annotations use the existing attribute merger; canonical JvmStatic retention is RUNTIME. Fresh final Formatter, annotation and reflection proofs pass."
+    },
+    {
+      "evidence": [
+        "reports/correctness/2026-11-13-next-ten-final-v3/rust.log"
+      ],
+      "resolution": "Only the enum test expectation changed in V4; final full suite reran with --no-fail-fast."
+    }
+  ],
+  "limitations": [
+    "Support is bounded by each feature-family report; explicit unsupported and invalid-input outcomes are not positive language passes.",
+    "The selected AndroidBible survey compiles files individually with Kotlin/JDK dependencies only. Runtime evidence for unchanged FormattedVerseText is separate; no whole-application, Android-device or performance claim.",
+    "One pinned-official custom JvmName short-name lowering discrepancy is recorded separately. Canonical annotation identity is preserved and this discrepancy is excluded from differential passes.",
+    "The final full-suite snapshot differs from V3 only in an obsolete enum test expectation. Compiler sources, binary and every accepted differential input are unchanged."
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-13-next-ten-final-v4/fmt.log",
+    "reports/correctness/2026-11-13-next-ten-final-v4/clippy.log",
+    "reports/correctness/2026-11-13-next-ten-final-v3/build.log",
+    "reports/correctness/2026-11-13-next-ten-final-v4/rust.log",
+    "reports/correctness/2026-11-13-next-ten-final-v3/python.log",
+    "reports/correctness/2026-11-13-next-ten-final/reference-integrity.log",
+    "reports/correctness/2026-11-13T151217495229Z-next10-iteration.json",
+    "reports/correctness/2026-11-13T151142596666Z-next10-generics.json",
+    "reports/correctness/2026-11-13T151222903185Z-next10-shorts.json",
+    "reports/correctness/2026-11-13T151136Z-next10-operators.json",
+    "reports/correctness/2026-11-13T151257406358Z-next10-jvm.json",
+    "reports/correctness/2026-11-13T151142200474Z-next10-formatted-verse-text.json",
+    "reports/correctness/2026-11-13T151142283998Z-next10-final-direct-classes.json",
+    "reports/correctness/2026-11-13T151257528873Z-nullable-annotation-merge.json",
+    "reports/correctness/2026-11-13T151649845422Z-nullable-jvmstatic-reflection.json",
+    "reports/correctness/2026-11-13T151142311962Z-next10-app-assessment.json",
+    "reports/correctness/2026-11-13-next-ten-final-v4/frozen-inputs.json",
+    "reports/correctness/2026-11-13-next-ten-final-v4/frozen-sources.zip"
+  ],
+  "reproduction_commands": [
+    "source /workspace/korrust-setup/env.sh",
+    "cargo fmt --all -- --check",
+    "cargo build --release --locked --offline",
+    "cargo clippy --release --all-targets --locked --offline -- -D warnings",
+    "RUST_MIN_STACK=16777216 cargo test --release --locked --offline --no-fail-fast",
+    "KORRUST_COMPILER=target/next10-final-v3/korrust python3 -m unittest discover -s tests -p \"test_*.py\"",
+    "python3 tools/check_next10_app.py --baseline target/next10-baseline/korrust --candidate target/next10-final-v3/korrust",
+    "python3 tools/reports.py"
+  ]
+}
