@@ -302,6 +302,13 @@ impl Checker<'_> {
                 imports.insert(name.clone(), class.name);
             }
         }
+        nested_type_imports(
+            &expanded,
+            &mut imports,
+            self.classpath,
+            &self.lambda_owner,
+            offset,
+        )?;
         let ty = self.class_literal_classifier_type(
             resolve_type(&expanded, &imports, offset)?,
             true,

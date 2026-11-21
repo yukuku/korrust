@@ -2444,7 +2444,14 @@ impl Checker<'_> {
         let expanded =
             self.classpath
                 .expand_type_alias(ty, self.imports, library::DEFAULT_PACKAGES)?;
-        let imports = library::default_type_imports(&expanded, self.imports, self.classpath);
+        let mut imports = library::default_type_imports(&expanded, self.imports, self.classpath);
+        nested_type_imports(
+            &expanded,
+            &mut imports,
+            self.classpath,
+            &self.lambda_owner,
+            offset,
+        )?;
         let ty = resolve_type(&expanded, &imports, offset)?;
         self.validate_type_arguments(&ty, offset)?;
         self.classpath
@@ -5914,6 +5921,147 @@ impl Checker<'_> {
         Ok(Value { ty, kind })
     }
 }
+fn nested_type_imports(
+    ty: &Type,
+    imports: &mut HashMap<String, String>,
+    classpath: &Classpath,
+    caller: &str,
+    offset: usize,
+) -> Result<()> {
+    match ty {
+        Type::Java(name) | Type::Parameterized { name, .. } => {
+            if let Some(owner) = nested_type_owner(name, imports, classpath, caller, offset)? {
+                imports.insert(name.clone(), owner);
+            }
+            if let Type::Parameterized { arguments, .. } = ty {
+                for argument in arguments {
+                    if let Some(ty) = &argument.ty {
+                        nested_type_imports(ty, imports, classpath, caller, offset)?;
+                    }
+                }
+            }
+        }
+        Type::Array(inner)
+        | Type::Nullable(inner)
+        | Type::Platform(inner)
+        | Type::List(inner)
+        | Type::MutableList(inner)
+        | Type::ThreadLocal(inner)
+        | Type::Parameter {
+            upper_bound: inner, ..
+        } => {
+            nested_type_imports(inner, imports, classpath, caller, offset)?;
+        }
+        Type::Function { params, result } | Type::SuspendFunction { params, result } => {
+            for ty in params.iter().chain(std::iter::once(result.as_ref())) {
+                nested_type_imports(ty, imports, classpath, caller, offset)?;
+            }
+        }
+        Type::ReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => {
+            for ty in params.iter().chain([receiver.as_ref(), result.as_ref()]) {
+                nested_type_imports(ty, imports, classpath, caller, offset)?;
+            }
+        }
+        _ => (),
+    }
+    Ok(())
+}
+
+fn nested_type_owner(
+    name: &str,
+    imports: &HashMap<String, String>,
+    classpath: &Classpath,
+    caller: &str,
+    offset: usize,
+) -> Result<Option<String>> {
+    if imports.contains_key(name) || !name.contains('/') {
+        return Ok(None);
+    }
+    match classpath.load(name) {
+        Ok(_) => return Ok(None),
+        Err(error) if error.code == "CLASS_NOT_FOUND" => (),
+        Err(error) => return Err(error),
+    }
+    fn package(owner: &str) -> &str {
+        owner.rsplit_once('/').map_or("", |(package, _)| package)
+    }
+    let parts = name.split('/').collect::<Vec<_>>();
+    let mut found = if let Some(owner) = imports.get(parts[0]).filter(|owner| !owner.contains("::"))
+    {
+        Some((classpath.load(owner)?, 1))
+    } else {
+        None
+    };
+    if found.is_none() {
+        let root = if package(caller).is_empty() {
+            parts[0].to_owned()
+        } else {
+            format!("{}/{}", package(caller), parts[0])
+        };
+        match classpath.load(&root) {
+            Ok(class) => found = Some((class, 1)),
+            Err(error) if error.code == "CLASS_NOT_FOUND" => (),
+            Err(error) => return Err(error),
+        }
+    }
+    if found.is_none() {
+        for end in (1..parts.len()).rev() {
+            match classpath.load(&parts[..end].join("/")) {
+                Ok(class) => {
+                    found = Some((class, end));
+                    break;
+                }
+                Err(error) if error.code == "CLASS_NOT_FOUND" => (),
+                Err(error) => return Err(error),
+            }
+        }
+    }
+    let Some((mut class, cursor)) = found else {
+        return Ok(None);
+    };
+    classpath.check_classifier_visibility(caller, &class.name, offset)?;
+    if class.access & 1 == 0 && package(caller) != package(&class.name) {
+        return Err(
+            Diagnostic::new(offset, "Containing classifier is inaccessible")
+                .with_kind(crate::DiagnosticKind::InvalidKotlin, "INVISIBLE_REFERENCE"),
+        );
+    }
+    for member in &parts[cursor..] {
+        let Some((nested, flags)) = classpath.java_member_class(&class.name, member)? else {
+            return Err(
+                Diagnostic::new(offset, format!("Unresolved nested classifier: {name}"))
+                    .with_kind(crate::DiagnosticKind::MissingDependency, "CLASS_NOT_FOUND")
+                    .for_type(name),
+            );
+        };
+        if !class.kotlin_class {
+            if flags & 2 != 0 || flags & 7 == 0 && package(caller) != package(&class.name) {
+                return Err(
+                    Diagnostic::new(offset, "Nested Java classifier is inaccessible")
+                        .with_kind(crate::DiagnosticKind::InvalidKotlin, "INVISIBLE_REFERENCE"),
+                );
+            }
+            if flags & 4 != 0 || nested.unsupported {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Protected or unsupported nested Java classifier metadata",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "JAVA_NESTED_CLASS_UNSUPPORTED",
+                ));
+            }
+        }
+        classpath.check_classifier_visibility(caller, &nested.name, offset)?;
+        class = nested;
+    }
+    Ok(Some(class.name))
+}
+
 fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> Result<Type> {
     if let Type::Java(name) = ty {
         let owner = imports.get(name).map_or(name.as_str(), String::as_str);
@@ -6775,12 +6923,17 @@ pub fn check_with_owner(
             .iter()
             .find(|(candidate, _)| candidate == &name)
             .map_or(0, |(_, offset)| *offset);
-        let resolved_owner = resolve_type(&Type::Java(name.clone()), &imports, 0)
-            .ok()
-            .and_then(|ty| match ty {
-                Type::Java(owner) => Some(owner),
-                _ => None,
-            });
+        let resolved_owner =
+            nested_type_owner(&name, &imports, classpath, lexical_owner, type_offset)?.or_else(
+                || {
+                    resolve_type(&Type::Java(name.clone()), &imports, 0)
+                        .ok()
+                        .and_then(|ty| match ty {
+                            Type::Java(owner) => Some(owner),
+                            _ => None,
+                        })
+                },
+            );
         if let std::collections::hash_map::Entry::Vacant(entry) = imports.entry(name.clone()) {
             let owner = resolved_owner.unwrap_or_else(|| {
                 if source.package.is_empty() || name.contains('/') {

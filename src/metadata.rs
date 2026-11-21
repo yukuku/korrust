@@ -1605,11 +1605,17 @@ fn accessor_annotation_flags(
 
 fn same_metadata_type(source: &Type, checked: &Type, imports: Imports<'_>) -> bool {
     match (source, checked) {
-        (Type::Java(alias), Type::Java(owner)) => imports
-            .iter()
-            .find(|(name, _, _)| name == alias)
-            .map(|(_, imported, _)| imported == owner)
-            .unwrap_or_else(|| owner.rsplit('/').next() == Some(alias.as_str())),
+        (Type::Java(alias), Type::Java(owner)) => {
+            if let Some((_, imported, _)) = imports.iter().find(|(name, _, _)| name == alias) {
+                return imported == owner;
+            }
+            if let Some((root, nested)) = alias.split_once('/')
+                && let Some((_, imported, _)) = imports.iter().find(|(name, _, _)| name == root)
+            {
+                return format!("{imported}${}", nested.replace('/', "$")) == *owner;
+            }
+            owner.replace('$', "/") == *alias || owner.rsplit('/').next() == Some(alias.as_str())
+        }
         (
             Type::Parameterized {
                 name: source,

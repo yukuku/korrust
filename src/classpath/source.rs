@@ -18,9 +18,20 @@ fn resolve(ty: &Type, module: &Module, cp: &Classpath) -> Type {
             {
                 return format!("{owner}${}", nested.replace('/', "$"));
             }
-            return cp
-                .kotlin_classifier(name)
-                .map_or_else(|| name.into(), |class| class.name);
+            let parts = name.split('/').collect::<Vec<_>>();
+            for split in (1..parts.len()).rev() {
+                let Ok(mut class) = cp.load(&parts[..split].join("/")) else {
+                    continue;
+                };
+                for member in &parts[split..] {
+                    let Ok(Some((nested, _))) = cp.java_member_class(&class.name, member) else {
+                        return name.into();
+                    };
+                    class = nested;
+                }
+                return class.name;
+            }
+            return name.into();
         }
         match name {
             "List" | "MutableList" => "java/util/List".into(),
@@ -1324,6 +1335,39 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) {
             &mut names,
         );
     }
+    names.extend(
+        module
+            .type_locations
+            .iter()
+            .map(|(name, _)| name)
+            .filter(|name| {
+                Type::primitive_array_named(name).is_none()
+                    && !matches!(
+                        name.as_str(),
+                        "Int"
+                            | "Long"
+                            | "Byte"
+                            | "Short"
+                            | "Char"
+                            | "Boolean"
+                            | "Float"
+                            | "Double"
+                            | "String"
+                            | "Unit"
+                            | "Array"
+                            | "List"
+                            | "MutableList"
+                            | "StringArray"
+                    )
+            })
+            .cloned(),
+    );
+    names.extend(
+        names
+            .iter()
+            .filter_map(|name| name.split_once('/').map(|(root, _)| root.to_owned()))
+            .collect::<Vec<_>>(),
+    );
     for name in names {
         if name.contains('/')
             || name.contains('.')

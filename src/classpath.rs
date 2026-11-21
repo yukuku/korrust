@@ -1229,6 +1229,22 @@ impl Classpath {
         owner: &str,
         short: &str,
     ) -> Result<Option<(JavaClass, u16)>> {
+        if self.is_source(owner) {
+            let nested = format!("{owner}${short}");
+            if self.is_source(&nested)
+                && self
+                    .lexical_parents
+                    .borrow()
+                    .get(&nested)
+                    .map(String::as_str)
+                    == Some(owner)
+                && let Some(class) = self.cache.borrow().get(&nested)
+                && class.kotlin_class
+            {
+                return Ok(Some((class.clone(), class.access)));
+            }
+            return Ok(None);
+        }
         let resource = format!("{owner}.class");
         let mut bytes = None;
         for path in &self.paths {

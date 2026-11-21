@@ -2665,6 +2665,7 @@ fn infer_source_results_impl(
         for (_, ty) in &function.params {
             type_names(ty, &mut names);
         }
+        type_names(&function.result, &mut names);
     }
     if let Some(class) = &source.class_decl {
         for (_, ty) in &class.params {
@@ -2685,11 +2686,13 @@ fn infer_source_results_impl(
         if imports.contains_key(&name) {
             continue;
         }
-        let path = if name.contains('/') || source.package.is_empty() {
-            name.clone()
-        } else {
-            format!("{}/{}", source.package.replace('.', "/"), name)
-        };
+        let path = nested_type_owner(&name, &imports, classpath, owner, 0)?.unwrap_or_else(|| {
+            if name.contains('/') || source.package.is_empty() {
+                name.clone()
+            } else {
+                format!("{}/{}", source.package.replace('.', "/"), name)
+            }
+        });
         if let Ok(class) = classpath.load(&path) {
             imports.insert(name, path.clone());
             classes.insert(path, class);
