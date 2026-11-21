@@ -6667,7 +6667,9 @@ pub fn check_with_owner(
                         classes.insert(class.name.clone(), class);
                         continue;
                     }
-                    imports.entry(simple).or_insert_with(|| class.name.clone());
+                    if !source.imports.iter().any(|(alias, _, _)| alias == &simple) {
+                        imports.entry(simple).or_insert_with(|| class.name.clone());
+                    }
                 }
                 classes.insert(class.name.clone(), class);
             }

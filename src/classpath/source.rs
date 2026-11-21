@@ -1177,20 +1177,20 @@ fn constants(class: &mut JavaClass, constants: &[crate::syntax::ConstDecl]) -> R
     Ok(())
 }
 
-pub(super) fn defaults(module: &mut Module, cp: &Classpath) {
+pub(super) fn defaults(module: &mut Module, cp: &Classpath) -> Result<()> {
     if let Some(mut enumeration) = module.enum_decl.take() {
         let mut context = module.clone();
         context.class_decl = Some(enumeration.body.clone());
-        defaults(&mut context, cp);
+        defaults(&mut context, cp)?;
         enumeration.body = context.class_decl.take().unwrap();
         for entry in enumeration.entry_bodies.iter_mut().flatten() {
             context.class_decl = Some(entry.clone());
-            defaults(&mut context, cp);
+            defaults(&mut context, cp)?;
             *entry = context.class_decl.take().unwrap();
         }
         module.imports = context.imports;
         module.enum_decl = Some(enumeration);
-        return;
+        return Ok(());
     }
     fn ty(value: &Type, names: &mut std::collections::BTreeSet<String>) {
         match value {
@@ -1462,22 +1462,57 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) {
         if own {
             continue;
         }
-        let source_package = module.package.replace('.', "/");
-        for package in std::iter::once(source_package.as_str())
-            .chain(std::iter::once("java/lang"))
-            .chain(DEFAULT_KOTLIN_PACKAGES.iter().copied())
-        {
-            let path = if package.is_empty() {
+        let path = |package: &str| {
+            if package.is_empty() {
                 name.clone()
             } else {
                 format!("{package}/{name}")
-            };
-            if cp.load(&path).is_ok_and(|class| class.access & 1 != 0) {
-                module.imports.push((name.clone(), path, 0));
+            }
+        };
+        let classifier = |package: &str| -> Result<bool> {
+            Ok(cp
+                .load(&path(package))
+                .is_ok_and(|class| class.access & 1 != 0)
+                || cp.type_alias(package, &name)?.is_some())
+        };
+        let source_package = module.package.replace('.', "/");
+        if classifier(&source_package)? {
+            module
+                .imports
+                .push((name.clone(), path(&source_package), 0));
+            continue;
+        }
+        let mut wildcard: Option<(String, usize)> = None;
+        for (_, package, offset) in module.imports.iter().filter(|(alias, _, _)| alias == "*") {
+            let package = package.strip_suffix("/*").unwrap_or(package);
+            if classifier(package)? {
+                let candidate = path(package);
+                if wildcard
+                    .as_ref()
+                    .is_some_and(|(previous, _)| previous != &candidate)
+                {
+                    return Err(
+                        Diagnostic::new(*offset, "Ambiguous wildcard classifier import").with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "AMBIGUOUS_CLASSIFIER_IMPORT",
+                        ),
+                    );
+                }
+                wildcard = Some((candidate, *offset));
+            }
+        }
+        if let Some((candidate, offset)) = wildcard {
+            module.imports.push((name, candidate, offset));
+            continue;
+        }
+        for package in std::iter::once("java/lang").chain(DEFAULT_KOTLIN_PACKAGES.iter().copied()) {
+            if classifier(package)? {
+                module.imports.push((name.clone(), path(package), 0));
                 break;
             }
         }
     }
+    Ok(())
 }
 
 pub(super) fn expand_aliases(module: &mut Module, cp: &Classpath) -> Result<()> {
@@ -1739,4 +1774,34 @@ pub(super) fn validate_private_signatures(
         }
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod import_priority_tests {
+    use super::*;
+
+    #[test]
+    fn wildcard_candidates_are_deduplicated_and_conflicting_classifiers_are_rejected() {
+        let classpath = Classpath::new(&[]).unwrap();
+        classpath.register_source(empty("one/Collision"));
+        classpath.register_source(empty("two/Collision"));
+        let mut module = crate::syntax::parse(
+            "package use\nimport one.*\nimport two.*\nclass Holder(val value: Collision)",
+        )
+        .unwrap();
+        let error = defaults(&mut module, &classpath).unwrap_err();
+        assert_eq!(error.kind, crate::DiagnosticKind::InvalidKotlin);
+        assert_eq!(error.code, "AMBIGUOUS_CLASSIFIER_IMPORT");
+        let mut module = crate::syntax::parse(
+            "package use\nimport one.*\nimport one.*\nclass Holder(val value: Collision)",
+        )
+        .unwrap();
+        defaults(&mut module, &classpath).unwrap();
+        assert!(
+            module
+                .imports
+                .iter()
+                .any(|(alias, owner, _)| alias == "Collision" && owner == "one/Collision")
+        );
+    }
 }

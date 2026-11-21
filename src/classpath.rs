@@ -880,7 +880,7 @@ impl Classpath {
     }
 
     pub(crate) fn source_default_imports(&self, module: &mut crate::syntax::Module) -> Result<()> {
-        source::defaults(module, self);
+        source::defaults(module, self)?;
         source::expand_aliases(module, self)
     }
 

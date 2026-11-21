@@ -1,0 +1,6 @@
+$ /workspace/work/audio33/references/kotlinc/bin/kotlinc /workspace/work/audio33/tests/import_priority/InvalidAnnotation.kt -cp /workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/official-InvalidAnnotation -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/import_priority/InvalidAnnotation.kt:4:18: error: overload resolution ambiguity between candidates:
+annotation class JvmField : Annotation
+annotation class JvmField : Annotation
+class Ambiguous(@JvmField val value: String)
+                 ^^^^^^^^

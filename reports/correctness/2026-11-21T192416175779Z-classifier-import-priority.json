@@ -1,0 +1,816 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-21T19:24:16.175779+00:00",
+  "status": "complete",
+  "compiler": {
+    "path": "target/checks/2026-11-21T192416175779Z-classifier-import-priority/korrust-frozen",
+    "sha256": "bbe03d2f27ebec6588de1c3e2651a6037ee05719360d47abe9f8bce616c00415",
+    "source_revision": "ec48a3f2ebbcfb4f43e2c205ef72ffe037959320"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "frozen_input_hashes": {
+    "src/annotation_declarations.rs": "ac237d773c71a2fc26faeb2d79b837265c6d557ef7bb31aab748fa8b1c7572be",
+    "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+    "src/bytecode/annotation_files.rs": "4f3c136aaa2ed30b85d2a4cc2a9be8331b2da9682d450f6a4dcc135ef04ab86a",
+    "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+    "src/bytecode/class_companion.rs": "2dacd7b21d48fcdd59955fa30b58a6e88bb67642d4bd6dd9d845842b1880417a",
+    "src/bytecode/data.rs": "c99cb60546cbe8873ef99d1ab057aa7439f4239fce13927d324dfea078dbe98c",
+    "src/bytecode/defaults.rs": "ebdb1c988443c1b984081aa8555c5bb2f649685e3bbfef011cd138c0bf29aecd",
+    "src/bytecode/enums.rs": "25fe788c54554741347ba6bb4b84cbee7c324db6925209a434fb139ceb66b2b1",
+    "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+    "src/bytecode/inline.rs": "e598575c521153d592face8dd19018beaf89be45fbde985ae3845526e5a0be44",
+    "src/bytecode/interfaces.rs": "02e19cc9024bda962e06cedec8e15ebfc8b9f1ccd7f95ec11980ab46de917ae6",
+    "src/bytecode/lambdas.rs": "75a4ad990edd822dffaadc1be8cccf6d6cb345848f147e6b3a30c17dc0351360",
+    "src/bytecode/objects.rs": "142f8e5c70f0ac61423c3887447c54865b7b657768cf683fc553fde398a17e7e",
+    "src/bytecode/suspend.rs": "79e1064dd35da268956f91b167a779ce0957cefa8fef629789a2fb3afee987b7",
+    "src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+    "src/bytecode.rs": "d610c4766d35743cc7864a44fec87f93715b5c4c486cb6c3f6790b738434f26b",
+    "src/check.rs": "e04cc7091201c23b787e6756d0f9259a03156870d0d3643d95629a796f696bf1",
+    "src/check_annotation_placements.rs": "b6c899c4a5c2f3269ae1b93268b2ede0f29f4ce68c5ef42b833d7edcecf2d2cc",
+    "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+    "src/check_anonymous.rs": "fd523e4ff9173f209bde5b6cec9c5e13bae942da680e752611b242b0d8cc0f53",
+    "src/check_captures.rs": "b640213c5a98157b012203d2ff07e22799b7b7a187e75b7a22a4415c005a77a1",
+    "src/check_class_delegation.rs": "25cd077ed2b3b51158a53efb2c8190296064fe607db399ab416a3d51a4df2be0",
+    "src/check_classes.rs": "d67e980fdceb784bad7f4c0ee73752d2f9123d973c3c4952c5ad87d623432987",
+    "src/check_contracts.rs": "8bba31d6987b61295aed4c18eee29136f26724e00b5ab69b743655f4469f08c6",
+    "src/check_control.rs": "19e7fe2376f65209fd0d9b04be9254ec868fed288707d34631f30e841f3eaca7",
+    "src/check_declarations.rs": "d5d40e5b70684673e29b9295fee3a5a9491ef04dd7fd4a891d52291a4af10ce1",
+    "src/check_delegates.rs": "7fe3b9dcdb8bb1e86c2334e18daac91b90a780338f00cc1170eed1d2cca0e6c2",
+    "src/check_enums.rs": "2a16c9e4dbae29a8c479ab5cddefad66f0bdd09143e2a0cde8428d2d0c174d8b",
+    "src/check_functions.rs": "5ea379c79dfc6d4bd3797d199694bd421395aa12463a8fd7a142ba7f418b5aa1",
+    "src/check_inner_classes.rs": "60a4cdbfef5b069e0312c3ea7511b0de6a862d20ff393c464ea080968aa233cd",
+    "src/check_interfaces.rs": "c733506c29aeb5738c3266d03579e420bf26719ec59bd09fc4fc4d542c149f15",
+    "src/check_ir_walk.rs": "a25108644c43fb44e387050b0c203342232d342bca6130db0947f8ba4359b42c",
+    "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+    "src/check_jvm_fields.rs": "0db42bdfad6cca0d1bf84ba6d0963c40b2bc51393153b92910d05aa0b4e20947",
+    "src/check_library.rs": "1737bf4df2e599b838f326cc240574179a3c27bc95c89014a1fdb864114d5bca",
+    "src/check_member_extensions.rs": "66a4cfa55e05e5699d510113566c91fd54fa79e1257f769df334338c0f7201e5",
+    "src/check_objects.rs": "79cb9168240ce6833ab14ff8c05752e144e39a33a61fb59c292f298ab47514e6",
+    "src/check_operations.rs": "def335f6d315e240152d8f67b527283e3cca11d659967479223a9a29fc784152",
+    "src/check_overloads.rs": "6612d428673b842cf07a72b2344e6eb790d1a6f1b689373428140d07ab182dbf",
+    "src/check_references.rs": "3a4fd327b7a13f48e69d5fbd059c76cbb8d2ce50ae2e140a762a06d9e1e6eab8",
+    "src/check_relations.rs": "d14fbe255067f67bca7f5d8f4d84c39e8ecfaf2c8d5d5d460041796988136470",
+    "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+    "src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+    "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+    "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+    "src/check_variant_signatures.rs": "487fea7351445905782f472e297e15080a4244ce34a4a4aa9904b30c01263a86",
+    "src/classpath/aliases.rs": "745fa67edb3216b77ce5e65f63b75c51ac221f5b49d3e08a4327990bd9e6f4c5",
+    "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+    "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+    "src/classpath/metadata.rs": "ad587038956087ed383d6f0d6f970d5609d5a60ac59632b2fecc311ce4c1e045",
+    "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+    "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+    "src/classpath/signature.rs": "2dbed1bcacc67d8ffadd01d466676a969dc849eaa7d397d6c390e61a4ec12c7c",
+    "src/classpath/source.rs": "6a0853ab48091dca9aa9035b79b3e4b2c2a9f377e12537b4e0a256bed66832f0",
+    "src/classpath/source_enums.rs": "a3ed1a550007856e482624b65d024249e503524b577aa2a5f99b9db334ee1374",
+    "src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+    "src/classpath.rs": "a863e341b2200ddd60db855f82488fd0e4b3eed0c2841c1ae259feae73618754",
+    "src/compiled_inline.rs": "7acd0769184152ea2659a9217886608cff7219eea5a47d25cf573e0f0318d7fa",
+    "src/const_eval.rs": "6714c1d6296d1c3f60fab09891a492f66a9850b3ff3ee2b5a7df42400dfdcdaa",
+    "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+    "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+    "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+    "src/lib.rs": "fa65d18a3567992124b03314127594cefa2abd36dd70af78e8ded63b8801f6a2",
+    "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+    "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+    "src/metadata.rs": "e7c7cf07ffdd2c0bf4fc803a2b989fb0c7b9aea6d2778b8ea80dfc2b1906dfc4",
+    "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+    "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+    "src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+    "src/syntax.rs": "ceb747fc30c11e1cafb38017a45bf722bc3906c23de3ecd48d73ba303a8d218d",
+    "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+    "src/visibility.rs": "0268165a314fe1a169d5604fdda38968b0bbda07f11c60db92d36a7247f879c7",
+    "tests/import_priority/Alias.kt": "be9bcfb292450548766833ca160d36d3185e85c32ed77ae6f32158ef316c9431",
+    "tests/import_priority/Calls.java": "23dc0f1977b6f2f10347d91ec829a966da609e2a9c3abcb3060e793d618680f4",
+    "tests/import_priority/Consumer.kt": "c05d44ac2c46464746ebb3f99adfc8907f1f40838585aa0bc2f5fd0cc6de66cc",
+    "tests/import_priority/Duplicate.kt": "9aa8fdc7837a1ada58e8c20f2797e8f52d7115940a9b20e1bf8fcc3b5d402758",
+    "tests/import_priority/Explicit.kt": "8f5c278f856435dd90831dba48775620b9f77fa5c2d3caa1111b52582a66337f",
+    "tests/import_priority/InvalidAmbiguous.kt": "ba0bac146f4158d36602871aa41a1ea4905a8d49a25e29f046a440c014e47acb",
+    "tests/import_priority/InvalidAnnotation.kt": "c41bef8ba1a5aae2f57f8de9e8d0f33f4f39e0d761ff4292e1b443bd315cc190",
+    "tests/import_priority/Local.kt": "6be75e0c3a60df05608cf375d084461ea6239961c6c569684d9caa218b68132c",
+    "tests/import_priority/One.kt": "3f4d8af7df03e622139cecbdbb8fd439a5ddf8e3d1913159413f25127fa535c9",
+    "tests/import_priority/SamePackage.kt": "489d31d3b61c74a2bae777c4d51b2727156bfcc7c1753ab0b1ae3e36d6b6c0c8",
+    "tests/import_priority/Two.kt": "8efe9944c2af9e05c46ffc47c5a6727e1169d1feb0c58151d30b3f80edb0c675",
+    "tests/import_priority/Wildcard.kt": "096a09cc8fecfd8ccfc5408fed0dd8dc13a6d8b9a7f695e4955f4065a5cb82ee",
+    "tests/import_priority.rs": "94583dc8fb2bad0a20b88140d0e5a2b18538edbd6b2c27b4366850232cd52a1e",
+    "tools/check_import_priority.py": "048fe90d890953f9fa7e88d698acf97e559ac0c4c616c4d36779087a874c95c5",
+    "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+    "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+    "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "target/checks/2026-11-21T192416175779Z-classifier-import-priority/korrust-frozen": "bbe03d2f27ebec6588de1c3e2651a6037ee05719360d47abe9f8bce616c00415",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "target/checks/2026-11-21T110143376167Z-instance-jvm-fields/korrust-frozen": "28ded0f81f6cc2d9626376257e32cbc3c3dfb375120bd312bca0b1dff162805e"
+  },
+  "input_bundle": {
+    "path": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/inputs.zip",
+    "sha256": "cf289cb6fecf7b1231814548d373b5266686be5f2805c21b4ed41024a4b2726c"
+  },
+  "effective_options": {
+    "jvm_target": "1.8",
+    "language_version": "2.3",
+    "api_version": "2.3"
+  },
+  "scope": "Classifier import precedence: explicit and renamed imports, same-package declarations, wildcard classes/type aliases before platform/default imports, canonical annotation identity and conflicting wildcard ambiguity",
+  "limitations": [
+    "Existing bounded classifier/type-alias and visibility rules still apply",
+    "No full application or performance claim"
+  ],
+  "cases": [
+    {
+      "id": "semantic_fixture_compile",
+      "outcome": "pass",
+      "detail": "Same unmodified fixtures, dependency and standard library"
+    },
+    {
+      "id": "fixed_java_caller_both_providers",
+      "outcome": "pass",
+      "detail": {
+        "caller_sha256": {
+          "target/checks/2026-11-21T192416175779Z-classifier-import-priority/caller/priority/consumer/Calls.class": "1d049775ed969714984ef9651b70b602b19631a81caf8da330814c6e2d019b54"
+        },
+        "assertions": "Distinct constructor/getter descriptors for wildcard, explicit and package classifiers; canonical wildcard annotation shadow retains private field/getter; explicit standard annotation retains public field; duplicate wildcard and imported alias cases"
+      }
+    },
+    {
+      "id": "public_jvm_descriptors",
+      "outcome": "pass",
+      "detail": [
+        [
+          "priority.consumer.Aliased",
+          "public final java.lang.String value;",
+          "descriptor: Ljava/lang/String;"
+        ],
+        [
+          "priority.consumer.Aliased",
+          "public final priority.one.StringBuilder getBuilder();",
+          "descriptor: ()Lpriority/one/StringBuilder;"
+        ],
+        [
+          "priority.consumer.Aliased",
+          "public priority.consumer.Aliased(java.lang.String, priority.one.StringBuilder);",
+          "descriptor: (Ljava/lang/String;Lpriority/one/StringBuilder;)V"
+        ],
+        [
+          "priority.consumer.Duplicate",
+          "public final priority.one.StringBuilder getBuilder();",
+          "descriptor: ()Lpriority/one/StringBuilder;"
+        ],
+        [
+          "priority.consumer.Duplicate",
+          "public priority.consumer.Duplicate(priority.one.StringBuilder);",
+          "descriptor: (Lpriority/one/StringBuilder;)V"
+        ],
+        [
+          "priority.consumer.Explicit",
+          "public final java.lang.String value;",
+          "descriptor: Ljava/lang/String;"
+        ],
+        [
+          "priority.consumer.Explicit",
+          "public final priority.two.StringBuilder getBuilder();",
+          "descriptor: ()Lpriority/two/StringBuilder;"
+        ],
+        [
+          "priority.consumer.Explicit",
+          "public priority.consumer.Explicit(java.lang.String, priority.two.StringBuilder);",
+          "descriptor: (Ljava/lang/String;Lpriority/two/StringBuilder;)V"
+        ],
+        [
+          "priority.consumer.Wildcard",
+          "public final java.lang.String getValue();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "priority.consumer.Wildcard",
+          "public final priority.one.StringBuilder getAlias();",
+          "descriptor: ()Lpriority/one/StringBuilder;"
+        ],
+        [
+          "priority.consumer.Wildcard",
+          "public final priority.one.StringBuilder getBuilder();",
+          "descriptor: ()Lpriority/one/StringBuilder;"
+        ],
+        [
+          "priority.consumer.Wildcard",
+          "public priority.consumer.Wildcard(java.lang.String, priority.one.StringBuilder, priority.one.StringBuilder);",
+          "descriptor: (Ljava/lang/String;Lpriority/one/StringBuilder;Lpriority/one/StringBuilder;)V"
+        ],
+        [
+          "priority.consumer.WildcardKt",
+          "public static final java.lang.String read(priority.consumer.Wildcard);",
+          "descriptor: (Lpriority/consumer/Wildcard;)Ljava/lang/String;"
+        ],
+        [
+          "priority.local.SamePackage",
+          "public final java.lang.String getValue();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "priority.local.SamePackage",
+          "public final priority.local.StringBuilder getBuilder();",
+          "descriptor: ()Lpriority/local/StringBuilder;"
+        ],
+        [
+          "priority.local.SamePackage",
+          "public priority.local.SamePackage(java.lang.String, priority.local.StringBuilder);",
+          "descriptor: (Ljava/lang/String;Lpriority/local/StringBuilder;)V"
+        ]
+      ]
+    },
+    {
+      "id": "kotlin_consumer_official",
+      "outcome": "pass",
+      "detail": "Official consumers read emitted Kotlin metadata and run against both providers"
+    },
+    {
+      "id": "kotlin_consumer_candidate",
+      "outcome": "pass",
+      "detail": "Official consumers read emitted Kotlin metadata and run against both providers"
+    },
+    {
+      "id": "InvalidAmbiguous",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": {
+          "source_identity": "/workspace/work/audio33/tests/import_priority/InvalidAmbiguous.kt",
+          "offset": 55,
+          "category": "invalid_kotlin",
+          "code": "INVALID_ANNOTATION_VALUE",
+          "message": "Ambiguous wildcard annotation classifier",
+          "path": "/workspace/work/audio33/tests/import_priority/InvalidAmbiguous.kt",
+          "line": 3,
+          "column": 8
+        }
+      }
+    },
+    {
+      "id": "InvalidAnnotation",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": {
+          "source_identity": "/workspace/work/audio33/tests/import_priority/InvalidAnnotation.kt",
+          "offset": 55,
+          "category": "invalid_kotlin",
+          "code": "INVALID_ANNOTATION_VALUE",
+          "message": "Ambiguous wildcard annotation classifier",
+          "path": "/workspace/work/audio33/tests/import_priority/InvalidAnnotation.kt",
+          "line": 3,
+          "column": 8
+        }
+      }
+    },
+    {
+      "id": "baseline_valid_import_resolution_failure",
+      "outcome": "baseline_resolution_failure",
+      "detail": {
+        "diagnostic": "/workspace/work/audio33/tests/import_priority/Wildcard.kt:3:84: error: Type requires an explicit class import: AliasBuilder\n",
+        "compiler_sha256": "28ded0f81f6cc2d9626376257e32cbc3c3dfb375120bd312bca0b1dff162805e"
+      }
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "pass",
+      "changed": []
+    }
+  ],
+  "commands": [
+    {
+      "label": "official arbitrary classifiers and annotation providers",
+      "argv": [
+        "/workspace/work/audio33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/audio33/tests/import_priority/One.kt",
+        "/workspace/work/audio33/tests/import_priority/Two.kt",
+        "/workspace/work/audio33/tests/import_priority/Local.kt",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/dependency",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/000.txt"
+    },
+    {
+      "label": "official semantic fixtures",
+      "argv": [
+        "/workspace/work/audio33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/audio33/tests/import_priority/Wildcard.kt",
+        "/workspace/work/audio33/tests/import_priority/Explicit.kt",
+        "/workspace/work/audio33/tests/import_priority/SamePackage.kt",
+        "/workspace/work/audio33/tests/import_priority/Alias.kt",
+        "/workspace/work/audio33/tests/import_priority/Duplicate.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/001.txt"
+    },
+    {
+      "label": "candidate semantic fixtures",
+      "argv": [
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/korrust-frozen",
+        "/workspace/work/audio33/tests/import_priority/Wildcard.kt",
+        "/workspace/work/audio33/tests/import_priority/Explicit.kt",
+        "/workspace/work/audio33/tests/import_priority/SamePackage.kt",
+        "/workspace/work/audio33/tests/import_priority/Alias.kt",
+        "/workspace/work/audio33/tests/import_priority/Duplicate.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/002.txt"
+    },
+    {
+      "label": "fixed Java caller compiled against official only",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/official:/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/caller",
+        "/workspace/work/audio33/tests/import_priority/Calls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/003.txt"
+    },
+    {
+      "label": "official independent assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/caller:/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/official:/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "priority.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/004.txt"
+    },
+    {
+      "label": "candidate independent assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/caller:/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/candidate:/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "priority.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/005.txt"
+    },
+    {
+      "label": "official public JVM descriptors priority.consumer.Wildcard",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/official",
+        "priority.consumer.Wildcard"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/006.txt"
+    },
+    {
+      "label": "official public JVM descriptors priority.consumer.WildcardKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/official",
+        "priority.consumer.WildcardKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/007.txt"
+    },
+    {
+      "label": "official public JVM descriptors priority.consumer.Explicit",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/official",
+        "priority.consumer.Explicit"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/008.txt"
+    },
+    {
+      "label": "official public JVM descriptors priority.consumer.Aliased",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/official",
+        "priority.consumer.Aliased"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/009.txt"
+    },
+    {
+      "label": "official public JVM descriptors priority.consumer.Duplicate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/official",
+        "priority.consumer.Duplicate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/010.txt"
+    },
+    {
+      "label": "official public JVM descriptors priority.local.SamePackage",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/official",
+        "priority.local.SamePackage"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/011.txt"
+    },
+    {
+      "label": "candidate public JVM descriptors priority.consumer.Wildcard",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/candidate",
+        "priority.consumer.Wildcard"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/012.txt"
+    },
+    {
+      "label": "candidate public JVM descriptors priority.consumer.WildcardKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/candidate",
+        "priority.consumer.WildcardKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/013.txt"
+    },
+    {
+      "label": "candidate public JVM descriptors priority.consumer.Explicit",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/candidate",
+        "priority.consumer.Explicit"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/014.txt"
+    },
+    {
+      "label": "candidate public JVM descriptors priority.consumer.Aliased",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/candidate",
+        "priority.consumer.Aliased"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/015.txt"
+    },
+    {
+      "label": "candidate public JVM descriptors priority.consumer.Duplicate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/candidate",
+        "priority.consumer.Duplicate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/016.txt"
+    },
+    {
+      "label": "candidate public JVM descriptors priority.local.SamePackage",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/candidate",
+        "priority.local.SamePackage"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/017.txt"
+    },
+    {
+      "label": "official Kotlin consumer against official",
+      "argv": [
+        "/workspace/work/audio33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/audio33/tests/import_priority/Consumer.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/official:/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/018.txt"
+    },
+    {
+      "label": "consumer official on official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/consumer-official:/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/official:/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "priority.reader.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/019.txt"
+    },
+    {
+      "label": "consumer official on candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/consumer-official:/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/candidate:/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "priority.reader.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/020.txt"
+    },
+    {
+      "label": "official Kotlin consumer against candidate",
+      "argv": [
+        "/workspace/work/audio33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/audio33/tests/import_priority/Consumer.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/candidate:/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/021.txt"
+    },
+    {
+      "label": "consumer candidate on official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/consumer-candidate:/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/official:/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "priority.reader.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/022.txt"
+    },
+    {
+      "label": "consumer candidate on candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/consumer-candidate:/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/candidate:/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "priority.reader.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/023.txt"
+    },
+    {
+      "label": "official invalid InvalidAmbiguous",
+      "argv": [
+        "/workspace/work/audio33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/audio33/tests/import_priority/InvalidAmbiguous.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/official-InvalidAmbiguous",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/024.txt"
+    },
+    {
+      "label": "candidate invalid InvalidAmbiguous",
+      "argv": [
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/korrust-frozen",
+        "/workspace/work/audio33/tests/import_priority/InvalidAmbiguous.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/candidate-InvalidAmbiguous",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/025.txt"
+    },
+    {
+      "label": "official invalid InvalidAnnotation",
+      "argv": [
+        "/workspace/work/audio33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/audio33/tests/import_priority/InvalidAnnotation.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/official-InvalidAnnotation",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/026.txt"
+    },
+    {
+      "label": "candidate invalid InvalidAnnotation",
+      "argv": [
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/korrust-frozen",
+        "/workspace/work/audio33/tests/import_priority/InvalidAnnotation.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/candidate-InvalidAnnotation",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/027.txt"
+    },
+    {
+      "label": "baseline valid wildcard imports fail resolution",
+      "argv": [
+        "/workspace/work/audio33/target/checks/2026-11-21T110143376167Z-instance-jvm-fields/korrust-frozen",
+        "/workspace/work/audio33/tests/import_priority/Wildcard.kt",
+        "/workspace/work/audio33/tests/import_priority/Explicit.kt",
+        "/workspace/work/audio33/tests/import_priority/SamePackage.kt",
+        "/workspace/work/audio33/tests/import_priority/Alias.kt",
+        "/workspace/work/audio33/tests/import_priority/Duplicate.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T192416175779Z-classifier-import-priority/baseline"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/028.txt"
+    }
+  ],
+  "reproduction_command": [
+    "python3",
+    "tools/check_import_priority.py",
+    "--candidate",
+    "/workspace/korrust/target/audio33/debug/korrust",
+    "--output",
+    "target/checks/2026-11-21T192416175779Z-classifier-import-priority",
+    "--evidence-directory",
+    "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority",
+    "--baseline",
+    "/workspace/work/audio33/target/checks/2026-11-21T110143376167Z-instance-jvm-fields/korrust-frozen"
+  ],
+  "counts": {
+    "pass": 6,
+    "invalid_rejected": 2,
+    "baseline_resolution_failure": 1
+  },
+  "language_rules": [
+    {
+      "path": "references/kotlin-spec/docs/src/md/kotlin.core/packages.md",
+      "section": "Importing",
+      "rule": "Explicit, star and renaming imports provide unqualified names; same-package declarations remain available subject to visibility."
+    },
+    {
+      "path": "references/kotlin-spec/docs/src/md/kotlin.core/overload-resolution.md",
+      "section": "Call without an explicit receiver",
+      "rule": "The package/import hierarchy distinguishes explicitly imported, same-package, star-imported and implicitly imported candidates; classifier/annotation cases are checked against pinned Kotlin output."
+    }
+  ],
+  "validation": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--test",
+        "import_priority",
+        "--lib",
+        "import_priority"
+      ],
+      "environment": {
+        "RUST_MIN_STACK": "33554432"
+      },
+      "outcome": "pass",
+      "tests": 3,
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/rust-tests.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--offline",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "outcome": "pass",
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/clippy.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "outcome": "pass",
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/format.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--offline"
+      ],
+      "outcome": "pass",
+      "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/compiler-build.log"
+    }
+  ],
+  "html_validation": {
+    "command": [
+      "python3",
+      "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/check-html.py"
+    ],
+    "log": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority/html-links.json"
+  }
+}
