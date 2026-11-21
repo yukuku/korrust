@@ -574,6 +574,7 @@ fn uninitialized_read<'a>(
             owner: field_owner,
             name,
             receiver,
+            ..
         } => {
             if field_owner == owner && (unavailable.contains(name) || name == "Companion") {
                 Some(name)

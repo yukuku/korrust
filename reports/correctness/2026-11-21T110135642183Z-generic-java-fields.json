@@ -1,0 +1,1167 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-21T11:01:35.642183+00:00",
+  "status": "completed",
+  "compiler": {
+    "binary": "target/checks/2026-11-21T110135642183Z-generic-java-fields/korrust-frozen",
+    "binary_sha256": "f1852c2e00279bc4cc82f7fcc92c379274dfbbbfd2beb1968729fea07d415947",
+    "source_revision": "2f09630b2c28450bdea07ba9a42c96ad2a2487dd"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8",
+      "-module-name",
+      "generic_java_fields"
+    ]
+  },
+  "inputs": {
+    "files_sha256": {
+      "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/sync/Sync.java": "15782e55ebd2957ae7af21a63232012a640eb81128cc2fda1ee312937c47806f",
+      "/workspace/korrust/references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+      "/workspace/korrust/references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+      "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "src/annotation_declarations.rs": "ac237d773c71a2fc26faeb2d79b837265c6d557ef7bb31aab748fa8b1c7572be",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/annotation_files.rs": "4f3c136aaa2ed30b85d2a4cc2a9be8331b2da9682d450f6a4dcc135ef04ab86a",
+      "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "src/bytecode/class_companion.rs": "2dacd7b21d48fcdd59955fa30b58a6e88bb67642d4bd6dd9d845842b1880417a",
+      "src/bytecode/data.rs": "c99cb60546cbe8873ef99d1ab057aa7439f4239fce13927d324dfea078dbe98c",
+      "src/bytecode/defaults.rs": "ebdb1c988443c1b984081aa8555c5bb2f649685e3bbfef011cd138c0bf29aecd",
+      "src/bytecode/enums.rs": "25fe788c54554741347ba6bb4b84cbee7c324db6925209a434fb139ceb66b2b1",
+      "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+      "src/bytecode/inline.rs": "e598575c521153d592face8dd19018beaf89be45fbde985ae3845526e5a0be44",
+      "src/bytecode/interfaces.rs": "02e19cc9024bda962e06cedec8e15ebfc8b9f1ccd7f95ec11980ab46de917ae6",
+      "src/bytecode/lambdas.rs": "7fc48f807dfb3c613ddb65611cfc71d6b5ab53b795c7931fd500d229be466110",
+      "src/bytecode/objects.rs": "142f8e5c70f0ac61423c3887447c54865b7b657768cf683fc553fde398a17e7e",
+      "src/bytecode/suspend.rs": "79e1064dd35da268956f91b167a779ce0957cefa8fef629789a2fb3afee987b7",
+      "src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+      "src/bytecode.rs": "3b3f7cc4318f01da4c3140cf91338efabfbd44bea671ac94f303cb1037a83c71",
+      "src/check.rs": "e6eccc5365188cc7ffa06ddbb98ed6330b21f256b26a0f0f4566a374421bb3ca",
+      "src/check_annotation_placements.rs": "b6c899c4a5c2f3269ae1b93268b2ede0f29f4ce68c5ef42b833d7edcecf2d2cc",
+      "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "src/check_anonymous.rs": "ed4a38c4199786e96d39f1aa72ac94f61b2ca755631d47e0c4e68bc13bdf2a93",
+      "src/check_captures.rs": "f36e1ac25d7c46e32b1293fb75d7b9a7940f104ccdeab212d1630900215e311f",
+      "src/check_class_delegation.rs": "25cd077ed2b3b51158a53efb2c8190296064fe607db399ab416a3d51a4df2be0",
+      "src/check_classes.rs": "d67e980fdceb784bad7f4c0ee73752d2f9123d973c3c4952c5ad87d623432987",
+      "src/check_contracts.rs": "8bba31d6987b61295aed4c18eee29136f26724e00b5ab69b743655f4469f08c6",
+      "src/check_control.rs": "19e7fe2376f65209fd0d9b04be9254ec868fed288707d34631f30e841f3eaca7",
+      "src/check_declarations.rs": "f9702e12d2928736af2b0fcf7e3319a6c3fff26a9e09ad9315d10d1d3a641812",
+      "src/check_delegates.rs": "6ba1fb0aa2ba511c31accd8a06282490a94b8cbf4857c5687ddab3a71236beb2",
+      "src/check_enums.rs": "b312e7005fa9f9a86a7b0060bba9cfe45d91e78f4449654e318a42ca97a83b61",
+      "src/check_functions.rs": "18f898fd815a3bfec9015f1eede425c04f1b03c455d7c85566f0fdd30d0bd331",
+      "src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+      "src/check_interfaces.rs": "c733506c29aeb5738c3266d03579e420bf26719ec59bd09fc4fc4d542c149f15",
+      "src/check_ir_walk.rs": "11b8f21285e9743b5a71fdb7de6826cc3e85689d9622380fae58fc676dce0195",
+      "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+      "src/check_library.rs": "4f21a889fc7a64f09eb5dfbfb4aac8bfbe1acecc54cf1be313980cbcf4c2def2",
+      "src/check_member_extensions.rs": "c97b70cbd56da4588817a5cdd294cb724009feee3abbcb29a5dde2846bb8d3f9",
+      "src/check_objects.rs": "1b73e97a598d8dd17d977304f77532c7262c2b9286e4196153782f6eaf6e7ba4",
+      "src/check_operations.rs": "7e4f574fc274ccf92a525f8a6b3054958ab312fa702288e95e5fc591112f96c4",
+      "src/check_overloads.rs": "d418fb5ed0880483b5d6ac58ce8093d0eb13804ff1b4176e19abd4b1a3e589cd",
+      "src/check_references.rs": "3a4fd327b7a13f48e69d5fbd059c76cbb8d2ce50ae2e140a762a06d9e1e6eab8",
+      "src/check_relations.rs": "2cc771191f61ab96ac6eda2019ef857f9cb72d71bf332aa11fa63b32cab5bdfc",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+      "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+      "src/check_variant_signatures.rs": "487fea7351445905782f472e297e15080a4244ce34a4a4aa9904b30c01263a86",
+      "src/classpath/aliases.rs": "745fa67edb3216b77ce5e65f63b75c51ac221f5b49d3e08a4327990bd9e6f4c5",
+      "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+      "src/classpath/metadata.rs": "ad587038956087ed383d6f0d6f970d5609d5a60ac59632b2fecc311ce4c1e045",
+      "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/signature.rs": "11e1e7c67cfe84b56892cddf6b6fa85daa19dfec4f34846a215a18605dfb3bec",
+      "src/classpath/source.rs": "3ac63a03428af46ffa1e5f18ea1d08d6fa2977309aef8f05888fa82caa3d2d1e",
+      "src/classpath/source_enums.rs": "3ae8bea81669d8feec40a16fae21a80f4a9d8006acd23c3f4f68d5d177f79be3",
+      "src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+      "src/classpath.rs": "48d2433a1fe10d932cbc9e24dd5e67e9a38bc1134de91e506b8c3a4f546a030a",
+      "src/compiled_inline.rs": "7acd0769184152ea2659a9217886608cff7219eea5a47d25cf573e0f0318d7fa",
+      "src/const_eval.rs": "6714c1d6296d1c3f60fab09891a492f66a9850b3ff3ee2b5a7df42400dfdcdaa",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+      "src/lib.rs": "fa65d18a3567992124b03314127594cefa2abd36dd70af78e8ded63b8801f6a2",
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/metadata.rs": "556b933de58c6c9927da29159891fd00f97b11b1ef7a2325d0dab92c6a7dbe84",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+      "src/syntax.rs": "39153a0deb47a7a18059ee5e6add94e400b2401cc8767119aafdf6509364e441",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/visibility.rs": "2be70217a6c7322b7a272a647833cf83ed526586f535c0be15dff46e9ef82ee7",
+      "target/checks/2026-11-21T110135642183Z-generic-java-fields/korrust-frozen": "f1852c2e00279bc4cc82f7fcc92c379274dfbbbfd2beb1968729fea07d415947",
+      "target/nullable-fields-build/release/korrust": "ac4c9d066e1c7032e19cd2a6f0d23bf176bd9a2f2bb35e31ba8385fedb9ea07f",
+      "target/nullable-fields-overlay/Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "target/nullable-fields-overlay/Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "target/nullable-fields-overlay/src/annotation_declarations.rs": "ac237d773c71a2fc26faeb2d79b837265c6d557ef7bb31aab748fa8b1c7572be",
+      "target/nullable-fields-overlay/src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "target/nullable-fields-overlay/src/bytecode/annotation_files.rs": "4f3c136aaa2ed30b85d2a4cc2a9be8331b2da9682d450f6a4dcc135ef04ab86a",
+      "target/nullable-fields-overlay/src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "target/nullable-fields-overlay/src/bytecode/class_companion.rs": "2dacd7b21d48fcdd59955fa30b58a6e88bb67642d4bd6dd9d845842b1880417a",
+      "target/nullable-fields-overlay/src/bytecode/data.rs": "c99cb60546cbe8873ef99d1ab057aa7439f4239fce13927d324dfea078dbe98c",
+      "target/nullable-fields-overlay/src/bytecode/defaults.rs": "ebdb1c988443c1b984081aa8555c5bb2f649685e3bbfef011cd138c0bf29aecd",
+      "target/nullable-fields-overlay/src/bytecode/enums.rs": "25fe788c54554741347ba6bb4b84cbee7c324db6925209a434fb139ceb66b2b1",
+      "target/nullable-fields-overlay/src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+      "target/nullable-fields-overlay/src/bytecode/inline.rs": "e598575c521153d592face8dd19018beaf89be45fbde985ae3845526e5a0be44",
+      "target/nullable-fields-overlay/src/bytecode/interfaces.rs": "02e19cc9024bda962e06cedec8e15ebfc8b9f1ccd7f95ec11980ab46de917ae6",
+      "target/nullable-fields-overlay/src/bytecode/lambdas.rs": "7fc48f807dfb3c613ddb65611cfc71d6b5ab53b795c7931fd500d229be466110",
+      "target/nullable-fields-overlay/src/bytecode/objects.rs": "142f8e5c70f0ac61423c3887447c54865b7b657768cf683fc553fde398a17e7e",
+      "target/nullable-fields-overlay/src/bytecode/suspend.rs": "79e1064dd35da268956f91b167a779ce0957cefa8fef629789a2fb3afee987b7",
+      "target/nullable-fields-overlay/src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+      "target/nullable-fields-overlay/src/bytecode.rs": "3b3f7cc4318f01da4c3140cf91338efabfbd44bea671ac94f303cb1037a83c71",
+      "target/nullable-fields-overlay/src/check.rs": "e6eccc5365188cc7ffa06ddbb98ed6330b21f256b26a0f0f4566a374421bb3ca",
+      "target/nullable-fields-overlay/src/check_annotation_placements.rs": "b6c899c4a5c2f3269ae1b93268b2ede0f29f4ce68c5ef42b833d7edcecf2d2cc",
+      "target/nullable-fields-overlay/src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "target/nullable-fields-overlay/src/check_anonymous.rs": "ed4a38c4199786e96d39f1aa72ac94f61b2ca755631d47e0c4e68bc13bdf2a93",
+      "target/nullable-fields-overlay/src/check_captures.rs": "f36e1ac25d7c46e32b1293fb75d7b9a7940f104ccdeab212d1630900215e311f",
+      "target/nullable-fields-overlay/src/check_class_delegation.rs": "25cd077ed2b3b51158a53efb2c8190296064fe607db399ab416a3d51a4df2be0",
+      "target/nullable-fields-overlay/src/check_classes.rs": "d67e980fdceb784bad7f4c0ee73752d2f9123d973c3c4952c5ad87d623432987",
+      "target/nullable-fields-overlay/src/check_contracts.rs": "8bba31d6987b61295aed4c18eee29136f26724e00b5ab69b743655f4469f08c6",
+      "target/nullable-fields-overlay/src/check_control.rs": "19e7fe2376f65209fd0d9b04be9254ec868fed288707d34631f30e841f3eaca7",
+      "target/nullable-fields-overlay/src/check_declarations.rs": "f9702e12d2928736af2b0fcf7e3319a6c3fff26a9e09ad9315d10d1d3a641812",
+      "target/nullable-fields-overlay/src/check_delegates.rs": "6ba1fb0aa2ba511c31accd8a06282490a94b8cbf4857c5687ddab3a71236beb2",
+      "target/nullable-fields-overlay/src/check_enums.rs": "b312e7005fa9f9a86a7b0060bba9cfe45d91e78f4449654e318a42ca97a83b61",
+      "target/nullable-fields-overlay/src/check_functions.rs": "18f898fd815a3bfec9015f1eede425c04f1b03c455d7c85566f0fdd30d0bd331",
+      "target/nullable-fields-overlay/src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+      "target/nullable-fields-overlay/src/check_interfaces.rs": "c733506c29aeb5738c3266d03579e420bf26719ec59bd09fc4fc4d542c149f15",
+      "target/nullable-fields-overlay/src/check_ir_walk.rs": "11b8f21285e9743b5a71fdb7de6826cc3e85689d9622380fae58fc676dce0195",
+      "target/nullable-fields-overlay/src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+      "target/nullable-fields-overlay/src/check_library.rs": "4f21a889fc7a64f09eb5dfbfb4aac8bfbe1acecc54cf1be313980cbcf4c2def2",
+      "target/nullable-fields-overlay/src/check_member_extensions.rs": "c97b70cbd56da4588817a5cdd294cb724009feee3abbcb29a5dde2846bb8d3f9",
+      "target/nullable-fields-overlay/src/check_objects.rs": "1b73e97a598d8dd17d977304f77532c7262c2b9286e4196153782f6eaf6e7ba4",
+      "target/nullable-fields-overlay/src/check_operations.rs": "7e4f574fc274ccf92a525f8a6b3054958ab312fa702288e95e5fc591112f96c4",
+      "target/nullable-fields-overlay/src/check_overloads.rs": "d418fb5ed0880483b5d6ac58ce8093d0eb13804ff1b4176e19abd4b1a3e589cd",
+      "target/nullable-fields-overlay/src/check_references.rs": "3a4fd327b7a13f48e69d5fbd059c76cbb8d2ce50ae2e140a762a06d9e1e6eab8",
+      "target/nullable-fields-overlay/src/check_relations.rs": "e840b3b6193e68b825a7bd18861c686d4c7adbdb8024ffcbc121d78c694ef038",
+      "target/nullable-fields-overlay/src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "target/nullable-fields-overlay/src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+      "target/nullable-fields-overlay/src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "target/nullable-fields-overlay/src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+      "target/nullable-fields-overlay/src/check_variant_signatures.rs": "487fea7351445905782f472e297e15080a4244ce34a4a4aa9904b30c01263a86",
+      "target/nullable-fields-overlay/src/classpath/aliases.rs": "745fa67edb3216b77ce5e65f63b75c51ac221f5b49d3e08a4327990bd9e6f4c5",
+      "target/nullable-fields-overlay/src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "target/nullable-fields-overlay/src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+      "target/nullable-fields-overlay/src/classpath/metadata.rs": "ad587038956087ed383d6f0d6f970d5609d5a60ac59632b2fecc311ce4c1e045",
+      "target/nullable-fields-overlay/src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+      "target/nullable-fields-overlay/src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "target/nullable-fields-overlay/src/classpath/signature.rs": "11e1e7c67cfe84b56892cddf6b6fa85daa19dfec4f34846a215a18605dfb3bec",
+      "target/nullable-fields-overlay/src/classpath/source.rs": "3ac63a03428af46ffa1e5f18ea1d08d6fa2977309aef8f05888fa82caa3d2d1e",
+      "target/nullable-fields-overlay/src/classpath/source_enums.rs": "3ae8bea81669d8feec40a16fae21a80f4a9d8006acd23c3f4f68d5d177f79be3",
+      "target/nullable-fields-overlay/src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+      "target/nullable-fields-overlay/src/classpath.rs": "48d2433a1fe10d932cbc9e24dd5e67e9a38bc1134de91e506b8c3a4f546a030a",
+      "target/nullable-fields-overlay/src/compiled_inline.rs": "7acd0769184152ea2659a9217886608cff7219eea5a47d25cf573e0f0318d7fa",
+      "target/nullable-fields-overlay/src/const_eval.rs": "6714c1d6296d1c3f60fab09891a492f66a9850b3ff3ee2b5a7df42400dfdcdaa",
+      "target/nullable-fields-overlay/src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "target/nullable-fields-overlay/src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "target/nullable-fields-overlay/src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+      "target/nullable-fields-overlay/src/lib.rs": "fa65d18a3567992124b03314127594cefa2abd36dd70af78e8ded63b8801f6a2",
+      "target/nullable-fields-overlay/src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "target/nullable-fields-overlay/src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "target/nullable-fields-overlay/src/metadata.rs": "556b933de58c6c9927da29159891fd00f97b11b1ef7a2325d0dab92c6a7dbe84",
+      "target/nullable-fields-overlay/src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "target/nullable-fields-overlay/src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "target/nullable-fields-overlay/src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+      "target/nullable-fields-overlay/src/syntax.rs": "39153a0deb47a7a18059ee5e6add94e400b2401cc8767119aafdf6509364e441",
+      "target/nullable-fields-overlay/src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "target/nullable-fields-overlay/src/visibility.rs": "2be70217a6c7322b7a272a647833cf83ed526586f535c0be15dff46e9ef82ee7",
+      "target/unchanged-models-baseline": "193fcdd9fd7af09271cbad17e47d126dc28d27a0528d49996a866862bb349c50",
+      "tests/generic_java_fields/Cell.java": "5889b771730d3c3ddbdee67f7a0273a8af2377a7bfc5d40676879231c72649df",
+      "tests/generic_java_fields/Driver.java": "058386c8ebdcea7768713c4fd7fbc663f59dd81edcd19707f17509277e3177c9",
+      "tests/generic_java_fields/NullableParameter.kt": "7979aed48d6b32605ddd6500508453c463d9e0108a91b08f205791b5585e3b5f",
+      "tests/generic_java_fields/NullableParameterCalls.java": "f863a82447343b26df8c536c0da93429165be93588c759bbc467a681c9cd6597",
+      "tests/generic_java_fields/NumberCell.java": "2efabd44ee801536a3e22587e738a4338c8f21adf8ce2c88d5d0034409f84f37",
+      "tests/generic_java_fields/Provider.java": "4c753c12ee73c5abf661b0e58853c82b19f05e407ccaf2738c32c3fc283536d7",
+      "tests/generic_java_fields/Rejections.json": "ae283a816e8916ecb100545bb3fe5ef0c95c6cbc44134c4326b9b638794fa707",
+      "tests/generic_java_fields/RequiredParameter.kt": "177f9840500b7ccf02e720eebd565c57717b45d269675b96f52a840d2dbfe001",
+      "tests/generic_java_fields/StringCell.java": "7c1f74c438fdd8099d6a2947b130f2c7576616340c76c6dc67065b64226a9c13",
+      "tests/generic_java_fields/Use.kt": "4f51de7ac990ca2a3cfcbffb71dd871531de0fbd753ccca34ecab92f67007b0e",
+      "tests/generic_java_fields.rs": "77d84e4a6e241a7c3726bd45134b5518a334397879845b75c73842be12f428d0",
+      "tools/check_generic_java_fields.py": "d97a09a8e9f918eceb90ec1ac300eeedf95db5422dcb3dfe72ad694da5fb65b6",
+      "tools/check_internaldb_wrapper.py": "c0f8479bb2a13da99268045569966e3e0fd4835cc0666fb6ba6e864a53886b71"
+    }
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_generic_java_fields.py",
+      "--candidate",
+      "/workspace/work/tx33/target/fields-build/release/korrust",
+      "--reference-root",
+      "/workspace/korrust",
+      "--baseline",
+      "/workspace/work/tx33/target/unchanged-models-baseline",
+      "--nullable-parameter-candidate",
+      "/workspace/work/tx33/target/nullable-fields-build/release/korrust",
+      "--nullable-parameter-source-root",
+      "/workspace/work/tx33/target/nullable-fields-overlay"
+    ]
+  ],
+  "commands": [
+    {
+      "label": "Compile ordinary generic Java fields",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency",
+        "/workspace/work/tx33/tests/generic_java_fields/Cell.java",
+        "/workspace/work/tx33/tests/generic_java_fields/StringCell.java",
+        "/workspace/work/tx33/tests/generic_java_fields/NumberCell.java",
+        "/workspace/work/tx33/tests/generic_java_fields/Provider.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/000-stderr.txt"
+    },
+    {
+      "label": "Compile specialized field reads official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/tx33/tests/generic_java_fields/Use.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "generic_java_fields",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/001-stderr.txt"
+    },
+    {
+      "label": "Public JVM signatures official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/official",
+        "genericfields.UseKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/002-stderr.txt"
+    },
+    {
+      "label": "Compile specialized field reads candidate",
+      "argv": [
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/korrust-frozen",
+        "/workspace/work/tx33/tests/generic_java_fields/Use.kt",
+        "--module-name",
+        "generic_java_fields",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/003-stderr.txt"
+    },
+    {
+      "label": "Public JVM signatures candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/candidate",
+        "genericfields.UseKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/004-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java caller against official output",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/official:/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/fixed-caller",
+        "/workspace/work/tx33/tests/generic_java_fields/Driver.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/005-stderr.txt"
+    },
+    {
+      "label": "Verified fixed Java caller official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/fixed-caller:/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/official:/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "genericfields.Driver"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/006-stderr.txt"
+    },
+    {
+      "label": "Verified fixed Java caller candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/fixed-caller:/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/candidate:/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "genericfields.Driver"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/007-stderr.txt"
+    },
+    {
+      "label": "Compile unconstrained field-result parameter official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/tx33/tests/generic_java_fields/NullableParameter.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "generic_java_fields",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/nullable-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/008-stderr.txt"
+    },
+    {
+      "label": "Compile unconstrained field-result parameter candidate",
+      "argv": [
+        "/workspace/work/tx33/target/nullable-fields-build/release/korrust",
+        "/workspace/work/tx33/tests/generic_java_fields/NullableParameter.kt",
+        "--module-name",
+        "generic_java_fields",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/nullable-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/009-stderr.txt"
+    },
+    {
+      "label": "Compile fixed nullable-parameter caller against official output",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/nullable-official:/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/nullable-caller",
+        "/workspace/work/tx33/tests/generic_java_fields/NullableParameterCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/010-stderr.txt"
+    },
+    {
+      "label": "Verify nullable and nonnull parameter bounds official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/nullable-caller:/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/nullable-official:/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "genericfields.NullableParameterCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/011-stderr.txt"
+    },
+    {
+      "label": "Verify nullable and nonnull parameter bounds candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/nullable-caller:/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/nullable-candidate:/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "genericfields.NullableParameterCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/012-stderr.txt"
+    },
+    {
+      "label": "Oracle accepts nonnull enhancement of nullable parameter",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/tx33/tests/generic_java_fields/RequiredParameter.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "generic_java_fields",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/required-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/013-stderr.txt"
+    },
+    {
+      "label": "Explicit nonnull nullable-parameter boundary",
+      "argv": [
+        "/workspace/work/tx33/target/nullable-fields-build/release/korrust",
+        "/workspace/work/tx33/tests/generic_java_fields/RequiredParameter.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/required-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/required-parameter-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/required-parameter-stderr.txt"
+    },
+    {
+      "label": "Boundary official/write",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/write/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "generic_java_fields",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/write/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/015-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/write",
+      "argv": [
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/korrust-frozen",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/write/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/write/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/016-stderr.txt"
+    },
+    {
+      "label": "Boundary official/static",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/static/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "generic_java_fields",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/static/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/017-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/static",
+      "argv": [
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/korrust-frozen",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/static/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/static/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/018-stderr.txt"
+    },
+    {
+      "label": "Boundary official/nested-projected",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/nested-projected/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "generic_java_fields",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/nested-projected/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/019-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/nested-projected",
+      "argv": [
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/korrust-frozen",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/nested-projected/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/nested-projected/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/020-stderr.txt"
+    },
+    {
+      "label": "Boundary official/nested-star",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/nested-star/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "generic_java_fields",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/nested-star/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/021-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/nested-star",
+      "argv": [
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/korrust-frozen",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/nested-star/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/nested-star/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/022-stderr.txt"
+    },
+    {
+      "label": "Boundary official/field-declaration-annotation",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/field-declaration-annotation/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "generic_java_fields",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/field-declaration-annotation/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/023-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/field-declaration-annotation",
+      "argv": [
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/korrust-frozen",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/field-declaration-annotation/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/field-declaration-annotation/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/024-stderr.txt"
+    },
+    {
+      "label": "Boundary official/nullable-result",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/nullable-result/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "generic_java_fields",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/nullable-result/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/025-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/nullable-result",
+      "argv": [
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/korrust-frozen",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/nullable-result/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/nullable-result/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/026-stderr.txt"
+    },
+    {
+      "label": "Boundary official/wrong-result",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/wrong-result/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "generic_java_fields",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/wrong-result/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/027-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/wrong-result",
+      "argv": [
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/korrust-frozen",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/wrong-result/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/wrong-result/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/028-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/028-stderr.txt"
+    },
+    {
+      "label": "Boundary official/in-projection",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/in-projection/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "generic_java_fields",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/in-projection/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/029-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/029-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/in-projection",
+      "argv": [
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/korrust-frozen",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/in-projection/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/in-projection/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/030-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/030-stderr.txt"
+    },
+    {
+      "label": "Boundary official/private",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/private/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "generic_java_fields",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/private/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/031-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/031-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/private",
+      "argv": [
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/korrust-frozen",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/private/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/private/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/032-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/032-stderr.txt"
+    },
+    {
+      "label": "Boundary official/final-write",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/final-write/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "generic_java_fields",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/final-write/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/033-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/033-stderr.txt"
+    },
+    {
+      "label": "Boundary candidate/final-write",
+      "argv": [
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/korrust-frozen",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/final-write/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/final-write/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/034-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/034-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "baseline-missing-support",
+      "outcome": "pass",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/baseline-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/baseline-stderr.txt"
+    },
+    {
+      "id": "compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "public-jvm-signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "nullable-parameter-compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "nullable-parameter-compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "nullable-parameter-runtime/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "nullable-parameter-runtime/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "boundary/nonnull-nullable-parameter",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/tx33/tests/generic_java_fields/RequiredParameter.kt",
+          "offset": 68,
+          "category": "unsupported_language",
+          "code": "NONNULL_JAVA_FIELD_PARAMETER_UNSUPPORTED",
+          "message": "Non-null Java fields with nullable source type parameters require unsupported intersection types",
+          "path": "/workspace/work/tx33/tests/generic_java_fields/RequiredParameter.kt",
+          "line": 2,
+          "column": 47
+        }
+      ],
+      "stdout": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/required-parameter-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields/required-parameter-stderr.txt"
+    },
+    {
+      "id": "boundary/write",
+      "outcome": "unsupported_language",
+      "official_accepted": true,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/write/Boundary.kt",
+          "offset": 53,
+          "category": "unsupported_language",
+          "code": "GENERIC_JAVA_FIELD_WRITE_UNSUPPORTED",
+          "message": "Generic Java field writes are unsupported",
+          "path": "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/write/Boundary.kt",
+          "line": 2,
+          "column": 32
+        }
+      ],
+      "source_sha256": "a842a1966f48127db402806d18fb43e6571c02fe35dd70d0164fb1bfb68a0734"
+    },
+    {
+      "id": "boundary/static",
+      "outcome": "unsupported_language",
+      "official_accepted": true,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/static/Boundary.kt",
+          "offset": 49,
+          "category": "unsupported_language",
+          "code": "GENERIC_JAVA_STATIC_FIELD_UNSUPPORTED",
+          "message": "Generic Java static field reads are unsupported",
+          "path": "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/static/Boundary.kt",
+          "line": 2,
+          "column": 28
+        }
+      ],
+      "source_sha256": "82e3d880d1a7e84b86b5024d3710de3d025d374baee3e3c4768b1d2eae81f848"
+    },
+    {
+      "id": "boundary/nested-projected",
+      "outcome": "unsupported_language",
+      "official_accepted": true,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/nested-projected/Boundary.kt",
+          "offset": 62,
+          "category": "unsupported_language",
+          "code": "PROJECTED_JAVA_FIELD_UNSUPPORTED",
+          "message": "Nested generic Java field reads through projected receivers are unsupported",
+          "path": "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/nested-projected/Boundary.kt",
+          "line": 2,
+          "column": 41
+        }
+      ],
+      "source_sha256": "f1339b81c29dc8a95e6ebdc01dea28aa9d7ac80971d8699cdf4564f70b32c2ef"
+    },
+    {
+      "id": "boundary/nested-star",
+      "outcome": "unsupported_language",
+      "official_accepted": true,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/nested-star/Boundary.kt",
+          "offset": 53,
+          "category": "unsupported_language",
+          "code": "PROJECTED_JAVA_FIELD_UNSUPPORTED",
+          "message": "Nested generic Java field reads through projected receivers are unsupported",
+          "path": "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/nested-star/Boundary.kt",
+          "line": 2,
+          "column": 32
+        }
+      ],
+      "source_sha256": "f372894785a59704ddfaea739c40ec6667c10ea90e51897de0f2f12c3525b2cc"
+    },
+    {
+      "id": "boundary/field-declaration-annotation",
+      "outcome": "unsupported_language",
+      "official_accepted": true,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/field-declaration-annotation/Boundary.kt",
+          "offset": 60,
+          "category": "unsupported_language",
+          "code": "JAVA_FIELD_UNSUPPORTED",
+          "message": "Java field is inaccessible or unsupported",
+          "path": "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/field-declaration-annotation/Boundary.kt",
+          "line": 2,
+          "column": 39
+        }
+      ],
+      "source_sha256": "075d14d1429b5b971d3b0b091837dca6c9cef335a5d1a02482730af6051132ec"
+    },
+    {
+      "id": "boundary/nullable-result",
+      "outcome": "invalid_rejected",
+      "official_accepted": false,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/nullable-result/Boundary.kt",
+          "offset": 60,
+          "category": "invalid_kotlin",
+          "code": "TYPE_MISMATCH",
+          "message": "Type mismatch: expected String, found Nullable(String)",
+          "path": "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/nullable-result/Boundary.kt",
+          "line": 2,
+          "column": 39
+        }
+      ],
+      "source_sha256": "c40e4479abfa86c80f9ae1df8452c17b32f275e6fafcd98b38fe16d1e1d384db"
+    },
+    {
+      "id": "boundary/wrong-result",
+      "outcome": "invalid_rejected",
+      "official_accepted": false,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/wrong-result/Boundary.kt",
+          "offset": 57,
+          "category": "invalid_kotlin",
+          "code": "TYPE_MISMATCH",
+          "message": "Type mismatch: expected String, found Platform(Int)",
+          "path": "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/wrong-result/Boundary.kt",
+          "line": 2,
+          "column": 36
+        }
+      ],
+      "source_sha256": "665f14a5d1208562cb1ae301954d7f5d197f449155598910bfb6a08b52dc2505"
+    },
+    {
+      "id": "boundary/in-projection",
+      "outcome": "invalid_rejected",
+      "official_accepted": false,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/in-projection/Boundary.kt",
+          "offset": 63,
+          "category": "invalid_kotlin",
+          "code": "TYPE_MISMATCH",
+          "message": "Type mismatch: expected String, found Platform(Java(\"java/lang/Object\"))",
+          "path": "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/in-projection/Boundary.kt",
+          "line": 2,
+          "column": 42
+        }
+      ],
+      "source_sha256": "21987c3ae165989b7245204b78b3867b56d582381faa7eab76aa8e6fe243e847"
+    },
+    {
+      "id": "boundary/private",
+      "outcome": "invalid_rejected",
+      "official_accepted": false,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/private/Boundary.kt",
+          "offset": 60,
+          "category": "invalid_kotlin",
+          "code": "INVISIBLE_REFERENCE",
+          "message": "Field is inaccessible",
+          "path": "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/private/Boundary.kt",
+          "line": 2,
+          "column": 39
+        }
+      ],
+      "source_sha256": "295853e62e7e6c3673c9fd19e579cc488ea2729edb37523118f44ea300f82c1a"
+    },
+    {
+      "id": "boundary/final-write",
+      "outcome": "invalid_rejected",
+      "official_accepted": false,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/final-write/Boundary.kt",
+          "offset": 53,
+          "category": "invalid_kotlin",
+          "code": "FINAL_JAVA_FIELD_ASSIGNMENT_INVALID",
+          "message": "Cannot assign a final Java field",
+          "path": "/workspace/work/tx33/target/checks/2026-11-21T110135642183Z-generic-java-fields/boundaries/final-write/Boundary.kt",
+          "line": 2,
+          "column": 32
+        }
+      ],
+      "source_sha256": "87b6245a990f375548c327bf94672dd9d31ae6e749e81403ca997db2cef4f800"
+    },
+    {
+      "id": "frozen-inputs",
+      "outcome": "pass",
+      "changed": []
+    }
+  ],
+  "evidence": [],
+  "limitations": [
+    "Public generic Java instance field signatures retain declaring-class type parameters, nullable/non-null declaration or root type-use annotations and erased JVM descriptors. Receiver substitution includes inherited generic supertypes, direct out/in/star reads, invariant nested lists/arrays and boxed primitives.",
+    "Generic writes and static generic field reads remain explicitly unsupported. Nested parameter-dependent reads through projected receivers, unrecognized field annotations, and non-null field enhancement of nullable source type parameters remain explicit boundaries. This is a bounded JVM language feature; no new unchanged app-file, Android execution, full-app compatibility or speed claim is made.",
+    "One fixed Java caller compiled against official Kotlin output runs against both providers under -Xverify:all, with independent value/null/exception/evaluation-count assertions. Public JVM signatures are compared. Original Sync.Entity<C>.content is relevance evidence; its application classpath is not substituted by the focused Java fixture."
+  ],
+  "public_jvm_signatures": {
+    "official": {
+      "public static final java.lang.String value(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.String nullable(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.String platform(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.String optional(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.String required(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.String fixed(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.String published(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.String inherited(genericfields.StringCell);": "(Lgenericfields/StringCell;)Ljava/lang/String;",
+      "public static final int primitive(genericfields.Cell<java.lang.Integer>);": "(Lgenericfields/Cell;)I",
+      "public static final java.lang.Integer nullablePrimitive(genericfields.Cell<java.lang.Integer>);": "(Lgenericfields/Cell;)Ljava/lang/Integer;",
+      "public static final long longValue(genericfields.Cell<java.lang.Long>);": "(Lgenericfields/Cell;)J",
+      "public static final java.lang.String first(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.String array(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.String projected(genericfields.Cell<? extends java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.Object starred(genericfields.Cell<?>);": "(Lgenericfields/Cell;)Ljava/lang/Object;",
+      "public static final java.lang.Object consumed(genericfields.Cell<? super java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/Object;",
+      "public static final <C> C generic(genericfields.Cell<C>);": "(Lgenericfields/Cell;)Ljava/lang/Object;",
+      "public static final java.lang.Object erased(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/Object;",
+      "public static final java.lang.Integer boxed(genericfields.Cell<java.lang.Integer>);": "(Lgenericfields/Cell;)Ljava/lang/Integer;",
+      "public static final int intArray(genericfields.Cell<java.lang.Integer>);": "(Lgenericfields/Cell;)I",
+      "public static final int bound(genericfields.NumberCell<java.lang.Integer>);": "(Lgenericfields/NumberCell;)I",
+      "public static final java.lang.Integer boundBoxed(genericfields.NumberCell<java.lang.Integer>);": "(Lgenericfields/NumberCell;)Ljava/lang/Integer;",
+      "public static final java.lang.Object plainAsAny(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/Object;",
+      "public static final java.lang.String indirect();": "()Ljava/lang/String;",
+      "public static final java.lang.String requiredNullable(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.String safe(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final kotlin.jvm.functions.Function0<java.lang.String> lambda(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Lkotlin/jvm/functions/Function0;"
+    },
+    "candidate": {
+      "public static final java.lang.String value(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.String nullable(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.String platform(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.String optional(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.String required(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.String fixed(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.String published(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.String inherited(genericfields.StringCell);": "(Lgenericfields/StringCell;)Ljava/lang/String;",
+      "public static final int primitive(genericfields.Cell<java.lang.Integer>);": "(Lgenericfields/Cell;)I",
+      "public static final java.lang.Integer nullablePrimitive(genericfields.Cell<java.lang.Integer>);": "(Lgenericfields/Cell;)Ljava/lang/Integer;",
+      "public static final long longValue(genericfields.Cell<java.lang.Long>);": "(Lgenericfields/Cell;)J",
+      "public static final java.lang.String first(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.String array(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.String projected(genericfields.Cell<? extends java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.Object starred(genericfields.Cell<?>);": "(Lgenericfields/Cell;)Ljava/lang/Object;",
+      "public static final java.lang.Object consumed(genericfields.Cell<? super java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/Object;",
+      "public static final <C> C generic(genericfields.Cell<C>);": "(Lgenericfields/Cell;)Ljava/lang/Object;",
+      "public static final java.lang.Object erased(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/Object;",
+      "public static final java.lang.Integer boxed(genericfields.Cell<java.lang.Integer>);": "(Lgenericfields/Cell;)Ljava/lang/Integer;",
+      "public static final int intArray(genericfields.Cell<java.lang.Integer>);": "(Lgenericfields/Cell;)I",
+      "public static final int bound(genericfields.NumberCell<java.lang.Integer>);": "(Lgenericfields/NumberCell;)I",
+      "public static final java.lang.Integer boundBoxed(genericfields.NumberCell<java.lang.Integer>);": "(Lgenericfields/NumberCell;)Ljava/lang/Integer;",
+      "public static final java.lang.Object plainAsAny(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/Object;",
+      "public static final java.lang.String indirect();": "()Ljava/lang/String;",
+      "public static final java.lang.String requiredNullable(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final java.lang.String safe(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Ljava/lang/String;",
+      "public static final kotlin.jvm.functions.Function0<java.lang.String> lambda(genericfields.Cell<java.lang.String>);": "(Lgenericfields/Cell;)Lkotlin/jvm/functions/Function0;"
+    }
+  },
+  "nullable_parameter_compiler": {
+    "binary": "target/nullable-fields-build/release/korrust",
+    "binary_sha256": "ac4c9d066e1c7032e19cd2a6f0d23bf176bd9a2f2bb35e31ba8385fedb9ea07f",
+    "source_root": "target/nullable-fields-overlay",
+    "dependency": "Includes the separately validated Java-platform generic-bound feature; this interaction is not a second field feature."
+  },
+  "emitted_classes_sha256": {
+    "official": {
+      "target/checks/2026-11-21T110135642183Z-generic-java-fields/official/genericfields/UseKt.class": "d0eea433ebfc2177385808420fcd86b19204fa4d4c95c9e50ebff578edee5497"
+    },
+    "candidate": {
+      "target/checks/2026-11-21T110135642183Z-generic-java-fields/candidate/genericfields/UseKt$lambda$1463$0.class": "45e1a1a2c42f1cd55e8d1932c349a2723594cc48fddfa0bcd6a858b4a40b64db",
+      "target/checks/2026-11-21T110135642183Z-generic-java-fields/candidate/genericfields/UseKt.class": "d0df2291c7735568d6d8b6710ee7d868ad39e73f19c85665dab2e908d9dcd4e6"
+    }
+  },
+  "counts": {
+    "pass": 11,
+    "unsupported_language": 6,
+    "invalid_rejected": 5
+  }
+}

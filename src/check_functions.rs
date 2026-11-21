@@ -490,6 +490,7 @@ impl Checker<'_> {
             let value = Value {
                 ty: ty.clone(),
                 kind: ValueKind::JavaField {
+                    descriptor: None,
                     owner: owner.clone(),
                     name,
                     receiver: Some(Box::new(Value {

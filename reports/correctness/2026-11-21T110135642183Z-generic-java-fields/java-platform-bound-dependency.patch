@@ -1,0 +1,60 @@
+diff --git a/src/check_relations.rs b/src/check_relations.rs
+index fc3378709..7901bceab 100644
+--- a/src/check_relations.rs
++++ b/src/check_relations.rs
+@@ -459,6 +459,12 @@ fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: usize) -> b
+     if let Type::Platform(inner) = actual {
+         return subtype_at(cp, inner, expected, depth + 1);
+     }
++    if let Type::Parameter { upper_bound, .. } = actual {
++        if matches!(expected, Type::Platform(inner) if inner.as_ref() == actual) {
++            return true;
++        }
++        return subtype_at(cp, upper_bound, expected, depth + 1);
++    }
+     if let Type::Platform(inner) = expected {
+         let actual = if let Type::Nullable(inner) = actual {
+             inner.as_ref()
+@@ -467,9 +473,6 @@ fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: usize) -> b
+         };
+         return subtype_at(cp, actual, inner, depth + 1);
+     }
+-    if let Type::Parameter { upper_bound, .. } = actual {
+-        return subtype_at(cp, upper_bound, expected, depth + 1);
+-    }
+     if let Type::Nullable(inner) = expected {
+         let actual = if let Type::Nullable(inner) = actual {
+             inner.as_ref()
+@@ -1733,6 +1736,32 @@ mod tests {
+         }
+     }
+ 
++    #[test]
++    fn java_platform_bounds_preserve_parameter_upper_bound_flexibility() {
++        let cp = Classpath::new(&[]).unwrap();
++        let any = Type::Java("java/lang/Object".into());
++        let number = Type::Java("java/lang/Number".into());
++        let parameter = |bound| Type::Parameter {
++            name: "T".into(),
++            upper_bound: Box::new(Type::Nullable(Box::new(bound))),
++        };
++        let unconstrained = parameter(any.clone());
++        let numeric = parameter(number.clone());
++        let platform = |ty| Type::Platform(Box::new(ty));
++        assert!(subtype_at(&cp, &unconstrained, &platform(any.clone()), 0));
++        assert!(subtype_at(&cp, &numeric, &platform(number.clone()), 0));
++        assert!(subtype_at(&cp, &numeric, &platform(any.clone()), 0));
++        assert!(subtype_at(
++            &cp,
++            &unconstrained,
++            &platform(unconstrained.clone()),
++            0
++        ));
++        assert!(!subtype_at(&cp, &unconstrained, &any, 0));
++        assert!(!subtype_at(&cp, &numeric, &number, 0));
++        assert!(!subtype_at(&cp, &unconstrained, &platform(number), 0));
++    }
++
+     #[test]
+     fn generic_variance_nullability_and_function_subtyping_are_checked() {
+         with_checker(&Classpath::new(&[]).unwrap(), |checker| {

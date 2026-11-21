@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-11-21T11:01:35.642183+00:00",
+  "compiler": {
+    "binary": "target/checks/2026-11-21T110135642183Z-generic-java-fields/korrust-frozen",
+    "binary_sha256": "f1852c2e00279bc4cc82f7fcc92c379274dfbbbfd2beb1968729fea07d415947",
+    "source_revision": "2f09630b2c28450bdea07ba9a42c96ad2a2487dd"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8",
+      "-module-name",
+      "generic_java_fields"
+    ]
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_generic_java_fields.py",
+      "--candidate",
+      "/workspace/work/tx33/target/fields-build/release/korrust",
+      "--reference-root",
+      "/workspace/korrust",
+      "--baseline",
+      "/workspace/work/tx33/target/unchanged-models-baseline",
+      "--nullable-parameter-candidate",
+      "/workspace/work/tx33/target/nullable-fields-build/release/korrust",
+      "--nullable-parameter-source-root",
+      "/workspace/work/tx33/target/nullable-fields-overlay"
+    ]
+  ],
+  "kind": "features",
+  "status": "completed",
+  "evidence": [
+    "reports/correctness/2026-11-21T110135642183Z-generic-java-fields.json"
+  ],
+  "features": [
+    {
+      "name": "Specialized generic Java instance field reads",
+      "status": "supported",
+      "scope": "Public generic Java fields with declaring-type substitution through inherited receivers, erased JVM access, root nullability, boxed primitives, invariant lists/arrays, direct projections, safe calls and receiver captures. Nullable source type-parameter results are also verified when combined with the separately validated Java-platform bound feature.",
+      "restrictions": [
+        "Generic writes and static generic field reads are unsupported.",
+        "Nested parameter-dependent reads through projected receivers, unrecognized field annotations and non-null enhancement of nullable source type parameters remain explicit boundaries.",
+        "This adds one compiler feature, with no unchanged application-file, Android execution, full-app or performance claim."
+      ],
+      "evidence_report": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields.json",
+      "evidence_cases": [
+        "compile/candidate",
+        "public-jvm-signatures",
+        "runtime/candidate",
+        "nullable-parameter-runtime/candidate",
+        "boundary/nonnull-nullable-parameter",
+        "frozen-inputs"
+      ]
+    }
+  ],
+  "derived_counts": {
+    "pass": 11,
+    "unsupported_language": 6,
+    "invalid_rejected": 5
+  }
+}

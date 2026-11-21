@@ -1,0 +1,57 @@
+[
+  {
+    "id": "write",
+    "source": "package genericfields\nfun write(cell:Cell<String>) { cell.value = \"next\" }",
+    "official": "accept",
+    "code": "GENERIC_JAVA_FIELD_WRITE_UNSUPPORTED"
+  },
+  {
+    "id": "static",
+    "source": "package genericfields\nfun value():List<String> = Cell.global",
+    "official": "accept",
+    "code": "GENERIC_JAVA_STATIC_FIELD_UNSUPPORTED"
+  },
+  {
+    "id": "nested-projected",
+    "source": "package genericfields\nfun value(cell:Cell<out String>):Any? = cell.list",
+    "official": "accept",
+    "code": "PROJECTED_JAVA_FIELD_UNSUPPORTED"
+  },
+  {
+    "id": "nested-star",
+    "source": "package genericfields\nfun value(cell:Cell<*>):Any? = cell.array",
+    "official": "accept",
+    "code": "PROJECTED_JAVA_FIELD_UNSUPPORTED"
+  },
+  {
+    "id": "field-declaration-annotation",
+    "source": "package genericfields\nfun value(cell:Cell<String>):String = cell.historical",
+    "official": "accept",
+    "code": "JAVA_FIELD_UNSUPPORTED"
+  },
+  {
+    "id": "nullable-result",
+    "source": "package genericfields\nfun value(cell:Cell<String>):String = cell.optional",
+    "official": "reject"
+  },
+  {
+    "id": "wrong-result",
+    "source": "package genericfields\nfun value(cell:Cell<Int>):String = cell.value",
+    "official": "reject"
+  },
+  {
+    "id": "in-projection",
+    "source": "package genericfields\nfun value(cell:Cell<in String>):String = cell.value",
+    "official": "reject"
+  },
+  {
+    "id": "private",
+    "source": "package genericfields\nfun value(cell:Cell<String>):String = cell.hidden",
+    "official": "reject"
+  },
+  {
+    "id": "final-write",
+    "source": "package genericfields\nfun write(cell:Cell<String>) { cell.fixed = \"wrong\" }",
+    "official": "reject"
+  }
+]

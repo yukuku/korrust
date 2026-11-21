@@ -480,6 +480,7 @@ pub enum ValueKind {
         args: Vec<Value>,
     },
     JavaField {
+        descriptor: Option<String>,
         owner: String,
         name: String,
         receiver: Option<Box<Value>>,
@@ -2157,6 +2158,7 @@ impl Checker<'_> {
             Value {
                 ty: logical,
                 kind: ValueKind::JavaField {
+                    descriptor: None,
                     owner: field.owner,
                     name: field.name,
                     receiver: receiver.map(Box::new),
@@ -2622,6 +2624,16 @@ impl Checker<'_> {
         {
             return Ok(Value {
                 ty: Type::Byte,
+                kind: value.kind,
+            });
+        }
+        if matches!(value.ty, Type::Platform(_))
+            && (!expected.is_reference()
+                || matches!(&expected, Type::Parameter { upper_bound, .. } if upper_bound.is_nullable()))
+            && value.ty.base() == expected.base()
+        {
+            return Ok(Value {
+                ty: expected,
                 kind: value.kind,
             });
         }
@@ -3137,16 +3149,34 @@ impl Checker<'_> {
             }
         };
         if field.access & 0x10 != 0 {
-            return Err(Diagnostic::new(offset, "Cannot assign a final Java field"));
+            return Err(
+                Diagnostic::new(offset, "Cannot assign a final Java field").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "FINAL_JAVA_FIELD_ASSIGNMENT_INVALID",
+                ),
+            );
         }
-        if field.access & 1 == 0
-            || field.unsupported
-            || (field.access & 8 != 0) != receiver.is_none()
-        {
+        if field.access & 1 == 0 || (field.access & 8 != 0) != receiver.is_none() {
             return Err(Diagnostic::new(
                 offset,
                 "Java field is inaccessible or unsupported",
             ));
+        }
+        if field.unsupported {
+            return Err(
+                Diagnostic::new(offset, "Java field is inaccessible or unsupported").with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "JAVA_FIELD_UNSUPPORTED",
+                ),
+            );
+        }
+        if field.java_type.is_some() {
+            return Err(
+                Diagnostic::new(offset, "Generic Java field writes are unsupported").with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "GENERIC_JAVA_FIELD_WRITE_UNSUPPORTED",
+                ),
+            );
         }
         let mut cursor = 0;
         let ty = java_parameter(self.java_type(&field.descriptor, &mut cursor, offset)?);
@@ -3204,9 +3234,7 @@ impl Checker<'_> {
                 "JAVA_FIELD_RECEIVER_MISMATCH",
             ));
         }
-        if field.unsupported
-            || field.access & 1 == 0 && !field.kotlin.as_ref().is_some_and(|field| field.constant)
-        {
+        if field.unsupported {
             if field.access & 0x4000 != 0 {
                 return Err(Diagnostic::new(
                     offset,
@@ -3217,13 +3245,38 @@ impl Checker<'_> {
                     "ENUM_CONSTANT_METADATA_UNSUPPORTED",
                 ));
             }
+            return Err(
+                Diagnostic::new(offset, "Java field is inaccessible or unsupported").with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "JAVA_FIELD_UNSUPPORTED",
+                ),
+            );
+        }
+        if field.access & 1 == 0 && !field.kotlin.as_ref().is_some_and(|field| field.constant) {
             return Err(Diagnostic::new(
                 offset,
                 "Java field is inaccessible or unsupported",
             ));
         }
+        if field.java_type.is_some() && receiver.is_none() {
+            return Err(
+                Diagnostic::new(offset, "Generic Java static field reads are unsupported")
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "GENERIC_JAVA_STATIC_FIELD_UNSUPPORTED",
+                    ),
+            );
+        }
         let mut cursor = 0;
-        let ty = if let Some(kotlin) = &field.kotlin {
+        let ty = if let Some(logical) = &field.java_type {
+            relations::specialize_field(
+                logical,
+                &receiver.as_ref().unwrap().ty,
+                &field.owner,
+                self.classpath,
+                offset,
+            )?
+        } else if let Some(kotlin) = &field.kotlin {
             kotlin.ty.clone()
         } else {
             self.java_type(&field.descriptor, &mut cursor, offset)?
@@ -3248,7 +3301,7 @@ impl Checker<'_> {
                 value
             });
         }
-        let ty = if ty.is_reference() && field.kotlin.is_none() {
+        let ty = if ty.is_reference() && field.kotlin.is_none() && field.java_type.is_none() {
             Type::Platform(Box::new(ty))
         } else {
             ty
@@ -3256,6 +3309,7 @@ impl Checker<'_> {
         Ok(Value {
             ty,
             kind: ValueKind::JavaField {
+                descriptor: Some(field.descriptor.clone()),
                 owner: owner.into(),
                 name: name.into(),
                 receiver: receiver.map(Box::new),
@@ -4482,6 +4536,7 @@ impl Checker<'_> {
                     return Ok(Value {
                         ty: ty.clone(),
                         kind: ValueKind::JavaField {
+                            descriptor: None,
                             owner: owner.clone(),
                             name: name.clone(),
                             receiver: Some(Box::new(Value {
@@ -5157,6 +5212,20 @@ impl Checker<'_> {
                             })
                         }) {
                             return Err(Diagnostic::new(offset, format!("Constructor parameter {name} is not a property and is unavailable outside initialization")).with_kind(crate::DiagnosticKind::InvalidKotlin, "NON_PROPERTY_CONSTRUCTOR_PARAMETER"));
+                        }
+                    }
+                    if let Some(owner) = library::type_owner(&receiver.ty) {
+                        if self
+                            .classpath
+                            .field_candidates(owner, name)?
+                            .iter()
+                            .any(|field| field.java_type.is_some() && field.access & 2 != 0)
+                        {
+                            return Err(Diagnostic::new(offset, "Field is inaccessible")
+                                .with_kind(
+                                    crate::DiagnosticKind::InvalidKotlin,
+                                    "INVISIBLE_REFERENCE",
+                                ));
                         }
                     }
                     return Err(

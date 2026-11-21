@@ -330,6 +330,51 @@ pub(super) fn projected_input(
         })
 }
 
+pub(super) fn specialize_field(
+    ty: &Type,
+    receiver: &Type,
+    owner: &str,
+    cp: &Classpath,
+    offset: usize,
+) -> Result<Type> {
+    let receiver = as_supertype(cp, receiver, owner).unwrap_or_else(|| receiver.clone());
+    let class = cp.load(owner)?;
+    let mut readable = class_substitutions(&receiver, &class);
+    if let Some(library) = &class.library {
+        let arguments = arguments(&receiver).unwrap_or_default();
+        for (index, parameter) in library.type_parameters.iter().enumerate() {
+            let argument = arguments.get(index);
+            if argument.is_none_or(|arg| arg.ty.is_none() || arg.variance != Variance::Invariant)
+                && mentions(ty, &parameter.name)
+            {
+                if !direct_parameter(ty, &parameter.name) {
+                    return Err(Diagnostic::new(offset, "Nested generic Java field reads through projected receivers are unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "PROJECTED_JAVA_FIELD_UNSUPPORTED"));
+                }
+                if argument.is_none_or(|arg| arg.ty.is_none() || arg.variance == Variance::In) {
+                    readable.insert(
+                        parameter.name.clone(),
+                        parameter
+                            .bounds
+                            .first()
+                            .cloned()
+                            .unwrap_or(Type::Java("java/lang/Object".into())),
+                    );
+                }
+            }
+        }
+    }
+    let mut result = substitute(ty, &readable);
+    if matches!(ty, Type::Parameter { .. }) {
+        while let Type::Nullable(inner) | Type::Platform(inner) = result {
+            result = *inner;
+        }
+        if matches!(&result, Type::Parameter { upper_bound, .. } if upper_bound.is_nullable()) {
+            return Err(Diagnostic::new(offset, "Non-null Java fields with nullable source type parameters require unsupported intersection types").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "NONNULL_JAVA_FIELD_PARAMETER_UNSUPPORTED"));
+        }
+    }
+    Ok(result)
+}
+
 pub(super) fn specialize_receiver(
     mut method: JavaMethod,
     receiver: &Type,

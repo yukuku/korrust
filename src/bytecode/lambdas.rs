@@ -538,6 +538,7 @@ mod tests {
                         Box::new(Value {
                             ty: Type::Long,
                             kind: ValueKind::JavaField {
+                                descriptor: None,
                                 owner: "CaptureLong".into(),
                                 name: "base".into(),
                                 receiver: Some(Box::new(local(

@@ -241,6 +241,48 @@ pub(super) fn method(
     s.finish()?;
     Ok((tp, args, result))
 }
+pub(super) fn field(value: &str, parameters: &[TypeParameter]) -> Result<Type> {
+    let mut signature = Signature::new(value, parameters);
+    let ty = signature.ty()?;
+    signature.finish()?;
+    if !ty.is_reference() {
+        return Err(invalid());
+    }
+    Ok(ty)
+}
+
+pub(super) fn attach_fields(class: &mut JavaClass, attrs: &Attributes, field_attrs: &[Attributes]) {
+    let parameters = match attrs.signature.as_deref().map(self::class).transpose() {
+        Ok(Some((parameters, _))) => parameters,
+        Ok(None) => Vec::new(),
+        Err(_) => return,
+    };
+    for (field, attributes) in class.fields.iter_mut().zip(field_attrs) {
+        let Some(signature) = &attributes.signature else {
+            continue;
+        };
+        if attributes.unsupported || field.access & 0x1000 != 0 {
+            continue;
+        }
+        let Ok(ty) = self::field(signature, &parameters) else {
+            continue;
+        };
+        if ty.descriptor() != field.descriptor {
+            continue;
+        }
+        if let Ok(ty) = nullability(
+            ty,
+            attributes
+                .annotations
+                .iter()
+                .chain(&attributes.return_type_annotations),
+        ) {
+            field.java_type = Some(Box::new(ty));
+            field.unsupported = false;
+        }
+    }
+}
+
 pub(super) fn class(value: &str) -> Result<(Vec<TypeParameter>, Vec<Type>)> {
     let mut s = Signature::new(value, &[]);
     let parameters = s.type_params()?;
@@ -510,6 +552,29 @@ pub(super) fn attach_with_declarations(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn generic_field_signatures_preserve_variables_and_reject_malformed_inputs() {
+        let (parameters, _) = class("<T:Ljava/lang/Object;>Ljava/lang/Object;").unwrap();
+        let ty = field("TT;", &parameters).unwrap();
+        assert!(matches!(ty, Type::Parameter { name, .. } if name == "T"));
+        assert_eq!(
+            field("[TT;", &parameters).unwrap().descriptor(),
+            "[Ljava/lang/Object;"
+        );
+        for invalid in [
+            "",
+            "V",
+            "I",
+            "TU;",
+            "TT",
+            "TT;;",
+            "()TT;",
+            "Ljava/util/List<TT;>",
+        ] {
+            assert!(field(invalid, &parameters).is_err(), "{invalid}");
+        }
+    }
+
     #[test]
     fn generic_method_preserves_variables_and_variance() {
         let (tp, args, result) =

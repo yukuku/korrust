@@ -453,6 +453,7 @@ impl Planner<'_> {
                 owner,
                 name,
                 receiver: None,
+                ..
             } if caller != owner => {
                 if let Some(bridge) = self.field_bridge(owner, name, false)? {
                     value.kind = Self::static_call(bridge, Vec::new());

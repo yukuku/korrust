@@ -1218,6 +1218,7 @@ impl Code<'_> {
         )
     }
     fn generic_result(&mut self, ty: &Type) -> Result<()> {
+        let ty = ty.base();
         if ty.is_reference() {
             return self.class_reference(0xc0, &reference_class(ty)?);
         }
@@ -1408,6 +1409,20 @@ impl Code<'_> {
         self.box_value(&value.ty)
     }
     fn erased_generic_value(&mut self, value: &Value) -> Result<bool> {
+        if let ValueKind::JavaField {
+            descriptor: Some(descriptor),
+            ..
+        } = &value.kind
+        {
+            let physical = invocation_types(&format!("(){descriptor}"))?.1;
+            if physical.is_reference() {
+                self.value(&Value {
+                    ty: physical,
+                    kind: value.kind.clone(),
+                })?;
+                return Ok(true);
+            }
+        }
         let descriptor = match &value.kind {
             ValueKind::JavaCall { method, .. } | ValueKind::MemberCall { method, .. } => {
                 Some(method.descriptor.as_str())
@@ -1748,6 +1763,7 @@ impl Code<'_> {
                 self.method_reference(0xb7, owner, "<init>", descriptor)?;
             }
             ValueKind::JavaField {
+                descriptor,
                 owner,
                 name,
                 receiver,
@@ -1756,6 +1772,17 @@ impl Code<'_> {
                     self.value(receiver)?;
                 }
                 if self.captured_field(owner, name, &value.ty, receiver.is_none(), false)? {
+                    return Ok(());
+                }
+                if let Some(descriptor) = descriptor {
+                    self.field_reference(
+                        if receiver.is_some() { 0xb4 } else { 0xb2 },
+                        owner,
+                        name,
+                        descriptor,
+                    )?;
+                    let physical = invocation_types(&format!("(){descriptor}"))?.1;
+                    self.adapt_value(&physical, &value.ty)?;
                     return Ok(());
                 }
                 let object_cell = owner == "kotlin/jvm/internal/Ref$ObjectRef" && name == "element";

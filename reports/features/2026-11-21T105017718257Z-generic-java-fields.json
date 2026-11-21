@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-11-21T10:50:17.718257+00:00",
+  "compiler": {
+    "binary": "target/checks/2026-11-21T105017718257Z-generic-java-fields/korrust-frozen",
+    "binary_sha256": "22423e009c439572d3922e6f83f9efad11c930770d2ca3778be6bbfe577e35b1",
+    "source_revision": "cfff6405a57de9de01e14ddd2bfde8cbf4d0a125"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8",
+      "-module-name",
+      "generic_java_fields"
+    ]
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_generic_java_fields.py",
+      "--candidate",
+      "/workspace/work/tx33/target/fields-build/release/korrust",
+      "--reference-root",
+      "/workspace/korrust",
+      "--baseline",
+      "/workspace/work/tx33/target/unchanged-models-baseline"
+    ]
+  ],
+  "kind": "features",
+  "status": "completed",
+  "evidence": [
+    "reports/correctness/2026-11-21T105017718257Z-generic-java-fields.json"
+  ],
+  "features": [
+    {
+      "name": "Specialized generic Java instance field reads",
+      "status": "supported",
+      "scope": "Public generic Java fields with declaring-type substitution through inherited receivers, erased JVM access, recognized root nullability, boxed primitives, invariant lists/arrays, direct projections, safe calls and captured receiver reads.",
+      "restrictions": [
+        "Generic writes and static generic field reads are unsupported.",
+        "Nested parameter-dependent reads through projected receivers, unrecognized field annotations and non-null enhancement of nullable source type parameters remain bounded rejection cases.",
+        "This feature report adds no unchanged application-file, Android execution, full-app or performance claim."
+      ],
+      "evidence_report": "reports/correctness/2026-11-21T105017718257Z-generic-java-fields.json",
+      "evidence_cases": [
+        "compile/candidate",
+        "public-jvm-signatures",
+        "runtime/official",
+        "runtime/candidate",
+        "frozen-inputs"
+      ]
+    }
+  ],
+  "derived_counts": {
+    "pass": 7,
+    "unsupported_language": 5,
+    "invalid_rejected": 5
+  }
+}

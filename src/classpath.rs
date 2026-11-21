@@ -141,6 +141,7 @@ impl JavaClass {
 
 #[derive(Clone, Debug)]
 pub(crate) struct JavaField {
+    pub java_type: Option<Box<Type>>,
     pub kotlin: Option<KotlinField>,
     pub constant: Option<JavaConstant>,
     pub owner: String,
@@ -1870,9 +1871,9 @@ fn attributes(
                         result
                             .only_input_type_parameters
                             .push(parameter.ok_or_else(invalid)?);
-                    } else if path_length != 0 || !matches!(target, 0x14 | 0x16) {
+                    } else if path_length != 0 || !matches!(target, 0x13 | 0x14 | 0x16) {
                         result.unsupported = true;
-                    } else if target == 0x14 {
+                    } else if matches!(target, 0x13 | 0x14) {
                         result.return_type_annotations.push(value);
                     } else {
                         result
@@ -3351,6 +3352,7 @@ fn parse_details_impl(
         field_attributes.push(attrs);
         let attrs = field_attributes.last().unwrap();
         fields.push(JavaField {
+            java_type: None,
             kotlin: None,
             owner: name.clone(),
             name: field_name,
@@ -3471,6 +3473,7 @@ fn parse_details_impl(
         }
     } else {
         let _ = signature::attach(&mut class, &attrs, &method_attributes);
+        signature::attach_fields(&mut class, &attrs, &field_attributes);
     }
     if annotation_definitions && class.access & 0x2000 != 0 {
         class.annotation_definition =
@@ -3577,7 +3580,13 @@ mod tests {
         )
         .unwrap();
         assert_eq!(invisible.return_type_annotations.len(), 1);
-        assert!(decode(&[0, 1, 0x13, 0, 0, 2, 0, 0]).unwrap().unsupported);
+        assert_eq!(
+            decode(&[0, 1, 0x13, 0, 0, 2, 0, 0])
+                .unwrap()
+                .return_type_annotations
+                .len(),
+            1
+        );
         assert!(
             decode(&[0, 1, 0x16, 0, 1, 0, 0, 0, 2, 0, 0])
                 .unwrap()

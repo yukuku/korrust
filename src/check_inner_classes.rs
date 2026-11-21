@@ -18,6 +18,7 @@ impl Checker<'_> {
         Ok(class.enclosing_instance().map(|outer| Value {
             ty: Type::Java(outer.into()),
             kind: ValueKind::JavaField {
+                descriptor: None,
                 owner,
                 name: "this$0".into(),
                 receiver: Some(Box::new(receiver)),
