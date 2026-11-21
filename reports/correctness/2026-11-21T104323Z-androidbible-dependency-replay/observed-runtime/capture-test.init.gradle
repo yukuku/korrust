@@ -1,0 +1,21 @@
+import groovy.json.JsonOutput
+gradle.projectsEvaluated {
+  def app = gradle.rootProject.project(':Alkitab')
+  app.tasks.register('captureTestDeps33') {
+    dependsOn app.tasks.named('compilePlainDebugJavaWithJavac')
+    doLast {
+      def configuration = app.configurations.getByName('plainDebugUnitTestRuntimeClasspath')
+      def jars = configuration.incoming.artifactView {
+        attributes { attribute(org.gradle.api.attributes.Attribute.of('artifactType', String), 'android-classes-jar') }
+      }.files.files.collect { it.absolutePath }
+      def kt = app.tasks.named('compilePlainDebugKotlin').get()
+      def jc = app.tasks.named('compilePlainDebugJavaWithJavac').get()
+      def model = [configuration: configuration.name, classpath: jars,
+        app_kotlin_output: kt.destinationDirectory.get().asFile.absolutePath,
+        app_java_output: jc.destinationDirectory.get().asFile.absolutePath,
+        source_build_model: '/workspace/work/deps33/official-model.json',
+        scope: 'Genuine resolved Gradle test runtime component class jars; original test sources were not compiled.']
+      new File('/workspace/work/deps33/test-runtime.json').text = JsonOutput.prettyPrint(JsonOutput.toJson(model))
+    }
+  }
+}

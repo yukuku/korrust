@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "kind": "androidbible_dependency_replay",
+  "created_at": "2026-11-21T10:52:22.156125+00:00",
+  "status": "passed",
+  "source_revision": "798f7b410",
+  "scope": "Genuine dependency inputs for five app-backed survey files and the unchanged InternalDb wrapper runtime proof; no app target bytecode substitutes and no original app-source edits. This is dependency-build evidence, not a claim that the candidate compiler built the full Android app.",
+  "compiler": {
+    "production_dependencies": "official Gradle9.7.1 / AGP9.2.1 / Kotlin2.3.21 with Java21",
+    "archive_correction": "9163aef81c2524a144f3200bf2c655367e55bfe2"
+  },
+  "validation": {
+    "source_and_build_files_sha256_verified": 660,
+    "production_case_classpaths": 5,
+    "test_runtime_dependency_jars": 247,
+    "offline_sdk_artifacts_sha256_verified": 2,
+    "full_configurable_production_and_runtime_replay": "passed",
+    "fresh_Gradle_checksum_and_extraction": "passed",
+    "fresh_command_tools_checksum_and_extraction_version19": "passed",
+    "original_dependency_input_files_unchanged_after_measurements": 215,
+    "archive_unit_tests": 9,
+    "report_generator_tests": 8,
+    "cargo_fmt": "passed",
+    "clippy_all_targets": "passed"
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/replay.py",
+      "--repo-root",
+      ".",
+      "--jdk",
+      "/path/to/full-jdk21",
+      "--work-dir",
+      "/tmp/androidbible-replay",
+      "--runtime"
+    ],
+    [
+      "python3",
+      "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/replay-archive-io.py",
+      "--artifact",
+      "/tmp/androidbible-replay/sdk/platforms/android-36/android.jar",
+      "--work-dir",
+      "/tmp/archive-io-replay"
+    ]
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/README.md",
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/manifest.json",
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/downloads.json",
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/targets.json",
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/replay.py",
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/filter-classpaths.py",
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/capture.init.gradle",
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/capture-test.init.gradle",
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/observed-production/classpaths.json",
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/observed-production/source-sha256.json",
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/observed-production/official-build.log",
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/observed-runtime/test-runtime-receipt.json",
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/observed-runtime/receipt-i6.json",
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/observed-runtime/receipt-android14-i6.json",
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/validated-replay/official-build.log",
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/validated-replay/test-deps-build.log",
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/validated-replay/test-runtime-receipt.json",
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/validated-replay/report-tests.log",
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/archive-io/receipt.json",
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/archive-io/archive-tests.log",
+    "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay/archive-io/clippy.log"
+  ],
+  "limitations": [
+    "Linux command-line tools and NDK are pinned; a full JDK21 and network access are prerequisites. SDK36 revision2 android.jar must match its captured SHA256.",
+    "Observed absolute paths remain unchanged in immutable observations. The new replay accepts repository/work/JDK/SDK paths and emits fresh receipts. Rebuilt class bytes may differ across JDK patch levels or containers.",
+    "Archive I/O probes use identical debug build profiles and byte-identical source/dependency inputs. Text diagnostics match byte for byte. Whole-compiler wall timings were observed under concurrent workspace load; CPU and syscall measurements are separate."
+  ]
+}
