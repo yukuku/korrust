@@ -1,0 +1,635 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-21T10:14:09.963014+00:00",
+  "status": "complete",
+  "mode": "standalone",
+  "selection_report": "reports/correctness/2026-11-21T072519326520Z-next10-app-assessment.json",
+  "assessment_scope": "selected_subset",
+  "pinned_case_count": 33,
+  "selected_case_count": 1,
+  "input_archive": {
+    "path": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/inputs.zip",
+    "sha256": "262974169e65a85deb6e5e0000febbae0fefb1e206089e1b9ef6a9aae64e316c",
+    "members": {
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt": {
+        "member": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt",
+        "sha256": "527b8dfff07dcaa3dd7fcc4ee852c9707fc2765587ffb2374c75a04ef102106c"
+      },
+      "references/compiler.json": {
+        "member": "references/compiler.json",
+        "sha256": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c"
+      },
+      "reports/correctness/2026-11-21T072519326520Z-next10-app-assessment.json": {
+        "member": "reports/correctness/2026-11-21T072519326520Z-next10-app-assessment.json",
+        "sha256": "a95c80423c070949f826a4cf819745387bb46237677120ff51b471a51415cb9c"
+      },
+      "tools/check_androidbible_survey.py": {
+        "member": "tools/check_androidbible_survey.py",
+        "sha256": "93107794adb9992048fbc4e13af5dee6aeadfc95e264c58f94ccf6eba84ea0f7"
+      }
+    }
+  },
+  "selection": "Exact case IDs and source hashes from the pinned 33-file survey; no source rewriting. Only JDK and pinned standard library.",
+  "compiler": {
+    "candidate": {
+      "path": "target/nov21-final-v5/korrust",
+      "sha256": "193fcdd9fd7af09271cbad17e47d126dc28d27a0528d49996a866862bb349c50",
+      "frozen_path": "target/checks/2026-11-21T101407725513Z-androidbible-survey-standalone/bin/candidate"
+    }
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "source_revision": "48c9502b6bb73e609f675c9c1f5be9a79c5cdb28",
+  "environment": {
+    "JAVA_HOME": "/workspace/korrust-setup/jdk-21",
+    "official_jvm_target": "1.8 unless the case records a dependency requirement",
+    "candidate_jvm_target": "compiler default; emitted class versions recorded per class",
+    "language_version": "2.3",
+    "api_version": "2.3"
+  },
+  "input_hashes": {
+    "target/nov21-final-v5/korrust": {
+      "sha256": "193fcdd9fd7af09271cbad17e47d126dc28d27a0528d49996a866862bb349c50"
+    },
+    "references/kotlinc/bin/kotlinc": {
+      "sha256": "90750c977cc043dd2b05c69dd4e052c10377554925dd5a155e74ef732be28c7d"
+    },
+    "references/kotlinc/lib": {
+      "allopen-compiler-plugin.jar": "4d10b6efd97edcdfff90ad064eb4410c60177653810844b104155b4a9086dfc6",
+      "annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+      "assignment-compiler-plugin.jar": "ca3c5b11501c5ed848b491d5a69bf13cb4197c79903a7cee2b2ad024bae5f601",
+      "compose-compiler-plugin.jar": "e8b44d65a4ba5fb14f3e51d10fb605d7da2a0c35a9ee275c94ffd74cb3f2b11e",
+      "jvm-abi-gen.jar": "88a5e104dde4ef2f3cd211b077bb93f0a5e2e54b61e53c373f146af061be4504",
+      "kotlin-annotation-processing-cli.jar": "c44c21f9bedeca54e0062b825dcb394a75a3efc289d4354e153225213f498e5f",
+      "kotlin-annotation-processing-runtime.jar": "d9bcc297a3263366e216956c9425f3ba7b04f4a72f8b0dffb06fdd88e48606b9",
+      "kotlin-annotation-processing.jar": "51308691a3cbd4c3964c5669d6ffb771b4879a214ab95c1df6aab18f137b4fa6",
+      "kotlin-annotations-jvm-sources.jar": "bf594d0e3a35c21b1f07097d9e10b6ab524ae5bb2ffdb92ea9b1f79f28e8ab09",
+      "kotlin-annotations-jvm.jar": "6054230599c840c69af3657c292b768f2b585c25fba91d26cd5ad8c992757b03",
+      "kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+      "kotlin-daemon-client.jar": "fa767c9b40d069f164c617a6e6bd302643c7ba8c0792e8ed9e412c18f84b50be",
+      "kotlin-daemon.jar": "b7c67e908442f64f7d2acf99ac6b68b625d5317541d7130efac72507de0c36cf",
+      "kotlin-main-kts.jar": "d786b3ace9625918014c1da51d7c6ba29ef06e3291f6cc4264d39e6992acc4ee",
+      "kotlin-metadata-jvm-sources.jar": "2ededf948f1afd503217a772c95718a41494e757762206216f4c1b42ada64585",
+      "kotlin-metadata-jvm.jar": "00590f26a5a768777f04252c6cf93c016a3361a6bc93636df67375ad4d19557d",
+      "kotlin-preloader.jar": "4fb08cc92cf83ace6af60953e968a7f79eb57c5304175a9c0a9a9ad14a9e6348",
+      "kotlin-reflect-sources.jar": "8cbdca65092aa6888901e23c08c7d69d141544107a9bcc9aa47b5453d4dbcf7e",
+      "kotlin-reflect.jar": "33e37d9dfa86c7a29ab34e975b5f4a1287b458878611051f3485652220c1a2cb",
+      "kotlin-runner.jar": "b217c59d320058007fed21927f71d5fbb7899fb6acab817a6d63aec5544a548c",
+      "kotlin-script-runtime-sources.jar": "275d90c0c92e9680aff9c013394f3f395bc46dc23762107c4fdccd9887a58561",
+      "kotlin-script-runtime.jar": "ec61bf1229c837fa9f4255f34ca69816138b73158e7ae9b8d964cf92ca6dfd2e",
+      "kotlin-scripting-common.jar": "69885751bdce7d4e1d1b9758baf4bc0fe03b24827abd7b7687e5a7c0b4d029ed",
+      "kotlin-scripting-compiler-impl.jar": "fe93b36234d6ff2ae5d1c8f965c5ae7c61b5211c5945d1fe8f3b2136ef313520",
+      "kotlin-scripting-compiler.jar": "bbcbc97789cc599ad28c3fadb8ad479b9ad98849da797394f05cbe450fc040d5",
+      "kotlin-scripting-jvm.jar": "8cb637132fc7fa511c700ee7f2b63b282630167f5ebd699a263a0b67b5d486ab",
+      "kotlin-serialization-compiler-plugin.jar": "e05fdd1e0f151df7c177c9bde02bd6c8bd58c04c403c830485472948867f7b72",
+      "kotlin-stdlib-jdk7-sources.jar": "2534c8908432e06de73177509903d405b55f423dd4c2f747e16b92a2162611e6",
+      "kotlin-stdlib-jdk7.jar": "e2243abac2bed6e0b47be18b2b7fe1c1b4cf6a431480353dcd49d1ed35f31199",
+      "kotlin-stdlib-jdk8-sources.jar": "3cb6895054a0985bba591c165503fe4dd63a215af53263b67a071ccdc242bf6e",
+      "kotlin-stdlib-jdk8.jar": "63091929246beba86b5fb2b020a6f5d06e01693a960b58a59959c8713667991c",
+      "kotlin-stdlib-js-sources.jar": "f57cda653d86e12f005c68a684ed32cdf44416f55db140a4182d8dbb53697ef2",
+      "kotlin-stdlib-js.klib": "da52dd92c9aa6b43a92222f99b7e6c10221e265a2a67cd73b86facd994169e5a",
+      "kotlin-stdlib-sources.jar": "8693386ae174f7e4a91eb82c5c632d169d236704da24f78b9c8c84d87af2fd64",
+      "kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+      "kotlin-test-js-sources.jar": "b45aee3561d48173468db1eb05743925b3f91c7a99a30c8a3457e3a554819e78",
+      "kotlin-test-js.klib": "f8669827c379b20b8bca58d8f299c680040815a0c2d475e2394c710d3b46a9d5",
+      "kotlin-test-junit-sources.jar": "3fd39bbf3f8283cf7b7759e02abdd752ddde9964352f645467b779257bccef20",
+      "kotlin-test-junit.jar": "554739f282eaca114882ad7effcd8523de2651eb6d65189624425110992ca4ce",
+      "kotlin-test-junit5-sources.jar": "5e0d4688277a3f859be086b874601b45f54b30b5b045800138b54e9418bdc95b",
+      "kotlin-test-junit5.jar": "24350f53fe1be3b7fe0e8fcd7e1b777eb0b8fa16af720617fe7e87d0a77c2797",
+      "kotlin-test-sources.jar": "bce4ebcf90507cc14ea3857f65088d10fd1a305616da62a6e5b6be0735ccb456",
+      "kotlin-test-testng-sources.jar": "b88a8f12928480d14e29c6c879958c156afc946b9b8d333d1c2f4a428cdb1041",
+      "kotlin-test-testng.jar": "da9c1164af8de599d8e31ae768f78c48caceb1a401790454139ec03cfe8ddf08",
+      "kotlin-test.jar": "038f7d2c7df1039450809c486068f301a29c6e90356c9a4b595e34f4f4a813e7",
+      "kotlinx-coroutines-core-jvm.jar": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+      "kotlinx-serialization-compiler-plugin.jar": "e05fdd1e0f151df7c177c9bde02bd6c8bd58c04c403c830485472948867f7b72",
+      "lombok-compiler-plugin.jar": "ab61ddad3977c19396223dbac64b82c5d33796b712e4cfac6d79a0fe2166cf24",
+      "mutability-annotations-compat.jar": "8c76693fde1f34baaeaf5298e1953fca489c8e90ce6c065f96dd20d978c2003b",
+      "noarg-compiler-plugin.jar": "2f978ae34fec60a2e92ed3c1f6862f015b98922b07508a2648a019d898bf3761",
+      "parcelize-compiler.jar": "edacd6e066bef87f00448e95ba4aff89b4e10f6ce27d99ba125c7e96f2d73ada",
+      "parcelize-runtime.jar": "a21d5f85475efb27f17dd97d1a289d64874f2ddfdb508ea484477a4cf1afe969",
+      "power-assert-compiler-plugin.jar": "29164fe3dd405d78204655bb533cf1abc409288be825039c3443fd894096745e",
+      "sam-with-receiver-compiler-plugin.jar": "8e9eb418d5ddae8c24ee79da1d5394636dc256defc62a3ea347bd59aca8592fd",
+      "scripting-compiler.jar": "bbcbc97789cc599ad28c3fadb8ad479b9ad98849da797394f05cbe450fc040d5"
+    },
+    "/workspace/korrust-setup/jdk-21/jmods": {
+      "java.base.jmod": "f8d258a856a691c81ad9dd16964635bbc8a8fdd7f40edec37dcf3d904feb7ae1",
+      "java.compiler.jmod": "8ecb32088b19111c3ee0853bea6746b22194432ebcf74862167b9b274000fe91",
+      "java.datatransfer.jmod": "81080a1cf86550f26b4f97ea339b440d71f490c039219517f83057f31587c824",
+      "java.desktop.jmod": "9fe3cc48baa72ea5db726d771fc4eaf96a93e74ee3e8003d8dcd659e2be8ab16",
+      "java.instrument.jmod": "1c5e7a1b45df25593d4ed18cdf4a4bbf2cfa84973cbb3ec3bd6146089ee46317",
+      "java.logging.jmod": "e10ecae70b2bc533f3030c9d82e378c802a6e7fed290631c80e266c2bd5c3253",
+      "java.management.jmod": "6e8d448dd6faa4446337a367d5f9da0f98d1472cdc415f4df7f28d08d4ed3bd3",
+      "java.management.rmi.jmod": "96d3dcfdfb7feeb607f02c04b36a540dd277b4a2973d14474432f1cc79583b16",
+      "java.naming.jmod": "b2ec32c7fbc6eab604134eddd84c4d52f598934cec1c162ff5a618964821abcb",
+      "java.net.http.jmod": "05a8d7ad35f6c4c512ad83dfff488cf38754e6340ee4f3f67e91130cc504b7ae",
+      "java.prefs.jmod": "a976af64aac691428478043b8c0ef1438aa33b84ec265369d3b52ec8d92ebbe7",
+      "java.rmi.jmod": "fee9ea4cb68aa07b63207a967fa9e089148da5d6ab2735e69dbc1c97d625eabb",
+      "java.scripting.jmod": "153c4335816abb651b5c3677b4aafa9b9be093d68cb389cb469b81623f726fb4",
+      "java.se.jmod": "9976f9186f8b411aeb074a6fb3099ca7593cb75f235d8bcb402c0437b8146273",
+      "java.security.jgss.jmod": "8e5630c78fb65f402e7316b8e932a1285a24ba30fb43b5d60f3b94f7a114cb70",
+      "java.security.sasl.jmod": "5cbfc6356e053e43ffa1abadb892cb39ada3b1d9b046dd4dd9bcabea21590d6e",
+      "java.smartcardio.jmod": "aa3eeb8691e062a9eed9cc4fe7d761cbf206fa59ab6b0aecdf0bf07c395ee4d5",
+      "java.sql.jmod": "09fc6697b6cfb5fb156bf6ed69f462a04b41d6194f45fcfaabb20c963c8da62c",
+      "java.sql.rowset.jmod": "e6abfe2f60fb1b52c38d6069a1805ddbd118b8cffd26f1a0ad2d241e4d4ef91e",
+      "java.transaction.xa.jmod": "5f593e97ffcedc42628cd892dc328d30c4fdcf32c426b4c97ecb917d829c503b",
+      "java.xml.crypto.jmod": "97132aa0427e76aa958ec310c18d6efd735092e55e9bed92ffbe12bcd13153a8",
+      "java.xml.jmod": "47583b53613b63857528d628a56d7e5562896db526528fd2fd790c1702980877",
+      "jdk.accessibility.jmod": "e19ddb1e375d99ee6e344c4830bba068bca47a62c30209c6170dffc6a958b111",
+      "jdk.attach.jmod": "9f775b1c1875ce8808565e2c94f201ae76987554943742c2c4a518df2d7d077d",
+      "jdk.charsets.jmod": "07db04862b54e3356222fa835dbcb65b721778308ee297dada88f224ebe8420c",
+      "jdk.compiler.jmod": "d6e050030264b82fdc57732be842eaafb36a35082cf9be7f47f84552634b5244",
+      "jdk.crypto.cryptoki.jmod": "2192534d947d41a07f018f10f6c467e342047074a5a19b5064c1e8aa0c73cad7",
+      "jdk.crypto.ec.jmod": "5c0f6f12ed6ff8db3f6adaa79b6263dc2ae532c82790a2b503f2a9077547780d",
+      "jdk.dynalink.jmod": "e7556260319c24069c7b77cede622b44798644d6db27a0dfbb150fe20bb67d13",
+      "jdk.editpad.jmod": "6e4a457cab6d64bd3590f9423b6ec54e356f0d69691914c31e740c3c7a5de9a0",
+      "jdk.hotspot.agent.jmod": "71638b688326ef2d95cf1c15228914f0377151caf56e72f67159e7e014880d6e",
+      "jdk.httpserver.jmod": "ab90731e3cf2119d5a2cb4a0b4db35c8387292602afda1c1a5e99269a7dbc731",
+      "jdk.incubator.vector.jmod": "b1b35bedbc5959c48194c81873ace9466c39c8ef9594dfdfac0f735c9cd46ba7",
+      "jdk.internal.ed.jmod": "5e4183cdefea2ad90a90fea6add84cb24af8b0acba1e8753658652d01ac3279c",
+      "jdk.internal.jvmstat.jmod": "a78214fbdf970647b30d618cf50dd232881f5afded6d347a93833e1f974bfedd",
+      "jdk.internal.le.jmod": "7f376038fc5daa8d961ca96dd3c56fe0dbe1e40eea80a77ba2c27efb9afbeb11",
+      "jdk.internal.opt.jmod": "b8a9b6e9ae1bb6e88d57296f87b0c9794445efd716ad27e6fe0ae3490c759c55",
+      "jdk.internal.vm.ci.jmod": "6cf7a4a0b421a0fa3465ecda59bcc0235766329501175c65e97cdadfb385e783",
+      "jdk.internal.vm.compiler.jmod": "f611033ff5707666caa2a2f5c3da1864c6487182d0c48ee21558cb92b828fd1d",
+      "jdk.internal.vm.compiler.management.jmod": "667d7d43701a355f4fd3da371ca0c5a70658a1dcedb4184d3398e60eb0a20ec3",
+      "jdk.jartool.jmod": "3b3c66468edc46389019324297608a48f7b5452dbea6e961c4032ffac1f7a98a",
+      "jdk.javadoc.jmod": "6c3b5eceb5a584623280632d013105beac9e49790ca0f62ae09136c048234881",
+      "jdk.jcmd.jmod": "1daac8ffa53131f79c8bbf47a77981d907c4cafd9438025fdb333dff0b50eaf7",
+      "jdk.jconsole.jmod": "07420f51b3b18d1012fc3899bf599375ed0865fdc85f431d6f738f8d4c91aa19",
+      "jdk.jdeps.jmod": "603648b9a16cf8297e9b93450cc0d141c52d7a90cd51d19a6a84773c757f0cd5",
+      "jdk.jdi.jmod": "6a6ec784621e6c4c13cbffd7ddcd65e57bcc0d31f8e4d073951ce6b83f19068f",
+      "jdk.jdwp.agent.jmod": "86aa6ee1b41c4840f67a7db2b3a16458d6c6b55bb75e329c2c123e4f089709d5",
+      "jdk.jfr.jmod": "76e4416fa558f3a8e15b660c4e53525421b01c7d6d0ea16474828806a07307a8",
+      "jdk.jlink.jmod": "1d1eb5ea4ecdad9e6e319a687d307a65e99405ee85327cc029258e2da6e997d7",
+      "jdk.jpackage.jmod": "359575e07166a3b418933ccc536828883832a7e1fcca3322353efd869f47f028",
+      "jdk.jshell.jmod": "184882f480a3e0741e6ff192d288418bcdf6e3f4462f8add9f3ff6256c99853d",
+      "jdk.jsobject.jmod": "d805b75e4da6bd309aa1e1b9604156670152ead9bbfceb711558c6d24e9df87f",
+      "jdk.jstatd.jmod": "007aaf0ff0afd717d71926040216e9b58b3dda20d7ae7ab89b5c827767463d49",
+      "jdk.localedata.jmod": "978d06a09398702837a6940f301bb22d47b6d7845296e8b330b9635843dca112",
+      "jdk.management.agent.jmod": "ec973e3e1276df9e9754e45ba5ab98d16a22399828e70208131af8a53cf56384",
+      "jdk.management.jfr.jmod": "0f6f0f0037f5390555480b9b4de57d006d161e68a6083c8c419e790173151dfa",
+      "jdk.management.jmod": "b4ef8e9dde6bd917ba7184f53b96b6f3a5d1900ed0c5391b1d23f9e54c1081e9",
+      "jdk.naming.dns.jmod": "17eebef765cf9bb1cc6ca9c8b09ae750f0fc39f85a74472cd31d58ef85d9d10d",
+      "jdk.naming.rmi.jmod": "b19cdc985f3ccc56283e5792a7b031abe5c7fa289b32d033dc139e9dfab92246",
+      "jdk.net.jmod": "3b018d18ae9b313af0af150293c7149421b0d801c8820d892243ca3ecfa7ca20",
+      "jdk.nio.mapmode.jmod": "15646a6c62d4e56c9df6be47597fefa39ebecd9e965031d0c5eb4b334fd55be9",
+      "jdk.random.jmod": "e9b374bca4f6ccc9b6a92f4f3ddb43b47dcddbd6af97b46bd464ed0261951ea0",
+      "jdk.sctp.jmod": "5d95539c1e48563c4fa045d741f8051bdd4ed4ac24aae365d4875f3cae13adab",
+      "jdk.security.auth.jmod": "f856f102525420a8be0491917526101906d6fdfe73404ffb204e4d8a39029d42",
+      "jdk.security.jgss.jmod": "a85002ada4c4bc97ca550698a0d53191c6034d57145122a75bf3544701246993",
+      "jdk.unsupported.desktop.jmod": "0a60945f5e12eafec6a03d1b92badb9fa19f26af0d725d59495bd84215c5a884",
+      "jdk.unsupported.jmod": "7dbe51bf64d9b9e5f6e87d3042413b335ced61b99325750b52dacb9adbc5bb6f",
+      "jdk.xml.dom.jmod": "d0684b86dd827be5fcc49cf44aacf8fb9ed829f023ae002e075460f462e475bf",
+      "jdk.zipfs.jmod": "4ef65e80e2caa4c028fc8cca474a08d782ddfea046d7c035b3485213760bfd62"
+    },
+    "/workspace/korrust-setup/jdk-21/bin/java": {
+      "sha256": "2a207f5e7d075afa01d97f8048389a64432a44c4a5af0f5e77d6e286ec5f401d"
+    },
+    "tools/check_androidbible_survey.py": {
+      "sha256": "93107794adb9992048fbc4e13af5dee6aeadfc95e264c58f94ccf6eba84ea0f7"
+    },
+    "reports/correctness/2026-11-21T072519326520Z-next10-app-assessment.json": {
+      "sha256": "a95c80423c070949f826a4cf819745387bb46237677120ff51b471a51415cb9c"
+    },
+    "references/compiler.json": {
+      "sha256": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c"
+    },
+    "/workspace/work/survey33/standalone/results.json": {
+      "sha256": "f090bb030225da2c876b963aea192695bd55e69e205f16ada738ad09f3414ac1"
+    },
+    "/workspace/work/survey33/standalone/RibkaEligibility.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/AudioErrorCode.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/AudioHttpErrorBody.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/AudioLogEntry.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/PlaybackState.log": {
+      "sha256": "cf375b4095b1f1af6b6b77b80209523f6fd4834e6069b780b1452f8e3e0811df"
+    },
+    "/workspace/work/survey33/standalone/GotoTab.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/PrereleaseVersion.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/PdbBookNumberToBookIdMapping.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/AppServices.log": {
+      "sha256": "a9ab9a7f24f6b89846d8df2351fdc9bf4278d84c918a2619a8910a30e1232f3e"
+    },
+    "/workspace/work/survey33/standalone/InternalDbTxWrapper.log": {
+      "sha256": "098f67bb535999be681362eb7ae792d08c968cd8628d8abb0fc8bc90051deee6"
+    },
+    "/workspace/work/survey33/standalone/VerseTextDecoder.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/SyncUtils.log": {
+      "sha256": "9a8e29e31040bdc84c89b664a8c0034c7428dc41a9b9defb9e91346f0848c4ed"
+    },
+    "/workspace/work/survey33/standalone/AlphanumComparator.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/BackForwardList.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/BookColorUtil.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/FormattedVerseText.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/Levenshtein.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/LidToAri.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/QueryTokenizer.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/RequestCodes.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/VersesUiModel.log": {
+      "sha256": "aed41e7ef44acb959f75176de243369af6a111ef7ee989e74bdaa14eba866fbe"
+    },
+    "/workspace/work/survey33/standalone/ReaderGestureActions.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/VerseNumberPlacement.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/Gid.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/Rpp.log": {
+      "sha256": "441ab0428f375e3959d097d2fbcefac476c8b87a7d5ea3c325f96c8fde0fade5"
+    },
+    "/workspace/work/survey33/standalone/LogInterface.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/MediaStateListener.log": {
+      "sha256": "d001235fed0a755a7d086679e16e09b3abde502a4467cded0cacfc0ac957ce88"
+    },
+    "/workspace/work/survey33/standalone/SongPlaybackState.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/SongTextZoomable.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/SongDocumentSearch.log": {
+      "sha256": "f4fb25b1f175b0c3fb1dd1861aa6c3aa3f7c4f1b0cbafb1e43a6c299bffe281e"
+    },
+    "/workspace/work/survey33/standalone/SongDocumentText.log": {
+      "sha256": "5f2301b835b426fea40a1656841ee736e9d8666b7d01035c026f57df02c9e966"
+    },
+    "/workspace/work/survey33/standalone/SingleChapterVerses.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/standalone/unsignedBinarySearch.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/work/survey33/oracle.py": {
+      "sha256": "95c2bf6b1b8e77a528fe696b7f893ec3133bce6b61e06cc78de20deaca9b6a1d"
+    },
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt": {
+      "sha256": "527b8dfff07dcaa3dd7fcc4ee852c9707fc2765587ffb2374c75a04ef102106c"
+    },
+    "references/kotlinc/lib/kotlin-stdlib.jar": {
+      "sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+    }
+  },
+  "cases": [
+    {
+      "id": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt",
+      "sha256": "527b8dfff07dcaa3dd7fcc4ee852c9707fc2765587ffb2374c75a04ef102106c",
+      "source_inputs": [
+        "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt"
+      ],
+      "classpath": [
+        "target/checks/2026-11-21T101407725513Z-androidbible-survey-standalone/classpath/000/kotlin-stdlib.jar"
+      ],
+      "friend_paths": [],
+      "dependency_provenance": {},
+      "official_jvm_target": "1.8",
+      "providers": {
+        "official": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/00-official.log",
+          "output": "target/checks/2026-11-21T101407725513Z-androidbible-survey-standalone/output/00/official",
+          "classes": [
+            {
+              "name": "yuku/alkitab/base/storage/VerseTextDecoder",
+              "source_file": "VerseTextDecoder.kt",
+              "class_major_version": 52,
+              "primary": true,
+              "path": "yuku/alkitab/base/storage/VerseTextDecoder.class",
+              "sha256": "328180dc54cce8ac9213f6102f7273d82f9da7b1443780591bd9a1ea98cf1aea"
+            }
+          ]
+        },
+        "candidate": {
+          "outcome": "compiled",
+          "exit_code": 0,
+          "log": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/00-candidate.log",
+          "output": "target/checks/2026-11-21T101407725513Z-androidbible-survey-standalone/output/00/candidate",
+          "classes": [
+            {
+              "name": "yuku/alkitab/base/storage/VerseTextDecoder",
+              "source_file": "VerseTextDecoder.kt",
+              "class_major_version": 52,
+              "primary": true,
+              "path": "yuku/alkitab/base/storage/VerseTextDecoder.class",
+              "sha256": "115e9ffc9bb2d069907fd021f7bf02b4d0318ff127320e5f37314bc428396b77"
+            }
+          ],
+          "missing_primary_classes": []
+        }
+      },
+      "classpath_overlap": [],
+      "surveyed_primary_classes": [
+        "yuku/alkitab/base/storage/VerseTextDecoder"
+      ],
+      "expected_primary_classes": [
+        "yuku/alkitab/base/storage/VerseTextDecoder"
+      ],
+      "missing_primary_classes": [],
+      "outcome": "compiled"
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T101407725513Z-androidbible-survey-standalone/classpath/000/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T101407725513Z-androidbible-survey-standalone/output/00/official",
+        "-no-stdlib",
+        "-no-reflect",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 600,
+      "log": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/00-official.log"
+    },
+    {
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-21T101407725513Z-androidbible-survey-standalone/bin/candidate",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T101407725513Z-androidbible-survey-standalone/classpath/000/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T101407725513Z-androidbible-survey-standalone/output/00/candidate"
+      ],
+      "exit_code": 0,
+      "timeout_seconds": 600,
+      "log": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/00-candidate.log"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/00-official.log",
+    "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/00-candidate.log"
+  ],
+  "dependency_provenance_copies": [],
+  "classpath_copies": [
+    {
+      "original": "references/kotlinc/lib/kotlin-stdlib.jar",
+      "copy": "target/checks/2026-11-21T101407725513Z-androidbible-survey-standalone/classpath/000/kotlin-stdlib.jar"
+    }
+  ],
+  "prior_standalone_oracle_archives": [
+    {
+      "original": "/workspace/work/survey33/standalone/results.json",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/results.json",
+      "sha256": "f090bb030225da2c876b963aea192695bd55e69e205f16ada738ad09f3414ac1"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/RibkaEligibility.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/RibkaEligibility.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/AudioErrorCode.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/AudioErrorCode.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/AudioHttpErrorBody.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/AudioHttpErrorBody.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/AudioLogEntry.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/AudioLogEntry.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/PlaybackState.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/PlaybackState.log",
+      "sha256": "cf375b4095b1f1af6b6b77b80209523f6fd4834e6069b780b1452f8e3e0811df"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/GotoTab.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/GotoTab.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/PrereleaseVersion.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/PrereleaseVersion.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/PdbBookNumberToBookIdMapping.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/PdbBookNumberToBookIdMapping.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/AppServices.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/AppServices.log",
+      "sha256": "a9ab9a7f24f6b89846d8df2351fdc9bf4278d84c918a2619a8910a30e1232f3e"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/InternalDbTxWrapper.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/InternalDbTxWrapper.log",
+      "sha256": "098f67bb535999be681362eb7ae792d08c968cd8628d8abb0fc8bc90051deee6"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/VerseTextDecoder.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/VerseTextDecoder.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/SyncUtils.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/SyncUtils.log",
+      "sha256": "9a8e29e31040bdc84c89b664a8c0034c7428dc41a9b9defb9e91346f0848c4ed"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/AlphanumComparator.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/AlphanumComparator.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/BackForwardList.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/BackForwardList.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/BookColorUtil.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/BookColorUtil.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/FormattedVerseText.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/FormattedVerseText.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/Levenshtein.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/Levenshtein.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/LidToAri.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/LidToAri.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/QueryTokenizer.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/QueryTokenizer.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/RequestCodes.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/RequestCodes.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/VersesUiModel.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/VersesUiModel.log",
+      "sha256": "aed41e7ef44acb959f75176de243369af6a111ef7ee989e74bdaa14eba866fbe"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/ReaderGestureActions.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/ReaderGestureActions.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/VerseNumberPlacement.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/VerseNumberPlacement.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/Gid.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/Gid.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/Rpp.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/Rpp.log",
+      "sha256": "441ab0428f375e3959d097d2fbcefac476c8b87a7d5ea3c325f96c8fde0fade5"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/LogInterface.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/LogInterface.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/MediaStateListener.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/MediaStateListener.log",
+      "sha256": "d001235fed0a755a7d086679e16e09b3abde502a4467cded0cacfc0ac957ce88"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/SongPlaybackState.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/SongPlaybackState.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/SongTextZoomable.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/SongTextZoomable.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/SongDocumentSearch.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/SongDocumentSearch.log",
+      "sha256": "f4fb25b1f175b0c3fb1dd1861aa6c3aa3f7c4f1b0cbafb1e43a6c299bffe281e"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/SongDocumentText.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/SongDocumentText.log",
+      "sha256": "5f2301b835b426fea40a1656841ee736e9d8666b7d01035c026f57df02c9e966"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/SingleChapterVerses.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/SingleChapterVerses.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/standalone/unsignedBinarySearch.log",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/unsignedBinarySearch.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/workspace/work/survey33/oracle.py",
+      "archive": "reports/correctness/2026-11-21T101407725513Z-androidbible-survey-standalone/prior-standalone-oracle/oracle.py",
+      "sha256": "95c2bf6b1b8e77a528fe696b7f893ec3133bce6b61e06cc78de20deaca9b6a1d"
+    }
+  ],
+  "prior_standalone_oracle": "/workspace/work/survey33/standalone/results.json",
+  "reproduction_commands": [
+    [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "tools/check_androidbible_survey.py",
+      "--candidate",
+      "target/nov21-final-v5/korrust",
+      "--case",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt",
+      "--standalone-oracle-evidence",
+      "/workspace/work/survey33/standalone/results.json",
+      "--skip-html"
+    ]
+  ],
+  "limitations": [
+    "Compile and emitted-class assessment only; this does not establish runtime, whole-module, or Android-device compatibility.",
+    "Oracle-generated synthetic and local classes need not have identical names; primary source classes must be emitted."
+  ],
+  "counts": {
+    "compiled": 1
+  },
+  "provider_counts": {
+    "official": {
+      "compiled": 1
+    },
+    "candidate": {
+      "compiled": 1
+    }
+  },
+  "input_integrity": {
+    "changed_originals": [],
+    "changed_classpath_copies": [],
+    "changed_binary_copies": [],
+    "input_archive_changed": false
+  }
+}
