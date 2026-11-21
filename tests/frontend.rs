@@ -828,6 +828,28 @@ fn checks_constructor_fields_array_operations_and_getter_returns() {
 }
 
 #[test]
+fn empty_explicit_getters_have_result_diagnostics_separate_from_initializer_boundaries() {
+    let source = "class E() { val x: Int get() {} }";
+    let error = compile_all(source, "Getter.kt").err().unwrap();
+    assert_eq!(error.kind, korrust::DiagnosticKind::InvalidKotlin);
+    assert_eq!(error.code, "PROPERTY_GETTER_RESULT_MISSING");
+    assert_eq!(error.offset, source.find("get").unwrap());
+    let error = compile_all("class E { val x: Int }", "Declaration.kt")
+        .err()
+        .unwrap();
+    assert_eq!(error.kind, korrust::DiagnosticKind::UnsupportedLanguage);
+    assert_eq!(error.code, "PROPERTY_INITIALIZER_FORM_UNSUPPORTED");
+    for source in [
+        "class E { val x: Unit get() {} }",
+        "class E { val x get() {} }",
+    ] {
+        let error = compile_all(source, "UnitGetter.kt").err().unwrap();
+        assert_eq!(error.kind, korrust::DiagnosticKind::UnsupportedLanguage);
+        assert_eq!(error.code, "PROPERTY_GETTER_EMPTY_BODY_UNSUPPORTED");
+    }
+}
+
+#[test]
 fn classes_require_valid_imports_even_when_unused() {
     rejects("import missing.Foreign\nclass E()", "not found");
     rejects(

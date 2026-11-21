@@ -4365,7 +4365,26 @@ impl Parser {
                 has_getter = true;
                 getter_visibility = accessor_visibility;
                 if self.at("(") {
+                    let getter_offset = self.tokens[self.pos - 1].offset;
                     body = self.getter_body()?;
+                    if body.is_empty() {
+                        let known_non_unit = !matches!(
+                            ty.as_ref(),
+                            None | Some(
+                                Type::Unit
+                                    | Type::Java(_)
+                                    | Type::Parameterized { .. }
+                                    | Type::Parameter { .. }
+                            )
+                        );
+                        return Err(if known_non_unit {
+                            Diagnostic::new(getter_offset, "Properties require a result from an explicitly declared non-Unit getter")
+                                .with_kind(DiagnosticKind::InvalidKotlin, "PROPERTY_GETTER_RESULT_MISSING")
+                        } else {
+                            Diagnostic::new(getter_offset, "Empty property getter bodies require unsupported Unit or alias result typing")
+                                .with_kind(DiagnosticKind::UnsupportedLanguage, "PROPERTY_GETTER_EMPTY_BODY_UNSUPPORTED")
+                        });
+                    }
                 }
             } else if self.take("set") {
                 if !mutable {
