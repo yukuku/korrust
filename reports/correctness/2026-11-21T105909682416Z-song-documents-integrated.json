@@ -1,0 +1,593 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-21T11:00:49.072915+00:00",
+  "status": "complete",
+  "compiler": {
+    "source_revision": "000b87640b34b9d166fda80bf91f9ab87b070ee4",
+    "frozen_source_hashes": {
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "benchmarks/source-files.sha256.json": "48e5d343ebfb4b24c87485a754bdfb237164a1c574b7c40cce7cbc8fc0357a4c",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocument.kt": "6fa1a91c4d5cf9f578891b1cce1c454a74d44a96765d2fc28085c0cf5b4c6a96",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt": "f0d62b37a07ae8d538805f8daea3052945f0d57dd81624d05d66e817c60ab485",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSerializers.kt": "a09ecef5a2f15cbaace011001ab670cfa0c360e5cfd3a01f75153b8b54eb5943",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentText.kt": "6392a4452b7723e2fe889a545bd945ae0426414fd806c467fa0b6bde13f99ee2",
+      "benchmarks/sources.json": "d88269921818e783935300c3aa8873595466293da3e8fe5b02f26522f39abfd4",
+      "probes/SongConsumer.kt": "34371f5d3620881dcc55031f8a84b23f231f9088ecb5791a194141c5beed8e26",
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+      "src/annotation_declarations.rs": "ac237d773c71a2fc26faeb2d79b837265c6d557ef7bb31aab748fa8b1c7572be",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/annotation_files.rs": "4f3c136aaa2ed30b85d2a4cc2a9be8331b2da9682d450f6a4dcc135ef04ab86a",
+      "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "src/bytecode/class_companion.rs": "2dacd7b21d48fcdd59955fa30b58a6e88bb67642d4bd6dd9d845842b1880417a",
+      "src/bytecode/data.rs": "c99cb60546cbe8873ef99d1ab057aa7439f4239fce13927d324dfea078dbe98c",
+      "src/bytecode/defaults.rs": "ebdb1c988443c1b984081aa8555c5bb2f649685e3bbfef011cd138c0bf29aecd",
+      "src/bytecode/enums.rs": "25fe788c54554741347ba6bb4b84cbee7c324db6925209a434fb139ceb66b2b1",
+      "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+      "src/bytecode/inline.rs": "e598575c521153d592face8dd19018beaf89be45fbde985ae3845526e5a0be44",
+      "src/bytecode/interfaces.rs": "02e19cc9024bda962e06cedec8e15ebfc8b9f1ccd7f95ec11980ab46de917ae6",
+      "src/bytecode/lambdas.rs": "75a4ad990edd822dffaadc1be8cccf6d6cb345848f147e6b3a30c17dc0351360",
+      "src/bytecode/objects.rs": "142f8e5c70f0ac61423c3887447c54865b7b657768cf683fc553fde398a17e7e",
+      "src/bytecode/suspend.rs": "79e1064dd35da268956f91b167a779ce0957cefa8fef629789a2fb3afee987b7",
+      "src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+      "src/bytecode.rs": "d610c4766d35743cc7864a44fec87f93715b5c4c486cb6c3f6790b738434f26b",
+      "src/check.rs": "3ecc78365b228c32b2836c71ad5c9af8b07d2e107d66cf41143abd6894be54cb",
+      "src/check_annotation_placements.rs": "b6c899c4a5c2f3269ae1b93268b2ede0f29f4ce68c5ef42b833d7edcecf2d2cc",
+      "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "src/check_anonymous.rs": "fd523e4ff9173f209bde5b6cec9c5e13bae942da680e752611b242b0d8cc0f53",
+      "src/check_captures.rs": "b640213c5a98157b012203d2ff07e22799b7b7a187e75b7a22a4415c005a77a1",
+      "src/check_class_delegation.rs": "25cd077ed2b3b51158a53efb2c8190296064fe607db399ab416a3d51a4df2be0",
+      "src/check_classes.rs": "669ec7c4c5ef4900ed53d4151cf07269c8fa195d98b4ce51a4f59dc15a072351",
+      "src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+      "src/check_control.rs": "19e7fe2376f65209fd0d9b04be9254ec868fed288707d34631f30e841f3eaca7",
+      "src/check_declarations.rs": "07c1cabd3926f2c58f10d0622f3e7e333ad689bc639560ad57f6ec3d7c5ed3e8",
+      "src/check_delegates.rs": "6ba1fb0aa2ba511c31accd8a06282490a94b8cbf4857c5687ddab3a71236beb2",
+      "src/check_enums.rs": "2a16c9e4dbae29a8c479ab5cddefad66f0bdd09143e2a0cde8428d2d0c174d8b",
+      "src/check_functions.rs": "5ea379c79dfc6d4bd3797d199694bd421395aa12463a8fd7a142ba7f418b5aa1",
+      "src/check_inner_classes.rs": "60a4cdbfef5b069e0312c3ea7511b0de6a862d20ff393c464ea080968aa233cd",
+      "src/check_interfaces.rs": "c733506c29aeb5738c3266d03579e420bf26719ec59bd09fc4fc4d542c149f15",
+      "src/check_ir_walk.rs": "11b8f21285e9743b5a71fdb7de6826cc3e85689d9622380fae58fc676dce0195",
+      "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+      "src/check_library.rs": "1737bf4df2e599b838f326cc240574179a3c27bc95c89014a1fdb864114d5bca",
+      "src/check_member_extensions.rs": "66a4cfa55e05e5699d510113566c91fd54fa79e1257f769df334338c0f7201e5",
+      "src/check_objects.rs": "79cb9168240ce6833ab14ff8c05752e144e39a33a61fb59c292f298ab47514e6",
+      "src/check_operations.rs": "1013c1d7a9bf96c18128d59f766474427818da7e6b189494ae57c644ab2b3f7a",
+      "src/check_overloads.rs": "6612d428673b842cf07a72b2344e6eb790d1a6f1b689373428140d07ab182dbf",
+      "src/check_references.rs": "3a4fd327b7a13f48e69d5fbd059c76cbb8d2ce50ae2e140a762a06d9e1e6eab8",
+      "src/check_relations.rs": "2b5a8daa6e2642040a59c4a3b5466558ac0047d1f5d7ee31c7a552fd4d274b07",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+      "src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+      "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+      "src/check_variant_signatures.rs": "487fea7351445905782f472e297e15080a4244ce34a4a4aa9904b30c01263a86",
+      "src/classpath/aliases.rs": "745fa67edb3216b77ce5e65f63b75c51ac221f5b49d3e08a4327990bd9e6f4c5",
+      "src/classpath/archive.rs": "875c9119ee5386c40848c8570a27b90964d1a7c5ce65f941217652ae59f1b16c",
+      "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+      "src/classpath/metadata.rs": "45c98d86e202e8679f420585e6315c15b65dd38ad80ef3dc6bed5cb7fdd6d1d1",
+      "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/signature.rs": "2dbed1bcacc67d8ffadd01d466676a969dc849eaa7d397d6c390e61a4ec12c7c",
+      "src/classpath/source.rs": "b4def553b584cf598c156c16089bdb7cacc8271351c5a570ef9f436968d772c2",
+      "src/classpath/source_enums.rs": "a3ed1a550007856e482624b65d024249e503524b577aa2a5f99b9db334ee1374",
+      "src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+      "src/classpath.rs": "0bc519d992abbcf276619884fdae2ef90396048d7e39a1299239d820b36fbc26",
+      "src/compiled_inline.rs": "7acd0769184152ea2659a9217886608cff7219eea5a47d25cf573e0f0318d7fa",
+      "src/const_eval.rs": "6714c1d6296d1c3f60fab09891a492f66a9850b3ff3ee2b5a7df42400dfdcdaa",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+      "src/lib.rs": "fa65d18a3567992124b03314127594cefa2abd36dd70af78e8ded63b8801f6a2",
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/metadata.rs": "45c1261a573d0d3c0fce5dcf2c7988f1ec798ecdf79c29213ad9fc29e487c77d",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+      "src/syntax.rs": "062bed277fc673496d459b0f9bc59c245905c5ad0d6782f3fa81b78b586f1d92",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/visibility.rs": "0268165a314fe1a169d5604fdda38968b0bbda07f11c60db92d36a7247f879c7",
+      "tests/stable_properties/SongCalls.java": "5b95c15dc235ff160287e13bdf3dce011088abe36ec088649e1ad803da221cde"
+    },
+    "path": "/workspace/work/song33-proof/compiler-release/korrust",
+    "sha256": "637b195a19692229e0ddcb007b7818e14570a6342339ab642d535e94af613e58"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "source_input_bundle": {
+    "path": "reports/correctness/2026-11-21T105909682416Z-song-documents-integrated/source-inputs.zip",
+    "sha256": "bd18a39996a650d108895943605881124bd4d33e2de16b7ba9b5b5194063a080"
+  },
+  "unchanged_app_sources": {
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocument.kt": "6fa1a91c4d5cf9f578891b1cce1c454a74d44a96765d2fc28085c0cf5b4c6a96",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSerializers.kt": "a09ecef5a2f15cbaace011001ab670cfa0c360e5cfd3a01f75153b8b54eb5943",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt": "f0d62b37a07ae8d538805f8daea3052945f0d57dd81624d05d66e817c60ab485",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentText.kt": "6392a4452b7723e2fe889a545bd945ae0426414fd806c467fa0b6bde13f99ee2"
+  },
+  "frozen_library_hashes": {
+    "kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "kotlinx-serialization-compiler-plugin.jar": "e05fdd1e0f151df7c177c9bde02bd6c8bd58c04c403c830485472948867f7b72",
+    "kotlinx-serialization-core-jvm-1.5.1.jar": "a4053a35abeb59bf707d7948245556fe8dc379e9cfed088aec08134c899605d4",
+    "kotlinx-serialization-json-jvm-1.5.1.jar": "6fc10b056e1006963abb2b9fc393dcd4e38425358b6f16285e8f63d3429ffd21"
+  },
+  "options": {
+    "language_version": "2.3",
+    "api_version": "2.3",
+    "jvm_target": "1.8",
+    "friend_dependency": "Actual SongDocument and SongDocumentSerializers outputs from pinned official compiler and serialization plugin"
+  },
+  "scope": "Early integrated proof for both unchanged portable Song app objects against actual model/serialization dependencies; genuine JAR inputs, matching classpaths and explicit friend paths, fixed official Java caller, JVM verification, signatures and official Kotlin metadata consumers",
+  "limitations": [
+    "No full Android application build",
+    "No compilation or runtime performance claim"
+  ],
+  "reproduction_command": [
+    "python3",
+    "reports/correctness/2026-11-21T105909682416Z-song-documents-integrated/reproduce.py",
+    "--reference-root",
+    "/workspace/korrust",
+    "--report-root",
+    "/workspace/work/song33",
+    "--work",
+    "/workspace/work/song33-proof"
+  ],
+  "cases": [
+    {
+      "id": "frozen_integrated_release_build",
+      "outcome": "pass",
+      "detail": {
+        "source_revision": "000b87640b34b9d166fda80bf91f9ab87b070ee4",
+        "sha256": "637b195a19692229e0ddcb007b7818e14570a6342339ab642d535e94af613e58"
+      }
+    },
+    {
+      "id": "actual_dependency_compile",
+      "outcome": "pass",
+      "detail": {
+        "sources": {
+          "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocument.kt": "6fa1a91c4d5cf9f578891b1cce1c454a74d44a96765d2fc28085c0cf5b4c6a96",
+          "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSerializers.kt": "a09ecef5a2f15cbaace011001ab670cfa0c360e5cfd3a01f75153b8b54eb5943"
+        },
+        "output_hashes": {
+          "META-INF/main.kotlin_module": "6a7121b1e6891da889afc88dde37882dc5967c299b9c2c0584cd11c04aed01da",
+          "yuku/alkitab/songs/newdoc/Block$Companion.class": "14b9d74ed9047e2bb727c628e1b42ac5c49c92db7938ee0a6574bb987dc176d7",
+          "yuku/alkitab/songs/newdoc/Block.class": "9a30f99e914add15f4838a2e8afd5dd4b05c9f07c72c0d126cb8a1f712f7aa31",
+          "yuku/alkitab/songs/newdoc/BlockSerializer.class": "3d717fddb589890087d4fa611d18d882264ac652fa01d9e98544b35e347f272b",
+          "yuku/alkitab/songs/newdoc/GapBlock$Companion.class": "7d17e9f91972f0fbaf834e1687dd5e8415c218fc6f4344eb8e748b9c91cf6eb8",
+          "yuku/alkitab/songs/newdoc/GapBlock.class": "7287fcab93590e0056a72bfca222309b5ddd44849316ed584d840007c6551302",
+          "yuku/alkitab/songs/newdoc/GapBlockSerializer.class": "e0db77668665a8967b26c76103d996664399fd90e2e529e8d0ec2b206518cb47",
+          "yuku/alkitab/songs/newdoc/Line$Companion.class": "4fa9bce005c341f96d331238292470eed512407eebb30ce337533bf666aaf85b",
+          "yuku/alkitab/songs/newdoc/Line$Plain.class": "b3795ca5217b404c7da2f68b56b4c22582a07709a7012dcdcb215fd25bcf72c7",
+          "yuku/alkitab/songs/newdoc/Line$Styled.class": "bff0a170a5bb21f17e9962dccd241f962b1e098380cfaf4486e8b19bc57fd182",
+          "yuku/alkitab/songs/newdoc/Line.class": "4cffbbef0221bddc909264810a1ee0dfb89126b595b6f361f6e95628da200635",
+          "yuku/alkitab/songs/newdoc/LineSerializer.class": "9f69846383be646a66a854cf0b0486f3fcb75425d5a7fbc9c27e046f89dc2d9a",
+          "yuku/alkitab/songs/newdoc/LyricBlock$Companion.class": "829fd5208b4535d2d999a82b9a18b103f7ac4b51348071056e04c2df6be0eea1",
+          "yuku/alkitab/songs/newdoc/LyricBlock.class": "5447cabe3f400e1c23eb4928d5d6c5ce46f786b0d496cc40ff3e990ecb43f26a",
+          "yuku/alkitab/songs/newdoc/LyricBlockSerializer.class": "7fb2889d7379d0d12ba500812dfd63d39eaf2f45d437c7adf77ec92b86dd6780",
+          "yuku/alkitab/songs/newdoc/Meta$$serializer.class": "95c93769ecbf52f2b7e3fca60b75cae804ded566a1caa574e17142f6fced6dd0",
+          "yuku/alkitab/songs/newdoc/Meta$Companion.class": "df63efcd2c348d3ae08863c9e7f00a8df838f1cb4fccad7ae68dbbb39198efe8",
+          "yuku/alkitab/songs/newdoc/Meta.class": "44de4c4e96bc414c8bc6192b9595906a4b1ce75e6309a65e9db76a5ded64690a",
+          "yuku/alkitab/songs/newdoc/PBlock$Companion.class": "3354ca3724fd43877ba4a910fb1d0dac0aad7d9b2221cdc82860e2c78494ac20",
+          "yuku/alkitab/songs/newdoc/PBlock.class": "fc0b8ab82c043d2f00efe867f72be45cd7181011b9510e065f7509e025f9ce22",
+          "yuku/alkitab/songs/newdoc/PBlockSerializer.class": "676953d228cdc094b78982188b90fa09c298f1c765ae20b3a796450613bef163",
+          "yuku/alkitab/songs/newdoc/RowBlock$Companion.class": "c2e7823f51c3930915deb8401367e5726db039c9b5bcaddf9668be34feb67abd",
+          "yuku/alkitab/songs/newdoc/RowBlock.class": "509db5b653b6890b9d10703ed1a3613fc34bfa3bff86806c9669cd03ab9094cb",
+          "yuku/alkitab/songs/newdoc/RowBlockSerializer.class": "99f959e483b775877f0ece2349afb89f46e46e7f1a02a9935c51af1ade3f1671",
+          "yuku/alkitab/songs/newdoc/ScriptureBlock$Companion.class": "577d0ed5ee688b37aebc2c9914d29afab9b692a7e3f8a343c4e668f7ff2b0aa3",
+          "yuku/alkitab/songs/newdoc/ScriptureBlock.class": "da86c6f64593d70a13db81dbd839e36f6c33904b60db00b620f8cae3ab85cab3",
+          "yuku/alkitab/songs/newdoc/ScriptureBlockSerializer.class": "3c5b34e2e4992d1f898385fce78729b481b0a73038895384ba705fcdf79f51ba",
+          "yuku/alkitab/songs/newdoc/SongDocument$$serializer.class": "1ed4253210a3d2c7207f9cad965f11a7503d6ae52fc9181a6536bf5dce482957",
+          "yuku/alkitab/songs/newdoc/SongDocument$Companion.class": "e47ba4fc6c0e8aa24e23a63bd0102503b75275097d380faa6784620baf5a1921",
+          "yuku/alkitab/songs/newdoc/SongDocument.class": "80011d3c2b98e6667f215a71375d9143670765610a1611fc3693258b813ef3ed",
+          "yuku/alkitab/songs/newdoc/SongDocumentKt.class": "7ec5179b40773467f10c1cdfc956a36cb164bf5893a82ea78c51012a6c7371e8",
+          "yuku/alkitab/songs/newdoc/SongDocumentSerializersKt.class": "5cc37ca71a52619d80530759b6f22fdf0f5837b700555a00e5dc2811a42431fb",
+          "yuku/alkitab/songs/newdoc/Span$$serializer.class": "414cc18bd19e5d08db59457320f1359555dba6cae2069dd16fbf4d51a4d03f7b",
+          "yuku/alkitab/songs/newdoc/Span$Companion.class": "e929857c77192f35913c3e7a8390a6711ca979eea9c6f54f6166508a52f0b6ba",
+          "yuku/alkitab/songs/newdoc/Span.class": "ce436ede960e42468b5e4375ca6826cdc4ee734cdc455c0c3bbaa2f4229ca3ab",
+          "yuku/alkitab/songs/newdoc/UnknownBlock.class": "ea339ad630c9cdc1c395e43c50f935adc671fc46c2255add7b8a060a2255d1c0",
+          "yuku/alkitab/songs/newdoc/Verse$$serializer.class": "97ea85265aa1ea507b79e5f7f1ce55f36f4e12b24a592685d842e3404ddc27d1",
+          "yuku/alkitab/songs/newdoc/Verse$Companion.class": "28151b42c8f84214d9221f8a8993916eee326d95fbab77fe9d59a465df353a1e",
+          "yuku/alkitab/songs/newdoc/Verse.class": "fdfd4b5c5688fc127d073fd97197b9e5ee3788a80680f0bb621616eb58a6d910",
+          "yuku/alkitab/songs/newdoc/VerseKind$Companion.class": "2703734cb9a80cbeb713e06b6a425cfb9d75103852f7685c8a4d299567d32d5e",
+          "yuku/alkitab/songs/newdoc/VerseKind.class": "b67f5308c01cd9000945a6b533609072914b2bf0fa1a844f1526683baf50cd43",
+          "yuku/alkitab/songs/newdoc/VerseLine$Companion.class": "a1942029290c33b648531a1f66c128417ea4e08431030d6097cf3af3963b3906",
+          "yuku/alkitab/songs/newdoc/VerseLine$Simple.class": "c4240235d96a4cf1b68b9f7c98183c9458885cd948057cda8fc1a414fc0297e5",
+          "yuku/alkitab/songs/newdoc/VerseLine$Wrapped.class": "70aa9c621dc9a96372bb5b99af48c14755268632a69e9b061fbb15bd51436480",
+          "yuku/alkitab/songs/newdoc/VerseLine.class": "97e7a30b88ea3a260df42e49c355c0f67e82435eb6c54cace01380b3770a3756",
+          "yuku/alkitab/songs/newdoc/VerseLineSerializer.class": "1c48af741708d516417af573ea7fe8de378e877b5ffee304f610a1bb0030a19f",
+          "yuku/alkitab/songs/newdoc/YoutubeBlock$Companion.class": "69416c3fa50cf2795e656aa124f1cedd2fcc22227db2bfd5034c32522f70b0f9",
+          "yuku/alkitab/songs/newdoc/YoutubeBlock.class": "7d6e5b1928d2bdaf749b70af220d3343689ee58e6adf0c030ea454192795b21e",
+          "yuku/alkitab/songs/newdoc/YoutubeBlockSerializer.class": "87fb6b1fb82ec6f47cdda03a086f6d7428376f4b95dd91cd0433330afdcc0528"
+        }
+      }
+    },
+    {
+      "id": "both_unchanged_app_sources_compile",
+      "outcome": "pass",
+      "detail": {
+        "source_hashes": {
+          "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt": "f0d62b37a07ae8d538805f8daea3052945f0d57dd81624d05d66e817c60ab485",
+          "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentText.kt": "6392a4452b7723e2fe889a545bd945ae0426414fd806c467fa0b6bde13f99ee2"
+        },
+        "classpath": [
+          "/workspace/work/song33-proof/actual-model",
+          "/workspace/work/song33-proof/jars/kotlin-stdlib.jar",
+          "/workspace/work/song33-proof/jars/kotlinx-serialization-core-jvm-1.5.1.jar",
+          "/workspace/work/song33-proof/jars/kotlinx-serialization-json-jvm-1.5.1.jar"
+        ],
+        "friend_paths": [
+          "/workspace/work/song33-proof/actual-model"
+        ],
+        "dependency_output_overlap": false
+      }
+    },
+    {
+      "id": "fixed_java_caller_both_outputs",
+      "outcome": "pass",
+      "detail": {
+        "caller_source_sha256": "5b95c15dc235ff160287e13bdf3dce011088abe36ec088649e1ad803da221cde",
+        "caller_class_hashes": {
+          "SongCalls.class": "f961f27daaa41dcfb344349e22eca974282bcd8bd5b7101d98ad0738b701ff8d"
+        },
+        "assertions": "Search field inclusion and exclusion, styled/wrapped lyric extraction, exact render text, Turkish default Locale independence, title/original title/authors/tune/musical/scripture placement, NORMAL/REFRAIN/TEXT formatting, caption fallback callback argument and count, multiple lyric blocks, empty/null fields"
+      }
+    },
+    {
+      "id": "matching_jvm_signatures",
+      "outcome": "pass",
+      "detail": "Compiled from \"SongDocumentSearch.kt\"\npublic final class yuku.alkitab.songs.newdoc.SongDocumentSearch {\n  public static final yuku.alkitab.songs.newdoc.SongDocumentSearch INSTANCE;\n    descriptor: Lyuku/alkitab/songs/newdoc/SongDocumentSearch;\n  public static final java.util.List<java.lang.String> searchableTexts(yuku.alkitab.songs.newdoc.SongDocument);\n    descriptor: (Lyuku/alkitab/songs/newdoc/SongDocument;)Ljava/util/List;\n\n  public static final java.util.List<java.lang.String> lyricLines(yuku.alkitab.songs.newdoc.SongDocument);\n    descriptor: (Lyuku/alkitab/songs/newdoc/SongDocument;)Ljava/util/List;\n}\nCompiled from \"SongDocumentText.kt\"\npublic final class yuku.alkitab.songs.newdoc.SongDocumentText {\n  public static final yuku.alkitab.songs.newdoc.SongDocumentText INSTANCE;\n    descriptor: Lyuku/alkitab/songs/newdoc/SongDocumentText;\n  public static final java.lang.String render(yuku.alkitab.songs.newdoc.SongDocument, java.lang.CharSequence, java.lang.String, kotlin.jvm.functions.Function1<? super java.lang.Integer, java.lang.String>, java.lang.String);\n    descriptor: (Lyuku/alkitab/songs/newdoc/SongDocument;Ljava/lang/CharSequence;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;)Ljava/lang/String;\n}\n"
+    },
+    {
+      "id": "kotlin_consumer_official",
+      "outcome": "pass",
+      "detail": "Pinned Kotlin consumers compile against each provider and cross-run against both outputs"
+    },
+    {
+      "id": "kotlin_consumer_candidate",
+      "outcome": "pass",
+      "detail": "Pinned Kotlin consumers compile against each provider and cross-run against both outputs"
+    }
+  ],
+  "commands": [
+    {
+      "label": "Build exact frozen integrated source snapshot in release mode",
+      "argv": [
+        "cargo",
+        "build",
+        "--release",
+        "--offline",
+        "--locked"
+      ],
+      "cwd": "/workspace/work/song33-proof/inputs",
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T105909682416Z-song-documents-integrated/000.log"
+    },
+    {
+      "label": "Pinned official actual Song model and serializer dependency compile",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/song33-proof/inputs/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocument.kt",
+        "/workspace/work/song33-proof/inputs/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSerializers.kt",
+        "-Xplugin=/workspace/work/song33-proof/jars/kotlinx-serialization-compiler-plugin.jar",
+        "-cp",
+        "/workspace/work/song33-proof/jars/kotlinx-serialization-core-jvm-1.5.1.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-json-jvm-1.5.1.jar",
+        "-d",
+        "/workspace/work/song33-proof/actual-model",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T105909682416Z-song-documents-integrated/001.log"
+    },
+    {
+      "label": "Official two unchanged app source module",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/song33-proof/inputs/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt",
+        "/workspace/work/song33-proof/inputs/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentText.kt",
+        "-cp",
+        "/workspace/work/song33-proof/actual-model:/workspace/work/song33-proof/jars/kotlin-stdlib.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-core-jvm-1.5.1.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-json-jvm-1.5.1.jar",
+        "-Xfriend-paths=/workspace/work/song33-proof/actual-model",
+        "-module-name",
+        "songproof",
+        "-d",
+        "/workspace/work/song33-proof/official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T105909682416Z-song-documents-integrated/002.log"
+    },
+    {
+      "label": "Candidate two unchanged app source module with genuine JARs",
+      "argv": [
+        "/workspace/work/song33-proof/compiler-release/korrust",
+        "/workspace/work/song33-proof/inputs/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentSearch.kt",
+        "/workspace/work/song33-proof/inputs/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/SongDocumentText.kt",
+        "-cp",
+        "/workspace/work/song33-proof/actual-model:/workspace/work/song33-proof/jars/kotlin-stdlib.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-core-jvm-1.5.1.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-json-jvm-1.5.1.jar",
+        "--friend-paths",
+        "/workspace/work/song33-proof/actual-model",
+        "--module-name",
+        "songproof",
+        "-d",
+        "/workspace/work/song33-proof/candidate"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T105909682416Z-song-documents-integrated/003.log"
+    },
+    {
+      "label": "Compile fixed Java SongCalls once against official output",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/song33-proof/official:/workspace/work/song33-proof/actual-model:/workspace/work/song33-proof/jars/kotlin-stdlib.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-core-jvm-1.5.1.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-json-jvm-1.5.1.jar",
+        "-d",
+        "/workspace/work/song33-proof/fixed-official-java",
+        "/workspace/work/song33-proof/inputs/tests/stable_properties/SongCalls.java"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T105909682416Z-song-documents-integrated/004.log"
+    },
+    {
+      "label": "official full independent Song assertions with JVM verification",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/song33-proof/fixed-official-java:/workspace/work/song33-proof/official:/workspace/work/song33-proof/actual-model:/workspace/work/song33-proof/jars/kotlin-stdlib.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-core-jvm-1.5.1.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-json-jvm-1.5.1.jar",
+        "SongCalls"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T105909682416Z-song-documents-integrated/005.log"
+    },
+    {
+      "label": "candidate full independent Song assertions with JVM verification",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/song33-proof/fixed-official-java:/workspace/work/song33-proof/candidate:/workspace/work/song33-proof/actual-model:/workspace/work/song33-proof/jars/kotlin-stdlib.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-core-jvm-1.5.1.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-json-jvm-1.5.1.jar",
+        "SongCalls"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T105909682416Z-song-documents-integrated/006.log"
+    },
+    {
+      "label": "official Song JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-protected",
+        "-classpath",
+        "/workspace/work/song33-proof/official",
+        "yuku.alkitab.songs.newdoc.SongDocumentSearch",
+        "yuku.alkitab.songs.newdoc.SongDocumentText"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T105909682416Z-song-documents-integrated/007.log"
+    },
+    {
+      "label": "candidate Song JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-protected",
+        "-classpath",
+        "/workspace/work/song33-proof/candidate",
+        "yuku.alkitab.songs.newdoc.SongDocumentSearch",
+        "yuku.alkitab.songs.newdoc.SongDocumentText"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T105909682416Z-song-documents-integrated/008.log"
+    },
+    {
+      "label": "Official Kotlin metadata consumer against official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/song33-proof/inputs/probes/SongConsumer.kt",
+        "-cp",
+        "/workspace/work/song33-proof/official:/workspace/work/song33-proof/actual-model:/workspace/work/song33-proof/jars/kotlin-stdlib.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-core-jvm-1.5.1.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-json-jvm-1.5.1.jar",
+        "-d",
+        "/workspace/work/song33-proof/consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T105909682416Z-song-documents-integrated/009.log"
+    },
+    {
+      "label": "Kotlin consumer official on official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/song33-proof/consumer-official:/workspace/work/song33-proof/official:/workspace/work/song33-proof/actual-model:/workspace/work/song33-proof/jars/kotlin-stdlib.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-core-jvm-1.5.1.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-json-jvm-1.5.1.jar",
+        "songconsumer.SongConsumerKt"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T105909682416Z-song-documents-integrated/010.log"
+    },
+    {
+      "label": "Kotlin consumer official on candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/song33-proof/consumer-official:/workspace/work/song33-proof/candidate:/workspace/work/song33-proof/actual-model:/workspace/work/song33-proof/jars/kotlin-stdlib.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-core-jvm-1.5.1.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-json-jvm-1.5.1.jar",
+        "songconsumer.SongConsumerKt"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T105909682416Z-song-documents-integrated/011.log"
+    },
+    {
+      "label": "Official Kotlin metadata consumer against candidate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/song33-proof/inputs/probes/SongConsumer.kt",
+        "-cp",
+        "/workspace/work/song33-proof/candidate:/workspace/work/song33-proof/actual-model:/workspace/work/song33-proof/jars/kotlin-stdlib.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-core-jvm-1.5.1.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-json-jvm-1.5.1.jar",
+        "-d",
+        "/workspace/work/song33-proof/consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T105909682416Z-song-documents-integrated/012.log"
+    },
+    {
+      "label": "Kotlin consumer candidate on official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/song33-proof/consumer-candidate:/workspace/work/song33-proof/official:/workspace/work/song33-proof/actual-model:/workspace/work/song33-proof/jars/kotlin-stdlib.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-core-jvm-1.5.1.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-json-jvm-1.5.1.jar",
+        "songconsumer.SongConsumerKt"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T105909682416Z-song-documents-integrated/013.log"
+    },
+    {
+      "label": "Kotlin consumer candidate on candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/song33-proof/consumer-candidate:/workspace/work/song33-proof/candidate:/workspace/work/song33-proof/actual-model:/workspace/work/song33-proof/jars/kotlin-stdlib.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-core-jvm-1.5.1.jar:/workspace/work/song33-proof/jars/kotlinx-serialization-json-jvm-1.5.1.jar",
+        "songconsumer.SongConsumerKt"
+      ],
+      "cwd": "/workspace/korrust",
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T105909682416Z-song-documents-integrated/014.log"
+    },
+    {
+      "label": "Generate readable HTML reports",
+      "argv": [
+        "python3",
+        "/workspace/work/song33/tools/reports.py"
+      ],
+      "cwd": "/workspace/work/song33",
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T105909682416Z-song-documents-integrated/015.log"
+    }
+  ],
+  "counts": {
+    "pass": 7
+  },
+  "model_hashes": {
+    "META-INF/main.kotlin_module": "6a7121b1e6891da889afc88dde37882dc5967c299b9c2c0584cd11c04aed01da",
+    "yuku/alkitab/songs/newdoc/Block$Companion.class": "14b9d74ed9047e2bb727c628e1b42ac5c49c92db7938ee0a6574bb987dc176d7",
+    "yuku/alkitab/songs/newdoc/Block.class": "9a30f99e914add15f4838a2e8afd5dd4b05c9f07c72c0d126cb8a1f712f7aa31",
+    "yuku/alkitab/songs/newdoc/BlockSerializer.class": "3d717fddb589890087d4fa611d18d882264ac652fa01d9e98544b35e347f272b",
+    "yuku/alkitab/songs/newdoc/GapBlock$Companion.class": "7d17e9f91972f0fbaf834e1687dd5e8415c218fc6f4344eb8e748b9c91cf6eb8",
+    "yuku/alkitab/songs/newdoc/GapBlock.class": "7287fcab93590e0056a72bfca222309b5ddd44849316ed584d840007c6551302",
+    "yuku/alkitab/songs/newdoc/GapBlockSerializer.class": "e0db77668665a8967b26c76103d996664399fd90e2e529e8d0ec2b206518cb47",
+    "yuku/alkitab/songs/newdoc/Line$Companion.class": "4fa9bce005c341f96d331238292470eed512407eebb30ce337533bf666aaf85b",
+    "yuku/alkitab/songs/newdoc/Line$Plain.class": "b3795ca5217b404c7da2f68b56b4c22582a07709a7012dcdcb215fd25bcf72c7",
+    "yuku/alkitab/songs/newdoc/Line$Styled.class": "bff0a170a5bb21f17e9962dccd241f962b1e098380cfaf4486e8b19bc57fd182",
+    "yuku/alkitab/songs/newdoc/Line.class": "4cffbbef0221bddc909264810a1ee0dfb89126b595b6f361f6e95628da200635",
+    "yuku/alkitab/songs/newdoc/LineSerializer.class": "9f69846383be646a66a854cf0b0486f3fcb75425d5a7fbc9c27e046f89dc2d9a",
+    "yuku/alkitab/songs/newdoc/LyricBlock$Companion.class": "829fd5208b4535d2d999a82b9a18b103f7ac4b51348071056e04c2df6be0eea1",
+    "yuku/alkitab/songs/newdoc/LyricBlock.class": "5447cabe3f400e1c23eb4928d5d6c5ce46f786b0d496cc40ff3e990ecb43f26a",
+    "yuku/alkitab/songs/newdoc/LyricBlockSerializer.class": "7fb2889d7379d0d12ba500812dfd63d39eaf2f45d437c7adf77ec92b86dd6780",
+    "yuku/alkitab/songs/newdoc/Meta$$serializer.class": "95c93769ecbf52f2b7e3fca60b75cae804ded566a1caa574e17142f6fced6dd0",
+    "yuku/alkitab/songs/newdoc/Meta$Companion.class": "df63efcd2c348d3ae08863c9e7f00a8df838f1cb4fccad7ae68dbbb39198efe8",
+    "yuku/alkitab/songs/newdoc/Meta.class": "44de4c4e96bc414c8bc6192b9595906a4b1ce75e6309a65e9db76a5ded64690a",
+    "yuku/alkitab/songs/newdoc/PBlock$Companion.class": "3354ca3724fd43877ba4a910fb1d0dac0aad7d9b2221cdc82860e2c78494ac20",
+    "yuku/alkitab/songs/newdoc/PBlock.class": "fc0b8ab82c043d2f00efe867f72be45cd7181011b9510e065f7509e025f9ce22",
+    "yuku/alkitab/songs/newdoc/PBlockSerializer.class": "676953d228cdc094b78982188b90fa09c298f1c765ae20b3a796450613bef163",
+    "yuku/alkitab/songs/newdoc/RowBlock$Companion.class": "c2e7823f51c3930915deb8401367e5726db039c9b5bcaddf9668be34feb67abd",
+    "yuku/alkitab/songs/newdoc/RowBlock.class": "509db5b653b6890b9d10703ed1a3613fc34bfa3bff86806c9669cd03ab9094cb",
+    "yuku/alkitab/songs/newdoc/RowBlockSerializer.class": "99f959e483b775877f0ece2349afb89f46e46e7f1a02a9935c51af1ade3f1671",
+    "yuku/alkitab/songs/newdoc/ScriptureBlock$Companion.class": "577d0ed5ee688b37aebc2c9914d29afab9b692a7e3f8a343c4e668f7ff2b0aa3",
+    "yuku/alkitab/songs/newdoc/ScriptureBlock.class": "da86c6f64593d70a13db81dbd839e36f6c33904b60db00b620f8cae3ab85cab3",
+    "yuku/alkitab/songs/newdoc/ScriptureBlockSerializer.class": "3c5b34e2e4992d1f898385fce78729b481b0a73038895384ba705fcdf79f51ba",
+    "yuku/alkitab/songs/newdoc/SongDocument$$serializer.class": "1ed4253210a3d2c7207f9cad965f11a7503d6ae52fc9181a6536bf5dce482957",
+    "yuku/alkitab/songs/newdoc/SongDocument$Companion.class": "e47ba4fc6c0e8aa24e23a63bd0102503b75275097d380faa6784620baf5a1921",
+    "yuku/alkitab/songs/newdoc/SongDocument.class": "80011d3c2b98e6667f215a71375d9143670765610a1611fc3693258b813ef3ed",
+    "yuku/alkitab/songs/newdoc/SongDocumentKt.class": "7ec5179b40773467f10c1cdfc956a36cb164bf5893a82ea78c51012a6c7371e8",
+    "yuku/alkitab/songs/newdoc/SongDocumentSerializersKt.class": "5cc37ca71a52619d80530759b6f22fdf0f5837b700555a00e5dc2811a42431fb",
+    "yuku/alkitab/songs/newdoc/Span$$serializer.class": "414cc18bd19e5d08db59457320f1359555dba6cae2069dd16fbf4d51a4d03f7b",
+    "yuku/alkitab/songs/newdoc/Span$Companion.class": "e929857c77192f35913c3e7a8390a6711ca979eea9c6f54f6166508a52f0b6ba",
+    "yuku/alkitab/songs/newdoc/Span.class": "ce436ede960e42468b5e4375ca6826cdc4ee734cdc455c0c3bbaa2f4229ca3ab",
+    "yuku/alkitab/songs/newdoc/UnknownBlock.class": "ea339ad630c9cdc1c395e43c50f935adc671fc46c2255add7b8a060a2255d1c0",
+    "yuku/alkitab/songs/newdoc/Verse$$serializer.class": "97ea85265aa1ea507b79e5f7f1ce55f36f4e12b24a592685d842e3404ddc27d1",
+    "yuku/alkitab/songs/newdoc/Verse$Companion.class": "28151b42c8f84214d9221f8a8993916eee326d95fbab77fe9d59a465df353a1e",
+    "yuku/alkitab/songs/newdoc/Verse.class": "fdfd4b5c5688fc127d073fd97197b9e5ee3788a80680f0bb621616eb58a6d910",
+    "yuku/alkitab/songs/newdoc/VerseKind$Companion.class": "2703734cb9a80cbeb713e06b6a425cfb9d75103852f7685c8a4d299567d32d5e",
+    "yuku/alkitab/songs/newdoc/VerseKind.class": "b67f5308c01cd9000945a6b533609072914b2bf0fa1a844f1526683baf50cd43",
+    "yuku/alkitab/songs/newdoc/VerseLine$Companion.class": "a1942029290c33b648531a1f66c128417ea4e08431030d6097cf3af3963b3906",
+    "yuku/alkitab/songs/newdoc/VerseLine$Simple.class": "c4240235d96a4cf1b68b9f7c98183c9458885cd948057cda8fc1a414fc0297e5",
+    "yuku/alkitab/songs/newdoc/VerseLine$Wrapped.class": "70aa9c621dc9a96372bb5b99af48c14755268632a69e9b061fbb15bd51436480",
+    "yuku/alkitab/songs/newdoc/VerseLine.class": "97e7a30b88ea3a260df42e49c355c0f67e82435eb6c54cace01380b3770a3756",
+    "yuku/alkitab/songs/newdoc/VerseLineSerializer.class": "1c48af741708d516417af573ea7fe8de378e877b5ffee304f610a1bb0030a19f",
+    "yuku/alkitab/songs/newdoc/YoutubeBlock$Companion.class": "69416c3fa50cf2795e656aa124f1cedd2fcc22227db2bfd5034c32522f70b0f9",
+    "yuku/alkitab/songs/newdoc/YoutubeBlock.class": "7d6e5b1928d2bdaf749b70af220d3343689ee58e6adf0c030ea454192795b21e",
+    "yuku/alkitab/songs/newdoc/YoutubeBlockSerializer.class": "87fb6b1fb82ec6f47cdda03a086f6d7428376f4b95dd91cd0433330afdcc0528"
+  },
+  "application_output_hashes": {
+    "official": {
+      "META-INF/songproof.kotlin_module": "e871d64c498617a57844801a5921b0eb078931ca7429f57b863de02b58cbb2a0",
+      "yuku/alkitab/songs/newdoc/SongDocumentSearch.class": "73ff8d9ef210ba554600091e991ad548964ee79a1b33f91304cd477880bc9bba",
+      "yuku/alkitab/songs/newdoc/SongDocumentText$WhenMappings.class": "f005afa70dbb2a59bcf31b6efb17de8aeb9c9f26b6dbee913e0797308f782b52",
+      "yuku/alkitab/songs/newdoc/SongDocumentText.class": "bac2dd894f1ad52f12895abdea037eb9266fe85dc28dbc54478a627eae2bdc4d"
+    },
+    "candidate": {
+      ".korrust/module-736f6e6770726f6f66.index": "6777e5ea18471d6b5d362221e68948622a26bb6560ac07ff88b21d3e3c5f5f0e",
+      "yuku/alkitab/songs/newdoc/SongDocumentSearch$lambda$752$0.class": "e0e057b7a5701a5a388659f564f2f13c028805af67355ddd598e4a62a4dcfa8a",
+      "yuku/alkitab/songs/newdoc/SongDocumentSearch$lambda$807$1.class": "a47dc9b3e780b33b58c134778b47dfa67133609e820feceeff4d1d28ef2bf9d7",
+      "yuku/alkitab/songs/newdoc/SongDocumentSearch.class": "ba0d4acd4c8e14305c2af782da0e515820d645d2fae8f9f13eeb7e9f38c1565a",
+      "yuku/alkitab/songs/newdoc/SongDocumentText$lambda$1002$1.class": "38d6ab815d9d3011c5f9e317e1cda43a0c765499580666796ade5f10ea02af4b",
+      "yuku/alkitab/songs/newdoc/SongDocumentText$lambda$1232$2.class": "03de18a3664ee8e01b6499773c28e04b1748c9c57613c187d9668147a08ead71",
+      "yuku/alkitab/songs/newdoc/SongDocumentText$lambda$1268$3.class": "fe92d0482795c6b529cbbcb7d90e1caf60cfd838079a0d21c0f30a782e2fca27",
+      "yuku/alkitab/songs/newdoc/SongDocumentText$lambda$1348$4.class": "29c01f7e3066d806adc4f00b2d8c35f93a3c6b6cf79adac195e4a7c1e0f3d692",
+      "yuku/alkitab/songs/newdoc/SongDocumentText$lambda$1384$5.class": "70d1e2c2e069c33852fdd4d41410febe12f8e16bf4c9a71b6093c585dde15cee",
+      "yuku/alkitab/songs/newdoc/SongDocumentText$lambda$1493$6.class": "9d307316a8ff0a9aa61ab61042ca9e2745ac679f95070b086f29d056e82a346a",
+      "yuku/alkitab/songs/newdoc/SongDocumentText$lambda$1520$7.class": "98dc42d61da6f2fe7a27c463f7aca11b8463388635fb0cf75a0527f101eb5c3d",
+      "yuku/alkitab/songs/newdoc/SongDocumentText$lambda$1800$8.class": "fa8acf3532d49a0c0b7432bcb7c240618819106aa4c63632df9026ac6589d68b",
+      "yuku/alkitab/songs/newdoc/SongDocumentText$lambda$1830$9.class": "fbd63e5ed2adcd90df89c2aaa5db4dcdb442799957164ad91aee04949f101bb2",
+      "yuku/alkitab/songs/newdoc/SongDocumentText$lambda$753$0.class": "95983a69a064a2cf978623288e64f4da086c62cc2a0db5ff2f1bf2c3fa22f48e",
+      "yuku/alkitab/songs/newdoc/SongDocumentText$lambda$923$0.class": "5331401faeb729f9f2ff159a002f773d01ecc301e1841dfd07bd5b7921429ec9",
+      "yuku/alkitab/songs/newdoc/SongDocumentText.class": "be89e3db8c209b029ee6de0aab6910ee983d67b27b958f0fe39a31b57817be0f"
+    }
+  }
+}
