@@ -61,6 +61,8 @@ mod overloads;
 mod references;
 #[path = "check_relations.rs"]
 mod relations;
+#[path = "check_stable_properties.rs"]
+mod stable_properties;
 
 #[path = "check_unsigned.rs"]
 mod unsigned;
@@ -719,7 +721,7 @@ struct Checker<'a> {
     allow_return: bool,
     contract_facts: HashMap<usize, Vec<contracts::Fact>>,
     contract_registration: Option<usize>,
-    refinements: HashMap<u8, Type>,
+    refinements: HashMap<stable_properties::Subject, Type>,
     initialized: HashSet<u8>,
     loop_depth: usize,
     scopes: Vec<HashMap<String, Local>>,
@@ -973,13 +975,14 @@ impl Checker<'_> {
     }
     fn refine(&mut self, condition: &Expr, truth: bool) {
         self.refine_contract(condition, truth);
+        self.refine_stable_property(condition, truth);
         if let ExprKind::TypeOperation(op, value, target) = &condition.kind {
             if (op == "is" && truth) || (op == "!is" && !truth) {
                 if let ExprKind::Name(name) = &value.kind {
                     if let Some(local) = self.local(name) {
                         if !local.mutable {
                             if let Ok(target) = self.resolve(target, condition.offset) {
-                                self.refinements.insert(local.slot, target);
+                                self.refinements.insert(local.slot.into(), target);
                             }
                         }
                     }
@@ -1014,10 +1017,10 @@ impl Checker<'_> {
                         if !local.mutable {
                             match local.ty {
                                 Type::Nullable(inner) => {
-                                    self.refinements.insert(local.slot, *inner);
+                                    self.refinements.insert(local.slot.into(), *inner);
                                 }
                                 ty @ Type::Parameter { .. } => {
-                                    self.refinements.insert(local.slot, ty);
+                                    self.refinements.insert(local.slot.into(), ty);
                                 }
                                 _ => {}
                             }
@@ -1840,7 +1843,7 @@ impl Checker<'_> {
             },
         );
         self.scopes.push(scope);
-        self.refinements.insert(slot, inner);
+        self.refinements.insert(slot.into(), inner);
         self.initialized.insert(slot);
         let property = Expr {
             offset,
@@ -1862,7 +1865,7 @@ impl Checker<'_> {
         let result = self.value(&expression);
         self.scopes.pop();
         self.initialized.remove(&slot);
-        self.refinements.remove(&slot);
+        self.refinements.remove(&slot.into());
         let result = result?;
         if result.ty == Type::Unit {
             return Err(Diagnostic::new(
@@ -1942,7 +1945,7 @@ impl Checker<'_> {
             if let ExprKind::Name(name) = &source_left.kind {
                 if let Some(local) = self.local(name) {
                     if !local.mutable {
-                        self.refinements.insert(local.slot, inner.clone());
+                        self.refinements.insert(local.slot.into(), inner.clone());
                     }
                 }
             }
@@ -3935,7 +3938,8 @@ impl Checker<'_> {
             return self.value(&labeled);
         }
         if !matches!(expr.kind, ExprKind::Call(..)) {
-            return self.value_untracked(expr);
+            let value = self.value_untracked(expr)?;
+            return self.refined_property_value(expr, value);
         }
         let previous = self.contract_registration.take();
         let result = self.value_untracked(expr);
@@ -4466,7 +4470,7 @@ impl Checker<'_> {
                             format!("Variable must be initialized before use: {name}"),
                         ));
                     }
-                    if let Some(refined) = self.refinements.get(&local.slot) {
+                    if let Some(refined) = self.refinements.get(&local.slot.into()) {
                         if !local.mutable {
                             let raw = Value {
                                 ty: local.ty.clone(),

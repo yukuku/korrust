@@ -1,0 +1,4 @@
+$ /workspace/work/song33/references/kotlinc/bin/kotlinc /workspace/work/song33/tests/stable_properties/InvalidDelegated.kt -cp /workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar -Xfriend-paths=/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency -d /workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official-InvalidDelegated -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/stable_properties/InvalidDelegated.kt:2:61: error: smart cast to 'String' is impossible, because 'text' is a property that has an open or custom getter.
+fun bad(value: DelegatedBox): Int = if (value.text != null) value.text.length else 0
+                                                            ^^^^^^^^^^

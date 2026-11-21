@@ -152,6 +152,7 @@ pub(crate) struct JavaField {
 
 #[derive(Clone, Debug)]
 pub(crate) struct KotlinField {
+    pub stable: bool,
     pub name: String,
     pub ty: Type,
     pub visibility: u8,

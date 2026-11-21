@@ -747,7 +747,7 @@ impl Checker<'_> {
                 match nullable_parameter_bound(&value.ty, &mut HashSet::new(), 0) {
                     Some(false) => {},
                     Some(true) => {
-                        let refined = matches!(&receiver.kind, ExprKind::Name(name) if self.local(name).is_some_and(|local| self.refinements.contains_key(&local.slot)));
+                        let refined = matches!(&receiver.kind, ExprKind::Name(name) if self.local(name).is_some_and(|local| self.refinements.contains_key(&local.slot.into())));
                         let unsupported = refined || matches!(receiver.kind, ExprKind::NonNull(_));
                         return Err(literal_error(offset, if unsupported { "Class literals require unsupported definitely non-null type-parameter semantics" } else { "Expression in a class literal has a possibly nullable type parameter" }, !unsupported));
                     },

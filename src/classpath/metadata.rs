@@ -1880,6 +1880,9 @@ pub(super) fn attach_with_values(
                                 field.unsupported = false;
                             }
                             field.kotlin = Some(KotlinField {
+                                stable: flags & (48 | 256 | 4096 | 32768) == 0
+                                    && property.integer(7)?.unwrap_or(flags & 63) & 64 == 0
+                                    && field.access & 0x18 == 0x10,
                                 name: name.into(),
                                 ty: ty.clone(),
                                 visibility: ((flags >> 1) & 7) as u8,

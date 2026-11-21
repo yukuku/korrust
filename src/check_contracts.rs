@@ -124,10 +124,10 @@ impl Checker<'_> {
         if let Some(facts) = self.contract_facts.get(&call.offset) {
             for fact in facts {
                 if fact.returned == returned && (exact || fact.boolean_result) {
-                    match self.refinements.get(&fact.slot) {
+                    match self.refinements.get(&fact.slot.into()) {
                         Some(previous) if self.subtype(previous, &fact.ty) => {}
                         _ => {
-                            self.refinements.insert(fact.slot, fact.ty.clone());
+                            self.refinements.insert(fact.slot.into(), fact.ty.clone());
                         }
                     }
                 }

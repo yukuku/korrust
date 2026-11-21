@@ -761,7 +761,7 @@ impl Checker<'_> {
             let (body, _) = self.block(&[syntax::Statement { offset, kind }])?;
             if let ExprKind::Name(name) = &target.kind {
                 if let Some(local) = self.local(name) {
-                    self.refinements.remove(&local.slot);
+                    self.refinements.remove(&local.slot.into());
                 }
             }
             Ok(Statement::Expression(Self::wrap_lets(
@@ -816,7 +816,7 @@ impl Checker<'_> {
             if let Some(local) = self.local(name) {
                 if local.ty == Type::Int && local.mutable && self.initialized.contains(&local.slot)
                 {
-                    self.refinements.remove(&local.slot);
+                    self.refinements.remove(&local.slot.into());
                     return Ok(Value {
                         ty: Type::Int,
                         kind: if increment {

@@ -1072,6 +1072,7 @@ fn constants(class: &mut JavaClass, constants: &[crate::syntax::ConstDecl]) -> R
         };
         class.fields.push(JavaField {
             kotlin: Some(KotlinField {
+                stable: false,
                 name: c.name.clone(),
                 ty: ty.clone(),
                 visibility: if c.private {

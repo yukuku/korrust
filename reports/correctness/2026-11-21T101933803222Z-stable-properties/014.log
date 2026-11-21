@@ -1,0 +1,4 @@
+$ /workspace/work/song33/references/kotlinc/bin/kotlinc /workspace/work/song33/tests/stable_properties/InvalidCallReceiver.kt -cp /workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar -Xfriend-paths=/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency -d /workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official-InvalidCallReceiver -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/stable_properties/InvalidCallReceiver.kt:3:54: error: only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'String?'.
+fun bad(): Int = if (next().text != null) next().text.length else 0
+                                                     ^

@@ -1,0 +1,4 @@
+$ /workspace/work/song33/references/kotlinc/bin/kotlinc /workspace/work/song33/tests/stable_properties/InvalidOpposite.kt -cp /workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar -Xfriend-paths=/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency -d /workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official-InvalidOpposite -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/stable_properties/InvalidOpposite.kt:2:62: error: only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'Nothing?'.
+fun bad(value: Box): Int = if (value.text == null) value.text.length else 0
+                                                             ^

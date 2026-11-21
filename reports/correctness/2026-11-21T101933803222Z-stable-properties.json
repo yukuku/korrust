@@ -1,0 +1,853 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-21T10:19:33.803222+00:00",
+  "status": "complete",
+  "compiler": {
+    "path": "target/checks/2026-11-21T101933803222Z-stable-properties/korrust-frozen",
+    "sha256": "aa80f85b24b0f23104f5f52c756e1ad8cd04f04f1b544fe96cc4897227fa6b85",
+    "source_revision": "e8bac257caff6df6610c51cb2242f8bd6eb65f56"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "artifact_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "frozen_input_hashes": {
+    "src/annotation_declarations.rs": "ac237d773c71a2fc26faeb2d79b837265c6d557ef7bb31aab748fa8b1c7572be",
+    "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+    "src/bytecode/annotation_files.rs": "4f3c136aaa2ed30b85d2a4cc2a9be8331b2da9682d450f6a4dcc135ef04ab86a",
+    "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+    "src/bytecode/class_companion.rs": "2dacd7b21d48fcdd59955fa30b58a6e88bb67642d4bd6dd9d845842b1880417a",
+    "src/bytecode/data.rs": "c99cb60546cbe8873ef99d1ab057aa7439f4239fce13927d324dfea078dbe98c",
+    "src/bytecode/defaults.rs": "ebdb1c988443c1b984081aa8555c5bb2f649685e3bbfef011cd138c0bf29aecd",
+    "src/bytecode/enums.rs": "25fe788c54554741347ba6bb4b84cbee7c324db6925209a434fb139ceb66b2b1",
+    "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+    "src/bytecode/inline.rs": "e598575c521153d592face8dd19018beaf89be45fbde985ae3845526e5a0be44",
+    "src/bytecode/interfaces.rs": "02e19cc9024bda962e06cedec8e15ebfc8b9f1ccd7f95ec11980ab46de917ae6",
+    "src/bytecode/lambdas.rs": "75a4ad990edd822dffaadc1be8cccf6d6cb345848f147e6b3a30c17dc0351360",
+    "src/bytecode/objects.rs": "142f8e5c70f0ac61423c3887447c54865b7b657768cf683fc553fde398a17e7e",
+    "src/bytecode/suspend.rs": "79e1064dd35da268956f91b167a779ce0957cefa8fef629789a2fb3afee987b7",
+    "src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+    "src/bytecode.rs": "d610c4766d35743cc7864a44fec87f93715b5c4c486cb6c3f6790b738434f26b",
+    "src/check.rs": "5c54bfcc164f5a203f6bd9942cf73a92c1e8b4f9e5b5a2283b6a2920a7efd644",
+    "src/check_annotation_placements.rs": "b6c899c4a5c2f3269ae1b93268b2ede0f29f4ce68c5ef42b833d7edcecf2d2cc",
+    "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+    "src/check_anonymous.rs": "fd523e4ff9173f209bde5b6cec9c5e13bae942da680e752611b242b0d8cc0f53",
+    "src/check_captures.rs": "18ad01412f9b7da141573f44d422e3987ac14df12175fcda3b2aa69ac90463e4",
+    "src/check_class_delegation.rs": "25cd077ed2b3b51158a53efb2c8190296064fe607db399ab416a3d51a4df2be0",
+    "src/check_classes.rs": "868f2316b9a9449db99baa5a01d0ccd65b90947013ab24bbf0afb76923205ff6",
+    "src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+    "src/check_control.rs": "19e7fe2376f65209fd0d9b04be9254ec868fed288707d34631f30e841f3eaca7",
+    "src/check_declarations.rs": "f9702e12d2928736af2b0fcf7e3319a6c3fff26a9e09ad9315d10d1d3a641812",
+    "src/check_delegates.rs": "6ba1fb0aa2ba511c31accd8a06282490a94b8cbf4857c5687ddab3a71236beb2",
+    "src/check_enums.rs": "2a16c9e4dbae29a8c479ab5cddefad66f0bdd09143e2a0cde8428d2d0c174d8b",
+    "src/check_functions.rs": "567bb05543fe7d8788be999969451be38c590672dd22d4b793047889a169c762",
+    "src/check_inner_classes.rs": "60a4cdbfef5b069e0312c3ea7511b0de6a862d20ff393c464ea080968aa233cd",
+    "src/check_interfaces.rs": "c733506c29aeb5738c3266d03579e420bf26719ec59bd09fc4fc4d542c149f15",
+    "src/check_ir_walk.rs": "11b8f21285e9743b5a71fdb7de6826cc3e85689d9622380fae58fc676dce0195",
+    "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+    "src/check_library.rs": "4f21a889fc7a64f09eb5dfbfb4aac8bfbe1acecc54cf1be313980cbcf4c2def2",
+    "src/check_member_extensions.rs": "c97b70cbd56da4588817a5cdd294cb724009feee3abbcb29a5dde2846bb8d3f9",
+    "src/check_objects.rs": "1b73e97a598d8dd17d977304f77532c7262c2b9286e4196153782f6eaf6e7ba4",
+    "src/check_operations.rs": "11d6f36d03a35e430369917ed85cf80e5888cadaf201598662a8d8500f11b684",
+    "src/check_overloads.rs": "d418fb5ed0880483b5d6ac58ce8093d0eb13804ff1b4176e19abd4b1a3e589cd",
+    "src/check_references.rs": "3a4fd327b7a13f48e69d5fbd059c76cbb8d2ce50ae2e140a762a06d9e1e6eab8",
+    "src/check_relations.rs": "b68377816cd0642ce6184886f09792aacedade20c14c6c115a1b43e1e7904ad5",
+    "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+    "src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+    "src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+    "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+    "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+    "src/check_variant_signatures.rs": "487fea7351445905782f472e297e15080a4244ce34a4a4aa9904b30c01263a86",
+    "src/classpath/aliases.rs": "745fa67edb3216b77ce5e65f63b75c51ac221f5b49d3e08a4327990bd9e6f4c5",
+    "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+    "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+    "src/classpath/metadata.rs": "45c98d86e202e8679f420585e6315c15b65dd38ad80ef3dc6bed5cb7fdd6d1d1",
+    "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+    "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+    "src/classpath/signature.rs": "2dbed1bcacc67d8ffadd01d466676a969dc849eaa7d397d6c390e61a4ec12c7c",
+    "src/classpath/source.rs": "af8c354f522b4e59eabe6ee75698d5c1ca0bfc28ca2f9d3d49ee72b18b7e3085",
+    "src/classpath/source_enums.rs": "a3ed1a550007856e482624b65d024249e503524b577aa2a5f99b9db334ee1374",
+    "src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+    "src/classpath.rs": "973075b660574f3f82aaa3aa8900bab6ece39a4da68f5228b13210f3389e9d36",
+    "src/compiled_inline.rs": "7acd0769184152ea2659a9217886608cff7219eea5a47d25cf573e0f0318d7fa",
+    "src/const_eval.rs": "6714c1d6296d1c3f60fab09891a492f66a9850b3ff3ee2b5a7df42400dfdcdaa",
+    "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+    "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+    "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+    "src/lib.rs": "fa65d18a3567992124b03314127594cefa2abd36dd70af78e8ded63b8801f6a2",
+    "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+    "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+    "src/metadata.rs": "556b933de58c6c9927da29159891fd00f97b11b1ef7a2325d0dab92c6a7dbe84",
+    "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+    "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+    "src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+    "src/syntax.rs": "39153a0deb47a7a18059ee5e6add94e400b2401cc8767119aafdf6509364e441",
+    "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+    "src/visibility.rs": "0268165a314fe1a169d5604fdda38968b0bbda07f11c60db92d36a7247f879c7",
+    "tests/stable_properties/Calls.java": "8074ee0eb35711d0cbed9bf4272151507af7cbfe33145eb41b5c294557c4cc0d",
+    "tests/stable_properties/Consumer.kt": "0aeca6d3928fc27aa46709f1add120cc591f125f2648f3a1ac544614f74dce8d",
+    "tests/stable_properties/CrossModule.kt": "d0654b37b021a55209abb60c39ad9f876599f180aa329ccab2feb5c2bbeb09f6",
+    "tests/stable_properties/Dependency.kt": "a539e69d12d5cb4bffc2f40ac88dac02d9a227e763e9ce35ccfb9701b340e8d6",
+    "tests/stable_properties/InvalidCallReceiver.kt": "d5ae2fb227385eea1342f75a000f8e92a3af6e5bdf9362b5100003caa5a1fcc4",
+    "tests/stable_properties/InvalidChangedReceiver.kt": "b9549344fe6bb6c819798b68f6de7643fb406fd41616fbd78f28321acc68604d",
+    "tests/stable_properties/InvalidCustomGetter.kt": "131d3ebd4be2d36a0ee7026c920df52f74c4ef2d907383218b0ee883fe70f884",
+    "tests/stable_properties/InvalidDelegated.kt": "4be04172a26e7f6dc71d2137bdfd5562ad53a13d6904b65c94c9be13837aed33",
+    "tests/stable_properties/InvalidDifferentReceiver.kt": "7e28eb2f0510837c2ab96218f8c05e7f7830a87b31cf57d1fb3f95753a7615b5",
+    "tests/stable_properties/InvalidEscapedGuard.kt": "1aad283c23b979ccfe09df53776171acf6ab1547eb727fab2a14a47736a4697d",
+    "tests/stable_properties/InvalidMutableProperty.kt": "25c8c8dbff1c3be06f1e9e77ab909dd79d83fb3aa672a35b2f99e21562c5bc81",
+    "tests/stable_properties/InvalidOpenProperty.kt": "ecd86b9abdd27329e9c05a5945847ed2e4a644f4573406f6dba37fe95d89ddde",
+    "tests/stable_properties/InvalidOpposite.kt": "a49b27baac0a9dad33e2b90155b24a014ffd6f88dbdd57177cab8066341b669f",
+    "tests/stable_properties/InvalidShadowedReceiver.kt": "a307572d653d3628570f85c7995ba1d11e03d38a79019ff7db4b67a3a170804b",
+    "tests/stable_properties/Models.kt": "10db96ac2b9d5be40ab09e9003a3651120cd38bba77e1641c66428ba3c0ba2fa",
+    "tests/stable_properties/SongCalls.java": "5b95c15dc235ff160287e13bdf3dce011088abe36ec088649e1ad803da221cde",
+    "tests/stable_properties.rs": "322e1fc3fe281b107f13afa953e53fff6a052af8800421bfe2bebd417fa2eb17",
+    "tools/check_stable_properties.py": "1c205d281c7789fb254961bdac05f5f9e02dadbd56b9ff844bd550b6c0d828b9",
+    "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+    "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+    "target/checks/2026-11-21T101933803222Z-stable-properties/korrust-frozen": "aa80f85b24b0f23104f5f52c756e1ad8cd04f04f1b544fe96cc4897227fa6b85",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "effective_options": {
+    "language_version": "2.3",
+    "api_version": "2.3",
+    "jvm_target": "1.8"
+  },
+  "scope": "Compiled Kotlin final default val property smartcasts after null guards, with stable immutable local receiver identity and chains, constrained to explicit friend dependencies",
+  "limitations": [
+    "Source property headers do not yet expose stability",
+    "Mutable local receivers and captured receivers remain unsupported",
+    "No open, delegated, custom getter, mutable property, extension property or ordinary external module smartcasts",
+    "No application build or performance claim"
+  ],
+  "reproduction_command": [
+    "python3",
+    "tools/check_stable_properties.py",
+    "--candidate",
+    "/workspace/korrust/target/song33/release/korrust",
+    "--baseline",
+    "/workspace/korrust/target/release/korrust"
+  ],
+  "commands": [
+    {
+      "label": "real compiled Kotlin dependency",
+      "argv": [
+        "/workspace/work/song33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/song33/tests/stable_properties/Dependency.kt",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/000.log"
+    },
+    {
+      "label": "official matching friend compilation",
+      "argv": [
+        "/workspace/work/song33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/song33/tests/stable_properties/Models.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-Xfriend-paths=/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/001.log"
+    },
+    {
+      "label": "candidate matching friend compilation",
+      "argv": [
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/korrust-frozen",
+        "/workspace/work/song33/tests/stable_properties/Models.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--friend-paths",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/002.log"
+    },
+    {
+      "label": "fixed Java assertions against official only",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official:/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/callers",
+        "/workspace/work/song33/tests/stable_properties/Calls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/003.log"
+    },
+    {
+      "label": "official fixed caller JVM verification",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/callers:/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official:/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "stable.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/004.log"
+    },
+    {
+      "label": "candidate fixed caller JVM verification",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/callers:/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/candidate:/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "stable.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/005.log"
+    },
+    {
+      "label": "official JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-protected",
+        "-classpath",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official",
+        "stable.ModelsKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/006.log"
+    },
+    {
+      "label": "candidate JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-protected",
+        "-classpath",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/candidate",
+        "stable.ModelsKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/007.log"
+    },
+    {
+      "label": "official Kotlin metadata consumer against official",
+      "argv": [
+        "/workspace/work/song33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/song33/tests/stable_properties/Consumer.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official:/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/008.log"
+    },
+    {
+      "label": "Kotlin consumer official on official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/consumer-official:/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official:/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/009.log"
+    },
+    {
+      "label": "Kotlin consumer official on candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/consumer-official:/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/candidate:/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/010.log"
+    },
+    {
+      "label": "official Kotlin metadata consumer against candidate",
+      "argv": [
+        "/workspace/work/song33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/song33/tests/stable_properties/Consumer.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/candidate:/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/011.log"
+    },
+    {
+      "label": "Kotlin consumer candidate on official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/consumer-candidate:/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official:/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/012.log"
+    },
+    {
+      "label": "Kotlin consumer candidate on candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/consumer-candidate:/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/candidate:/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/013.log"
+    },
+    {
+      "label": "official rejects InvalidCallReceiver",
+      "argv": [
+        "/workspace/work/song33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/song33/tests/stable_properties/InvalidCallReceiver.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-Xfriend-paths=/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official-InvalidCallReceiver",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/014.log"
+    },
+    {
+      "label": "candidate rejects InvalidCallReceiver",
+      "argv": [
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/korrust-frozen",
+        "/workspace/work/song33/tests/stable_properties/InvalidCallReceiver.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--friend-paths",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/candidate-InvalidCallReceiver"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/015.log"
+    },
+    {
+      "label": "official rejects InvalidChangedReceiver",
+      "argv": [
+        "/workspace/work/song33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/song33/tests/stable_properties/InvalidChangedReceiver.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-Xfriend-paths=/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official-InvalidChangedReceiver",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/016.log"
+    },
+    {
+      "label": "candidate rejects InvalidChangedReceiver",
+      "argv": [
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/korrust-frozen",
+        "/workspace/work/song33/tests/stable_properties/InvalidChangedReceiver.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--friend-paths",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/candidate-InvalidChangedReceiver"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/017.log"
+    },
+    {
+      "label": "official rejects InvalidCustomGetter",
+      "argv": [
+        "/workspace/work/song33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/song33/tests/stable_properties/InvalidCustomGetter.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-Xfriend-paths=/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official-InvalidCustomGetter",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/018.log"
+    },
+    {
+      "label": "candidate rejects InvalidCustomGetter",
+      "argv": [
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/korrust-frozen",
+        "/workspace/work/song33/tests/stable_properties/InvalidCustomGetter.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--friend-paths",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/candidate-InvalidCustomGetter"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/019.log"
+    },
+    {
+      "label": "official rejects InvalidDelegated",
+      "argv": [
+        "/workspace/work/song33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/song33/tests/stable_properties/InvalidDelegated.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-Xfriend-paths=/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official-InvalidDelegated",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/020.log"
+    },
+    {
+      "label": "candidate rejects InvalidDelegated",
+      "argv": [
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/korrust-frozen",
+        "/workspace/work/song33/tests/stable_properties/InvalidDelegated.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--friend-paths",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/candidate-InvalidDelegated"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/021.log"
+    },
+    {
+      "label": "official rejects InvalidDifferentReceiver",
+      "argv": [
+        "/workspace/work/song33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/song33/tests/stable_properties/InvalidDifferentReceiver.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-Xfriend-paths=/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official-InvalidDifferentReceiver",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/022.log"
+    },
+    {
+      "label": "candidate rejects InvalidDifferentReceiver",
+      "argv": [
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/korrust-frozen",
+        "/workspace/work/song33/tests/stable_properties/InvalidDifferentReceiver.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--friend-paths",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/candidate-InvalidDifferentReceiver"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/023.log"
+    },
+    {
+      "label": "official rejects InvalidEscapedGuard",
+      "argv": [
+        "/workspace/work/song33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/song33/tests/stable_properties/InvalidEscapedGuard.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-Xfriend-paths=/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official-InvalidEscapedGuard",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/024.log"
+    },
+    {
+      "label": "candidate rejects InvalidEscapedGuard",
+      "argv": [
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/korrust-frozen",
+        "/workspace/work/song33/tests/stable_properties/InvalidEscapedGuard.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--friend-paths",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/candidate-InvalidEscapedGuard"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/025.log"
+    },
+    {
+      "label": "official rejects InvalidMutableProperty",
+      "argv": [
+        "/workspace/work/song33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/song33/tests/stable_properties/InvalidMutableProperty.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-Xfriend-paths=/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official-InvalidMutableProperty",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/026.log"
+    },
+    {
+      "label": "candidate rejects InvalidMutableProperty",
+      "argv": [
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/korrust-frozen",
+        "/workspace/work/song33/tests/stable_properties/InvalidMutableProperty.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--friend-paths",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/candidate-InvalidMutableProperty"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/027.log"
+    },
+    {
+      "label": "official rejects InvalidOpenProperty",
+      "argv": [
+        "/workspace/work/song33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/song33/tests/stable_properties/InvalidOpenProperty.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-Xfriend-paths=/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official-InvalidOpenProperty",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/028.log"
+    },
+    {
+      "label": "candidate rejects InvalidOpenProperty",
+      "argv": [
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/korrust-frozen",
+        "/workspace/work/song33/tests/stable_properties/InvalidOpenProperty.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--friend-paths",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/candidate-InvalidOpenProperty"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/029.log"
+    },
+    {
+      "label": "official rejects InvalidOpposite",
+      "argv": [
+        "/workspace/work/song33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/song33/tests/stable_properties/InvalidOpposite.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-Xfriend-paths=/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official-InvalidOpposite",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/030.log"
+    },
+    {
+      "label": "candidate rejects InvalidOpposite",
+      "argv": [
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/korrust-frozen",
+        "/workspace/work/song33/tests/stable_properties/InvalidOpposite.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--friend-paths",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/candidate-InvalidOpposite"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/031.log"
+    },
+    {
+      "label": "official rejects InvalidShadowedReceiver",
+      "argv": [
+        "/workspace/work/song33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/song33/tests/stable_properties/InvalidShadowedReceiver.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-Xfriend-paths=/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official-InvalidShadowedReceiver",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/032.log"
+    },
+    {
+      "label": "candidate rejects InvalidShadowedReceiver",
+      "argv": [
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/korrust-frozen",
+        "/workspace/work/song33/tests/stable_properties/InvalidShadowedReceiver.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--friend-paths",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/candidate-InvalidShadowedReceiver"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/033.log"
+    },
+    {
+      "label": "official rejects external public property smartcast",
+      "argv": [
+        "/workspace/work/song33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/song33/tests/stable_properties/CrossModule.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/external-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/034.log"
+    },
+    {
+      "label": "candidate rejects external public property smartcast",
+      "argv": [
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/korrust-frozen",
+        "/workspace/work/song33/tests/stable_properties/CrossModule.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/external-candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/035.log"
+    },
+    {
+      "label": "pre-feature compiler rejects valid friend smartcasts",
+      "argv": [
+        "/workspace/korrust/target/release/korrust",
+        "/workspace/work/song33/tests/stable_properties/Models.kt",
+        "-cp",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--friend-paths",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency",
+        "-d",
+        "/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/baseline"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101933803222Z-stable-properties/036.log"
+    }
+  ],
+  "cases": [
+    {
+      "id": "guarded_property_compile",
+      "outcome": "pass",
+      "detail": "Exact source and dependencies, matching explicit friend origin"
+    },
+    {
+      "id": "fixed_java_caller_both_providers",
+      "outcome": "pass",
+      "detail": {
+        "caller_sha256": {
+          "target/checks/2026-11-21T101933803222Z-stable-properties/callers/stable/Calls.class": "bccd169cafcbecc03a3f7fdf7baa63ad487f751c3b931f5845143d386aaf60a7"
+        },
+        "assertions": "Null/nonnull UTF-16 lengths, reverse/null polarity, early-return control flow, conjunction, chained getters, distinct and shadowed receivers"
+      }
+    },
+    {
+      "id": "jvm_signatures",
+      "outcome": "pass",
+      "detail": "Compiled from \"Models.kt\"\npublic final class stable.ModelsKt {\n  public static final int guarded(stable.dependency.Box);\n    descriptor: (Lstable/dependency/Box;)I\n\n  public static final int reversed(stable.dependency.Box);\n    descriptor: (Lstable/dependency/Box;)I\n\n  public static final int complement(stable.dependency.Box);\n    descriptor: (Lstable/dependency/Box;)I\n\n  public static final int early(stable.dependency.Box);\n    descriptor: (Lstable/dependency/Box;)I\n\n  public static final int conjunction(stable.dependency.Box);\n    descriptor: (Lstable/dependency/Box;)I\n\n  public static final int chain(stable.dependency.Box);\n    descriptor: (Lstable/dependency/Box;)I\n\n  public static final int shadow(stable.dependency.Box, stable.dependency.Box);\n    descriptor: (Lstable/dependency/Box;Lstable/dependency/Box;)I\n}\n"
+    },
+    {
+      "id": "kotlin_consumer_official",
+      "outcome": "pass",
+      "detail": "Official Kotlin consumer reads emitted ordinary function metadata and cross-runs against both providers"
+    },
+    {
+      "id": "kotlin_consumer_candidate",
+      "outcome": "pass",
+      "detail": "Official Kotlin consumer reads emitted ordinary function metadata and cross-runs against both providers"
+    },
+    {
+      "id": "InvalidCallReceiver",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "/workspace/work/song33/tests/stable_properties/InvalidCallReceiver.kt:3:43: error: Unresolved or unsupported applicable extension: length\n"
+      }
+    },
+    {
+      "id": "InvalidChangedReceiver",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "/workspace/work/song33/tests/stable_properties/InvalidChangedReceiver.kt:2:109: error: Unresolved or unsupported applicable extension: length\n"
+      }
+    },
+    {
+      "id": "InvalidCustomGetter",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "/workspace/work/song33/tests/stable_properties/InvalidCustomGetter.kt:2:58: error: Unresolved or unsupported applicable extension: length\n"
+      }
+    },
+    {
+      "id": "InvalidDelegated",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "/workspace/work/song33/tests/stable_properties/InvalidDelegated.kt:2:61: error: Unresolved or unsupported applicable extension: length\n"
+      }
+    },
+    {
+      "id": "InvalidDifferentReceiver",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "/workspace/work/song33/tests/stable_properties/InvalidDifferentReceiver.kt:2:65: error: Unresolved or unsupported applicable extension: length\n"
+      }
+    },
+    {
+      "id": "InvalidEscapedGuard",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "/workspace/work/song33/tests/stable_properties/InvalidEscapedGuard.kt:2:82: error: Unresolved or unsupported applicable extension: length\n"
+      }
+    },
+    {
+      "id": "InvalidMutableProperty",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "/workspace/work/song33/tests/stable_properties/InvalidMutableProperty.kt:2:59: error: Unresolved or unsupported applicable extension: length\n"
+      }
+    },
+    {
+      "id": "InvalidOpenProperty",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "/workspace/work/song33/tests/stable_properties/InvalidOpenProperty.kt:2:56: error: Unresolved or unsupported applicable extension: length\n"
+      }
+    },
+    {
+      "id": "InvalidOpposite",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "/workspace/work/song33/tests/stable_properties/InvalidOpposite.kt:2:52: error: Unresolved or unsupported applicable extension: length\n"
+      }
+    },
+    {
+      "id": "InvalidShadowedReceiver",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "/workspace/work/song33/tests/stable_properties/InvalidShadowedReceiver.kt:2:94: error: Unresolved or unsupported applicable extension: length\n"
+      }
+    },
+    {
+      "id": "ordinary_external_module",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "reason": "No explicit friend origin"
+      }
+    },
+    {
+      "id": "baseline_missing_feature",
+      "outcome": "baseline_rejected",
+      "detail": {
+        "compiler_sha256": "193fcdd9fd7af09271cbad17e47d126dc28d27a0528d49996a866862bb349c50",
+        "diagnostic": "/workspace/work/song33/tests/stable_properties/Models.kt:3:56: error: Unresolved or unsupported applicable extension: length\n"
+      }
+    }
+  ],
+  "counts": {
+    "pass": 5,
+    "invalid_rejected": 11,
+    "baseline_rejected": 1
+  }
+}

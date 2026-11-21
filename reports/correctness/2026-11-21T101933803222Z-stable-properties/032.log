@@ -1,0 +1,4 @@
+$ /workspace/work/song33/references/kotlinc/bin/kotlinc /workspace/work/song33/tests/stable_properties/InvalidShadowedReceiver.kt -cp /workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency:/workspace/work/song33/references/kotlinc/lib/kotlin-stdlib.jar -Xfriend-paths=/workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/dependency -d /workspace/work/song33/target/checks/2026-11-21T101933803222Z-stable-properties/official-InvalidShadowedReceiver -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/stable_properties/InvalidShadowedReceiver.kt:2:104: error: only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'String?'.
+fun bad(first: Box, second: Box): Int { if (first.text != null) { val first = second; return first.text.length }; return 0 }
+                                                                                                       ^

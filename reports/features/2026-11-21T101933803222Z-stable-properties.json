@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-21T10:25:05.462887+00:00",
+  "status": "complete",
+  "compiler": {
+    "path": "target/checks/2026-11-21T101933803222Z-stable-properties/korrust-frozen",
+    "sha256": "aa80f85b24b0f23104f5f52c756e1ad8cd04f04f1b544fe96cc4897227fa6b85",
+    "source_revision": "e8bac257caff6df6610c51cb2242f8bd6eb65f56"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "artifact_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_stable_properties.py",
+      "--candidate",
+      "/workspace/korrust/target/song33/release/korrust",
+      "--baseline",
+      "/workspace/korrust/target/release/korrust"
+    ]
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-21T101933803222Z-stable-properties.json"
+  ],
+  "features": [
+    {
+      "name": "Stable Kotlin property-path smartcasts from explicit friend dependencies",
+      "status": "supported",
+      "scope": "Null guards and their complements for final default read-only properties rooted in immutable locals; chained properties, Boolean conjunctions, early-return continuation and lexical receiver identity",
+      "restrictions": [
+        "Source property headers do not yet expose stability",
+        "Mutable local receivers and captured receivers remain unsupported",
+        "No open, delegated, custom getter, mutable property, extension property or ordinary external module smartcasts",
+        "No application build or performance claim"
+      ],
+      "evidence_report": "reports/correctness/2026-11-21T101933803222Z-stable-properties.json",
+      "evidence_cases": [
+        "guarded_property_compile",
+        "fixed_java_caller_both_providers",
+        "kotlin_consumer_candidate",
+        "ordinary_external_module",
+        "InvalidCustomGetter",
+        "InvalidMutableProperty",
+        "InvalidOpenProperty",
+        "InvalidDelegated",
+        "InvalidChangedReceiver",
+        "InvalidDifferentReceiver",
+        "InvalidShadowedReceiver",
+        "InvalidEscapedGuard",
+        "InvalidOpposite"
+      ]
+    }
+  ]
+}
