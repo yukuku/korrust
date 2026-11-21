@@ -1,0 +1,166 @@
+
+running 3 tests
+"/workspace/work/class33/references/kotlinc/bin/kotlinc" "/tmp/korrust-data-invalid-239377/Bad.kt" "-language-version" "2.3" "-api-version" "2.3" "-jvm-target" "1.8" "-cp" "/workspace/work/class33/references/kotlinc/lib/kotlin-stdlib.jar" "-d" "/tmp/korrust-data-invalid-239377/official"
+
+/tmp/korrust-data-invalid-239377/Bad.kt:1:31: error: one type argument expected for 'interface Set<out E> : Collection<E>'.
+data class Bad(val values: Set<Int, Int>)
+                              ^^^^^^^^^^
+
+"/workspace/work/class33/references/kotlinc/bin/kotlinc" "/workspace/work/class33/tests/parameterized_data_properties/Models.kt" "-language-version" "2.3" "-api-version" "2.3" "-jvm-target" "1.8" "-cp" "/workspace/work/class33/references/kotlinc/lib/kotlin-stdlib.jar" "-d" "/tmp/korrust-data-references-239377-1795259146718816971/official"
+
+
+"/workspace/work/class33/references/kotlinc/bin/kotlinc" "/tmp/korrust-data-arrays-239377/Bad.kt" "-language-version" "2.3" "-api-version" "2.3" "-jvm-target" "1.8" "-cp" "/workspace/work/class33/references/kotlinc/lib/kotlin-stdlib.jar" "-d" "/tmp/korrust-data-arrays-239377/0"
+
+
+"/workspace/work/class33/references/kotlinc/bin/kotlinc" "/tmp/korrust-data-arrays-239377/Bad.kt" "-language-version" "2.3" "-api-version" "2.3" "-jvm-target" "1.8" "-cp" "/workspace/work/class33/references/kotlinc/lib/kotlin-stdlib.jar" "-d" "/tmp/korrust-data-arrays-239377/1"
+
+
+test direct_arrays_remain_explicitly_unsupported ... ok
+"javap" "-public" "-s" "-classpath" "/tmp/korrust-data-references-239377-1795259146718816971/official:/workspace/work/class33/references/kotlinc/lib/kotlin-stdlib.jar" "datarefs.Selection"
+Compiled from "Models.kt"
+public final class datarefs.Selection {
+  public datarefs.Selection(java.util.Set<java.lang.Integer>, java.util.Map<java.lang.String, java.lang.String>, datarefs.Crate<java.lang.String>, java.util.Set<java.lang.Integer>);
+    descriptor: (Ljava/util/Set;Ljava/util/Map;Ldatarefs/Crate;Ljava/util/Set;)V
+
+  public datarefs.Selection(java.util.Set, java.util.Map, datarefs.Crate, java.util.Set, int, kotlin.jvm.internal.DefaultConstructorMarker);
+    descriptor: (Ljava/util/Set;Ljava/util/Map;Ldatarefs/Crate;Ljava/util/Set;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+
+  public final java.util.Set<java.lang.Integer> getIds();
+    descriptor: ()Ljava/util/Set;
+
+  public final java.util.Map<java.lang.String, java.lang.String> getNames();
+    descriptor: ()Ljava/util/Map;
+
+  public final datarefs.Crate<java.lang.String> getBoxed();
+    descriptor: ()Ldatarefs/Crate;
+
+  public final java.util.Set<java.lang.Integer> getOptional();
+    descriptor: ()Ljava/util/Set;
+
+  public final java.util.Set<java.lang.Integer> component1();
+    descriptor: ()Ljava/util/Set;
+
+  public final java.util.Map<java.lang.String, java.lang.String> component2();
+    descriptor: ()Ljava/util/Map;
+
+  public final datarefs.Crate<java.lang.String> component3();
+    descriptor: ()Ldatarefs/Crate;
+
+  public final java.util.Set<java.lang.Integer> component4();
+    descriptor: ()Ljava/util/Set;
+
+  public final datarefs.Selection copy(java.util.Set<java.lang.Integer>, java.util.Map<java.lang.String, java.lang.String>, datarefs.Crate<java.lang.String>, java.util.Set<java.lang.Integer>);
+    descriptor: (Ljava/util/Set;Ljava/util/Map;Ldatarefs/Crate;Ljava/util/Set;)Ldatarefs/Selection;
+
+  public static datarefs.Selection copy$default(datarefs.Selection, java.util.Set, java.util.Map, datarefs.Crate, java.util.Set, int, java.lang.Object);
+    descriptor: (Ldatarefs/Selection;Ljava/util/Set;Ljava/util/Map;Ldatarefs/Crate;Ljava/util/Set;ILjava/lang/Object;)Ldatarefs/Selection;
+
+  public java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public int hashCode();
+    descriptor: ()I
+
+  public boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+}
+
+
+"/workspace/work/class33/references/kotlinc/bin/kotlinc" "/tmp/korrust-data-invalid-239377/Bad.kt" "-language-version" "2.3" "-api-version" "2.3" "-jvm-target" "1.8" "-cp" "/workspace/work/class33/references/kotlinc/lib/kotlin-stdlib.jar" "-d" "/tmp/korrust-data-invalid-239377/official"
+
+/tmp/korrust-data-invalid-239377/Bad.kt:2:35: error: type argument is not within its bounds: must be subtype of 'Number'.
+data class Bad(val value: Bounded<String>)
+                                  ^^^^^^
+
+"javap" "-public" "-s" "-classpath" "/tmp/korrust-data-references-239377-1795259146718816971/candidate:/workspace/work/class33/references/kotlinc/lib/kotlin-stdlib.jar" "datarefs.Selection"
+Compiled from "Models.kt"
+public final class datarefs.Selection {
+  public datarefs.Selection(java.util.Set<java.lang.Integer>, java.util.Map<java.lang.String, java.lang.String>, datarefs.Crate<java.lang.String>, java.util.Set<java.lang.Integer>);
+    descriptor: (Ljava/util/Set;Ljava/util/Map;Ldatarefs/Crate;Ljava/util/Set;)V
+
+  public datarefs.Selection(java.util.Set, java.util.Map, datarefs.Crate, java.util.Set, int, kotlin.jvm.internal.DefaultConstructorMarker);
+    descriptor: (Ljava/util/Set;Ljava/util/Map;Ldatarefs/Crate;Ljava/util/Set;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+
+  public final java.util.Set<java.lang.Integer> component1();
+    descriptor: ()Ljava/util/Set;
+
+  public final java.util.Map<java.lang.String, java.lang.String> component2();
+    descriptor: ()Ljava/util/Map;
+
+  public final datarefs.Crate<java.lang.String> component3();
+    descriptor: ()Ldatarefs/Crate;
+
+  public final java.util.Set<java.lang.Integer> component4();
+    descriptor: ()Ljava/util/Set;
+
+  public final datarefs.Selection copy(java.util.Set<java.lang.Integer>, java.util.Map<java.lang.String, java.lang.String>, datarefs.Crate<java.lang.String>, java.util.Set<java.lang.Integer>);
+    descriptor: (Ljava/util/Set;Ljava/util/Map;Ldatarefs/Crate;Ljava/util/Set;)Ldatarefs/Selection;
+
+  public static datarefs.Selection copy$default(datarefs.Selection, java.util.Set, java.util.Map, datarefs.Crate, java.util.Set, int, java.lang.Object);
+    descriptor: (Ldatarefs/Selection;Ljava/util/Set;Ljava/util/Map;Ldatarefs/Crate;Ljava/util/Set;ILjava/lang/Object;)Ldatarefs/Selection;
+
+  public java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+
+  public int hashCode();
+    descriptor: ()I
+
+  public boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+
+  public final java.util.Set<java.lang.Integer> getIds();
+    descriptor: ()Ljava/util/Set;
+
+  public final java.util.Map<java.lang.String, java.lang.String> getNames();
+    descriptor: ()Ljava/util/Map;
+
+  public final datarefs.Crate<java.lang.String> getBoxed();
+    descriptor: ()Ldatarefs/Crate;
+
+  public final java.util.Set<java.lang.Integer> getOptional();
+    descriptor: ()Ljava/util/Set;
+}
+
+
+test invalid_parameterized_data_properties_do_not_return_artifacts ... ok
+"/workspace/work/class33/references/kotlinc/bin/kotlinc" "/workspace/work/class33/tests/parameterized_data_properties/Consumer.kt" "-language-version" "2.3" "-api-version" "2.3" "-jvm-target" "1.8" "-cp" "/tmp/korrust-data-references-239377-1795259146718816971/official:/workspace/work/class33/references/kotlinc/lib/kotlin-stdlib.jar" "-d" "/tmp/korrust-data-references-239377-1795259146718816971/official-official"
+
+
+"/workspace/work/class33/references/kotlinc/bin/kotlinc" "/workspace/work/class33/tests/parameterized_data_properties/Consumer.kt" "-language-version" "2.3" "-api-version" "2.3" "-jvm-target" "1.8" "-cp" "/tmp/korrust-data-references-239377-1795259146718816971/candidate:/workspace/work/class33/references/kotlinc/lib/kotlin-stdlib.jar" "-d" "/tmp/korrust-data-references-239377-1795259146718816971/candidate-official"
+
+
+"javac" "-cp" "/tmp/korrust-data-references-239377-1795259146718816971/official:/tmp/korrust-data-references-239377-1795259146718816971/official-official:/workspace/work/class33/references/kotlinc/lib/kotlin-stdlib.jar" "-d" "/tmp/korrust-data-references-239377-1795259146718816971/callers" "/workspace/work/class33/tests/parameterized_data_properties/Driver.java"
+
+
+"java" "-Xverify:all" "-cp" "/tmp/korrust-data-references-239377-1795259146718816971/callers:/tmp/korrust-data-references-239377-1795259146718816971/official:/tmp/korrust-data-references-239377-1795259146718816971/official-official:/workspace/work/class33/references/kotlinc/lib/kotlin-stdlib.jar" "datarefs.Driver"
+OK
+
+
+"java" "-Xverify:all" "-cp" "/tmp/korrust-data-references-239377-1795259146718816971/callers:/tmp/korrust-data-references-239377-1795259146718816971/official:/tmp/korrust-data-references-239377-1795259146718816971/official-candidate:/workspace/work/class33/references/kotlinc/lib/kotlin-stdlib.jar" "datarefs.Driver"
+OK
+
+
+"java" "-Xverify:all" "-cp" "/tmp/korrust-data-references-239377-1795259146718816971/callers:/tmp/korrust-data-references-239377-1795259146718816971/candidate:/tmp/korrust-data-references-239377-1795259146718816971/candidate-official:/workspace/work/class33/references/kotlinc/lib/kotlin-stdlib.jar" "datarefs.Driver"
+OK
+
+
+"java" "-Xverify:all" "-cp" "/tmp/korrust-data-references-239377-1795259146718816971/callers:/tmp/korrust-data-references-239377-1795259146718816971/candidate:/tmp/korrust-data-references-239377-1795259146718816971/candidate-candidate:/workspace/work/class33/references/kotlinc/lib/kotlin-stdlib.jar" "datarefs.Driver"
+OK
+
+
+test parameterized_data_properties_preserve_reference_and_data_contracts ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 47.78s
+
+
+running 3 tests
+test classifier_bound_and_override_failures_do_not_return_artifacts ... ok
+test unsupported_classifier_shapes_have_structured_boundaries ... ok
+test generic_override_bridges_and_classifier_metadata_compile_together ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.64s
+
+   Compiling korrust v0.1.0 (/workspace/work/class33)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.48s
+     Running tests/parameterized_data_properties.rs (target/debug/deps/parameterized_data_properties-45825480f49a4c1e)
+     Running tests/source_generic_diagnostics.rs (target/debug/deps/source_generic_diagnostics-2c3f244227f79275)

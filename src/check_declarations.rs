@@ -287,7 +287,8 @@ pub(super) fn check_class_with_constants(
             | Type::Float
             | Type::Double
             | Type::String
-            | Type::Java(_) => true,
+            | Type::Java(_)
+            | Type::Parameterized { .. } => true,
             Type::Nullable(inner) | Type::List(inner) | Type::MutableList(inner) => {
                 data_type(inner)
             }
@@ -298,7 +299,7 @@ pub(super) fn check_class_with_constants(
         return Err(Diagnostic::new(
             source.offset,
             "Data classes require supported scalar, nullable, List, or reference constructor properties; arrays are unsupported",
-        ));
+        ).with_kind(crate::DiagnosticKind::UnsupportedLanguage, "DATA_PROPERTY_SHAPE_UNSUPPORTED"));
     }
     let mut params = Vec::new();
     let mut fields = HashMap::new();
