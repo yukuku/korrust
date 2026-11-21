@@ -1,0 +1,825 @@
+$ /workspace/korrust-setup/jdk-21/bin/javap -public -s -v -classpath /workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/candidate trailing.ModelsKt
+Classfile /workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/candidate/trailing/ModelsKt.class
+  Last modified Nov 21, 2026; size 7983 bytes
+  SHA-256 checksum e1a190dfdcc6af20610bf8433c4e85c2c9fb1b183cf7965f3a7f5ab90b1adfaf
+  Compiled from "Models.kt"
+public final class trailing.ModelsKt
+  minor version: 0
+  major version: 49
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // trailing/ModelsKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 1, methods: 26, attributes: 2
+Constant pool:
+    #1 = Utf8               trailing/ModelsKt
+    #2 = Class              #1            // trailing/ModelsKt
+    #3 = Utf8               java/lang/Object
+    #4 = Class              #3            // java/lang/Object
+    #5 = Utf8               SourceFile
+    #6 = Utf8               Models.kt
+    #7 = Utf8               trace
+    #8 = Utf8               Ljava/lang/String;
+    #9 = NameAndType        #7:#8         // trace:Ljava/lang/String;
+   #10 = Fieldref           #2.#9         // trailing/ModelsKt.trace:Ljava/lang/String;
+   #11 = Utf8               java/lang/String
+   #12 = Class              #11           // java/lang/String
+   #13 = Utf8               java/lang/StringBuilder
+   #14 = Class              #13           // java/lang/StringBuilder
+   #15 = Utf8               <init>
+   #16 = Utf8               ()V
+   #17 = NameAndType        #15:#16       // "<init>":()V
+   #18 = Methodref          #14.#17       // java/lang/StringBuilder."<init>":()V
+   #19 = Utf8               append
+   #20 = Utf8               (Ljava/lang/String;)Ljava/lang/StringBuilder;
+   #21 = NameAndType        #19:#20       // append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+   #22 = Methodref          #14.#21       // java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+   #23 = Utf8               toString
+   #24 = Utf8               ()Ljava/lang/String;
+   #25 = NameAndType        #23:#24       // toString:()Ljava/lang/String;
+   #26 = Methodref          #14.#25       // java/lang/StringBuilder.toString:()Ljava/lang/String;
+   #27 = Utf8               note
+   #28 = Utf8               (Ljava/lang/String;)Ljava/lang/String;
+   #29 = Utf8               Code
+   #30 = Utf8               RuntimeInvisibleAnnotations
+   #31 = Utf8               Lorg/jetbrains/annotations/NotNull;
+   #32 = Utf8               RuntimeInvisibleParameterAnnotations
+   #33 = Utf8               (I)Ljava/lang/StringBuilder;
+   #34 = NameAndType        #19:#33       // append:(I)Ljava/lang/StringBuilder;
+   #35 = Methodref          #14.#34       // java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+   #36 = Utf8               kotlin/jvm/functions/Function0
+   #37 = Class              #36           // kotlin/jvm/functions/Function0
+   #38 = Utf8               invoke
+   #39 = Utf8               ()Ljava/lang/Object;
+   #40 = NameAndType        #38:#39       // invoke:()Ljava/lang/Object;
+   #41 = InterfaceMethodref #37.#40       // kotlin/jvm/functions/Function0.invoke:()Ljava/lang/Object;
+   #42 = Utf8               source
+   #43 = Utf8               (Ljava/lang/String;ILkotlin/jvm/functions/Function0;)Ljava/lang/String;
+   #44 = Utf8               Signature
+   #45 = Utf8               (Ljava/lang/String;ILkotlin/jvm/functions/Function0<Ljava/lang/String;>;)Ljava/lang/String;
+   #46 = String             #42           // source
+   #47 = NameAndType        #42:#43       // source:(Ljava/lang/String;ILkotlin/jvm/functions/Function0;)Ljava/lang/String;
+   #48 = Methodref          #2.#47        // trailing/ModelsKt.source:(Ljava/lang/String;ILkotlin/jvm/functions/Function0;)Ljava/lang/String;
+   #49 = Utf8               source$default
+   #50 = Utf8               (Ljava/lang/String;ILkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ljava/lang/String;
+   #51 = Utf8               java/lang/Throwable
+   #52 = Class              #51           // java/lang/Throwable
+   #53 = Utf8               StackMapTable
+   #54 = Utf8               kotlin/jvm/functions/Function1
+   #55 = Class              #54           // kotlin/jvm/functions/Function1
+   #56 = Utf8               (Ljava/lang/Object;)Ljava/lang/Object;
+   #57 = NameAndType        #38:#56       // invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+   #58 = InterfaceMethodref #55.#57       // kotlin/jvm/functions/Function1.invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+   #59 = Utf8               transform
+   #60 = Utf8               (Ljava/lang/Object;ILkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+   #61 = Utf8               <T:Ljava/lang/Object;R:Ljava/lang/Object;>(TT;ILkotlin/jvm/functions/Function1<-TT;+TR;>;)TR;
+   #62 = NameAndType        #59:#60       // transform:(Ljava/lang/Object;ILkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+   #63 = Methodref          #2.#62        // trailing/ModelsKt.transform:(Ljava/lang/Object;ILkotlin/jvm/functions/Function1;)Ljava/lang/Object;
+   #64 = Utf8               transform$default
+   #65 = Utf8               (Ljava/lang/Object;ILkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+   #66 = Utf8               immediate
+   #67 = Utf8               (Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ljava/lang/String;
+   #68 = Utf8               (Ljava/lang/String;Lkotlin/jvm/functions/Function0<Ljava/lang/String;>;)Ljava/lang/String;
+   #69 = Utf8               trailing/ModelsKt$lambda$495$0
+   #70 = Class              #69           // trailing/ModelsKt$lambda$495$0
+   #71 = Methodref          #70.#17       // trailing/ModelsKt$lambda$495$0."<init>":()V
+   #72 = NameAndType        #49:#50       // source$default:(Ljava/lang/String;ILkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ljava/lang/String;
+   #73 = Methodref          #2.#72        // trailing/ModelsKt.source$default:(Ljava/lang/String;ILkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ljava/lang/String;
+   #74 = Utf8               sourceDefault
+   #75 = Utf8               trailing/ModelsKt$lambda$549$1
+   #76 = Class              #75           // trailing/ModelsKt$lambda$549$1
+   #77 = Methodref          #76.#17       // trailing/ModelsKt$lambda$549$1."<init>":()V
+   #78 = Utf8               sourceNamed
+   #79 = Utf8               trailing/ModelsKt$lambda$600$2
+   #80 = Class              #79           // trailing/ModelsKt$lambda$600$2
+   #81 = Methodref          #80.#17       // trailing/ModelsKt$lambda$600$2."<init>":()V
+   #82 = Utf8               java/lang/Integer
+   #83 = Class              #82           // java/lang/Integer
+   #84 = Utf8               valueOf
+   #85 = Utf8               (I)Ljava/lang/Integer;
+   #86 = NameAndType        #84:#85       // valueOf:(I)Ljava/lang/Integer;
+   #87 = Methodref          #83.#86       // java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+   #88 = NameAndType        #64:#65       // transform$default:(Ljava/lang/Object;ILkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+   #89 = Methodref          #2.#88        // trailing/ModelsKt.transform$default:(Ljava/lang/Object;ILkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+   #90 = Utf8               sourceGeneric
+   #91 = Utf8               trailing/ModelsKt$lambda$662$3
+   #92 = Class              #91           // trailing/ModelsKt$lambda$662$3
+   #93 = Methodref          #92.#17       // trailing/ModelsKt$lambda$662$3."<init>":()V
+   #94 = Utf8               trailing/dependency/DependencyKt
+   #95 = Class              #94           // trailing/dependency/DependencyKt
+   #96 = Utf8               convert$default
+   #97 = Utf8               (Ljava/lang/Object;Ljava/lang/String;ILkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/String;
+   #98 = NameAndType        #96:#97       // convert$default:(Ljava/lang/Object;Ljava/lang/String;ILkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/String;
+   #99 = Methodref          #95.#98       // trailing/dependency/DependencyKt.convert$default:(Ljava/lang/Object;Ljava/lang/String;ILkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/String;
+  #100 = Utf8               compiledExtension
+  #101 = Utf8               trailing/ModelsKt$lambda$731$4
+  #102 = Class              #101          // trailing/ModelsKt$lambda$731$4
+  #103 = Methodref          #102.#17      // trailing/ModelsKt$lambda$731$4."<init>":()V
+  #104 = Utf8               compiledNamed
+  #105 = Utf8               trailing/ModelsKt$lambda$792$5
+  #106 = Class              #105          // trailing/ModelsKt$lambda$792$5
+  #107 = Methodref          #106.#17      // trailing/ModelsKt$lambda$792$5."<init>":()V
+  #108 = Utf8               apply$default
+  #109 = Utf8               (Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+  #110 = NameAndType        #108:#109     // apply$default:(Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+  #111 = Methodref          #95.#110      // trailing/dependency/DependencyKt.apply$default:(Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+  #112 = Utf8               compiledNullable
+  #113 = Utf8               Lorg/jetbrains/annotations/Nullable;
+  #114 = Utf8               RuntimeVisibleAnnotations
+  #115 = Utf8               trailing/dependency/Adapter
+  #116 = Class              #115          // trailing/dependency/Adapter
+  #117 = Methodref          #116.#17      // trailing/dependency/Adapter."<init>":()V
+  #118 = Utf8               trailing/ModelsKt$lambda$863$6
+  #119 = Class              #118          // trailing/ModelsKt$lambda$863$6
+  #120 = Methodref          #119.#17      // trailing/ModelsKt$lambda$863$6."<init>":()V
+  #121 = Utf8               dispatch$default
+  #122 = Utf8               (Ltrailing/dependency/Adapter;Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/String;
+  #123 = NameAndType        #121:#122     // dispatch$default:(Ltrailing/dependency/Adapter;Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/String;
+  #124 = Methodref          #116.#123     // trailing/dependency/Adapter.dispatch$default:(Ltrailing/dependency/Adapter;Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/String;
+  #125 = Utf8               compiledMember
+  #126 = Utf8               trailing/ModelsKt$lambda$925$7
+  #127 = Class              #126          // trailing/ModelsKt$lambda$925$7
+  #128 = Methodref          #127.#17      // trailing/ModelsKt$lambda$925$7."<init>":()V
+  #129 = Utf8               overloaded$default
+  #130 = Utf8               (Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ljava/lang/String;
+  #131 = NameAndType        #129:#130     // overloaded$default:(Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ljava/lang/String;
+  #132 = Methodref          #95.#131      // trailing/dependency/DependencyKt.overloaded$default:(Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ljava/lang/String;
+  #133 = Utf8               compiledOverload
+  #134 = Utf8               trailing/ModelsKt$lambda$980$8
+  #135 = Class              #134          // trailing/ModelsKt$lambda$980$8
+  #136 = Methodref          #135.#17      // trailing/ModelsKt$lambda$980$8."<init>":()V
+  #137 = Utf8               overloaded
+  #138 = Utf8               (ILkotlin/jvm/functions/Function0;)Ljava/lang/String;
+  #139 = NameAndType        #137:#138     // overloaded:(ILkotlin/jvm/functions/Function0;)Ljava/lang/String;
+  #140 = Methodref          #95.#139      // trailing/dependency/DependencyKt.overloaded:(ILkotlin/jvm/functions/Function0;)Ljava/lang/String;
+  #141 = Utf8               selectedOverload
+  #142 = Utf8               trailing/ModelsKt$lambda$1031$9
+  #143 = Class              #142          // trailing/ModelsKt$lambda$1031$9
+  #144 = Methodref          #143.#17      // trailing/ModelsKt$lambda$1031$9."<init>":()V
+  #145 = Utf8               explicitLabel
+  #146 = Utf8               trailing/ModelsKt$lambda$1093$10
+  #147 = Class              #146          // trailing/ModelsKt$lambda$1093$10
+  #148 = Methodref          #147.#17      // trailing/ModelsKt$lambda$1093$10."<init>":()V
+  #149 = Utf8               implicitLabel
+  #150 = Utf8               inline
+  #151 = String             #150          // inline
+  #152 = Utf8               trailing/ModelsKt$lambda$1172$11
+  #153 = Class              #152          // trailing/ModelsKt$lambda$1172$11
+  #154 = Methodref          #153.#17      // trailing/ModelsKt$lambda$1172$11."<init>":()V
+  #155 = Utf8               prefix
+  #156 = String             #155          // prefix
+  #157 = Utf8               kotlin/jvm/internal/Intrinsics
+  #158 = Class              #157          // kotlin/jvm/internal/Intrinsics
+  #159 = Utf8               checkNotNullParameter
+  #160 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+  #161 = NameAndType        #159:#160     // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #162 = Methodref          #158.#161     // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #163 = Utf8               block
+  #164 = String             #163          // block
+  #165 = Utf8               early
+  #166 = String             #165          // early
+  #167 = Utf8               late
+  #168 = String             #167          // late
+  #169 = Utf8               inlineReturn
+  #170 = Utf8               values
+  #171 = String             #170          // values
+  #172 = Utf8               java/util/List
+  #173 = Class              #172          // java/util/List
+  #174 = Utf8               java/lang/Iterable
+  #175 = Class              #174          // java/lang/Iterable
+  #176 = Utf8
+  #177 = String             #176          //
+  #178 = Utf8               java/lang/CharSequence
+  #179 = Class              #178          // java/lang/CharSequence
+  #180 = Utf8               trailing/ModelsKt$lambda$1277$12
+  #181 = Class              #180          // trailing/ModelsKt$lambda$1277$12
+  #182 = Methodref          #181.#17      // trailing/ModelsKt$lambda$1277$12."<init>":()V
+  #183 = Utf8               kotlin/collections/CollectionsKt
+  #184 = Class              #183          // kotlin/collections/CollectionsKt
+  #185 = Utf8               joinToString$default
+  #186 = Utf8               (Ljava/lang/Iterable;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;ILjava/lang/CharSequence;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/String;
+  #187 = NameAndType        #185:#186     // joinToString$default:(Ljava/lang/Iterable;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;ILjava/lang/CharSequence;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/String;
+  #188 = Methodref          #184.#187     // kotlin/collections/CollectionsKt.joinToString$default:(Ljava/lang/Iterable;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;ILjava/lang/CharSequence;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/String;
+  #189 = Utf8               joined
+  #190 = Utf8               (Ljava/util/List;)Ljava/lang/String;
+  #191 = Utf8               (Ljava/util/List<Ljava/lang/Byte;>;)Ljava/lang/String;
+  #192 = Utf8
+  #193 = String             #192          //
+  #194 = Utf8               A
+  #195 = String             #194          // A
+  #196 = NameAndType        #27:#28       // note:(Ljava/lang/String;)Ljava/lang/String;
+  #197 = Methodref          #2.#196       // trailing/ModelsKt.note:(Ljava/lang/String;)Ljava/lang/String;
+  #198 = Utf8               trailing/ModelsKt$lambda$1393$13
+  #199 = Class              #198          // trailing/ModelsKt$lambda$1393$13
+  #200 = Methodref          #199.#17      // trailing/ModelsKt$lambda$1393$13."<init>":()V
+  #201 = Utf8               :
+  #202 = String             #201          // :
+  #203 = Utf8               ordered
+  #204 = Utf8               trailing/ModelsKt$lambda$1483$14
+  #205 = Class              #204          // trailing/ModelsKt$lambda$1483$14
+  #206 = Methodref          #205.#17      // trailing/ModelsKt$lambda$1483$14."<init>":()V
+  #207 = Utf8               arrayInitializer
+  #208 = Utf8               trailing/Holder
+  #209 = Class              #208          // trailing/Holder
+  #210 = Utf8               trailing/ModelsKt$lambda$1597$15
+  #211 = Class              #210          // trailing/ModelsKt$lambda$1597$15
+  #212 = Methodref          #211.#17      // trailing/ModelsKt$lambda$1597$15."<init>":()V
+  #213 = Utf8               (Lkotlin/jvm/functions/Function0;)V
+  #214 = NameAndType        #15:#213      // "<init>":(Lkotlin/jvm/functions/Function0;)V
+  #215 = Methodref          #209.#214     // trailing/Holder."<init>":(Lkotlin/jvm/functions/Function0;)V
+  #216 = Utf8               getBlock
+  #217 = Utf8               ()Lkotlin/jvm/functions/Function0;
+  #218 = NameAndType        #216:#217     // getBlock:()Lkotlin/jvm/functions/Function0;
+  #219 = Methodref          #209.#218     // trailing/Holder.getBlock:()Lkotlin/jvm/functions/Function0;
+  #220 = Utf8               constructed
+  #221 = Utf8               trailing/ModelsKt$lambda$1741$16
+  #222 = Class              #221          // trailing/ModelsKt$lambda$1741$16
+  #223 = Methodref          #222.#17      // trailing/ModelsKt$lambda$1741$16."<init>":()V
+  #224 = Utf8               kotlin/jvm/functions/Function2
+  #225 = Class              #224          // kotlin/jvm/functions/Function2
+  #226 = Utf8               trailing/ModelsKt$lambda$1807$17
+  #227 = Class              #226          // trailing/ModelsKt$lambda$1807$17
+  #228 = Methodref          #227.#17      // trailing/ModelsKt$lambda$1807$17."<init>":()V
+  #229 = Utf8               (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  #230 = NameAndType        #38:#229      // invoke:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  #231 = InterfaceMethodref #225.#230     // kotlin/jvm/functions/Function2.invoke:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  #232 = Utf8               functionValue
+  #233 = Utf8               captured
+  #234 = String             #233          // captured
+  #235 = Utf8               trailing/ModelsKt$lambda$1895$18
+  #236 = Class              #235          // trailing/ModelsKt$lambda$1895$18
+  #237 = Utf8               (Ljava/lang/String;)V
+  #238 = NameAndType        #15:#237      // "<init>":(Ljava/lang/String;)V
+  #239 = Methodref          #236.#238     // trailing/ModelsKt$lambda$1895$18."<init>":(Ljava/lang/String;)V
+  #240 = Utf8               access$note
+  #241 = Utf8               Lkotlin/Metadata;
+  #242 = Utf8               mv
+  #243 = Integer            2
+  #244 = Integer            3
+  #245 = Integer            0
+  #246 = Utf8               k
+  #247 = Utf8               xi
+  #248 = Integer            48
+  #249 = Utf8               d1
+  #250 = Utf8               \u0000\u0004\n\u0002\b+\u001a\u0017H\u0002\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u0001¢\u0006\u0004\b\u0000\u0010\u0003\u001a1H\u0002\u0010\u0004\u001a\u00020\u00012\b\u0010\u0005\u001a\u00020\u0001\b\u00022\b\u0010\u0006\u001a\u00020\u0007\b\u00022\f\u0010\b\u001a\b\u0012\u0004\u0012\u00020\u00010\t¢\u0006\u0004\b\u0004\u0010\n\u001aEH\u0002\u0010\u000b\"\u0006\b\u0000\u0010\f \u0002\"\u0006\b\u0001\u0010\r \u0002\u001a\u00028\u00012\u0006\u0010\u0002\u001a\u00028\u00002\b\u0010\u0006\u001a\u00020\u0007\b\u00022\u0012\u0010\b\u001a\u000e\u0012\u0004\u0012\u00028\u0000\u0012\u0004\u0012\u00028\u00010\u000e¢\u0006\u0004\b\u000b\u0010\u000f\u001a&H\u0082\b\u0010\u0010\u001a\u00020\u00012\u0006\u0010\u0005\u001a\u00020\u00012\f\u0010\b\u001a\b\u0012\u0004\u0012\u00020\u00010\t¢\u0006\u0004\b\u0010\u0010\u0011\u001a\u000fH\u0006\u0010\u0012\u001a\u00020\u0001¢\u0006\u0004\b\u0012\u0010\u0013\u001a\u000fH\u0006\u0010\u0014\u001a\u00020\u0001¢\u0006\u0004\b\u0014\u0010\u0013\u001a\u000fH\u0006\u0010\u0015\u001a\u00020\u0001¢\u0006\u0004\b\u0015\u0010\u0013\u001a\u000fH\u0006\u0010\u0016\u001a\u00020\u0001¢\u0006\u0004\b\u0016\u0010\u0013\u001a\u000fH\u0006\u0010\u0017\u001a\u00020\u0001¢\u0006\u0004\b\u0017\u0010\u0013\u001a\u0011H\u0006\u0010\u0018\u001a\u00040\u0001\u0018\u0001¢\u0006\u0004\b\u0018\u0010\u0013\u001a\u000fH\u0006\u0010\u0019\u001a\u00020\u0001¢\u0006\u0004\b\u0019\u0010\u0013\u001a\u000fH\u0006\u0010\u001a\u001a\u00020\u0001¢\u0006\u0004\b\u001a\u0010\u0013\u001a\u000fH\u0006\u0010\u001b\u001a\u00020\u0001¢\u0006\u0004\b\u001b\u0010\u0013\u001a\u000fH\u0006\u0010\u001c\u001a\u00020\u0001¢\u0006\u0004\b\u001c\u0010\u0013\u001a\u000fH\u0006\u0010\u001d\u001a\u00020\u0001¢\u0006\u0004\b\u001d\u0010\u0013\u001a\u000fH\u0006\u0010\u001e\u001a\u00020\u0001¢\u0006\u0004\b\u001e\u0010\u0013\u001a\u001dH\u0006\u0010\u001f\u001a\u00020\u00012\f\u0010 \u001a\b\u0012\u0004\u0012\u00020!0\"¢\u0006\u0004\b\u001f\u0010#\u001a\u000fH\u0006\u0010$\u001a\u00020\u0001¢\u0006\u0004\b$\u0010\u0013\u001a\u000fH\u0006\u0010%\u001a\u00020\u0001¢\u0006\u0004\b%\u0010\u0013\u001a\u000fH\u0006\u0010&\u001a\u00020\u0001¢\u0006\u0004\b&\u0010\u0013\u001a\u000fH\u0006\u0010\'\u001a\u00020\u0001¢\u0006\u0004\b\'\u0010\u0013\u001a\u000fH\u0006\u0010(\u001a\u00020\u0001¢\u0006\u0004\b(\u0010\u0013\"\u0012X\u0082\u000e\u0010)\u001a\u00020\u0001¢\u0006\u0006\n\u0004\b)\u0010*
+  #251 = Utf8               d2
+  #252 = Utf8               kotlin/String
+  #253 = Utf8               value
+  #254 = Utf8               count
+  #255 = Utf8               kotlin/Int
+  #256 = Utf8               kotlin/Function0
+  #257 = Utf8               T
+  #258 = Utf8               R
+  #259 = Utf8               kotlin/Function1
+  #260 = Utf8               kotlin/Byte
+  #261 = Utf8               kotlin/collections/List
+  #262 = Utf8               <clinit>
+{
+  public static final java.lang.String sourceDefault();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=5, locals=1, args_size=0
+         0: new           #70                 // class trailing/ModelsKt$lambda$495$0
+         3: dup
+         4: invokespecial #71                 // Method trailing/ModelsKt$lambda$495$0."<init>":()V
+         7: checkcast     #37                 // class kotlin/jvm/functions/Function0
+        10: astore        0
+        12: aconst_null
+        13: iconst_0
+        14: aload         0
+        16: iconst_3
+        17: aconst_null
+        18: invokestatic  #73                 // Method source$default:(Ljava/lang/String;ILkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ljava/lang/String;
+        21: areturn
+        22: aconst_null
+        23: athrow
+    RuntimeInvisibleAnnotations:
+      0: #31()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String sourceNamed();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=5, locals=2, args_size=0
+         0: iconst_4
+         1: istore        0
+         3: new           #76                 // class trailing/ModelsKt$lambda$549$1
+         6: dup
+         7: invokespecial #77                 // Method trailing/ModelsKt$lambda$549$1."<init>":()V
+        10: checkcast     #37                 // class kotlin/jvm/functions/Function0
+        13: astore        1
+        15: aconst_null
+        16: iload         0
+        18: aload         1
+        20: iconst_1
+        21: aconst_null
+        22: invokestatic  #73                 // Method source$default:(Ljava/lang/String;ILkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ljava/lang/String;
+        25: areturn
+        26: aconst_null
+        27: athrow
+    RuntimeInvisibleAnnotations:
+      0: #31()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String sourceGeneric();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=5, locals=2, args_size=0
+         0: bipush        7
+         2: istore        0
+         4: new           #80                 // class trailing/ModelsKt$lambda$600$2
+         7: dup
+         8: invokespecial #81                 // Method trailing/ModelsKt$lambda$600$2."<init>":()V
+        11: checkcast     #55                 // class kotlin/jvm/functions/Function1
+        14: astore        1
+        16: iload         0
+        18: invokestatic  #87                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        21: iconst_0
+        22: aload         1
+        24: iconst_2
+        25: aconst_null
+        26: invokestatic  #89                 // Method transform$default:(Ljava/lang/Object;ILkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+        29: checkcast     #12                 // class java/lang/String
+        32: areturn
+        33: aconst_null
+        34: athrow
+    RuntimeInvisibleAnnotations:
+      0: #31()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String compiledExtension();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=8, locals=3, args_size=0
+         0: iconst_5
+         1: istore        0
+         3: iload         0
+         5: istore        1
+         7: new           #92                 // class trailing/ModelsKt$lambda$662$3
+        10: dup
+        11: invokespecial #93                 // Method trailing/ModelsKt$lambda$662$3."<init>":()V
+        14: checkcast     #55                 // class kotlin/jvm/functions/Function1
+        17: astore        2
+        19: iload         1
+        21: invokestatic  #87                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        24: aconst_null
+        25: iconst_0
+        26: aload         2
+        28: iconst_3
+        29: aconst_null
+        30: invokestatic  #99                 // Method trailing/dependency/DependencyKt.convert$default:(Ljava/lang/Object;Ljava/lang/String;ILkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/String;
+        33: areturn
+        34: aconst_null
+        35: athrow
+    RuntimeInvisibleAnnotations:
+      0: #31()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String compiledNamed();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=8, locals=4, args_size=0
+         0: iconst_5
+         1: istore        0
+         3: iload         0
+         5: istore        1
+         7: bipush        6
+         9: istore        2
+        11: new           #102                // class trailing/ModelsKt$lambda$731$4
+        14: dup
+        15: invokespecial #103                // Method trailing/ModelsKt$lambda$731$4."<init>":()V
+        18: checkcast     #55                 // class kotlin/jvm/functions/Function1
+        21: astore        3
+        23: iload         1
+        25: invokestatic  #87                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        28: aconst_null
+        29: iload         2
+        31: aload         3
+        33: iconst_1
+        34: aconst_null
+        35: invokestatic  #99                 // Method trailing/dependency/DependencyKt.convert$default:(Ljava/lang/Object;Ljava/lang/String;ILkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/String;
+        38: areturn
+        39: aconst_null
+        40: athrow
+    RuntimeInvisibleAnnotations:
+      0: #31()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String compiledNullable();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=7, locals=2, args_size=0
+         0: bipush        8
+         2: istore        0
+         4: new           #106                // class trailing/ModelsKt$lambda$792$5
+         7: dup
+         8: invokespecial #107                // Method trailing/ModelsKt$lambda$792$5."<init>":()V
+        11: checkcast     #55                 // class kotlin/jvm/functions/Function1
+        14: astore        1
+        16: iload         0
+        18: invokestatic  #87                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        21: aconst_null
+        22: aload         1
+        24: iconst_2
+        25: aconst_null
+        26: invokestatic  #111                // Method trailing/dependency/DependencyKt.apply$default:(Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/Object;
+        29: checkcast     #12                 // class java/lang/String
+        32: areturn
+        33: aconst_null
+        34: athrow
+    RuntimeInvisibleAnnotations:
+      0: #113()
+        org.jetbrains.annotations.Nullable
+
+  public static final java.lang.String compiledMember();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=8, locals=3, args_size=0
+         0: new           #116                // class trailing/dependency/Adapter
+         3: dup
+         4: invokespecial #117                // Method trailing/dependency/Adapter."<init>":()V
+         7: checkcast     #116                // class trailing/dependency/Adapter
+        10: astore        2
+        12: bipush        9
+        14: istore        0
+        16: new           #119                // class trailing/ModelsKt$lambda$863$6
+        19: dup
+        20: invokespecial #120                // Method trailing/ModelsKt$lambda$863$6."<init>":()V
+        23: checkcast     #55                 // class kotlin/jvm/functions/Function1
+        26: astore        1
+        28: aload         2
+        30: iload         0
+        32: invokestatic  #87                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        35: aconst_null
+        36: aload         1
+        38: iconst_2
+        39: aconst_null
+        40: invokestatic  #124                // Method trailing/dependency/Adapter.dispatch$default:(Ltrailing/dependency/Adapter;Ljava/lang/Object;Ljava/lang/String;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/String;
+        43: areturn
+        44: aconst_null
+        45: athrow
+    RuntimeInvisibleAnnotations:
+      0: #31()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String compiledOverload();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=6, locals=1, args_size=0
+         0: new           #127                // class trailing/ModelsKt$lambda$925$7
+         3: dup
+         4: invokespecial #128                // Method trailing/ModelsKt$lambda$925$7."<init>":()V
+         7: checkcast     #37                 // class kotlin/jvm/functions/Function0
+        10: astore        0
+        12: aconst_null
+        13: aload         0
+        15: iconst_1
+        16: aconst_null
+        17: invokestatic  #132                // Method trailing/dependency/DependencyKt.overloaded$default:(Ljava/lang/String;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ljava/lang/String;
+        20: areturn
+        21: aconst_null
+        22: athrow
+    RuntimeInvisibleAnnotations:
+      0: #31()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String selectedOverload();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=5, locals=0, args_size=0
+         0: iconst_4
+         1: new           #135                // class trailing/ModelsKt$lambda$980$8
+         4: dup
+         5: invokespecial #136                // Method trailing/ModelsKt$lambda$980$8."<init>":()V
+         8: invokestatic  #140                // Method trailing/dependency/DependencyKt.overloaded:(ILkotlin/jvm/functions/Function0;)Ljava/lang/String;
+        11: areturn
+        12: aconst_null
+        13: athrow
+    RuntimeInvisibleAnnotations:
+      0: #31()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String explicitLabel();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=5, locals=1, args_size=0
+         0: new           #143                // class trailing/ModelsKt$lambda$1031$9
+         3: dup
+         4: invokespecial #144                // Method trailing/ModelsKt$lambda$1031$9."<init>":()V
+         7: checkcast     #37                 // class kotlin/jvm/functions/Function0
+        10: astore        0
+        12: aconst_null
+        13: iconst_0
+        14: aload         0
+        16: iconst_3
+        17: aconst_null
+        18: invokestatic  #73                 // Method source$default:(Ljava/lang/String;ILkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ljava/lang/String;
+        21: areturn
+        22: aconst_null
+        23: athrow
+    RuntimeInvisibleAnnotations:
+      0: #31()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String implicitLabel();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=5, locals=1, args_size=0
+         0: new           #147                // class trailing/ModelsKt$lambda$1093$10
+         3: dup
+         4: invokespecial #148                // Method trailing/ModelsKt$lambda$1093$10."<init>":()V
+         7: checkcast     #37                 // class kotlin/jvm/functions/Function0
+        10: astore        0
+        12: aconst_null
+        13: iconst_0
+        14: aload         0
+        16: iconst_3
+        17: aconst_null
+        18: invokestatic  #73                 // Method source$default:(Ljava/lang/String;ILkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ljava/lang/String;
+        21: areturn
+        22: aconst_null
+        23: athrow
+    RuntimeInvisibleAnnotations:
+      0: #31()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String inlineReturn();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=256, locals=3, args_size=0
+         0: ldc_w         #151                // String inline
+         3: astore        0
+         5: new           #153                // class trailing/ModelsKt$lambda$1172$11
+         8: dup
+         9: invokespecial #154                // Method trailing/ModelsKt$lambda$1172$11."<init>":()V
+        12: astore        1
+        14: aload         0
+        16: ldc_w         #156                // String prefix
+        19: invokestatic  #162                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+        22: aload         1
+        24: ldc_w         #164                // String block
+        27: invokestatic  #162                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+        30: new           #14                 // class java/lang/StringBuilder
+        33: dup
+        34: invokespecial #18                 // Method java/lang/StringBuilder."<init>":()V
+        37: aload         0
+        39: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        42: aload         1
+        44: astore        2
+        46: ldc_w         #166                // String early
+        49: areturn
+        50: checkcast     #12                 // class java/lang/String
+        53: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        56: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+        59: goto          64
+        62: aconst_null
+        63: athrow
+        64: pop
+        65: ldc_w         #168                // String late
+        68: areturn
+        69: aconst_null
+        70: athrow
+    RuntimeInvisibleAnnotations:
+      0: #31()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String joined(java.util.List<java.lang.Byte>);
+    descriptor: (Ljava/util/List;)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=11, locals=5, args_size=1
+         0: aload         0
+         2: ldc_w         #171                // String values
+         5: invokestatic  #162                // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         0
+        10: checkcast     #173                // class java/util/List
+        13: astore        1
+        15: aload         1
+        17: checkcast     #175                // class java/lang/Iterable
+        20: astore        2
+        22: ldc_w         #177                // String
+        25: checkcast     #179                // class java/lang/CharSequence
+        28: astore        3
+        30: new           #181                // class trailing/ModelsKt$lambda$1277$12
+        33: dup
+        34: invokespecial #182                // Method trailing/ModelsKt$lambda$1277$12."<init>":()V
+        37: checkcast     #55                 // class kotlin/jvm/functions/Function1
+        40: astore        4
+        42: aload         2
+        44: aload         3
+        46: aconst_null
+        47: aconst_null
+        48: iconst_0
+        49: aconst_null
+        50: aload         4
+        52: bipush        30
+        54: aconst_null
+        55: invokestatic  #188                // Method kotlin/collections/CollectionsKt.joinToString$default:(Ljava/lang/Iterable;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;ILjava/lang/CharSequence;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/String;
+        58: areturn
+        59: aconst_null
+        60: athrow
+    Signature: #191                         // (Ljava/util/List<Ljava/lang/Byte;>;)Ljava/lang/String;
+    RuntimeInvisibleAnnotations:
+      0: #31()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #31()
+          org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String ordered();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=5, locals=4, args_size=0
+         0: ldc_w         #193                // String
+         3: putstatic     #10                 // Field trace:Ljava/lang/String;
+         6: iconst_4
+         7: istore        0
+         9: ldc_w         #195                // String A
+        12: invokestatic  #197                // Method note:(Ljava/lang/String;)Ljava/lang/String;
+        15: checkcast     #12                 // class java/lang/String
+        18: astore        1
+        20: new           #199                // class trailing/ModelsKt$lambda$1393$13
+        23: dup
+        24: invokespecial #200                // Method trailing/ModelsKt$lambda$1393$13."<init>":()V
+        27: checkcast     #37                 // class kotlin/jvm/functions/Function0
+        30: astore        2
+        32: aload         1
+        34: iload         0
+        36: aload         2
+        38: invokestatic  #48                 // Method source:(Ljava/lang/String;ILkotlin/jvm/functions/Function0;)Ljava/lang/String;
+        41: checkcast     #12                 // class java/lang/String
+        44: astore        3
+        46: new           #14                 // class java/lang/StringBuilder
+        49: dup
+        50: invokespecial #18                 // Method java/lang/StringBuilder."<init>":()V
+        53: new           #14                 // class java/lang/StringBuilder
+        56: dup
+        57: invokespecial #18                 // Method java/lang/StringBuilder."<init>":()V
+        60: getstatic     #10                 // Field trace:Ljava/lang/String;
+        63: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        66: ldc_w         #202                // String :
+        69: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        72: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+        75: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        78: aload         3
+        80: invokevirtual #22                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        83: invokevirtual #26                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+        86: areturn
+        87: aconst_null
+        88: athrow
+    RuntimeInvisibleAnnotations:
+      0: #31()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String arrayInitializer();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=256, locals=3, args_size=0
+         0: iconst_1
+         1: istore        1
+         3: new           #205                // class trailing/ModelsKt$lambda$1483$14
+         6: dup
+         7: invokespecial #206                // Method trailing/ModelsKt$lambda$1483$14."<init>":()V
+        10: astore        2
+        12: iload         1
+        14: anewarray     #12                 // class java/lang/String
+        17: astore        0
+        19: iconst_0
+        20: istore        1
+        22: iload         1
+        24: aload         0
+        26: arraylength
+        27: if_icmpge     53
+        30: aload         0
+        32: iload         1
+        34: aload         2
+        36: iload         1
+        38: invokestatic  #87                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        41: invokeinterface #58,  2           // InterfaceMethod kotlin/jvm/functions/Function1.invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+        46: aastore
+        47: iinc          1, 1
+        50: goto          22
+        53: aload         0
+        55: iconst_0
+        56: aaload
+        57: checkcast     #12                 // class java/lang/String
+        60: areturn
+        61: aconst_null
+        62: athrow
+    RuntimeInvisibleAnnotations:
+      0: #31()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String constructed();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=7, locals=2, args_size=0
+         0: new           #209                // class trailing/Holder
+         3: dup
+         4: new           #211                // class trailing/ModelsKt$lambda$1597$15
+         7: dup
+         8: invokespecial #212                // Method trailing/ModelsKt$lambda$1597$15."<init>":()V
+        11: invokespecial #215                // Method trailing/Holder."<init>":(Lkotlin/jvm/functions/Function0;)V
+        14: checkcast     #209                // class trailing/Holder
+        17: astore        0
+        19: aload         0
+        21: checkcast     #209                // class trailing/Holder
+        24: invokevirtual #219                // Method trailing/Holder.getBlock:()Lkotlin/jvm/functions/Function0;
+        27: checkcast     #37                 // class kotlin/jvm/functions/Function0
+        30: astore        1
+        32: aload         1
+        34: invokeinterface #41,  1           // InterfaceMethod kotlin/jvm/functions/Function0.invoke:()Ljava/lang/Object;
+        39: checkcast     #12                 // class java/lang/String
+        42: areturn
+        43: aconst_null
+        44: athrow
+    RuntimeInvisibleAnnotations:
+      0: #31()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String functionValue();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=7, locals=1, args_size=0
+         0: new           #222                // class trailing/ModelsKt$lambda$1741$16
+         3: dup
+         4: invokespecial #223                // Method trailing/ModelsKt$lambda$1741$16."<init>":()V
+         7: checkcast     #225                // class kotlin/jvm/functions/Function2
+        10: astore        0
+        12: aload         0
+        14: iconst_2
+        15: invokestatic  #87                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        18: new           #227                // class trailing/ModelsKt$lambda$1807$17
+        21: dup
+        22: invokespecial #228                // Method trailing/ModelsKt$lambda$1807$17."<init>":()V
+        25: invokeinterface #231,  3          // InterfaceMethod kotlin/jvm/functions/Function2.invoke:(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+        30: checkcast     #12                 // class java/lang/String
+        33: areturn
+        34: aconst_null
+        35: athrow
+    RuntimeInvisibleAnnotations:
+      0: #31()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String captured();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=5, locals=2, args_size=0
+         0: ldc_w         #234                // String captured
+         3: checkcast     #12                 // class java/lang/String
+         6: astore        0
+         8: new           #236                // class trailing/ModelsKt$lambda$1895$18
+        11: dup
+        12: aload         0
+        14: invokespecial #239                // Method trailing/ModelsKt$lambda$1895$18."<init>":(Ljava/lang/String;)V
+        17: checkcast     #37                 // class kotlin/jvm/functions/Function0
+        20: astore        1
+        22: aconst_null
+        23: iconst_0
+        24: aload         1
+        26: iconst_3
+        27: aconst_null
+        28: invokestatic  #73                 // Method source$default:(Ljava/lang/String;ILkotlin/jvm/functions/Function0;ILjava/lang/Object;)Ljava/lang/String;
+        31: areturn
+        32: aconst_null
+        33: athrow
+    RuntimeInvisibleAnnotations:
+      0: #31()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String access$note(java.lang.String);
+    descriptor: (Ljava/lang/String;)Ljava/lang/String;
+    flags: (0x1019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload         0
+         2: invokestatic  #197                // Method note:(Ljava/lang/String;)Ljava/lang/String;
+         5: areturn
+}
+SourceFile: "Models.kt"
+RuntimeVisibleAnnotations:
+  0: #241(#242=[I#243,I#244,I#245],#246=I#243,#247=I#248,#249=[s#250],#251=[s#27,s#252,s#253,s#28,s#42,s#155,s#254,s#255,s#163,s#256,s#43,s#59,s#257,s#258,s#259,s#60,s#66,s#67,s#74,s#24,s#78,s#90,s#100,s#104,s#112,s#125,s#133,s#141,s#145,s#149,s#169,s#189,s#170,s#260,s#261,s#190,s#203,s#207,s#220,s#232,s#233,s#7,s#8])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000\u0004\n\u0002\b+\u001a\u0017H\u0002\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u0001¢\u0006\u0004\b\u0000\u0010\u0003\u001a1H\u0002\u0010\u0004\u001a\u00020\u00012\b\u0010\u0005\u001a\u00020\u0001\b\u00022\b\u0010\u0006\u001a\u00020\u0007\b\u00022\f\u0010\b\u001a\b\u0012\u0004\u0012\u00020\u00010\t¢\u0006\u0004\b\u0004\u0010\n\u001aEH\u0002\u0010\u000b\"\u0006\b\u0000\u0010\f \u0002\"\u0006\b\u0001\u0010\r \u0002\u001a\u00028\u00012\u0006\u0010\u0002\u001a\u00028\u00002\b\u0010\u0006\u001a\u00020\u0007\b\u00022\u0012\u0010\b\u001a\u000e\u0012\u0004\u0012\u00028\u0000\u0012\u0004\u0012\u00028\u00010\u000e¢\u0006\u0004\b\u000b\u0010\u000f\u001a&H\u0082\b\u0010\u0010\u001a\u00020\u00012\u0006\u0010\u0005\u001a\u00020\u00012\f\u0010\b\u001a\b\u0012\u0004\u0012\u00020\u00010\t¢\u0006\u0004\b\u0010\u0010\u0011\u001a\u000fH\u0006\u0010\u0012\u001a\u00020\u0001¢\u0006\u0004\b\u0012\u0010\u0013\u001a\u000fH\u0006\u0010\u0014\u001a\u00020\u0001¢\u0006\u0004\b\u0014\u0010\u0013\u001a\u000fH\u0006\u0010\u0015\u001a\u00020\u0001¢\u0006\u0004\b\u0015\u0010\u0013\u001a\u000fH\u0006\u0010\u0016\u001a\u00020\u0001¢\u0006\u0004\b\u0016\u0010\u0013\u001a\u000fH\u0006\u0010\u0017\u001a\u00020\u0001¢\u0006\u0004\b\u0017\u0010\u0013\u001a\u0011H\u0006\u0010\u0018\u001a\u00040\u0001\u0018\u0001¢\u0006\u0004\b\u0018\u0010\u0013\u001a\u000fH\u0006\u0010\u0019\u001a\u00020\u0001¢\u0006\u0004\b\u0019\u0010\u0013\u001a\u000fH\u0006\u0010\u001a\u001a\u00020\u0001¢\u0006\u0004\b\u001a\u0010\u0013\u001a\u000fH\u0006\u0010\u001b\u001a\u00020\u0001¢\u0006\u0004\b\u001b\u0010\u0013\u001a\u000fH\u0006\u0010\u001c\u001a\u00020\u0001¢\u0006\u0004\b\u001c\u0010\u0013\u001a\u000fH\u0006\u0010\u001d\u001a\u00020\u0001¢\u0006\u0004\b\u001d\u0010\u0013\u001a\u000fH\u0006\u0010\u001e\u001a\u00020\u0001¢\u0006\u0004\b\u001e\u0010\u0013\u001a\u001dH\u0006\u0010\u001f\u001a\u00020\u00012\f\u0010 \u001a\b\u0012\u0004\u0012\u00020!0\"¢\u0006\u0004\b\u001f\u0010#\u001a\u000fH\u0006\u0010$\u001a\u00020\u0001¢\u0006\u0004\b$\u0010\u0013\u001a\u000fH\u0006\u0010%\u001a\u00020\u0001¢\u0006\u0004\b%\u0010\u0013\u001a\u000fH\u0006\u0010&\u001a\u00020\u0001¢\u0006\u0004\b&\u0010\u0013\u001a\u000fH\u0006\u0010\'\u001a\u00020\u0001¢\u0006\u0004\b\'\u0010\u0013\u001a\u000fH\u0006\u0010(\u001a\u00020\u0001¢\u0006\u0004\b(\u0010\u0013\"\u0012X\u0082\u000e\u0010)\u001a\u00020\u0001¢\u0006\u0006\n\u0004\b)\u0010*"]
+      d2=["note","kotlin/String","value","(Ljava/lang/String;)Ljava/lang/String;","source","prefix","count","kotlin/Int","block","kotlin/Function0","(Ljava/lang/String;ILkotlin/jvm/functions/Function0;)Ljava/lang/String;","transform","T","R","kotlin/Function1","(Ljava/lang/Object;ILkotlin/jvm/functions/Function1;)Ljava/lang/Object;","immediate","(Ljava/lang/String;Lkotlin/jvm/functions/Function0;)Ljava/lang/String;","sourceDefault","()Ljava/lang/String;","sourceNamed","sourceGeneric","compiledExtension","compiledNamed","compiledNullable","compiledMember","compiledOverload","selectedOverload","explicitLabel","implicitLabel","inlineReturn","joined","values","kotlin/Byte","kotlin/collections/List","(Ljava/util/List;)Ljava/lang/String;","ordered","arrayInitializer","constructed","functionValue","captured","trace","Ljava/lang/String;"]
+    )

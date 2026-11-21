@@ -60,10 +60,11 @@ fn expected_results_and_metadata_contracts_preserve_stability_and_return_polarit
             "{name}"
         );
     }
+    let source = std::fs::read_to_string(fixtures.join("UnsupportedTrailing.kt")).unwrap();
+    compile_outputs_with_classpath(&source, "UnsupportedTrailing.kt", &cp).unwrap();
     for name in [
         "UnsupportedMutable",
         "UnsupportedCaptured",
-        "UnsupportedTrailing",
         "UnsupportedReifiedUnit",
         "UnsupportedReifiedNullableUnit",
         "NullReturn",

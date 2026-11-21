@@ -1048,7 +1048,9 @@ impl Checker<'_> {
         let mut score = 0;
         let result = (|| {
             for (arg, i) in args.iter().zip(mapping) {
-                let arg = if let ExprKind::NamedArgument(_, value) = &arg.kind {
+                let arg = if let ExprKind::NamedArgument(_, value)
+                | ExprKind::TrailingLambda(value) = &arg.kind
+                {
                     value.as_ref()
                 } else {
                     arg
@@ -1404,7 +1406,10 @@ impl Checker<'_> {
             }
             if matches!(
                 arg.kind,
-                ExprKind::Lambda(_) | ExprKind::LambdaWithParams { .. } | ExprKind::Labeled(..)
+                ExprKind::Lambda(_)
+                    | ExprKind::LambdaWithParams { .. }
+                    | ExprKind::Labeled(..)
+                    | ExprKind::TrailingLambda(_)
             ) {
                 return Ok(true);
             }
@@ -1520,7 +1525,24 @@ impl Checker<'_> {
         let mut mapping = Vec::new();
         let mut seen_named = false;
         for (position, arg) in args.iter().enumerate() {
-            let index = if let ExprKind::NamedArgument(name, _) = &arg.kind {
+            let index = if let ExprKind::TrailingLambda(_) = &arg.kind {
+                if position + 1 != args.len() {
+                    return Err(Diagnostic::new(
+                        arg.offset,
+                        "Only one trailing lambda is supported",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "ARGUMENT_MAPPING_MISMATCH",
+                    ));
+                }
+                params.len().checked_sub(1).ok_or_else(|| {
+                    Diagnostic::new(arg.offset, "Trailing lambda requires a parameter").with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "ARGUMENT_MAPPING_MISMATCH",
+                    )
+                })?
+            } else if let ExprKind::NamedArgument(name, _) = &arg.kind {
                 if !named {
                     return Err(Diagnostic::new(
                         arg.offset,
@@ -1603,7 +1625,9 @@ impl Checker<'_> {
         let mut ordered: Vec<Option<Value>> = (0..params.len()).map(|_| None).collect();
         let mut lets = Vec::new();
         for (arg, index) in args.iter().zip(mapping) {
-            let expr = if let ExprKind::NamedArgument(_, expr) = &arg.kind {
+            let expr = if let ExprKind::NamedArgument(_, expr) | ExprKind::TrailingLambda(expr) =
+                &arg.kind
+            {
                 expr.as_ref()
             } else {
                 arg
@@ -4014,7 +4038,9 @@ impl Checker<'_> {
             ),
             ExprKind::Float(bits) => (Type::Float, ValueKind::Float(*bits)),
             ExprKind::Double(bits) => (Type::Double, ValueKind::Double(*bits)),
-            ExprKind::NamedArgument(_, _) | ExprKind::Generic(_, _) => {
+            ExprKind::NamedArgument(_, _)
+            | ExprKind::TrailingLambda(_)
+            | ExprKind::Generic(_, _) => {
                 return Err(Diagnostic::new(
                     offset,
                     "Named arguments and generic types require a supported call",
@@ -6161,6 +6187,7 @@ fn call_names(expr: &Expr, names: &mut HashSet<String>) {
         ExprKind::ClassLiteral { receiver: a, .. }
         | ExprKind::Generic(a, _)
         | ExprKind::NamedArgument(_, a)
+        | ExprKind::TrailingLambda(a)
         | ExprKind::Unary(_, a)
         | ExprKind::NonNull(a)
         | ExprKind::Lambda(a)

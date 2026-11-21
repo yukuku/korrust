@@ -1297,7 +1297,9 @@ impl Checker<'_> {
             offset,
         )?;
         for (arg, index) in args.iter().zip(&mapping) {
-            let arg = if let ExprKind::NamedArgument(_, expr) = &arg.kind {
+            let arg = if let ExprKind::NamedArgument(_, expr) | ExprKind::TrailingLambda(expr) =
+                &arg.kind
+            {
                 expr.as_ref()
             } else {
                 arg
@@ -1414,7 +1416,9 @@ impl Checker<'_> {
             .map(|parameter| parameter.name.clone())
             .collect::<HashSet<_>>();
         for (arg, index) in args.iter().zip(&mapping) {
-            let arg = if let ExprKind::NamedArgument(_, expr) = &arg.kind {
+            let arg = if let ExprKind::NamedArgument(_, expr) | ExprKind::TrailingLambda(expr) =
+                &arg.kind
+            {
                 expr.as_ref()
             } else {
                 arg

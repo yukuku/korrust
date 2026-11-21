@@ -4148,6 +4148,7 @@ fn constructor_read(
         | ExprKind::SafeProperty(value, _)
         | ExprKind::Generic(value, _)
         | ExprKind::NamedArgument(_, value)
+        | ExprKind::TrailingLambda(value)
         | ExprKind::Throw(value)
         | ExprKind::Labeled(_, value) => constructor_read(value, fields, locals, state)?,
         ExprKind::TypeOperation(_, value, _)

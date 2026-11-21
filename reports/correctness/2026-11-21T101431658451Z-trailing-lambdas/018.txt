@@ -1,0 +1,4 @@
+$ /workspace/work/audio33/references/kotlinc/bin/kotlinc /workspace/work/audio33/tests/trailing_lambdas/InvalidNamedPosition.kt -cp /workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/official-InvalidNamedPosition -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/trailing_lambdas/InvalidNamedPosition.kt:2:49: error: mixing named and positional arguments is not allowed unless the order of the arguments matches the order of the parameters.
+fun bad(): String = target(block = { "named" }, "out of order")
+                                                ^^^^^^^^^^^^^^

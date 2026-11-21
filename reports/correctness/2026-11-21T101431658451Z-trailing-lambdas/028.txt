@@ -1,0 +1,421 @@
+$ /workspace/korrust-setup/jdk-21/bin/javap -public -s -v -classpath /workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/app-official yuku.alkitab.base.audio.AudioHttpErrorBodyKt
+Classfile /workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/app-official/yuku/alkitab/base/audio/AudioHttpErrorBodyKt.class
+  Last modified Nov 21, 2026; size 4493 bytes
+  SHA-256 checksum 2c327e7309e9afcf352e664c7efc45a2bc9c461408e3ec028498ff1f294c3d5d
+  Compiled from "AudioHttpErrorBody.kt"
+public final class yuku.alkitab.base.audio.AudioHttpErrorBodyKt
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // yuku/alkitab/base/audio/AudioHttpErrorBodyKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 2, methods: 3, attributes: 5
+Constant pool:
+    #1 = Utf8               yuku/alkitab/base/audio/AudioHttpErrorBodyKt
+    #2 = Class              #1            // yuku/alkitab/base/audio/AudioHttpErrorBodyKt
+    #3 = Utf8               java/lang/Object
+    #4 = Class              #3            // java/lang/Object
+    #5 = Utf8               formatErrorBody
+    #6 = Utf8               ([B)Ljava/lang/String;
+    #7 = Utf8               Lorg/jetbrains/annotations/Nullable;
+    #8 = Utf8               Lorg/jetbrains/annotations/NotNull;
+    #9 = Utf8               body
+   #10 = String             #9            // body
+   #11 = Utf8               kotlin/jvm/internal/Intrinsics
+   #12 = Class              #11           // kotlin/jvm/internal/Intrinsics
+   #13 = Utf8               checkNotNullParameter
+   #14 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+   #15 = NameAndType        #13:#14       // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+   #16 = Methodref          #12.#15       // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+   #17 = Utf8               isPrintableOrWhitespace
+   #18 = Utf8               (B)Z
+   #19 = NameAndType        #17:#18       // isPrintableOrWhitespace:(B)Z
+   #20 = Methodref          #2.#19        // yuku/alkitab/base/audio/AudioHttpErrorBodyKt.isPrintableOrWhitespace:(B)Z
+   #21 = Utf8               java/lang/String
+   #22 = Class              #21           // java/lang/String
+   #23 = Utf8               kotlin/text/Charsets
+   #24 = Class              #23           // kotlin/text/Charsets
+   #25 = Utf8               US_ASCII
+   #26 = Utf8               Ljava/nio/charset/Charset;
+   #27 = NameAndType        #25:#26       // US_ASCII:Ljava/nio/charset/Charset;
+   #28 = Fieldref           #24.#27       // kotlin/text/Charsets.US_ASCII:Ljava/nio/charset/Charset;
+   #29 = Utf8               <init>
+   #30 = Utf8               ([BLjava/nio/charset/Charset;)V
+   #31 = NameAndType        #29:#30       // "<init>":([BLjava/nio/charset/Charset;)V
+   #32 = Methodref          #22.#31       // java/lang/String."<init>":([BLjava/nio/charset/Charset;)V
+   #33 = Utf8               kotlin/text/StringsKt
+   #34 = Class              #33           // kotlin/text/StringsKt
+   #35 = Utf8               replace$default
+   #36 = Utf8               (Ljava/lang/String;CCZILjava/lang/Object;)Ljava/lang/String;
+   #37 = NameAndType        #35:#36       // replace$default:(Ljava/lang/String;CCZILjava/lang/Object;)Ljava/lang/String;
+   #38 = Methodref          #34.#37       // kotlin/text/StringsKt.replace$default:(Ljava/lang/String;CCZILjava/lang/Object;)Ljava/lang/String;
+   #39 = Utf8               java/lang/CharSequence
+   #40 = Class              #39           // java/lang/CharSequence
+   #41 = Utf8               trim
+   #42 = Utf8               (Ljava/lang/CharSequence;)Ljava/lang/CharSequence;
+   #43 = NameAndType        #41:#42       // trim:(Ljava/lang/CharSequence;)Ljava/lang/CharSequence;
+   #44 = Methodref          #34.#43       // kotlin/text/StringsKt.trim:(Ljava/lang/CharSequence;)Ljava/lang/CharSequence;
+   #45 = Utf8               toString
+   #46 = Utf8               ()Ljava/lang/String;
+   #47 = NameAndType        #45:#46       // toString:()Ljava/lang/String;
+   #48 = Methodref          #4.#47        // java/lang/Object.toString:()Ljava/lang/String;
+   #49 = Utf8               length
+   #50 = Utf8               ()I
+   #51 = NameAndType        #49:#50       // length:()I
+   #52 = InterfaceMethodref #40.#51       // java/lang/CharSequence.length:()I
+   #53 = Utf8               java/lang/StringBuilder
+   #54 = Class              #53           // java/lang/StringBuilder
+   #55 = Utf8               ()V
+   #56 = NameAndType        #29:#55       // "<init>":()V
+   #57 = Methodref          #54.#56       // java/lang/StringBuilder."<init>":()V
+   #58 = Utf8               kotlin/collections/ArraysKt
+   #59 = Class              #58           // kotlin/collections/ArraysKt
+   #60 = Utf8               take
+   #61 = Utf8               ([BI)Ljava/util/List;
+   #62 = NameAndType        #60:#61       // take:([BI)Ljava/util/List;
+   #63 = Methodref          #59.#62       // kotlin/collections/ArraysKt.take:([BI)Ljava/util/List;
+   #64 = Utf8               java/lang/Iterable
+   #65 = Class              #64           // java/lang/Iterable
+   #66 = Utf8
+   #67 = String             #66           //
+   #68 = Utf8               (Ljava/lang/Object;)Ljava/lang/Object;
+   #69 = MethodType         #68           //  (Ljava/lang/Object;)Ljava/lang/Object;
+   #70 = Utf8               formatErrorBody$lambda$2
+   #71 = Utf8               (B)Ljava/lang/CharSequence;
+   #72 = NameAndType        #70:#71       // formatErrorBody$lambda$2:(B)Ljava/lang/CharSequence;
+   #73 = Methodref          #2.#72        // yuku/alkitab/base/audio/AudioHttpErrorBodyKt.formatErrorBody$lambda$2:(B)Ljava/lang/CharSequence;
+   #74 = MethodHandle       6:#73         // REF_invokeStatic yuku/alkitab/base/audio/AudioHttpErrorBodyKt.formatErrorBody$lambda$2:(B)Ljava/lang/CharSequence;
+   #75 = Utf8               (Ljava/lang/Byte;)Ljava/lang/CharSequence;
+   #76 = MethodType         #75           //  (Ljava/lang/Byte;)Ljava/lang/CharSequence;
+   #77 = Utf8               java/lang/invoke/LambdaMetafactory
+   #78 = Class              #77           // java/lang/invoke/LambdaMetafactory
+   #79 = Utf8               metafactory
+   #80 = Utf8               (Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+   #81 = NameAndType        #79:#80       // metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+   #82 = Methodref          #78.#81       // java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+   #83 = MethodHandle       6:#82         // REF_invokeStatic java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+   #84 = Utf8               invoke
+   #85 = Utf8               ()Lkotlin/jvm/functions/Function1;
+   #86 = NameAndType        #84:#85       // invoke:()Lkotlin/jvm/functions/Function1;
+   #87 = InvokeDynamic      #0:#86        // #0:invoke:()Lkotlin/jvm/functions/Function1;
+   #88 = Utf8               kotlin/collections/CollectionsKt
+   #89 = Class              #88           // kotlin/collections/CollectionsKt
+   #90 = Utf8               joinToString$default
+   #91 = Utf8               (Ljava/lang/Iterable;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;ILjava/lang/CharSequence;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/String;
+   #92 = NameAndType        #90:#91       // joinToString$default:(Ljava/lang/Iterable;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;ILjava/lang/CharSequence;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/String;
+   #93 = Methodref          #89.#92       // kotlin/collections/CollectionsKt.joinToString$default:(Ljava/lang/Iterable;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;ILjava/lang/CharSequence;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/String;
+   #94 = Utf8               append
+   #95 = Utf8               (Ljava/lang/String;)Ljava/lang/StringBuilder;
+   #96 = NameAndType        #94:#95       // append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+   #97 = Methodref          #54.#96       // java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+   #98 = Utf8                ...
+   #99 = String             #98           //  ...
+  #100 = Methodref          #54.#47       // java/lang/StringBuilder.toString:()Ljava/lang/String;
+  #101 = Utf8               $i$a$-all-AudioHttpErrorBodyKt$formatErrorBody$1
+  #102 = Utf8               I
+  #103 = Utf8               it
+  #104 = Utf8               B
+  #105 = Utf8               element$iv
+  #106 = Utf8               $i$f$all
+  #107 = Utf8               $this$all$iv
+  #108 = Utf8               [B
+  #109 = Utf8               $i$a$-ifEmpty-AudioHttpErrorBodyKt$formatErrorBody$2
+  #110 = Utf8               text
+  #111 = Utf8               Ljava/lang/String;
+  #112 = Class              #108          // "[B"
+  #113 = Utf8               v
+  #114 = Utf8               b
+  #115 = Utf8               %02x
+  #116 = String             #115          // %02x
+  #117 = Utf8               java/lang/Byte
+  #118 = Class              #117          // java/lang/Byte
+  #119 = Utf8               valueOf
+  #120 = Utf8               (B)Ljava/lang/Byte;
+  #121 = NameAndType        #119:#120     // valueOf:(B)Ljava/lang/Byte;
+  #122 = Methodref          #118.#121     // java/lang/Byte.valueOf:(B)Ljava/lang/Byte;
+  #123 = Utf8               java/util/Arrays
+  #124 = Class              #123          // java/util/Arrays
+  #125 = Utf8               copyOf
+  #126 = Utf8               ([Ljava/lang/Object;I)[Ljava/lang/Object;
+  #127 = NameAndType        #125:#126     // copyOf:([Ljava/lang/Object;I)[Ljava/lang/Object;
+  #128 = Methodref          #124.#127     // java/util/Arrays.copyOf:([Ljava/lang/Object;I)[Ljava/lang/Object;
+  #129 = Utf8               format
+  #130 = Utf8               (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+  #131 = NameAndType        #129:#130     // format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+  #132 = Methodref          #22.#131      // java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+  #133 = Utf8               format(...)
+  #134 = String             #133          // format(...)
+  #135 = Utf8               checkNotNullExpressionValue
+  #136 = NameAndType        #135:#14      // checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+  #137 = Methodref          #12.#136      // kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+  #138 = Utf8               MAX_ERROR_BODY_BYTES
+  #139 = Integer            1024
+  #140 = Utf8               HEX_DUMP_BYTES
+  #141 = Integer            16
+  #142 = Utf8               Lkotlin/Metadata;
+  #143 = Utf8               mv
+  #144 = Integer            2
+  #145 = Integer            3
+  #146 = Integer            0
+  #147 = Utf8               k
+  #148 = Utf8               xi
+  #149 = Integer            48
+  #150 = Utf8               d1
+  #151 = Utf8               \u0000 \n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\u0012\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0005\u001a\u0012\u0010\u0003\u001a\u0004\u0018\u00010\u00042\u0006\u0010\u0005\u001a\u00020\u0006H\u0000\u001a\u0010\u0010\u0007\u001a\u00020\b2\u0006\u0010\t\u001a\u00020\nH\u0002\"\u000e\u0010\u0000\u001a\u00020\u0001X\u0080T¢\u0006\u0002\n\u0000\"\u000e\u0010\u0002\u001a\u00020\u0001X\u0082T¢\u0006\u0002\n\u0000
+  #152 = Utf8               d2
+  #153 = Utf8
+  #154 = Utf8               AudioHttpErrorBody.kt
+  #155 = Utf8               Lkotlin/jvm/internal/SourceDebugExtension;
+  #156 = Utf8               value
+  #157 = Utf8               SMAP\nAudioHttpErrorBody.kt\nKotlin\n*S Kotlin\n*F\n+ 1 AudioHttpErrorBody.kt\nyuku/alkitab/base/audio/AudioHttpErrorBodyKt\n+ 2 _Arrays.kt\nkotlin/collections/ArraysKt___ArraysKt\n+ 3 fake.kt\nkotlin/jvm/internal/FakeKt\n*L\n1#1,43:1\n13024#2,2:44\n1#3:46\n*S KotlinDebug\n*F\n+ 1 AudioHttpErrorBody.kt\nyuku/alkitab/base/audio/AudioHttpErrorBodyKt\n*L\n22#1:44,2\n*E\n
+  #158 = Utf8               ConstantValue
+  #159 = Utf8               Code
+  #160 = Utf8               StackMapTable
+  #161 = Utf8               LineNumberTable
+  #162 = Utf8               LocalVariableTable
+  #163 = Utf8               RuntimeInvisibleAnnotations
+  #164 = Utf8               RuntimeInvisibleParameterAnnotations
+  #165 = Utf8               SourceFile
+  #166 = Utf8               SourceDebugExtension
+  #167 = Utf8               RuntimeVisibleAnnotations
+  #168 = Utf8               BootstrapMethods
+{
+  public static final int MAX_ERROR_BODY_BYTES;
+    descriptor: I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    ConstantValue: int 1024
+
+  public static final java.lang.String formatErrorBody(byte[]);
+    descriptor: ([B)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=10, locals=8, args_size=1
+         0: aload_0
+         1: ldc           #10                 // String body
+         3: invokestatic  #16                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: arraylength
+         8: ifne          15
+        11: iconst_1
+        12: goto          16
+        15: iconst_0
+        16: ifne          27
+        19: aload_0
+        20: arraylength
+        21: sipush        1024
+        24: if_icmplt     29
+        27: aconst_null
+        28: areturn
+        29: aload_0
+        30: astore_1
+        31: iconst_0
+        32: istore_2
+        33: iconst_0
+        34: istore_3
+        35: aload_1
+        36: arraylength
+        37: istore        4
+        39: iload_3
+        40: iload         4
+        42: if_icmpge     75
+        45: aload_1
+        46: iload_3
+        47: baload
+        48: istore        5
+        50: iload         5
+        52: istore        6
+        54: iconst_0
+        55: istore        7
+        57: iload         6
+        59: invokestatic  #20                 // Method isPrintableOrWhitespace:(B)Z
+        62: ifne          69
+        65: iconst_0
+        66: goto          76
+        69: iinc          3, 1
+        72: goto          39
+        75: iconst_1
+        76: ifeq          165
+        79: new           #22                 // class java/lang/String
+        82: dup
+        83: aload_0
+        84: getstatic     #28                 // Field kotlin/text/Charsets.US_ASCII:Ljava/nio/charset/Charset;
+        87: invokespecial #32                 // Method java/lang/String."<init>":([BLjava/nio/charset/Charset;)V
+        90: bipush        10
+        92: bipush        32
+        94: iconst_0
+        95: iconst_4
+        96: aconst_null
+        97: invokestatic  #38                 // Method kotlin/text/StringsKt.replace$default:(Ljava/lang/String;CCZILjava/lang/Object;)Ljava/lang/String;
+       100: bipush        13
+       102: bipush        32
+       104: iconst_0
+       105: iconst_4
+       106: aconst_null
+       107: invokestatic  #38                 // Method kotlin/text/StringsKt.replace$default:(Ljava/lang/String;CCZILjava/lang/Object;)Ljava/lang/String;
+       110: bipush        9
+       112: bipush        32
+       114: iconst_0
+       115: iconst_4
+       116: aconst_null
+       117: invokestatic  #38                 // Method kotlin/text/StringsKt.replace$default:(Ljava/lang/String;CCZILjava/lang/Object;)Ljava/lang/String;
+       120: checkcast     #40                 // class java/lang/CharSequence
+       123: invokestatic  #44                 // Method kotlin/text/StringsKt.trim:(Ljava/lang/CharSequence;)Ljava/lang/CharSequence;
+       126: invokevirtual #48                 // Method java/lang/Object.toString:()Ljava/lang/String;
+       129: astore_1
+       130: aload_1
+       131: checkcast     #40                 // class java/lang/CharSequence
+       134: astore_2
+       135: aload_2
+       136: invokeinterface #52,  1           // InterfaceMethod java/lang/CharSequence.length:()I
+       141: ifne          148
+       144: iconst_1
+       145: goto          149
+       148: iconst_0
+       149: ifeq          158
+       152: iconst_0
+       153: istore_3
+       154: aconst_null
+       155: goto          159
+       158: aload_2
+       159: checkcast     #22                 // class java/lang/String
+       162: goto          212
+       165: new           #54                 // class java/lang/StringBuilder
+       168: dup
+       169: invokespecial #57                 // Method java/lang/StringBuilder."<init>":()V
+       172: aload_0
+       173: bipush        16
+       175: invokestatic  #63                 // Method kotlin/collections/ArraysKt.take:([BI)Ljava/util/List;
+       178: checkcast     #65                 // class java/lang/Iterable
+       181: ldc           #67                 // String
+       183: checkcast     #40                 // class java/lang/CharSequence
+       186: aconst_null
+       187: aconst_null
+       188: iconst_0
+       189: aconst_null
+       190: invokedynamic #87,  0             // InvokeDynamic #0:invoke:()Lkotlin/jvm/functions/Function1;
+       195: bipush        30
+       197: aconst_null
+       198: invokestatic  #93                 // Method kotlin/collections/CollectionsKt.joinToString$default:(Ljava/lang/Iterable;Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;ILjava/lang/CharSequence;Lkotlin/jvm/functions/Function1;ILjava/lang/Object;)Ljava/lang/String;
+       201: invokevirtual #97                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       204: ldc           #99                 // String  ...
+       206: invokevirtual #97                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+       209: invokevirtual #100                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+       212: areturn
+      StackMapTable: number_of_entries = 14
+        frame_type = 15 /* same */
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ int ]
+        frame_type = 10 /* same */
+        frame_type = 1 /* same */
+        frame_type = 255 /* full_frame */
+          offset_delta = 9
+          locals = [ class "[B", class "[B", int, int, int ]
+          stack = []
+        frame_type = 254 /* append */
+          offset_delta = 29
+          locals = [ int, int, int ]
+        frame_type = 248 /* chop */
+          offset_delta = 5
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 71
+          locals = [ class "[B", class java/lang/String, class java/lang/CharSequence, int, int ]
+          stack = []
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ int ]
+        frame_type = 8 /* same */
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ class java/lang/CharSequence ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 5
+          locals = [ class "[B", class "[B", int, int, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 46
+          locals = [ class "[B", class java/lang/Object, top, int, int ]
+          stack = [ class java/lang/String ]
+      LineNumberTable:
+        line 21: 6
+        line 21: 16
+        line 22: 29
+        line 44: 33
+        line 22: 57
+        line 44: 62
+        line 45: 75
+        line 22: 76
+        line 27: 79
+        line 23: 84
+        line 24: 90
+        line 25: 100
+        line 26: 110
+        line 27: 129
+        line 23: 129
+        line 28: 130
+        line 46: 152
+        line 28: 154
+        line 28: 155
+        line 30: 165
+        line 22: 212
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           57       5     7 $i$a$-all-AudioHttpErrorBodyKt$formatErrorBody$1   I
+           54       8     6    it   B
+           50      19     5 element$iv   B
+           33      43     2 $i$f$all   I
+           31      45     1 $this$all$iv   [B
+          154       1     3 $i$a$-ifEmpty-AudioHttpErrorBodyKt$formatErrorBody$2   I
+          130      29     1  text   Ljava/lang/String;
+            0     213     0  body   [B
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.Nullable
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #8()
+          org.jetbrains.annotations.NotNull
+}
+SourceFile: "AudioHttpErrorBody.kt"
+SourceDebugExtension:
+  SMAP
+  AudioHttpErrorBody.kt
+  Kotlin
+  *S Kotlin
+  *F
+  + 1 AudioHttpErrorBody.kt
+  yuku/alkitab/base/audio/AudioHttpErrorBodyKt
+  + 2 _Arrays.kt
+  kotlin/collections/ArraysKt___ArraysKt
+  + 3 fake.kt
+  kotlin/jvm/internal/FakeKt
+  *L
+  1#1,43:1
+  13024#2,2:44
+  1#3:46
+  *S KotlinDebug
+  *F
+  + 1 AudioHttpErrorBody.kt
+  yuku/alkitab/base/audio/AudioHttpErrorBodyKt
+  *L
+  22#1:44,2
+  *E
+RuntimeVisibleAnnotations:
+  0: #142(#143=[I#144,I#145,I#146],#147=I#144,#148=I#149,#150=[s#151],#152=[s#138,s#153,s#140,s#5,s#153,s#9,s#153,s#17,s#153,s#114,s#153])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000 \n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\u0012\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0005\u001a\u0012\u0010\u0003\u001a\u0004\u0018\u00010\u00042\u0006\u0010\u0005\u001a\u00020\u0006H\u0000\u001a\u0010\u0010\u0007\u001a\u00020\b2\u0006\u0010\t\u001a\u00020\nH\u0002\"\u000e\u0010\u0000\u001a\u00020\u0001X\u0080T¢\u0006\u0002\n\u0000\"\u000e\u0010\u0002\u001a\u00020\u0001X\u0082T¢\u0006\u0002\n\u0000"]
+      d2=["MAX_ERROR_BODY_BYTES","","HEX_DUMP_BYTES","formatErrorBody","","body","","isPrintableOrWhitespace","","b",""]
+    )
+RuntimeInvisibleAnnotations:
+  0: #155(#156=[s#157])
+    kotlin.jvm.internal.SourceDebugExtension(
+      value=["SMAP\nAudioHttpErrorBody.kt\nKotlin\n*S Kotlin\n*F\n+ 1 AudioHttpErrorBody.kt\nyuku/alkitab/base/audio/AudioHttpErrorBodyKt\n+ 2 _Arrays.kt\nkotlin/collections/ArraysKt___ArraysKt\n+ 3 fake.kt\nkotlin/jvm/internal/FakeKt\n*L\n1#1,43:1\n13024#2,2:44\n1#3:46\n*S KotlinDebug\n*F\n+ 1 AudioHttpErrorBody.kt\nyuku/alkitab/base/audio/AudioHttpErrorBodyKt\n*L\n22#1:44,2\n*E\n"]
+    )
+BootstrapMethods:
+  0: #83 REF_invokeStatic java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+    Method arguments:
+      #69 (Ljava/lang/Object;)Ljava/lang/Object;
+      #74 REF_invokeStatic yuku/alkitab/base/audio/AudioHttpErrorBodyKt.formatErrorBody$lambda$2:(B)Ljava/lang/CharSequence;
+      #76 (Ljava/lang/Byte;)Ljava/lang/CharSequence;

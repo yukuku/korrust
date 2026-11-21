@@ -190,7 +190,11 @@ fn legacy_check(
                 "Only unshadowed ThreadLocal.withInitial array suppliers are supported",
             ));
         }
-        let ExprKind::Lambda(array) = &arguments[0].kind else {
+        let argument = match &arguments[0].kind {
+            ExprKind::TrailingLambda(value) => value.as_ref(),
+            _ => &arguments[0],
+        };
+        let ExprKind::Lambda(array) = &argument.kind else {
             return Err(Diagnostic::new(
                 field.offset,
                 "ThreadLocal suppliers require a zero-argument array allocation lambda",

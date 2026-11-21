@@ -59,7 +59,7 @@ def main():
         effective_options=dict(jvm_target='1.8', language_version='2.3', api_version='2.3'),
         supersedes=relative(args.supersedes) if args.supersedes else None,
         scope='Expected results through explicit return expressions, block and try/catch tails, contextual generic reference-array construction, canonical StringArray constraints, direct interparameter bounds, compiled extension result contexts and nullable functional lambda/reference contexts; imported metadata conditional contract facts for stable immutable locals and parameters',
-        limitations=['No source contract DSL authoring', 'Contract facts apply to compiled static/top-level and extension calls; instance-member contracts are not applied', 'returns(null) facts are decoded but not applied; pinned compiler also rejects the tested external null-return implication consumer', 'No mutable/captured-cell contract smartcasts', 'No disjunction or negative-type implications', 'No calls-in-place analysis or returns-not-null/unconditional-return effect support', 'General expected-result propagation through when and Elvis remains outside this slice', 'Trailing lambdas after omitted default parameters remain unsupported because the parser does not retain outside-parentheses argument placement', 'Nullable Unit type-argument errors are currently swallowed by speculative call parsing; the direct reified Unit case has the structured classifier diagnostic', 'No full application build or performance claim'],
+        limitations=['No source contract DSL authoring', 'Contract facts apply to compiled static/top-level and extension calls; instance-member contracts are not applied', 'returns(null) facts are decoded but not applied; pinned compiler also rejects the tested external null-return implication consumer', 'No mutable/captured-cell contract smartcasts', 'No disjunction or negative-type implications', 'No calls-in-place analysis or returns-not-null/unconditional-return effect support', 'General expected-result propagation through when and Elvis remains outside this slice', 'Nullable Unit type-argument errors are currently swallowed by speculative call parsing; the direct reified Unit case has the structured classifier diagnostic', 'No full application build or performance claim'],
         evidence=dict(work_directory=relative(directory), logs=relative(evidence / 'commands')), cases=[], commands=[],
         reproduction_command=['python3', relative(__file__), '--candidate', relative(args.candidate), '--baseline', relative(args.baseline), '--output', relative(directory), '--evidence-directory', relative(evidence)])
 
@@ -154,10 +154,11 @@ def main():
     for source in sorted(FIXTURES.glob('Unsupported*.kt')):
         def unsupported(source=source):
             run('official valid contract boundary ' + source.stem, [official, source, '-cp', cp, '-d', directory / ('official-' + source.stem), *options])
+            if source.stem == 'UnsupportedTrailing':
+                run('candidate trailing lambda after defaults', [candidate, source, '-cp', cp, '-d', directory / ('candidate-' + source.stem)])
+                return dict(outcome='pass', reason='Outside-parentheses argument placement is retained and mapped to the last parameter')
             result = run('candidate contract boundary ' + source.stem, [candidate, source, '-cp', cp, '-d', directory / ('candidate-' + source.stem), '--diagnostic-format', 'json'], accepted=(1,))
             reason = 'Reified Unit and nullable Unit classifier representation remains unsupported' if 'Reified' in source.stem else 'Contracts currently refine immutable local JVM slots and parameters only; captured values and mutable bindings are excluded'
-            if source.stem == 'UnsupportedTrailing':
-                reason = 'Outside-parentheses trailing lambda placement after omitted defaults is not retained by the parser; supported tests use named transform or all arguments inside parentheses'
             if source.stem == 'UnsupportedReifiedNullableUnit':
                 reason = 'Nullable Unit is rejected by the existing parser, whose speculative generic-call path currently swallows its structured unsupported diagnostic'
             if source.stem == 'UnsupportedReifiedUnit':

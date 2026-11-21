@@ -1,0 +1,7 @@
+$ /workspace/work/audio33/references/kotlinc/bin/kotlinc /workspace/work/audio33/tests/trailing_lambdas/InvalidParenthesized.kt -cp /workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/official-InvalidParenthesized -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/trailing_lambdas/InvalidParenthesized.kt:2:28: error: argument type mismatch: actual type is '() -> String', but 'String' was expected.
+fun bad(): String = target({ "wrong position" })
+                           ^^^^^^^^^^^^^^^^^^^^
+tests/trailing_lambdas/InvalidParenthesized.kt:2:28: error: no value passed for parameter 'block'.
+fun bad(): String = target({ "wrong position" })
+                           ^^^^^^^^^^^^^^^^^^^^^

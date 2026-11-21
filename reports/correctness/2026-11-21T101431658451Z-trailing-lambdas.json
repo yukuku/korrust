@@ -1,0 +1,878 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-21T10:14:31.658451+00:00",
+  "status": "complete",
+  "compiler": {
+    "path": "target/checks/2026-11-21T101431658451Z-trailing-lambdas/korrust-frozen",
+    "sha256": "c3af3751d3949d6bff6c64a5d9a3eb6f16c60f1de6690dc468142a9786e5d08c",
+    "source_revision": "e8bac257caff6df6610c51cb2242f8bd6eb65f56"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "frozen_input_hashes": {
+    "src/annotation_declarations.rs": "ac237d773c71a2fc26faeb2d79b837265c6d557ef7bb31aab748fa8b1c7572be",
+    "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+    "src/bytecode/annotation_files.rs": "4f3c136aaa2ed30b85d2a4cc2a9be8331b2da9682d450f6a4dcc135ef04ab86a",
+    "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+    "src/bytecode/class_companion.rs": "2dacd7b21d48fcdd59955fa30b58a6e88bb67642d4bd6dd9d845842b1880417a",
+    "src/bytecode/data.rs": "c99cb60546cbe8873ef99d1ab057aa7439f4239fce13927d324dfea078dbe98c",
+    "src/bytecode/defaults.rs": "ebdb1c988443c1b984081aa8555c5bb2f649685e3bbfef011cd138c0bf29aecd",
+    "src/bytecode/enums.rs": "25fe788c54554741347ba6bb4b84cbee7c324db6925209a434fb139ceb66b2b1",
+    "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+    "src/bytecode/inline.rs": "e598575c521153d592face8dd19018beaf89be45fbde985ae3845526e5a0be44",
+    "src/bytecode/interfaces.rs": "02e19cc9024bda962e06cedec8e15ebfc8b9f1ccd7f95ec11980ab46de917ae6",
+    "src/bytecode/lambdas.rs": "75a4ad990edd822dffaadc1be8cccf6d6cb345848f147e6b3a30c17dc0351360",
+    "src/bytecode/objects.rs": "142f8e5c70f0ac61423c3887447c54865b7b657768cf683fc553fde398a17e7e",
+    "src/bytecode/suspend.rs": "79e1064dd35da268956f91b167a779ce0957cefa8fef629789a2fb3afee987b7",
+    "src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+    "src/bytecode.rs": "d610c4766d35743cc7864a44fec87f93715b5c4c486cb6c3f6790b738434f26b",
+    "src/check.rs": "be9127de32caa41cc3f8b05284b873da18eac25c30a814f6434d07eab3114223",
+    "src/check_annotation_placements.rs": "b6c899c4a5c2f3269ae1b93268b2ede0f29f4ce68c5ef42b833d7edcecf2d2cc",
+    "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+    "src/check_anonymous.rs": "fd523e4ff9173f209bde5b6cec9c5e13bae942da680e752611b242b0d8cc0f53",
+    "src/check_captures.rs": "b640213c5a98157b012203d2ff07e22799b7b7a187e75b7a22a4415c005a77a1",
+    "src/check_class_delegation.rs": "25cd077ed2b3b51158a53efb2c8190296064fe607db399ab416a3d51a4df2be0",
+    "src/check_classes.rs": "d67e980fdceb784bad7f4c0ee73752d2f9123d973c3c4952c5ad87d623432987",
+    "src/check_contracts.rs": "8bba31d6987b61295aed4c18eee29136f26724e00b5ab69b743655f4469f08c6",
+    "src/check_control.rs": "19e7fe2376f65209fd0d9b04be9254ec868fed288707d34631f30e841f3eaca7",
+    "src/check_declarations.rs": "7382dc96edcbd8ce55b7b49832d99f2645888be7fd45bbace9c8157424d76cdb",
+    "src/check_delegates.rs": "6ba1fb0aa2ba511c31accd8a06282490a94b8cbf4857c5687ddab3a71236beb2",
+    "src/check_enums.rs": "2a16c9e4dbae29a8c479ab5cddefad66f0bdd09143e2a0cde8428d2d0c174d8b",
+    "src/check_functions.rs": "5ea379c79dfc6d4bd3797d199694bd421395aa12463a8fd7a142ba7f418b5aa1",
+    "src/check_inner_classes.rs": "60a4cdbfef5b069e0312c3ea7511b0de6a862d20ff393c464ea080968aa233cd",
+    "src/check_interfaces.rs": "c733506c29aeb5738c3266d03579e420bf26719ec59bd09fc4fc4d542c149f15",
+    "src/check_ir_walk.rs": "11b8f21285e9743b5a71fdb7de6826cc3e85689d9622380fae58fc676dce0195",
+    "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+    "src/check_library.rs": "1737bf4df2e599b838f326cc240574179a3c27bc95c89014a1fdb864114d5bca",
+    "src/check_member_extensions.rs": "66a4cfa55e05e5699d510113566c91fd54fa79e1257f769df334338c0f7201e5",
+    "src/check_objects.rs": "79cb9168240ce6833ab14ff8c05752e144e39a33a61fb59c292f298ab47514e6",
+    "src/check_operations.rs": "def335f6d315e240152d8f67b527283e3cca11d659967479223a9a29fc784152",
+    "src/check_overloads.rs": "6612d428673b842cf07a72b2344e6eb790d1a6f1b689373428140d07ab182dbf",
+    "src/check_references.rs": "3a4fd327b7a13f48e69d5fbd059c76cbb8d2ce50ae2e140a762a06d9e1e6eab8",
+    "src/check_relations.rs": "d14fbe255067f67bca7f5d8f4d84c39e8ecfaf2c8d5d5d460041796988136470",
+    "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+    "src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+    "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+    "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+    "src/check_variant_signatures.rs": "487fea7351445905782f472e297e15080a4244ce34a4a4aa9904b30c01263a86",
+    "src/classpath/aliases.rs": "745fa67edb3216b77ce5e65f63b75c51ac221f5b49d3e08a4327990bd9e6f4c5",
+    "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+    "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+    "src/classpath/metadata.rs": "ad587038956087ed383d6f0d6f970d5609d5a60ac59632b2fecc311ce4c1e045",
+    "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+    "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+    "src/classpath/signature.rs": "2dbed1bcacc67d8ffadd01d466676a969dc849eaa7d397d6c390e61a4ec12c7c",
+    "src/classpath/source.rs": "a106e68b8627c11244fbec6ca33bb00b0d64dae66394da41029bf59b813702b9",
+    "src/classpath/source_enums.rs": "a3ed1a550007856e482624b65d024249e503524b577aa2a5f99b9db334ee1374",
+    "src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+    "src/classpath.rs": "826166f31a0c0e8f2a3cc7a5a327bc0a9bffa571543d743cf605b9f229900095",
+    "src/compiled_inline.rs": "7acd0769184152ea2659a9217886608cff7219eea5a47d25cf573e0f0318d7fa",
+    "src/const_eval.rs": "6714c1d6296d1c3f60fab09891a492f66a9850b3ff3ee2b5a7df42400dfdcdaa",
+    "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+    "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+    "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+    "src/lib.rs": "fa65d18a3567992124b03314127594cefa2abd36dd70af78e8ded63b8801f6a2",
+    "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+    "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+    "src/metadata.rs": "556b933de58c6c9927da29159891fd00f97b11b1ef7a2325d0dab92c6a7dbe84",
+    "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+    "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+    "src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+    "src/syntax.rs": "062bed277fc673496d459b0f9bc59c245905c5ad0d6782f3fa81b78b586f1d92",
+    "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+    "src/visibility.rs": "0268165a314fe1a169d5604fdda38968b0bbda07f11c60db92d36a7247f879c7",
+    "tests/trailing_lambdas/AudioCheck.java": "a526f429f20c71e048744446f98eb9cae714d2750a394dd592d9e3cfa60cad76",
+    "tests/trailing_lambdas/Calls.java": "0bc2c85070a067f6d2d8778f4e6f38e8ec3faf942426320a2f0bf4a4b6049eb2",
+    "tests/trailing_lambdas/Consumer.kt": "3ee15796fd81f80db16b3b789d648fcf2d644aa4812be02d901d35c111607c3a",
+    "tests/trailing_lambdas/Dependency.kt": "87f0a545a42b87d0982431bbe1d5902f49f53dea1693aabfaa0246a173953251",
+    "tests/trailing_lambdas/InvalidDuplicate.kt": "28af2e39ee71f5cdbe69e68ea29e7a76ce698d609b147469f8b60fab22f7172c",
+    "tests/trailing_lambdas/InvalidMissing.kt": "fd0ba1eef8aa0b468b9c68e94769fb3eb8b95a3ee403f2b40b6175c145fe7eb8",
+    "tests/trailing_lambdas/InvalidNamedPosition.kt": "5b3a3161369162025d868e63a62441d71592da1831814d4d498c893ed15395bd",
+    "tests/trailing_lambdas/InvalidParenthesized.kt": "70c05d36864a87a4b7cf8d8167e300ee1f9b8b5460dadeabb4b245ff0fff93d0",
+    "tests/trailing_lambdas/InvalidType.kt": "3693a6de522f6c36c14a932f1f49c3b11955bc0d27ef33840282f06949e28fc9",
+    "tests/trailing_lambdas/Models.kt": "cef72bc2713f2e0f8bb83905b71ec312e38a3d77513180ab3970703f07464bd8",
+    "tests/trailing_lambdas.rs": "08a2343462f0c7a39431d097eeab96b695eadd77d55bfffedc9ce7a447c39d38",
+    "tools/check_trailing_lambdas.py": "3771b9e907ff6ddda5c9cb8ae7ad5f640a766452fb03f363aaff30c149c0ff37",
+    "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+    "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+    "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt": "0f8bd02878e33edeca3d9e08a65b6ed96a44e6266c11053696816d69ca51db55",
+    "target/checks/2026-11-21T101431658451Z-trailing-lambdas/korrust-frozen": "c3af3751d3949d6bff6c64a5d9a3eb6f16c60f1de6690dc468142a9786e5d08c",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "input_bundle": {
+    "path": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/inputs.zip",
+    "sha256": "204f5f059c8c454787033a77006108f959984641a8b872fbfbc28ab5cba35576"
+  },
+  "effective_options": {
+    "jvm_target": "1.8",
+    "language_version": "2.3",
+    "api_version": "2.3"
+  },
+  "scope": "Outside-parentheses trailing lambdas mapped to the last parameter after omitted defaults and named arguments; ordinary source and compiled generic, nullable function, member, extension and overload resolution, labels, inline returns and evaluation order",
+  "limitations": [
+    "Existing bounded language and interop restrictions still apply",
+    "General nonfinal vararg parameters remain outside this slice",
+    "No full Android module/application or performance claim"
+  ],
+  "cases": [
+    {
+      "id": "semantic_fixture_compile",
+      "outcome": "pass",
+      "detail": "Same unmodified fixtures, dependency and standard library"
+    },
+    {
+      "id": "fixed_java_caller_both_providers",
+      "outcome": "pass",
+      "detail": {
+        "caller_sha256": {
+          "target/checks/2026-11-21T101431658451Z-trailing-lambdas/caller/trailing/Calls.class": "e5a85395258f732e9d5ea826d401bee8f50077d6230c9d2d99069d87350b6489"
+        },
+        "assertions": "Source and compiled default dispatch, generic and nullable lambda inference, overloads, labels, nonlocal returns, reordered argument evaluation, Byte boxing/formatting and array initialization"
+      }
+    },
+    {
+      "id": "public_jvm_descriptors",
+      "outcome": "pass",
+      "detail": [
+        [
+          "public static final java.lang.String sourceDefault();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "public static final java.lang.String sourceNamed();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "public static final java.lang.String sourceGeneric();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "public static final java.lang.String compiledExtension();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "public static final java.lang.String compiledNamed();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "public static final java.lang.String compiledNullable();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "public static final java.lang.String compiledMember();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "public static final java.lang.String compiledOverload();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "public static final java.lang.String selectedOverload();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "public static final java.lang.String explicitLabel();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "public static final java.lang.String implicitLabel();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "public static final java.lang.String inlineReturn();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "public static final java.lang.String joined(java.util.List<java.lang.Byte>);",
+          "descriptor: (Ljava/util/List;)Ljava/lang/String;"
+        ],
+        [
+          "public static final java.lang.String ordered();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "public static final java.lang.String arrayInitializer();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "public static final java.lang.String constructed();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "public static final java.lang.String functionValue();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "public static final java.lang.String captured();",
+          "descriptor: ()Ljava/lang/String;"
+        ]
+      ]
+    },
+    {
+      "id": "kotlin_consumer_official",
+      "outcome": "pass",
+      "detail": "Official consumers read emitted Kotlin metadata and run against both providers"
+    },
+    {
+      "id": "kotlin_consumer_candidate",
+      "outcome": "pass",
+      "detail": "Official consumers read emitted Kotlin metadata and run against both providers"
+    },
+    {
+      "id": "InvalidDuplicate",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/work/audio33/tests/trailing_lambdas/InvalidDuplicate.kt\",\"offset\":98,\"category\":\"invalid_kotlin\",\"code\":\"ARGUMENT_MAPPING_MISMATCH\",\"message\":\"Wrong or duplicate arguments\",\"path\":\"/workspace/work/audio33/tests/trailing_lambdas/InvalidDuplicate.kt\",\"line\":2,\"column\":49}\n"
+      }
+    },
+    {
+      "id": "InvalidMissing",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/work/audio33/tests/trailing_lambdas/InvalidMissing.kt\",\"offset\":120,\"category\":\"invalid_kotlin\",\"code\":\"ARGUMENT_MAPPING_MISMATCH\",\"message\":\"Wrong argument count: missing required argument\",\"path\":\"/workspace/work/audio33/tests/trailing_lambdas/InvalidMissing.kt\",\"line\":2,\"column\":21}\n"
+      }
+    },
+    {
+      "id": "InvalidNamedPosition",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/work/audio33/tests/trailing_lambdas/InvalidNamedPosition.kt\",\"offset\":135,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Positional arguments after named arguments are not supported\",\"path\":\"/workspace/work/audio33/tests/trailing_lambdas/InvalidNamedPosition.kt\",\"line\":2,\"column\":49}\n"
+      }
+    },
+    {
+      "id": "InvalidParenthesized",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/work/audio33/tests/trailing_lambdas/InvalidParenthesized.kt\",\"offset\":107,\"category\":\"invalid_kotlin\",\"code\":\"ARGUMENT_MAPPING_MISMATCH\",\"message\":\"Wrong argument count: missing required argument\",\"path\":\"/workspace/work/audio33/tests/trailing_lambdas/InvalidParenthesized.kt\",\"line\":2,\"column\":21}\n"
+      }
+    },
+    {
+      "id": "InvalidType",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/work/audio33/tests/trailing_lambdas/InvalidType.kt\",\"offset\":63,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Lambda parameter type differs from expected type\",\"path\":\"/workspace/work/audio33/tests/trailing_lambdas/InvalidType.kt\",\"line\":2,\"column\":31}\n"
+      }
+    },
+    {
+      "id": "app/AudioHttpErrorBody",
+      "outcome": "pass",
+      "detail": {
+        "caller_sha256": {
+          "target/checks/2026-11-21T101431658451Z-trailing-lambdas/audio-caller/AudioCheck.class": "2c0f0f63b5d6ffed4d3a8ad475bdb311fccfbe9671e5fe142e3a29baf801931b"
+        },
+        "stdout": [
+          "audio-checks=267\n",
+          "audio-checks=267\n"
+        ],
+        "assertions": "267 independent cases: all 256 byte classifications, null/whitespace handling, line folding, 15/16/17 byte hex truncation, 1023/1024/1025 byte limits and input immutability"
+      }
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "pass",
+      "changed": []
+    }
+  ],
+  "commands": [
+    {
+      "label": "official generic providers",
+      "argv": [
+        "/workspace/work/audio33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/audio33/tests/trailing_lambdas/Dependency.kt",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/000.txt"
+    },
+    {
+      "label": "official semantic fixtures",
+      "argv": [
+        "/workspace/work/audio33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/audio33/tests/trailing_lambdas/Models.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/001.txt"
+    },
+    {
+      "label": "candidate semantic fixtures",
+      "argv": [
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/korrust-frozen",
+        "/workspace/work/audio33/tests/trailing_lambdas/Models.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/002.txt"
+    },
+    {
+      "label": "fixed Java caller compiled against official only",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/official:/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/caller",
+        "/workspace/work/audio33/tests/trailing_lambdas/Calls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/003.txt"
+    },
+    {
+      "label": "official independent assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/caller:/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/official:/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "trailing.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/004.txt"
+    },
+    {
+      "label": "candidate independent assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/caller:/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/candidate:/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "trailing.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/005.txt"
+    },
+    {
+      "label": "official public JVM descriptors",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/official",
+        "trailing.ModelsKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/006.txt"
+    },
+    {
+      "label": "candidate public JVM descriptors",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/candidate",
+        "trailing.ModelsKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/007.txt"
+    },
+    {
+      "label": "official Kotlin consumer against official",
+      "argv": [
+        "/workspace/work/audio33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/audio33/tests/trailing_lambdas/Consumer.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/official:/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/008.txt"
+    },
+    {
+      "label": "consumer official on official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/consumer-official:/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/official:/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/009.txt"
+    },
+    {
+      "label": "consumer official on candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/consumer-official:/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/candidate:/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/010.txt"
+    },
+    {
+      "label": "official Kotlin consumer against candidate",
+      "argv": [
+        "/workspace/work/audio33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/audio33/tests/trailing_lambdas/Consumer.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/candidate:/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/011.txt"
+    },
+    {
+      "label": "consumer candidate on official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/consumer-candidate:/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/official:/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/012.txt"
+    },
+    {
+      "label": "consumer candidate on candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/consumer-candidate:/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/candidate:/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/013.txt"
+    },
+    {
+      "label": "official invalid InvalidDuplicate",
+      "argv": [
+        "/workspace/work/audio33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/audio33/tests/trailing_lambdas/InvalidDuplicate.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/official-InvalidDuplicate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/014.txt"
+    },
+    {
+      "label": "candidate invalid InvalidDuplicate",
+      "argv": [
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/korrust-frozen",
+        "/workspace/work/audio33/tests/trailing_lambdas/InvalidDuplicate.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/candidate-InvalidDuplicate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/015.txt"
+    },
+    {
+      "label": "official invalid InvalidMissing",
+      "argv": [
+        "/workspace/work/audio33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/audio33/tests/trailing_lambdas/InvalidMissing.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/official-InvalidMissing",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/016.txt"
+    },
+    {
+      "label": "candidate invalid InvalidMissing",
+      "argv": [
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/korrust-frozen",
+        "/workspace/work/audio33/tests/trailing_lambdas/InvalidMissing.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/candidate-InvalidMissing",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/017.txt"
+    },
+    {
+      "label": "official invalid InvalidNamedPosition",
+      "argv": [
+        "/workspace/work/audio33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/audio33/tests/trailing_lambdas/InvalidNamedPosition.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/official-InvalidNamedPosition",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/018.txt"
+    },
+    {
+      "label": "candidate invalid InvalidNamedPosition",
+      "argv": [
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/korrust-frozen",
+        "/workspace/work/audio33/tests/trailing_lambdas/InvalidNamedPosition.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/candidate-InvalidNamedPosition",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/019.txt"
+    },
+    {
+      "label": "official invalid InvalidParenthesized",
+      "argv": [
+        "/workspace/work/audio33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/audio33/tests/trailing_lambdas/InvalidParenthesized.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/official-InvalidParenthesized",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/020.txt"
+    },
+    {
+      "label": "candidate invalid InvalidParenthesized",
+      "argv": [
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/korrust-frozen",
+        "/workspace/work/audio33/tests/trailing_lambdas/InvalidParenthesized.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/candidate-InvalidParenthesized",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/021.txt"
+    },
+    {
+      "label": "official invalid InvalidType",
+      "argv": [
+        "/workspace/work/audio33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/audio33/tests/trailing_lambdas/InvalidType.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/official-InvalidType",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/022.txt"
+    },
+    {
+      "label": "candidate invalid InvalidType",
+      "argv": [
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/korrust-frozen",
+        "/workspace/work/audio33/tests/trailing_lambdas/InvalidType.kt",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/candidate-InvalidType",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/023.txt"
+    },
+    {
+      "label": "official unchanged AudioHttpErrorBody",
+      "argv": [
+        "/workspace/work/audio33/references/kotlinc/bin/kotlinc",
+        "/workspace/work/audio33/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/app-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/024.txt"
+    },
+    {
+      "label": "candidate unchanged AudioHttpErrorBody",
+      "argv": [
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/korrust-frozen",
+        "/workspace/work/audio33/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt",
+        "-cp",
+        "/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/app-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/025.txt"
+    },
+    {
+      "label": "fixed Audio Java caller compiled against official only",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/app-official:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/audio-caller",
+        "/workspace/work/audio33/tests/trailing_lambdas/AudioCheck.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/026.txt"
+    },
+    {
+      "label": "verified unchanged Audio on official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/audio-caller:/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/app-official:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "AudioCheck"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/027.txt"
+    },
+    {
+      "label": "Audio public JVM descriptors official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/app-official",
+        "yuku.alkitab.base.audio.AudioHttpErrorBodyKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/028.txt"
+    },
+    {
+      "label": "verified unchanged Audio on candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/audio-caller:/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/app-candidate:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar",
+        "AudioCheck"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/029.txt"
+    },
+    {
+      "label": "Audio public JVM descriptors candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/app-candidate",
+        "yuku.alkitab.base.audio.AudioHttpErrorBodyKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/030.txt"
+    }
+  ],
+  "reproduction_command": [
+    "python3",
+    "tools/check_trailing_lambdas.py",
+    "--candidate",
+    "/workspace/korrust/target/audio33/debug/korrust",
+    "--output",
+    "target/checks/2026-11-21T101431658451Z-trailing-lambdas",
+    "--evidence-directory",
+    "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas"
+  ],
+  "counts": {
+    "pass": 7,
+    "invalid_rejected": 5
+  },
+  "language_rules": [
+    {
+      "path": "references/kotlin-spec/docs/src/md/kotlin.core/overload-resolution.md",
+      "section": "Call with trailing lambda expressions",
+      "rule": "A single outside-parentheses lambda maps to the last formal parameter; named/default argument reordering is candidate-specific."
+    },
+    {
+      "path": "references/kotlin-spec/docs/src/md/kotlin.core/declarations.md",
+      "section": "Named, positional and default parameters",
+      "rule": "An inside-parentheses positional argument cannot skip parameters with defaults."
+    }
+  ],
+  "validation": [
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--lib",
+        "syntax::tests"
+      ],
+      "environment": {
+        "RUST_MIN_STACK": "33554432"
+      },
+      "outcome": "pass",
+      "tests": 72,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/parser-tests.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--test",
+        "frontend",
+        "--test",
+        "nov21_inference",
+        "--test",
+        "trailing_lambdas"
+      ],
+      "environment": {
+        "RUST_MIN_STACK": "33554432"
+      },
+      "outcome": "pass",
+      "tests": 62,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/rust-integration-tests.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "outcome": "pass",
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/format.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--offline",
+        "--all-targets",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "outcome": "pass",
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/clippy.log"
+    },
+    {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_reports.py"
+      ],
+      "outcome": "pass",
+      "tests": 8,
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/report-tests.log"
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--release",
+        "--locked",
+        "--offline"
+      ],
+      "outcome": "pass",
+      "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/optimized-build.log"
+    }
+  ],
+  "html_validation": {
+    "command": [
+      "python3",
+      "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/check-html.py"
+    ],
+    "log": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas/html-links.json"
+  }
+}

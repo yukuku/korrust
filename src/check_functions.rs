@@ -2,6 +2,9 @@ use super::*;
 
 impl Checker<'_> {
     pub(super) fn argument_value(&mut self, expr: &Expr, expected: &Type) -> Result<Value> {
+        if let ExprKind::TrailingLambda(inner) = &expr.kind {
+            return self.argument_value(inner, expected);
+        }
         let context = self.inline_result.clone();
         if !matches!(
             expr.kind,
@@ -14,6 +17,9 @@ impl Checker<'_> {
         result
     }
     pub(super) fn expected_value(&mut self, expr: &Expr, expected: &Type) -> Result<Value> {
+        if let ExprKind::TrailingLambda(inner) = &expr.kind {
+            return self.expected_value(inner, expected);
+        }
         if let ExprKind::Unsigned { bits, long } = &expr.kind {
             let value = self.unsigned_literal(*bits, *long, Some(expected), expr.offset)?;
             return self.coerce(value, expected.clone(), expr.offset);

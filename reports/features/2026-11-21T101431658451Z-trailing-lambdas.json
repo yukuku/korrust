@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-21T10:14:31.658451+00:00",
+  "status": "pass",
+  "compiler": {
+    "path": "target/checks/2026-11-21T101431658451Z-trailing-lambdas/korrust-frozen",
+    "sha256": "c3af3751d3949d6bff6c64a5d9a3eb6f16c60f1de6690dc468142a9786e5d08c",
+    "source_revision": "e8bac257caff6df6610c51cb2242f8bd6eb65f56"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_trailing_lambdas.py",
+      "--candidate",
+      "/workspace/korrust/target/audio33/debug/korrust",
+      "--output",
+      "target/checks/2026-11-21T101431658451Z-trailing-lambdas",
+      "--evidence-directory",
+      "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas"
+    ]
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas.json"
+  ],
+  "features": [
+    {
+      "name": "Trailing lambda arguments after omitted defaults",
+      "status": "supported",
+      "scope": "Retained outside-parentheses lambda placement, last-parameter mapping, named/default dispatch and generic inference for supported source and compiled functions, members, extensions and constructors; labels, captures, local function-valued invocation and ordinary array initializers retain their behavior.",
+      "restrictions": [
+        "Existing bounded declaration and invocation rules still apply; source inline functions with defaults, general nonfinal varargs and direct invocation of function-valued properties remain unsupported.",
+        "No full Android module/application or performance claim."
+      ],
+      "evidence_report": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas.json",
+      "evidence_cases": [
+        "semantic_fixture_compile",
+        "fixed_java_caller_both_providers",
+        "public_jvm_descriptors",
+        "kotlin_consumer_official",
+        "kotlin_consumer_candidate",
+        "InvalidDuplicate",
+        "InvalidMissing",
+        "InvalidNamedPosition",
+        "InvalidParenthesized",
+        "InvalidType",
+        "app/AudioHttpErrorBody",
+        "frozen_inputs"
+      ]
+    }
+  ]
+}

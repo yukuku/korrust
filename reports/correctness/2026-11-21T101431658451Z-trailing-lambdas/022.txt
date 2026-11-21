@@ -1,0 +1,4 @@
+$ /workspace/work/audio33/references/kotlinc/bin/kotlinc /workspace/work/audio33/tests/trailing_lambdas/InvalidType.kt -cp /workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/official-InvalidType -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/trailing_lambdas/InvalidType.kt:2:31: error: argument type mismatch: actual type is '(String) -> String', but '((Int) -> String)?' was expected.
+fun bad(): String? = apply(1) { value: String -> value }
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -14,6 +14,14 @@ pub(super) fn call_labels(name: &str, arguments: &[Expr]) -> Vec<Expr> {
                     ),
                 };
             }
+            if let ExprKind::TrailingLambda(value) = &argument.kind {
+                return Expr {
+                    offset: argument.offset,
+                    kind: ExprKind::TrailingLambda(Box::new(
+                        call_labels(name, std::slice::from_ref(value.as_ref())).remove(0),
+                    )),
+                };
+            }
             if matches!(
                 argument.kind,
                 ExprKind::Lambda(_) | ExprKind::LambdaWithParams { .. }
@@ -40,7 +48,7 @@ pub(super) fn labeled_call(expr: &Expr) -> Option<Expr> {
     fn unlabeled(argument: &Expr) -> bool {
         match &argument.kind {
             ExprKind::Lambda(_) | ExprKind::LambdaWithParams { .. } => true,
-            ExprKind::NamedArgument(_, value) => unlabeled(value),
+            ExprKind::NamedArgument(_, value) | ExprKind::TrailingLambda(value) => unlabeled(value),
             _ => false,
         }
     }

@@ -301,7 +301,9 @@ impl Checker<'_> {
                 Err(error)
                     if error.code == "TYPE_MISMATCH"
                         && args.iter().any(|arg| {
-                            let argument = if let ExprKind::NamedArgument(_, value) = &arg.kind {
+                            let argument = if let ExprKind::NamedArgument(_, value)
+                            | ExprKind::TrailingLambda(value) = &arg.kind
+                            {
                                 value.as_ref()
                             } else {
                                 arg

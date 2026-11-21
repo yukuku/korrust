@@ -2444,7 +2444,9 @@ impl Checker<'_> {
         fn stable_initializer(checker: &Checker<'_>, expr: &Expr) -> bool {
             match &expr.kind {
                 ExprKind::Lambda(_) | ExprKind::LambdaWithParams { .. } => true,
-                ExprKind::Labeled(_, inner) => stable_initializer(checker, inner),
+                ExprKind::Labeled(_, inner) | ExprKind::TrailingLambda(inner) => {
+                    stable_initializer(checker, inner)
+                }
                 ExprKind::Name(name) => checker.local(name).is_some_and(|local| {
                     !local.mutable
                         && matches!(
@@ -2510,7 +2512,7 @@ impl Checker<'_> {
     }
 
     fn infer_array_element(&mut self, initializer: &Expr, offset: usize) -> Result<Type> {
-        if let ExprKind::Labeled(_, inner) = &initializer.kind {
+        if let ExprKind::Labeled(_, inner) | ExprKind::TrailingLambda(inner) = &initializer.kind {
             return self.infer_array_element(inner, offset);
         }
         let (params, body) = match &initializer.kind {

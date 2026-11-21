@@ -1,0 +1,4 @@
+$ /workspace/work/audio33/references/kotlinc/bin/kotlinc /workspace/work/audio33/tests/trailing_lambdas/InvalidDuplicate.kt -cp /workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/official-InvalidDuplicate -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/trailing_lambdas/InvalidDuplicate.kt:2:49: error: too many arguments for 'fun target(block: () -> String): String'.
+fun bad(): String = target(block = { "first" }) { "second" }
+                                                ^^^^^^^^^^^^

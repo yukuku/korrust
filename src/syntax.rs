@@ -951,6 +951,7 @@ pub enum ExprKind {
     Float(u32),
     Double(u64),
     NamedArgument(String, Box<Expr>),
+    TrailingLambda(Box<Expr>),
     Generic(Box<Expr>, Vec<Type>),
     Return(Option<Box<Expr>>),
     Throw(Box<Expr>),
@@ -1059,6 +1060,7 @@ fn shift_expression_offsets(expression: &mut Expr, offset: usize) {
             ExprKind::Return(Some(value))
             | ExprKind::Throw(value)
             | ExprKind::NamedArgument(_, value)
+            | ExprKind::TrailingLambda(value)
             | ExprKind::Generic(value, _)
             | ExprKind::Unary(_, value)
             | ExprKind::Property(value, _)
@@ -6322,7 +6324,10 @@ impl Parser {
                 }),
             }
         };
+        let mut call_suffix = false;
         loop {
+            let append_trailing = call_suffix;
+            call_suffix = false;
             if self.at("\n")
                 && let Some(next) = self.tokens[self.pos..]
                     .iter()
@@ -6407,8 +6412,12 @@ impl Parser {
                         kind: ExprKind::Labeled(label, Box::new(self.lambda()?)),
                     }
                 };
+                let lambda = Expr {
+                    offset: lambda.offset,
+                    kind: ExprKind::TrailingLambda(Box::new(lambda)),
+                };
                 expr = match expr.kind {
-                    ExprKind::Call(target, mut arguments) => {
+                    ExprKind::Call(target, mut arguments) if append_trailing => {
                         arguments.push(lambda);
                         Expr {
                             offset,
@@ -6456,6 +6465,7 @@ impl Parser {
                 };
             } else if self.at("(") {
                 let args = self.arguments()?;
+                call_suffix = true;
                 expr = Expr {
                     offset,
                     kind: ExprKind::Call(Box::new(expr), args),
@@ -6515,6 +6525,7 @@ impl Parser {
                     | ExprKind::Return(Some(value))
                     | ExprKind::Throw(value)
                     | ExprKind::NamedArgument(_, value)
+                    | ExprKind::TrailingLambda(value)
                     | ExprKind::Generic(value, _)
                     | ExprKind::Unary(_, value)
                     | ExprKind::Property(value, _)
@@ -6565,7 +6576,9 @@ impl Parser {
         if let ExprKind::Call(target, arguments) = &mut expression.kind {
             if let Some(label) = call_name(target) {
                 for argument in arguments {
-                    let value = if let ExprKind::NamedArgument(_, value) = &mut argument.kind {
+                    let value = if let ExprKind::NamedArgument(_, value)
+                    | ExprKind::TrailingLambda(value) = &mut argument.kind
+                    {
                         value.as_mut()
                     } else {
                         argument
@@ -7141,6 +7154,7 @@ impl Parser {
                 ExprKind::Return(Some(value))
                 | ExprKind::Throw(value)
                 | ExprKind::NamedArgument(_, value)
+                | ExprKind::TrailingLambda(value)
                 | ExprKind::Generic(value, _)
                 | ExprKind::Increment { value, .. }
                 | ExprKind::Decrement { value, .. }
@@ -7710,6 +7724,34 @@ mod tests {
         ] {
             assert!(parse(source).is_err(), "{source}");
         }
+    }
+
+    #[test]
+    fn trailing_lambda_placement_is_retained_separately_from_positional_arguments() {
+        let module = parse(
+            r#"fun f(): String = target("prefix") { "tail" }
+fun g(): String = target({ "position" })
+fun h(): String = target(prefix = "named") label@{ return@label "tail" }"#,
+        )
+        .unwrap();
+        for (index, function) in module.functions.iter().enumerate() {
+            let StatementKind::Return(Some(Expr {
+                kind: ExprKind::Call(_, arguments),
+                ..
+            })) = &function.body[0].kind
+            else {
+                panic!();
+            };
+            assert_eq!(
+                matches!(arguments.last().unwrap().kind, ExprKind::TrailingLambda(_)),
+                index != 1
+            );
+        }
+        let grouped = parse("fun f(): String = (producer()) { \"tail\" }").unwrap();
+        assert!(matches!(&grouped.functions[0].body[0].kind,
+            StatementKind::Return(Some(Expr { kind: ExprKind::Call(target, arguments), .. }))
+                if matches!(target.kind, ExprKind::Call(_, _))
+                    && matches!(arguments[0].kind, ExprKind::TrailingLambda(_))));
     }
 
     #[test]
@@ -8603,10 +8645,13 @@ mod tests {
         else {
             panic!()
         };
+        let ExprKind::TrailingLambda(lambda) = &arguments[0].kind else {
+            panic!()
+        };
         let ExprKind::LambdaWithParams {
             params: Some(params),
             ..
-        } = &arguments[0].kind
+        } = &lambda.kind
         else {
             panic!()
         };
@@ -9290,7 +9335,9 @@ mod tests {
                 panic!()
             };
             let lambda = match &arguments[0].kind {
-                ExprKind::NamedArgument(_, value) => value.as_ref(),
+                ExprKind::NamedArgument(_, value) | ExprKind::TrailingLambda(value) => {
+                    value.as_ref()
+                }
                 _ => &arguments[0],
             };
             assert!(matches!(&lambda.kind, ExprKind::Labeled(_, _)));

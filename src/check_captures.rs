@@ -26,6 +26,7 @@ pub(super) fn expression_names(expr: &Expr, names: &mut HashSet<String>) {
         }
         ExprKind::Generic(expr, _)
         | ExprKind::NamedArgument(_, expr)
+        | ExprKind::TrailingLambda(expr)
         | ExprKind::Unary(_, expr)
         | ExprKind::NonNull(expr)
         | ExprKind::Lambda(expr)
@@ -209,6 +210,7 @@ pub(super) fn lambda_capture_names(statements: &[syntax::Statement]) -> HashSet<
             ExprKind::ClassLiteral { receiver: a, .. }
             | ExprKind::Generic(a, _)
             | ExprKind::NamedArgument(_, a)
+            | ExprKind::TrailingLambda(a)
             | ExprKind::Unary(_, a)
             | ExprKind::NonNull(a)
             | ExprKind::Throw(a)
@@ -466,6 +468,7 @@ pub(super) fn free_names(
             ExprKind::ClassLiteral { receiver: a, .. }
             | ExprKind::Generic(a, _)
             | ExprKind::NamedArgument(_, a)
+            | ExprKind::TrailingLambda(a)
             | ExprKind::Unary(_, a)
             | ExprKind::NonNull(a)
             | ExprKind::Throw(a)

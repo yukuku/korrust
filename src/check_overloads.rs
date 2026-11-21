@@ -100,7 +100,7 @@ impl Checker<'_> {
                         true
                     } else {
                         let mut argument = &args[argument_index];
-                        while let ExprKind::NamedArgument(_, value) | ExprKind::Labeled(_, value) =
+                        while let ExprKind::NamedArgument(_, value) | ExprKind::TrailingLambda(value) | ExprKind::Labeled(_, value) =
                             &argument.kind
                         {
                             argument = value;
