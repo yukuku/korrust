@@ -8,10 +8,10 @@ class Holder(val mode: Catalog.Mode)
 
 object Lookup {
     @JvmStatic
-    fun <C : Any> value(entry: Catalog.Entry<C>): String = entry.key
+    fun <C> value(entry: Catalog.Entry<C>): String = entry.key
 
     @JvmStatic
-    fun <C : Any> find(entries: List<Catalog.Entry<C>>, key: String): Catalog.Entry<C>? {
+    fun <C> find(entries: List<Catalog.Entry<C>>, key: String): Catalog.Entry<C>? {
         for (entry in entries) {
             if (entry.key == key) return entry
         }
