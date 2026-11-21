@@ -1,0 +1,328 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "status": "completed",
+  "created_at": "2026-11-21T19:51:50.057694+00:00",
+  "source_revision": "60e64ad70e547665ecd709b6e9173383d930889a",
+  "compiler": {
+    "path": "target/survey33-final-60e64ad70/korrust",
+    "sha256": "8020ab45fdb0ec2e07e8634f04afbe37f7a635834e45a32c25bc428bdafa3d73",
+    "frozen_path": "target/checks/2026-11-21T193810601621Z-androidbible-survey-dependencies/bin/candidate"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "selection": "The same 33 SHA-256-pinned, unchanged AndroidBible production sources as the prior survey. Each target was compiled separately.",
+  "accepted_new_features": 9,
+  "features": [
+    {
+      "name": "Trailing lambda arguments after omitted defaults",
+      "commit": "def7645ef5ee48e833aba555adc0b3451293420f",
+      "commit_url": "https://github.com/yukuku/korrust/commit/def7645ef5ee48e833aba555adc0b3451293420f",
+      "evidence_report": "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas.json",
+      "supporting_cases": [
+        "semantic_fixture_compile",
+        "fixed_java_caller_both_providers",
+        "kotlin_consumer_candidate"
+      ],
+      "scope": "Outside-parentheses trailing lambdas mapped to the last parameter after omitted defaults and named arguments; ordinary source and compiled generic, nullable function, member, extension and overload resolution, labels, inline returns and evaluation order",
+      "restrictions": [
+        "Existing bounded language and interop restrictions still apply",
+        "General nonfinal vararg parameters remain outside this slice",
+        "No full Android module/application or performance claim"
+      ],
+      "status": "supported"
+    },
+    {
+      "name": "Stable property-path smartcasts in friend dependencies",
+      "commit": "ab3a4d917483d28ea9817948968b73c639a2cf83",
+      "commit_url": "https://github.com/yukuku/korrust/commit/ab3a4d917483d28ea9817948968b73c639a2cf83",
+      "evidence_report": "reports/correctness/2026-11-21T101933803222Z-stable-properties.json",
+      "supporting_cases": [
+        "guarded_property_compile",
+        "fixed_java_caller_both_providers",
+        "kotlin_consumer_candidate"
+      ],
+      "scope": "Compiled Kotlin final default val property smartcasts after null guards, with stable immutable local receiver identity and chains, constrained to explicit friend dependencies",
+      "restrictions": [
+        "Source property headers do not yet expose stability",
+        "Mutable local receivers and captured receivers remain unsupported",
+        "No open, delegated, custom getter, mutable property, extension property or ordinary external module smartcasts",
+        "No application build or performance claim"
+      ],
+      "status": "supported"
+    },
+    {
+      "name": "Implicit and nested classifier type references",
+      "commit": "f2cdc521af983542dee284958ae8bb06063f92a0",
+      "commit_url": "https://github.com/yukuku/korrust/commit/f2cdc521af983542dee284958ae8bb06063f92a0",
+      "evidence_report": "reports/correctness/2026-11-21T104611326908Z-implicit-type-classifiers.json",
+      "supporting_cases": [
+        "implicit_body_and_nested_signature_classifiers_preserve_interop_and_visibility",
+        "generic_override_bridges_and_classifier_metadata_compile_together"
+      ],
+      "scope": "Implicit same-package/default classifier lookup in body type syntax and direct nested Java/Kotlin classifier lookup through declared member metadata, including generic Java nested type signatures.",
+      "restrictions": [
+        "Inherited Java member-class lookup and protected Java nested classifiers remain unsupported.",
+        "No Android, app-build or performance claim; independent fixtures use actual javac and pinned Kotlin compiler dependencies."
+      ],
+      "status": "supported",
+      "related_commits": [
+        "f241b69d7a2709ba060b2fc7affeaeb4fcf9bd7f"
+      ]
+    },
+    {
+      "name": "Java platform bounds for Kotlin type parameters",
+      "commit": "cd3d0f54457fc631982244196a63154e3d02eead",
+      "commit_url": "https://github.com/yukuku/korrust/commit/cd3d0f54457fc631982244196a63154e3d02eead",
+      "evidence_report": "reports/correctness/2026-11-21T105123031582Z-java-platform-parameter-bounds.json",
+      "supporting_cases": [
+        "check::relations::tests::java_platform_bounds_preserve_parameter_upper_bound_flexibility"
+      ],
+      "scope": "Kotlin type parameters with nullable upper bounds satisfy compatible Java platform upper bounds, while nonnull Kotlin bounds and incompatible Java bounds still reject. Implicit same-package/default classifier lookup in body type syntax and direct nested Java/Kotlin classifier lookup through declared member metadata, including generic Java nested type signatures.",
+      "restrictions": [
+        "Inherited Java member-class lookup and protected Java nested classifiers remain unsupported.",
+        "No Android, app-build or performance claim; independent fixtures use actual javac and pinned Kotlin compiler dependencies."
+      ],
+      "status": "supported"
+    },
+    {
+      "name": "Passive declaration annotations on imported enum constants",
+      "commit": "000b87640b34b9d166fda80bf91f9ab87b070ee4",
+      "commit_url": "https://github.com/yukuku/korrust/commit/000b87640b34b9d166fda80bf91f9ab87b070ee4",
+      "evidence_report": "reports/correctness/2026-11-21T105303515876Z-enum-field-annotations.json",
+      "supporting_cases": [
+        "enum_field_compile",
+        "fixed_java_caller_both_providers",
+        "kotlin_consumer_candidate"
+      ],
+      "scope": "Passive declaration annotations with payloads on imported enum constant fields, retaining actual runtime field reads and annotation data",
+      "restrictions": [
+        "Exact public/static/final enum constants with self-typed descriptors only",
+        "No recovery for ordinary annotated fields, field signatures, type-use annotations, synthetic fields, nullability/type-qualifier annotations or Kotlin semantic annotations and opt-in meta-annotations",
+        "Passive annotation inspection checks structural class metadata and qualifier meta-annotations without requiring annotation implementation Kotlin metadata to be at the compiler pin",
+        "Pinned 2.3.21 accepts the tested HIDDEN enum entry from another module; candidate conservatively rejects Kotlin semantic field annotations",
+        "No application build or performance claim"
+      ],
+      "status": "supported"
+    },
+    {
+      "name": "Generic Java instance-field reads through receiver substitution",
+      "commit": "ba3e902c0a840bbec219e567c6baa290ebc37899",
+      "commit_url": "https://github.com/yukuku/korrust/commit/ba3e902c0a840bbec219e567c6baa290ebc37899",
+      "evidence_report": "reports/correctness/2026-11-21T110135642183Z-generic-java-fields.json",
+      "supporting_cases": [
+        "runtime/candidate",
+        "nullable-parameter-runtime/candidate",
+        "public-jvm-signatures"
+      ],
+      "scope": "Specialize public generic Java instance-field signatures through receiver types and inherited generic supertypes while retaining the erased JVM descriptor and checked read boundaries.",
+      "restrictions": [
+        "Public generic Java instance field signatures retain declaring-class type parameters, nullable/non-null declaration or root type-use annotations and erased JVM descriptors. Receiver substitution includes inherited generic supertypes, direct out/in/star reads, invariant nested lists/arrays and boxed primitives.",
+        "Generic writes and static generic field reads remain explicitly unsupported. Nested parameter-dependent reads through projected receivers, unrecognized field annotations, and non-null field enhancement of nullable source type parameters remain explicit boundaries. This is a bounded JVM language feature; no new unchanged app-file, Android execution, full-app compatibility or speed claim is made.",
+        "One fixed Java caller compiled against official Kotlin output runs against both providers under -Xverify:all, with independent value/null/exception/evaluation-count assertions. Public JVM signatures are compared. Original Sync.Entity<C>.content is relevance evidence; its application classpath is not substituted by the focused Java fixture."
+      ],
+      "status": "supported"
+    },
+    {
+      "name": "Parameterized reference properties in data classes",
+      "commit": "f3bc7ba9be4283d06602ad25c0d969f9f6599e9d",
+      "commit_url": "https://github.com/yukuku/korrust/commit/f3bc7ba9be4283d06602ad25c0d969f9f6599e9d",
+      "evidence_report": "reports/correctness/2026-11-21T110546135866Z-parameterized-data-properties.json",
+      "supporting_cases": [
+        "parameterized_data_properties_preserve_reference_and_data_contracts"
+      ],
+      "scope": "Validated parameterized JVM reference properties in otherwise-supported nongeneric data classes: Set, Map with nullable values, ordinary generic references, and nullable parameterized properties. Public constructors/getters/components/copy signatures, shallow copy/defaults, equality, hashCode, toString, null checks, and Kotlin metadata consumers are checked.",
+      "restrictions": [
+        "Existing declaration/mutability restrictions, generic data-class declarations and array/function property restrictions remain.",
+        "Private backing-field generic signatures are not compared.",
+        "No unchanged app-file, Android build or performance claim in this independent differential report."
+      ],
+      "status": "supported"
+    },
+    {
+      "name": "JvmField instance constructor and body properties",
+      "commit": "23690876d5f4be95f9acd7e9e71e0a1be5a7e4fb",
+      "commit_url": "https://github.com/yukuku/korrust/commit/23690876d5f4be95f9acd7e9e71e0a1be5a7e4fb",
+      "evidence_report": "reports/correctness/2026-11-21T110143376167Z-instance-jvm-fields.json",
+      "supporting_cases": [
+        "fixed_java_caller_both_providers",
+        "public_protected_jvm_abi",
+        "kotlin_consumer_candidate"
+      ],
+      "scope": "JvmField instance constructor/body properties: public/protected and final/mutable JVM fields, absent generated accessors, field-only Kotlin metadata, initialization order, generic producer fields, source/library resolution and canonical annotation identity",
+      "restrictions": [
+        "Static/object/companion and enum field lowering are outside this instance slice",
+        "JvmField value-class carrier properties, accessor annotations, volatile modifier combinations and declarations assigned later in init retain explicit unsupported boundaries",
+        "Generic field reading by Korrust retains existing independent interop bounds; generic field emission is checked through fixed Java/Kotlin consumers",
+        "No full Android module/application or performance claim"
+      ],
+      "status": "supported",
+      "oracle_discrepancies": [
+        {
+          "id": "oracle_nonproperty_parameter_field_target",
+          "outcome": "oracle_discrepancy",
+          "detail": {
+            "official_abi": "Compiled from \"OracleParameter.kt\"\npublic final class Bad {\n  public Bad(java.lang.String);\n}\n",
+            "diagnostic": "{\"source_identity\":\"/workspace/work/audio33/tests/jvm_fields/OracleParameter.kt\",\"offset\":10,\"category\":\"invalid_kotlin\",\"code\":\"JVM_FIELD_INVALID\",\"message\":\"JvmField requires a constructor property\",\"path\":\"/workspace/work/audio33/tests/jvm_fields/OracleParameter.kt\",\"line\":1,\"column\":11}\n",
+            "resolution": "The pinned compiler accepts and drops the explicit field annotation on a constructor parameter without val/var. Korrust rejects the nonexistent property backing-field target rather than adopting ignored annotation semantics.",
+            "specification": "references/kotlin-spec/docs/src/md/kotlin.core/annotations.md: allowed targets include a property backing field"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Static JvmField properties in ordinary class companions and named objects",
+      "commit": "60e64ad70e547665ecd709b6e9173383d930889a",
+      "evidence_report": "reports/correctness/2026-11-21T193734081152Z-static-jvm-fields.json",
+      "supporting_cases": [
+        "semantic_fixture_compile",
+        "fixed_java_caller_both_providers",
+        "public_protected_abi",
+        "kotlin_metadata_consumer_official",
+        "kotlin_metadata_consumer_candidate",
+        "app/VersesUiModel_fixed_java_and_abi",
+        "app_kotlin_consumer_official",
+        "app_kotlin_consumer_candidate",
+        "frozen_inputs"
+      ],
+      "scope": "Static JvmField on ordinary class companions and named objects: outer/object storage, initialization order, field-only metadata, absent generated accessors, source reads and writes, Java and Kotlin consumers, unchanged VersesUiModel",
+      "restrictions": [
+        "Enum and interface companions, internal visibility, collisions with instance backing fields or singleton names retain explicit unsupported boundaries",
+        "Effectful object receiver expressions retain an explicit boundary; pinned compiler evaluation discrepancy is recorded separately",
+        "Existing value-class, volatile and accessor-annotation restrictions remain; no full Android module or performance claim",
+        "Compiled Kotlin static field consumption by Korrust is not claimed; independent official Kotlin consumers exercise emitted metadata"
+      ],
+      "status": "supported",
+      "included_corrections": [
+        "Companion getter bridge/helper emission correction belongs to this implementation and is not counted separately."
+      ],
+      "commit_url": "https://github.com/yukuku/korrust/commit/60e64ad70e547665ecd709b6e9173383d930889a",
+      "evidence_commit": "90d553fef0ef9c8fc32d73312855b7c63225a03c",
+      "oracle_discrepancies": [
+        {
+          "id": "oracle_static_object_receiver_evaluation",
+          "outcome": "oracle_discrepancy",
+          "detail": {
+            "observed": "RV14\n",
+            "resolution": "Pinned compiler evaluates the assignment receiver but drops evaluation of the read receiver for static object fields. Korrust rejects nontrivial receivers explicitly rather than silently adopting receiver omission.",
+            "specification": "references/kotlin-spec/docs/src/md/kotlin.core/expressions.md: function-call and assignment evaluation"
+          }
+        }
+      ]
+    }
+  ],
+  "supporting_changes": [
+    {
+      "name": "Canonical nested classifier names in Kotlin metadata",
+      "commit": "f241b69d7a2709ba060b2fc7affeaeb4fcf9bd7f",
+      "evidence_report": "reports/correctness/2026-11-21T104611326908Z-implicit-type-classifiers.json",
+      "classification": "correctness_followup",
+      "commit_url": "https://github.com/yukuku/korrust/commit/f241b69d7a2709ba060b2fc7affeaeb4fcf9bd7f"
+    },
+    {
+      "name": "Explicit getter diagnostic boundary",
+      "commit": "4a4c7b09cd7ceb6dc15f4b31f4e0a509aaba6e5e",
+      "evidence_report": "reports/correctness/2026-11-21T110143376167Z-instance-jvm-fields.json",
+      "classification": "diagnostic_repair",
+      "note": "The linked feature report precedes the diagnostic-only repair; final full-suite log supplies final-revision validation.",
+      "commit_url": "https://github.com/yukuku/korrust/commit/4a4c7b09cd7ceb6dc15f4b31f4e0a509aaba6e5e"
+    },
+    {
+      "name": "Buffered classpath ZIP reads",
+      "commit": "9e4b89ac3172dbaddca72063251967041f653094",
+      "evidence_report": "reports/correctness/2026-11-21T104323Z-androidbible-dependency-replay.json",
+      "classification": "archive_io_change",
+      "note": "Retain the report-specific measurements and limits; no full-application speed claim.",
+      "commit_url": "https://github.com/yukuku/korrust/commit/9e4b89ac3172dbaddca72063251967041f653094"
+    },
+    {
+      "name": "Wildcard imports before default classifiers",
+      "commit": "13195b28dff4bc3e236aef45ba9a44463709fe24",
+      "evidence_report": "reports/correctness/2026-11-21T192416175779Z-classifier-import-priority.json",
+      "classification": "correctness_repair",
+      "status": "validated_supporting_correction",
+      "scope": "Explicit/renamed and same-package classifiers precede wildcard candidates; wildcard classes and supported typealiases precede platform/default imports. Repeated identical candidates deduplicate; conflicting candidates reject.",
+      "commit_url": "https://github.com/yukuku/korrust/commit/13195b28dff4bc3e236aef45ba9a44463709fe24"
+    }
+  ],
+  "application_assessment": {
+    "dependency_aware": {
+      "source_files": 33,
+      "official_compiled": 33,
+      "candidate_compiled": 33,
+      "report": "reports/correctness/2026-11-21T193810601621Z-androidbible-survey-dependencies.json"
+    },
+    "standalone": {
+      "source_files": 33,
+      "previous_candidate_compiled": 23,
+      "candidate_compiled": 24,
+      "official_compiled": 24,
+      "report": "reports/correctness/2026-11-21T193758617900Z-next10-app-assessment.json"
+    },
+    "runtime_and_abi_proofs": [
+      "reports/correctness/2026-11-21T194551247078Z-androidbible-survey-jvm-callers.json",
+      "reports/correctness/2026-11-21T193850934352Z-unchanged-models.json",
+      "reports/correctness/2026-11-21T193804955138Z-androidbible-audiohttperrorbody-junit.json",
+      "reports/correctness/2026-11-21T193946182218Z-internaldb-wrapper-compile.json",
+      "reports/correctness/2026-11-21T194047600758Z-internaldb-wrapper-robolectric.json",
+      "reports/correctness/2026-11-21T105909682416Z-song-documents-integrated.json",
+      "reports/correctness/2026-11-21T111252642461Z-unchanged-syncutils.json"
+    ]
+  },
+  "checks": {
+    "rust_tests": 552,
+    "rust_ignored": 0,
+    "python_tests": 179,
+    "logs": [
+      "reports/correctness/2026-11-21-survey33-verification-60e64ad70/build.log",
+      "reports/correctness/2026-11-21-survey33-verification-60e64ad70/clippy.log",
+      "reports/correctness/2026-11-21-survey33-verification-60e64ad70/fmt.log",
+      "reports/correctness/2026-11-21-survey33-verification-60e64ad70/frozen-inputs.zip",
+      "reports/correctness/2026-11-21-survey33-verification-60e64ad70/python.log",
+      "reports/correctness/2026-11-21-survey33-verification-60e64ad70/reference-integrity.log",
+      "reports/correctness/2026-11-21-survey33-verification-60e64ad70/rust.log",
+      "reports/correctness/2026-11-21-survey33-verification-60e64ad70/sha256.txt",
+      "reports/correctness/2026-11-21-survey33-verification-60e64ad70/source-revision.txt"
+    ]
+  },
+  "limitations": [
+    "The nine sources with app dependencies require original sibling or Gradle-built artifacts; with just stdlib and JDK the official compiler also rejects these nine.",
+    "The unchanged-source survey measures compilation and class emission. Each runtime report identifies its own callers, provider revisions and coverage. A full AndroidBible build by Korrust was outside this survey."
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-21T193810601621Z-androidbible-survey-dependencies.json",
+    "reports/correctness/2026-11-21T193758617900Z-next10-app-assessment.json",
+    "reports/correctness/2026-11-21T194551247078Z-androidbible-survey-jvm-callers.json",
+    "reports/correctness/2026-11-21-survey33-verification-60e64ad70/build.log",
+    "reports/correctness/2026-11-21-survey33-verification-60e64ad70/clippy.log",
+    "reports/correctness/2026-11-21-survey33-verification-60e64ad70/fmt.log",
+    "reports/correctness/2026-11-21-survey33-verification-60e64ad70/frozen-inputs.zip",
+    "reports/correctness/2026-11-21-survey33-verification-60e64ad70/python.log",
+    "reports/correctness/2026-11-21-survey33-verification-60e64ad70/reference-integrity.log",
+    "reports/correctness/2026-11-21-survey33-verification-60e64ad70/rust.log",
+    "reports/correctness/2026-11-21-survey33-verification-60e64ad70/sha256.txt",
+    "reports/correctness/2026-11-21-survey33-verification-60e64ad70/source-revision.txt",
+    "reports/correctness/2026-11-21T193850934352Z-unchanged-models.json",
+    "reports/correctness/2026-11-21T193804955138Z-androidbible-audiohttperrorbody-junit.json",
+    "reports/correctness/2026-11-21T193946182218Z-internaldb-wrapper-compile.json",
+    "reports/correctness/2026-11-21T194047600758Z-internaldb-wrapper-robolectric.json",
+    "reports/correctness/2026-11-21T105909682416Z-song-documents-integrated.json",
+    "reports/correctness/2026-11-21T111252642461Z-unchanged-syncutils.json",
+    "reports/correctness/2026-11-21T101431658451Z-trailing-lambdas.json",
+    "reports/correctness/2026-11-21T101933803222Z-stable-properties.json",
+    "reports/correctness/2026-11-21T104611326908Z-implicit-type-classifiers.json",
+    "reports/correctness/2026-11-21T105123031582Z-java-platform-parameter-bounds.json",
+    "reports/correctness/2026-11-21T105303515876Z-enum-field-annotations.json",
+    "reports/correctness/2026-11-21T110135642183Z-generic-java-fields.json",
+    "reports/correctness/2026-11-21T110546135866Z-parameterized-data-properties.json",
+    "reports/correctness/2026-11-21T110143376167Z-instance-jvm-fields.json",
+    "reports/correctness/2026-11-21T193734081152Z-static-jvm-fields.json"
+  ]
+}
