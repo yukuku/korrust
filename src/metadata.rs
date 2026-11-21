@@ -258,6 +258,19 @@ pub(crate) fn annotation_source(
         .into_iter()
         .map(|(name, path)| (name, path, 0))
         .collect();
+    let context = source.clone();
+    for (name, offset) in &source.type_locations {
+        if !name.contains('/') || source.imports.iter().any(|(alias, _, _)| alias == name) {
+            continue;
+        }
+        if let Type::Java(owner) =
+            classpath.resolve_source_type(&Type::Java(name.clone()), &context)
+            && owner != *name
+            && classpath.load(&owner).is_ok()
+        {
+            source.imports.push((name.clone(), owner, *offset));
+        }
+    }
     let filter = Filter {
         classpath,
         imports: &source.imports,

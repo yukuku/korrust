@@ -79,21 +79,52 @@ fn implicit_body_and_nested_signature_classifiers_preserve_interop_and_visibilit
             std::fs::write(path, output.bytes).unwrap();
         }
     }
+    let consumers = [
+        root.join("consumer-official"),
+        root.join("consumer-candidate"),
+    ];
+    for (provider, consumer) in [&official, &candidate].into_iter().zip(&consumers) {
+        run(Command::new(&kotlin)
+            .arg(fixtures.join("Consumer.kt"))
+            .args([
+                "-language-version",
+                "2.3",
+                "-api-version",
+                "2.3",
+                "-jvm-target",
+                "1.8",
+            ])
+            .arg("-cp")
+            .arg(classpath(&[provider, &dependency, &standard]))
+            .arg("-d")
+            .arg(consumer));
+    }
     let callers = root.join("callers");
     run(Command::new("javac")
         .arg("-cp")
-        .arg(classpath(&[&official, &dependency, &standard]))
+        .arg(classpath(&[
+            &official,
+            &consumers[0],
+            &dependency,
+            &standard,
+        ]))
         .arg("-d")
         .arg(&callers)
         .arg(fixtures.join("Driver.java")));
     let mut signatures = Vec::new();
-    for output in [&official, &candidate] {
+    for (output, consumer) in [&official, &candidate].into_iter().zip(&consumers) {
         let result = run(Command::new("java")
             .arg("-Xverify:all")
             .arg("-cp")
-            .arg(classpath(&[&callers, output, &dependency, &standard]))
+            .arg(classpath(&[
+                &callers,
+                output,
+                consumer,
+                &dependency,
+                &standard,
+            ]))
             .arg("classifierprobe.Driver"));
-        assert_eq!(String::from_utf8_lossy(&result.stdout).trim(), "OK 13");
+        assert_eq!(String::from_utf8_lossy(&result.stdout).trim(), "OK 15");
         let result = run(Command::new("javap")
             .args(["-public", "-s", "-classpath"])
             .arg(classpath(&[output, &dependency]))

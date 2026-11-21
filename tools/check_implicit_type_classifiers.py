@@ -63,6 +63,7 @@ def main():
             oracle_and_candidate_inputs='tests/implicit_type_classifiers/Use.kt and Alias.kt with identical real javac/Kotlin-built dependencies',
             runtime='One Java caller compiled against official output runs unchanged against both outputs using -Xverify:all.',
             signatures='javap public signatures and descriptors for Lookup, Observer, Holder, and AliasKt compare exactly.',
+            kotlin_consumers='Pinned Kotlin consumers of nested generic object parameters and nested enum interface parameters compile against both providers and run with the fixed Java caller.',
             boundaries='Private/protected/missing/fake Java members, inaccessible Java and Kotlin outers, fake top-level Kotlin dollar names, and corrupt outer/nested classfiles.',
         ),
         cases=cases, counts=dict(Counter(case['outcome'] for case in cases)),

@@ -15,6 +15,8 @@ public class Driver {
         if (!aliasprobe.AliasKt.alias(first).equals("a")) throw new AssertionError();
         if (!aliasprobe.AliasKt.fullyQualified(second).equals("b")) throw new AssertionError();
         if (!Lookup.kotlinNested(new KotlinOuter.Nested()) || Lookup.kotlinNested(new Marker())) throw new AssertionError();
-        System.out.println("OK 13");
+        if (!ConsumerKt.consume(first).equals("a")) throw new AssertionError();
+        if (!ConsumerKt.consumeText(new Catalog.Entry<String>("text", "body")).equals("text")) throw new AssertionError();
+        System.out.println("OK 15");
     }
 }

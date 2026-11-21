@@ -883,6 +883,10 @@ impl Classpath {
         source::expand_aliases(module, self)
     }
 
+    pub(crate) fn resolve_source_type(&self, ty: &Type, module: &crate::syntax::Module) -> Type {
+        source::resolve(ty, module, self)
+    }
+
     pub(crate) fn default_source_accessor(
         &self,
         method: &JavaMethod,

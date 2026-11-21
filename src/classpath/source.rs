@@ -3,7 +3,7 @@ mod enums;
 use super::*;
 use crate::syntax::{ConstValue, Function, Module, TypeArgument};
 
-fn resolve(ty: &Type, module: &Module, cp: &Classpath) -> Type {
+pub(super) fn resolve(ty: &Type, module: &Module, cp: &Classpath) -> Type {
     fn name(name: &str, module: &Module, cp: &Classpath) -> String {
         if let Some((_, path, _)) = module.imports.iter().find(|(alias, _, _)| alias == name) {
             return path.clone();
