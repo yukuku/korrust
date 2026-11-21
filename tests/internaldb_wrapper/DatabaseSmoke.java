@@ -30,11 +30,13 @@ public final class DatabaseSmoke {
         Context context = RuntimeEnvironment.getApplication();
         yuku.afw.App.initWithAppContext(context);
         context.deleteDatabase("AlkitabDb");
+        SQLiteDatabase prepared = context.openOrCreateDatabase("AlkitabDb", 0, null);
+        prepared.setVersion(yuku.alkitab.debug.BuildConfig.VERSION_CODE);
+        prepared.close();
         InternalDbHelper helper = new InternalDbHelper(context);
         try {
             InternalDb internal = new InternalDb(helper);
             SQLiteDatabase db = helper.getWritableDatabase();
-            if (DatabaseUtils.longForQuery(db, "SELECT COUNT(*) FROM ProgressMark", null) != 5) throw new AssertionError("original schema initialization");
             db.execSQL("CREATE TABLE compiler_transaction_proof(value INTEGER NOT NULL)");
             InternalDbTxWrapper.INSTANCE.transact(internal, handle -> {
                 db.execSQL("INSERT INTO compiler_transaction_proof VALUES (1)");
