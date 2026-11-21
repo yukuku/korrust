@@ -660,6 +660,7 @@ enum Constant {
 }
 #[derive(Default)]
 struct Pool {
+    exposed_static_fields: HashSet<(String, String)>,
     value_classes: crate::value_abi::Registry,
     entries: Vec<Constant>,
     indices: HashMap<Constant, u16>,
@@ -885,6 +886,11 @@ impl Code<'_> {
         store: bool,
     ) -> Result<bool> {
         if !self.in_lambda
+            || is_static
+                && self
+                    .pool
+                    .exposed_static_fields
+                    .contains(&(owner.into(), name.into()))
             || matches!(name, "Companion" | "INSTANCE")
             || !(owner == self.owner || owner.starts_with(&format!("{}$", self.owner)))
             || self.lambdas.iter().any(|lambda| lambda.owner == owner)

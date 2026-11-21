@@ -6,6 +6,27 @@ pub fn emit_lambdas(
     file: &str,
     values: &crate::value_abi::Registry,
 ) -> Result<Vec<crate::ClassFile>> {
+    let mut exposed = HashSet::new();
+    if let Some(class) = &module.class_decl
+        && let Some(companion) = &class.companion
+    {
+        exposed.extend(
+            companion
+                .properties
+                .iter()
+                .filter(|field| field.jvm_field)
+                .map(|field| (facade.to_owned(), field.name.clone())),
+        );
+    }
+    if let Some(object) = &module.object_decl {
+        exposed.extend(
+            object
+                .fields
+                .iter()
+                .filter(|field| field.jvm_field)
+                .map(|field| (object.owner.clone(), field.name.clone())),
+        );
+    }
     module
         .lambdas
         .iter()
@@ -17,6 +38,7 @@ pub fn emit_lambdas(
                 file,
                 &module.lambdas,
                 values,
+                &exposed,
             )
         })
         .collect()
@@ -29,6 +51,7 @@ pub(super) fn emit(
     file: &str,
     lambdas: &[crate::check::LambdaDecl],
     values: &crate::value_abi::Registry,
+    exposed: &HashSet<(String, String)>,
 ) -> Result<crate::ClassFile> {
     let function = &lambda.function;
     if lambda.anonymous_methods.is_none() && function.params.len() > 22 {
@@ -46,6 +69,7 @@ pub(super) fn emit(
     }
     let owner = &lambda.owner;
     let mut pool = Pool {
+        exposed_static_fields: exposed.clone(),
         value_classes: values.clone(),
         ..Pool::default()
     };
@@ -610,6 +634,7 @@ mod tests {
                 "Lambda.kt",
                 &[],
                 &Default::default(),
+                &HashSet::new(),
             )
             .unwrap();
             std::fs::write(

@@ -295,6 +295,7 @@ fn legacy_check(
         let ty = Type::ThreadLocal(Box::new(array_type.clone()));
         object_fields.insert(field.name.clone(), (owner.clone(), ty.clone()));
         fields.push(ObjectField {
+            jvm_field: false,
             mutable: field.mutable,
             name: field.name.clone(),
             ty,
@@ -523,6 +524,7 @@ pub(super) fn check(
             format!("{}/{}", package.replace('.', "/"), source.name)
         }
     });
+    let jvm_fields = jvm_fields::object_fields(source, classpath, imports)?;
     let mut scoped_imports = imports.clone();
     scoped_imports.insert(source.name.clone(), owner.clone());
     let imports = &scoped_imports;
@@ -774,6 +776,7 @@ pub(super) fn check(
                 value: delegated.metadata,
             });
             fields.push(ObjectField {
+                jvm_field: false,
                 name: delegated.metadata_name,
                 ty: metadata_type.clone(),
                 mutable: false,
@@ -791,6 +794,7 @@ pub(super) fn check(
                 value: delegated.field.initializer.unwrap(),
             });
             fields.push(ObjectField {
+                jvm_field: false,
                 name: delegated.field.name,
                 ty: delegate_type.clone(),
                 mutable: false,
@@ -810,7 +814,8 @@ pub(super) fn check(
             continue;
         }
         let thread_local = field.initializer.as_ref().is_some_and(|e|matches!(&e.kind,ExprKind::Call(target,_) if matches!(&target.kind,ExprKind::Property(receiver,name) if name=="withInitial" && matches!(&receiver.kind,ExprKind::Name(n) if n=="ThreadLocal"))));
-        if thread_local
+        if !jvm_fields.contains(&field.name)
+            && thread_local
             && !source.methods.iter().any(|m| {
                 matches!(
                     m.function.name.as_str(),
@@ -898,6 +903,7 @@ pub(super) fn check(
             context.mutable_fields.insert(field.name.clone());
         }
         fields.push(ObjectField {
+            jvm_field: jvm_fields.contains(&field.name),
             name: field.name.clone(),
             ty: ty.clone(),
             mutable: field.mutable,
@@ -1079,7 +1085,7 @@ pub(super) fn check(
         });
     }
     for field in &source.fields {
-        if field.delegate.is_some() {
+        if field.delegate.is_some() || jvm_fields.contains(&field.name) {
             continue;
         }
         let ty = context.static_fields[&field.name].1.clone();
@@ -1287,7 +1293,7 @@ pub(super) fn check(
             exposed_fields: source
                 .fields
                 .iter()
-                .filter(|f| f.lateinit)
+                .filter(|f| f.lateinit || jvm_fields.contains(&f.name))
                 .map(|f| (f.name.clone(), if f.private { 2 } else { 1 }))
                 .collect(),
             constants: source.constants.clone(),

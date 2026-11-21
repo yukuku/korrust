@@ -140,6 +140,7 @@ pub struct DynamicObject {
     pub methods: Vec<ObjectMethod>,
 }
 pub struct ObjectField {
+    pub jvm_field: bool,
     pub mutable: bool,
     pub name: String,
     pub ty: Type,
@@ -209,6 +210,7 @@ pub struct ClassField {
     pub initializer: Option<Value>,
 }
 pub struct ClassCompanionProperty {
+    pub jvm_field: bool,
     pub name: String,
     pub ty: Type,
     pub private: bool,
@@ -3160,6 +3162,33 @@ impl Checker<'_> {
                 ),
             );
         }
+        let mut receiver = receiver;
+        let evaluation = if field.access & 8 != 0
+            && field.kotlin.is_some()
+            && receiver.is_some()
+            && (field.owner != class.name
+                || class
+                    .fields
+                    .iter()
+                    .any(|f| f.name == "INSTANCE" && f.descriptor == format!("L{};", class.name)))
+        {
+            receiver.take()
+        } else {
+            None
+        };
+        if evaluation
+            .as_ref()
+            .is_some_and(|value| !Self::static_field_receiver_supported(value, &field.owner))
+        {
+            return Err(Diagnostic::new(offset,"Effectful static Kotlin field receivers require unresolved oracle evaluation semantics").with_kind(crate::DiagnosticKind::UnsupportedLanguage,"JVM_FIELD_RECEIVER_EVALUATION_UNSUPPORTED"));
+        }
+        if !self
+            .classpath
+            .kotlin_field_visible(&self.lambda_owner, field)
+        {
+            return Err(Diagnostic::new(offset, "Field is inaccessible")
+                .with_kind(crate::DiagnosticKind::InvalidKotlin, "INVISIBLE_REFERENCE"));
+        }
         if field.access & 1 == 0 || (field.access & 8 != 0) != receiver.is_none() {
             return Err(Diagnostic::new(
                 offset,
@@ -3183,16 +3212,62 @@ impl Checker<'_> {
             );
         }
         let mut cursor = 0;
-        let ty = java_parameter(self.java_type(&field.descriptor, &mut cursor, offset)?);
+        let ty = if let Some(kotlin) = &field.kotlin {
+            kotlin.ty.clone()
+        } else {
+            java_parameter(self.java_type(&field.descriptor, &mut cursor, offset)?)
+        };
         let value = self.value(expr)?;
         let value = self.coerce(value, ty.clone(), offset)?;
-        Ok(Statement::JavaFieldStore {
-            owner,
+        let store = Statement::JavaFieldStore {
+            owner: if field.kotlin.is_some() {
+                field.owner.clone()
+            } else {
+                owner
+            },
             name: name.into(),
             ty,
             receiver,
             value,
+        };
+        Ok(if let Some(evaluation) = evaluation {
+            Statement::Expression(Value {
+                ty: Type::Unit,
+                kind: ValueKind::Block(
+                    vec![Statement::Expression(evaluation), store],
+                    Box::new(Value {
+                        ty: Type::Unit,
+                        kind: ValueKind::Unit,
+                    }),
+                ),
+            })
+        } else {
+            store
         })
+    }
+    fn static_field_receiver_supported(value: &Value, storage: &str) -> bool {
+        match &value.kind {
+            ValueKind::Local(_) => true,
+            ValueKind::ObjectInstance(owner) => owner == storage,
+            ValueKind::StaticField { owner, name } => owner == storage && name == "Companion",
+            ValueKind::JavaField {
+                owner,
+                name,
+                receiver: None,
+                ..
+            } => owner == storage && name == "Companion",
+            _ => false,
+        }
+    }
+
+    fn exposed_static_field(&self, owner: &str, name: &str) -> bool {
+        self.classpath
+            .field_candidates(owner, name)
+            .is_ok_and(|fields| {
+                fields.iter().any(|field| {
+                    field.access & 9 == 9 && field.kotlin.is_some() && !field.unsupported
+                })
+            })
     }
     fn java_field(
         &mut self,
@@ -3227,6 +3302,26 @@ impl Checker<'_> {
         {
             return Err(Diagnostic::new(offset, "Field is inaccessible")
                 .with_kind(crate::DiagnosticKind::InvalidKotlin, "INVISIBLE_REFERENCE"));
+        }
+        let mut receiver = receiver;
+        let evaluation = if field.access & 8 != 0
+            && field.kotlin.as_ref().is_some_and(|k| !k.constant)
+            && receiver.is_some()
+            && (field.owner != class.name
+                || class
+                    .fields
+                    .iter()
+                    .any(|f| f.name == "INSTANCE" && f.descriptor == format!("L{};", class.name)))
+        {
+            receiver.take()
+        } else {
+            None
+        };
+        if evaluation
+            .as_ref()
+            .is_some_and(|value| !Self::static_field_receiver_supported(value, &field.owner))
+        {
+            return Err(Diagnostic::new(offset,"Effectful static Kotlin field receivers require unresolved oracle evaluation semantics").with_kind(crate::DiagnosticKind::UnsupportedLanguage,"JVM_FIELD_RECEIVER_EVALUATION_UNSUPPORTED"));
         }
         if (field.access & 8 != 0) != receiver.is_none() {
             return Err(Diagnostic::new(
@@ -3310,15 +3405,25 @@ impl Checker<'_> {
         } else {
             ty
         };
-        Ok(Value {
+        let value = Value {
             ty,
             kind: ValueKind::JavaField {
                 descriptor: Some(field.descriptor.clone()),
-                owner: owner.into(),
+                owner: if field.kotlin.is_some() {
+                    field.owner.clone()
+                } else {
+                    owner.into()
+                },
                 name: name.into(),
                 receiver: receiver.map(Box::new),
             },
-        })
+        };
+        if let Some(evaluation) = evaluation {
+            let slot = self.allocate_typed_slot(&evaluation.ty, offset)?;
+            Ok(Self::wrap_lets(value, vec![(slot, evaluation)]))
+        } else {
+            Ok(value)
+        }
     }
     fn local(&self, name: &str) -> Option<Local> {
         self.scopes.iter().rev().find_map(|s| s.get(name).cloned())
@@ -3632,7 +3737,9 @@ impl Checker<'_> {
                             }
                             if let Some((owner, ty)) = self.object_fields.get(&name) {
                                 let value = self.expected_value(expr, ty)?;
-                                if self.lambda_owner.starts_with(&format!("{owner}$Companion")) {
+                                if self.lambda_owner.starts_with(&format!("{owner}$Companion"))
+                                    && !self.exposed_static_field(owner, &name)
+                                {
                                     body.push(Statement::Expression(Value {
                                         ty: Type::Unit,
                                         kind: ValueKind::StaticCall {
@@ -3723,7 +3830,9 @@ impl Checker<'_> {
                                 ));
                             }
                             let value = self.expected_value(expr, ty)?;
-                            if self.lambda_owner.starts_with(&format!("{owner}$Companion")) {
+                            if self.lambda_owner.starts_with(&format!("{owner}$Companion"))
+                                && !self.exposed_static_field(owner, name)
+                            {
                                 body.push(Statement::Expression(Value {
                                     ty: Type::Unit,
                                     kind: ValueKind::StaticCall {
@@ -4449,6 +4558,7 @@ impl Checker<'_> {
                                 kind: if self
                                     .lambda_owner
                                     .starts_with(&format!("{owner}$Companion"))
+                                    && !self.exposed_static_field(owner, &backing.name)
                                 {
                                     ValueKind::StaticCall {
                                         owner: owner.clone(),
@@ -4592,7 +4702,9 @@ impl Checker<'_> {
                 } else if let Some((owner, ty)) = self.object_fields.get(name) {
                     (
                         ty.clone(),
-                        if self.lambda_owner.starts_with(&format!("{owner}$Companion")) {
+                        if self.lambda_owner.starts_with(&format!("{owner}$Companion"))
+                            && !self.exposed_static_field(owner, name)
+                        {
                             ValueKind::StaticCall {
                                 owner: owner.clone(),
                                 name: format!("access${}$cp", getter_name(name)),

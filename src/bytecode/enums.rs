@@ -210,6 +210,7 @@ pub(crate) fn emit(
             file,
             &checked.lambdas,
             &metadata.value_classes,
+            &HashSet::new(),
         )?);
     }
     Ok(files)

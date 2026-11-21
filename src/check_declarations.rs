@@ -3185,6 +3185,7 @@ pub(super) fn check_static_state(
     classes: &HashMap<String, JavaClass>,
     lambdas: &Rc<RefCell<Vec<LambdaDecl>>>,
 ) -> Result<ClassCompanion> {
+    let jvm_fields = jvm_fields::static_fields(source_properties, classpath, imports)?;
     let mut context = DeclarationContext::new(owner, classpath, imports, classes, lambdas);
     if let Ok(class) = classpath.load(owner) {
         for method in class.methods {
@@ -3283,6 +3284,7 @@ pub(super) fn check_static_state(
                 value: delegated.metadata,
             });
             properties.push(ClassCompanionProperty {
+                jvm_field: false,
                 name: delegated.metadata_name,
                 ty: metadata_type.clone(),
                 private: true,
@@ -3299,6 +3301,7 @@ pub(super) fn check_static_state(
                 value: delegated.field.initializer.unwrap(),
             });
             properties.push(ClassCompanionProperty {
+                jvm_field: false,
                 name: delegated.field.name,
                 ty: delegate_type.clone(),
                 private: true,
@@ -3373,6 +3376,7 @@ pub(super) fn check_static_state(
             .static_fields
             .insert(property.name.clone(), (storage_owner.into(), ty.clone()));
         properties.push(ClassCompanionProperty {
+            jvm_field: jvm_fields.contains(&property.name),
             name: property.name.clone(),
             ty: ty.clone(),
             private: property.private,
@@ -3436,7 +3440,7 @@ pub(super) fn check_static_state(
         methods.push(context.function(&source.function, receiver, source.is_override)?);
     }
     for property in source_properties {
-        if property.delegate.is_some() {
+        if property.delegate.is_some() || jvm_fields.contains(&property.name) {
             continue;
         }
         let ty = context.static_fields[&property.name].1.clone();
@@ -3587,7 +3591,7 @@ pub(super) fn check_static_state(
     Ok(ClassCompanion {
         exposed_fields: source_properties
             .iter()
-            .filter(|p| p.lateinit)
+            .filter(|p| p.lateinit || jvm_fields.contains(&p.name))
             .map(|p| (p.name.clone(), if p.private { 2 } else { 1 }))
             .collect(),
         owner: owner.into(),

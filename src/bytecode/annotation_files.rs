@@ -86,6 +86,7 @@ fn original_pool(reader: &mut Reader<'_>) -> Result<(Pool, HashMap<u16, Vec<u8>>
         return Err(failure("Invalid JVM annotation input constant pool count"));
     }
     let mut pool = Pool {
+        exposed_static_fields: Default::default(),
         value_classes: Default::default(),
         entries: vec![Constant::Reserved; usize::from(count) - 1],
         indices: HashMap::new(),

@@ -323,7 +323,26 @@ pub(crate) fn annotation_placements(
                     classpath,
                     &imports,
                 )?;
-                if !property.annotations.is_empty() {
+                if crate::check::has_jvm_field(&property.annotations, classpath, &imports) {
+                    let ty = property.ty.as_ref().ok_or_else(|| {
+                        Diagnostic::new(
+                            property.offset,
+                            "Cannot place annotations on unresolved property",
+                        )
+                    })?;
+                    property_annotations(
+                        owner,
+                        &property.annotations,
+                        &property.name,
+                        ty,
+                        property.mutable,
+                        property.private,
+                        true,
+                        classpath,
+                        &imports,
+                        &mut output,
+                    )?;
+                } else if !property.annotations.is_empty() {
                     return Err(Diagnostic::new(
                         property.offset,
                         "Annotations on companion properties require unsupported split backing-field placement",

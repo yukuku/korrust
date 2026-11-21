@@ -1876,10 +1876,14 @@ pub(crate) fn for_class_companion(
         );
     }
     for property in &source.properties {
+        let exposed = companion
+            .properties
+            .iter()
+            .any(|field| field.name == property.name && field.jvm_field);
         let ty = companion
             .methods
             .iter()
-            .find(|method| method.name == crate::check::getter_name(&property.name))
+            .find(|method| !exposed && method.name == crate::check::getter_name(&property.name))
             .map(|method| &method.result)
             .or_else(|| {
                 companion
@@ -1898,9 +1902,13 @@ pub(crate) fn for_class_companion(
         let mut declaration = Proto::default();
         declaration.number(
             11,
-            (property.visibility().metadata() | 512)
+            (property.visibility().metadata() | if exposed { 0 } else { 512 })
                 | u32::from(property_has_annotations(&property.annotations))
-                | if property.mutable { 256 | 1024 } else { 0 }
+                | if property.mutable {
+                    256 | if exposed { 0 } else { 1024 }
+                } else {
+                    0
+                }
                 | if !property.mutable && literal_initializer(property.initializer.as_ref()) {
                     8192
                 } else {
@@ -1927,7 +1935,7 @@ pub(crate) fn for_class_companion(
                 &method_signature(&field.name, &descriptor(&field.ty, imports)?, &mut strings)?,
             );
         }
-        if !property.private {
+        if !property.private && !exposed {
             signature.message(
                 3,
                 &method_signature(
@@ -1958,26 +1966,28 @@ pub(crate) fn for_class_companion(
             &property.name,
             &mut strings,
         )?;
-        accessor_annotation_flags(
-            &mut declaration,
-            &property.annotations,
-            ty,
-            property.getter_visibility().metadata(),
-            property.setter_visibility().metadata(),
-            !property.body.is_empty() || property.delegate.is_some(),
-            property.setter.is_some() || property.delegate.is_some(),
-            property.mutable,
-            property.setter.as_ref().map_or(
-                if property.delegate.is_some() {
-                    "<set-?>"
-                } else {
-                    property.name.as_str()
-                },
-                |(name, _)| name,
-            ),
-            imports,
-            &mut strings,
-        )?;
+        if !exposed {
+            accessor_annotation_flags(
+                &mut declaration,
+                &property.annotations,
+                ty,
+                property.getter_visibility().metadata(),
+                property.setter_visibility().metadata(),
+                !property.body.is_empty() || property.delegate.is_some(),
+                property.setter.is_some() || property.delegate.is_some(),
+                property.mutable,
+                property.setter.as_ref().map_or(
+                    if property.delegate.is_some() {
+                        "<set-?>"
+                    } else {
+                        property.name.as_str()
+                    },
+                    |(name, _)| name,
+                ),
+                imports,
+                &mut strings,
+            )?;
+        }
         declaration.message(100, &signature);
         proto.message(10, &declaration);
     }
@@ -2605,6 +2615,12 @@ fn object_metadata(
     }
     let mut seen = BTreeSet::new();
     for field in &object.fields {
+        let exposed = checked.is_some_and(|object| {
+            object
+                .fields
+                .iter()
+                .any(|actual| actual.name == field.name && actual.jvm_field)
+        });
         if !seen.insert(&field.name) {
             return Err(Diagnostic::new(
                 field.offset,
@@ -2622,9 +2638,13 @@ fn object_metadata(
         let mut declaration = Proto::default();
         declaration.number(
             11,
-            (field.visibility().metadata() | 512)
+            (field.visibility().metadata() | if exposed { 0 } else { 512 })
                 | u32::from(property_has_annotations(&field.annotations))
-                | if field.mutable { 256 | 1024 } else { 0 }
+                | if field.mutable {
+                    256 | if exposed { 0 } else { 1024 }
+                } else {
+                    0
+                }
                 | if field.lateinit { 4096 } else { 0 }
                 | if field.delegate.is_some() { 32768 } else { 0 },
         );
@@ -2650,7 +2670,7 @@ fn object_metadata(
                 )?,
             );
         }
-        if !field.private {
+        if !field.private && !exposed {
             signature.message(
                 3,
                 &method_signature(
@@ -2681,26 +2701,28 @@ fn object_metadata(
             &field.name,
             &mut strings,
         )?;
-        accessor_annotation_flags(
-            &mut declaration,
-            &field.annotations,
-            ty,
-            field.getter_visibility().metadata(),
-            field.setter_visibility().metadata(),
-            !field.body.is_empty() || field.delegate.is_some(),
-            field.setter.is_some() || field.delegate.is_some(),
-            field.mutable,
-            field.setter.as_ref().map_or(
-                if field.delegate.is_some() {
-                    "<set-?>"
-                } else {
-                    field.name.as_str()
-                },
-                |(name, _)| name,
-            ),
-            &module.imports,
-            &mut strings,
-        )?;
+        if !exposed {
+            accessor_annotation_flags(
+                &mut declaration,
+                &field.annotations,
+                ty,
+                field.getter_visibility().metadata(),
+                field.setter_visibility().metadata(),
+                !field.body.is_empty() || field.delegate.is_some(),
+                field.setter.is_some() || field.delegate.is_some(),
+                field.mutable,
+                field.setter.as_ref().map_or(
+                    if field.delegate.is_some() {
+                        "<set-?>"
+                    } else {
+                        field.name.as_str()
+                    },
+                    |(name, _)| name,
+                ),
+                &module.imports,
+                &mut strings,
+            )?;
+        }
         declaration.message(100, &signature);
         proto.message(10, &declaration);
     }

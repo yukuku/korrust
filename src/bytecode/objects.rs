@@ -348,7 +348,7 @@ pub fn emit_dynamic_object(
                 .copied()
                 .unwrap_or(0x0002),
         )?);
-        if !lambdas.is_empty() {
+        if !lambdas.is_empty() && !property.jvm_field {
             builder.methods.extend(field_bridges(
                 &mut builder.pool,
                 owner,

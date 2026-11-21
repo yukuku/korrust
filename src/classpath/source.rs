@@ -722,6 +722,14 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
             );
             for p in &companion.properties {
                 if let Some(ty) = p.ty.as_ref().map(|t| resolve(t, module, cp)) {
+                    if crate::check::has_jvm_field(&p.annotations, cp, &imports) {
+                        let mut field =
+                            exposed_property_field(owner, &p.name, ty, p.mutable, p.visibility());
+                        field.access |= 8;
+                        nested.fields.push(field.clone());
+                        class.fields.push(field);
+                        continue;
+                    }
                     nested.methods.extend(property_accessors(
                         cp,
                         &companion_owner,
@@ -900,6 +908,13 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         );
         for p in &source.fields {
             if let Some(ty) = p.ty.as_ref().map(|t| resolve(t, module, cp)) {
+                if crate::check::has_jvm_field(&p.annotations, cp, &imports) {
+                    let mut field =
+                        exposed_property_field(owner, &p.name, ty, p.mutable, p.visibility());
+                    field.access |= 8;
+                    class.fields.push(field);
+                    continue;
+                }
                 class.methods.extend(property_accessors(
                     cp,
                     owner,

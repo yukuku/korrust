@@ -23,6 +23,7 @@ pub(crate) fn check_enum(
     classpath: &Classpath,
     owner: &str,
 ) -> Result<CheckedEnum> {
+    jvm_fields::preflight(module, classpath)?;
     let source = module
         .enum_decl
         .as_ref()

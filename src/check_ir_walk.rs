@@ -350,6 +350,7 @@ mod tests {
             initializers: vec![Statement::Expression(int(number + 1))],
             owner: owner.into(),
             properties: vec![ClassCompanionProperty {
+                jvm_field: false,
                 name: "p".into(),
                 ty: Type::Int,
                 private: false,
@@ -564,6 +565,7 @@ mod tests {
                 interfaces: Vec::new(),
                 serializable: false,
                 fields: vec![ObjectField {
+                    jvm_field: false,
                     mutable: false,
                     name: "field".into(),
                     ty: Type::IntArray,

@@ -145,6 +145,83 @@ pub(super) fn class_fields(
     Ok(fields)
 }
 
+pub(super) fn static_fields(
+    properties: &[syntax::ClassCompanionProperty],
+    classpath: &Classpath,
+    imports: &HashMap<String, String>,
+) -> Result<HashSet<String>> {
+    let mut fields = HashSet::new();
+    for property in properties {
+        let Some(annotation) = marker(&property.annotations, classpath, imports)? else {
+            continue;
+        };
+        let source = syntax::PropertyDecl {
+            receiver: None,
+            annotations: property.annotations.clone(),
+            name: property.name.clone(),
+            private: property.private,
+            internal: property.internal,
+            getter_visibility: property.getter_visibility,
+            setter_visibility: property.setter_visibility,
+            protected: false,
+            mutable: property.mutable,
+            inferred: property.ty.is_none(),
+            initializer: property.initializer.clone(),
+            offset: property.offset,
+            ty: property.ty.clone().unwrap_or(Type::Unit),
+            body: property.body.clone(),
+            is_override: false,
+            setter: property.setter.clone(),
+            delegate: property.delegate.clone(),
+            lateinit: property.lateinit,
+            open: false,
+        };
+        validate_property(&source, annotation)?;
+        fields.insert(property.name.clone());
+    }
+    Ok(fields)
+}
+
+pub(super) fn object_fields(
+    source: &syntax::ObjectDecl,
+    classpath: &Classpath,
+    imports: &HashMap<String, String>,
+) -> Result<HashSet<String>> {
+    let properties = source
+        .fields
+        .iter()
+        .map(|p| syntax::ClassCompanionProperty {
+            annotations: p.annotations.clone(),
+            name: p.name.clone(),
+            offset: p.offset,
+            private: p.private,
+            internal: p.internal,
+            getter_visibility: p.getter_visibility,
+            setter_visibility: p.setter_visibility,
+            mutable: p.mutable,
+            ty: p.ty.clone(),
+            initializer: p.initializer.clone(),
+            body: p.body.clone(),
+            setter: p.setter.clone(),
+            delegate: p.delegate.clone(),
+            lateinit: p.lateinit,
+        })
+        .collect::<Vec<_>>();
+    let fields = static_fields(&properties, classpath, imports)?;
+    if fields.contains("INSTANCE") {
+        return Err(Diagnostic::new(source.offset, "JvmField names colliding with singleton storage require unsupported field disambiguation").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "JVM_FIELD_STATIC_COLLISION_UNSUPPORTED"));
+    }
+    for property in &source.fields {
+        if fields.contains(&property.name) && property.is_override {
+            return Err(invalid(
+                property.offset,
+                "JvmField cannot expose an overriding property",
+            ));
+        }
+    }
+    Ok(fields)
+}
+
 pub(super) fn preflight(source: &syntax::Module, classpath: &Classpath) -> Result<()> {
     let imports = crate::annotation_declarations::imports(source, classpath)?;
     let constants = |values: &[syntax::ConstDecl]| -> Result<()> {
@@ -184,24 +261,19 @@ pub(super) fn preflight(source: &syntax::Module, classpath: &Classpath) -> Resul
     if let Some(class) = &source.class_decl {
         class_fields(class, classpath, &imports)?;
         if let Some(companion) = &class.companion {
-            static_properties(
-                companion
-                    .properties
-                    .iter()
-                    .map(|p| p.annotations.as_slice())
-                    .collect(),
-            )?;
+            let exposed = static_fields(&companion.properties, classpath, &imports)?;
+            if exposed.iter().any(|name| {
+                name == "Companion"
+                    || class.param_properties.contains(name)
+                    || class.properties.iter().any(|p| &p.name == name)
+            }) {
+                return Err(Diagnostic::new(class.offset, "JvmField names colliding with class storage require unsupported field disambiguation").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "JVM_FIELD_STATIC_COLLISION_UNSUPPORTED"));
+            }
         }
     }
     if let Some(object) = &source.object_decl {
         constants(&object.constants)?;
-        static_properties(
-            object
-                .fields
-                .iter()
-                .map(|p| p.annotations.as_slice())
-                .collect(),
-        )?;
+        object_fields(object, classpath, &imports)?;
     }
     if let Some(interface) = &source.interface_decl {
         for property in &interface.properties {
@@ -229,6 +301,20 @@ pub(super) fn preflight(source: &syntax::Module, classpath: &Classpath) -> Resul
         }
     }
     if let Some(enumeration) = &source.enum_decl {
+        if let Some(companion) = &enumeration.body.companion {
+            for property in &companion.properties {
+                if let Some(annotation) = marker(&property.annotations, classpath, &imports)? {
+                    return Err(Diagnostic::new(
+                        annotation.offset,
+                        "Enum companion JvmField properties remain unsupported",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "JVM_FIELD_ENUM_UNSUPPORTED",
+                    ));
+                }
+            }
+        }
         for uses in &enumeration.body.param_annotations {
             if let Some(annotation) = marker(uses, classpath, &imports)? {
                 return Err(Diagnostic::new(

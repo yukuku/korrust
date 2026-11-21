@@ -3119,7 +3119,7 @@ impl Parser {
                 return Err(Diagnostic::new(
                     member_offset,
                     "Object member name INSTANCE conflicts with the generated singleton field and is not supported",
-                ));
+                ).with_kind(crate::DiagnosticKind::UnsupportedLanguage, "OBJECT_SINGLETON_FIELD_COLLISION_UNSUPPORTED"));
             }
             if !names.insert(member_name) {
                 return Err(Diagnostic::new(

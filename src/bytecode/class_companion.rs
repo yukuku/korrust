@@ -43,7 +43,7 @@ pub(super) fn outer(
                     .unwrap_or(0x0002)
                 | if property.mutable { 0 } else { 0x0010 },
         )?);
-        if !lambdas.is_empty() {
+        if !lambdas.is_empty() && !property.jvm_field {
             methods.extend(field_bridges(
                 pool,
                 owner,
@@ -52,6 +52,9 @@ pub(super) fn outer(
                 true,
                 property.mutable,
             )?);
+        }
+        if property.jvm_field {
+            continue;
         }
         let mut code = SimpleCode::new(property.ty.slots() as u16, 0);
         code.reference(
@@ -251,7 +254,7 @@ pub(super) fn emit(
         &mut pool, 0x0002, "<init>", "()V", code, None, false,
     )?);
     for property in &companion.properties {
-        if property.private {
+        if property.private || property.jvm_field {
             continue;
         }
         let has_getter = companion.methods.iter().any(|method| {
