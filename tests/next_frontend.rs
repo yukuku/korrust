@@ -104,7 +104,7 @@ fn numeric_operations_preserve_assignment_and_comparison_types() {
     rejects("fun f(a: Float): Float = a and a", "Float operation");
     rejects(
         "fun f(): Int { val n = 1; return n-- }",
-        "initialized mutable Int",
+        "Cannot reassign val or parameter",
     );
 }
 

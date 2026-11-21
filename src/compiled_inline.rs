@@ -585,6 +585,10 @@ pub(crate) fn validate_access(
             }
             _ => continue,
         };
+        let member_reference = matches!(
+            &constant,
+            InlineConstant::Method { .. } | InlineConstant::Field { .. }
+        );
         let (owner, member_access) = match constant {
             InlineConstant::Method {
                 owner,
@@ -604,10 +608,21 @@ pub(crate) fn validate_access(
                     return Err(unsupported("inaccessible JVM method owner"));
                 }
                 let target = classpath
-                    .methods(&owner)?
+                    .ordinary_methods(&owner)?
                     .into_iter()
-                    .find(|target| target.name == name && target.descriptor == descriptor)
-                    .ok_or_else(|| unsupported("unresolved inline method reference"))?;
+                    .find(|target| {
+                        target.name == name
+                            && target.descriptor == descriptor
+                            && (name != "<init>" || target.owner == owner)
+                    })
+                    .ok_or_else(|| {
+                        unsupported(format!(
+                            "unresolved inline method reference {owner}.{name}{descriptor}"
+                        ))
+                    })?;
+                if (opcode == 0xb8) != (target.access & 8 != 0) {
+                    return Err(unsupported("inline invocation kind disagrees with target"));
+                }
                 (target.owner, target.access)
             }
             InlineConstant::Field {
@@ -615,13 +630,18 @@ pub(crate) fn validate_access(
                 name,
                 descriptor,
             } => {
-                let class = classpath.load(&owner)?;
-                let field = class
-                    .fields
-                    .iter()
-                    .find(|field| field.name == name && field.descriptor == descriptor)
-                    .ok_or_else(|| unsupported("unresolved inline field reference"))?;
-                (owner, field.access)
+                if !accessible(classpath.load(&owner)?.access, &owner) {
+                    return Err(unsupported("inaccessible JVM field owner"));
+                }
+                let field =
+                    inline_field(classpath, &owner, &name, &descriptor, &mut BTreeSet::new())?
+                        .ok_or_else(|| unsupported("unresolved inline field reference"))?;
+                if matches!(opcode, 0xb2 | 0xb3) != (field.access & 8 != 0) {
+                    return Err(unsupported(
+                        "inline field access kind disagrees with target",
+                    ));
+                }
+                (field.owner, field.access)
             }
             InlineConstant::Class(owner) => {
                 if owner.starts_with('[') {
@@ -642,7 +662,9 @@ pub(crate) fn validate_access(
             _ => continue,
         };
         let class = classpath.load(&owner)?;
-        if !accessible(class.access, &owner) || !accessible(member_access, &owner) {
+        if !member_reference && !accessible(class.access, &owner)
+            || !accessible(member_access, &owner)
+        {
             return Err(unsupported(format!(
                 "inaccessible JVM reference in {}/{}",
                 method.owner, method.name
@@ -650,6 +672,35 @@ pub(crate) fn validate_access(
         }
     }
     Ok(())
+}
+
+fn inline_field(
+    classpath: &crate::classpath::Classpath,
+    owner: &str,
+    name: &str,
+    descriptor: &str,
+    seen: &mut BTreeSet<String>,
+) -> Result<Option<crate::classpath::JavaField>> {
+    if !seen.insert(owner.to_owned()) {
+        return Ok(None);
+    }
+    if seen.len() > 256 {
+        return Err(unsupported("inline field hierarchy is too deep"));
+    }
+    let class = classpath.load(owner)?;
+    if let Some(field) = class
+        .fields
+        .into_iter()
+        .find(|field| field.name == name && field.descriptor == descriptor)
+    {
+        return Ok(Some(field));
+    }
+    for parent in class.interfaces.iter().chain(class.super_name.iter()) {
+        if let Some(field) = inline_field(classpath, parent, name, descriptor, seen)? {
+            return Ok(Some(field));
+        }
+    }
+    Ok(None)
 }
 
 #[cfg(test)]
@@ -731,6 +782,7 @@ mod tests {
     fn inline_method(code: JavaCode) -> JavaMethod {
         JavaMethod {
             library: Some(crate::classpath::LibraryMethod {
+                contracts: Vec::new(),
                 value_dispatch: false,
                 suspend_: false,
                 kotlin_declared: true,
@@ -777,6 +829,42 @@ mod tests {
             ),
         ]);
         input
+    }
+
+    #[test]
+    fn validates_root_virtual_references_without_exposing_protected_or_wrong_kind_members() {
+        let classpath = crate::classpath::Classpath::new(&[]).unwrap();
+        for (opcode, owner, name, descriptor, accepted) in [
+            (
+                0xb6,
+                "java/lang/Object",
+                "toString",
+                "()Ljava/lang/String;",
+                true,
+            ),
+            (0xb6, "java/lang/StringBuilder", "hashCode", "()I", true),
+            (
+                0xb6,
+                "java/lang/Object",
+                "clone",
+                "()Ljava/lang/Object;",
+                false,
+            ),
+            (
+                0xb8,
+                "java/lang/Object",
+                "toString",
+                "()Ljava/lang/String;",
+                false,
+            ),
+            (0xb7, "java/lang/Integer", "<init>", "()V", false),
+        ] {
+            let mut input = code(&[0x2a, opcode, 0, 1, 0xb0]);
+            std::sync::Arc::make_mut(&mut input.constants)
+                .insert(1, method(owner, name, descriptor));
+            let result = validate_access(&inline_method(input), &classpath, "external/Caller");
+            assert_eq!(result.is_ok(), accepted, "{owner}.{name}: {result:?}");
+        }
     }
 
     #[test]

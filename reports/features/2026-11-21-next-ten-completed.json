@@ -1,0 +1,301 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-11-21T07:48:50.773768+00:00",
+  "status": "completed",
+  "compiler": {
+    "path": "target/nov21-final-v5/korrust",
+    "sha256": "193fcdd9fd7af09271cbad17e47d126dc28d27a0528d49996a866862bb349c50",
+    "source_revision": "c2ab871533215e4c3c5a8fac588b9ba5a0c367c8",
+    "frozen_input_manifest": "reports/correctness/2026-11-21-next-ten-final-v5/frozen-inputs.json",
+    "source_archive": "reports/correctness/2026-11-21-next-ten-final-v5/frozen-sources.zip",
+    "archive_sha256": "65939a1556acb5db77b7dbc1f6e7f69dcb3cca000826606f5f1a8916b0336e04"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "kind": "features",
+  "accepted_new_features": 10,
+  "features": [
+    {
+      "name": "Expected types in explicit return expressions",
+      "scope": "Infer return expression types from the declared result, including supported generic calls and array initializers returning Java platform values.",
+      "restrictions": [
+        "No source contract DSL authoring",
+        "Contract facts apply to compiled static/top-level and extension calls; instance-member contracts are not applied",
+        "returns(null) facts are decoded but not applied; pinned compiler also rejects the tested external null-return implication consumer",
+        "No mutable/captured-cell contract smartcasts",
+        "No disjunction or negative-type implications",
+        "No calls-in-place analysis or returns-not-null/unconditional-return effect support",
+        "General expected-result propagation through when and Elvis remains outside this slice",
+        "Trailing lambdas after omitted default parameters remain unsupported because the parser does not retain outside-parentheses argument placement",
+        "Nullable Unit type-argument errors are currently swallowed by speculative call parsing; the direct reified Unit case has the structured classifier diagnostic",
+        "No full application build or performance claim"
+      ],
+      "supporting_cases": [
+        "semantic_fixture_compile",
+        "fixed_java_caller_both_providers"
+      ],
+      "status": "supported",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json"
+    },
+    {
+      "name": "Smart casts from compiled Kotlin contracts",
+      "scope": "Use supported conditional effects from Kotlin metadata to refine stable values. Resolve the selected callable and preserve branch and mutation boundaries.",
+      "restrictions": [
+        "No source contract DSL authoring",
+        "Contract facts apply to compiled static/top-level and extension calls; instance-member contracts are not applied",
+        "returns(null) facts are decoded but not applied; pinned compiler also rejects the tested external null-return implication consumer",
+        "No mutable/captured-cell contract smartcasts",
+        "No disjunction or negative-type implications",
+        "No calls-in-place analysis or returns-not-null/unconditional-return effect support",
+        "General expected-result propagation through when and Elvis remains outside this slice",
+        "Trailing lambdas after omitted default parameters remain unsupported because the parser does not retain outside-parentheses argument placement",
+        "Nullable Unit type-argument errors are currently swallowed by speculative call parsing; the direct reified Unit case has the structured classifier diagnostic",
+        "No full application build or performance claim"
+      ],
+      "supporting_cases": [
+        "semantic_fixture_compile",
+        "fixed_java_caller_both_providers"
+      ],
+      "status": "supported",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json"
+    },
+    {
+      "name": "JVM wildcards from declaration-site variance",
+      "scope": "Emit supported contextual wildcard signatures while retaining Kotlin declaration metadata and erasure.",
+      "restrictions": [
+        "Newly supported: independent method type parameters in supported ordinary generic source classes and abstract generic source interfaces; interface generic-call registration, method substitution/erasure and exact callable JVM/Kotlin metadata are checked. Ordinary nongeneric class/object generic methods already existed and are regression evidence, not a new feature count.",
+        "Contextual declaration-variance callable signatures cover final/open/type-parameter arguments, nested final variant classifiers, invariant nesting, projections, input/output/function-type modes, arrays, class constructors and interface/class/object members. Private backing-field generic signatures are not parity claims; projected exposed JVM fields and variant classifier bounds/nested supertypes remain explicit boundaries.",
+        "Independent single reference upper bounds; method shadowing, recursive/dependent/multiple bounds, generic overrides/defaults/inline/suspend/varargs, generic interface bodies and lambdas in generic members remain explicit boundaries. Existing generic classifier nested/data restrictions remain.",
+        "Fixed Java caller compiled against official output is reused with -Xverify:all. All four official/candidate Kotlin provider/consumer pairs execute. AndroidBible files are relevance evidence only; this report claims no new unchanged app-file or full-app coverage."
+      ],
+      "supporting_cases": [
+        "runtime/official",
+        "runtime/candidate",
+        "signature/Generic",
+        "signature/GenericApi",
+        "signature/Helpers",
+        "signature/Cov",
+        "signature/Con",
+        "signature/Inv",
+        "signature/UseKt",
+        "signature/WildMethods",
+        "signature/WildApi",
+        "signature/WildDefaults",
+        "signature/WildDefaults$Companion",
+        "signature/WildDefaultApi",
+        "signature/WildDefaultApi$DefaultImpls",
+        "signature/WildDefaultImpl",
+        "new-scope/candidate/BaselineWild.kt"
+      ],
+      "status": "supported",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json"
+    },
+    {
+      "name": "Generic methods on generic classifiers",
+      "scope": "Support independent method and owner type parameters on bounded source classes and interfaces, including supported generic interface dispatch.",
+      "restrictions": [
+        "Newly supported: independent method type parameters in supported ordinary generic source classes and abstract generic source interfaces; interface generic-call registration, method substitution/erasure and exact callable JVM/Kotlin metadata are checked. Ordinary nongeneric class/object generic methods already existed and are regression evidence, not a new feature count.",
+        "Contextual declaration-variance callable signatures cover final/open/type-parameter arguments, nested final variant classifiers, invariant nesting, projections, input/output/function-type modes, arrays, class constructors and interface/class/object members. Private backing-field generic signatures are not parity claims; projected exposed JVM fields and variant classifier bounds/nested supertypes remain explicit boundaries.",
+        "Independent single reference upper bounds; method shadowing, recursive/dependent/multiple bounds, generic overrides/defaults/inline/suspend/varargs, generic interface bodies and lambdas in generic members remain explicit boundaries. Existing generic classifier nested/data restrictions remain.",
+        "Fixed Java caller compiled against official output is reused with -Xverify:all. All four official/candidate Kotlin provider/consumer pairs execute. AndroidBible files are relevance evidence only; this report claims no new unchanged app-file or full-app coverage."
+      ],
+      "supporting_cases": [
+        "runtime/official",
+        "runtime/candidate",
+        "signature/Generic",
+        "signature/GenericApi",
+        "signature/Helpers",
+        "signature/Cov",
+        "signature/Con",
+        "signature/Inv",
+        "signature/UseKt",
+        "signature/WildMethods",
+        "signature/WildApi",
+        "signature/WildDefaults",
+        "signature/WildDefaults$Companion",
+        "signature/WildDefaultApi",
+        "signature/WildDefaultApi$DefaultImpls",
+        "signature/WildDefaultImpl",
+        "new-scope/candidate/BaselineMembers.kt"
+      ],
+      "status": "supported",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json"
+    },
+    {
+      "name": "Checked exceptions on JVM methods",
+      "scope": "Validate canonical Throws annotations and emit checked exception declarations for supported functions and methods, including interface methods.",
+      "restrictions": [
+        "Canonical Throws for supported top-level, class, object, companion, interface abstract/default/override methods and public primary constructors; source/import aliases and real accessible Throwable subclasses. Supported function/constructor defaults preserve Exceptions on synthetic helpers and overloads. Throws suspend functions and secondary-constructor annotations retain explicit boundaries. Inheriting a Throws-bearing interface default requires an explicit override; generated inherited wrappers otherwise lose the Exceptions contract, so class/object/subinterface inheritance is rejected explicitly.",
+        "Canonical Synchronized on supported concrete static/instance methods and supported accessor use sites uses JVM ACC_SYNCHRONIZED. Interface/abstract members and invalid placements reject; suspend and value-class members reject as invalid; inline and default-argument combinations retain explicit unsupported boundaries.",
+        "Java caller is compiled once against official output and reused unchanged with -Xverify:all for both providers. Kotlin consumers compile against each provider separately. Signatures are compared for selected public declarations; existing unrelated interface DefaultImpls compatibility helpers are outside exact class-shape equivalence.",
+        "No new count for existing Utf8Decoder object Throws support, full Android application compatibility, or performance claim."
+      ],
+      "supporting_cases": [
+        "provider/official/java-contract-monitor-release",
+        "provider/candidate/java-contract-monitor-release",
+        "provider/public-signatures-exceptions-flags"
+      ],
+      "status": "supported",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json"
+    },
+    {
+      "name": "Synchronized JVM methods",
+      "scope": "Honor canonical Synchronized annotations on supported methods and expose monitor semantics to Java and Kotlin consumers.",
+      "restrictions": [
+        "Canonical Throws for supported top-level, class, object, companion, interface abstract/default/override methods and public primary constructors; source/import aliases and real accessible Throwable subclasses. Supported function/constructor defaults preserve Exceptions on synthetic helpers and overloads. Throws suspend functions and secondary-constructor annotations retain explicit boundaries. Inheriting a Throws-bearing interface default requires an explicit override; generated inherited wrappers otherwise lose the Exceptions contract, so class/object/subinterface inheritance is rejected explicitly.",
+        "Canonical Synchronized on supported concrete static/instance methods and supported accessor use sites uses JVM ACC_SYNCHRONIZED. Interface/abstract members and invalid placements reject; suspend and value-class members reject as invalid; inline and default-argument combinations retain explicit unsupported boundaries.",
+        "Java caller is compiled once against official output and reused unchanged with -Xverify:all for both providers. Kotlin consumers compile against each provider separately. Signatures are compared for selected public declarations; existing unrelated interface DefaultImpls compatibility helpers are outside exact class-shape equivalence.",
+        "No new count for existing Utf8Decoder object Throws support, full Android application compatibility, or performance claim."
+      ],
+      "supporting_cases": [
+        "provider/official/java-contract-monitor-release",
+        "provider/candidate/java-contract-monitor-release",
+        "provider/public-signatures-exceptions-flags"
+      ],
+      "status": "supported",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json"
+    },
+    {
+      "name": "Reified reference array allocation",
+      "scope": "Allocate JVM reference arrays with the substituted runtime component type in supported compiled inline bodies.",
+      "restrictions": [
+        "Unit-returning expressions, nullable Unit and arrays with nullable Unit components in templates, and direct reified Unit array allocation remain explicitly unsupported; Unit singleton references are supported.",
+        "Reified nested array marker encodings beyond a single substituted parameter and existing parameterized generic/function classifier boundaries remain unsupported; direct concrete array components are tested.",
+        "Inline exception tables, generated nested allocations, context-sensitive invokespecial and array-owner method references retain explicit rejection boundaries.",
+        "Root Object references and inherited field resolution are prerequisite correctness repairs, not counted features.",
+        "No full Android build or performance claim."
+      ],
+      "supporting_cases": [
+        "runtime/official",
+        "runtime/candidate",
+        "signature/consumer.ValuesKt",
+        "signature/consumer.ForwardKt"
+      ],
+      "status": "supported",
+      "evidence_report": "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json"
+    },
+    {
+      "name": "Reference string templates",
+      "scope": "Interpolate supported reference values, including nullable values and objects with virtual toString implementations.",
+      "restrictions": [
+        "Unit-returning expressions, nullable Unit and arrays with nullable Unit components in templates, and direct reified Unit array allocation remain explicitly unsupported; Unit singleton references are supported.",
+        "Reified nested array marker encodings beyond a single substituted parameter and existing parameterized generic/function classifier boundaries remain unsupported; direct concrete array components are tested.",
+        "Inline exception tables, generated nested allocations, context-sensitive invokespecial and array-owner method references retain explicit rejection boundaries.",
+        "Root Object references and inherited field resolution are prerequisite correctness repairs, not counted features.",
+        "No full Android build or performance claim."
+      ],
+      "supporting_cases": [
+        "runtime/official",
+        "runtime/candidate",
+        "signature/consumer.ValuesKt",
+        "signature/consumer.ForwardKt"
+      ],
+      "status": "supported",
+      "evidence_report": "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json"
+    },
+    {
+      "name": "Custom increment and decrement",
+      "scope": "Resolve supported inc and dec operators, write results back to the target and preserve prefix or postfix values within documented boundaries.",
+      "restrictions": [
+        "Prefix updates of property/custom-index targets are explicitly rejected because the pinned compiler rereads the getter after setting, contrary to the specification expansion; see the recorded oracle discrepancy.",
+        "Nullable update receivers and safe-call update/compound targets remain unsupported.",
+        "Parameterized inc/dec declarations, including defaulted or vararg parameters, are explicitly unsupported; pinned Kotlin accepts some such declarations.",
+        "Index expressions keep their standalone inferred types; literal indices requiring contextual narrowing are rejected in agreement with pinned Kotlin.",
+        "The existing ordinary overload-resolution, generic, inline and primitive compound-operator boundaries apply.",
+        "Android and full-application compatibility remain unassessed."
+      ],
+      "supporting_cases": [
+        "runtime/official",
+        "runtime/candidate",
+        "abi/updates.Counter",
+        "abi/updates.Holder",
+        "abi/updates.Indexed",
+        "abi/updates.Base",
+        "abi/updates.Child",
+        "abi/updates.OperatorsKt",
+        "abi/updates.ImportedKt"
+      ],
+      "status": "supported",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json"
+    },
+    {
+      "name": "Property and indexed compound assignments",
+      "scope": "Resolve supported assignment operators or read-modify-write operations with ordered receiver, index and right-hand-side evaluation.",
+      "restrictions": [
+        "Prefix updates of property/custom-index targets are explicitly rejected because the pinned compiler rereads the getter after setting, contrary to the specification expansion; see the recorded oracle discrepancy.",
+        "Nullable update receivers and safe-call update/compound targets remain unsupported.",
+        "Parameterized inc/dec declarations, including defaulted or vararg parameters, are explicitly unsupported; pinned Kotlin accepts some such declarations.",
+        "Index expressions keep their standalone inferred types; literal indices requiring contextual narrowing are rejected in agreement with pinned Kotlin.",
+        "The existing ordinary overload-resolution, generic, inline and primitive compound-operator boundaries apply.",
+        "Android and full-application compatibility remain unassessed."
+      ],
+      "supporting_cases": [
+        "runtime/official",
+        "runtime/candidate",
+        "abi/updates.Counter",
+        "abi/updates.Holder",
+        "abi/updates.Indexed",
+        "abi/updates.Base",
+        "abi/updates.Child",
+        "abi/updates.OperatorsKt",
+        "abi/updates.ImportedKt"
+      ],
+      "status": "supported",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json"
+    }
+  ],
+  "checks_report": "reports/correctness/2026-11-21-next-ten-final-v5.json",
+  "application_assessment": {
+    "survey": "reports/correctness/2026-11-21T072519326520Z-next10-app-assessment.json",
+    "provider_counts": {
+      "baseline": {
+        "compiled": 22,
+        "rejected": 11
+      },
+      "candidate": {
+        "compiled": 23,
+        "rejected": 10
+      }
+    },
+    "changes": {
+      "unchanged": 32,
+      "newly_compiled": 1
+    },
+    "runtime_reports": [
+      "reports/correctness/2026-11-21T072519378637Z-nov21-query-tokenizer.json",
+      "reports/correctness/2026-11-21T072519479479Z-androidbible-oldversetextdecoder-junit.json",
+      "reports/correctness/2026-11-21T072653065294Z-androidbible-querytokenizer-junit.json"
+    ]
+  },
+  "uncounted_repairs": [
+    "Compiled inline JVM Object method and inherited member lookup.",
+    "Expected extension results, nullable functional contexts and direct generic bounds used during inference.",
+    "Class and interface method signature and forwarding metadata consistency.",
+    "Resolve value receivers before falling back to Java classifiers in contextual calls, preserving local and implicit receiver property shadowing."
+  ],
+  "limitations": [
+    "The survey compiles selected AndroidBible sources individually with Kotlin/JDK dependencies. OldVerseTextDecoder has a separate test with its original dependencies.",
+    "AudioHttpErrorBody remains blocked by trailing lambda argument mapping after omitted defaults.",
+    "The family reports describe restrictions on smart casts, assignable expressions, generated signatures, annotations and reified inline bytecode.",
+    "Boolean contract effects require a Boolean or nullable Boolean result. Direct predicates and negation require a nonnullable Boolean."
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-21-next-ten-final-v5.json",
+    "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+    "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+    "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+    "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json",
+    "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+    "reports/correctness/2026-11-21T072519326520Z-next10-app-assessment.json",
+    "reports/correctness/2026-11-21T072519378637Z-nov21-query-tokenizer.json",
+    "reports/correctness/2026-11-21T072519479479Z-androidbible-oldversetextdecoder-junit.json",
+    "reports/correctness/2026-11-21T072653065294Z-androidbible-querytokenizer-junit.json"
+  ]
+}

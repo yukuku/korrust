@@ -17,16 +17,20 @@ pub(super) fn check(
         source.offset,
     )?;
     if !source.type_params.is_empty()
-        && (source
-            .methods
-            .iter()
-            .any(|m| m.has_body || !m.function.type_params.is_empty())
+        && (source.methods.iter().any(|m| m.has_body)
             || source.properties.iter().any(|p| p.body.is_some())
             || source.companion.is_some()
             || !source.nested.is_empty()
             || !source.declarations.is_empty())
     {
-        return Err(Diagnostic::new(source.offset,"Generic interface defaults, generic members, companions, and nested declarations are unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage,"GENERIC_INTERFACE_BODY_UNSUPPORTED"));
+        return Err(Diagnostic::new(
+            source.offset,
+            "Generic interface defaults, companions, and nested declarations are unsupported",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "GENERIC_INTERFACE_BODY_UNSUPPORTED",
+        ));
     }
     let owner = if let Some(owner) = owner_override {
         owner.into()
@@ -261,6 +265,13 @@ fn register_classes(
     }
     for method in &source.methods {
         let function = &method.function;
+        declarations::validate_member_generics(
+            function,
+            method.is_override,
+            classpath,
+            &imports,
+            classes,
+        )?;
         declarations::validate_overriding_defaults(function, method.is_override)?;
         if !function.annotations.is_empty() {
             if annotations::declaration_annotations(
@@ -283,14 +294,19 @@ fn register_classes(
                     "JVM_STATIC_PLACEMENT_INVALID",
                 ));
             }
-            return Err(Diagnostic::new(
-                function.offset,
-                "Annotations on source interface methods are not supported",
-            )
-            .with_kind(
-                crate::DiagnosticKind::UnsupportedLanguage,
-                "INTERFACE_METHOD_ANNOTATION_UNSUPPORTED",
-            ));
+            if function.annotations.iter().any(|annotation| {
+                annotations::annotation_owner(&annotation.name, classpath, &imports)
+                    != "kotlin/jvm/Throws"
+            }) {
+                return Err(Diagnostic::new(
+                    function.offset,
+                    "Annotations on source interface methods other than Throws are unsupported",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "INTERFACE_METHOD_ANNOTATION_UNSUPPORTED",
+                ));
+            }
         }
         if function.defaults.iter().any(Option::is_some) {
             return Err(Diagnostic::new(
@@ -336,31 +352,47 @@ fn register_classes(
             parameters.push_str(&ty.descriptor());
         }
         let result = resolve_type(&function.result, &imports, function.offset)?;
+        let type_parameters = resolve_parameters(
+            &function.type_params,
+            &imports,
+            classpath,
+            function.offset,
+            classes,
+        )?;
+        let exceptions = annotations::exception_classes(&annotations::declaration_annotations(
+            &function.annotations,
+            classpath,
+            &imports,
+            "METHOD",
+            None,
+            Some(owner),
+        )?);
         add_method(
             &mut methods,
             &mut names,
             JavaMethod {
-                library: (function.suspend_ || function.infix || function.operator).then(|| {
-                    crate::classpath::LibraryMethod {
-                        value_dispatch: false,
-                        suspend_: function.suspend_,
-                        kotlin_declared: true,
-                        has_annotations: false,
-                        parameter_modes: Vec::new(),
-                        reified_arguments: Vec::new(),
-                        abstract_: false,
-                        builtin_array: false,
-                        source_name: function.name.clone(),
-                        operator: function.operator,
-                        kotlin_public: !function.private
-                            && !function.protected
-                            && !function.internal,
-                        type_parameters: Vec::new(),
-                        receiver: None,
-                        infix: function.infix,
-                        inline: false,
-                        code: None,
-                    }
+                library: (function.suspend_
+                    || function.infix
+                    || function.operator
+                    || !function.type_params.is_empty())
+                .then(|| crate::classpath::LibraryMethod {
+                    contracts: Vec::new(),
+                    value_dispatch: false,
+                    suspend_: function.suspend_,
+                    kotlin_declared: true,
+                    has_annotations: false,
+                    parameter_modes: Vec::new(),
+                    reified_arguments: Vec::new(),
+                    abstract_: false,
+                    builtin_array: false,
+                    source_name: function.name.clone(),
+                    operator: function.operator,
+                    kotlin_public: !function.private && !function.protected && !function.internal,
+                    type_parameters: type_parameters.clone(),
+                    receiver: None,
+                    infix: function.infix,
+                    inline: false,
+                    code: None,
                 }),
                 kotlin_params: Some(
                     function
@@ -398,6 +430,7 @@ fn register_classes(
             },
             function.offset,
         )?;
+        classpath.register_exception_contract(methods.last().unwrap(), exceptions);
     }
     if classes
         .insert(
@@ -723,8 +756,19 @@ fn check_interface(
     }
     for method in &source.methods {
         let source_function = &method.function;
+        if !source_function.type_params.is_empty() && method.has_body {
+            return Err(Diagnostic::new(
+                source_function.offset,
+                "Generic source interface default bodies are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "GENERIC_INTERFACE_METHOD_BODY_UNSUPPORTED",
+            ));
+        }
         declarations::validate_operator(source_function, true)?;
         let signature = &members[&source_function.name];
+        operator_checker.validate_update_declaration(source_function, &Type::Java(owner.into()))?;
         check_override(
             signature,
             method.is_override,
@@ -746,6 +790,15 @@ fn check_interface(
             &members,
             &companion_fields,
             lambdas,
+        )?;
+        annotations::validate_jvm_function(source_function, classpath, &imports)?;
+        function.annotations = annotations::declaration_annotations(
+            &source_function.annotations,
+            classpath,
+            &imports,
+            "METHOD",
+            None,
+            Some(owner),
         )?;
         function.type_params = resolve_parameters(
             &source_function.type_params,
@@ -992,6 +1045,8 @@ fn check_function(
         object_fields: &HashMap::new(),
         object_owner: None,
         allow_return: true,
+        contract_facts: HashMap::new(),
+        contract_registration: None,
         refinements: HashMap::new(),
         initialized: HashSet::new(),
         loop_depth: 0,
@@ -1034,6 +1089,7 @@ fn check_function(
         extension_receiver: false,
         class_type_params: Vec::new(),
         jvm_result: None,
+        jvm_signature: None,
         jvm_name: None,
         annotations: Vec::new(),
         vararg: false,
@@ -1360,6 +1416,8 @@ interface Catalog {
                 object_fields: &HashMap::new(),
                 object_owner: None,
                 allow_return: true,
+                contract_facts: HashMap::new(),
+                contract_registration: None,
                 refinements: HashMap::new(),
                 initialized: HashSet::new(),
                 loop_depth: 0,
@@ -1468,6 +1526,23 @@ interface Catalog {
                 None,
             );
             assert_eq!(result.is_ok(), accepted);
+            if access & 0x0400 == 0 {
+                classpath.register_exception_contract(
+                    &classes["foreign/Parent"].methods[0],
+                    vec!["java/io/IOException".into()],
+                );
+                let error = super::check(
+                    source.interface_decl.as_ref().unwrap(),
+                    "",
+                    &classpath,
+                    imports.clone(),
+                    classes.clone(),
+                    None,
+                )
+                .err()
+                .expect("Declared exception contracts must retain the default bridge boundary");
+                assert_eq!(error.code, "INHERITED_THROWS_DEFAULT_UNSUPPORTED");
+            }
             if !accepted {
                 assert!(
                     result

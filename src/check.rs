@@ -37,6 +37,8 @@ mod anonymous;
 mod captures;
 #[path = "check_classes.rs"]
 mod classes;
+#[path = "check_contracts.rs"]
+mod contracts;
 #[path = "check_control.rs"]
 mod control;
 #[path = "check_functions.rs"]
@@ -257,6 +259,7 @@ pub struct ClassDecl {
     pub delegated_properties: Vec<(String, Value)>,
     pub primary_constructor: bool,
     pub constructor_visibility: u16,
+    pub constructor_signature: Option<String>,
     pub constructor_annotations: Vec<DeclarationAnnotation>,
     pub abstract_: bool,
     pub open_methods: HashSet<String>,
@@ -284,6 +287,7 @@ pub struct Function {
     pub class_type_params: Vec<String>,
     pub jvm_result: Option<Type>,
     pub jvm_name: Option<String>,
+    pub jvm_signature: Option<String>,
     pub annotations: Vec<DeclarationAnnotation>,
     pub vararg: bool,
     pub type_params: Vec<syntax::TypeParameter>,
@@ -713,6 +717,8 @@ struct Checker<'a> {
     object_fields: &'a HashMap<String, (String, Type)>,
     object_owner: Option<&'a str>,
     allow_return: bool,
+    contract_facts: HashMap<usize, Vec<contracts::Fact>>,
+    contract_registration: Option<usize>,
     refinements: HashMap<u8, Type>,
     initialized: HashSet<u8>,
     loop_depth: usize,
@@ -966,6 +972,7 @@ impl Checker<'_> {
         Ok(values)
     }
     fn refine(&mut self, condition: &Expr, truth: bool) {
+        self.refine_contract(condition, truth);
         if let ExprKind::TypeOperation(op, value, target) = &condition.kind {
             if (op == "is" && truth) || (op == "!is" && !truth) {
                 if let ExprKind::Name(name) = &value.kind {
@@ -1029,6 +1036,8 @@ impl Checker<'_> {
         offset: usize,
     ) -> Result<usize> {
         let mapping = Self::argument_mapping(params, defaults, args, named, offset)?;
+        let saved_contract_registration = self.contract_registration;
+        let saved_contract_facts = self.contract_facts.clone();
         let before = self.next;
         let refinements = self.refinements.clone();
         let initialized = self.initialized.clone();
@@ -1050,6 +1059,8 @@ impl Checker<'_> {
             Ok(score * 64 + params.len().saturating_sub(args.len()))
         })();
         self.lambdas.borrow_mut().truncate(lambda_count);
+        self.contract_facts = saved_contract_facts;
+        self.contract_registration = saved_contract_registration;
         self.next = before;
         self.refinements = refinements;
         self.initialized = initialized;
@@ -1073,9 +1084,13 @@ impl Checker<'_> {
         let mut applicable = Vec::new();
         let mut errors = Vec::new();
         for id in candidates {
+            let saved_contract_registration = self.contract_registration;
+            let saved_contract_facts = self.contract_facts.clone();
             let next = self.next;
             let count = self.lambdas.borrow().len();
             let specialized = self.specialize_source(*id, args, explicit, offset);
+            self.contract_facts = saved_contract_facts;
+            self.contract_registration = saved_contract_registration;
             self.next = next;
             self.lambdas.borrow_mut().truncate(count);
             let (params, _) = match specialized {
@@ -1187,10 +1202,14 @@ impl Checker<'_> {
                 }
             };
             let normalized = normalized.as_slice();
+            let saved_contract_registration = self.contract_registration;
+            let saved_contract_facts = self.contract_facts.clone();
             let next = self.next;
             let count = self.lambdas.borrow().len();
             let specialized =
                 self.specialize_method_expected(original, normalized, explicit, expected, offset);
+            self.contract_facts = saved_contract_facts;
+            self.contract_registration = saved_contract_registration;
             self.next = next;
             self.lambdas.borrow_mut().truncate(count);
             let method = match specialized {
@@ -2873,6 +2892,8 @@ impl Checker<'_> {
         expr: &Expr,
         offset: usize,
     ) -> Result<Statement> {
+        let saved_contract_registration = self.contract_registration;
+        let saved_contract_facts = self.contract_facts.clone();
         let saved_next = self.next;
         let saved_initialized = self.initialized.clone();
         let saved_refinements = self.refinements.clone();
@@ -2882,6 +2903,8 @@ impl Checker<'_> {
                 return Ok(Statement::Expression(value));
             }
         }
+        self.contract_facts = saved_contract_facts;
+        self.contract_registration = saved_contract_registration;
         self.next = saved_next;
         self.initialized = saved_initialized;
         self.refinements = saved_refinements;
@@ -3288,6 +3311,9 @@ impl Checker<'_> {
                 }
                 StatementKind::CompoundAssign(name, op, expr) => {
                     self.check_compound_assignment(name, op, expr, offset)?
+                }
+                StatementKind::LvalueCompoundAssign(target, op, expr) => {
+                    self.check_lvalue_compound_assignment(target, op, expr, offset)?
                 }
                 StatementKind::SafePropertyAssign(receiver, name, expr) => {
                     let temporary = format!("<safe-assignment-{}>", self.next);
@@ -3908,6 +3934,19 @@ impl Checker<'_> {
         if let Some(labeled) = member_extensions::labeled_call(expr) {
             return self.value(&labeled);
         }
+        if !matches!(expr.kind, ExprKind::Call(..)) {
+            return self.value_untracked(expr);
+        }
+        let previous = self.contract_registration.take();
+        let result = self.value_untracked(expr);
+        if result.is_err() || self.contract_registration != Some(expr.offset) {
+            self.contract_facts.remove(&expr.offset);
+        }
+        self.contract_registration = previous;
+        result
+    }
+
+    fn value_untracked(&mut self, expr: &Expr) -> Result<Value> {
         let offset = expr.offset;
         if let ExprKind::Call(target, args) = &expr.kind {
             if let Some(value) = self.qualified_constructor(target, args, offset)? {
@@ -3947,7 +3986,7 @@ impl Checker<'_> {
             | ExprKind::LabeledReturn(..)
             | ExprKind::WhenBinding(..) => return self.control_value(expr),
             ExprKind::Decrement { value, prefix } => {
-                return self.check_decrement(value, *prefix, offset);
+                return self.check_update(value, *prefix, false, offset);
             }
             ExprKind::TypeOperation(op, value, target) => {
                 return self.check_type_operation(op, value, target, offset);
@@ -3988,17 +4027,17 @@ impl Checker<'_> {
                         "NON_LOCAL_RETURN_NOT_ALLOWED",
                     ));
                 }
+                let expected = self
+                    .nonlocal_result
+                    .clone()
+                    .unwrap_or_else(|| self.result.clone());
                 let value = match expr {
-                    Some(value) => self.value(value)?,
+                    Some(value) => self.expected_value(value, &expected)?,
                     None => Value {
                         ty: Type::Unit,
                         kind: ValueKind::Unit,
                     },
                 };
-                let expected = self
-                    .nonlocal_result
-                    .clone()
-                    .unwrap_or_else(|| self.result.clone());
                 let value = self.coerce(value, expected, offset)?;
                 let statement = if self.nonlocal_result.is_some() {
                     Statement::NonLocalReturn(value)
@@ -4019,43 +4058,7 @@ impl Checker<'_> {
             ExprKind::Boolean(value) => (Type::Boolean, ValueKind::Boolean(*value)),
             ExprKind::String(value) => (Type::String, ValueKind::String(value.clone())),
             ExprKind::Increment { value, prefix } => {
-                let ExprKind::Name(name) = &value.kind else {
-                    return Err(Diagnostic::new(
-                        offset,
-                        "Increment supports mutable Int locals only",
-                    ));
-                };
-                if let Some((cell, ty)) = self.cell_binding(name) {
-                    if ty != Type::Int {
-                        return Err(Diagnostic::new(offset, "Captured increment requires Int"));
-                    }
-                    return Ok(Value {
-                        ty: Type::Int,
-                        kind: ValueKind::CellIncrement {
-                            cell: Box::new(cell),
-                            prefix: *prefix,
-                        },
-                    });
-                }
-                let local = self
-                    .local(name)
-                    .ok_or_else(|| Diagnostic::new(offset, "Increment requires a local"))?;
-                if !local.mutable
-                    || local.ty != Type::Int
-                    || !self.initialized.contains(&local.slot)
-                {
-                    return Err(Diagnostic::new(
-                        offset,
-                        "Increment supports initialized mutable Int locals only",
-                    ));
-                }
-                (
-                    Type::Int,
-                    ValueKind::Increment {
-                        slot: local.slot,
-                        prefix: *prefix,
-                    },
-                )
+                return self.check_update(value, *prefix, true, offset);
             }
             ExprKind::NonNull(value) => {
                 let value = self.value(value)?;
@@ -4294,24 +4297,30 @@ impl Checker<'_> {
                 };
                 for part in parts {
                     let value = self.value(part)?;
-                    if !matches!(
-                        value.ty.base(),
-                        Type::String
-                            | Type::Int
-                            | Type::Long
-                            | Type::Byte
-                            | Type::Short
-                            | Type::Float
-                            | Type::Double
-                            | Type::Boolean
-                            | Type::Char
-                            | Type::Null
-                    ) && !matches!(value.ty.base(), Type::Nullable(inner) if matches!(inner.as_ref(), Type::String | Type::Int | Type::Long | Type::Byte | Type::Short | Type::Float | Type::Double | Type::Boolean | Type::Char))
+                    let descriptor = value.ty.descriptor();
+                    if descriptor == "V"
+                        || descriptor.contains("[V")
+                        || !value.ty.is_reference()
+                            && !matches!(
+                                value.ty.base(),
+                                Type::Int
+                                    | Type::Long
+                                    | Type::Byte
+                                    | Type::Short
+                                    | Type::Float
+                                    | Type::Double
+                                    | Type::Boolean
+                                    | Type::Char
+                            )
                     {
                         return Err(Diagnostic::new(
                             part.offset,
-                            "String templates support only String, supported primitives, their nullable forms, and null",
-                        ).with_kind(crate::DiagnosticKind::UnsupportedLanguage, "STRING_TEMPLATE_VALUE_UNSUPPORTED"));
+                            "String templates require a reference or a supported primitive value",
+                        )
+                        .with_kind(
+                            crate::DiagnosticKind::UnsupportedLanguage,
+                            "STRING_TEMPLATE_VALUE_UNSUPPORTED",
+                        ));
                     }
                     result = Value {
                         ty: Type::String,
@@ -4535,7 +4544,8 @@ impl Checker<'_> {
                     {
                         return self.receiver_property(name, offset);
                     }
-                    return Err(Diagnostic::new(offset, format!("Unresolved local: {name}")));
+                    return Err(Diagnostic::new(offset, format!("Unresolved local: {name}"))
+                        .with_kind(crate::DiagnosticKind::Unclassified, "UNRESOLVED_VALUE"));
                 }
             }
             ExprKind::Unary(op, inner) => {
@@ -5087,7 +5097,8 @@ impl Checker<'_> {
                         return Err(Diagnostic::new(
                             offset,
                             format!("Unresolved property: {name}"),
-                        ));
+                        )
+                        .with_kind(crate::DiagnosticKind::Unclassified, "UNRESOLVED_VALUE"));
                     }
                     if let Some(owner) = library::type_owner(&receiver.ty) {
                         if self.classpath.load(owner).is_ok_and(|class| {
@@ -5101,10 +5112,10 @@ impl Checker<'_> {
                             return Err(Diagnostic::new(offset, format!("Constructor parameter {name} is not a property and is unavailable outside initialization")).with_kind(crate::DiagnosticKind::InvalidKotlin, "NON_PROPERTY_CONSTRUCTOR_PARAMETER"));
                         }
                     }
-                    return Err(Diagnostic::new(
-                        offset,
-                        format!("Unsupported property: {name}"),
-                    ));
+                    return Err(
+                        Diagnostic::new(offset, format!("Unsupported property: {name}"))
+                            .with_kind(crate::DiagnosticKind::Unclassified, "UNRESOLVED_VALUE"),
+                    );
                 }
             }
             ExprKind::Index(array, index) => {
@@ -5423,6 +5434,8 @@ impl Checker<'_> {
                 }
                 ExprKind::Property(receiver, name) => {
                     if self.qualified_java_class(receiver)?.is_none() {
+                        let saved_contract_registration = self.contract_registration;
+                        let saved_contract_facts = self.contract_facts.clone();
                         let saved_next = self.next;
                         let saved_initialized = self.initialized.clone();
                         let saved_refinements = self.refinements.clone();
@@ -5440,6 +5453,8 @@ impl Checker<'_> {
                                 }
                             }
                         }
+                        self.contract_facts = saved_contract_facts;
+                        self.contract_registration = saved_contract_registration;
                         self.next = saved_next;
                         self.initialized = saved_initialized;
                         self.refinements = saved_refinements;
@@ -6232,7 +6247,9 @@ pub(crate) fn body_call_names(body: &[syntax::Statement], names: &mut HashSet<St
                     call_names(e, names);
                 }
             }
-            StatementKind::PropertyAssign(a, _, b) | StatementKind::SafePropertyAssign(a, _, b) => {
+            StatementKind::LvalueCompoundAssign(a, _, b)
+            | StatementKind::PropertyAssign(a, _, b)
+            | StatementKind::SafePropertyAssign(a, _, b) => {
                 call_names(a, names);
                 call_names(b, names);
             }
@@ -6523,7 +6540,10 @@ pub fn check_with_owner(
         classpath.check_classifier_visibility(owner, &class.name, *offset)?;
         let supported_jvm_marker = matches!(
             name.as_str(),
-            "kotlin/jvm/JvmOverloads" | "kotlin/jvm/JvmStatic"
+            "kotlin/jvm/JvmOverloads"
+                | "kotlin/jvm/JvmStatic"
+                | "kotlin/jvm/Throws"
+                | "kotlin/jvm/Synchronized"
         );
         if class.access & 0x2000 != 0
             && class.annotation_definition.is_none()
@@ -7115,6 +7135,8 @@ pub fn check_with_owner(
             object_fields: &static_fields,
             object_owner: None,
             allow_return: true,
+            contract_facts: HashMap::new(),
+            contract_registration: None,
             refinements: HashMap::new(),
             initialized: HashSet::new(),
             loop_depth: 0,
@@ -7122,6 +7144,9 @@ pub fn check_with_owner(
             next: 0,
             result: return_type.clone(),
         };
+        if function.receiver.is_some() {
+            checker.validate_update_result(function, &params[0].1, &return_type)?;
+        }
         for (name, ty) in &params {
             checker.declare(name, ty.clone(), false, function.offset)?;
         }
@@ -7167,6 +7192,7 @@ pub fn check_with_owner(
             jvm_result: function
                 .suspend_
                 .then(|| Type::Nullable(Box::new(Type::Java("java/lang/Object".into())))),
+            jvm_signature: None,
             jvm_name: None,
             annotations: annotations::declaration_annotations(
                 &function.annotations,

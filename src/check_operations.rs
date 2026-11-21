@@ -9,7 +9,47 @@ pub(super) enum ExtensionKind {
     MemberFallback(Diagnostic),
 }
 
+struct LvaluePlan {
+    target: Expr,
+    lets: Vec<(u8, Value)>,
+}
+
 impl Checker<'_> {
+    pub(super) fn validate_update_declaration(
+        &self,
+        function: &syntax::Function,
+        dispatch: &Type,
+    ) -> Result<()> {
+        if !function.operator || !matches!(function.name.as_str(), "inc" | "dec") {
+            return Ok(());
+        }
+        let receiver = match &function.receiver {
+            Some(ty) => self.resolve(ty, function.offset)?,
+            None => dispatch.clone(),
+        };
+        let result = self.resolve(&function.result, function.offset)?;
+        self.validate_update_result(function, &receiver, &result)
+    }
+
+    pub(super) fn validate_update_result(
+        &self,
+        function: &syntax::Function,
+        receiver: &Type,
+        result: &Type,
+    ) -> Result<()> {
+        if function.operator
+            && matches!(function.name.as_str(), "inc" | "dec")
+            && (result == &Type::Unit || !self.subtype(result, receiver))
+        {
+            return Err(Diagnostic::new(
+                function.offset,
+                "inc/dec must return a subtype of its receiver",
+            )
+            .with_kind(crate::DiagnosticKind::InvalidKotlin, "INC_DEC_RETURN_TYPE"));
+        }
+        Ok(())
+    }
+
     pub(super) fn promote_integral_operands(
         &self,
         op: &str,
@@ -319,16 +359,20 @@ impl Checker<'_> {
         right: &Expr,
         offset: usize,
     ) -> Result<Statement> {
-        let receiver = self.value(&Expr {
+        self.check_lvalue_compound_assignment(
+            &Expr {
+                offset,
+                kind: ExprKind::Name(name.into()),
+            },
+            op,
+            right,
             offset,
-            kind: ExprKind::Name(name.into()),
-        })?;
-        self.check_compound_operator(name, op, receiver, right, offset)
+        )
     }
 
     fn check_compound_operator(
         &mut self,
-        target: &str,
+        target: &Expr,
         op: &str,
         receiver: Value,
         right: &Expr,
@@ -395,7 +439,7 @@ impl Checker<'_> {
                 }
             }
             let value = self.compound_binary_value(receiver, binary, right, offset)?;
-            return self.compound_operator_store(target, value, offset);
+            return self.lvalue_store(target, value, offset);
         }
         let assigning = assigning.unwrap_err();
         let replacing = replacing.unwrap_err();
@@ -443,7 +487,7 @@ impl Checker<'_> {
         receiver: Value,
         method: &str,
         right: &Expr,
-        target: Option<&str>,
+        target: Option<&Expr>,
         offset: usize,
     ) -> Result<Type> {
         let next = self.next;
@@ -458,7 +502,7 @@ impl Checker<'_> {
             };
             let ty = value.ty.clone();
             if let Some(target) = target {
-                self.compound_operator_store(target, value, offset)?;
+                self.lvalue_store(target, value, offset)?;
             }
             Ok(ty)
         })();
@@ -521,102 +565,408 @@ impl Checker<'_> {
         result.map(|value| Self::wrap_lets(value, vec![(slot, receiver)]))
     }
 
-    fn compound_operator_store(
+    fn save_lvalue_value(
         &mut self,
-        target: &str,
         value: Value,
+        lets: &mut Vec<(u8, Value)>,
         offset: usize,
-    ) -> Result<Statement> {
+    ) -> Result<Expr> {
         let slot = self.allocate_typed_slot(&value.ty, offset)?;
-        let temporary = format!("<compound{slot}>");
-        self.scopes.push(HashMap::from([(
-            temporary.clone(),
+        let name = format!("<lvalue{slot}>");
+        self.scopes.last_mut().unwrap().insert(
+            name.clone(),
             Local {
                 slot,
                 ty: value.ty.clone(),
                 mutable: false,
             },
-        )]));
+        );
         self.initialized.insert(slot);
-        let checked = self.block(&[syntax::Statement {
+        lets.push((slot, value));
+        Ok(Expr {
             offset,
-            kind: StatementKind::Assign(
-                target.into(),
-                Expr {
-                    offset,
-                    kind: ExprKind::Name(temporary),
-                },
-            ),
-        }]);
-        self.scopes.pop();
-        let (mut body, _) = checked?;
-        if let Some(local) = self.local(target) {
-            self.refinements.remove(&local.slot);
-        }
-        body.insert(0, Statement::Store(slot, value));
-        Ok(Statement::Expression(Value {
-            ty: Type::Unit,
-            kind: ValueKind::Block(
-                body,
-                Box::new(Value {
-                    ty: Type::Unit,
-                    kind: ValueKind::Unit,
-                }),
-            ),
-        }))
+            kind: ExprKind::Name(name),
+        })
     }
 
-    pub(super) fn check_decrement(
+    fn lvalue_plan(&mut self, target: &Expr, offset: usize) -> Result<LvaluePlan> {
+        let mut lets = Vec::new();
+        let target = self.lvalue_target(target, &mut lets, offset)?;
+        Ok(LvaluePlan { target, lets })
+    }
+
+    fn lvalue_target(
         &mut self,
-        expr: &Expr,
-        prefix: bool,
+        target: &Expr,
+        lets: &mut Vec<(u8, Value)>,
         offset: usize,
-    ) -> Result<Value> {
-        let ExprKind::Name(name) = &expr.kind else {
-            return Err(Diagnostic::new(
-                offset,
-                "Decrement requires a mutable Int local",
-            ));
-        };
-        if let Some((cell, ty)) = self.cell_binding(name) {
-            if ty != Type::Int {
-                return Err(Diagnostic::new(
-                    offset,
-                    "Decrement requires a mutable Int local",
-                ));
-            }
-            if let Some(local) = self.local(name) {
-                if !local.mutable || !self.initialized.contains(&local.slot) {
+    ) -> Result<Expr> {
+        let kind = match &target.kind {
+            ExprKind::Name(_) => return Ok(target.clone()),
+            ExprKind::Property(receiver, name) => {
+                let receiver = self.value(receiver)?;
+                if receiver.ty.is_nullable() {
                     return Err(Diagnostic::new(
                         offset,
-                        "Decrement requires an initialized mutable Int local",
+                        "Nullable update receivers require a not-null assertion",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "NULLABLE_LVALUE_UNSUPPORTED",
                     ));
                 }
+                ExprKind::Property(
+                    Box::new(self.save_lvalue_value(receiver, lets, offset)?),
+                    name.clone(),
+                )
             }
-            return Ok(Value {
-                ty: Type::Int,
-                kind: ValueKind::CellDecrement {
-                    cell: Box::new(cell),
-                    prefix,
+            ExprKind::Index(receiver, index) => {
+                let receiver = self.value(receiver)?;
+                if receiver.ty.is_nullable() {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Nullable indexed update receivers require a not-null assertion",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "NULLABLE_LVALUE_UNSUPPORTED",
+                    ));
+                }
+                let receiver = self.save_lvalue_value(receiver, lets, offset)?;
+                let index = self.value(index)?;
+                let index = self.save_lvalue_value(index, lets, offset)?;
+                ExprKind::Index(Box::new(receiver), Box::new(index))
+            }
+            ExprKind::Indices(receiver, indices) => {
+                let receiver = self.value(receiver)?;
+                if receiver.ty.is_nullable() {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Nullable indexed update receivers require a not-null assertion",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "NULLABLE_LVALUE_UNSUPPORTED",
+                    ));
+                }
+                let receiver = self.save_lvalue_value(receiver, lets, offset)?;
+                let mut saved = Vec::new();
+                for index in indices {
+                    let value = self.value(index)?;
+                    saved.push(self.save_lvalue_value(value, lets, offset)?);
+                }
+                ExprKind::Indices(Box::new(receiver), saved)
+            }
+            ExprKind::SafeProperty(_, _) => {
+                return Err(
+                    Diagnostic::new(offset, "Safe-call update targets are unsupported").with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "SAFE_UPDATE_UNSUPPORTED",
+                    ),
+                );
+            }
+            _ => {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Update requires an assignable local, property or index",
+                )
+                .with_kind(crate::DiagnosticKind::InvalidKotlin, "VARIABLE_EXPECTED"));
+            }
+        };
+        Ok(Expr { offset, kind })
+    }
+
+    fn read_lvalue(&mut self, saved: &Expr, source: &Expr, offset: usize) -> Result<Value> {
+        let checked = self.value(saved);
+        let literal_index = match &source.kind {
+            ExprKind::Index(_, index) => matches!(index.kind, ExprKind::Int(_)),
+            ExprKind::Indices(_, indices) => indices
+                .iter()
+                .any(|index| matches!(index.kind, ExprKind::Int(_))),
+            _ => false,
+        };
+        if checked.is_err() && literal_index {
+            let next = self.next;
+            let initialized = self.initialized.clone();
+            let refinements = self.refinements.clone();
+            let lambdas = self.lambdas.borrow().len();
+            let contextual = self.value(source);
+            self.next = next;
+            self.initialized = initialized;
+            self.refinements = refinements;
+            self.lambdas.borrow_mut().truncate(lambdas);
+            if contextual.is_ok() {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Index update targets require standalone numeric index types",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "UPDATE_INDEX_TYPE_MISMATCH",
+                ));
+            }
+        }
+        checked
+    }
+
+    pub(super) fn check_lvalue_compound_assignment(
+        &mut self,
+        target: &Expr,
+        op: &str,
+        right: &Expr,
+        offset: usize,
+    ) -> Result<Statement> {
+        self.scopes.push(HashMap::new());
+        let result = (|| {
+            let source = target;
+            let LvaluePlan { target, lets } = self.lvalue_plan(source, offset)?;
+            let receiver = self.read_lvalue(&target, source, offset)?;
+            let statement = self.check_compound_operator(&target, op, receiver, right, offset)?;
+            Ok(Statement::Expression(Self::wrap_lets(
+                Value {
+                    ty: Type::Unit,
+                    kind: ValueKind::Block(
+                        vec![statement],
+                        Box::new(Value {
+                            ty: Type::Unit,
+                            kind: ValueKind::Unit,
+                        }),
+                    ),
                 },
-            });
+                lets,
+            )))
+        })();
+        self.scopes.pop();
+        result
+    }
+
+    fn lvalue_store(&mut self, target: &Expr, value: Value, offset: usize) -> Result<Statement> {
+        self.scopes.push(HashMap::new());
+        let result = (|| {
+            let mut lets = Vec::new();
+            let expression = self.save_lvalue_value(value, &mut lets, offset)?;
+            let kind = match &target.kind {
+                ExprKind::Name(name) => StatementKind::Assign(name.clone(), expression),
+                ExprKind::Property(receiver, name) => {
+                    StatementKind::PropertyAssign(*receiver.clone(), name.clone(), expression)
+                }
+                ExprKind::Index(receiver, index) => {
+                    StatementKind::IndexAssign(*receiver.clone(), *index.clone(), expression)
+                }
+                ExprKind::Indices(receiver, indices) => {
+                    StatementKind::IndicesAssign(*receiver.clone(), indices.clone(), expression)
+                }
+                _ => return Err(Diagnostic::new(offset, "Unsupported assignment target")),
+            };
+            let (body, _) = self.block(&[syntax::Statement { offset, kind }])?;
+            if let ExprKind::Name(name) = &target.kind {
+                if let Some(local) = self.local(name) {
+                    self.refinements.remove(&local.slot);
+                }
+            }
+            Ok(Statement::Expression(Self::wrap_lets(
+                Value {
+                    ty: Type::Unit,
+                    kind: ValueKind::Block(
+                        body,
+                        Box::new(Value {
+                            ty: Type::Unit,
+                            kind: ValueKind::Unit,
+                        }),
+                    ),
+                },
+                lets,
+            )))
+        })();
+        self.scopes.pop();
+        result
+    }
+
+    pub(super) fn check_update(
+        &mut self,
+        target: &Expr,
+        prefix: bool,
+        increment: bool,
+        offset: usize,
+    ) -> Result<Value> {
+        if let ExprKind::Name(name) = &target.kind {
+            if let Some((cell, Type::Int)) = self.cell_binding(name) {
+                self.value(target)?;
+                if self.cell_is_readonly(name)
+                    || self.local(name).is_some_and(|local| !local.mutable)
+                {
+                    return Err(Diagnostic::new(offset, "Cannot reassign val or parameter")
+                        .with_kind(crate::DiagnosticKind::InvalidKotlin, "VAL_REASSIGNMENT"));
+                }
+                return Ok(Value {
+                    ty: Type::Int,
+                    kind: if increment {
+                        ValueKind::CellIncrement {
+                            cell: Box::new(cell),
+                            prefix,
+                        }
+                    } else {
+                        ValueKind::CellDecrement {
+                            cell: Box::new(cell),
+                            prefix,
+                        }
+                    },
+                });
+            }
+            if let Some(local) = self.local(name) {
+                if local.ty == Type::Int && local.mutable && self.initialized.contains(&local.slot)
+                {
+                    self.refinements.remove(&local.slot);
+                    return Ok(Value {
+                        ty: Type::Int,
+                        kind: if increment {
+                            ValueKind::Increment {
+                                slot: local.slot,
+                                prefix,
+                            }
+                        } else {
+                            ValueKind::Decrement {
+                                slot: local.slot,
+                                prefix,
+                            }
+                        },
+                    });
+                }
+            }
         }
-        let local = self
-            .local(name)
-            .ok_or_else(|| Diagnostic::new(offset, "Decrement requires a local"))?;
-        if !local.mutable || local.ty != Type::Int || !self.initialized.contains(&local.slot) {
-            return Err(Diagnostic::new(
-                offset,
-                "Decrement requires an initialized mutable Int local",
-            ));
-        }
-        Ok(Value {
-            ty: Type::Int,
-            kind: ValueKind::Decrement {
-                slot: local.slot,
-                prefix,
-            },
-        })
+        self.scopes.push(HashMap::new());
+        let result = (|| {
+            let source = target;
+            let LvaluePlan { target, mut lets } = self.lvalue_plan(source, offset)?;
+            if prefix {
+                let supported = match &target.kind {
+                    ExprKind::Name(name) => {
+                        self.local(name).is_some() || self.cell_binding(name).is_some()
+                    }
+                    ExprKind::Index(receiver, _) | ExprKind::Indices(receiver, _) => {
+                        self.value(receiver)?.ty.array_element().is_some()
+                    }
+                    _ => false,
+                };
+                if !supported {
+                    return Err(Diagnostic::new(offset, "Prefix property/custom-index updates have a specification/oracle getter-count discrepancy").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "PREFIX_UPDATE_ORACLE_DISCREPANCY"));
+                }
+            }
+            let old = self.read_lvalue(&target, source, offset)?;
+            let ty = old.ty.clone();
+            if ty.is_nullable() {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Nullable update operator receivers are unsupported",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "NULLABLE_UPDATE_UNSUPPORTED",
+                ));
+            }
+            let old_expr = self.save_lvalue_value(old, &mut lets, offset)?;
+            let old = self.value(&old_expr)?;
+            let next = match ty {
+                Type::Byte
+                | Type::Short
+                | Type::Char
+                | Type::Int
+                | Type::Long
+                | Type::Float
+                | Type::Double => {
+                    let promoted = if matches!(ty, Type::Byte | Type::Short | Type::Char) {
+                        Type::Int
+                    } else {
+                        ty.clone()
+                    };
+                    let old = if old.ty == promoted {
+                        old
+                    } else {
+                        Value {
+                            ty: promoted.clone(),
+                            kind: ValueKind::Convert(promoted.clone(), Box::new(old)),
+                        }
+                    };
+                    let one = match promoted {
+                        Type::Long => Value {
+                            ty: Type::Long,
+                            kind: ValueKind::Long(1),
+                        },
+                        Type::Float => Value {
+                            ty: Type::Float,
+                            kind: ValueKind::Float(1f32.to_bits()),
+                        },
+                        Type::Double => Value {
+                            ty: Type::Double,
+                            kind: ValueKind::Double(1f64.to_bits()),
+                        },
+                        _ => Value {
+                            ty: Type::Int,
+                            kind: ValueKind::Int(1),
+                        },
+                    };
+                    let value = Value {
+                        ty: promoted,
+                        kind: ValueKind::Binary(
+                            if increment { "+" } else { "-" }.into(),
+                            Box::new(old),
+                            Box::new(one),
+                        ),
+                    };
+                    if value.ty == ty {
+                        value
+                    } else {
+                        Value {
+                            ty: ty.clone(),
+                            kind: ValueKind::Convert(ty.clone(), Box::new(value)),
+                        }
+                    }
+                }
+                _ => self
+                    .operator_call(old, if increment { "inc" } else { "dec" }, &[], offset)
+                    .map_err(|error| {
+                        if error.message.contains("operator modifier") {
+                            error.with_kind(
+                                crate::DiagnosticKind::InvalidKotlin,
+                                "OPERATOR_MODIFIER_REQUIRED",
+                            )
+                        } else {
+                            error
+                        }
+                    })?,
+            };
+            if next.ty == Type::Unit || !self.subtype(&next.ty, &ty) {
+                return Err(Diagnostic::new(
+                    offset,
+                    "inc/dec must return a subtype of its receiver",
+                )
+                .with_kind(crate::DiagnosticKind::InvalidKotlin, "INC_DEC_RETURN_TYPE"));
+            }
+            let next_expr = self.save_lvalue_value(next, &mut lets, offset)?;
+            let next = self.value(&next_expr)?;
+            let statement = self
+                .lvalue_store(&target, next.clone(), offset)
+                .map_err(|error| {
+                    if error.kind == crate::DiagnosticKind::Unclassified {
+                        error.with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "UPDATE_TARGET_NOT_WRITABLE",
+                        )
+                    } else {
+                        error
+                    }
+                })?;
+            let result = if prefix { next } else { self.value(&old_expr)? };
+            Ok(Self::wrap_lets(
+                Value {
+                    ty: result.ty.clone(),
+                    kind: ValueKind::Block(vec![statement], Box::new(result)),
+                },
+                lets,
+            ))
+        })();
+        self.scopes.pop();
+        result
     }
 
     fn resolve_runtime_type(&self, target: &Type, offset: usize) -> Result<Type> {
@@ -1087,6 +1437,127 @@ impl Checker<'_> {
             .collect())
     }
 
+    pub(super) fn contextual_extension_call(
+        &mut self,
+        receiver: &Expr,
+        name: &str,
+        args: &[Expr],
+        types: &[Type],
+        expected: &Type,
+        offset: usize,
+    ) -> Result<Option<Value>> {
+        if self.qualified_java_class(receiver)?.is_some()
+            || self.local(name).is_some()
+            || !self
+                .extension_candidate_groups(name, false)?
+                .iter()
+                .flatten()
+                .any(|method| {
+                    method
+                        .library
+                        .as_ref()
+                        .is_some_and(|library| !library.type_parameters.is_empty())
+                })
+        {
+            return Ok(None);
+        }
+        let next = self.next;
+        let initialized = self.initialized.clone();
+        let refinements = self.refinements.clone();
+        let facts = self.contract_facts.clone();
+        let registration = self.contract_registration;
+        let lambdas = self.lambdas.borrow().len();
+        let source_receiver = receiver;
+        let receiver = match self.value(source_receiver) {
+            Ok(value) => value,
+            Err(error) => {
+                self.next = next;
+                self.initialized = initialized;
+                self.refinements = refinements;
+                self.contract_facts = facts;
+                self.contract_registration = registration;
+                self.lambdas.borrow_mut().truncate(lambdas);
+                if error.code == "UNRESOLVED_VALUE"
+                    && self
+                        .value_classifier(source_receiver)?
+                        .is_some_and(|class| !class.kotlin_class)
+                {
+                    return Ok(None);
+                }
+                return Err(error);
+            }
+        };
+        if matches!(receiver.ty.base(), Type::ThreadLocal(_))
+            || library::type_owner(&receiver.ty).is_some_and(|owner| {
+                library::ordinary_member_methods(self.classpath, owner, name, args.len()).is_ok_and(
+                    |methods| {
+                        methods.iter().any(|method| {
+                            method.source_name() == name
+                                && method.source_property.is_none()
+                                && method.instance_dispatch()
+                        })
+                    },
+                )
+            })
+        {
+            if self
+                .value_classifier(source_receiver)?
+                .is_some_and(|class| !class.kotlin_class)
+            {
+                let slot = self.allocate_typed_slot(&receiver.ty, offset)?;
+                let temporary = format!("<contextMember{slot}>");
+                self.scopes.push(HashMap::from([(
+                    temporary.clone(),
+                    Local {
+                        slot,
+                        ty: receiver.ty.clone(),
+                        mutable: false,
+                    },
+                )]));
+                self.initialized.insert(slot);
+                let mut target = Expr {
+                    offset,
+                    kind: ExprKind::Property(
+                        Box::new(Expr {
+                            offset,
+                            kind: ExprKind::Name(temporary),
+                        }),
+                        name.into(),
+                    ),
+                };
+                if !types.is_empty() {
+                    target = Expr {
+                        offset,
+                        kind: ExprKind::Generic(Box::new(target), types.to_vec()),
+                    };
+                }
+                let result = self.value(&Expr {
+                    offset,
+                    kind: ExprKind::Call(Box::new(target), args.to_vec()),
+                });
+                self.scopes.pop();
+                return result.map(|value| Some(Self::wrap_lets(value, vec![(slot, receiver)])));
+            }
+            self.next = next;
+            self.initialized = initialized;
+            self.refinements = refinements;
+            self.contract_facts = facts;
+            self.contract_registration = registration;
+            self.lambdas.borrow_mut().truncate(lambdas);
+            return Ok(None);
+        }
+        self.resolved_extension_call_expected(
+            receiver,
+            name,
+            args,
+            types,
+            ExtensionKind::Ordinary,
+            offset,
+            Some(expected),
+        )
+        .map(Some)
+    }
+
     pub(super) fn resolved_extension_call(
         &mut self,
         receiver: Value,
@@ -1095,6 +1566,20 @@ impl Checker<'_> {
         types: &[Type],
         kind: ExtensionKind,
         offset: usize,
+    ) -> Result<Value> {
+        self.resolved_extension_call_expected(receiver, name, args, types, kind, offset, None)
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(super) fn resolved_extension_call_expected(
+        &mut self,
+        receiver: Value,
+        name: &str,
+        args: &[Expr],
+        types: &[Type],
+        kind: ExtensionKind,
+        offset: usize,
+        expected: Option<&Type>,
     ) -> Result<Value> {
         let operator = matches!(&kind, ExtensionKind::Operator);
         let infix = matches!(&kind, ExtensionKind::Infix);
@@ -1182,10 +1667,11 @@ impl Checker<'_> {
                     if generic_value {
                         method.unsupported = false;
                     }
-                    match self.select_method_types(
+                    match self.select_method_expected(
                         std::slice::from_ref(&method),
                         &all_args,
                         types,
+                        expected,
                         offset,
                     ) {
                         Ok(_) if infix && !is_infix => non_infix_applicable = true,
@@ -1274,10 +1760,12 @@ impl Checker<'_> {
                     "GENERIC_VALUE_EXTENSION_ABI_UNSUPPORTED",
                 ));
             }
-            let method = self.select_method_types(candidates, &all_args, types, offset)?;
+            let method =
+                self.select_method_expected(candidates, &all_args, types, expected, offset)?;
             self.library_static_call(method, &all_args, offset)
         })();
         self.scopes.pop();
+        self.remap_contract_receiver(offset, slot, &receiver);
         result.map(|value| Self::wrap_lets(value, vec![(slot, receiver)]))
     }
 
@@ -2116,7 +2604,8 @@ impl Checker<'_> {
 impl Checker<'_> {
     pub(super) fn receiver_property(&mut self, name: &str, offset: usize) -> Result<Value> {
         let result = if self.dispatch_receiver.is_none() {
-            Err(Diagnostic::new(offset, format!("Unresolved name: {name}")))
+            Err(Diagnostic::new(offset, format!("Unresolved name: {name}"))
+                .with_kind(crate::DiagnosticKind::Unclassified, "UNRESOLVED_VALUE"))
         } else {
             self.value(&Expr {
                 offset,

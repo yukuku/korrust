@@ -1263,10 +1263,10 @@ fn requires_definite_assignment_before_every_local_read() {
 
 #[test]
 fn rejects_unsupported_object_annotations_initializers_and_overloads() {
+    assert!(compile_all("object E { @Throws() fun f() {} }", "EmptyThrows.kt").is_ok());
     for source in [
         "object E { @Unknown fun f() {} }",
         "object E { @JvmStatic @JvmStatic fun f() {} }",
-        "object E { @Throws() fun f() {} }",
         "object E { @Throws(String::class) fun f() {} }",
         "object E { @Suppress(1) fun f() {} }",
         "object E { @Suppress(\"x\") @Suppress(\"y\") fun f() {} }",
@@ -1290,7 +1290,6 @@ fn rejects_invalid_loop_membership_increment_and_when_boundaries() {
         "fun f() { break }",
         "fun f(): Int { val value = 0; return value++ }",
         "fun f(value: Int): Int = ++value",
-        "fun f(): Int { var value: Char = 'a'; value++; return 0 }",
         "fun f() { for (index in 0 until 2) { index++ } }",
         "fun f(value: Int): Boolean = value in 0..true",
         "fun f(value: Int): Int = when (value) { in 0..2 -> 1 }",

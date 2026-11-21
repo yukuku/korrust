@@ -604,6 +604,7 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
             kotlin_result: Some(array),
             kotlin_internal: false,
             library: Some(LibraryMethod {
+                contracts: Vec::new(),
                 value_dispatch: false,
                 suspend_: false,
                 kotlin_declared: true,
@@ -799,6 +800,7 @@ fn builtin_declarations(
             kotlin_result: Some(returned),
             kotlin_internal: false,
             library: requested_name.map(|_| LibraryMethod {
+                contracts: Vec::new(),
                 value_dispatch: false,
                 suspend_: false,
                 parameter_modes: Vec::new(),
@@ -1008,9 +1010,125 @@ pub(super) fn module_parts(bytes: &[u8], package: &str) -> Result<Vec<String>> {
     Ok(result)
 }
 
+type ContractRequirements = Vec<(usize, Option<Type>)>;
+
+fn contract_requirements(
+    context: &Context<'_>,
+    expression: &Proto<'_>,
+    depth: usize,
+) -> Result<Option<ContractRequirements>> {
+    expression.allowed(&[1, 2, 3, 4, 5, 6, 7])?;
+    if depth > 32 || !expression.messages(7)?.is_empty() || expression.integer(3)?.is_some() {
+        return Ok(None);
+    }
+    let flags = expression.integer(1)?.unwrap_or(0);
+    let mut requirements = Vec::new();
+    if let Some(parameter) = expression.integer(2)? {
+        let parameter = usize::try_from(parameter).map_err(|_| invalid())?;
+        if flags == 3 && expression.bytes(4)?.is_none() && expression.integer(5)?.is_none() {
+            requirements.push((parameter, None));
+        } else if flags == 0 && (expression.bytes(4)?.is_some() || expression.integer(5)?.is_some())
+        {
+            let target = context.field(expression, 4, 5)?;
+            if !matches!(
+                target.base(),
+                Type::String
+                    | Type::Java(_)
+                    | Type::Int
+                    | Type::Long
+                    | Type::Byte
+                    | Type::Short
+                    | Type::Char
+                    | Type::Boolean
+                    | Type::Float
+                    | Type::Double
+                    | Type::IntArray
+                    | Type::LongArray
+                    | Type::ByteArray
+                    | Type::ShortArray
+                    | Type::CharArray
+                    | Type::BooleanArray
+                    | Type::FloatArray
+                    | Type::DoubleArray
+                    | Type::StringArray
+            ) {
+                return Ok(None);
+            }
+            requirements.push((parameter, Some(target)));
+        } else {
+            return Ok(None);
+        }
+    } else if flags != 0 || expression.integer(3)?.is_some() {
+        return Ok(None);
+    }
+    for argument in expression.messages(6)? {
+        let expression = Proto::parse(argument)?;
+        let Some(nested) = contract_requirements(context, &expression, depth + 1)? else {
+            return Ok(None);
+        };
+        requirements.extend(nested);
+    }
+    Ok(Some(requirements))
+}
+
+fn contracts(
+    context: &Context<'_>,
+    member: &Proto<'_>,
+    parameters: usize,
+    receiver: bool,
+) -> Result<Vec<ContractEffect>> {
+    let Some(bytes) = member.bytes(32)? else {
+        return Ok(Vec::new());
+    };
+    let contract = Proto::parse(bytes)?;
+    contract.allowed(&[1])?;
+    let mut effects = Vec::new();
+    for bytes in contract.messages(1)? {
+        let effect = Proto::parse(bytes)?;
+        effect.allowed(&[1, 2, 3, 4, 5])?;
+        if effect.integer(1)? != Some(0) || effect.integer(5)?.unwrap_or(0) != 0 {
+            continue;
+        }
+        let arguments = effect.messages(2)?;
+        let [argument] = arguments.as_slice() else {
+            continue;
+        };
+        let argument = Proto::parse(argument)?;
+        argument.allowed(&[1, 3])?;
+        if argument.integer(1)?.unwrap_or(0) != 0 {
+            continue;
+        }
+        let returned = match argument.integer(3)? {
+            Some(0) => ContractReturn::Boolean(true),
+            Some(1) => ContractReturn::Boolean(false),
+            Some(2) => ContractReturn::Null,
+            _ => continue,
+        };
+        let Some(conclusion) = effect.bytes(3)? else {
+            continue;
+        };
+        let conclusion = Proto::parse(conclusion)?;
+        let Some(requirements) = contract_requirements(context, &conclusion, 0)? else {
+            continue;
+        };
+        if requirements
+            .iter()
+            .any(|(parameter, _)| *parameter > parameters || *parameter == 0 && !receiver)
+        {
+            return Err(invalid());
+        }
+        effects.push(ContractEffect {
+            returned,
+            requirements,
+        });
+    }
+    Ok(effects)
+}
+
 struct MemberTypes<'a> {
     value_classes: &'a crate::value_abi::Registry,
     parameter_modes: Vec<crate::syntax::InlineParameterMode>,
+    contracts: Vec<ContractEffect>,
     params: Vec<(String, Type, bool)>,
     result: Type,
     receiver: Option<Type>,
@@ -1057,6 +1175,7 @@ fn attach_member(
     let MemberTypes {
         value_classes: values,
         mut parameter_modes,
+        contracts,
         params,
         result,
         receiver,
@@ -1183,8 +1302,22 @@ fn attach_member(
             .library
             .as_ref()
             .map_or(&[][..], |c| c.type_parameters.as_slice());
-        let parsed_signature = signature::method(signature, class_parameters);
-        let (_, signature_params, signature_result) = parsed_signature?;
+        let mut signature_parameters = class_parameters.to_vec();
+        signature_parameters.extend(type_parameters.iter().cloned());
+        let (signature_parameters, signature_params, signature_result) =
+            signature::method(signature, &signature_parameters)?;
+        if signature_parameters.len() != type_parameters.len()
+            || signature_parameters
+                .iter()
+                .zip(&type_parameters)
+                .any(|(physical, logical)| {
+                    physical.name != logical.name
+                        || physical.bounds.first().map(Type::descriptor)
+                            != logical.bounds.first().map(Type::descriptor)
+                })
+        {
+            return Err(invalid());
+        }
         let erased = format!(
             "({}){}",
             signature_params
@@ -1260,6 +1393,7 @@ fn attach_member(
         parameter_modes.insert(0, crate::syntax::InlineParameterMode::Ordinary);
     }
     method.library = Some(LibraryMethod {
+        contracts,
         value_dispatch,
         suspend_,
         kotlin_declared: true,
@@ -1308,6 +1442,7 @@ fn remember_callable(
             && method.library.is_none()
         {
             method.library = Some(LibraryMethod {
+                contracts: Vec::new(),
                 value_dispatch: false,
                 suspend_: false,
                 kotlin_declared: true,
@@ -1653,6 +1788,11 @@ pub(super) fn attach_with_values(
                     name,
                     MemberTypes {
                         value_classes: values,
+                        contracts: if constructor {
+                            Vec::new()
+                        } else {
+                            contracts(&context, &member, params.len(), receiver.is_some())?
+                        },
                         parameter_modes,
                         params,
                         result,
@@ -1765,6 +1905,7 @@ pub(super) fn attach_with_values(
                     MemberTypes {
                         value_classes: values,
                         parameter_modes: Vec::new(),
+                        contracts: Vec::new(),
                         params: Vec::new(),
                         result: ty.clone(),
                         receiver: receiver.clone(),
@@ -1784,6 +1925,7 @@ pub(super) fn attach_with_values(
                     MemberTypes {
                         value_classes: values,
                         parameter_modes: Vec::new(),
+                        contracts: Vec::new(),
                         params: vec![("value".into(), ty, false)],
                         result: Type::Unit,
                         receiver,

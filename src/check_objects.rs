@@ -22,6 +22,13 @@ fn legacy_check(
     let mut object_methods: HashMap<String, Vec<JavaMethod>> = HashMap::new();
     for method in &source.methods {
         let function = &method.function;
+        declarations::validate_member_generics(
+            function,
+            method.is_override,
+            classpath,
+            imports,
+            classes,
+        )?;
         if function.defaults.iter().any(Option::is_some) {
             return Err(Diagnostic::new(
                 function.offset,
@@ -115,6 +122,7 @@ fn legacy_check(
         }
         overloads.push(JavaMethod {
             library: function.infix.then(|| crate::classpath::LibraryMethod {
+                contracts: Vec::new(),
                 value_dispatch: false,
                 suspend_: false,
                 kotlin_declared: true,
@@ -269,6 +277,8 @@ fn legacy_check(
             object_fields: &empty_object_fields,
             object_owner: None,
             allow_return: true,
+            contract_facts: HashMap::new(),
+            contract_registration: None,
             refinements: HashMap::new(),
             initialized: HashSet::new(),
             loop_depth: 0,
@@ -300,6 +310,13 @@ fn legacy_check(
     let extensions = HashSet::new();
     for method in &source.methods {
         let function = &method.function;
+        declarations::validate_member_generics(
+            function,
+            method.is_override,
+            classpath,
+            imports,
+            classes,
+        )?;
         if function.defaults.iter().any(Option::is_some) {
             return Err(Diagnostic::new(
                 function.offset,
@@ -360,6 +377,8 @@ fn legacy_check(
             object_fields: &object_fields,
             object_owner: Some(&owner),
             allow_return: true,
+            contract_facts: HashMap::new(),
+            contract_registration: None,
             refinements: HashMap::new(),
             initialized: HashSet::new(),
             loop_depth: 0,
@@ -418,6 +437,7 @@ fn legacy_check(
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
+                jvm_signature: None,
                 jvm_name: None,
                 annotations: Vec::new(),
                 vararg: false,
@@ -520,6 +540,13 @@ pub(super) fn check(
     }
     for method in &source.methods {
         let function = &method.function;
+        declarations::validate_member_generics(
+            function,
+            method.is_override,
+            classpath,
+            imports,
+            classes,
+        )?;
         if method.jvm_static && method.is_override {
             return Err(Diagnostic::new(
                 function.offset,
@@ -620,6 +647,7 @@ pub(super) fn check(
             kotlin_result: Some(result),
             kotlin_internal: function.internal,
             library: Some(crate::classpath::LibraryMethod {
+                contracts: Vec::new(),
                 value_dispatch: false,
                 suspend_: false,
                 kotlin_declared: true,
@@ -931,6 +959,42 @@ pub(super) fn check(
         })
         .collect::<Vec<_>>();
     for method in &source.methods {
+        for annotation in &method.function.annotations {
+            if annotations::annotation_owner(&annotation.name, classpath, imports)
+                != "kotlin/jvm/Throws"
+            {
+                continue;
+            }
+            let mut pending = annotation
+                .arguments
+                .iter()
+                .map(|(_, value)| value)
+                .collect::<Vec<_>>();
+            while let Some(value) = pending.pop() {
+                match &value.kind {
+                    ExprKind::ClassLiteral { receiver, .. } => {
+                        if crate::annotation_declarations::path(receiver).is_some_and(|path| {
+                            let head = path.split('/').next().unwrap();
+                            source.fields.iter().any(|field| field.name == head)
+                        }) {
+                            return Err(Diagnostic::new(
+                                value.offset,
+                                "Annotation class literal receiver is a lexical value",
+                            )
+                            .with_kind(
+                                crate::DiagnosticKind::InvalidKotlin,
+                                "INVALID_ANNOTATION_VALUE",
+                            ));
+                        }
+                    }
+                    ExprKind::AnnotationArray(values) | ExprKind::Call(_, values) => {
+                        pending.extend(values)
+                    }
+                    ExprKind::Unary(_, value) => pending.push(value),
+                    _ => {}
+                }
+            }
+        }
         let function =
             context.function(&method.function, !method.jvm_static, method.is_override)?;
         if function
@@ -1078,6 +1142,7 @@ pub(super) fn check(
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
+                jvm_signature: None,
                 jvm_name: None,
                 annotations: Vec::new(),
                 vararg: false,
@@ -1140,6 +1205,7 @@ pub(super) fn check(
                     extension_receiver: false,
                     class_type_params: Vec::new(),
                     jvm_result: None,
+                    jvm_signature: None,
                     jvm_name: None,
                     annotations: Vec::new(),
                     vararg: false,
@@ -1421,13 +1487,13 @@ object Scratch {
         rejects("fun f() { break }", "enclosing loop");
         rejects(
             "fun f() { for (index in 0 until 2) { index++ } }",
-            "mutable Int",
+            "Cannot reassign val or parameter",
         );
         rejects("fun f(a: ByteArray) { a[0] = 128 }", "Type mismatch");
         rejects("fun f(a: CharArray) { a[0] = 65 }", "Type mismatch");
         rejects(
             "fun f(): Int { val index = 0; return index++ }",
-            "mutable Int",
+            "Cannot reassign val or parameter",
         );
     }
     #[test]
@@ -1448,7 +1514,7 @@ object Scratch {
         );
         rejects(
             "object Throws { @Throws(IllegalArgumentException::class) fun f(): Int = 1 }",
-            "Shadowed builtin",
+            "annotation definition",
         );
         assert!(checked("object Scratch { internal fun f(): Int = 1 }").is_ok());
         rejects(
@@ -1459,9 +1525,12 @@ object Scratch {
     #[test]
     fn exceptions_conversions_and_range_expressions_have_bounded_types() {
         let object = checked("object Scratch { @JvmStatic @Throws(IllegalArgumentException::class) fun f() { throw IllegalArgumentException() } }").unwrap().object_decl.unwrap();
-        assert_eq!(
-            object.methods[0].throws,
-            ["java/lang/IllegalArgumentException"]
+        assert!(
+            object.methods[0]
+                .function
+                .annotations
+                .iter()
+                .any(|annotation| annotation.descriptor == "Lkotlin/jvm/Throws;")
         );
         assert!(checked("fun f(a: ByteArray): Int = a[0].toInt() and 0xff").is_ok());
         assert!(checked("fun f(value: Int): Char = Character.highSurrogate(value)").is_ok());
@@ -1533,11 +1602,11 @@ object Scratch {
     fn throws_class_literals_cannot_resolve_to_values_or_the_declared_object() {
         rejects(
             "object Scratch { private val IllegalArgumentException = ThreadLocal.withInitial { ByteArray(1) }; @JvmStatic @Throws(IllegalArgumentException::class) fun f(): Int = 1 }",
-            "class literals cannot be shadowed",
+            "lexical value",
         );
         rejects(
             "object IllegalArgumentException { @Throws(IllegalArgumentException::class) fun f(): Int = 1 }",
-            "class literals cannot be shadowed",
+            "Throwable",
         );
     }
     #[test]

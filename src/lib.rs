@@ -1303,19 +1303,26 @@ fn check_unit(
     owner: &str,
 ) -> Result<CheckedUnit> {
     if module.enum_decl.is_some() {
-        let value = check::enums::check_enum(module, classpath, owner)?;
+        let mut value = check::enums::check_enum(module, classpath, owner)?;
+        let signature_imports = annotation_declarations::imports(module, classpath)?;
         check::validate_variant_class_signatures(
             &module.enum_decl.as_ref().unwrap().body,
-            &value.class,
+            &mut value.class,
             classpath,
+            &signature_imports,
         )?;
-        for entry in &value.entry_classes {
-            check::validate_variant_class_signatures(&entry.source, &entry.class, classpath)?;
+        for entry in &mut value.entry_classes {
+            check::validate_variant_class_signatures(
+                &entry.source,
+                &mut entry.class,
+                classpath,
+                &signature_imports,
+            )?;
         }
         Ok(CheckedUnit::Enum(Box::new(value)))
     } else {
-        let value = check::check_with_owner(module, classpath, owner)?;
-        check::validate_variant_signatures(module, &value, classpath)?;
+        let mut value = check::check_with_owner(module, classpath, owner)?;
+        check::validate_variant_signatures(module, &mut value, classpath)?;
         Ok(CheckedUnit::Module(Box::new(value)))
     }
 }

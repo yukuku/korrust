@@ -5,6 +5,7 @@ impl Checker<'_> {
         &mut self,
         statements: &[syntax::Statement],
         _offset: usize,
+        expected: Option<&Type>,
     ) -> Result<(Vec<Statement>, Value)> {
         let tail = statements.last().and_then(|statement| {
             let block = |body: &[syntax::Statement]| Expr {
@@ -57,7 +58,11 @@ impl Checker<'_> {
                 kind: ValueKind::Abrupt(Vec::new()),
             }
         } else if let Some(expr) = tail {
-            self.value(&expr)?
+            if let Some(expected) = expected {
+                self.expected_value(&expr, expected)?
+            } else {
+                self.value(&expr)?
+            }
         } else {
             Value {
                 ty: Type::Unit,
@@ -69,10 +74,18 @@ impl Checker<'_> {
     }
 
     pub(super) fn control_value(&mut self, expr: &Expr) -> Result<Value> {
+        self.control_value_expected(expr, None)
+    }
+
+    pub(super) fn control_value_expected(
+        &mut self,
+        expr: &Expr,
+        expected: Option<&Type>,
+    ) -> Result<Value> {
         let offset = expr.offset;
         match &expr.kind {
             ExprKind::Block(statements) => {
-                let (mut body, result) = self.result_block(statements, offset)?;
+                let (mut body, result) = self.result_block(statements, offset, expected)?;
                 if let ValueKind::Abrupt(tail) = result.kind {
                     body.extend(tail);
                     return Ok(Value {
@@ -150,7 +163,7 @@ impl Checker<'_> {
             } => {
                 let before = self.initialized.clone();
                 let refinements = self.refinements.clone();
-                let (body, mut result) = self.result_block(body, offset)?;
+                let (body, mut result) = self.result_block(body, offset, expected)?;
                 let mut initialized = if matches!(result.kind, ValueKind::Abrupt(_)) {
                     None
                 } else {
@@ -171,7 +184,8 @@ impl Checker<'_> {
                     }
                     self.scopes.push(HashMap::new());
                     let slot = self.declare(&catch.name, ty, false, offset)?;
-                    let (catch_body, catch_result) = self.result_block(&catch.body, offset)?;
+                    let (catch_body, catch_result) =
+                        self.result_block(&catch.body, offset, expected)?;
                     self.scopes.pop();
                     if !matches!(catch_result.kind, ValueKind::Abrupt(_)) {
                         initialized = Some(match initialized {

@@ -141,7 +141,9 @@ pub(super) fn statement_names(statements: &[syntax::Statement], names: &mut Hash
                 expression_names(b, names);
                 expression_names(c, names);
             }
-            StatementKind::PropertyAssign(a, _, b) | StatementKind::SafePropertyAssign(a, _, b) => {
+            StatementKind::LvalueCompoundAssign(a, _, b)
+            | StatementKind::PropertyAssign(a, _, b)
+            | StatementKind::SafePropertyAssign(a, _, b) => {
                 expression_names(a, names);
                 expression_names(b, names);
             }
@@ -281,7 +283,8 @@ pub(super) fn lambda_capture_names(statements: &[syntax::Statement]) -> HashSet<
                     expr(b, names);
                     expr(c, names);
                 }
-                StatementKind::PropertyAssign(a, _, b)
+                StatementKind::LvalueCompoundAssign(a, _, b)
+                | StatementKind::PropertyAssign(a, _, b)
                 | StatementKind::SafePropertyAssign(a, _, b) => {
                     expr(a, names);
                     expr(b, names);
@@ -567,7 +570,8 @@ pub(super) fn free_names(
                     expression(b, bound, free);
                     expression(c, bound, free);
                 }
-                StatementKind::PropertyAssign(a, _, b)
+                StatementKind::LvalueCompoundAssign(a, _, b)
+                | StatementKind::PropertyAssign(a, _, b)
                 | StatementKind::SafePropertyAssign(a, _, b) => {
                     expression(a, bound, free);
                     expression(b, bound, free);

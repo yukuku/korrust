@@ -1,0 +1,1321 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-11-21T07:48:50.773768+00:00",
+  "status": "completed",
+  "compiler": {
+    "path": "target/nov21-final-v5/korrust",
+    "sha256": "193fcdd9fd7af09271cbad17e47d126dc28d27a0528d49996a866862bb349c50",
+    "source_revision": "c2ab871533215e4c3c5a8fac588b9ba5a0c367c8",
+    "frozen_input_manifest": "reports/correctness/2026-11-21-next-ten-final-v5/frozen-inputs.json",
+    "source_archive": "reports/correctness/2026-11-21-next-ten-final-v5/frozen-sources.zip",
+    "archive_sha256": "65939a1556acb5db77b7dbc1f6e7f69dcb3cca000826606f5f1a8916b0336e04"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "kind": "correctness",
+  "selection": "Final milestone validation. Family outcomes include compilation, runtime, signature, consumer and diagnostic checks. A passing harness check need not be an additional supported language construct.",
+  "checks": {
+    "rust_tests": 535,
+    "rust_ignored": 0,
+    "python_tests": 179,
+    "logs": {
+      "fmt": "reports/correctness/2026-11-21-next-ten-final-v5/fmt.log",
+      "clippy": "reports/correctness/2026-11-21-next-ten-final-v5/clippy.log",
+      "build": "reports/correctness/2026-11-21-next-ten-final-v5/build.log",
+      "python": "reports/correctness/2026-11-21-next-ten-final-v5/python.log",
+      "rust": "reports/correctness/2026-11-21-next-ten-final-v5/rust.log",
+      "focused_string_factory_runtime": "reports/correctness/2026-11-21-next-ten-final-v5/focused-string-factories.log",
+      "static_shadow_validation": "reports/correctness/2026-11-21-next-ten-final-v5/independent-shadow-validation.json",
+      "reference_integrity": "reports/correctness/2026-11-21-next-ten-final-v1/reference-integrity.log"
+    }
+  },
+  "counts": {
+    "pass": 77,
+    "invalid_rejected": 29,
+    "unsupported_language": 40,
+    "baseline_rejected": 6,
+    "invalid_kotlin": 29,
+    "baseline_unsupported": 2,
+    "not_run": 1
+  },
+  "cases": [
+    {
+      "id": "inference/semantic_fixture_compile",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "semantic_fixture_compile"
+    },
+    {
+      "id": "inference/fixed_java_caller_both_providers",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "fixed_java_caller_both_providers"
+    },
+    {
+      "id": "inference/jvm_descriptors",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "jvm_descriptors"
+    },
+    {
+      "id": "inference/kotlin_consumer_official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "kotlin_consumer_official"
+    },
+    {
+      "id": "inference/kotlin_consumer_candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "kotlin_consumer_candidate"
+    },
+    {
+      "id": "inference/InvalidAnyEqualsFalse",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidAnyEqualsFalse"
+    },
+    {
+      "id": "inference/InvalidAnyEqualsFalseReverse",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidAnyEqualsFalseReverse"
+    },
+    {
+      "id": "inference/InvalidAnyEqualsTrue",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidAnyEqualsTrue"
+    },
+    {
+      "id": "inference/InvalidAnyEqualsTrueReverse",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidAnyEqualsTrueReverse"
+    },
+    {
+      "id": "inference/InvalidAnyNot",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidAnyNot"
+    },
+    {
+      "id": "inference/InvalidArray",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidArray"
+    },
+    {
+      "id": "inference/InvalidCapturedMutated",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidCapturedMutated"
+    },
+    {
+      "id": "inference/InvalidChain",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidChain"
+    },
+    {
+      "id": "inference/InvalidDisjunction",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidDisjunction"
+    },
+    {
+      "id": "inference/InvalidExplicitArray",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidExplicitArray"
+    },
+    {
+      "id": "inference/InvalidExplicitBound",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidExplicitBound"
+    },
+    {
+      "id": "inference/InvalidMutated",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidMutated"
+    },
+    {
+      "id": "inference/InvalidNoContract",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidNoContract"
+    },
+    {
+      "id": "inference/InvalidNullComplement",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidNullComplement"
+    },
+    {
+      "id": "inference/InvalidNullableComplement",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidNullableComplement"
+    },
+    {
+      "id": "inference/InvalidNullableComplementReverse",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidNullableComplementReverse"
+    },
+    {
+      "id": "inference/InvalidNullableFalseComplement",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidNullableFalseComplement"
+    },
+    {
+      "id": "inference/InvalidNullableFalseComplementReverse",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidNullableFalseComplementReverse"
+    },
+    {
+      "id": "inference/InvalidNullableFunction",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidNullableFunction"
+    },
+    {
+      "id": "inference/InvalidNullableNot",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidNullableNot"
+    },
+    {
+      "id": "inference/InvalidNullableReference",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidNullableReference"
+    },
+    {
+      "id": "inference/InvalidOpposite",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidOpposite"
+    },
+    {
+      "id": "inference/InvalidOverload",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidOverload"
+    },
+    {
+      "id": "inference/InvalidShortCircuitAnd",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidShortCircuitAnd"
+    },
+    {
+      "id": "inference/InvalidShortCircuitOr",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "InvalidShortCircuitOr"
+    },
+    {
+      "id": "inference/UnsupportedCaptured",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "UnsupportedCaptured"
+    },
+    {
+      "id": "inference/UnsupportedMutable",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "UnsupportedMutable"
+    },
+    {
+      "id": "inference/UnsupportedReifiedNullableUnit",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "UnsupportedReifiedNullableUnit"
+    },
+    {
+      "id": "inference/UnsupportedReifiedUnit",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "UnsupportedReifiedUnit"
+    },
+    {
+      "id": "inference/UnsupportedTrailing",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "UnsupportedTrailing"
+    },
+    {
+      "id": "inference/null_return_contract_boundary",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "null_return_contract_boundary"
+    },
+    {
+      "id": "inference/BaselineBounds",
+      "outcome": "baseline_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "BaselineBounds"
+    },
+    {
+      "id": "inference/BaselineContext",
+      "outcome": "baseline_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "BaselineContext"
+    },
+    {
+      "id": "inference/BaselineContract",
+      "outcome": "baseline_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "BaselineContract"
+    },
+    {
+      "id": "inference/BaselineNullableFunction",
+      "outcome": "baseline_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "BaselineNullableFunction"
+    },
+    {
+      "id": "inference/BaselinePlatformArray",
+      "outcome": "baseline_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "BaselinePlatformArray"
+    },
+    {
+      "id": "inference/BaselineReturn",
+      "outcome": "baseline_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "BaselineReturn"
+    },
+    {
+      "id": "inference/unchanged_query_tokenizer_compile",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "case_id": "unchanged_query_tokenizer_compile"
+    },
+    {
+      "id": "generics/baseline/BaselineMembers.kt",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "baseline/BaselineMembers.kt"
+    },
+    {
+      "id": "generics/baseline/BaselineWild.kt",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "baseline/BaselineWild.kt"
+    },
+    {
+      "id": "generics/baseline/BaselineInterface.kt",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "baseline/BaselineInterface.kt"
+    },
+    {
+      "id": "generics/new-scope/official/BaselineMembers.kt",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "new-scope/official/BaselineMembers.kt"
+    },
+    {
+      "id": "generics/new-scope/official/BaselineWild.kt",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "new-scope/official/BaselineWild.kt"
+    },
+    {
+      "id": "generics/new-scope/official/BaselineInterface.kt",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "new-scope/official/BaselineInterface.kt"
+    },
+    {
+      "id": "generics/new-scope/candidate/BaselineMembers.kt",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "new-scope/candidate/BaselineMembers.kt"
+    },
+    {
+      "id": "generics/new-scope/candidate/BaselineWild.kt",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "new-scope/candidate/BaselineWild.kt"
+    },
+    {
+      "id": "generics/new-scope/candidate/BaselineInterface.kt",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "new-scope/candidate/BaselineInterface.kt"
+    },
+    {
+      "id": "generics/runtime/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "runtime/official"
+    },
+    {
+      "id": "generics/imported-bound/official/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "imported-bound/official/official"
+    },
+    {
+      "id": "generics/consumer/official/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "consumer/official/official"
+    },
+    {
+      "id": "generics/imported-bound/official/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "imported-bound/official/candidate"
+    },
+    {
+      "id": "generics/consumer/official/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "consumer/official/candidate"
+    },
+    {
+      "id": "generics/runtime/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "runtime/candidate"
+    },
+    {
+      "id": "generics/imported-bound/candidate/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "imported-bound/candidate/official"
+    },
+    {
+      "id": "generics/consumer/candidate/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "consumer/candidate/official"
+    },
+    {
+      "id": "generics/imported-bound/candidate/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "imported-bound/candidate/candidate"
+    },
+    {
+      "id": "generics/consumer/candidate/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "consumer/candidate/candidate"
+    },
+    {
+      "id": "generics/signature/Generic",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "signature/Generic"
+    },
+    {
+      "id": "generics/signature/GenericApi",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "signature/GenericApi"
+    },
+    {
+      "id": "generics/signature/Helpers",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "signature/Helpers"
+    },
+    {
+      "id": "generics/signature/Cov",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "signature/Cov"
+    },
+    {
+      "id": "generics/signature/Con",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "signature/Con"
+    },
+    {
+      "id": "generics/signature/Inv",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "signature/Inv"
+    },
+    {
+      "id": "generics/signature/UseKt",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "signature/UseKt"
+    },
+    {
+      "id": "generics/signature/WildMethods",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "signature/WildMethods"
+    },
+    {
+      "id": "generics/signature/WildApi",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "signature/WildApi"
+    },
+    {
+      "id": "generics/signature/WildDefaults",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "signature/WildDefaults"
+    },
+    {
+      "id": "generics/signature/WildDefaults$Companion",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "signature/WildDefaults$Companion"
+    },
+    {
+      "id": "generics/signature/WildDefaultApi",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "signature/WildDefaultApi"
+    },
+    {
+      "id": "generics/signature/WildDefaultApi$DefaultImpls",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "signature/WildDefaultApi$DefaultImpls"
+    },
+    {
+      "id": "generics/signature/WildDefaultImpl",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "signature/WildDefaultImpl"
+    },
+    {
+      "id": "generics/boundary/recursive-method-bound",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "boundary/recursive-method-bound"
+    },
+    {
+      "id": "generics/boundary/dependent-method-bound",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "boundary/dependent-method-bound"
+    },
+    {
+      "id": "generics/boundary/method-shadowing",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "boundary/method-shadowing"
+    },
+    {
+      "id": "generics/boundary/generic-member-default",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "boundary/generic-member-default"
+    },
+    {
+      "id": "generics/boundary/generic-member-capture",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "boundary/generic-member-capture"
+    },
+    {
+      "id": "generics/boundary/generic-interface-default",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "boundary/generic-interface-default"
+    },
+    {
+      "id": "generics/boundary/generic-nongeneric-interface-default",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "boundary/generic-nongeneric-interface-default"
+    },
+    {
+      "id": "generics/boundary/generic-override",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "boundary/generic-override"
+    },
+    {
+      "id": "generics/boundary/wrong-method-bound",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "boundary/wrong-method-bound"
+    },
+    {
+      "id": "generics/boundary/nullable-method-bound",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "boundary/nullable-method-bound"
+    },
+    {
+      "id": "generics/boundary/variance-opposition",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "boundary/variance-opposition"
+    },
+    {
+      "id": "generics/boundary/wrong-generic-interface-bound",
+      "outcome": "invalid_rejected",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "boundary/wrong-generic-interface-bound"
+    },
+    {
+      "id": "generics/boundary/variant-classifier-bound",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "boundary/variant-classifier-bound"
+    },
+    {
+      "id": "generics/boundary/variant-nested-supertype",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "boundary/variant-nested-supertype"
+    },
+    {
+      "id": "generics/boundary/multiple-method-bounds",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "boundary/multiple-method-bounds"
+    },
+    {
+      "id": "generics/boundary/projected-exposed-field",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "boundary/projected-exposed-field"
+    },
+    {
+      "id": "generics/boundary/projected-exposed-field-alias",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "boundary/projected-exposed-field-alias"
+    },
+    {
+      "id": "generics/boundary/projected-exposed-constructor-field",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "boundary/projected-exposed-constructor-field"
+    },
+    {
+      "id": "generics/frozen_inputs",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "case_id": "frozen_inputs"
+    },
+    {
+      "id": "jvm/provider/source-compilation",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "provider/source-compilation"
+    },
+    {
+      "id": "jvm/provider/official/java-contract-monitor-release",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "provider/official/java-contract-monitor-release"
+    },
+    {
+      "id": "jvm/consumer/official-against-official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "consumer/official-against-official"
+    },
+    {
+      "id": "jvm/consumer/candidate-against-official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "consumer/candidate-against-official"
+    },
+    {
+      "id": "jvm/provider/candidate/java-contract-monitor-release",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "provider/candidate/java-contract-monitor-release"
+    },
+    {
+      "id": "jvm/consumer/official-against-candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "consumer/official-against-candidate"
+    },
+    {
+      "id": "jvm/consumer/candidate-against-candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "consumer/candidate-against-candidate"
+    },
+    {
+      "id": "jvm/provider/public-signatures-exceptions-flags",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "provider/public-signatures-exceptions-flags"
+    },
+    {
+      "id": "jvm/provider/official/aliases-shadowing",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "provider/official/aliases-shadowing"
+    },
+    {
+      "id": "jvm/provider/candidate/aliases-shadowing",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "provider/candidate/aliases-shadowing"
+    },
+    {
+      "id": "jvm/boundary/non_throwable",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/non_throwable"
+    },
+    {
+      "id": "jvm/boundary/primitive_throwable",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/primitive_throwable"
+    },
+    {
+      "id": "jvm/boundary/duplicate_alias",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/duplicate_alias"
+    },
+    {
+      "id": "jvm/boundary/duplicate_sync",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/duplicate_sync"
+    },
+    {
+      "id": "jvm/boundary/interface_abstract_sync",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/interface_abstract_sync"
+    },
+    {
+      "id": "jvm/boundary/interface_default_sync",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/interface_default_sync"
+    },
+    {
+      "id": "jvm/boundary/abstract_sync",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/abstract_sync"
+    },
+    {
+      "id": "jvm/boundary/constructor_sync",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/constructor_sync"
+    },
+    {
+      "id": "jvm/boundary/field_throws",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/field_throws"
+    },
+    {
+      "id": "jvm/boundary/function_get_site",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/function_get_site"
+    },
+    {
+      "id": "jvm/boundary/sync_arguments",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/sync_arguments"
+    },
+    {
+      "id": "jvm/boundary/throws_unknown_name",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/throws_unknown_name"
+    },
+    {
+      "id": "jvm/boundary/throws_duplicate_name",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/throws_duplicate_name"
+    },
+    {
+      "id": "jvm/boundary/throws_bound_value",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/throws_bound_value"
+    },
+    {
+      "id": "jvm/boundary/sync_defaults",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/sync_defaults"
+    },
+    {
+      "id": "jvm/boundary/sync_inline",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/sync_inline"
+    },
+    {
+      "id": "jvm/boundary/sync_suspend",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/sync_suspend"
+    },
+    {
+      "id": "jvm/boundary/sync_value",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/sync_value"
+    },
+    {
+      "id": "jvm/boundary/duplicate_get_alias",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/duplicate_get_alias"
+    },
+    {
+      "id": "jvm/boundary/inherited_default_class",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/inherited_default_class"
+    },
+    {
+      "id": "jvm/boundary/inherited_default_object",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/inherited_default_object"
+    },
+    {
+      "id": "jvm/boundary/inherited_default_interface",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/inherited_default_interface"
+    },
+    {
+      "id": "jvm/boundary/throws_inferred_shadow",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/throws_inferred_shadow"
+    },
+    {
+      "id": "jvm/boundary/throws_suspend",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/throws_suspend"
+    },
+    {
+      "id": "jvm/boundary/compiled_inherited_default_official",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/compiled_inherited_default_official"
+    },
+    {
+      "id": "jvm/boundary/compiled_inherited_default_candidate",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/compiled_inherited_default_candidate"
+    },
+    {
+      "id": "jvm/boundary/official-valid-unsupported-combinations",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "boundary/official-valid-unsupported-combinations"
+    },
+    {
+      "id": "jvm/freeze/source-fixture-candidate-hashes",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "case_id": "freeze/source-fixture-candidate-hashes"
+    },
+    {
+      "id": "inline/baseline/object_template",
+      "outcome": "baseline_unsupported",
+      "evidence_report": "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json",
+      "case_id": "baseline/object_template"
+    },
+    {
+      "id": "inline/baseline/reified_array",
+      "outcome": "baseline_unsupported",
+      "evidence_report": "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json",
+      "case_id": "baseline/reified_array"
+    },
+    {
+      "id": "inline/compile/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json",
+      "case_id": "compile/official"
+    },
+    {
+      "id": "inline/compile/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json",
+      "case_id": "compile/candidate"
+    },
+    {
+      "id": "inline/runtime/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json",
+      "case_id": "runtime/official"
+    },
+    {
+      "id": "inline/metadata/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json",
+      "case_id": "metadata/official"
+    },
+    {
+      "id": "inline/runtime/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json",
+      "case_id": "runtime/candidate"
+    },
+    {
+      "id": "inline/metadata/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json",
+      "case_id": "metadata/candidate"
+    },
+    {
+      "id": "inline/signature/consumer.ValuesKt",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json",
+      "case_id": "signature/consumer.ValuesKt"
+    },
+    {
+      "id": "inline/signature/consumer.ForwardKt",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json",
+      "case_id": "signature/consumer.ForwardKt"
+    },
+    {
+      "id": "inline/boundary/nested_marker",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json",
+      "case_id": "boundary/nested_marker"
+    },
+    {
+      "id": "inline/boundary/nullable_unit",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json",
+      "case_id": "boundary/nullable_unit"
+    },
+    {
+      "id": "inline/boundary/nullable_unit_array_template",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json",
+      "case_id": "boundary/nullable_unit_array_template"
+    },
+    {
+      "id": "inline/boundary/unit",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json",
+      "case_id": "boundary/unit"
+    },
+    {
+      "id": "inline/boundary/unit_array",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json",
+      "case_id": "boundary/unit_array"
+    },
+    {
+      "id": "inline/app/AudioHttpErrorBody",
+      "outcome": "not_run",
+      "evidence_report": "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json",
+      "case_id": "app/AudioHttpErrorBody"
+    },
+    {
+      "id": "inline/upstream/twoArgumentStringTemplate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json",
+      "case_id": "upstream/twoArgumentStringTemplate"
+    },
+    {
+      "id": "operators/compile/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "compile/official"
+    },
+    {
+      "id": "operators/compile/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "compile/candidate"
+    },
+    {
+      "id": "operators/runtime/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "runtime/official"
+    },
+    {
+      "id": "operators/runtime/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "runtime/candidate"
+    },
+    {
+      "id": "operators/abi/updates.Counter",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "abi/updates.Counter"
+    },
+    {
+      "id": "operators/abi/updates.Holder",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "abi/updates.Holder"
+    },
+    {
+      "id": "operators/abi/updates.Indexed",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "abi/updates.Indexed"
+    },
+    {
+      "id": "operators/abi/updates.Base",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "abi/updates.Base"
+    },
+    {
+      "id": "operators/abi/updates.Child",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "abi/updates.Child"
+    },
+    {
+      "id": "operators/abi/updates.OperatorsKt",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "abi/updates.OperatorsKt"
+    },
+    {
+      "id": "operators/abi/updates.ImportedKt",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "abi/updates.ImportedKt"
+    },
+    {
+      "id": "operators/kotlin_consumer/official/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "kotlin_consumer/official/official"
+    },
+    {
+      "id": "operators/kotlin_consumer/official/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "kotlin_consumer/official/candidate"
+    },
+    {
+      "id": "operators/kotlin_consumer/candidate/official",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "kotlin_consumer/candidate/official"
+    },
+    {
+      "id": "operators/kotlin_consumer/candidate/candidate",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "kotlin_consumer/candidate/candidate"
+    },
+    {
+      "id": "operators/prefix_property_oracle_discrepancy",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "prefix_property_oracle_discrepancy"
+    },
+    {
+      "id": "operators/boundary/IncArity",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "boundary/IncArity"
+    },
+    {
+      "id": "operators/boundary/DecUnit",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "boundary/DecUnit"
+    },
+    {
+      "id": "operators/boundary/IncResult",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "boundary/IncResult"
+    },
+    {
+      "id": "operators/boundary/IncInferredResult",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "boundary/IncInferredResult"
+    },
+    {
+      "id": "operators/boundary/ExtensionResult",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "boundary/ExtensionResult"
+    },
+    {
+      "id": "operators/boundary/Immutable",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "boundary/Immutable"
+    },
+    {
+      "id": "operators/boundary/MissingOperator",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "boundary/MissingOperator"
+    },
+    {
+      "id": "operators/boundary/PropertyAmbiguous",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "boundary/PropertyAmbiguous"
+    },
+    {
+      "id": "operators/boundary/Nullable",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "boundary/Nullable"
+    },
+    {
+      "id": "operators/boundary/SafeUpdate",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "boundary/SafeUpdate"
+    },
+    {
+      "id": "operators/boundary/SafeCompound",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "boundary/SafeCompound"
+    },
+    {
+      "id": "operators/boundary/PrefixProperty",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "boundary/PrefixProperty"
+    },
+    {
+      "id": "operators/boundary/PrefixIndex",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "boundary/PrefixIndex"
+    },
+    {
+      "id": "operators/boundary/IndexAmbiguous",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "boundary/IndexAmbiguous"
+    },
+    {
+      "id": "operators/boundary/ReadOnly",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "boundary/ReadOnly"
+    },
+    {
+      "id": "operators/boundary/NullableExtension",
+      "outcome": "unsupported_language",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "boundary/NullableExtension"
+    },
+    {
+      "id": "operators/boundary/ContextualIndex",
+      "outcome": "invalid_kotlin",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "boundary/ContextualIndex"
+    },
+    {
+      "id": "operators/fixed_caller_integrity",
+      "outcome": "pass",
+      "evidence_report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "case_id": "fixed_caller_integrity"
+    }
+  ],
+  "families": {
+    "inference": {
+      "report": "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+      "counts": {
+        "pass": 6,
+        "invalid_rejected": 25,
+        "unsupported_language": 6,
+        "baseline_rejected": 6
+      },
+      "limitations": [
+        "No source contract DSL authoring",
+        "Contract facts apply to compiled static/top-level and extension calls; instance-member contracts are not applied",
+        "returns(null) facts are decoded but not applied; pinned compiler also rejects the tested external null-return implication consumer",
+        "No mutable/captured-cell contract smartcasts",
+        "No disjunction or negative-type implications",
+        "No calls-in-place analysis or returns-not-null/unconditional-return effect support",
+        "General expected-result propagation through when and Elvis remains outside this slice",
+        "Trailing lambdas after omitted default parameters remain unsupported because the parser does not retain outside-parentheses argument placement",
+        "Nullable Unit type-argument errors are currently swallowed by speculative call parsing; the direct reified Unit case has the structured classifier diagnostic",
+        "No full application build or performance claim"
+      ]
+    },
+    "generics": {
+      "report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+      "counts": {
+        "pass": 34,
+        "unsupported_language": 14,
+        "invalid_rejected": 4
+      },
+      "limitations": [
+        "Newly supported: independent method type parameters in supported ordinary generic source classes and abstract generic source interfaces; interface generic-call registration, method substitution/erasure and exact callable JVM/Kotlin metadata are checked. Ordinary nongeneric class/object generic methods already existed and are regression evidence, not a new feature count.",
+        "Contextual declaration-variance callable signatures cover final/open/type-parameter arguments, nested final variant classifiers, invariant nesting, projections, input/output/function-type modes, arrays, class constructors and interface/class/object members. Private backing-field generic signatures are not parity claims; projected exposed JVM fields and variant classifier bounds/nested supertypes remain explicit boundaries.",
+        "Independent single reference upper bounds; method shadowing, recursive/dependent/multiple bounds, generic overrides/defaults/inline/suspend/varargs, generic interface bodies and lambdas in generic members remain explicit boundaries. Existing generic classifier nested/data restrictions remain.",
+        "Fixed Java caller compiled against official output is reused with -Xverify:all. All four official/candidate Kotlin provider/consumer pairs execute. AndroidBible files are relevance evidence only; this report claims no new unchanged app-file or full-app coverage."
+      ]
+    },
+    "jvm": {
+      "report": "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+      "counts": {
+        "pass": 12,
+        "invalid_kotlin": 18,
+        "unsupported_language": 8
+      },
+      "limitations": [
+        "Canonical Throws for supported top-level, class, object, companion, interface abstract/default/override methods and public primary constructors; source/import aliases and real accessible Throwable subclasses. Supported function/constructor defaults preserve Exceptions on synthetic helpers and overloads. Throws suspend functions and secondary-constructor annotations retain explicit boundaries. Inheriting a Throws-bearing interface default requires an explicit override; generated inherited wrappers otherwise lose the Exceptions contract, so class/object/subinterface inheritance is rejected explicitly.",
+        "Canonical Synchronized on supported concrete static/instance methods and supported accessor use sites uses JVM ACC_SYNCHRONIZED. Interface/abstract members and invalid placements reject; suspend and value-class members reject as invalid; inline and default-argument combinations retain explicit unsupported boundaries.",
+        "Java caller is compiled once against official output and reused unchanged with -Xverify:all for both providers. Kotlin consumers compile against each provider separately. Signatures are compared for selected public declarations; existing unrelated interface DefaultImpls compatibility helpers are outside exact class-shape equivalence.",
+        "No new count for existing Utf8Decoder object Throws support, full Android application compatibility, or performance claim."
+      ]
+    },
+    "inline": {
+      "report": "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json",
+      "counts": {
+        "baseline_unsupported": 2,
+        "pass": 9,
+        "unsupported_language": 5,
+        "not_run": 1
+      },
+      "limitations": [
+        "Unit-returning expressions, nullable Unit and arrays with nullable Unit components in templates, and direct reified Unit array allocation remain explicitly unsupported; Unit singleton references are supported.",
+        "Reified nested array marker encodings beyond a single substituted parameter and existing parameterized generic/function classifier boundaries remain unsupported; direct concrete array components are tested.",
+        "Inline exception tables, generated nested allocations, context-sensitive invokespecial and array-owner method references retain explicit rejection boundaries.",
+        "Root Object references and inherited field resolution are prerequisite correctness repairs, not counted features.",
+        "No full Android build or performance claim."
+      ]
+    },
+    "operators": {
+      "report": "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+      "counts": {
+        "pass": 16,
+        "unsupported_language": 7,
+        "invalid_kotlin": 11
+      },
+      "limitations": [
+        "Prefix updates of property/custom-index targets are explicitly rejected because the pinned compiler rereads the getter after setting, contrary to the specification expansion; see the recorded oracle discrepancy.",
+        "Nullable update receivers and safe-call update/compound targets remain unsupported.",
+        "Parameterized inc/dec declarations, including defaulted or vararg parameters, are explicitly unsupported; pinned Kotlin accepts some such declarations.",
+        "Index expressions keep their standalone inferred types; literal indices requiring contextual narrowing are rejected in agreement with pinned Kotlin.",
+        "The existing ordinary overload-resolution, generic, inline and primitive compound-operator boundaries apply.",
+        "Android and full-application compatibility remain unassessed."
+      ]
+    }
+  },
+  "application_assessment": {
+    "survey": "reports/correctness/2026-11-21T072519326520Z-next10-app-assessment.json",
+    "provider_counts": {
+      "baseline": {
+        "compiled": 22,
+        "rejected": 11
+      },
+      "candidate": {
+        "compiled": 23,
+        "rejected": 10
+      }
+    },
+    "changes": {
+      "unchanged": 32,
+      "newly_compiled": 1
+    },
+    "runtime_reports": [
+      "reports/correctness/2026-11-21T072519378637Z-nov21-query-tokenizer.json",
+      "reports/correctness/2026-11-21T072519479479Z-androidbible-oldversetextdecoder-junit.json",
+      "reports/correctness/2026-11-21T072653065294Z-androidbible-querytokenizer-junit.json"
+    ]
+  },
+  "evidence": [
+    "reports/correctness/2026-11-21T072529642447Z-nov21-inference.json",
+    "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+    "reports/correctness/2026-11-21T072545793334Z-nov21-jvm.json",
+    "reports/correctness/2026-11-21T072557661239Z-nov21-inline.json",
+    "reports/correctness/2026-11-21T072641197078Z-nov21-operators-v5.json",
+    "reports/correctness/2026-11-21T072519326520Z-next10-app-assessment.json",
+    "reports/correctness/2026-11-21T072519378637Z-nov21-query-tokenizer.json",
+    "reports/correctness/2026-11-21T072519479479Z-androidbible-oldversetextdecoder-junit.json",
+    "reports/correctness/2026-11-21T072653065294Z-androidbible-querytokenizer-junit.json",
+    "reports/correctness/2026-11-21-next-ten-final-v5/frozen-inputs.json",
+    "reports/correctness/2026-11-21-next-ten-final-v5/frozen-sources.zip",
+    "reports/correctness/2026-11-21-next-ten-final-v5/fmt.log",
+    "reports/correctness/2026-11-21-next-ten-final-v5/clippy.log",
+    "reports/correctness/2026-11-21-next-ten-final-v5/build.log",
+    "reports/correctness/2026-11-21-next-ten-final-v5/python.log",
+    "reports/correctness/2026-11-21-next-ten-final-v5/rust.log",
+    "reports/correctness/2026-11-21-next-ten-final-v5/focused-string-factories.log",
+    "reports/correctness/2026-11-21-next-ten-final-v5/independent-shadow-validation.json",
+    "reports/correctness/2026-11-21-next-ten-final-v1/reference-integrity.log"
+  ],
+  "earlier_validation": [
+    {
+      "snapshot": "reports/correctness/2026-11-21-next-ten-final-v1/frozen-inputs.json",
+      "finding": "An uncontracted outer call in a chain could inherit the inner predicate\u2019s contract through a shared source offset. V2 scopes each call registration and includes the InvalidChain regression.",
+      "status": "superseded; first full Rust run interrupted",
+      "survey": "reports/correctness/2026-11-21T054553486733Z-next10-app-assessment.json"
+    },
+    {
+      "baseline_decoder_report": "reports/correctness/2026-11-21T045417081451Z-androidbible-oldversetextdecoder-junit.json",
+      "finding": "Baseline with unchanged dependencies rejects OldVerseTextDecoder at reified array allocation before runtime."
+    },
+    {
+      "snapshot": "reports/correctness/2026-11-21-next-ten-final-v2/frozen-inputs.json",
+      "rust": "reports/correctness/2026-11-21-next-ten-final-v2/rust.log",
+      "finding": "The broad Rust suite exposed inherited interface default registration and expected-type handling for Java calls in String constructors. Immutable numeric updates retained their rejection with a broader diagnostic. Corrections and regression checks are included in the final run."
+    },
+    {
+      "snapshot": "reports/correctness/2026-11-21-next-ten-final-v3/frozen-inputs.json",
+      "finding": "The third candidate fixed the previously failing library behaviors, but the string-factory integration test still failed for a static call on an imported Java class. The final compiler restores static class lookup when no value receiver resolves. Further verification found that a custom negation could expose a Boolean contract on an Any result. The final checker only considers Boolean or nullable Boolean return types under supported condition shapes."
+    },
+    {
+      "snapshot": "reports/correctness/2026-11-21-next-ten-final-v4/frozen-inputs.json",
+      "finding": "The static import regression passed, but an implicit receiver property with the same name as an imported Java class could dispatch to the class. The final lookup preserves value precedence for contextual member and extension calls, with static class fallback for unresolved values."
+    }
+  ],
+  "limitations": [
+    "The survey compiles selected AndroidBible sources individually with Kotlin/JDK dependencies. OldVerseTextDecoder has a separate test with its original dependencies.",
+    "AudioHttpErrorBody remains blocked by trailing lambda argument mapping after omitted defaults.",
+    "The family reports describe restrictions on smart casts, assignable expressions, generated signatures, annotations and reified inline bytecode.",
+    "Boolean contract effects require a Boolean or nullable Boolean result. Direct predicates and negation require a nonnullable Boolean."
+  ],
+  "reproduction_commands": [
+    "source /workspace/korrust-setup/env.sh",
+    "cargo fmt --all -- --check",
+    "cargo build --release --locked --offline",
+    "cargo clippy --release --all-targets --locked --offline -- -D warnings",
+    "RUST_MIN_STACK=33554432 cargo test --release --locked --offline --no-fail-fast",
+    "KORRUST_COMPILER=target/nov21-final-v5/korrust python3 -m unittest discover -s tests -p \"test_*.py\"",
+    "python3 tools/check_next10_app.py --baseline target/next10-final-v3/korrust --candidate target/nov21-final-v5/korrust --timeout-seconds 600",
+    "python3 tools/reports.py"
+  ]
+}

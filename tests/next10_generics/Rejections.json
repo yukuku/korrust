@@ -81,7 +81,7 @@
     "id": "generic_member",
     "official": "accept",
     "source": "class Holder<out T> { fun <U> id(x: U): U = x }",
-    "code": "GENERIC_CLASS_MEMBER_TYPE_PARAMETERS_UNSUPPORTED"
+    "candidate": "accept"
   },
   {
     "id": "generic_data",
@@ -111,48 +111,48 @@
     "id": "wildcard_out_any",
     "official": "accept",
     "source": "interface Producer<out T>\nfun consume(value:Producer<Any>):Int=1",
-    "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED"
+    "candidate": "accept"
   },
   {
     "id": "wildcard_in_string",
     "official": "accept",
     "source": "interface Consumer<in T>\nfun consume(value:Consumer<String>):Int=1",
-    "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED"
+    "candidate": "accept"
   },
   {
     "id": "wildcard_constructor",
     "official": "accept",
     "source": "interface Producer<out T>\nclass Holder(val value:Producer<Any>)",
-    "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED"
+    "candidate": "accept"
   },
   {
     "id": "wildcard_method",
     "official": "accept",
     "source": "interface Producer<out T>\ninterface Api { fun consume(value:Producer<Any>):Int }",
-    "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED"
+    "candidate": "accept"
   },
   {
     "id": "wildcard_redundant_projection",
     "official": "accept",
     "source": "interface Producer<out T>\nfun consume(value:Producer<out String>):Int=1",
-    "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED"
+    "candidate": "accept"
   },
   {
     "id": "wildcard_return_projection",
     "official": "accept",
     "source": "interface Producer<out T>\nfun value(p:Producer<String>):Producer<out String> = p",
-    "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED"
+    "candidate": "accept"
   },
   {
     "id": "wildcard_property_projection",
     "official": "accept",
     "source": "interface Producer<out T>\ninterface Api { val value:Producer<out String> }",
-    "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED"
+    "candidate": "accept"
   },
   {
     "id": "wildcard_bound_projection",
     "official": "accept",
     "source": "interface Producer<out T>\nclass Api<T:Producer<out String>>(val value:T)",
-    "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED"
+    "code": "VARIANT_CLASSIFIER_SIGNATURE_UNSUPPORTED"
   }
 ]

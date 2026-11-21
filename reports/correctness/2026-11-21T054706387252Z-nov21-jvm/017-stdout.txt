@@ -1,0 +1,2590 @@
+Classfile /workspace/korrust/target/checks/2026-11-21T054706387252Z-nov21-jvm/candidate/novjvm/FunctionsKt.class
+  Last modified Nov 21, 2026; size 1706 bytes
+  SHA-256 checksum de7bafb5fbcf52a5b13b09b08545241df6f44e02270160be08c011d4d856b3b7
+  Compiled from "Functions.kt"
+public final class novjvm.FunctionsKt
+  minor version: 0
+  major version: 49
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // novjvm/FunctionsKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 10, attributes: 2
+Constant pool:
+   #1 = Utf8               novjvm/FunctionsKt
+   #2 = Class              #1             // novjvm/FunctionsKt
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               SourceFile
+   #6 = Utf8               Functions.kt
+   #7 = Utf8               declared
+   #8 = Utf8               ()I
+   #9 = Utf8               Code
+  #10 = Utf8               Exceptions
+  #11 = Utf8               java/io/IOException
+  #12 = Class              #11            // java/io/IOException
+  #13 = Utf8               novjvm/support/CustomFailure
+  #14 = Class              #13            // novjvm/support/CustomFailure
+  #15 = Utf8               java/lang/Throwable
+  #16 = Class              #15            // java/lang/Throwable
+  #17 = Utf8               RuntimeVisibleAnnotations
+  #18 = Utf8               RuntimeInvisibleAnnotations
+  #19 = Utf8               named
+  #20 = Utf8               spread
+  #21 = Utf8               empty
+  #22 = Utf8               novjvm.FunctionsKt
+  #23 = String             #22            // novjvm.FunctionsKt
+  #24 = Utf8               novjvm/support/Probe
+  #25 = Class              #24            // novjvm/support/Probe
+  #26 = Utf8               staticHeld
+  #27 = Utf8               (Ljava/lang/String;)Z
+  #28 = NameAndType        #26:#27        // staticHeld:(Ljava/lang/String;)Z
+  #29 = Methodref          #25.#28        // novjvm/support/Probe.staticHeld:(Ljava/lang/String;)Z
+  #30 = Utf8               facadeMonitor
+  #31 = Utf8               ()Z
+  #32 = Utf8               <init>
+  #33 = Utf8               ()V
+  #34 = NameAndType        #32:#33        // "<init>":()V
+  #35 = Methodref          #12.#34        // java/io/IOException."<init>":()V
+  #36 = Utf8               facadeFailure
+  #37 = Utf8               defaulted$default
+  #38 = Utf8               (IILjava/lang/Object;)I
+  #39 = NameAndType        #37:#38        // defaulted$default:(IILjava/lang/Object;)I
+  #40 = Methodref          #2.#39         // novjvm/FunctionsKt.defaulted$default:(IILjava/lang/Object;)I
+  #41 = Utf8               defaulted
+  #42 = Utf8               Lkotlin/jvm/JvmOverloads;
+  #43 = Utf8               StackMapTable
+  #44 = Utf8               (I)I
+  #45 = NameAndType        #41:#44        // defaulted:(I)I
+  #46 = Methodref          #2.#45         // novjvm/FunctionsKt.defaulted:(I)I
+  #47 = Utf8               sourceFailure
+  #48 = Utf8               novjvm/SourceFailure
+  #49 = Class              #48            // novjvm/SourceFailure
+  #50 = Utf8               Lkotlin/Metadata;
+  #51 = Utf8               mv
+  #52 = Integer            2
+  #53 = Integer            3
+  #54 = Integer            0
+  #55 = Utf8               k
+  #56 = Utf8               xi
+  #57 = Integer            48
+  #58 = Utf8               d1
+  #59 = Utf8               \u0000\b\n\u0002\b\u0012\n\u0002\b\u0001*\f\b\u0006\u0010\u0000\"\u00020\u00012\u00020\u0001\u001a\u000fH\u0007\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0002\u0010\u0004\u001a\u000fH\u0007\u0010\u0005\u001a\u00020\u0003¢\u0006\u0004\b\u0005\u0010\u0004\u001a\u000fH\u0007\u0010\u0006\u001a\u00020\u0003¢\u0006\u0004\b\u0006\u0010\u0004\u001a\u000fH\u0007\u0010\u0007\u001a\u00020\u0003¢\u0006\u0004\b\u0007\u0010\u0004\u001a\u000fH\u0006\u0010\b\u001a\u00020\t¢\u0006\u0004\b\b\u0010\n\u001a\u000fH\u0007\u0010\u000b\u001a\u00020\f¢\u0006\u0004\b\u000b\u0010\r\u001a\u0019H\u0007\u0010\u000e\u001a\u00020\u00032\b\u0010\u000f\u001a\u00020\u0003\b\u0002¢\u0006\u0004\b\u000e\u0010\u0010\u001a\u000fH\u0007\u0010\u0011\u001a\u00020\u0003¢\u0006\u0004\b\u0011\u0010\u0004¨\u0006\u0012
+  #60 = Utf8               d2
+  #61 = Utf8               FailureAlias
+  #62 = Utf8               kotlin/Int
+  #63 = Utf8               kotlin/Boolean
+  #64 = Utf8               kotlin/Unit
+  #65 = Utf8               value
+  #66 = Utf8               nov21_jvm
+{
+  public static final int declared() throws java.io.IOException, novjvm.support.CustomFailure, java.lang.Throwable;
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: bipush        7
+         2: ireturn
+         3: aconst_null
+         4: athrow
+    Exceptions:
+      throws java.io.IOException, novjvm.support.CustomFailure, java.lang.Throwable
+
+  public static final int named() throws java.io.IOException, novjvm.support.CustomFailure;
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: bipush        8
+         2: ireturn
+         3: aconst_null
+         4: athrow
+    Exceptions:
+      throws java.io.IOException, novjvm.support.CustomFailure
+
+  public static final int spread() throws java.io.IOException;
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: bipush        9
+         2: ireturn
+         3: aconst_null
+         4: athrow
+    Exceptions:
+      throws java.io.IOException
+
+  public static final int empty();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: bipush        10
+         2: ireturn
+         3: aconst_null
+         4: athrow
+
+  public static final synchronized boolean facadeMonitor();
+    descriptor: ()Z
+    flags: (0x0039) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNCHRONIZED
+    Code:
+      stack=3, locals=0, args_size=0
+         0: ldc_w         #23                 // String novjvm.FunctionsKt
+         3: invokestatic  #29                 // Method novjvm/support/Probe.staticHeld:(Ljava/lang/String;)Z
+         6: ireturn
+         7: aconst_null
+         8: athrow
+
+  public static final synchronized void facadeFailure() throws java.io.IOException;
+    descriptor: ()V
+    flags: (0x0039) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNCHRONIZED
+    Code:
+      stack=4, locals=0, args_size=0
+         0: new           #12                 // class java/io/IOException
+         3: dup
+         4: invokespecial #35                 // Method java/io/IOException."<init>":()V
+         7: athrow
+         8: aconst_null
+         9: athrow
+    Exceptions:
+      throws java.io.IOException
+
+  public static final int defaulted() throws java.io.IOException;
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: iconst_0
+         1: iconst_1
+         2: aconst_null
+         3: invokestatic  #40                 // Method defaulted$default:(IILjava/lang/Object;)I
+         6: ireturn
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = []
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ int, int, null ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = [ int ]
+    Exceptions:
+      throws java.io.IOException
+    RuntimeInvisibleAnnotations:
+      0: #42()
+        kotlin.jvm.JvmOverloads
+
+  public static final int defaulted(int) throws java.io.IOException;
+    descriptor: (I)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=3, args_size=1
+         0: iload         0
+         2: ireturn
+         3: aconst_null
+         4: athrow
+    Exceptions:
+      throws java.io.IOException
+    RuntimeInvisibleAnnotations:
+      0: #42()
+        kotlin.jvm.JvmOverloads
+
+  public static int defaulted$default(int, int, java.lang.Object) throws java.io.IOException;
+    descriptor: (IILjava/lang/Object;)I
+    flags: (0x1009) ACC_PUBLIC, ACC_STATIC, ACC_SYNTHETIC
+    Code:
+      stack=2, locals=3, args_size=3
+         0: iload         1
+         2: iconst_1
+         3: iand
+         4: ifeq          11
+         7: bipush        18
+         9: istore        0
+        11: iload         0
+        13: invokestatic  #46                 // Method defaulted:(I)I
+        16: ireturn
+        17: nop
+        18: athrow
+      StackMapTable: number_of_entries = 10
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ int, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ int, int, class java/lang/Object ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ int, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ int, int, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ int, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ int, int, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ int, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ int, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ int, int, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ int, int, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+    Exceptions:
+      throws java.io.IOException
+
+  public static final int sourceFailure() throws novjvm.SourceFailure;
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: bipush        23
+         2: ireturn
+         3: aconst_null
+         4: athrow
+    Exceptions:
+      throws novjvm.SourceFailure
+}
+SourceFile: "Functions.kt"
+RuntimeVisibleAnnotations:
+  0: #50(#51=[I#52,I#53,I#54],#55=I#52,#56=I#57,#58=[s#59],#60=[s#61,s#13,s#7,s#62,s#8,s#19,s#20,s#21,s#30,s#63,s#31,s#36,s#64,s#33,s#41,s#65,s#44,s#47,s#66])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u0012\n\u0002\b\u0001*\f\b\u0006\u0010\u0000\"\u00020\u00012\u00020\u0001\u001a\u000fH\u0007\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0002\u0010\u0004\u001a\u000fH\u0007\u0010\u0005\u001a\u00020\u0003¢\u0006\u0004\b\u0005\u0010\u0004\u001a\u000fH\u0007\u0010\u0006\u001a\u00020\u0003¢\u0006\u0004\b\u0006\u0010\u0004\u001a\u000fH\u0007\u0010\u0007\u001a\u00020\u0003¢\u0006\u0004\b\u0007\u0010\u0004\u001a\u000fH\u0006\u0010\b\u001a\u00020\t¢\u0006\u0004\b\b\u0010\n\u001a\u000fH\u0007\u0010\u000b\u001a\u00020\f¢\u0006\u0004\b\u000b\u0010\r\u001a\u0019H\u0007\u0010\u000e\u001a\u00020\u00032\b\u0010\u000f\u001a\u00020\u0003\b\u0002¢\u0006\u0004\b\u000e\u0010\u0010\u001a\u000fH\u0007\u0010\u0011\u001a\u00020\u0003¢\u0006\u0004\b\u0011\u0010\u0004¨\u0006\u0012"]
+      d2=["FailureAlias","novjvm/support/CustomFailure","declared","kotlin/Int","()I","named","spread","empty","facadeMonitor","kotlin/Boolean","()Z","facadeFailure","kotlin/Unit","()V","defaulted","value","(I)I","sourceFailure","nov21_jvm"]
+    )
+Classfile /workspace/korrust/target/checks/2026-11-21T054706387252Z-nov21-jvm/candidate/novjvm/Worker.class
+  Last modified Nov 21, 2026; size 1139 bytes
+  SHA-256 checksum 5ac477ae9794dc4f01719c653aeff9544c6ac7d3fef797691378866a364d6d4c
+  Compiled from "Functions.kt"
+public final class novjvm.Worker
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // novjvm/Worker
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 4, attributes: 2
+Constant pool:
+   #1 = Utf8               novjvm/Worker
+   #2 = Class              #1             // novjvm/Worker
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               <init>
+   #6 = Utf8               ()V
+   #7 = NameAndType        #5:#6          // "<init>":()V
+   #8 = Methodref          #4.#7          // java/lang/Object."<init>":()V
+   #9 = Utf8               Code
+  #10 = Utf8               java/lang/Throwable
+  #11 = Class              #10            // java/lang/Throwable
+  #12 = Utf8               StackMapTable
+  #13 = Utf8               Exceptions
+  #14 = Utf8               novjvm/support/CustomFailure
+  #15 = Class              #14            // novjvm/support/CustomFailure
+  #16 = Utf8               RuntimeVisibleAnnotations
+  #17 = Utf8               RuntimeInvisibleAnnotations
+  #18 = Utf8               java/lang/Thread
+  #19 = Class              #18            // java/lang/Thread
+  #20 = Utf8               holdsLock
+  #21 = Utf8               (Ljava/lang/Object;)Z
+  #22 = NameAndType        #20:#21        // holdsLock:(Ljava/lang/Object;)Z
+  #23 = Methodref          #19.#22        // java/lang/Thread.holdsLock:(Ljava/lang/Object;)Z
+  #24 = Utf8               getHeld
+  #25 = Utf8               ()Z
+  #26 = Utf8               enter
+  #27 = Utf8               java/io/IOException
+  #28 = Class              #27            // java/io/IOException
+  #29 = Methodref          #28.#7         // java/io/IOException."<init>":()V
+  #30 = Utf8               fail
+  #31 = Utf8               SourceFile
+  #32 = Utf8               Functions.kt
+  #33 = Utf8               Lkotlin/Metadata;
+  #34 = Utf8               mv
+  #35 = Integer            2
+  #36 = Integer            3
+  #37 = Integer            0
+  #38 = Utf8               k
+  #39 = Integer            1
+  #40 = Utf8               xi
+  #41 = Integer            48
+  #42 = Utf8               d1
+  #43 = Utf8               \u0000\b\n\u0002\b\u000b\n\u0002\b\u0001\b\u0006\u0018\u00002\u00020\u0001B\t\b\u0007¢\u0006\u0004\b\u0002\u0010\u0003J\u000fH\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0004\b\u0004\u0010\u0006J\u000fH\u0007\u0010\u0007\u001a\u00020\b¢\u0006\u0004\b\u0007\u0010\u0003R\u0014X\u0086\u0004\u0010\t\u001a\u00020\u00058G¢\u0006\u0006\u001a\u0004\b\n\u0010\u0006¨\u0006\u000b
+  #44 = Utf8               d2
+  #45 = Utf8               kotlin/Any
+  #46 = Utf8               kotlin/Boolean
+  #47 = Utf8               kotlin/Unit
+  #48 = Utf8               held
+  #49 = Utf8               nov21_jvm
+  #50 = Class              #27            // java/io/IOException
+{
+  public novjvm.Worker() throws novjvm.support.CustomFailure;
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #8                  // Method java/lang/Object."<init>":()V
+         4: return
+         5: nop
+         6: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Worker ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Worker ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Worker ]
+          stack = [ class java/lang/Throwable ]
+    Exceptions:
+      throws novjvm.support.CustomFailure
+
+  public final synchronized boolean getHeld() throws java.io.IOException;
+    descriptor: ()Z
+    flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SYNCHRONIZED
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload         0
+         2: invokestatic  #23                 // Method java/lang/Thread.holdsLock:(Ljava/lang/Object;)Z
+         5: ireturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Worker ]
+          stack = [ class novjvm/Worker ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Worker ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Worker ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Worker ]
+          stack = [ class java/lang/Throwable ]
+    Exceptions:
+      throws java.io.IOException
+
+  public final synchronized boolean enter();
+    descriptor: ()Z
+    flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SYNCHRONIZED
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload         0
+         2: invokestatic  #23                 // Method java/lang/Thread.holdsLock:(Ljava/lang/Object;)Z
+         5: ireturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Worker ]
+          stack = [ class novjvm/Worker ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Worker ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Worker ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Worker ]
+          stack = [ class java/lang/Throwable ]
+
+  public final synchronized void fail() throws java.io.IOException;
+    descriptor: ()V
+    flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SYNCHRONIZED
+    Code:
+      stack=4, locals=1, args_size=1
+         0: new           #28                 // class java/io/IOException
+         3: dup
+         4: invokespecial #29                 // Method java/io/IOException."<init>":()V
+         7: athrow
+         8: nop
+         9: athrow
+      StackMapTable: number_of_entries = 5
+        frame_type = 255 /* full_frame */
+          offset_delta = 3
+          locals = [ class novjvm/Worker ]
+          stack = [ uninitialized 0 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Worker ]
+          stack = [ uninitialized 0, uninitialized 0 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Worker ]
+          stack = [ class java/io/IOException ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Worker ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Worker ]
+          stack = [ class java/lang/Throwable ]
+    Exceptions:
+      throws java.io.IOException
+}
+SourceFile: "Functions.kt"
+RuntimeVisibleAnnotations:
+  0: #33(#34=[I#35,I#36,I#37],#38=I#39,#40=I#41,#42=[s#43],#44=[s#1,s#45,s#5,s#6,s#26,s#46,s#25,s#30,s#47,s#48,s#24,s#49])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u000b\n\u0002\b\u0001\b\u0006\u0018\u00002\u00020\u0001B\t\b\u0007¢\u0006\u0004\b\u0002\u0010\u0003J\u000fH\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0004\b\u0004\u0010\u0006J\u000fH\u0007\u0010\u0007\u001a\u00020\b¢\u0006\u0004\b\u0007\u0010\u0003R\u0014X\u0086\u0004\u0010\t\u001a\u00020\u00058G¢\u0006\u0006\u001a\u0004\b\n\u0010\u0006¨\u0006\u000b"]
+      d2=["novjvm/Worker","kotlin/Any","<init>","()V","enter","kotlin/Boolean","()Z","fail","kotlin/Unit","held","getHeld","nov21_jvm"]
+    )
+Classfile /workspace/korrust/target/checks/2026-11-21T054706387252Z-nov21-jvm/candidate/novjvm/Constructed.class
+  Last modified Nov 21, 2026; size 1339 bytes
+  SHA-256 checksum 9dd4ff06b15196a5294a73e314068b5e7c701830855fcf6b26ecfe039645be23
+  Compiled from "Functions.kt"
+public final class novjvm.Constructed
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // novjvm/Constructed
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 1, methods: 4, attributes: 2
+Constant pool:
+   #1 = Utf8               novjvm/Constructed
+   #2 = Class              #1             // novjvm/Constructed
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               value
+   #6 = Utf8               I
+   #7 = Utf8               <init>
+   #8 = Utf8               ()V
+   #9 = NameAndType        #7:#8          // "<init>":()V
+  #10 = Methodref          #4.#9          // java/lang/Object."<init>":()V
+  #11 = NameAndType        #5:#6          // value:I
+  #12 = Fieldref           #2.#11         // novjvm/Constructed.value:I
+  #13 = Utf8               (I)V
+  #14 = Utf8               Code
+  #15 = Utf8               java/lang/Throwable
+  #16 = Class              #15            // java/lang/Throwable
+  #17 = Utf8               StackMapTable
+  #18 = Utf8               Exceptions
+  #19 = Utf8               java/io/IOException
+  #20 = Class              #19            // java/io/IOException
+  #21 = Utf8               Lkotlin/jvm/JvmOverloads;
+  #22 = Utf8               RuntimeVisibleAnnotations
+  #23 = Utf8               RuntimeInvisibleAnnotations
+  #24 = NameAndType        #7:#13         // "<init>":(I)V
+  #25 = Methodref          #2.#24         // novjvm/Constructed."<init>":(I)V
+  #26 = Utf8               (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+  #27 = Utf8               kotlin/jvm/internal/DefaultConstructorMarker
+  #28 = Class              #27            // kotlin/jvm/internal/DefaultConstructorMarker
+  #29 = Integer            1
+  #30 = NameAndType        #7:#26         // "<init>":(IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+  #31 = Methodref          #2.#30         // novjvm/Constructed."<init>":(IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+  #32 = Utf8               getValue
+  #33 = Utf8               ()I
+  #34 = Utf8               SourceFile
+  #35 = Utf8               Functions.kt
+  #36 = Utf8               Lkotlin/Metadata;
+  #37 = Utf8               mv
+  #38 = Integer            2
+  #39 = Integer            3
+  #40 = Integer            0
+  #41 = Utf8               k
+  #42 = Utf8               xi
+  #43 = Integer            48
+  #44 = Utf8               d1
+  #45 = Utf8               \u0000\b\n\u0002\b\t\n\u0002\b\u0001\b\u0006\u0018\u00002\u00020\u0001B\u0013\b\u0007\u0012\b\u0010\u0002\u001a\u00020\u0003\b\u0002¢\u0006\u0004\b\u0004\u0010\u0005R\u0018X\u0086\u0004\u0010\u0002\u001a\u00020\u0003¢\u0006\f\n\u0004\b\u0002\u0010\u0006\u001a\u0004\b\u0007\u0010\b¨\u0006\t
+  #46 = Utf8               d2
+  #47 = Utf8               kotlin/Any
+  #48 = Utf8               kotlin/Int
+  #49 = Utf8               nov21_jvm
+{
+  private final int value;
+    descriptor: I
+    flags: (0x0012) ACC_PRIVATE, ACC_FINAL
+
+  public novjvm.Constructed(int) throws java.io.IOException;
+    descriptor: (I)V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=6, locals=4, args_size=2
+         0: aload_0
+         1: invokespecial #10                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: iload         1
+         7: putfield      #12                 // Field value:I
+        10: return
+        11: nop
+        12: athrow
+      StackMapTable: number_of_entries = 7
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this, int ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Constructed, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Constructed, int ]
+          stack = [ class novjvm/Constructed ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class novjvm/Constructed, int ]
+          stack = [ class novjvm/Constructed, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Constructed, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Constructed, int ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Constructed, int ]
+          stack = [ class java/lang/Throwable ]
+    Exceptions:
+      throws java.io.IOException
+    RuntimeInvisibleAnnotations:
+      0: #21()
+        kotlin.jvm.JvmOverloads
+
+  public novjvm.Constructed(int, int, kotlin.jvm.internal.DefaultConstructorMarker) throws java.io.IOException;
+    descriptor: (IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+    flags: (0x1001) ACC_PUBLIC, ACC_SYNTHETIC
+    Code:
+      stack=2, locals=4, args_size=4
+         0: iload         2
+         2: iconst_1
+         3: iand
+         4: ifeq          11
+         7: bipush        22
+         9: istore        1
+        11: aload_0
+        12: iload         1
+        14: invokespecial #25                 // Method "<init>":(I)V
+        17: return
+        18: nop
+        19: athrow
+      StackMapTable: number_of_entries = 11
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this, int, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ this, int, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ this, int, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this, int, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this, int, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this, int, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ this, int, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this, int, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ this, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Constructed, int, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Constructed, int, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Constructed, int, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ class java/lang/Throwable ]
+    Exceptions:
+      throws java.io.IOException
+
+  public novjvm.Constructed() throws java.io.IOException;
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=4, locals=1, args_size=1
+         0: aload_0
+         1: iconst_0
+         2: ldc_w         #29                 // int 1
+         5: aconst_null
+         6: invokespecial #31                 // Method "<init>":(IILkotlin/jvm/internal/DefaultConstructorMarker;)V
+         9: return
+      StackMapTable: number_of_entries = 5
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ this ]
+          stack = [ this, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this ]
+          stack = [ this, int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ this ]
+          stack = [ this, int, int, null ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Constructed ]
+          stack = []
+    Exceptions:
+      throws java.io.IOException
+    RuntimeInvisibleAnnotations:
+      0: #21()
+        kotlin.jvm.JvmOverloads
+
+  public final int getValue();
+    descriptor: ()I
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #12                 // Field value:I
+         5: ireturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Constructed ]
+          stack = [ class novjvm/Constructed ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Constructed ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Constructed ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Constructed ]
+          stack = [ class java/lang/Throwable ]
+}
+SourceFile: "Functions.kt"
+RuntimeVisibleAnnotations:
+  0: #36(#37=[I#38,I#39,I#40],#41=I#29,#42=I#43,#44=[s#45],#46=[s#1,s#47,s#5,s#48,s#7,s#13,s#6,s#32,s#33,s#49])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\b\n\u0002\b\t\n\u0002\b\u0001\b\u0006\u0018\u00002\u00020\u0001B\u0013\b\u0007\u0012\b\u0010\u0002\u001a\u00020\u0003\b\u0002¢\u0006\u0004\b\u0004\u0010\u0005R\u0018X\u0086\u0004\u0010\u0002\u001a\u00020\u0003¢\u0006\f\n\u0004\b\u0002\u0010\u0006\u001a\u0004\b\u0007\u0010\b¨\u0006\t"]
+      d2=["novjvm/Constructed","kotlin/Any","value","kotlin/Int","<init>","(I)V","I","getValue","()I","nov21_jvm"]
+    )
+Classfile /workspace/korrust/target/checks/2026-11-21T054706387252Z-nov21-jvm/candidate/novjvm/Parent.class
+  Last modified Nov 21, 2026; size 697 bytes
+  SHA-256 checksum 7c9af153e8dc601dce3d9bac4b8fad720bdf80ee99995316a983b7eb56cc78ac
+  Compiled from "Functions.kt"
+public class novjvm.Parent
+  minor version: 0
+  major version: 52
+  flags: (0x0021) ACC_PUBLIC, ACC_SUPER
+  this_class: #2                          // novjvm/Parent
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 2, attributes: 2
+Constant pool:
+   #1 = Utf8               novjvm/Parent
+   #2 = Class              #1             // novjvm/Parent
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               <init>
+   #6 = Utf8               ()V
+   #7 = NameAndType        #5:#6          // "<init>":()V
+   #8 = Methodref          #4.#7          // java/lang/Object."<init>":()V
+   #9 = Utf8               Code
+  #10 = Utf8               java/lang/Throwable
+  #11 = Class              #10            // java/lang/Throwable
+  #12 = Utf8               StackMapTable
+  #13 = Utf8               inherited
+  #14 = Utf8               ()I
+  #15 = Utf8               Exceptions
+  #16 = Utf8               java/io/IOException
+  #17 = Class              #16            // java/io/IOException
+  #18 = Utf8               RuntimeVisibleAnnotations
+  #19 = Utf8               RuntimeInvisibleAnnotations
+  #20 = Utf8               SourceFile
+  #21 = Utf8               Functions.kt
+  #22 = Utf8               Lkotlin/Metadata;
+  #23 = Utf8               mv
+  #24 = Integer            2
+  #25 = Integer            3
+  #26 = Integer            0
+  #27 = Utf8               k
+  #28 = Integer            1
+  #29 = Utf8               xi
+  #30 = Integer            48
+  #31 = Utf8               d1
+  #32 = Utf8               \u0000\b\n\u0002\b\u0007\n\u0002\b\u0001\b\u0016\u0018\u00002\u00020\u0001B\t\b\u0006¢\u0006\u0004\b\u0002\u0010\u0003J\u000fH\u0017\u0010\u0004\u001a\u00020\u0005¢\u0006\u0004\b\u0004\u0010\u0006¨\u0006\u0007
+  #33 = Utf8               d2
+  #34 = Utf8               kotlin/Any
+  #35 = Utf8               kotlin/Int
+  #36 = Utf8               nov21_jvm
+{
+  public novjvm.Parent();
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #8                  // Method java/lang/Object."<init>":()V
+         4: return
+         5: nop
+         6: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Parent ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Parent ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Parent ]
+          stack = [ class java/lang/Throwable ]
+
+  public int inherited() throws java.io.IOException;
+    descriptor: ()I
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=1, args_size=1
+         0: bipush        11
+         2: ireturn
+         3: nop
+         4: athrow
+      StackMapTable: number_of_entries = 3
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Parent ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Parent ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Parent ]
+          stack = [ class java/lang/Throwable ]
+    Exceptions:
+      throws java.io.IOException
+}
+SourceFile: "Functions.kt"
+RuntimeVisibleAnnotations:
+  0: #22(#23=[I#24,I#25,I#26],#27=I#28,#29=I#30,#31=[s#32],#33=[s#1,s#34,s#5,s#6,s#13,s#35,s#14,s#36])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u0007\n\u0002\b\u0001\b\u0016\u0018\u00002\u00020\u0001B\t\b\u0006¢\u0006\u0004\b\u0002\u0010\u0003J\u000fH\u0017\u0010\u0004\u001a\u00020\u0005¢\u0006\u0004\b\u0004\u0010\u0006¨\u0006\u0007"]
+      d2=["novjvm/Parent","kotlin/Any","<init>","()V","inherited","kotlin/Int","()I","nov21_jvm"]
+    )
+Classfile /workspace/korrust/target/checks/2026-11-21T054706387252Z-nov21-jvm/candidate/novjvm/Child.class
+  Last modified Nov 21, 2026; size 602 bytes
+  SHA-256 checksum 1c7f994d3609b14b544f9cda28007867a7ab02554c7b79b154df91ac3b3e62fc
+  Compiled from "Functions.kt"
+public final class novjvm.Child extends novjvm.Parent
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // novjvm/Child
+  super_class: #4                         // novjvm/Parent
+  interfaces: 0, fields: 0, methods: 2, attributes: 2
+Constant pool:
+   #1 = Utf8               novjvm/Child
+   #2 = Class              #1             // novjvm/Child
+   #3 = Utf8               novjvm/Parent
+   #4 = Class              #3             // novjvm/Parent
+   #5 = Utf8               <init>
+   #6 = Utf8               ()V
+   #7 = NameAndType        #5:#6          // "<init>":()V
+   #8 = Methodref          #4.#7          // novjvm/Parent."<init>":()V
+   #9 = Utf8               Code
+  #10 = Utf8               java/lang/Throwable
+  #11 = Class              #10            // java/lang/Throwable
+  #12 = Utf8               StackMapTable
+  #13 = Utf8               inherited
+  #14 = Utf8               ()I
+  #15 = Utf8               SourceFile
+  #16 = Utf8               Functions.kt
+  #17 = Utf8               Lkotlin/Metadata;
+  #18 = Utf8               mv
+  #19 = Integer            2
+  #20 = Integer            3
+  #21 = Integer            0
+  #22 = Utf8               k
+  #23 = Integer            1
+  #24 = Utf8               xi
+  #25 = Integer            48
+  #26 = Utf8               d1
+  #27 = Utf8               \u0000\b\n\u0002\b\u0007\n\u0002\b\u0001\b\u0006\u0018\u00002\u00020\u0001B\t\b\u0006¢\u0006\u0004\b\u0002\u0010\u0003J\u000fH\u0016\u0010\u0004\u001a\u00020\u0005¢\u0006\u0004\b\u0004\u0010\u0006¨\u0006\u0007
+  #28 = Utf8               d2
+  #29 = Utf8               kotlin/Int
+  #30 = Utf8               nov21_jvm
+  #31 = Utf8               RuntimeVisibleAnnotations
+{
+  public novjvm.Child();
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #8                  // Method novjvm/Parent."<init>":()V
+         4: return
+         5: nop
+         6: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Child ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Child ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Child ]
+          stack = [ class java/lang/Throwable ]
+
+  public int inherited();
+    descriptor: ()I
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=1, args_size=1
+         0: bipush        12
+         2: ireturn
+         3: nop
+         4: athrow
+      StackMapTable: number_of_entries = 3
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Child ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Child ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Child ]
+          stack = [ class java/lang/Throwable ]
+}
+SourceFile: "Functions.kt"
+RuntimeVisibleAnnotations:
+  0: #17(#18=[I#19,I#20,I#21],#22=I#23,#24=I#25,#26=[s#27],#28=[s#1,s#3,s#5,s#6,s#13,s#29,s#14,s#30])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u0007\n\u0002\b\u0001\b\u0006\u0018\u00002\u00020\u0001B\t\b\u0006¢\u0006\u0004\b\u0002\u0010\u0003J\u000fH\u0016\u0010\u0004\u001a\u00020\u0005¢\u0006\u0004\b\u0004\u0010\u0006¨\u0006\u0007"]
+      d2=["novjvm/Child","novjvm/Parent","<init>","()V","inherited","kotlin/Int","()I","nov21_jvm"]
+    )
+Classfile /workspace/korrust/target/checks/2026-11-21T054706387252Z-nov21-jvm/candidate/novjvm/Wider.class
+  Last modified Nov 21, 2026; size 680 bytes
+  SHA-256 checksum 8e0aa1433a0cd5c6c9570e1da158ce19e2680987127e042e0d7b352528cb01a8
+  Compiled from "Functions.kt"
+public final class novjvm.Wider extends novjvm.Parent
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // novjvm/Wider
+  super_class: #4                         // novjvm/Parent
+  interfaces: 0, fields: 0, methods: 2, attributes: 2
+Constant pool:
+   #1 = Utf8               novjvm/Wider
+   #2 = Class              #1             // novjvm/Wider
+   #3 = Utf8               novjvm/Parent
+   #4 = Class              #3             // novjvm/Parent
+   #5 = Utf8               <init>
+   #6 = Utf8               ()V
+   #7 = NameAndType        #5:#6          // "<init>":()V
+   #8 = Methodref          #4.#7          // novjvm/Parent."<init>":()V
+   #9 = Utf8               Code
+  #10 = Utf8               java/lang/Throwable
+  #11 = Class              #10            // java/lang/Throwable
+  #12 = Utf8               StackMapTable
+  #13 = Utf8               inherited
+  #14 = Utf8               ()I
+  #15 = Utf8               Exceptions
+  #16 = Utf8               java/lang/Exception
+  #17 = Class              #16            // java/lang/Exception
+  #18 = Utf8               RuntimeVisibleAnnotations
+  #19 = Utf8               RuntimeInvisibleAnnotations
+  #20 = Utf8               SourceFile
+  #21 = Utf8               Functions.kt
+  #22 = Utf8               Lkotlin/Metadata;
+  #23 = Utf8               mv
+  #24 = Integer            2
+  #25 = Integer            3
+  #26 = Integer            0
+  #27 = Utf8               k
+  #28 = Integer            1
+  #29 = Utf8               xi
+  #30 = Integer            48
+  #31 = Utf8               d1
+  #32 = Utf8               \u0000\b\n\u0002\b\u0007\n\u0002\b\u0001\b\u0006\u0018\u00002\u00020\u0001B\t\b\u0006¢\u0006\u0004\b\u0002\u0010\u0003J\u000fH\u0017\u0010\u0004\u001a\u00020\u0005¢\u0006\u0004\b\u0004\u0010\u0006¨\u0006\u0007
+  #33 = Utf8               d2
+  #34 = Utf8               kotlin/Int
+  #35 = Utf8               nov21_jvm
+{
+  public novjvm.Wider();
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #8                  // Method novjvm/Parent."<init>":()V
+         4: return
+         5: nop
+         6: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Wider ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Wider ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Wider ]
+          stack = [ class java/lang/Throwable ]
+
+  public int inherited() throws java.lang.Exception;
+    descriptor: ()I
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=1, args_size=1
+         0: bipush        13
+         2: ireturn
+         3: nop
+         4: athrow
+      StackMapTable: number_of_entries = 3
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Wider ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Wider ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Wider ]
+          stack = [ class java/lang/Throwable ]
+    Exceptions:
+      throws java.lang.Exception
+}
+SourceFile: "Functions.kt"
+RuntimeVisibleAnnotations:
+  0: #22(#23=[I#24,I#25,I#26],#27=I#28,#29=I#30,#31=[s#32],#33=[s#1,s#3,s#5,s#6,s#13,s#34,s#14,s#35])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u0007\n\u0002\b\u0001\b\u0006\u0018\u00002\u00020\u0001B\t\b\u0006¢\u0006\u0004\b\u0002\u0010\u0003J\u000fH\u0017\u0010\u0004\u001a\u00020\u0005¢\u0006\u0004\b\u0004\u0010\u0006¨\u0006\u0007"]
+      d2=["novjvm/Wider","novjvm/Parent","<init>","()V","inherited","kotlin/Int","()I","nov21_jvm"]
+    )
+Classfile /workspace/korrust/target/checks/2026-11-21T054706387252Z-nov21-jvm/candidate/novjvm/Contract.class
+  Last modified Nov 21, 2026; size 735 bytes
+  SHA-256 checksum ce4e3007882c9ba903617716b31675b1c949b2de6686d228e895e4aacca46bf4
+  Compiled from "Functions.kt"
+public interface novjvm.Contract
+  minor version: 0
+  major version: 52
+  flags: (0x0601) ACC_PUBLIC, ACC_INTERFACE, ACC_ABSTRACT
+  this_class: #2                          // novjvm/Contract
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 3, attributes: 3
+Constant pool:
+   #1 = Utf8               novjvm/Contract
+   #2 = Class              #1             // novjvm/Contract
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               run
+   #6 = Utf8               ()I
+   #7 = Utf8               Exceptions
+   #8 = Utf8               java/lang/Throwable
+   #9 = Class              #8             // java/lang/Throwable
+  #10 = Utf8               RuntimeVisibleAnnotations
+  #11 = Utf8               RuntimeInvisibleAnnotations
+  #12 = Utf8               novjvm/Contract$DefaultImpls
+  #13 = Class              #12            // novjvm/Contract$DefaultImpls
+  #14 = Utf8               ready
+  #15 = Utf8               (Lnovjvm/Contract;)I
+  #16 = NameAndType        #14:#15        // ready:(Lnovjvm/Contract;)I
+  #17 = Methodref          #13.#16        // novjvm/Contract$DefaultImpls.ready:(Lnovjvm/Contract;)I
+  #18 = Utf8               Code
+  #19 = Utf8               novjvm/support/CustomFailure
+  #20 = Class              #19            // novjvm/support/CustomFailure
+  #21 = NameAndType        #14:#6         // ready:()I
+  #22 = InterfaceMethodref #2.#21         // novjvm/Contract.ready:()I
+  #23 = Utf8               access$ready$jd
+  #24 = Utf8               InnerClasses
+  #25 = Utf8               DefaultImpls
+  #26 = Utf8               SourceFile
+  #27 = Utf8               Functions.kt
+  #28 = Utf8               Lkotlin/Metadata;
+  #29 = Utf8               mv
+  #30 = Integer            2
+  #31 = Integer            3
+  #32 = Integer            0
+  #33 = Utf8               k
+  #34 = Integer            1
+  #35 = Utf8               xi
+  #36 = Integer            48
+  #37 = Utf8               d1
+  #38 = Utf8               \u0000\b\n\u0002\b\u0006\n\u0002\b\u0001\bf\u0018\u00002\u00020\u0001J\u000fH\'\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0002\u0010\u0004J\u000fH\u0017\u0010\u0005\u001a\u00020\u0003¢\u0006\u0004\b\u0005\u0010\u0004À\u0006\u0003¨\u0006\u0006
+  #39 = Utf8               d2
+  #40 = Utf8               kotlin/Any
+  #41 = Utf8               kotlin/Int
+  #42 = Utf8               nov21_jvm
+{
+  public abstract int run() throws java.lang.Throwable;
+    descriptor: ()I
+    flags: (0x0401) ACC_PUBLIC, ACC_ABSTRACT
+    Exceptions:
+      throws java.lang.Throwable
+
+  public default int ready() throws novjvm.support.CustomFailure;
+    descriptor: ()I
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: invokestatic  #17                 // Method novjvm/Contract$DefaultImpls.ready:(Lnovjvm/Contract;)I
+         4: ireturn
+    Exceptions:
+      throws novjvm.support.CustomFailure
+
+  public static int access$ready$jd(novjvm.Contract);
+    descriptor: (Lnovjvm/Contract;)I
+    flags: (0x1009) ACC_PUBLIC, ACC_STATIC, ACC_SYNTHETIC
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #22                 // InterfaceMethod ready:()I
+         4: ireturn
+}
+InnerClasses:
+  public static final #25= #13 of #2;     // DefaultImpls=class novjvm/Contract$DefaultImpls of class novjvm/Contract
+SourceFile: "Functions.kt"
+RuntimeVisibleAnnotations:
+  0: #28(#29=[I#30,I#31,I#32],#33=I#34,#35=I#36,#37=[s#38],#39=[s#1,s#40,s#5,s#41,s#6,s#14,s#42])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u0006\n\u0002\b\u0001\bf\u0018\u00002\u00020\u0001J\u000fH\'\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0002\u0010\u0004J\u000fH\u0017\u0010\u0005\u001a\u00020\u0003¢\u0006\u0004\b\u0005\u0010\u0004À\u0006\u0003¨\u0006\u0006"]
+      d2=["novjvm/Contract","kotlin/Any","run","kotlin/Int","()I","ready","nov21_jvm"]
+    )
+Classfile /workspace/korrust/target/checks/2026-11-21T054706387252Z-nov21-jvm/candidate/novjvm/Contract$DefaultImpls.class
+  Last modified Nov 21, 2026; size 651 bytes
+  SHA-256 checksum 433cf675e86ab26f26810e381b5cea47f89f54f3d14d823f844f4437578ec263
+  Compiled from "Functions.kt"
+public final class novjvm.Contract$DefaultImpls
+  minor version: 0
+  major version: 49
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // novjvm/Contract$DefaultImpls
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 1, attributes: 3
+Constant pool:
+   #1 = Utf8               novjvm/Contract$DefaultImpls
+   #2 = Class              #1             // novjvm/Contract$DefaultImpls
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               getClass
+   #6 = Utf8               ()Ljava/lang/Class;
+   #7 = NameAndType        #5:#6          // getClass:()Ljava/lang/Class;
+   #8 = Methodref          #4.#7          // java/lang/Object.getClass:()Ljava/lang/Class;
+   #9 = Utf8               ready
+  #10 = Utf8               (Lnovjvm/Contract;)I
+  #11 = Utf8               Code
+  #12 = Utf8               Lorg/jetbrains/annotations/NotNull;
+  #13 = Utf8               RuntimeInvisibleParameterAnnotations
+  #14 = Utf8               Deprecated
+  #15 = Utf8               RuntimeVisibleAnnotations
+  #16 = Utf8               Ljava/lang/Deprecated;
+  #17 = Utf8               Exceptions
+  #18 = Utf8               novjvm/support/CustomFailure
+  #19 = Class              #18            // novjvm/support/CustomFailure
+  #20 = Utf8               RuntimeInvisibleAnnotations
+  #21 = Utf8               InnerClasses
+  #22 = Utf8               novjvm/Contract
+  #23 = Class              #22            // novjvm/Contract
+  #24 = Utf8               DefaultImpls
+  #25 = Utf8               SourceFile
+  #26 = Utf8               Functions.kt
+  #27 = Utf8               Lkotlin/Metadata;
+  #28 = Utf8               mv
+  #29 = Integer            2
+  #30 = Integer            3
+  #31 = Integer            0
+  #32 = Utf8               k
+  #33 = Utf8               xi
+  #34 = Integer            48
+{
+  public static int ready(novjvm.Contract) throws novjvm.support.CustomFailure;
+    descriptor: (Lnovjvm/Contract;)I
+    flags: (0x0009) ACC_PUBLIC, ACC_STATIC
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: invokevirtual #8                  // Method java/lang/Object.getClass:()Ljava/lang/Class;
+         4: pop
+         5: bipush        14
+         7: ireturn
+         8: aconst_null
+         9: athrow
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #12()
+          org.jetbrains.annotations.NotNull
+    Deprecated: true
+    RuntimeVisibleAnnotations:
+      0: #16()
+        java.lang.Deprecated
+    Exceptions:
+      throws novjvm.support.CustomFailure
+}
+InnerClasses:
+  public static final #24= #2 of #23;     // DefaultImpls=class novjvm/Contract$DefaultImpls of class novjvm/Contract
+SourceFile: "Functions.kt"
+RuntimeVisibleAnnotations:
+  0: #27(#28=[I#29,I#30,I#31],#32=I#30,#33=I#34)
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=3
+      xi=48
+    )
+Classfile /workspace/korrust/target/checks/2026-11-21T054706387252Z-nov21-jvm/candidate/novjvm/Implementation.class
+  Last modified Nov 21, 2026; size 858 bytes
+  SHA-256 checksum d00cc8e4ba658ef56529da323f5f17e7f52eb945774f56f083b849beae5e89a3
+  Compiled from "Functions.kt"
+public final class novjvm.Implementation implements novjvm.Contract
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // novjvm/Implementation
+  super_class: #4                         // java/lang/Object
+  interfaces: 1, fields: 0, methods: 3, attributes: 2
+Constant pool:
+   #1 = Utf8               novjvm/Implementation
+   #2 = Class              #1             // novjvm/Implementation
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               novjvm/Contract
+   #6 = Class              #5             // novjvm/Contract
+   #7 = Utf8               <init>
+   #8 = Utf8               ()V
+   #9 = NameAndType        #7:#8          // "<init>":()V
+  #10 = Methodref          #4.#9          // java/lang/Object."<init>":()V
+  #11 = Utf8               Code
+  #12 = Utf8               java/lang/Throwable
+  #13 = Class              #12            // java/lang/Throwable
+  #14 = Utf8               StackMapTable
+  #15 = Utf8               run
+  #16 = Utf8               ()I
+  #17 = Utf8               Exceptions
+  #18 = Utf8               java/io/IOException
+  #19 = Class              #18            // java/io/IOException
+  #20 = Utf8               RuntimeVisibleAnnotations
+  #21 = Utf8               RuntimeInvisibleAnnotations
+  #22 = Utf8               ready
+  #23 = Utf8               novjvm/support/CustomFailure
+  #24 = Class              #23            // novjvm/support/CustomFailure
+  #25 = Utf8               SourceFile
+  #26 = Utf8               Functions.kt
+  #27 = Utf8               Lkotlin/Metadata;
+  #28 = Utf8               mv
+  #29 = Integer            2
+  #30 = Integer            3
+  #31 = Integer            0
+  #32 = Utf8               k
+  #33 = Integer            1
+  #34 = Utf8               xi
+  #35 = Integer            48
+  #36 = Utf8               d1
+  #37 = Utf8               \u0000\b\n\u0002\b\b\n\u0002\b\u0001\b\u0006\u0018\u00002\u00020\u0001B\t\b\u0006¢\u0006\u0004\b\u0002\u0010\u0003J\u000fH\u0017\u0010\u0004\u001a\u00020\u0005¢\u0006\u0004\b\u0004\u0010\u0006J\u000fH\u0017\u0010\u0007\u001a\u00020\u0005¢\u0006\u0004\b\u0007\u0010\u0006¨\u0006\b
+  #38 = Utf8               d2
+  #39 = Utf8               kotlin/Int
+  #40 = Utf8               nov21_jvm
+{
+  public novjvm.Implementation();
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #10                 // Method java/lang/Object."<init>":()V
+         4: return
+         5: nop
+         6: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Implementation ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Implementation ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Implementation ]
+          stack = [ class java/lang/Throwable ]
+
+  public int run() throws java.io.IOException;
+    descriptor: ()I
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=1, args_size=1
+         0: bipush        15
+         2: ireturn
+         3: nop
+         4: athrow
+      StackMapTable: number_of_entries = 3
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Implementation ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Implementation ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Implementation ]
+          stack = [ class java/lang/Throwable ]
+    Exceptions:
+      throws java.io.IOException
+
+  public int ready() throws novjvm.support.CustomFailure;
+    descriptor: ()I
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=1, args_size=1
+         0: bipush        14
+         2: ireturn
+         3: nop
+         4: athrow
+      StackMapTable: number_of_entries = 3
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Implementation ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Implementation ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Implementation ]
+          stack = [ class java/lang/Throwable ]
+    Exceptions:
+      throws novjvm.support.CustomFailure
+}
+SourceFile: "Functions.kt"
+RuntimeVisibleAnnotations:
+  0: #27(#28=[I#29,I#30,I#31],#32=I#33,#34=I#35,#36=[s#37],#38=[s#1,s#5,s#7,s#8,s#15,s#39,s#16,s#22,s#40])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\b\n\u0002\b\b\n\u0002\b\u0001\b\u0006\u0018\u00002\u00020\u0001B\t\b\u0006¢\u0006\u0004\b\u0002\u0010\u0003J\u000fH\u0017\u0010\u0004\u001a\u00020\u0005¢\u0006\u0004\b\u0004\u0010\u0006J\u000fH\u0017\u0010\u0007\u001a\u00020\u0005¢\u0006\u0004\b\u0007\u0010\u0006¨\u0006\b"]
+      d2=["novjvm/Implementation","novjvm/Contract","<init>","()V","run","kotlin/Int","()I","ready","nov21_jvm"]
+    )
+Classfile /workspace/korrust/target/checks/2026-11-21T054706387252Z-nov21-jvm/candidate/novjvm/AbstractTask.class
+  Last modified Nov 21, 2026; size 630 bytes
+  SHA-256 checksum 53f6f1650283cc0c01ee40a5cc450a1489c8dbeff32432d2f9e331e6d9051fb9
+  Compiled from "Functions.kt"
+public abstract class novjvm.AbstractTask
+  minor version: 0
+  major version: 52
+  flags: (0x0421) ACC_PUBLIC, ACC_SUPER, ACC_ABSTRACT
+  this_class: #2                          // novjvm/AbstractTask
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 2, attributes: 2
+Constant pool:
+   #1 = Utf8               novjvm/AbstractTask
+   #2 = Class              #1             // novjvm/AbstractTask
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               <init>
+   #6 = Utf8               ()V
+   #7 = NameAndType        #5:#6          // "<init>":()V
+   #8 = Methodref          #4.#7          // java/lang/Object."<init>":()V
+   #9 = Utf8               Code
+  #10 = Utf8               java/lang/Throwable
+  #11 = Class              #10            // java/lang/Throwable
+  #12 = Utf8               StackMapTable
+  #13 = Utf8               work
+  #14 = Utf8               ()I
+  #15 = Utf8               Exceptions
+  #16 = Utf8               java/io/IOException
+  #17 = Class              #16            // java/io/IOException
+  #18 = Utf8               RuntimeVisibleAnnotations
+  #19 = Utf8               RuntimeInvisibleAnnotations
+  #20 = Utf8               SourceFile
+  #21 = Utf8               Functions.kt
+  #22 = Utf8               Lkotlin/Metadata;
+  #23 = Utf8               mv
+  #24 = Integer            2
+  #25 = Integer            3
+  #26 = Integer            0
+  #27 = Utf8               k
+  #28 = Integer            1
+  #29 = Utf8               xi
+  #30 = Integer            48
+  #31 = Utf8               d1
+  #32 = Utf8               \u0000\b\n\u0002\b\u0007\n\u0002\b\u0001\b&\u0018\u00002\u00020\u0001B\t\b\u0006¢\u0006\u0004\b\u0002\u0010\u0003J\u000fH\'\u0010\u0004\u001a\u00020\u0005¢\u0006\u0004\b\u0004\u0010\u0006¨\u0006\u0007
+  #33 = Utf8               d2
+  #34 = Utf8               kotlin/Any
+  #35 = Utf8               kotlin/Int
+  #36 = Utf8               nov21_jvm
+{
+  public novjvm.AbstractTask();
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #8                  // Method java/lang/Object."<init>":()V
+         4: return
+         5: nop
+         6: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/AbstractTask ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/AbstractTask ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/AbstractTask ]
+          stack = [ class java/lang/Throwable ]
+
+  public abstract int work() throws java.io.IOException;
+    descriptor: ()I
+    flags: (0x0401) ACC_PUBLIC, ACC_ABSTRACT
+    Exceptions:
+      throws java.io.IOException
+}
+SourceFile: "Functions.kt"
+RuntimeVisibleAnnotations:
+  0: #22(#23=[I#24,I#25,I#26],#27=I#28,#29=I#30,#31=[s#32],#33=[s#1,s#34,s#5,s#6,s#13,s#35,s#14,s#36])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u0007\n\u0002\b\u0001\b&\u0018\u00002\u00020\u0001B\t\b\u0006¢\u0006\u0004\b\u0002\u0010\u0003J\u000fH\'\u0010\u0004\u001a\u00020\u0005¢\u0006\u0004\b\u0004\u0010\u0006¨\u0006\u0007"]
+      d2=["novjvm/AbstractTask","kotlin/Any","<init>","()V","work","kotlin/Int","()I","nov21_jvm"]
+    )
+Classfile /workspace/korrust/target/checks/2026-11-21T054706387252Z-nov21-jvm/candidate/novjvm/Task.class
+  Last modified Nov 21, 2026; size 689 bytes
+  SHA-256 checksum 0e2c520a39bf5a2a56eac080fea9d8218866bd82f10ba40d366df532711ae68a
+  Compiled from "Functions.kt"
+public final class novjvm.Task extends novjvm.AbstractTask
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // novjvm/Task
+  super_class: #4                         // novjvm/AbstractTask
+  interfaces: 0, fields: 0, methods: 2, attributes: 2
+Constant pool:
+   #1 = Utf8               novjvm/Task
+   #2 = Class              #1             // novjvm/Task
+   #3 = Utf8               novjvm/AbstractTask
+   #4 = Class              #3             // novjvm/AbstractTask
+   #5 = Utf8               <init>
+   #6 = Utf8               ()V
+   #7 = NameAndType        #5:#6          // "<init>":()V
+   #8 = Methodref          #4.#7          // novjvm/AbstractTask."<init>":()V
+   #9 = Utf8               Code
+  #10 = Utf8               java/lang/Throwable
+  #11 = Class              #10            // java/lang/Throwable
+  #12 = Utf8               StackMapTable
+  #13 = Utf8               work
+  #14 = Utf8               ()I
+  #15 = Utf8               Exceptions
+  #16 = Utf8               novjvm/support/CustomFailure
+  #17 = Class              #16            // novjvm/support/CustomFailure
+  #18 = Utf8               RuntimeVisibleAnnotations
+  #19 = Utf8               RuntimeInvisibleAnnotations
+  #20 = Utf8               SourceFile
+  #21 = Utf8               Functions.kt
+  #22 = Utf8               Lkotlin/Metadata;
+  #23 = Utf8               mv
+  #24 = Integer            2
+  #25 = Integer            3
+  #26 = Integer            0
+  #27 = Utf8               k
+  #28 = Integer            1
+  #29 = Utf8               xi
+  #30 = Integer            48
+  #31 = Utf8               d1
+  #32 = Utf8               \u0000\b\n\u0002\b\u0007\n\u0002\b\u0001\b\u0006\u0018\u00002\u00020\u0001B\t\b\u0006¢\u0006\u0004\b\u0002\u0010\u0003J\u000fH\u0017\u0010\u0004\u001a\u00020\u0005¢\u0006\u0004\b\u0004\u0010\u0006¨\u0006\u0007
+  #33 = Utf8               d2
+  #34 = Utf8               kotlin/Int
+  #35 = Utf8               nov21_jvm
+{
+  public novjvm.Task();
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #8                  // Method novjvm/AbstractTask."<init>":()V
+         4: return
+         5: nop
+         6: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Task ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Task ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Task ]
+          stack = [ class java/lang/Throwable ]
+
+  public int work() throws novjvm.support.CustomFailure;
+    descriptor: ()I
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=1, args_size=1
+         0: bipush        26
+         2: ireturn
+         3: nop
+         4: athrow
+      StackMapTable: number_of_entries = 3
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Task ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Task ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Task ]
+          stack = [ class java/lang/Throwable ]
+    Exceptions:
+      throws novjvm.support.CustomFailure
+}
+SourceFile: "Functions.kt"
+RuntimeVisibleAnnotations:
+  0: #22(#23=[I#24,I#25,I#26],#27=I#28,#29=I#30,#31=[s#32],#33=[s#1,s#3,s#5,s#6,s#13,s#34,s#14,s#35])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u0007\n\u0002\b\u0001\b\u0006\u0018\u00002\u00020\u0001B\t\b\u0006¢\u0006\u0004\b\u0002\u0010\u0003J\u000fH\u0017\u0010\u0004\u001a\u00020\u0005¢\u0006\u0004\b\u0004\u0010\u0006¨\u0006\u0007"]
+      d2=["novjvm/Task","novjvm/AbstractTask","<init>","()V","work","kotlin/Int","()I","nov21_jvm"]
+    )
+Classfile /workspace/korrust/target/checks/2026-11-21T054706387252Z-nov21-jvm/candidate/novjvm/Host.class
+  Last modified Nov 21, 2026; size 1158 bytes
+  SHA-256 checksum c22ec9c82b4616d06967ce8ab984c5588bf5ce618c124e2768f9791fa763010d
+  Compiled from "Functions.kt"
+public final class novjvm.Host
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // novjvm/Host
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 1, methods: 3, attributes: 3
+Constant pool:
+   #1 = Utf8               novjvm/Host
+   #2 = Class              #1             // novjvm/Host
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               <init>
+   #6 = Utf8               ()V
+   #7 = NameAndType        #5:#6          // "<init>":()V
+   #8 = Methodref          #4.#7          // java/lang/Object."<init>":()V
+   #9 = Utf8               Code
+  #10 = Utf8               java/lang/Throwable
+  #11 = Class              #10            // java/lang/Throwable
+  #12 = Utf8               StackMapTable
+  #13 = Utf8               Companion
+  #14 = Utf8               Lnovjvm/Host$Companion;
+  #15 = Utf8               RuntimeInvisibleAnnotations
+  #16 = Utf8               Lorg/jetbrains/annotations/NotNull;
+  #17 = NameAndType        #13:#14        // Companion:Lnovjvm/Host$Companion;
+  #18 = Fieldref           #2.#17         // novjvm/Host.Companion:Lnovjvm/Host$Companion;
+  #19 = Utf8               novjvm/Host$Companion
+  #20 = Class              #19            // novjvm/Host$Companion
+  #21 = Utf8               both
+  #22 = Utf8               ()I
+  #23 = NameAndType        #21:#22        // both:()I
+  #24 = Methodref          #20.#23        // novjvm/Host$Companion.both:()I
+  #25 = Utf8               Exceptions
+  #26 = Utf8               java/io/IOException
+  #27 = Class              #26            // java/io/IOException
+  #28 = Utf8               Lkotlin/jvm/JvmStatic;
+  #29 = Utf8               RuntimeVisibleAnnotations
+  #30 = Utf8               (Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+  #31 = NameAndType        #5:#30         // "<init>":(Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+  #32 = Methodref          #20.#31        // novjvm/Host$Companion."<init>":(Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+  #33 = Utf8               <clinit>
+  #34 = Utf8               InnerClasses
+  #35 = Utf8               SourceFile
+  #36 = Utf8               Functions.kt
+  #37 = Utf8               Lkotlin/Metadata;
+  #38 = Utf8               mv
+  #39 = Integer            2
+  #40 = Integer            3
+  #41 = Integer            0
+  #42 = Utf8               k
+  #43 = Integer            1
+  #44 = Utf8               xi
+  #45 = Integer            48
+  #46 = Utf8               d1
+  #47 = Utf8               \u0000\b\n\u0002\b\u0006\n\u0002\b\u0001\b\u0006\u0018\u00008\u00012\u00020\u0002 \u00038\u0003B\t\b\u0006¢\u0006\u0004\b\u0004\u0010\u0005¨\u0006\u0006
+  #48 = Utf8               d2
+  #49 = Utf8               ThrowEverythingRunnable
+  #50 = Utf8               kotlin/Any
+  #51 = Utf8               nov21_jvm
+  #52 = Utf8               InnerClasses
+  #53 = Utf8               novjvm/Host$ThrowEverythingRunnable
+  #54 = Class              #53            // novjvm/Host$ThrowEverythingRunnable
+  #55 = Utf8               novjvm/Host
+  #56 = Class              #55            // novjvm/Host
+  #57 = Utf8               ThrowEverythingRunnable
+{
+  public static final novjvm.Host$Companion Companion;
+    descriptor: Lnovjvm/Host$Companion;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    RuntimeInvisibleAnnotations:
+      0: #16()
+        org.jetbrains.annotations.NotNull
+
+  public novjvm.Host();
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #8                  // Method java/lang/Object."<init>":()V
+         4: return
+         5: nop
+         6: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Host ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Host ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Host ]
+          stack = [ class java/lang/Throwable ]
+
+  public static final synchronized int both() throws java.io.IOException;
+    descriptor: ()I
+    flags: (0x0039) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNCHRONIZED
+    Code:
+      stack=1, locals=0, args_size=0
+         0: getstatic     #18                 // Field Companion:Lnovjvm/Host$Companion;
+         3: invokevirtual #24                 // Method novjvm/Host$Companion.both:()I
+         6: ireturn
+    Exceptions:
+      throws java.io.IOException
+    RuntimeVisibleAnnotations:
+      0: #28()
+        kotlin.jvm.JvmStatic
+
+  static {};
+    descriptor: ()V
+    flags: (0x0008) ACC_STATIC
+    Code:
+      stack=3, locals=0, args_size=0
+         0: new           #20                 // class novjvm/Host$Companion
+         3: dup
+         4: aconst_null
+         5: invokespecial #32                 // Method novjvm/Host$Companion."<init>":(Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+         8: putstatic     #18                 // Field Companion:Lnovjvm/Host$Companion;
+        11: return
+        12: nop
+        13: athrow
+      StackMapTable: number_of_entries = 7
+        frame_type = 255 /* full_frame */
+          offset_delta = 3
+          locals = []
+          stack = [ uninitialized 0 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ uninitialized 0, uninitialized 0 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ uninitialized 0, uninitialized 0, null ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = [ class novjvm/Host$Companion ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ class java/lang/Throwable ]
+}
+SourceFile: "Functions.kt"
+RuntimeVisibleAnnotations:
+  0: #37(#38=[I#39,I#40,I#41],#42=I#43,#44=I#45,#46=[s#47],#48=[s#1,s#49,s#50,s#13,s#5,s#6,s#51])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u0006\n\u0002\b\u0001\b\u0006\u0018\u00008\u00012\u00020\u0002 \u00038\u0003B\t\b\u0006¢\u0006\u0004\b\u0004\u0010\u0005¨\u0006\u0006"]
+      d2=["novjvm/Host","ThrowEverythingRunnable","kotlin/Any","Companion","<init>","()V","nov21_jvm"]
+    )
+InnerClasses:
+  public static final #13= #20 of #2;     // Companion=class novjvm/Host$Companion of class novjvm/Host
+  public static #57= #54 of #56;          // ThrowEverythingRunnable=class novjvm/Host$ThrowEverythingRunnable of class novjvm/Host
+Classfile /workspace/korrust/target/checks/2026-11-21T054706387252Z-nov21-jvm/candidate/novjvm/Host$ThrowEverythingRunnable.class
+  Last modified Nov 21, 2026; size 626 bytes
+  SHA-256 checksum 83461358c53e0e19caa22161cf1b3e30cb459a3d3bf58c2305654ac5cd850a5a
+  Compiled from "Functions.kt"
+public interface novjvm.Host$ThrowEverythingRunnable
+  minor version: 0
+  major version: 52
+  flags: (0x0601) ACC_PUBLIC, ACC_INTERFACE, ACC_ABSTRACT
+  this_class: #2                          // novjvm/Host$ThrowEverythingRunnable
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 1, attributes: 3
+Constant pool:
+   #1 = Utf8               novjvm/Host$ThrowEverythingRunnable
+   #2 = Class              #1             // novjvm/Host$ThrowEverythingRunnable
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               run
+   #6 = Utf8               ()V
+   #7 = Utf8               Exceptions
+   #8 = Utf8               java/lang/Throwable
+   #9 = Class              #8             // java/lang/Throwable
+  #10 = Utf8               RuntimeVisibleAnnotations
+  #11 = Utf8               RuntimeInvisibleAnnotations
+  #12 = Utf8               SourceFile
+  #13 = Utf8               Functions.kt
+  #14 = Utf8               Lkotlin/Metadata;
+  #15 = Utf8               mv
+  #16 = Integer            2
+  #17 = Integer            3
+  #18 = Integer            0
+  #19 = Utf8               k
+  #20 = Integer            1
+  #21 = Utf8               xi
+  #22 = Integer            48
+  #23 = Utf8               d1
+  #24 = Utf8               \u0000\b\n\u0002\b\u0005\n\u0002\b\u0001\bf\u0018\u00002\u00020\u0001J\u000fH\'\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0002\u0010\u0004À\u0006\u0003¨\u0006\u0005
+  #25 = Utf8               d2
+  #26 = Utf8               novjvm/Host.ThrowEverythingRunnable
+  #27 = Utf8               kotlin/Any
+  #28 = Utf8               kotlin/Unit
+  #29 = Utf8               nov21_jvm
+  #30 = Utf8               InnerClasses
+  #31 = Utf8               novjvm/Host$ThrowEverythingRunnable
+  #32 = Class              #31            // novjvm/Host$ThrowEverythingRunnable
+  #33 = Utf8               novjvm/Host
+  #34 = Class              #33            // novjvm/Host
+  #35 = Utf8               ThrowEverythingRunnable
+{
+  public abstract void run() throws java.lang.Throwable;
+    descriptor: ()V
+    flags: (0x0401) ACC_PUBLIC, ACC_ABSTRACT
+    Exceptions:
+      throws java.lang.Throwable
+}
+SourceFile: "Functions.kt"
+RuntimeVisibleAnnotations:
+  0: #14(#15=[I#16,I#17,I#18],#19=I#20,#21=I#22,#23=[s#24],#25=[s#26,s#27,s#5,s#28,s#6,s#29])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u0005\n\u0002\b\u0001\bf\u0018\u00002\u00020\u0001J\u000fH\'\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0002\u0010\u0004À\u0006\u0003¨\u0006\u0005"]
+      d2=["novjvm/Host.ThrowEverythingRunnable","kotlin/Any","run","kotlin/Unit","()V","nov21_jvm"]
+    )
+InnerClasses:
+  public static #35= #32 of #34;          // ThrowEverythingRunnable=class novjvm/Host$ThrowEverythingRunnable of class novjvm/Host
+Classfile /workspace/korrust/target/checks/2026-11-21T054706387252Z-nov21-jvm/candidate/novjvm/Host$Companion.class
+  Last modified Nov 21, 2026; size 1200 bytes
+  SHA-256 checksum cc888b9bb69a1a25438e7e53054d2260328b4ef9cc02938a618348237e83c429
+  Compiled from "Functions.kt"
+public final class novjvm.Host$Companion
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // novjvm/Host$Companion
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 3, attributes: 3
+Constant pool:
+   #1 = Utf8               novjvm/Host$Companion
+   #2 = Class              #1             // novjvm/Host$Companion
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               <init>
+   #6 = Utf8               ()V
+   #7 = NameAndType        #5:#6          // "<init>":()V
+   #8 = Methodref          #4.#7          // java/lang/Object."<init>":()V
+   #9 = Utf8               Code
+  #10 = Utf8               java/lang/Thread
+  #11 = Class              #10            // java/lang/Thread
+  #12 = Utf8               holdsLock
+  #13 = Utf8               (Ljava/lang/Object;)Z
+  #14 = NameAndType        #12:#13        // holdsLock:(Ljava/lang/Object;)Z
+  #15 = Methodref          #11.#14        // java/lang/Thread.holdsLock:(Ljava/lang/Object;)Z
+  #16 = Utf8               novjvm.Host
+  #17 = String             #16            // novjvm.Host
+  #18 = Utf8               novjvm/support/Probe
+  #19 = Class              #18            // novjvm/support/Probe
+  #20 = Utf8               staticHeld
+  #21 = Utf8               (Ljava/lang/String;)Z
+  #22 = NameAndType        #20:#21        // staticHeld:(Ljava/lang/String;)Z
+  #23 = Methodref          #19.#22        // novjvm/support/Probe.staticHeld:(Ljava/lang/String;)Z
+  #24 = Utf8               both
+  #25 = Utf8               ()I
+  #26 = Utf8               Exceptions
+  #27 = Utf8               java/io/IOException
+  #28 = Class              #27            // java/io/IOException
+  #29 = Utf8               Lkotlin/jvm/JvmStatic;
+  #30 = Utf8               RuntimeVisibleAnnotations
+  #31 = Utf8               RuntimeInvisibleAnnotations
+  #32 = Utf8               java/lang/String
+  #33 = Class              #32            // java/lang/String
+  #34 = Utf8               java/lang/Throwable
+  #35 = Class              #34            // java/lang/Throwable
+  #36 = Utf8               StackMapTable
+  #37 = Methodref          #2.#7          // novjvm/Host$Companion."<init>":()V
+  #38 = Utf8               (Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+  #39 = Utf8               InnerClasses
+  #40 = Utf8               novjvm/Host
+  #41 = Class              #40            // novjvm/Host
+  #42 = Utf8               Companion
+  #43 = Utf8               SourceFile
+  #44 = Utf8               Functions.kt
+  #45 = Utf8               Lkotlin/Metadata;
+  #46 = Utf8               mv
+  #47 = Integer            2
+  #48 = Integer            3
+  #49 = Integer            0
+  #50 = Utf8               k
+  #51 = Integer            1
+  #52 = Utf8               xi
+  #53 = Integer            48
+  #54 = Utf8               d1
+  #55 = Utf8               \u0000\b\n\u0002\b\u0007\n\u0002\b\u0001\b\u0086\u0003\u0018\u00002\u00020\u0001B\t\b\u0002¢\u0006\u0004\b\u0002\u0010\u0003J\u000fH\u0007\u0010\u0004\u001a\u00020\u0005¢\u0006\u0004\b\u0004\u0010\u0006¨\u0006\u0007
+  #56 = Utf8               d2
+  #57 = Utf8               novjvm/Host.Companion
+  #58 = Utf8               kotlin/Any
+  #59 = Utf8               kotlin/Int
+  #60 = Utf8               nov21_jvm
+{
+  private novjvm.Host$Companion();
+    descriptor: ()V
+    flags: (0x0002) ACC_PRIVATE
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #8                  // Method java/lang/Object."<init>":()V
+         4: return
+
+  public final synchronized int both() throws java.io.IOException;
+    descriptor: ()I
+    flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SYNCHRONIZED
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload         0
+         2: invokestatic  #15                 // Method java/lang/Thread.holdsLock:(Ljava/lang/Object;)Z
+         5: ifeq          12
+         8: iconst_1
+         9: goto          13
+        12: iconst_0
+        13: ldc_w         #17                 // String novjvm.Host
+        16: invokestatic  #23                 // Method novjvm/support/Probe.staticHeld:(Ljava/lang/String;)Z
+        19: ifeq          26
+        22: iconst_2
+        23: goto          27
+        26: iconst_0
+        27: iadd
+        28: ireturn
+        29: nop
+        30: athrow
+      StackMapTable: number_of_entries = 15
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Host$Companion ]
+          stack = [ class novjvm/Host$Companion ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Host$Companion ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Host$Companion ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Host$Companion ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Host$Companion ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Host$Companion ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Host$Companion ]
+          stack = [ int, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Host$Companion ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Host$Companion ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Host$Companion ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Host$Companion ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Host$Companion ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Host$Companion ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Host$Companion ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Host$Companion ]
+          stack = [ class java/lang/Throwable ]
+    Exceptions:
+      throws java.io.IOException
+    RuntimeVisibleAnnotations:
+      0: #29()
+        kotlin.jvm.JvmStatic
+
+  public novjvm.Host$Companion(kotlin.jvm.internal.DefaultConstructorMarker);
+    descriptor: (Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+    flags: (0x1001) ACC_PUBLIC, ACC_SYNTHETIC
+    Code:
+      stack=1, locals=2, args_size=2
+         0: aload_0
+         1: invokespecial #37                 // Method "<init>":()V
+         4: return
+}
+InnerClasses:
+  public static final #42= #2 of #41;     // Companion=class novjvm/Host$Companion of class novjvm/Host
+SourceFile: "Functions.kt"
+RuntimeVisibleAnnotations:
+  0: #45(#46=[I#47,I#48,I#49],#50=I#51,#52=I#53,#54=[s#55],#56=[s#57,s#58,s#5,s#6,s#24,s#59,s#25,s#60])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u0007\n\u0002\b\u0001\b\u0086\u0003\u0018\u00002\u00020\u0001B\t\b\u0002¢\u0006\u0004\b\u0002\u0010\u0003J\u000fH\u0007\u0010\u0004\u001a\u00020\u0005¢\u0006\u0004\b\u0004\u0010\u0006¨\u0006\u0007"]
+      d2=["novjvm/Host.Companion","kotlin/Any","<init>","()V","both","kotlin/Int","()I","nov21_jvm"]
+    )
+Classfile /workspace/korrust/target/checks/2026-11-21T054706387252Z-nov21-jvm/candidate/novjvm/Singleton.class
+  Last modified Nov 21, 2026; size 1238 bytes
+  SHA-256 checksum 0a47c89a6f0c6c31c192c3d92262a847648fed0c3f75537b512bee9cbd3b15e7
+  Compiled from "Functions.kt"
+public final class novjvm.Singleton
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // novjvm/Singleton
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 1, methods: 4, attributes: 2
+Constant pool:
+   #1 = Utf8               novjvm/Singleton
+   #2 = Class              #1             // novjvm/Singleton
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               INSTANCE
+   #6 = Utf8               Lnovjvm/Singleton;
+   #7 = Utf8               RuntimeInvisibleAnnotations
+   #8 = Utf8               Lorg/jetbrains/annotations/NotNull;
+   #9 = Utf8               <init>
+  #10 = Utf8               ()V
+  #11 = NameAndType        #9:#10         // "<init>":()V
+  #12 = Methodref          #4.#11         // java/lang/Object."<init>":()V
+  #13 = Utf8               Code
+  #14 = Utf8               java/lang/Thread
+  #15 = Class              #14            // java/lang/Thread
+  #16 = Utf8               holdsLock
+  #17 = Utf8               (Ljava/lang/Object;)Z
+  #18 = NameAndType        #16:#17        // holdsLock:(Ljava/lang/Object;)Z
+  #19 = Methodref          #15.#18        // java/lang/Thread.holdsLock:(Ljava/lang/Object;)Z
+  #20 = Utf8               instance
+  #21 = Utf8               ()Z
+  #22 = Utf8               RuntimeVisibleAnnotations
+  #23 = Utf8               java/lang/Throwable
+  #24 = Class              #23            // java/lang/Throwable
+  #25 = Utf8               StackMapTable
+  #26 = Utf8               novjvm.Singleton
+  #27 = String             #26            // novjvm.Singleton
+  #28 = Utf8               novjvm/support/Probe
+  #29 = Class              #28            // novjvm/support/Probe
+  #30 = Utf8               staticHeld
+  #31 = Utf8               (Ljava/lang/String;)Z
+  #32 = NameAndType        #30:#31        // staticHeld:(Ljava/lang/String;)Z
+  #33 = Methodref          #29.#32        // novjvm/support/Probe.staticHeld:(Ljava/lang/String;)Z
+  #34 = Utf8               staticMonitor
+  #35 = Utf8               Lkotlin/jvm/JvmStatic;
+  #36 = Utf8               Exceptions
+  #37 = Utf8               novjvm/support/CustomFailure
+  #38 = Class              #37            // novjvm/support/CustomFailure
+  #39 = Utf8               java/lang/String
+  #40 = Class              #39            // java/lang/String
+  #41 = Methodref          #2.#11         // novjvm/Singleton."<init>":()V
+  #42 = NameAndType        #5:#6          // INSTANCE:Lnovjvm/Singleton;
+  #43 = Fieldref           #2.#42         // novjvm/Singleton.INSTANCE:Lnovjvm/Singleton;
+  #44 = Utf8               <clinit>
+  #45 = Utf8               SourceFile
+  #46 = Utf8               Functions.kt
+  #47 = Utf8               Lkotlin/Metadata;
+  #48 = Utf8               mv
+  #49 = Integer            2
+  #50 = Integer            3
+  #51 = Integer            0
+  #52 = Utf8               k
+  #53 = Integer            1
+  #54 = Utf8               xi
+  #55 = Integer            48
+  #56 = Utf8               d1
+  #57 = Utf8               \u0000\b\n\u0002\b\b\n\u0002\b\u0001\bÆ\u0002\u0018\u00002\u00020\u0001B\t\b\u0002¢\u0006\u0004\b\u0002\u0010\u0003J\u000fH\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0004\b\u0004\u0010\u0006J\u000fH\u0007\u0010\u0007\u001a\u00020\u0005¢\u0006\u0004\b\u0007\u0010\u0006¨\u0006\b
+  #58 = Utf8               d2
+  #59 = Utf8               kotlin/Any
+  #60 = Utf8               kotlin/Boolean
+  #61 = Utf8               nov21_jvm
+{
+  public static final novjvm.Singleton INSTANCE;
+    descriptor: Lnovjvm/Singleton;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    RuntimeInvisibleAnnotations:
+      0: #8()
+        org.jetbrains.annotations.NotNull
+
+  private novjvm.Singleton();
+    descriptor: ()V
+    flags: (0x0002) ACC_PRIVATE
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #12                 // Method java/lang/Object."<init>":()V
+         4: return
+
+  public final synchronized boolean instance();
+    descriptor: ()Z
+    flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SYNCHRONIZED
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload         0
+         2: invokestatic  #19                 // Method java/lang/Thread.holdsLock:(Ljava/lang/Object;)Z
+         5: ireturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Singleton ]
+          stack = [ class novjvm/Singleton ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class novjvm/Singleton ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Singleton ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class novjvm/Singleton ]
+          stack = [ class java/lang/Throwable ]
+
+  public static final synchronized boolean staticMonitor() throws novjvm.support.CustomFailure;
+    descriptor: ()Z
+    flags: (0x0039) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNCHRONIZED
+    Code:
+      stack=3, locals=0, args_size=0
+         0: ldc_w         #27                 // String novjvm.Singleton
+         3: invokestatic  #33                 // Method novjvm/support/Probe.staticHeld:(Ljava/lang/String;)Z
+         6: ireturn
+         7: nop
+         8: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 3
+          locals = []
+          stack = [ class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ class java/lang/Throwable ]
+    RuntimeVisibleAnnotations:
+      0: #35()
+        kotlin.jvm.JvmStatic
+    Exceptions:
+      throws novjvm.support.CustomFailure
+
+  static {};
+    descriptor: ()V
+    flags: (0x0008) ACC_STATIC
+    Code:
+      stack=2, locals=0, args_size=0
+         0: new           #2                  // class novjvm/Singleton
+         3: dup
+         4: invokespecial #41                 // Method "<init>":()V
+         7: putstatic     #43                 // Field INSTANCE:Lnovjvm/Singleton;
+        10: return
+        11: nop
+        12: athrow
+      StackMapTable: number_of_entries = 6
+        frame_type = 255 /* full_frame */
+          offset_delta = 3
+          locals = []
+          stack = [ uninitialized 0 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ uninitialized 0, uninitialized 0 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = [ class novjvm/Singleton ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ class java/lang/Throwable ]
+}
+SourceFile: "Functions.kt"
+RuntimeVisibleAnnotations:
+  0: #47(#48=[I#49,I#50,I#51],#52=I#53,#54=I#55,#56=[s#57],#58=[s#1,s#59,s#9,s#10,s#20,s#60,s#21,s#34,s#61])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\b\n\u0002\b\b\n\u0002\b\u0001\bÆ\u0002\u0018\u00002\u00020\u0001B\t\b\u0002¢\u0006\u0004\b\u0002\u0010\u0003J\u000fH\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0004\b\u0004\u0010\u0006J\u000fH\u0007\u0010\u0007\u001a\u00020\u0005¢\u0006\u0004\b\u0007\u0010\u0006¨\u0006\b"]
+      d2=["novjvm/Singleton","kotlin/Any","<init>","()V","instance","kotlin/Boolean","()Z","staticMonitor","nov21_jvm"]
+    )
+Classfile /workspace/korrust/target/checks/2026-11-21T054706387252Z-nov21-jvm/candidate/novjvm/Defaults.class
+  Last modified Nov 21, 2026; size 1320 bytes
+  SHA-256 checksum fdc5ca4c03670fa3d11a308419deb4174386d6bab26cc8bd508497e9849d6f36
+  Compiled from "Functions.kt"
+public final class novjvm.Defaults
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // novjvm/Defaults
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 1, methods: 5, attributes: 2
+Constant pool:
+   #1 = Utf8               novjvm/Defaults
+   #2 = Class              #1             // novjvm/Defaults
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               INSTANCE
+   #6 = Utf8               Lnovjvm/Defaults;
+   #7 = Utf8               RuntimeInvisibleAnnotations
+   #8 = Utf8               Lorg/jetbrains/annotations/NotNull;
+   #9 = Utf8               <init>
+  #10 = Utf8               ()V
+  #11 = NameAndType        #9:#10         // "<init>":()V
+  #12 = Methodref          #4.#11         // java/lang/Object."<init>":()V
+  #13 = Utf8               Code
+  #14 = Utf8               value$default
+  #15 = Utf8               (IILjava/lang/Object;)I
+  #16 = NameAndType        #14:#15        // value$default:(IILjava/lang/Object;)I
+  #17 = Methodref          #2.#16         // novjvm/Defaults.value$default:(IILjava/lang/Object;)I
+  #18 = Utf8               value
+  #19 = Utf8               ()I
+  #20 = Utf8               Exceptions
+  #21 = Utf8               java/io/IOException
+  #22 = Class              #21            // java/io/IOException
+  #23 = Utf8               Lkotlin/jvm/JvmOverloads;
+  #24 = Utf8               RuntimeVisibleAnnotations
+  #25 = Utf8               StackMapTable
+  #26 = Utf8               Lkotlin/jvm/JvmStatic;
+  #27 = Utf8               (I)I
+  #28 = Utf8               java/lang/Throwable
+  #29 = Class              #28            // java/lang/Throwable
+  #30 = NameAndType        #18:#27        // value:(I)I
+  #31 = Methodref          #2.#30         // novjvm/Defaults.value:(I)I
+  #32 = Methodref          #2.#11         // novjvm/Defaults."<init>":()V
+  #33 = NameAndType        #5:#6          // INSTANCE:Lnovjvm/Defaults;
+  #34 = Fieldref           #2.#33         // novjvm/Defaults.INSTANCE:Lnovjvm/Defaults;
+  #35 = Utf8               <clinit>
+  #36 = Utf8               SourceFile
+  #37 = Utf8               Functions.kt
+  #38 = Utf8               Lkotlin/Metadata;
+  #39 = Utf8               mv
+  #40 = Integer            2
+  #41 = Integer            3
+  #42 = Integer            0
+  #43 = Utf8               k
+  #44 = Integer            1
+  #45 = Utf8               xi
+  #46 = Integer            48
+  #47 = Utf8               d1
+  #48 = Utf8               \u0000\b\n\u0002\b\u0007\n\u0002\b\u0001\bÆ\u0002\u0018\u00002\u00020\u0001B\t\b\u0002¢\u0006\u0004\b\u0002\u0010\u0003J\u0019H\u0007\u0010\u0004\u001a\u00020\u00052\b\u0010\u0004\u001a\u00020\u0005\b\u0002¢\u0006\u0004\b\u0004\u0010\u0006¨\u0006\u0007
+  #49 = Utf8               d2
+  #50 = Utf8               kotlin/Any
+  #51 = Utf8               kotlin/Int
+  #52 = Utf8               nov21_jvm
+{
+  public static final novjvm.Defaults INSTANCE;
+    descriptor: Lnovjvm/Defaults;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    RuntimeInvisibleAnnotations:
+      0: #8()
+        org.jetbrains.annotations.NotNull
+
+  private novjvm.Defaults();
+    descriptor: ()V
+    flags: (0x0002) ACC_PRIVATE
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #12                 // Method java/lang/Object."<init>":()V
+         4: return
+
+  public static final int value() throws java.io.IOException;
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: iconst_0
+         1: iconst_1
+         2: aconst_null
+         3: invokestatic  #17                 // Method value$default:(IILjava/lang/Object;)I
+         6: ireturn
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = []
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ int, int, null ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = [ int ]
+    Exceptions:
+      throws java.io.IOException
+    RuntimeInvisibleAnnotations:
+      0: #23()
+        kotlin.jvm.JvmOverloads
+    RuntimeVisibleAnnotations:
+      0: #26()
+        kotlin.jvm.JvmStatic
+
+  public static final int value(int) throws java.io.IOException;
+    descriptor: (I)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=3, args_size=1
+         0: iload         0
+         2: ireturn
+         3: nop
+         4: athrow
+      StackMapTable: number_of_entries = 3
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ int ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ int ]
+          stack = [ class java/lang/Throwable ]
+    RuntimeVisibleAnnotations:
+      0: #26()
+        kotlin.jvm.JvmStatic
+    Exceptions:
+      throws java.io.IOException
+    RuntimeInvisibleAnnotations:
+      0: #23()
+        kotlin.jvm.JvmOverloads
+
+  public static int value$default(int, int, java.lang.Object) throws java.io.IOException;
+    descriptor: (IILjava/lang/Object;)I
+    flags: (0x1009) ACC_PUBLIC, ACC_STATIC, ACC_SYNTHETIC
+    Code:
+      stack=2, locals=3, args_size=3
+         0: iload         1
+         2: iconst_1
+         3: iand
+         4: ifeq          11
+         7: bipush        19
+         9: istore        0
+        11: iload         0
+        13: invokestatic  #31                 // Method value:(I)I
+        16: ireturn
+        17: nop
+        18: athrow
+      StackMapTable: number_of_entries = 10
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ int, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ int, int, class java/lang/Object ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ int, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ int, int, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ int, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ int, int, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ int, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ int, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ int, int, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ int, int, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+    Exceptions:
+      throws java.io.IOException
+
+  static {};
+    descriptor: ()V
+    flags: (0x0008) ACC_STATIC
+    Code:
+      stack=2, locals=0, args_size=0
+         0: new           #2                  // class novjvm/Defaults
+         3: dup
+         4: invokespecial #32                 // Method "<init>":()V
+         7: putstatic     #34                 // Field INSTANCE:Lnovjvm/Defaults;
+        10: return
+        11: nop
+        12: athrow
+      StackMapTable: number_of_entries = 6
+        frame_type = 255 /* full_frame */
+          offset_delta = 3
+          locals = []
+          stack = [ uninitialized 0 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ uninitialized 0, uninitialized 0 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = [ class novjvm/Defaults ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ class java/lang/Throwable ]
+}
+SourceFile: "Functions.kt"
+RuntimeVisibleAnnotations:
+  0: #38(#39=[I#40,I#41,I#42],#43=I#44,#45=I#46,#47=[s#48],#49=[s#1,s#50,s#9,s#10,s#18,s#51,s#27,s#52])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u0007\n\u0002\b\u0001\bÆ\u0002\u0018\u00002\u00020\u0001B\t\b\u0002¢\u0006\u0004\b\u0002\u0010\u0003J\u0019H\u0007\u0010\u0004\u001a\u00020\u00052\b\u0010\u0004\u001a\u00020\u0005\b\u0002¢\u0006\u0004\b\u0004\u0010\u0006¨\u0006\u0007"]
+      d2=["novjvm/Defaults","kotlin/Any","<init>","()V","value","kotlin/Int","(I)I","nov21_jvm"]
+    )
+Classfile /workspace/korrust/target/checks/2026-11-21T054706387252Z-nov21-jvm/candidate/novjvm/aliases/AliasesKt.class
+  Last modified Nov 21, 2026; size 991 bytes
+  SHA-256 checksum ba9c5035a1ec726d71e1f9d075cad7120ef9b60b29c4dd55a59524b6098121c2
+  Compiled from "Aliases.kt"
+public final class novjvm.aliases.AliasesKt
+  minor version: 0
+  major version: 49
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // novjvm/aliases/AliasesKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 5, attributes: 2
+Constant pool:
+   #1 = Utf8               novjvm/aliases/AliasesKt
+   #2 = Class              #1             // novjvm/aliases/AliasesKt
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               SourceFile
+   #6 = Utf8               Aliases.kt
+   #7 = Utf8               common
+   #8 = Utf8               ()I
+   #9 = Utf8               Code
+  #10 = Utf8               Exceptions
+  #11 = Utf8               java/io/IOException
+  #12 = Class              #11            // java/io/IOException
+  #13 = Utf8               RuntimeVisibleAnnotations
+  #14 = Utf8               RuntimeInvisibleAnnotations
+  #15 = Utf8               sourceAlias
+  #16 = Utf8               novjvm.aliases.AliasesKt
+  #17 = String             #16            // novjvm.aliases.AliasesKt
+  #18 = Utf8               novjvm/support/Probe
+  #19 = Class              #18            // novjvm/support/Probe
+  #20 = Utf8               staticHeld
+  #21 = Utf8               (Ljava/lang/String;)Z
+  #22 = NameAndType        #20:#21        // staticHeld:(Ljava/lang/String;)Z
+  #23 = Methodref          #19.#22        // novjvm/support/Probe.staticHeld:(Ljava/lang/String;)Z
+  #24 = Utf8               sourceMonitor
+  #25 = Utf8               ()Z
+  #26 = Utf8               qualified
+  #27 = Utf8               qualifiedMonitor
+  #28 = Utf8               Lkotlin/Metadata;
+  #29 = Utf8               mv
+  #30 = Integer            2
+  #31 = Integer            3
+  #32 = Integer            0
+  #33 = Utf8               k
+  #34 = Utf8               xi
+  #35 = Integer            48
+  #36 = Utf8               d1
+  #37 = Utf8               \u0000\b\n\u0002\b\r\n\u0002\b\u0001*\f\b\u0006\u0010\u0000\"\u00020\u00012\u00020\u0001*\f\b\u0006\u0010\u0002\"\u00020\u00032\u00020\u0003\u001a\u000fH\u0007\u0010\u0004\u001a\u00020\u0005¢\u0006\u0004\b\u0004\u0010\u0006\u001a\u000fH\u0007\u0010\u0007\u001a\u00020\u0005¢\u0006\u0004\b\u0007\u0010\u0006\u001a\u000fH\u0007\u0010\b\u001a\u00020\t¢\u0006\u0004\b\b\u0010\n\u001a\u000fH\u0007\u0010\u000b\u001a\u00020\u0005¢\u0006\u0004\b\u000b\u0010\u0006\u001a\u000fH\u0006\u0010\f\u001a\u00020\t¢\u0006\u0004\b\f\u0010\n¨\u0006\r
+  #38 = Utf8               d2
+  #39 = Utf8               Declares
+  #40 = Utf8               kotlin/jvm/Throws
+  #41 = Utf8               Locked
+  #42 = Utf8               kotlin/jvm/Synchronized
+  #43 = Utf8               kotlin/Int
+  #44 = Utf8               kotlin/Boolean
+  #45 = Utf8               nov21_jvm
+{
+  public static final int common() throws java.io.IOException;
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: bipush        20
+         2: ireturn
+         3: aconst_null
+         4: athrow
+    Exceptions:
+      throws java.io.IOException
+
+  public static final int sourceAlias() throws java.io.IOException;
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: bipush        21
+         2: ireturn
+         3: aconst_null
+         4: athrow
+    Exceptions:
+      throws java.io.IOException
+
+  public static final synchronized boolean sourceMonitor();
+    descriptor: ()Z
+    flags: (0x0039) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNCHRONIZED
+    Code:
+      stack=3, locals=0, args_size=0
+         0: ldc_w         #17                 // String novjvm.aliases.AliasesKt
+         3: invokestatic  #23                 // Method novjvm/support/Probe.staticHeld:(Ljava/lang/String;)Z
+         6: ireturn
+         7: aconst_null
+         8: athrow
+
+  public static final int qualified() throws java.io.IOException;
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: bipush        24
+         2: ireturn
+         3: aconst_null
+         4: athrow
+    Exceptions:
+      throws java.io.IOException
+
+  public static final synchronized boolean qualifiedMonitor();
+    descriptor: ()Z
+    flags: (0x0039) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNCHRONIZED
+    Code:
+      stack=3, locals=0, args_size=0
+         0: ldc_w         #17                 // String novjvm.aliases.AliasesKt
+         3: invokestatic  #23                 // Method novjvm/support/Probe.staticHeld:(Ljava/lang/String;)Z
+         6: ireturn
+         7: aconst_null
+         8: athrow
+}
+SourceFile: "Aliases.kt"
+RuntimeVisibleAnnotations:
+  0: #28(#29=[I#30,I#31,I#32],#33=I#30,#34=I#35,#36=[s#37],#38=[s#39,s#40,s#41,s#42,s#7,s#43,s#8,s#15,s#24,s#44,s#25,s#26,s#27,s#45])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000\b\n\u0002\b\r\n\u0002\b\u0001*\f\b\u0006\u0010\u0000\"\u00020\u00012\u00020\u0001*\f\b\u0006\u0010\u0002\"\u00020\u00032\u00020\u0003\u001a\u000fH\u0007\u0010\u0004\u001a\u00020\u0005¢\u0006\u0004\b\u0004\u0010\u0006\u001a\u000fH\u0007\u0010\u0007\u001a\u00020\u0005¢\u0006\u0004\b\u0007\u0010\u0006\u001a\u000fH\u0007\u0010\b\u001a\u00020\t¢\u0006\u0004\b\b\u0010\n\u001a\u000fH\u0007\u0010\u000b\u001a\u00020\u0005¢\u0006\u0004\b\u000b\u0010\u0006\u001a\u000fH\u0006\u0010\f\u001a\u00020\t¢\u0006\u0004\b\f\u0010\n¨\u0006\r"]
+      d2=["Declares","kotlin/jvm/Throws","Locked","kotlin/jvm/Synchronized","common","kotlin/Int","()I","sourceAlias","sourceMonitor","kotlin/Boolean","()Z","qualified","qualifiedMonitor","nov21_jvm"]
+    )

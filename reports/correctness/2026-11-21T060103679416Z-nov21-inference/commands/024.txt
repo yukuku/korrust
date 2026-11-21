@@ -1,0 +1,5 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /workspace/korrust/tests/nov21_inference/InvalidExplicitBound.kt -cp /workspace/korrust/target/nov21-final-v2/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/korrust/target/nov21-final-v2/inference/oracle-InvalidExplicitBound -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/nov21_inference/InvalidExplicitBound.kt:3:26: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun <C : R, R> C.choose(useDefault: Boolean, defaultValue: () -> R): R
+fun bad(): Int = "value".choose<String, Int>(false) { 1 }
+                         ^^^^^^

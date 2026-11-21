@@ -578,6 +578,7 @@ impl Checker<'_> {
         self.inline_result = old_inline;
         self.inline_argument_modes = old_modes;
         let (mut values, lets, mut mask) = checked?;
+        let contract_facts = self.call_contract_facts(&method, &values, &lets);
         if method
             .library
             .as_ref()
@@ -758,6 +759,8 @@ impl Checker<'_> {
                 args: values,
             }
         };
+        self.contract_registration = Some(offset);
+        self.contract_facts.insert(offset, contract_facts);
         Ok(Self::wrap_lets(Value { ty: result, kind }, lets))
     }
 

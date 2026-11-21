@@ -59,7 +59,7 @@ fn private_variance_and_recursive_bounds_remain_explicit_unsupported() {
 }
 
 #[test]
-fn exposed_variant_inputs_requiring_contextual_wildcards_are_explicit_boundaries() {
+fn exposed_variant_inputs_have_contextual_wildcard_signatures() {
     for source in [
         "interface P<out T>\nfun use(value:P<Any>):Int=1",
         "interface C<in T>\nfun use(value:C<String>):Int=1",
@@ -71,16 +71,7 @@ fn exposed_variant_inputs_requiring_contextual_wildcards_are_explicit_boundaries
         "interface P<out T>\ninterface Api { fun use(value:P<Any>):Int }",
         "interface P<out T>\nenum class Api { A; fun use(value:P<Any>):Int=1 }",
     ] {
-        let error = compile_all(source, "Boundary.kt").err().unwrap();
-        assert_eq!(
-            error.kind,
-            DiagnosticKind::UnsupportedLanguage,
-            "{source}: {error:?}"
-        );
-        assert_eq!(
-            error.code, "VARIANT_JVM_SIGNATURE_UNSUPPORTED",
-            "{source}: {error:?}"
-        );
+        compile_all(source, "Boundary.kt").unwrap();
     }
     compile_all("interface P<out T>\ninterface C<in T>\nfun use(value:P<String>):P<Any> = value\nfun useInput(value:C<Any>):C<String> = value", "Exact.kt").unwrap();
 }

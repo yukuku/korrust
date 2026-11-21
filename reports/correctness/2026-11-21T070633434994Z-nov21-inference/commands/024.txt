@@ -1,0 +1,4 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /workspace/korrust/tests/nov21_inference/InvalidArray.kt -cp /workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidArray -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/nov21_inference/InvalidArray.kt:2:39: error: null cannot be a value of a non-null type 'String'.
+fun bad(): Array<String> = Array(1) { null }
+                                      ^^^^

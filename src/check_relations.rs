@@ -705,6 +705,10 @@ pub(super) fn validate_type_arguments_with_classes(
                         return Err(Diagnostic::new(
                             offset,
                             "Type projection conflicts with declaration-site variance",
+                        )
+                        .with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "TYPE_PROJECTION_CONFLICT",
                         ));
                     }
                     validate(ty, cp, classes, offset, depth + 1)?;
@@ -840,13 +844,15 @@ impl Checker<'_> {
                 };
                 self.infer_constraints(inner, actual, substitutions, fixed, depth + 1)
             }
-            Type::Array(element) => {
-                if let Type::Array(actual) = actual.base() {
+            Type::Array(element) => match actual.base() {
+                Type::Array(actual) => {
                     self.infer_constraints(element, actual, substitutions, fixed, depth + 1)
-                } else {
-                    true
                 }
-            }
+                Type::StringArray => {
+                    self.infer_constraints(element, &Type::String, substitutions, fixed, depth + 1)
+                }
+                _ => true,
+            },
             Type::ReceiverFunction {
                 receiver,
                 params,
@@ -938,6 +944,14 @@ impl Checker<'_> {
                 Some(label),
             );
         }
+        if let Type::Nullable(inner) = pattern.base()
+            && matches!(
+                inner.base(),
+                Type::Function { .. } | Type::ReceiverFunction { .. }
+            )
+        {
+            return self.infer_lambda_result(inner, expr, substitutions, fixed, parameters, label);
+        }
         if !matches!(
             expr.kind,
             ExprKind::Lambda(_) | ExprKind::LambdaWithParams { .. }
@@ -953,6 +967,8 @@ impl Checker<'_> {
             let receiver = substitute(receiver, substitutions);
             let old_receivers = self.extension_receivers.clone();
             let old_labels = self.receiver_labels.clone();
+            let saved_contract_registration = self.contract_registration;
+            let saved_contract_facts = self.contract_facts.clone();
             let next = self.next;
             let initialized = self.initialized.clone();
             let slot = self.allocate_typed_slot(&receiver, expr.offset)?;
@@ -974,6 +990,8 @@ impl Checker<'_> {
                 self.infer_lambda_result(&function, expr, substitutions, fixed, parameters, label);
             self.extension_receivers = old_receivers;
             self.receiver_labels = old_labels;
+            self.contract_facts = saved_contract_facts;
+            self.contract_registration = saved_contract_registration;
             self.next = next;
             self.initialized = initialized;
             return inferred;
@@ -1059,6 +1077,8 @@ impl Checker<'_> {
         if !parameters.iter().any(|name| mentions(&output, name)) {
             return Ok(());
         }
+        let saved_contract_registration = self.contract_registration;
+        let saved_contract_facts = self.contract_facts.clone();
         let next = self.next;
         let initialized = self.initialized.clone();
         let refinements = self.refinements.clone();
@@ -1095,6 +1115,8 @@ impl Checker<'_> {
         })();
         self.scopes.truncate(scopes_len);
         self.allow_return = allow_return;
+        self.contract_facts = saved_contract_facts;
+        self.contract_registration = saved_contract_registration;
         self.next = next;
         self.initialized = initialized;
         self.refinements = refinements;
@@ -1188,6 +1210,7 @@ impl Checker<'_> {
             ),
             kotlin_result: Some(result.clone()),
             library: Some(crate::classpath::LibraryMethod {
+                contracts: Vec::new(),
                 value_dispatch: false,
                 suspend_: false,
                 kotlin_declared: true,
@@ -1446,6 +1469,27 @@ impl Checker<'_> {
                 substitutions.entry(name).or_insert(ty);
             }
         }
+        for _ in 0..library.type_parameters.len() {
+            let previous = substitutions.clone();
+            for parameter in &library.type_parameters {
+                let Some(inferred) = substitutions.get(&parameter.name).cloned() else {
+                    continue;
+                };
+                for bound in &parameter.bounds {
+                    if matches!(bound, Type::Parameter { .. })
+                        && !self.infer_constraints(bound, &inferred, &mut substitutions, &fixed, 0)
+                    {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Conflicting interdependent type parameter bounds",
+                        ));
+                    }
+                }
+            }
+            if substitutions == previous {
+                break;
+            }
+        }
         for parameter in &library.type_parameters {
             let inferred = substitutions.get(&parameter.name).ok_or_else(|| {
                 Diagnostic::new(
@@ -1453,6 +1497,19 @@ impl Checker<'_> {
                     format!("Cannot infer type parameter {}", parameter.name),
                 )
             })?;
+            if parameter.reified
+                && (inferred.base() == &Type::Unit
+                    || matches!(inferred.base(), Type::Nullable(inner) if inner.base() == &Type::Unit))
+            {
+                return Err(Diagnostic::new(
+                    offset,
+                    "This reified argument classifier is unsupported",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "REIFIED_ARGUMENT_CLASSIFIER_UNSUPPORTED",
+                ));
+            }
             if parameter.only_input_types && !fixed.contains(&parameter.name) {
                 let Some(inputs) = input_types.get(&parameter.name) else {
                     return Err(Diagnostic::new(
@@ -1657,6 +1714,8 @@ mod tests {
             object_fields: &HashMap::new(),
             object_owner: None,
             allow_return: false,
+            contract_facts: HashMap::new(),
+            contract_registration: None,
             refinements: HashMap::new(),
             initialized: HashSet::new(),
             loop_depth: 0,

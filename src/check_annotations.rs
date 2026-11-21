@@ -8,7 +8,6 @@ pub(crate) fn unsupported_lowering(owner: &str) -> Option<&'static str> {
         | "kotlinx/parcelize/Parcelize" => Some("COMPILER_PLUGIN_UNSUPPORTED"),
         "kotlin/jvm/JvmName"
         | "kotlin/jvm/JvmSynthetic"
-        | "kotlin/jvm/Synchronized"
         | "kotlin/jvm/JvmDefault"
         | "kotlin/jvm/JvmDefaultWithCompatibility"
         | "kotlin/jvm/JvmDefaultWithoutCompatibility"
@@ -37,7 +36,26 @@ pub(super) fn annotation_owner(
     classpath: &Classpath,
     imports: &HashMap<String, String>,
 ) -> String {
-    crate::annotation_declarations::owner(name, imports, classpath)
+    let owner = crate::annotation_declarations::owner(name, imports, classpath);
+    let owner = if matches!(owner.as_str(), "Throws" | "Synchronized")
+        && !imports.contains_key(name)
+        && classpath.load(&owner).is_err()
+    {
+        format!("kotlin/jvm/{owner}")
+    } else {
+        owner
+    };
+    if classpath.load(&owner).is_ok() {
+        return owner;
+    }
+    match classpath.expand_type_alias(
+        &Type::Java(owner.clone()),
+        imports,
+        &["kotlin", "kotlin/jvm"],
+    ) {
+        Ok(Type::Java(expanded)) => expanded,
+        _ => owner,
+    }
 }
 
 pub(super) fn declaration_annotations(
@@ -70,6 +88,23 @@ pub(super) fn declaration_annotations(
                     DeclarationAnnotationValue::String(name.encode_utf16().collect()),
                 )],
             });
+            continue;
+        }
+        if matches!(
+            owner.as_str(),
+            "kotlin/jvm/Throws" | "kotlin/jvm/Synchronized"
+        ) {
+            if !seen.insert(owner.clone()) {
+                return Err(
+                    Diagnostic::new(annotation.offset, "Repeated JVM method annotation").with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "REPEATED_ANNOTATION_INVALID",
+                    ),
+                );
+            }
+            result.push(jvm_method_annotation(
+                annotation, &owner, classpath, imports, target, use_site, scope,
+            )?);
             continue;
         }
         if let Some(code) = unsupported_lowering(&owner) {
@@ -203,6 +238,209 @@ pub(super) fn declaration_annotations(
     Ok(result)
 }
 
+fn jvm_method_annotation(
+    annotation: &syntax::AnnotationUse,
+    owner: &str,
+    classpath: &Classpath,
+    imports: &HashMap<String, String>,
+    target: &str,
+    use_site: Option<&str>,
+    scope: Option<&str>,
+) -> Result<DeclarationAnnotation> {
+    let invalid = |message| {
+        Diagnostic::new(annotation.offset, message).with_kind(
+            crate::DiagnosticKind::InvalidKotlin,
+            "JVM_ANNOTATION_PLACEMENT_INVALID",
+        )
+    };
+    if annotation.use_site.as_deref() != use_site
+        || !matches!(
+            (target, use_site),
+            ("METHOD", None | Some("get" | "set")) | ("CONSTRUCTOR", None)
+        )
+        || target == "CONSTRUCTOR" && owner == "kotlin/jvm/Synchronized"
+    {
+        return Err(invalid(
+            "JVM annotation requires a function, accessor, or supported constructor",
+        ));
+    }
+    let mut values = Vec::new();
+    if owner == "kotlin/jvm/Synchronized" {
+        if !annotation.arguments.is_empty() {
+            return Err(invalid("Synchronized does not accept annotation arguments"));
+        }
+        if let Some(scope) = scope {
+            let class = classpath.load(scope)?;
+            if class.access & 0x0200 != 0 {
+                return Err(invalid("Synchronized is not allowed on interface members"));
+            }
+            if classpath.value_classes().contains_key(scope) {
+                return Err(Diagnostic::new(
+                    annotation.offset,
+                    "Synchronized is not allowed on value-class members",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "SYNCHRONIZED_VALUE_CLASS_INVALID",
+                ));
+            }
+        }
+    } else {
+        let mut classes = Vec::new();
+        let mut named = false;
+        for (name, expression) in &annotation.arguments {
+            let array = if let Some(name) = name {
+                if name != "exceptionClasses" || named || !classes.is_empty() {
+                    return Err(invalid(
+                        "Throws requires exceptionClasses or positional class literals",
+                    ));
+                }
+                named = true;
+                Some(expression)
+            } else {
+                if named {
+                    return Err(invalid(
+                        "Positional Throws arguments cannot follow a named argument",
+                    ));
+                }
+                match &expression.kind {
+                    ExprKind::Unary(operator, value) if operator == "*" => Some(value.as_ref()),
+                    _ => None,
+                }
+            };
+            if let Some(array) = array {
+                let DeclarationAnnotationValue::Array(items) =
+                    crate::annotation_declarations::value(
+                        array,
+                        "[Ljava/lang/Class;",
+                        imports,
+                        classpath,
+                        0,
+                        scope,
+                    )?
+                else {
+                    return Err(invalid("Throws requires an array of class literals"));
+                };
+                classes.extend(items);
+            } else {
+                classes.push(crate::annotation_declarations::value(
+                    expression,
+                    "Ljava/lang/Class;",
+                    imports,
+                    classpath,
+                    0,
+                    scope,
+                )?);
+            }
+        }
+        for value in &classes {
+            let DeclarationAnnotationValue::Class { descriptor, .. } = value else {
+                return Err(invalid("Throws requires Throwable class literals"));
+            };
+            let Some(mut current) = descriptor
+                .strip_prefix('L')
+                .and_then(|name| name.strip_suffix(';'))
+                .map(str::to_owned)
+            else {
+                return Err(invalid("Throws requires Throwable class literals"));
+            };
+            let mut visited = HashSet::new();
+            loop {
+                if current == "java/lang/Throwable" {
+                    break;
+                }
+                if !visited.insert(current.clone()) {
+                    return Err(invalid("Throws requires a Throwable subtype"));
+                }
+                let class = classpath.load(&current)?;
+                let Some(parent) = class.super_name else {
+                    return Err(invalid("Throws requires a Throwable subtype"));
+                };
+                current = parent;
+            }
+        }
+        values.push((
+            "exceptionClasses".into(),
+            DeclarationAnnotationValue::Array(classes),
+        ));
+    }
+    Ok(DeclarationAnnotation {
+        descriptor: format!("L{owner};"),
+        runtime: false,
+        values,
+    })
+}
+
+pub(super) fn exception_classes(annotations: &[DeclarationAnnotation]) -> Vec<String> {
+    annotations
+        .iter()
+        .filter(|annotation| annotation.descriptor == "Lkotlin/jvm/Throws;")
+        .flat_map(|annotation| &annotation.values)
+        .flat_map(|(_, value)| match value {
+            DeclarationAnnotationValue::Array(values) => values.as_slice(),
+            _ => &[],
+        })
+        .filter_map(|value| match value {
+            DeclarationAnnotationValue::Class { descriptor, .. } => descriptor
+                .strip_prefix('L')
+                .and_then(|name| name.strip_suffix(';'))
+                .map(str::to_owned),
+            _ => None,
+        })
+        .collect()
+}
+
+pub(super) fn validate_jvm_function(
+    function: &syntax::Function,
+    classpath: &Classpath,
+    imports: &HashMap<String, String>,
+) -> Result<()> {
+    for annotation in &function.annotations {
+        let owner = annotation_owner(&annotation.name, classpath, imports);
+        if owner == "kotlin/jvm/Throws" && function.suspend_ {
+            return Err(Diagnostic::new(
+                annotation.offset,
+                "Throws suspend functions are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "THROWS_SUSPEND_UNSUPPORTED",
+            ));
+        }
+        if owner == "kotlin/jvm/Synchronized" && function.defaults.iter().any(Option::is_some) {
+            return Err(Diagnostic::new(
+                annotation.offset,
+                "Synchronized functions with default arguments are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "JVM_ANNOTATION_DEFAULTS_UNSUPPORTED",
+            ));
+        }
+        if owner == "kotlin/jvm/Synchronized" && function.suspend_ {
+            return Err(Diagnostic::new(
+                annotation.offset,
+                "Synchronized is not allowed on suspend functions",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "SYNCHRONIZED_SUSPEND_INVALID",
+            ));
+        }
+        if owner == "kotlin/jvm/Synchronized" && function.inline {
+            return Err(Diagnostic::new(
+                annotation.offset,
+                "Synchronized inline functions are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "SYNCHRONIZED_FUNCTION_SHAPE_UNSUPPORTED",
+            ));
+        }
+    }
+    Ok(())
+}
+
 pub(super) fn overload_descriptors(function: &Function) -> Vec<String> {
     if !function
         .annotations
@@ -241,7 +479,6 @@ mod tests {
         for owner in [
             "kotlin/jvm/JvmName",
             "kotlin/jvm/JvmSynthetic",
-            "kotlin/jvm/Synchronized",
             "kotlin/jvm/JvmDefaultWithCompatibility",
             "kotlin/jvm/Transient",
             "kotlin/jvm/Strictfp",

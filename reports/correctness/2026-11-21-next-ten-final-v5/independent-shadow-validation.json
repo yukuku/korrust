@@ -1,0 +1,34 @@
+{
+  "static_shadow_release_test": {
+    "status": "pass",
+    "command": "cargo test --release --locked --offline --test string_factories",
+    "tests": 1,
+    "runtime_seconds": 89.95,
+    "log": "/tmp/nov21-static-context-string-factories-final.log"
+  },
+  "checks": {
+    "format": "pass",
+    "clippy_release_test_string_factories": "pass"
+  },
+  "baseline_source_provenance": {
+    "git_revision": "c2ab871533215e4c3c5a8fac588b9ba5a0c367c8",
+    "manifest": "reports/correctness/2026-11-13-next-ten-final-v3/frozen-inputs.json",
+    "src_hashes_checked": 70,
+    "mismatches": []
+  },
+  "implicit_property_shadow_trace": {
+    "official": 3,
+    "baseline_sha58990": 7,
+    "v3_sha9acd": 3,
+    "v4_sha05c52d": 7,
+    "patched": 3
+  },
+  "patch": "/tmp/nov21-static-context-final-v3.patch",
+  "patch_sha256": "2c15f86d6dedd38d97293b2438573d79d7a2d8eceefc89c9d5d1bb6c34528e1c",
+  "source_hashes": {
+    "src/check_operations.rs": "7e4f574fc274ccf92a525f8a6b3054958ab312fa702288e95e5fc591112f96c4",
+    "src/check.rs": "dd958fca4985ff8f1e112c5307e5881cd2241199d9487be4fed09c227b912972",
+    "tests/string_factories.rs": "dfea8a7b08d6074e7a4c9932c5ef67d542840bf2c3cd3a8b316b6e158448643f"
+  },
+  "main_matches_checked_files": true
+}

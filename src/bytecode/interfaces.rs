@@ -270,6 +270,7 @@ fn abstract_method(pool: &mut Pool, function: &crate::check::Function) -> Result
     }
     nullable_result(pool, &mut method, function.physical_result())?;
     parameter_annotations(pool, &mut method, &physical_params(function))?;
+    annotations::append_annotations(pool, &mut method, &function.annotations)?;
     Ok(method)
 }
 
@@ -289,6 +290,11 @@ fn helper_function(
     function: &crate::check::Function,
 ) -> crate::check::Function {
     let mut helper = function.clone();
+    helper.jvm_signature = select_signature(
+        function.jvm_signature.as_deref(),
+        &[],
+        &format!("L{};", interface.owner),
+    );
     helper
         .params
         .insert(0, ("$this".into(), Type::Java(interface.owner.clone())));
@@ -329,6 +335,7 @@ fn default_forward(
     )?;
     parameter_annotations(pool, &mut method, &params)?;
     nullable_result(pool, &mut method, function.physical_result())?;
+    annotations::append_annotations(pool, &mut method, &function.annotations)?;
     Ok(method)
 }
 
@@ -492,6 +499,7 @@ fn helper_body(
     params.extend(function.params.clone());
     parameter_annotations(&mut builder.pool, &mut method, &params)?;
     deprecated(&mut builder.pool, &mut method)?;
+    annotations::append_annotations(&mut builder.pool, &mut method, &function.annotations)?;
     builder.methods.push(method);
     Ok(())
 }

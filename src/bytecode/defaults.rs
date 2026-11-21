@@ -114,6 +114,13 @@ pub(super) fn function(
         None,
         false,
     )?;
+    let exceptions = function
+        .annotations
+        .iter()
+        .filter(|annotation| annotation.descriptor == "Lkotlin/jvm/Throws;")
+        .cloned()
+        .collect::<Vec<_>>();
+    annotations::append_annotations(pool, &mut method, &exceptions)?;
     frames::attach(pool, &mut method, owner, &params, locals, true)?;
     Ok(Some(method))
 }
@@ -220,6 +227,13 @@ pub(super) fn constructors_with_offset(
         None,
         false,
     )?;
+    let exceptions = class
+        .constructor_annotations
+        .iter()
+        .filter(|annotation| annotation.descriptor == "Lkotlin/jvm/Throws;")
+        .cloned()
+        .collect::<Vec<_>>();
+    annotations::append_annotations(pool, &mut method, &exceptions)?;
     frames::attach_constructor(pool, &mut method, owner, &params, locals)?;
     let mut methods = vec![method];
     let overloads = class
@@ -304,7 +318,15 @@ pub(super) fn constructors_with_offset(
             "<init>",
             &reduced_descriptor,
             body,
-            generic_method(&params, &Type::Unit).as_deref(),
+            select_signature(
+                class.constructor_signature.as_deref(),
+                &(0..class.params.len())
+                    .map(|i| !omitted.contains(&i))
+                    .collect::<Vec<_>>(),
+                "",
+            )
+            .or_else(|| generic_method(&params, &Type::Unit))
+            .as_deref(),
             false,
         )?;
         parameter_annotations(pool, &mut method, &params)?;
@@ -344,6 +366,13 @@ pub(super) fn overloads(
             extension_receiver: function.extension_receiver,
             class_type_params: function.class_type_params.clone(),
             jvm_result: function.jvm_result.clone(),
+            jvm_signature: select_signature(
+                function.jvm_signature.as_deref(),
+                &(0..function.params.len())
+                    .map(|i| !omitted.contains(&i))
+                    .collect::<Vec<_>>(),
+                "",
+            ),
             jvm_name: function.jvm_name.clone(),
             annotations: function.annotations.clone(),
             vararg: function.vararg && !omitted.contains(&(function.params.len() - 1)),

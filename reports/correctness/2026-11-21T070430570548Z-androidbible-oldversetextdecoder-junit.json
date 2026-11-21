@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-21T070430570548Z",
+  "selection": "Unchanged AndroidBible OldVerseTextDecoder and original JUnit 4 tests. Kotlin test bytecode built once against official provider, then executed separately with each provider.",
+  "compiler": {
+    "path": "target/nov21-final-v4/korrust",
+    "sha256": "05c52d1012b3c0d9452291d2e022df4b4196669d2eed80d71dea457a533b452e"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "source_revision": "c2ab871533215e4c3c5a8fac588b9ba5a0c367c8",
+  "frozen_input_hashes": {
+    "reports/correctness/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/replay.py": "3dfcb6600590724e742928b0c556081975eac6d8424859d02a6d2877e8d6fbcd",
+    "target/nov21-final-v4/korrust": "05c52d1012b3c0d9452291d2e022df4b4196669d2eed80d71dea457a533b452e",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "/workspace/korrust-setup/jdk-21/jmods/java.base.jmod": "f8d258a856a691c81ad9dd16964635bbc8a8fdd7f40edec37dcf3d904feb7ae1",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/OldVerseTextDecoder.kt": "3e0e9ea80c77be37db44d667d2acba06b23f6ec4ef2306e709857505d48369ab",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt": "527b8dfff07dcaa3dd7fcc4ee852c9707fc2765587ffb2374c75a04ef102106c",
+    "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/OldVerseTextDecoderTest.kt": "ef349610417289c6fbb95324a75db9e951e1d214c6c319b86880ef67f4804382",
+    "target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/junit-4.13.2.jar": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3",
+    "target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/hamcrest-core-1.3.jar": "66fdef91e9739348df7a096aa384a5685f4e875584cce89386a7a47251c4d8e9",
+    "benchmarks/sources/androidbible/Bintex/src/main/java/yuku/bintex/BintexReader.java": "9fca01731b0e1da5f87e4cf8476a0da531dd7acd43d8c370d5305ccf7222a919",
+    "benchmarks/sources/androidbible/Bintex/src/main/java/yuku/bintex/BintexWriter.java": "6ea38e7391c3a9d357f34b8fb9d9b90797fb4fa59cafef93f6071d391fbbff87",
+    "benchmarks/sources/androidbible/Bintex/src/main/java/yuku/bintex/ValueMap.java": "07434ce7129d73cd2232fe71a0471575ef85a5ac9e991d1b5e425d8ed420670c",
+    "benchmarks/sources/androidbible/AlkitabIo/src/main/java/yuku/alkitab/io/Utf8Decoder.kt": "acf20f118b8599b2fb4a6265edc9528b9f19107fabf790709451256edc8738d3"
+  },
+  "commands": [
+    {
+      "label": "java-dependencies",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/deps",
+        "/workspace/korrust/benchmarks/sources/androidbible/Bintex/src/main/java/yuku/bintex/BintexReader.java",
+        "/workspace/korrust/benchmarks/sources/androidbible/Bintex/src/main/java/yuku/bintex/BintexWriter.java",
+        "/workspace/korrust/benchmarks/sources/androidbible/Bintex/src/main/java/yuku/bintex/ValueMap.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/00-java-dependencies.log"
+    },
+    {
+      "label": "kotlin-dependencies",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/benchmarks/sources/androidbible/AlkitabIo/src/main/java/yuku/alkitab/io/Utf8Decoder.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "app",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/deps",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/deps"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/01-kotlin-dependencies.log"
+    },
+    {
+      "label": "official-compile",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/OldVerseTextDecoder.kt",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "app",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/deps",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/02-official-compile.log"
+    },
+    {
+      "label": "candidate-compile",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/OldVerseTextDecoder.kt",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/storage/VerseTextDecoder.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/deps",
+        "--module-name",
+        "app",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/03-candidate-compile.log"
+    },
+    {
+      "label": "fixed-test-compile",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/OldVerseTextDecoderTest.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "app",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/official:/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/deps:/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/junit-4.13.2.jar:/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/hamcrest-core-1.3.jar",
+        "-Xfriend-paths=/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/official",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/tests"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/04-fixed-test-compile.log"
+    },
+    {
+      "label": "official-junit",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/tests:/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/official:/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/deps:/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/junit-4.13.2.jar:/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/hamcrest-core-1.3.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "org.junit.runner.JUnitCore",
+        "yuku.alkitab.base.storage.OldVerseTextDecoderTest"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/05-official-junit.log"
+    },
+    {
+      "label": "candidate-junit",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/tests:/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/candidate:/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/deps:/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/junit-4.13.2.jar:/workspace/korrust/target/checks/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/hamcrest-core-1.3.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "org.junit.runner.JUnitCore",
+        "yuku.alkitab.base.storage.OldVerseTextDecoderTest"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/06-candidate-junit.log"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/replay.py",
+    "reports/correctness/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/00-java-dependencies.log",
+    "reports/correctness/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/01-kotlin-dependencies.log",
+    "reports/correctness/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/02-official-compile.log",
+    "reports/correctness/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/03-candidate-compile.log",
+    "reports/correctness/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/04-fixed-test-compile.log",
+    "reports/correctness/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/05-official-junit.log",
+    "reports/correctness/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/06-candidate-junit.log"
+  ],
+  "cases": [
+    {
+      "id": "official-junit",
+      "outcome": "pass",
+      "summary": "OK (13 tests)"
+    },
+    {
+      "id": "candidate-junit",
+      "outcome": "pass",
+      "summary": "OK (13 tests)"
+    }
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "reports/correctness/2026-11-21T070430570548Z-androidbible-oldversetextdecoder-junit/replay.py",
+      "OldVerseTextDecoder",
+      "--candidate",
+      "target/nov21-final-v4/korrust"
+    ]
+  ],
+  "status": "pass",
+  "counts": {
+    "pass": 2
+  }
+}

@@ -1,0 +1,160 @@
+[
+  {
+    "id": "non_throwable",
+    "source": "@Throws(String::class) fun bad() {}",
+    "category": "invalid_kotlin",
+    "code": "JVM_ANNOTATION_PLACEMENT_INVALID"
+  },
+  {
+    "id": "primitive_throwable",
+    "source": "@Throws(Int::class) fun bad() {}",
+    "category": "invalid_kotlin",
+    "code": "JVM_ANNOTATION_PLACEMENT_INVALID"
+  },
+  {
+    "id": "duplicate_alias",
+    "source": "import kotlin.jvm.Throws as Declares\n@Throws(Exception::class) @Declares(Exception::class) fun bad() {}",
+    "category": "invalid_kotlin",
+    "code": "REPEATED_ANNOTATION_INVALID"
+  },
+  {
+    "id": "duplicate_sync",
+    "source": "import kotlin.jvm.Synchronized as Monitor\n@Synchronized @Monitor fun bad() {}",
+    "category": "invalid_kotlin",
+    "code": "REPEATED_ANNOTATION_INVALID"
+  },
+  {
+    "id": "interface_abstract_sync",
+    "source": "interface Bad { @Synchronized fun bad() }",
+    "category": "invalid_kotlin",
+    "code": "JVM_ANNOTATION_PLACEMENT_INVALID"
+  },
+  {
+    "id": "interface_default_sync",
+    "source": "interface Bad { @Synchronized fun bad() {} }",
+    "category": "invalid_kotlin",
+    "code": "JVM_ANNOTATION_PLACEMENT_INVALID"
+  },
+  {
+    "id": "abstract_sync",
+    "source": "abstract class Bad { @Synchronized abstract fun bad() }",
+    "category": "invalid_kotlin",
+    "code": "SYNCHRONIZED_ABSTRACT_INVALID"
+  },
+  {
+    "id": "constructor_sync",
+    "source": "class Bad @Synchronized constructor()",
+    "category": "invalid_kotlin",
+    "code": "JVM_ANNOTATION_PLACEMENT_INVALID"
+  },
+  {
+    "id": "field_throws",
+    "source": "class Bad { @field:Throws(Exception::class) val x: Int = 1 }",
+    "category": "invalid_kotlin",
+    "code": "JVM_ANNOTATION_PLACEMENT_INVALID"
+  },
+  {
+    "id": "function_get_site",
+    "source": "@get:Throws(Exception::class) fun bad() {}",
+    "category": "invalid_kotlin",
+    "code": "JVM_ANNOTATION_PLACEMENT_INVALID"
+  },
+  {
+    "id": "sync_arguments",
+    "source": "@Synchronized(1) fun bad() {}",
+    "category": "invalid_kotlin",
+    "code": "JVM_ANNOTATION_PLACEMENT_INVALID"
+  },
+  {
+    "id": "throws_unknown_name",
+    "source": "@Throws(value = [Exception::class]) fun bad() {}",
+    "category": "invalid_kotlin",
+    "code": "JVM_ANNOTATION_PLACEMENT_INVALID"
+  },
+  {
+    "id": "throws_duplicate_name",
+    "source": "@Throws(exceptionClasses = [Exception::class], exceptionClasses = [Exception::class]) fun bad() {}",
+    "category": "invalid_kotlin",
+    "code": "JVM_ANNOTATION_PLACEMENT_INVALID"
+  },
+  {
+    "id": "throws_bound_value",
+    "source": "object Holder { val failure: Exception = Exception(); @Throws(failure::class) fun bad() {} }",
+    "category": "invalid_kotlin",
+    "code": "INVALID_ANNOTATION_VALUE"
+  },
+  {
+    "id": "sync_defaults",
+    "source": "@Synchronized fun bad(value: Int = 1): Int = value",
+    "category": "unsupported_language",
+    "code": "JVM_ANNOTATION_DEFAULTS_UNSUPPORTED"
+  },
+  {
+    "id": "sync_inline",
+    "source": "@Synchronized inline fun bad(): Int = 1",
+    "category": "unsupported_language",
+    "code": "SYNCHRONIZED_FUNCTION_SHAPE_UNSUPPORTED"
+  },
+  {
+    "id": "sync_suspend",
+    "source": "@Synchronized suspend fun bad(): Int = 1",
+    "category": "invalid_kotlin",
+    "code": "SYNCHRONIZED_SUSPEND_INVALID"
+  },
+  {
+    "id": "sync_value",
+    "source": "@JvmInline value class Bad(val value: Int) { @Synchronized fun bad(): Int = value }",
+    "category": "invalid_kotlin",
+    "code": "SYNCHRONIZED_VALUE_CLASS_INVALID"
+  },
+  {
+    "id": "duplicate_get_alias",
+    "source": "import kotlin.jvm.Throws as Declares\nclass Bad { @get:Throws(Exception::class) @get:Declares(Exception::class) val value: Int = 1 }",
+    "category": "invalid_kotlin",
+    "code": "REPEATED_ANNOTATION_INVALID"
+  },
+  {
+    "id": "inherited_default_class",
+    "source": "interface Contract { @Throws(Exception::class) fun ready(): Int = 1 }\nclass Bad: Contract",
+    "category": "unsupported_language",
+    "code": "INHERITED_THROWS_DEFAULT_UNSUPPORTED"
+  },
+  {
+    "id": "inherited_default_object",
+    "source": "interface Contract { @Throws(Exception::class) fun ready(): Int = 1 }\nobject Bad: Contract { fun own(): Int = 2 }",
+    "category": "unsupported_language",
+    "code": "INHERITED_THROWS_DEFAULT_UNSUPPORTED"
+  },
+  {
+    "id": "inherited_default_interface",
+    "source": "interface Contract { @Throws(Exception::class) fun ready(): Int = 1 }\ninterface Bad: Contract",
+    "category": "unsupported_language",
+    "code": "INHERITED_THROWS_DEFAULT_UNSUPPORTED"
+  },
+  {
+    "id": "throws_inferred_shadow",
+    "source": "object Scratch { private val IllegalArgumentException = ThreadLocal.withInitial { ByteArray(1) }; @Throws(IllegalArgumentException::class) fun bad() {} }",
+    "category": "invalid_kotlin",
+    "code": "INVALID_ANNOTATION_VALUE"
+  },
+  {
+    "id": "throws_suspend",
+    "source": "@Throws(Exception::class) suspend fun bad(): Int = 1",
+    "category": "unsupported_language",
+    "code": "THROWS_SUSPEND_UNSUPPORTED"
+  },
+  {
+    "id": "compiled_inherited_default_official",
+    "source": "class Bad: novjvm.Contract { override fun run(): Int = 1 }",
+    "category": "unsupported_language",
+    "code": "INHERITED_THROWS_DEFAULT_UNSUPPORTED",
+    "provider": "official"
+  },
+  {
+    "id": "compiled_inherited_default_candidate",
+    "source": "class Bad: novjvm.Contract { override fun run(): Int = 1 }",
+    "category": "unsupported_language",
+    "code": "INHERITED_THROWS_DEFAULT_UNSUPPORTED",
+    "provider": "candidate"
+  }
+]

@@ -265,21 +265,6 @@ pub(super) fn check_class_with_constants(
         ));
     }
     if !source.type_params.is_empty()
-        && source
-            .methods
-            .iter()
-            .any(|m| !m.function.type_params.is_empty())
-    {
-        return Err(Diagnostic::new(
-            source.offset,
-            "Generic members inside source generic classes are unsupported",
-        )
-        .with_kind(
-            crate::DiagnosticKind::UnsupportedLanguage,
-            "GENERIC_CLASS_MEMBER_TYPE_PARAMETERS_UNSUPPORTED",
-        ));
-    }
-    if !source.type_params.is_empty()
         && (source.data || source.companion.is_some() || !source.nested.is_empty())
     {
         return Err(Diagnostic::new(
@@ -669,6 +654,8 @@ pub(super) fn check_class_with_constants(
         object_fields: &HashMap::new(),
         object_owner: None,
         allow_return: true,
+        contract_facts: HashMap::new(),
+        contract_registration: None,
         refinements: HashMap::new(),
         initialized: HashSet::new(),
         loop_depth: 0,
@@ -851,6 +838,8 @@ pub(super) fn check_class_with_constants(
                 object_fields: &HashMap::new(),
                 object_owner: None,
                 allow_return: true,
+                contract_facts: HashMap::new(),
+                contract_registration: None,
                 refinements: HashMap::new(),
                 initialized: HashSet::new(),
                 loop_depth: 0,
@@ -1044,6 +1033,7 @@ pub(super) fn check_class_with_constants(
     }
     for method in &source.methods {
         let function = &method.function;
+        validate_member_generics(function, method.is_override, classpath, imports, classes)?;
         let mut params = function.params.clone();
         if let Some(receiver) = &function.receiver {
             params.insert(0, ("<this>".into(), receiver.clone()));
@@ -1098,6 +1088,7 @@ pub(super) fn check_class_with_constants(
                     .iter()
                     .find(|m| m.function.offset == *offset && m.function.name == *name)
                     .map(|m| -> Result<_> { Ok(crate::classpath::LibraryMethod {
+            contracts: Vec::new(),
             value_dispatch: false,
                 suspend_: m.function.suspend_,
                 kotlin_declared: true,
@@ -1326,6 +1317,8 @@ pub(super) fn check_class_with_constants(
             object_fields: &companion_static_fields,
             object_owner: None,
             allow_return: true,
+            contract_facts: HashMap::new(),
+            contract_registration: None,
             refinements: HashMap::new(),
             initialized: HashSet::new(),
             loop_depth: 0,
@@ -1375,6 +1368,9 @@ pub(super) fn check_class_with_constants(
             .methods
             .iter()
             .find(|method| method.function.offset == offset && method.function.name == name);
+        if let Some(method) = source_method {
+            checker.validate_update_declaration(&method.function, &self_type)?;
+        }
         let mut source_defaults = source_method
             .map(|method| method.function.defaults.clone())
             .unwrap_or_else(|| vec![None; method_params.len()]);
@@ -1400,11 +1396,24 @@ pub(super) fn check_class_with_constants(
                 "Abstract methods require an abstract class",
             ));
         }
+        let initial_lambda_count = lambdas.borrow().len();
         let (mut body, returns) = if has_body {
             checker.block(body)?
         } else {
             (Vec::new(), true)
         };
+        if source_method.is_some_and(|m| !m.function.type_params.is_empty())
+            && lambdas.borrow().len() != initial_lambda_count
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Lambdas in generic source members are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "GENERIC_MEMBER_LAMBDA_UNSUPPORTED",
+            ));
+        }
         if !returns {
             if result != Type::Unit {
                 return Err(Diagnostic::new(
@@ -1429,6 +1438,7 @@ pub(super) fn check_class_with_constants(
             jvm_result: source_method
                 .filter(|method| method.function.suspend_)
                 .map(|_| Type::Nullable(Box::new(Type::Java("java/lang/Object".into())))),
+            jvm_signature: None,
             jvm_name: None,
             annotations: annotations::declaration_annotations(
                 source_method.map_or(&[], |method| method.function.annotations.as_slice()),
@@ -1597,6 +1607,7 @@ pub(super) fn check_class_with_constants(
                     extension_receiver: false,
                     class_type_params: Vec::new(),
                     jvm_result: None,
+                    jvm_signature: None,
                     jvm_name: None,
                     annotations: Vec::new(),
                     vararg: false,
@@ -1642,6 +1653,7 @@ pub(super) fn check_class_with_constants(
                     extension_receiver: false,
                     class_type_params: Vec::new(),
                     jvm_result: None,
+                    jvm_signature: None,
                     jvm_name: None,
                     annotations: Vec::new(),
                     vararg: false,
@@ -2013,6 +2025,7 @@ pub(super) fn check_class_with_constants(
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
+                jvm_signature: None,
                 jvm_name: None,
                 annotations: Vec::new(),
                 vararg: false,
@@ -2165,6 +2178,7 @@ pub(super) fn check_class_with_constants(
         delegated_properties,
         primary_constructor: source.primary_constructor,
         constructor_visibility: source.constructor_visibility,
+        constructor_signature: None,
         constructor_annotations,
         abstract_: source.abstract_,
         open_methods,
@@ -2279,6 +2293,8 @@ impl<'a> DeclarationContext<'a> {
             object_fields: &self.static_fields,
             object_owner: Some(&self.owner),
             allow_return: true,
+            contract_facts: HashMap::new(),
+            contract_registration: None,
             refinements: HashMap::new(),
             initialized: HashSet::new(),
             loop_depth: 0,
@@ -2294,6 +2310,13 @@ impl<'a> DeclarationContext<'a> {
         is_override: bool,
     ) -> Result<Function> {
         validate_operator(source, true)?;
+        validate_member_generics(
+            source,
+            is_override,
+            self.classpath,
+            self.imports,
+            self.classes,
+        )?;
         validate_overriding_defaults(source, is_override)?;
 
         let result = resolve_type_checked(
@@ -2304,6 +2327,7 @@ impl<'a> DeclarationContext<'a> {
             self.classes,
         )?;
         let mut checker = self.checker(receiver, u16::from(receiver), result.clone());
+        checker.validate_update_declaration(source, &Type::Java(self.owner.clone()))?;
         let mut params = Vec::new();
         if let Some(receiver) = &source.receiver {
             let receiver = resolve_type_checked(
@@ -2356,7 +2380,18 @@ impl<'a> DeclarationContext<'a> {
             source_defaults.insert(0, None);
         }
         let defaults = checker.checked_defaults(&source_defaults, &params, source.offset)?;
+        let initial_lambda_count = self.lambdas.borrow().len();
         let (mut body, returns) = checker.block(&source.body)?;
+        if !source.type_params.is_empty() && self.lambdas.borrow().len() != initial_lambda_count {
+            return Err(Diagnostic::new(
+                source.offset,
+                "Lambdas in generic source members are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "GENERIC_MEMBER_LAMBDA_UNSUPPORTED",
+            ));
+        }
         if !returns {
             if result != Type::Unit {
                 return Err(Diagnostic::new(
@@ -2377,6 +2412,7 @@ impl<'a> DeclarationContext<'a> {
             extension_receiver: source.receiver.is_some(),
             class_type_params: Vec::new(),
             jvm_result: None,
+            jvm_signature: None,
             jvm_name: None,
             annotations: annotations::declaration_annotations(
                 &source.annotations,
@@ -3426,6 +3462,7 @@ pub(super) fn check_static_state(
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
+                jvm_signature: None,
                 jvm_name: None,
                 annotations: Vec::new(),
                 vararg: false,
@@ -3503,6 +3540,7 @@ pub(super) fn check_static_state(
                     extension_receiver: false,
                     class_type_params: Vec::new(),
                     jvm_result: None,
+                    jvm_signature: None,
                     jvm_name: None,
                     annotations: Vec::new(),
                     vararg: false,
@@ -3609,6 +3647,16 @@ pub(super) fn validate_operator(function: &syntax::Function, member: bool) -> Re
             "Operator functions require a member or extension receiver",
         ));
     }
+    if matches!(function.name.as_str(), "inc" | "dec") && count != 0 {
+        return Err(Diagnostic::new(
+            function.offset,
+            "Parameterized inc/dec declarations are unsupported",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "PARAMETERIZED_UPDATE_OPERATOR_UNSUPPORTED",
+        ));
+    }
     let valid = match function.name.as_str() {
         "iterator" | "next" => count == 0,
         "hasNext" => count == 0 && (function.result_inferred || function.result == Type::Boolean),
@@ -3620,6 +3668,7 @@ pub(super) fn validate_operator(function: &syntax::Function, member: bool) -> Re
         "setValue" => count == 3 && (function.result_inferred || function.result == Type::Unit),
         "plus" | "minus" | "times" | "div" | "rem" => count == 1,
         "unaryPlus" | "unaryMinus" | "not" => count == 0,
+        "inc" | "dec" => count == 0 && (function.result_inferred || function.result != Type::Unit),
         "compareTo" => count == 1 && (function.result_inferred || function.result == Type::Int),
         "plusAssign" | "minusAssign" | "timesAssign" | "divAssign" | "remAssign" => {
             count == 1 && (function.result_inferred || function.result == Type::Unit)
@@ -3893,7 +3942,8 @@ fn constructor_assignment_block(
             | StatementKind::Destructure(_, _, value) => {
                 constructor_read(value, fields, &locals, state)?
             }
-            StatementKind::PropertyAssign(receiver, _, value)
+            StatementKind::LvalueCompoundAssign(receiver, _, value)
+            | StatementKind::PropertyAssign(receiver, _, value)
             | StatementKind::SafePropertyAssign(receiver, _, value) => {
                 constructor_read(receiver, fields, &locals, state)?;
                 constructor_read(value, fields, &locals, state)?;
@@ -4188,6 +4238,16 @@ pub(super) fn direct_default_bridge(
     classpath: &Classpath,
     offset: usize,
 ) -> Result<JavaMethod> {
+    if !classpath.method_exceptions(&method).is_empty() {
+        return Err(Diagnostic::new(
+            offset,
+            "Inheriting a Throws-bearing interface default requires an explicit override",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "INHERITED_THROWS_DEFAULT_UNSUPPORTED",
+        ));
+    }
     if parents.contains(&method.owner) {
         return Ok(method);
     }
@@ -4520,4 +4580,32 @@ fn variance_visibility_error(error: Diagnostic, private: bool) -> Diagnostic {
     } else {
         error
     }
+}
+
+pub(super) fn validate_member_generics(
+    function: &syntax::Function,
+    is_override: bool,
+    classpath: &Classpath,
+    imports: &HashMap<String, String>,
+    classes: &HashMap<String, JavaClass>,
+) -> Result<()> {
+    if function.type_params.is_empty() {
+        return Ok(());
+    }
+    if is_override
+        || function.inline
+        || function.suspend_
+        || function.vararg
+        || function.defaults.iter().any(Option::is_some)
+    {
+        return Err(Diagnostic::new(function.offset, "Generic source member overrides, inline, suspend, varargs and defaults are unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "GENERIC_MEMBER_COMPLEXITY_UNSUPPORTED"));
+    }
+    validate_classifier_generics(
+        &function.type_params,
+        &[],
+        classpath,
+        imports,
+        classes,
+        function.offset,
+    )
 }

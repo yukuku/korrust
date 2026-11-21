@@ -1,0 +1,60 @@
+target/checks/2026-11-21T063024347925Z-nov21-jvm/reject_abstract_sync.kt:2:22: error: '@Synchronized' annotation cannot be used on abstract functions.
+abstract class Bad { @Synchronized abstract fun bad() }
+                     ^^^^^^^^^^^^^
+target/checks/2026-11-21T063024347925Z-nov21-jvm/reject_constructor_sync.kt:2:11: error: this annotation is not applicable to target 'constructor'. Applicable targets: function, getter, setter
+class Bad @Synchronized constructor()
+          ^^^^^^^^^^^^^
+target/checks/2026-11-21T063024347925Z-nov21-jvm/reject_duplicate_alias.kt:3:27: error: this annotation is not repeatable.
+@Throws(Exception::class) @Declares(Exception::class) fun bad() {}
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+target/checks/2026-11-21T063024347925Z-nov21-jvm/reject_duplicate_get_alias.kt:3:43: error: this annotation is not repeatable.
+class Bad { @get:Throws(Exception::class) @get:Declares(Exception::class) val value: Int = 1 }
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+target/checks/2026-11-21T063024347925Z-nov21-jvm/reject_duplicate_sync.kt:3:2: error: unresolved reference 'Synchronized'.
+@Synchronized @Monitor fun bad() {}
+ ^^^^^^^^^^^^
+target/checks/2026-11-21T063024347925Z-nov21-jvm/reject_field_throws.kt:2:13: error: this annotation is not applicable to target 'backing field' and use-site target '@field'. Applicable targets: function, getter, setter, constructor
+class Bad { @field:Throws(Exception::class) val x: Int = 1 }
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+target/checks/2026-11-21T063024347925Z-nov21-jvm/reject_function_get_site.kt:2:1: error: '@get:' annotations can only be applied to property declarations.
+@get:Throws(Exception::class) fun bad() {}
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+target/checks/2026-11-21T063024347925Z-nov21-jvm/reject_function_get_site.kt:2:1: error: this annotation is not applicable to target 'top level function' and use-site target '@get'. Applicable targets: function, getter, setter, constructor
+@get:Throws(Exception::class) fun bad() {}
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+target/checks/2026-11-21T063024347925Z-nov21-jvm/reject_interface_abstract_sync.kt:2:17: error: '@Synchronized' annotation cannot be used on interface members.
+interface Bad { @Synchronized fun bad() }
+                ^^^^^^^^^^^^^
+target/checks/2026-11-21T063024347925Z-nov21-jvm/reject_interface_default_sync.kt:2:17: error: '@Synchronized' annotation cannot be used on interface members.
+interface Bad { @Synchronized fun bad() {} }
+                ^^^^^^^^^^^^^
+target/checks/2026-11-21T063024347925Z-nov21-jvm/reject_non_throwable.kt:2:9: error: argument type mismatch: actual type is 'KClass<String>', but 'KClass<out Throwable>' was expected.
+@Throws(String::class) fun bad() {}
+        ^^^^^^^^^^^^^
+target/checks/2026-11-21T063024347925Z-nov21-jvm/reject_primitive_throwable.kt:2:9: error: argument type mismatch: actual type is 'KClass<Int>', but 'KClass<out Throwable>' was expected.
+@Throws(Int::class) fun bad() {}
+        ^^^^^^^^^^
+target/checks/2026-11-21T063024347925Z-nov21-jvm/reject_sync_arguments.kt:2:15: error: too many arguments for 'constructor(): Synchronized'.
+@Synchronized(1) fun bad() {}
+              ^
+target/checks/2026-11-21T063024347925Z-nov21-jvm/reject_sync_suspend.kt:2:1: error: '@Synchronized' annotation is not applicable to 'suspend' functions and lambdas.
+@Synchronized suspend fun bad(): Int = 1
+^^^^^^^^^^^^^
+target/checks/2026-11-21T063024347925Z-nov21-jvm/reject_sync_value.kt:2:46: error: '@Synchronized' annotation has no effect on value classes.
+@JvmInline value class Bad(val value: Int) { @Synchronized fun bad(): Int = value }
+                                             ^^^^^^^^^^^^^
+target/checks/2026-11-21T063024347925Z-nov21-jvm/reject_throws_bound_value.kt:2:63: error: annotation argument must be class literal (T::class).
+object Holder { val failure: Exception = Exception(); @Throws(failure::class) fun bad() {} }
+                                                              ^^^^^^^^^^^^^^
+target/checks/2026-11-21T063024347925Z-nov21-jvm/reject_throws_duplicate_name.kt:2:48: error: argument already passed for this parameter.
+@Throws(exceptionClasses = [Exception::class], exceptionClasses = [Exception::class]) fun bad() {}
+                                               ^^^^^^^^^^^^^^^^
+target/checks/2026-11-21T063024347925Z-nov21-jvm/reject_throws_inferred_shadow.kt:2:107: error: annotation argument must be class literal (T::class).
+object Scratch { private val IllegalArgumentException = ThreadLocal.withInitial { ByteArray(1) }; @Throws(IllegalArgumentException::class) fun bad() {} }
+                                                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+target/checks/2026-11-21T063024347925Z-nov21-jvm/reject_throws_inferred_shadow.kt:2:107: error: argument type mismatch: actual type is 'KClass<CapturedType(out ThreadLocal<ByteArray!>!)>', but 'KClass<out Throwable>' was expected.
+object Scratch { private val IllegalArgumentException = ThreadLocal.withInitial { ByteArray(1) }; @Throws(IllegalArgumentException::class) fun bad() {} }
+                                                                                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+target/checks/2026-11-21T063024347925Z-nov21-jvm/reject_throws_unknown_name.kt:2:9: error: no parameter with name 'value' found.
+@Throws(value = [Exception::class]) fun bad() {}
+        ^^^^^

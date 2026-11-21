@@ -18,6 +18,27 @@ impl Checker<'_> {
             let value = self.unsigned_literal(*bits, *long, Some(expected), expr.offset)?;
             return self.coerce(value, expected.clone(), expr.offset);
         }
+        if let Type::Nullable(inner) = expected.base() {
+            let callable = match &expr.kind {
+                ExprKind::Lambda(_)
+                | ExprKind::LambdaWithParams { .. }
+                | ExprKind::CallableReference { .. } => true,
+                ExprKind::Labeled(_, value) => matches!(
+                    value.kind,
+                    ExprKind::Lambda(_) | ExprKind::LambdaWithParams { .. }
+                ),
+                _ => false,
+            };
+            if callable
+                && matches!(
+                    inner.base(),
+                    Type::Function { .. } | Type::ReceiverFunction { .. }
+                )
+            {
+                let value = self.expected_value(expr, inner)?;
+                return self.coerce(value, expected.clone(), expr.offset);
+            }
+        }
         if let Some(labeled) = member_extensions::labeled_call(expr) {
             return self.expected_value(&labeled, expected);
         }
@@ -49,6 +70,10 @@ impl Checker<'_> {
             }
             return self.callable_reference(expr, expected);
         }
+        if matches!(expr.kind, ExprKind::Block(_) | ExprKind::Try { .. }) {
+            let value = self.control_value_expected(expr, Some(expected))?;
+            return self.coerce(value, expected.clone(), expr.offset);
+        }
         if let ExprKind::If(condition, yes, no) = &expr.kind {
             let refinements = self.refinements.clone();
             let checked_condition = self.value(condition)?;
@@ -74,7 +99,25 @@ impl Checker<'_> {
                 ExprKind::Generic(target, types) => (target.as_ref(), types.as_slice()),
                 _ => (target.as_ref(), &[][..]),
             };
+            if let ExprKind::Property(receiver, name) = &target.kind {
+                if let Some(value) = self.contextual_extension_call(
+                    receiver,
+                    name,
+                    args,
+                    explicit,
+                    expected,
+                    expr.offset,
+                )? {
+                    return self.coerce(value, expected.clone(), expr.offset);
+                }
+            }
             if let ExprKind::Name(name) = &target.kind {
+                if name == "Array" && explicit.is_empty() && self.unshadowed(name) {
+                    if let Some(element) = expected.base().array_element() {
+                        let value = self.array_constructor(&[element], args, expr.offset)?;
+                        return self.coerce(value, expected.clone(), expr.offset);
+                    }
+                }
                 if let Some(value) =
                     self.lexical_call(name, args, explicit, Some(expected), expr.offset)?
                 {
@@ -386,6 +429,8 @@ impl Checker<'_> {
             object_fields: self.object_fields,
             object_owner: self.object_owner,
             allow_return: local_return,
+            contract_facts: HashMap::new(),
+            contract_registration: None,
             refinements: HashMap::new(),
             initialized: HashSet::new(),
             loop_depth: 0,
@@ -536,6 +581,7 @@ impl Checker<'_> {
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
+                jvm_signature: None,
                 jvm_name: None,
                 annotations: Vec::new(),
                 vararg: false,
@@ -842,6 +888,7 @@ mod shadowing_tests {
                 kotlin_interface: false,
                 methods: vec![JavaMethod {
                     library: Some(crate::classpath::LibraryMethod {
+                        contracts: Vec::new(),
                         value_dispatch: false,
                         suspend_: false,
                         kotlin_declared: true,
@@ -910,6 +957,8 @@ mod shadowing_tests {
             object_fields: &HashMap::new(),
             object_owner: None,
             allow_return: true,
+            contract_facts: HashMap::new(),
+            contract_registration: None,
             refinements: HashMap::new(),
             initialized: HashSet::new(),
             loop_depth: 0,
@@ -964,6 +1013,8 @@ impl Checker<'_> {
             .collect::<Result<Vec<_>>>()?;
         let result = if function.result_inferred {
             let scope_count = self.scopes.len();
+            let saved_contract_registration = self.contract_registration;
+            let saved_contract_facts = self.contract_facts.clone();
             let next = self.next;
             let initialized = self.initialized.clone();
             let refinements = self.refinements.clone();
@@ -989,6 +1040,8 @@ impl Checker<'_> {
                 self.value(expr).map(|value| value.ty)
             })();
             self.scopes.truncate(scope_count);
+            self.contract_facts = saved_contract_facts;
+            self.contract_registration = saved_contract_registration;
             self.next = next;
             self.initialized = initialized;
             self.refinements = refinements;

@@ -1,0 +1,106 @@
+[
+  {
+    "id": "recursive-method-bound",
+    "official": "accept",
+    "code": "DEPENDENT_GENERIC_BOUND_UNSUPPORTED",
+    "source": "class Box<C> { fun <T:Comparable<T>> f(x:T):T=x }"
+  },
+  {
+    "id": "dependent-method-bound",
+    "official": "accept",
+    "code": "DEPENDENT_GENERIC_BOUND_UNSUPPORTED",
+    "source": "class Box<C> { fun <T,U:T> f(x:U):U=x }"
+  },
+  {
+    "id": "method-shadowing",
+    "official": "accept",
+    "code": "TYPE_PARAMETER_SHADOW_UNSUPPORTED",
+    "source": "class Box<C> { fun <C> f(x:C):C=x }"
+  },
+  {
+    "id": "generic-member-default",
+    "official": "accept",
+    "code": "GENERIC_MEMBER_COMPLEXITY_UNSUPPORTED",
+    "source": "class Box<C> { fun <T> f(x:T?=null):T?=x }"
+  },
+  {
+    "id": "generic-member-capture",
+    "official": "accept",
+    "code": "GENERIC_MEMBER_LAMBDA_UNSUPPORTED",
+    "source": "class Box<C> { fun <T> f(x:T):()->T = {x} }"
+  },
+  {
+    "id": "generic-interface-default",
+    "official": "accept",
+    "code": "GENERIC_INTERFACE_BODY_UNSUPPORTED",
+    "source": "interface Api<C> { fun <T> f(x:T):T=x }"
+  },
+  {
+    "id": "generic-nongeneric-interface-default",
+    "official": "accept",
+    "code": "GENERIC_INTERFACE_METHOD_BODY_UNSUPPORTED",
+    "source": "interface Api { fun <T> f(x:T):T=x }"
+  },
+  {
+    "id": "generic-override",
+    "official": "accept",
+    "code": "GENERIC_MEMBER_COMPLEXITY_UNSUPPORTED",
+    "source": "interface Api { fun <T> f(x:T):T }\nclass Impl:Api { override fun <T> f(x:T):T=x }"
+  },
+  {
+    "id": "wrong-method-bound",
+    "official": "reject",
+    "source": "interface Label\nclass Box<C> { fun <T:Label> f(x:T):T=x }\nfun bad():String=Box<String>().f(\"bad\")"
+  },
+  {
+    "id": "nullable-method-bound",
+    "official": "reject",
+    "source": "interface Label\nclass Box<C> { fun <T:Label> f(x:T):T=x }\nfun bad(x:Label?):Label=Box<String>().f(x)"
+  },
+  {
+    "id": "variance-opposition",
+    "official": "reject",
+    "source": "interface Cov<out T>\nfun bad(x:Cov<in String>):Int=1"
+  },
+  {
+    "id": "wrong-generic-interface-bound",
+    "official": "reject",
+    "source": "interface Label\ninterface Api<C> { fun <T:Label> f(x:T):T }\nfun bad(a:Api<String>):String=a.f(\"bad\")"
+  },
+  {
+    "id": "variant-classifier-bound",
+    "official": "accept",
+    "code": "VARIANT_CLASSIFIER_SIGNATURE_UNSUPPORTED",
+    "source": "interface Cov<out T>\nclass Box<T:Cov<String>>(val value:T)"
+  },
+  {
+    "id": "variant-nested-supertype",
+    "official": "accept",
+    "code": "VARIANT_CLASSIFIER_SIGNATURE_UNSUPPORTED",
+    "source": "interface Cov<out T>\ninterface Inv<T>\ninterface Nested:Inv<Cov<String>>"
+  },
+  {
+    "id": "multiple-method-bounds",
+    "official": "accept",
+    "code": "SOURCE_WHERE_BOUND_UNSUPPORTED",
+    "source": "interface Label\nclass Box<C> { fun <T> f(x:T):T where T:Label,T:CharSequence = x }"
+  },
+  {
+    "id": "projected-exposed-field",
+    "official": "accept",
+    "code": "VARIANT_FIELD_SIGNATURE_UNSUPPORTED",
+    "source": "interface Cov<out T>\nobject Fields { @JvmField val value:Cov<out String>? = null }"
+  },
+  {
+    "id": "projected-exposed-field-alias",
+    "official": "accept",
+    "code": "VARIANT_FIELD_SIGNATURE_UNSUPPORTED",
+    "source": "import kotlin.jvm.JvmField as Expose\ninterface Cov<out T>\nobject Fields { @Expose val value:Cov<out String>? = null }"
+  },
+  {
+    "id": "projected-exposed-constructor-field",
+    "official": "accept",
+    "code": "VARIANT_FIELD_SIGNATURE_UNSUPPORTED",
+    "source": "interface Cov<out T>\nclass Fields(@JvmField val value:Cov<out String>?)"
+  }
+]

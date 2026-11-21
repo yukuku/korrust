@@ -1,0 +1,99 @@
+{
+  "created_at": "2026-11-21T07:38:36.224615+00:00",
+  "report": "reports/correctness/2026-11-21T072533565630Z-nov21-generics.json",
+  "status": "passed",
+  "counts": {
+    "pass": 34,
+    "unsupported_language": 14,
+    "invalid_rejected": 4
+  },
+  "binary_sha256": "193fcdd9fd7af09271cbad17e47d126dc28d27a0528d49996a866862bb349c50",
+  "baseline_sha256": "58990f36b6aba59d2b92c5417cbde8a3daff1396ea3eda01c1e85c4b5c3dc574",
+  "family_frozen_files": 94,
+  "family_changed": [],
+  "global_manifest": "reports/correctness/2026-11-21-next-ten-final-v5/frozen-inputs.json",
+  "global_frozen_files": 1241,
+  "changed": [],
+  "added": [],
+  "missing": [],
+  "archive_sha256": "65939a1556acb5db77b7dbc1f6e7f69dcb3cca000826606f5f1a8916b0336e04",
+  "archive_contents_verified": true,
+  "signature_class_maps": 14,
+  "provider_class_integrity": {
+    "official": {
+      "classes": 18,
+      "hashes_match": true
+    },
+    "candidate": {
+      "classes": 19,
+      "hashes_match": true
+    }
+  },
+  "fixed_caller": {
+    "source": "tests/nov21_generics/Calls.java",
+    "source_sha256": "73912560fdb4ba414a5672a7a6f038c3bad90abbe056a47f014c69dc97d2c8b1",
+    "compiled_once_against": "official",
+    "same_caller_directory_for_both_providers": true,
+    "classes_sha256": {
+      "target/checks/2026-11-21T072533565630Z-nov21-generics/callers/Calls$Api.class": "9a1d9457d4f01cc129be3526e7c974b7888c855f1267dbe554bb7cc90cc39db7",
+      "target/checks/2026-11-21T072533565630Z-nov21-generics/callers/Calls.class": "227c2b30f34b92fda567eeecf1ab4f4c354b87ada4ac09d6aca683d7e3edce93"
+    },
+    "executions": [
+      {
+        "provider": "official",
+        "classpath": [
+          "/workspace/korrust/target/checks/2026-11-21T072533565630Z-nov21-generics/callers",
+          "/workspace/korrust/target/checks/2026-11-21T072533565630Z-nov21-generics/official",
+          "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar"
+        ],
+        "exit_code": 0,
+        "stdout": "OK",
+        "verification": "-Xverify:all"
+      },
+      {
+        "provider": "candidate",
+        "classpath": [
+          "/workspace/korrust/target/checks/2026-11-21T072533565630Z-nov21-generics/callers",
+          "/workspace/korrust/target/checks/2026-11-21T072533565630Z-nov21-generics/candidate",
+          "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar"
+        ],
+        "exit_code": 0,
+        "stdout": "OK",
+        "verification": "-Xverify:all"
+      }
+    ]
+  },
+  "consumer_and_launcher_classes_sha256": {
+    "official/official/consumer": {
+      "target/checks/2026-11-21T072533565630Z-nov21-generics/official-official-consumer/consumers/ConsumerKt.class": "d13f96c3cc53125df6b4a8c2e046970a819a41b2985322bda72f126aa263bba3"
+    },
+    "official/official/launcher": {
+      "target/checks/2026-11-21T072533565630Z-nov21-generics/official-official-launcher/ConsumerCalls$Api.class": "ed69082db9bdb0f0b31e20d7f4444081f15c0e18d90fde5b78a30073819588b2",
+      "target/checks/2026-11-21T072533565630Z-nov21-generics/official-official-launcher/ConsumerCalls.class": "471a29310edc603164da2a6ccb2890d46cf21605df4de4da6ae76667546c3d98"
+    },
+    "official/candidate/consumer": {
+      "target/checks/2026-11-21T072533565630Z-nov21-generics/official-candidate-consumer/consumers/ConsumerKt$lambda$385$0.class": "e0a297f6deffa5720c1cb226cf13017a6c6986be46e0682c2b8da1c0940d4d78",
+      "target/checks/2026-11-21T072533565630Z-nov21-generics/official-candidate-consumer/consumers/ConsumerKt.class": "1a7a0a910b63843a6a74bf9008e40eb1cebc37020162fe66d24c2a923b465f89"
+    },
+    "official/candidate/launcher": {
+      "target/checks/2026-11-21T072533565630Z-nov21-generics/official-candidate-launcher/ConsumerCalls$Api.class": "ed69082db9bdb0f0b31e20d7f4444081f15c0e18d90fde5b78a30073819588b2",
+      "target/checks/2026-11-21T072533565630Z-nov21-generics/official-candidate-launcher/ConsumerCalls.class": "471a29310edc603164da2a6ccb2890d46cf21605df4de4da6ae76667546c3d98"
+    },
+    "candidate/official/consumer": {
+      "target/checks/2026-11-21T072533565630Z-nov21-generics/candidate-official-consumer/consumers/ConsumerKt.class": "d13f96c3cc53125df6b4a8c2e046970a819a41b2985322bda72f126aa263bba3"
+    },
+    "candidate/official/launcher": {
+      "target/checks/2026-11-21T072533565630Z-nov21-generics/candidate-official-launcher/ConsumerCalls$Api.class": "ed69082db9bdb0f0b31e20d7f4444081f15c0e18d90fde5b78a30073819588b2",
+      "target/checks/2026-11-21T072533565630Z-nov21-generics/candidate-official-launcher/ConsumerCalls.class": "471a29310edc603164da2a6ccb2890d46cf21605df4de4da6ae76667546c3d98"
+    },
+    "candidate/candidate/consumer": {
+      "target/checks/2026-11-21T072533565630Z-nov21-generics/candidate-candidate-consumer/consumers/ConsumerKt$lambda$385$0.class": "e0a297f6deffa5720c1cb226cf13017a6c6986be46e0682c2b8da1c0940d4d78",
+      "target/checks/2026-11-21T072533565630Z-nov21-generics/candidate-candidate-consumer/consumers/ConsumerKt.class": "1a7a0a910b63843a6a74bf9008e40eb1cebc37020162fe66d24c2a923b465f89"
+    },
+    "candidate/candidate/launcher": {
+      "target/checks/2026-11-21T072533565630Z-nov21-generics/candidate-candidate-launcher/ConsumerCalls$Api.class": "ed69082db9bdb0f0b31e20d7f4444081f15c0e18d90fde5b78a30073819588b2",
+      "target/checks/2026-11-21T072533565630Z-nov21-generics/candidate-candidate-launcher/ConsumerCalls.class": "471a29310edc603164da2a6ccb2890d46cf21605df4de4da6ae76667546c3d98"
+    }
+  },
+  "pinned_reference_artifacts_match": true
+}

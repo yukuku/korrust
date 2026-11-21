@@ -1,0 +1,341 @@
+Classfile /workspace/korrust/target/checks/2026-11-21T054801876499Z-nov21-generics/official/methodgenerics/Generic.class
+  Last modified Nov 21, 2026; size 3362 bytes
+  SHA-256 checksum faf5ee3ddfa7697563e97e9b3020f844bbd5f9b9d63b473b3cdc6b3c5b20c9df
+  Compiled from "Use.kt"
+public final class methodgenerics.Generic<C extends java.lang.Object> extends java.lang.Object
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // methodgenerics/Generic
+  super_class: #5                         // java/lang/Object
+  interfaces: 0, fields: 1, methods: 10, attributes: 3
+Constant pool:
+    #1 = Utf8               methodgenerics/Generic
+    #2 = Class              #1            // methodgenerics/Generic
+    #3 = Utf8               <C:Ljava/lang/Object;>Ljava/lang/Object;
+    #4 = Utf8               java/lang/Object
+    #5 = Class              #4            // java/lang/Object
+    #6 = Utf8               <init>
+    #7 = Utf8               (Ljava/lang/Object;)V
+    #8 = Utf8               (TC;)V
+    #9 = Utf8               ()V
+   #10 = NameAndType        #6:#9         // "<init>":()V
+   #11 = Methodref          #5.#10        // java/lang/Object."<init>":()V
+   #12 = Utf8               seed
+   #13 = Utf8               Ljava/lang/Object;
+   #14 = NameAndType        #12:#13       // seed:Ljava/lang/Object;
+   #15 = Fieldref           #2.#14        // methodgenerics/Generic.seed:Ljava/lang/Object;
+   #16 = Utf8               this
+   #17 = Utf8               Lmethodgenerics/Generic;
+   #18 = Utf8               getSeed
+   #19 = Utf8               ()Ljava/lang/Object;
+   #20 = Utf8               ()TC;
+   #21 = Utf8               (Ljava/lang/Object;I)V
+   #22 = Utf8               (TC;I)V
+   #23 = NameAndType        #6:#7         // "<init>":(Ljava/lang/Object;)V
+   #24 = Methodref          #2.#23        // methodgenerics/Generic."<init>":(Ljava/lang/Object;)V
+   #25 = Utf8               ignored
+   #26 = Utf8               I
+   #27 = Utf8               echo
+   #28 = Utf8               (Ljava/lang/Object;)Ljava/lang/Object;
+   #29 = Utf8               <T:Ljava/lang/Object;>(TT;)TT;
+   #30 = Utf8               value
+   #31 = Utf8               bounded
+   #32 = Utf8               (Lmethodgenerics/Label;)Lmethodgenerics/Label;
+   #33 = Utf8               <T::Lmethodgenerics/Label;>(TT;)TT;
+   #34 = Utf8               Lorg/jetbrains/annotations/NotNull;
+   #35 = String             #30           // value
+   #36 = Utf8               kotlin/jvm/internal/Intrinsics
+   #37 = Class              #36           // kotlin/jvm/internal/Intrinsics
+   #38 = Utf8               checkNotNullParameter
+   #39 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+   #40 = NameAndType        #38:#39       // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+   #41 = Methodref          #37.#40       // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+   #42 = Utf8               Lmethodgenerics/Label;
+   #43 = Utf8               text
+   #44 = Utf8               (Lmethodgenerics/Label;)Ljava/lang/String;
+   #45 = Utf8               <T::Lmethodgenerics/Label;>(TT;)Ljava/lang/String;
+   #46 = Utf8               methodgenerics/Label
+   #47 = Class              #46           // methodgenerics/Label
+   #48 = Utf8               ()Ljava/lang/String;
+   #49 = NameAndType        #43:#48       // text:()Ljava/lang/String;
+   #50 = InterfaceMethodref #47.#49       // methodgenerics/Label.text:()Ljava/lang/String;
+   #51 = Utf8               choose
+   #52 = Utf8               <T:Ljava/lang/Object;>(TT;)TC;
+   #53 = Utf8               second
+   #54 = Utf8               (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+   #55 = Utf8               <T:Ljava/lang/Object;S:Ljava/lang/Object;>(TT;TS;)TS;
+   #56 = Utf8               first
+   #57 = Utf8               (Ljava/util/List;)Ljava/lang/Object;
+   #58 = Utf8               <T:Ljava/lang/Object;>(Ljava/util/List<+TT;>;)TT;
+   #59 = Utf8               values
+   #60 = String             #59           // values
+   #61 = Utf8               java/util/List
+   #62 = Class              #61           // java/util/List
+   #63 = Utf8               get
+   #64 = Utf8               (I)Ljava/lang/Object;
+   #65 = NameAndType        #63:#64       // get:(I)Ljava/lang/Object;
+   #66 = InterfaceMethodref #62.#65       // java/util/List.get:(I)Ljava/lang/Object;
+   #67 = Utf8               Ljava/util/List;
+   #68 = Utf8               transform
+   #69 = Utf8               (Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+   #70 = Utf8               <T:Ljava/lang/Object;>(TT;Lkotlin/jvm/functions/Function1<-TT;Ljava/lang/String;>;)Ljava/lang/String;
+   #71 = Utf8               block
+   #72 = String             #71           // block
+   #73 = Utf8               kotlin/jvm/functions/Function1
+   #74 = Class              #73           // kotlin/jvm/functions/Function1
+   #75 = Utf8               invoke
+   #76 = NameAndType        #75:#28       // invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+   #77 = InterfaceMethodref #74.#76       // kotlin/jvm/functions/Function1.invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+   #78 = Utf8               java/lang/String
+   #79 = Class              #78           // java/lang/String
+   #80 = Utf8               Lkotlin/jvm/functions/Function1;
+   #81 = Utf8               TC;
+   #82 = Utf8               Lkotlin/Metadata;
+   #83 = Utf8               mv
+   #84 = Integer            2
+   #85 = Integer            3
+   #86 = Integer            0
+   #87 = Utf8               k
+   #88 = Integer            1
+   #89 = Utf8               xi
+   #90 = Integer            48
+   #91 = Utf8               d1
+   #92 = Utf8               \u00006\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0000\n\u0002\b\u0004\n\u0002\u0010\b\n\u0002\b\t\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0002\b\u0007\n\u0002\u0010 \n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0002\u0018\u0000*\u0004\b\u0000\u0010\u00012\u00020\u0002B\u000f\u0012\u0006\u0010\u0003\u001a\u00028\u0000¢\u0006\u0004\b\u0004\u0010\u0005B\u0019\b\u0016\u0012\u0006\u0010\u0003\u001a\u00028\u0000\u0012\u0006\u0010\u0006\u001a\u00020\u0007¢\u0006\u0004\b\u0004\u0010\bJ\u0019\u0010\f\u001a\u0002H\r\"\u0004\b\u0001\u0010\r2\u0006\u0010\u000e\u001a\u0002H\r¢\u0006\u0002\u0010\u000fJ\u001d\u0010\u0010\u001a\u0002H\r\"\b\b\u0001\u0010\r*\u00020\u00112\u0006\u0010\u000e\u001a\u0002H\r¢\u0006\u0002\u0010\u0012J\u001d\u0010\u0013\u001a\u00020\u0014\"\b\b\u0001\u0010\r*\u00020\u00112\u0006\u0010\u000e\u001a\u0002H\r¢\u0006\u0002\u0010\u0015J\u0019\u0010\u0016\u001a\u00028\u0000\"\u0004\b\u0001\u0010\r2\u0006\u0010\u000e\u001a\u0002H\r¢\u0006\u0002\u0010\u000fJ\'\u0010\u0017\u001a\u0002H\u0018\"\u0004\b\u0001\u0010\r\"\u0004\b\u0002\u0010\u00182\u0006\u0010\u0019\u001a\u0002H\r2\u0006\u0010\u0017\u001a\u0002H\u0018¢\u0006\u0002\u0010\u001aJ\u001f\u0010\u0019\u001a\u0002H\r\"\u0004\b\u0001\u0010\r2\f\u0010\u001b\u001a\b\u0012\u0004\u0012\u0002H\r0\u001c¢\u0006\u0002\u0010\u001dJ-\u0010\u001e\u001a\u00020\u0014\"\u0004\b\u0001\u0010\r2\u0006\u0010\u000e\u001a\u0002H\r2\u0012\u0010\u001f\u001a\u000e\u0012\u0004\u0012\u0002H\r\u0012\u0004\u0012\u00020\u00140 ¢\u0006\u0002\u0010!R\u0013\u0010\u0003\u001a\u00028\u0000¢\u0006\n\n\u0002\u0010\u000b\u001a\u0004\b\t\u0010\n¨\u0006\"
+   #93 = Utf8               d2
+   #94 = Utf8               C
+   #95 = Utf8
+   #96 = Utf8               T
+   #97 = Utf8               S
+   #98 = Utf8               Lkotlin/Function1;
+   #99 = Utf8               nov21_generics
+  #100 = Utf8               Use.kt
+  #101 = Utf8               Signature
+  #102 = Utf8               Code
+  #103 = Utf8               LineNumberTable
+  #104 = Utf8               LocalVariableTable
+  #105 = Utf8               RuntimeInvisibleAnnotations
+  #106 = Utf8               RuntimeInvisibleParameterAnnotations
+  #107 = Utf8               SourceFile
+  #108 = Utf8               RuntimeVisibleAnnotations
+{
+  private final C seed;
+    descriptor: Ljava/lang/Object;
+    flags: (0x0012) ACC_PRIVATE, ACC_FINAL
+    Signature: #81                          // TC;
+
+  public methodgenerics.Generic(C);
+    descriptor: (Ljava/lang/Object;)V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload_0
+         1: invokespecial #11                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: aload_1
+         6: putfield      #15                 // Field seed:Ljava/lang/Object;
+         9: return
+      LineNumberTable:
+        line 5: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      10     0  this   Lmethodgenerics/Generic;
+            0      10     1  seed   Ljava/lang/Object;
+    Signature: #8                           // (TC;)V
+
+  public final C getSeed();
+    descriptor: ()Ljava/lang/Object;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: getfield      #15                 // Field seed:Ljava/lang/Object;
+         4: areturn
+      LineNumberTable:
+        line 5: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   Lmethodgenerics/Generic;
+    Signature: #20                          // ()TC;
+
+  public methodgenerics.Generic(C, int);
+    descriptor: (Ljava/lang/Object;I)V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=3, args_size=3
+         0: aload_0
+         1: aload_1
+         2: invokespecial #24                 // Method "<init>":(Ljava/lang/Object;)V
+         5: return
+      LineNumberTable:
+        line 6: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       6     0  this   Lmethodgenerics/Generic;
+            0       6     1  seed   Ljava/lang/Object;
+            0       6     2 ignored   I
+    Signature: #22                          // (TC;I)V
+
+  public final <T extends java.lang.Object> T echo(T);
+    descriptor: (Ljava/lang/Object;)Ljava/lang/Object;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=1, locals=2, args_size=2
+         0: aload_1
+         1: areturn
+      LineNumberTable:
+        line 7: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       2     0  this   Lmethodgenerics/Generic;
+            0       2     1 value   Ljava/lang/Object;
+    Signature: #29                          // <T:Ljava/lang/Object;>(TT;)TT;
+
+  public final <T extends methodgenerics.Label> T bounded(T);
+    descriptor: (Lmethodgenerics/Label;)Lmethodgenerics/Label;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload_1
+         1: ldc           #35                 // String value
+         3: invokestatic  #41                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_1
+         7: areturn
+      LineNumberTable:
+        line 8: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       8     0  this   Lmethodgenerics/Generic;
+            0       8     1 value   Lmethodgenerics/Label;
+    Signature: #33                          // <T::Lmethodgenerics/Label;>(TT;)TT;
+    RuntimeInvisibleAnnotations:
+      0: #34()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #34()
+          org.jetbrains.annotations.NotNull
+
+  public final <T extends methodgenerics.Label> java.lang.String text(T);
+    descriptor: (Lmethodgenerics/Label;)Ljava/lang/String;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload_1
+         1: ldc           #35                 // String value
+         3: invokestatic  #41                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_1
+         7: invokeinterface #50,  1           // InterfaceMethod methodgenerics/Label.text:()Ljava/lang/String;
+        12: areturn
+      LineNumberTable:
+        line 9: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      13     0  this   Lmethodgenerics/Generic;
+            0      13     1 value   Lmethodgenerics/Label;
+    Signature: #45                          // <T::Lmethodgenerics/Label;>(TT;)Ljava/lang/String;
+    RuntimeInvisibleAnnotations:
+      0: #34()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #34()
+          org.jetbrains.annotations.NotNull
+
+  public final <T extends java.lang.Object> C choose(T);
+    descriptor: (Ljava/lang/Object;)Ljava/lang/Object;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=1, locals=2, args_size=2
+         0: aload_0
+         1: getfield      #15                 // Field seed:Ljava/lang/Object;
+         4: areturn
+      LineNumberTable:
+        line 10: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   Lmethodgenerics/Generic;
+            0       5     1 value   Ljava/lang/Object;
+    Signature: #52                          // <T:Ljava/lang/Object;>(TT;)TC;
+
+  public final <T extends java.lang.Object, S extends java.lang.Object> S second(T, S);
+    descriptor: (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=1, locals=3, args_size=3
+         0: aload_2
+         1: areturn
+      LineNumberTable:
+        line 11: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       2     0  this   Lmethodgenerics/Generic;
+            0       2     1 first   Ljava/lang/Object;
+            0       2     2 second   Ljava/lang/Object;
+    Signature: #55                          // <T:Ljava/lang/Object;S:Ljava/lang/Object;>(TT;TS;)TS;
+
+  public final <T extends java.lang.Object> T first(java.util.List<? extends T>);
+    descriptor: (Ljava/util/List;)Ljava/lang/Object;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload_1
+         1: ldc           #60                 // String values
+         3: invokestatic  #41                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_1
+         7: iconst_0
+         8: invokeinterface #66,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+        13: areturn
+      LineNumberTable:
+        line 12: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      14     0  this   Lmethodgenerics/Generic;
+            0      14     1 values   Ljava/util/List;
+    Signature: #58                          // <T:Ljava/lang/Object;>(Ljava/util/List<+TT;>;)TT;
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #34()
+          org.jetbrains.annotations.NotNull
+
+  public final <T extends java.lang.Object> java.lang.String transform(T, kotlin.jvm.functions.Function1<? super T, java.lang.String>);
+    descriptor: (Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=2, locals=3, args_size=3
+         0: aload_2
+         1: ldc           #72                 // String block
+         3: invokestatic  #41                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_2
+         7: aload_1
+         8: invokeinterface #77,  2           // InterfaceMethod kotlin/jvm/functions/Function1.invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+        13: checkcast     #79                 // class java/lang/String
+        16: areturn
+      LineNumberTable:
+        line 13: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      17     0  this   Lmethodgenerics/Generic;
+            0      17     1 value   Ljava/lang/Object;
+            0      17     2 block   Lkotlin/jvm/functions/Function1;
+    Signature: #70                          // <T:Ljava/lang/Object;>(TT;Lkotlin/jvm/functions/Function1<-TT;Ljava/lang/String;>;)Ljava/lang/String;
+    RuntimeInvisibleAnnotations:
+      0: #34()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+      parameter 1:
+        0: #34()
+          org.jetbrains.annotations.NotNull
+}
+Signature: #3                           // <C:Ljava/lang/Object;>Ljava/lang/Object;
+SourceFile: "Use.kt"
+RuntimeVisibleAnnotations:
+  0: #82(#83=[I#84,I#85,I#86],#87=I#88,#89=I#90,#91=[s#92],#93=[s#17,s#94,s#95,s#12,s#6,s#7,s#25,s#95,s#21,s#18,s#19,s#13,s#27,s#96,s#30,s#28,s#31,s#42,s#32,s#43,s#95,s#44,s#51,s#53,s#97,s#56,s#54,s#59,s#95,s#57,s#68,s#71,s#98,s#69,s#99])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u00006\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0000\n\u0002\b\u0004\n\u0002\u0010\b\n\u0002\b\t\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0002\b\u0007\n\u0002\u0010 \n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0002\u0018\u0000*\u0004\b\u0000\u0010\u00012\u00020\u0002B\u000f\u0012\u0006\u0010\u0003\u001a\u00028\u0000¢\u0006\u0004\b\u0004\u0010\u0005B\u0019\b\u0016\u0012\u0006\u0010\u0003\u001a\u00028\u0000\u0012\u0006\u0010\u0006\u001a\u00020\u0007¢\u0006\u0004\b\u0004\u0010\bJ\u0019\u0010\f\u001a\u0002H\r\"\u0004\b\u0001\u0010\r2\u0006\u0010\u000e\u001a\u0002H\r¢\u0006\u0002\u0010\u000fJ\u001d\u0010\u0010\u001a\u0002H\r\"\b\b\u0001\u0010\r*\u00020\u00112\u0006\u0010\u000e\u001a\u0002H\r¢\u0006\u0002\u0010\u0012J\u001d\u0010\u0013\u001a\u00020\u0014\"\b\b\u0001\u0010\r*\u00020\u00112\u0006\u0010\u000e\u001a\u0002H\r¢\u0006\u0002\u0010\u0015J\u0019\u0010\u0016\u001a\u00028\u0000\"\u0004\b\u0001\u0010\r2\u0006\u0010\u000e\u001a\u0002H\r¢\u0006\u0002\u0010\u000fJ\'\u0010\u0017\u001a\u0002H\u0018\"\u0004\b\u0001\u0010\r\"\u0004\b\u0002\u0010\u00182\u0006\u0010\u0019\u001a\u0002H\r2\u0006\u0010\u0017\u001a\u0002H\u0018¢\u0006\u0002\u0010\u001aJ\u001f\u0010\u0019\u001a\u0002H\r\"\u0004\b\u0001\u0010\r2\f\u0010\u001b\u001a\b\u0012\u0004\u0012\u0002H\r0\u001c¢\u0006\u0002\u0010\u001dJ-\u0010\u001e\u001a\u00020\u0014\"\u0004\b\u0001\u0010\r2\u0006\u0010\u000e\u001a\u0002H\r2\u0012\u0010\u001f\u001a\u000e\u0012\u0004\u0012\u0002H\r\u0012\u0004\u0012\u00020\u00140 ¢\u0006\u0002\u0010!R\u0013\u0010\u0003\u001a\u00028\u0000¢\u0006\n\n\u0002\u0010\u000b\u001a\u0004\b\t\u0010\n¨\u0006\""]
+      d2=["Lmethodgenerics/Generic;","C","","seed","<init>","(Ljava/lang/Object;)V","ignored","","(Ljava/lang/Object;I)V","getSeed","()Ljava/lang/Object;","Ljava/lang/Object;","echo","T","value","(Ljava/lang/Object;)Ljava/lang/Object;","bounded","Lmethodgenerics/Label;","(Lmethodgenerics/Label;)Lmethodgenerics/Label;","text","","(Lmethodgenerics/Label;)Ljava/lang/String;","choose","second","S","first","(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;","values","","(Ljava/util/List;)Ljava/lang/Object;","transform","block","Lkotlin/Function1;","(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;","nov21_generics"]
+    )

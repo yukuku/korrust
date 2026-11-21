@@ -57,6 +57,7 @@ import java.lang.StringBuilder
 import java.lang.StringBuffer
 import java.lang.String as JavaString
 import foreign.Callbacks
+import foreign.Callbacks as StaticCallbacks
 typealias Text = String
 fun bytes(data: ByteArray, charset: Charset): String = String(data, charset)
 fun byteSlice(data: ByteArray, offset: Int, length: Int, charset: Charset): String = String(data, offset, length, charset)
@@ -73,6 +74,20 @@ fun aliasEmpty(): Text = Text()
 fun javaCopy(data: String): JavaString = JavaString(data)
 fun effects(bytes: () -> ByteArray, charset: () -> Charset): String = String(bytes(), charset())
 fun platform(): String = String(Callbacks.chars(), Callbacks.offset(), Callbacks.count())
+fun aliasedStatic(): Int = StaticCallbacks.count()
+fun shadowed(Callbacks: List<Int>): Int = Callbacks.count()
+class Receiver(val Callbacks: List<Int>)
+fun Receiver.implicitShadowed(): Int = Callbacks.count()
+class MemberCounter { fun count(): Int = 9 }
+fun memberShadowed(Callbacks: MemberCounter): Int = Callbacks.count()
+fun qualifiedStatic(): Int = foreign.Callbacks.count()
+class StaticCaller { fun value(): Int = Callbacks.count() }
+class DispatchReceiver(val Callbacks: List<Int>) { fun value(): Int = Callbacks.count() }
+class DispatchMemberReceiver(val Callbacks: MemberCounter) { fun value(): Int = Callbacks.count() }
+class ImplicitMemberReceiver(val Callbacks: MemberCounter)
+fun ImplicitMemberReceiver.value(): Int = Callbacks.count()
+class PackageReceiver(val Callbacks: MemberCounter)
+fun packageShadowed(foreign: PackageReceiver): Int = foreign.Callbacks.count()
 "#;
     let renamed = r#"package factory_aliases
 import kotlin.text.String as makeText
@@ -134,6 +149,16 @@ public class Driver {
         if (!factories.FactoriesKt.effects(() -> { order.append('b'); return bytes; }, () -> { order.append('c'); return StandardCharsets.UTF_8; }).equals("\u00e9 A") || !order.toString().equals("bc")) throw new AssertionError("factory argument effects");
         foreign.Callbacks.data = new char[]{'a', 'b'}; foreign.Callbacks.offset = 1; foreign.Callbacks.count = 1; foreign.Callbacks.trace = "";
         if (!factories.FactoriesKt.platform().equals("b") || !foreign.Callbacks.trace.equals("aoc")) throw new AssertionError("platform argument order");
+        foreign.Callbacks.count = 4;
+        if (factories.FactoriesKt.aliasedStatic() != 4) throw new AssertionError("aliased static classifier");
+        if (factories.FactoriesKt.shadowed(java.util.Arrays.asList(1, 2, 3)) != 3) throw new AssertionError("value shadows imported classifier");
+        if (factories.FactoriesKt.implicitShadowed(new factories.Receiver(java.util.Arrays.asList(1, 2, 3))) != 3) throw new AssertionError("implicit receiver property shadows imported classifier");
+        if (factories.FactoriesKt.memberShadowed(new factories.MemberCounter()) != 9) throw new AssertionError("receiver member beats extension");
+        if (factories.FactoriesKt.qualifiedStatic() != 4 || new factories.StaticCaller().value() != 4) throw new AssertionError("qualified and member-body static dispatch");
+        if (new factories.DispatchReceiver(java.util.Arrays.asList(1, 2, 3)).value() != 3) throw new AssertionError("dispatch receiver property shadows classifier");
+        if (new factories.DispatchMemberReceiver(new factories.MemberCounter()).value() != 9) throw new AssertionError("dispatch property member shadows extension");
+        if (factories.FactoriesKt.value(new factories.ImplicitMemberReceiver(new factories.MemberCounter())) != 9) throw new AssertionError("implicit property member shadows extension");
+        if (factories.FactoriesKt.packageShadowed(new factories.PackageReceiver(new factories.MemberCounter())) != 9) throw new AssertionError("value shadows package qualifier");
         foreign.Callbacks.data = null; foreign.Callbacks.trace = "";
         try { factories.FactoriesKt.platform(); throw new AssertionError("platform assertion"); } catch (NullPointerException expected) { if (!expected.getMessage().equals("chars(...) must not be null")) throw new AssertionError(expected); }
         if (!foreign.Callbacks.trace.equals("a")) throw new AssertionError("platform null assertion ordering");
@@ -207,6 +232,35 @@ public class Driver {
                 &standard,
             ]))
             .arg("MetadataDriver"));
+    }
+    for (source, expected) in [
+        (
+            "import foreign.Callbacks\nfun invalid(): Int { var Callbacks: List<Int>; return Callbacks.count() }",
+            "initialized",
+        ),
+        (
+            "import foreign.Callbacks\nfun invalid(Callbacks: List<Int>?): Int = Callbacks.count()",
+            "applicable",
+        ),
+    ] {
+        std::fs::write(&source_file, source).unwrap();
+        let reference = Command::new(&kotlin)
+            .arg(&source_file)
+            .arg("-cp")
+            .arg(classpath(&[&dependency, &standard]))
+            .arg("-d")
+            .arg(root.join("rejected-receiver"))
+            .output()
+            .unwrap();
+        assert!(!reference.status.success(), "{source}");
+        let error = compile_outputs_with_classpath(
+            source,
+            "Invalid.kt",
+            &[dependency.clone(), standard.clone()],
+        )
+        .err()
+        .expect("invalid receiver");
+        assert!(error.message.contains(expected), "{source}: {error:?}");
     }
     for source in [
         "fun invalid(): String = String(\"copy\")",

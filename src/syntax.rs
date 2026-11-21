@@ -842,6 +842,7 @@ pub enum StatementKind {
     Assign(String, Expr),
     AddAssign(String, Expr),
     CompoundAssign(String, String, Expr),
+    LvalueCompoundAssign(Expr, String, Expr),
     Return(Option<Expr>),
     Throw(Expr),
     Expression(Expr),
@@ -1125,6 +1126,7 @@ fn shift_statement_offsets(statements: &mut [Statement], offset: usize) {
                 shift_expression_offsets(value, offset);
             }
             StatementKind::PropertyAssign(target, _, value)
+            | StatementKind::LvalueCompoundAssign(target, _, value)
             | StatementKind::SafePropertyAssign(target, _, value) => {
                 shift_expression_offsets(target, offset);
                 shift_expression_offsets(value, offset);
@@ -3146,15 +3148,16 @@ impl Parser {
         let offset = self.token().offset;
         let mut annotations = Vec::new();
         let mut jvm_static = false;
-        let mut throws = None;
         let mut suppress = None;
         while self.at("@") {
-            let special = self.tokens.get(self.pos + 1).is_some_and(|token| {
-                matches!(token.text.as_str(), "JvmStatic" | "Throws" | "Suppress")
-            }) && !self
+            let special = self
                 .tokens
-                .get(self.pos + 2)
-                .is_some_and(|token| matches!(token.text.as_str(), ":" | "."));
+                .get(self.pos + 1)
+                .is_some_and(|token| matches!(token.text.as_str(), "JvmStatic" | "Suppress"))
+                && !self
+                    .tokens
+                    .get(self.pos + 2)
+                    .is_some_and(|token| matches!(token.text.as_str(), ":" | "."));
             if !special {
                 annotations.push(self.annotation()?);
                 self.lines();
@@ -3167,25 +3170,6 @@ impl Parser {
                     if jvm_static { return Err(self.error("Repeated @JvmStatic annotation")); }
                     jvm_static = true;
                     if self.take("(") { self.expect(")")?; }
-                }
-                "Throws" => {
-                    if throws.is_some() { return Err(self.error("Repeated @Throws annotation")); }
-                    self.expect("(")?;
-                    self.lines();
-                    let mut exceptions = Vec::new();
-                    loop {
-                        let exception = self.declaration_name()?;
-                        self.expect("::")?;
-                        self.expect("class")?;
-                        exceptions.push(exception);
-                        if exceptions.len() > 32 { return Err(self.error("@Throws exceeds the current 32-exception limit")); }
-                        self.lines();
-                        if !self.take(",") { break; }
-                        self.lines();
-                        if self.at(")") { break; }
-                    }
-                    self.expect(")")?;
-                    throws = Some(exceptions);
                 }
                 "Suppress" => {
                     if suppress.is_some() { return Err(self.error("Repeated @Suppress annotation")); }
@@ -3284,7 +3268,7 @@ impl Parser {
             is_override,
             function,
             jvm_static,
-            throws: throws.unwrap_or_default(),
+            throws: Vec::new(),
             inline,
             suppress: suppress.unwrap_or_default(),
         })
@@ -5412,9 +5396,12 @@ impl Parser {
             Type::Unit
         };
         if self.at("where") {
-            return Err(
-                self.error("Multiple type parameter bounds in where clauses are unsupported")
-            );
+            return Err(self
+                .error("Multiple type parameter bounds in where clauses are unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "SOURCE_WHERE_BOUND_UNSUPPORTED",
+                ));
         }
         let after_signature = self.pos;
         self.lines();
@@ -5851,9 +5838,10 @@ impl Parser {
                             "SAFE_COMPOUND_ASSIGNMENT_UNSUPPORTED",
                         ));
                 }
-                return Err(
-                    self.error("Compound assignments currently require a local variable target")
-                );
+                let operator = self.token().text.clone();
+                self.pos += 1;
+                self.lines();
+                StatementKind::LvalueCompoundAssign(target, operator, self.expr(0)?)
             } else {
                 StatementKind::Expression(target)
             }
@@ -7041,6 +7029,7 @@ impl Parser {
                     pending.push((value, depth));
                 }
                 StatementKind::PropertyAssign(target, _, value)
+                | StatementKind::LvalueCompoundAssign(target, _, value)
                 | StatementKind::SafePropertyAssign(target, _, value) => {
                     pending.push((target, depth));
                     pending.push((value, depth));
@@ -8187,7 +8176,8 @@ mod tests {
         assert_eq!(object.constants[0].annotations[0].name, "Mark");
         let method = &object.methods[0];
         assert!(method.jvm_static);
-        assert_eq!(method.throws, ["Exception"]);
+        assert!(method.throws.is_empty());
+        assert_eq!(method.function.annotations[1].name, "Throws");
         assert_eq!(method.suppress, ["unused"]);
         assert_eq!(method.function.annotations[0].name, "Mark");
         assert_eq!(method.function.param_annotations[0][0].name, "Mark");
@@ -8971,12 +8961,11 @@ mod tests {
         ));
         for target in ["a[0]", "a.value", "(a)"] {
             let source = format!("fun f(a: IntArray): Unit {{ {target} -= 1 }}");
-            assert!(
-                parse(&source)
-                    .unwrap_err()
-                    .message
-                    .contains("local variable target")
-            );
+            let module = parse(&source).unwrap();
+            assert!(matches!(
+                &module.functions[0].body[0].kind,
+                StatementKind::LvalueCompoundAssign(_, operator, _) if operator == "-="
+            ));
         }
     }
 

@@ -14,6 +14,9 @@ fn rejects(source: &str, message: &str) {
 
 #[test]
 fn accepts_numeric_updates_and_do_while() {
+    accepts("fun f(a: IntArray): Unit { a[0] *= 2 }");
+    accepts("fun f(a: IntArray): Int = a[0]--");
+    accepts("fun f(): Int { var value: Char = 'a'; value++; return value.code }");
     accepts(
         "fun f(): Int { var x = 7; do { x -= 1; if (x == 4) { continue }; x *= 2; x /= 2; x %= 7 } while (x > 2); return --x + x-- }",
     );
@@ -71,11 +74,6 @@ fn rejects_unsupported_update_targets_and_invalid_type_tokens() {
         "fun f(): Int { val n = 1; n -= 1; return n }",
         "Cannot reassign",
     );
-    rejects(
-        "fun f(a: IntArray): Unit { a[0] *= 2 }",
-        "local variable target",
-    );
-    rejects("fun f(a: IntArray): Int = a[0]--", "mutable Int local");
     rejects(
         "fun f(a: Any): Boolean = a ! is String",
         "newline or semicolon",

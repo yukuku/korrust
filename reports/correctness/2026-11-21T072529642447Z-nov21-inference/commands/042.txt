@@ -1,0 +1,4 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /workspace/korrust/tests/nov21_inference/InvalidNullableComplement.kt -cp /workspace/korrust/target/nov21-final-v5/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/korrust/target/nov21-final-v5/inference/oracle-InvalidNullableComplement -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/nov21_inference/InvalidNullableComplement.kt:4:52: error: only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'String?'.
+    if (nullableTruth(value) != false) return value.length
+                                                   ^

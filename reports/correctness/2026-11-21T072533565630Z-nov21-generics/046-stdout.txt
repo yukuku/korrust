@@ -1,0 +1,546 @@
+Classfile /workspace/korrust/target/checks/2026-11-21T072533565630Z-nov21-generics/candidate/methodgenerics/Generic.class
+  Last modified Nov 21, 2026; size 3987 bytes
+  SHA-256 checksum 7d99de01d648c23f921dbf26276839849f2cf1313b93ad0472ea63875cb9308c
+  Compiled from "Use.kt"
+public final class methodgenerics.Generic<C extends java.lang.Object> extends java.lang.Object
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // methodgenerics/Generic
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 1, methods: 10, attributes: 3
+Constant pool:
+    #1 = Utf8               methodgenerics/Generic
+    #2 = Class              #1            // methodgenerics/Generic
+    #3 = Utf8               java/lang/Object
+    #4 = Class              #3            // java/lang/Object
+    #5 = Utf8               seed
+    #6 = Utf8               Ljava/lang/Object;
+    #7 = Utf8               Signature
+    #8 = Utf8               TC;
+    #9 = Utf8               <init>
+   #10 = Utf8               ()V
+   #11 = NameAndType        #9:#10        // "<init>":()V
+   #12 = Methodref          #4.#11        // java/lang/Object."<init>":()V
+   #13 = NameAndType        #5:#6         // seed:Ljava/lang/Object;
+   #14 = Fieldref           #2.#13        // methodgenerics/Generic.seed:Ljava/lang/Object;
+   #15 = Utf8               (Ljava/lang/Object;)V
+   #16 = Utf8               Code
+   #17 = Utf8               (TC;)V
+   #18 = Utf8               java/lang/Throwable
+   #19 = Class              #18           // java/lang/Throwable
+   #20 = Utf8               StackMapTable
+   #21 = NameAndType        #9:#15        // "<init>":(Ljava/lang/Object;)V
+   #22 = Methodref          #2.#21        // methodgenerics/Generic."<init>":(Ljava/lang/Object;)V
+   #23 = Utf8               (Ljava/lang/Object;I)V
+   #24 = Utf8               (TC;I)V
+   #25 = Utf8               echo
+   #26 = Utf8               (Ljava/lang/Object;)Ljava/lang/Object;
+   #27 = Utf8               <T:Ljava/lang/Object;>(TT;)TT;
+   #28 = Utf8               value
+   #29 = String             #28           // value
+   #30 = Utf8               kotlin/jvm/internal/Intrinsics
+   #31 = Class              #30           // kotlin/jvm/internal/Intrinsics
+   #32 = Utf8               checkNotNullParameter
+   #33 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+   #34 = NameAndType        #32:#33       // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+   #35 = Methodref          #31.#34       // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+   #36 = Utf8               bounded
+   #37 = Utf8               (Lmethodgenerics/Label;)Lmethodgenerics/Label;
+   #38 = Utf8               <T::Lmethodgenerics/Label;>(TT;)TT;
+   #39 = Utf8               RuntimeInvisibleAnnotations
+   #40 = Utf8               Lorg/jetbrains/annotations/NotNull;
+   #41 = Utf8               RuntimeInvisibleParameterAnnotations
+   #42 = Utf8               methodgenerics/Label
+   #43 = Class              #42           // methodgenerics/Label
+   #44 = Utf8               java/lang/String
+   #45 = Class              #44           // java/lang/String
+   #46 = Utf8               text
+   #47 = Utf8               ()Ljava/lang/String;
+   #48 = NameAndType        #46:#47       // text:()Ljava/lang/String;
+   #49 = InterfaceMethodref #43.#48       // methodgenerics/Label.text:()Ljava/lang/String;
+   #50 = Utf8               (Lmethodgenerics/Label;)Ljava/lang/String;
+   #51 = Utf8               <T::Lmethodgenerics/Label;>(TT;)Ljava/lang/String;
+   #52 = Utf8               choose
+   #53 = Utf8               <T:Ljava/lang/Object;>(TT;)TC;
+   #54 = Utf8               second
+   #55 = Utf8               (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+   #56 = Utf8               <T:Ljava/lang/Object;S:Ljava/lang/Object;>(TT;TS;)TS;
+   #57 = Utf8               values
+   #58 = String             #57           // values
+   #59 = Utf8               java/util/List
+   #60 = Class              #59           // java/util/List
+   #61 = Utf8               get
+   #62 = Utf8               (I)Ljava/lang/Object;
+   #63 = NameAndType        #61:#62       // get:(I)Ljava/lang/Object;
+   #64 = InterfaceMethodref #60.#63       // java/util/List.get:(I)Ljava/lang/Object;
+   #65 = Utf8               first
+   #66 = Utf8               (Ljava/util/List;)Ljava/lang/Object;
+   #67 = Utf8               <T:Ljava/lang/Object;>(Ljava/util/List<+TT;>;)TT;
+   #68 = Utf8               block
+   #69 = String             #68           // block
+   #70 = Utf8               kotlin/jvm/functions/Function1
+   #71 = Class              #70           // kotlin/jvm/functions/Function1
+   #72 = Utf8               invoke
+   #73 = NameAndType        #72:#26       // invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+   #74 = InterfaceMethodref #71.#73       // kotlin/jvm/functions/Function1.invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+   #75 = Utf8               transform
+   #76 = Utf8               (Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+   #77 = Utf8               <T:Ljava/lang/Object;>(TT;Lkotlin/jvm/functions/Function1<-TT;Ljava/lang/String;>;)Ljava/lang/String;
+   #78 = Utf8               getSeed
+   #79 = Utf8               ()Ljava/lang/Object;
+   #80 = Utf8               ()TC;
+   #81 = Utf8               <C:Ljava/lang/Object;>Ljava/lang/Object;
+   #82 = Utf8               SourceFile
+   #83 = Utf8               Use.kt
+   #84 = Utf8               Lkotlin/Metadata;
+   #85 = Utf8               mv
+   #86 = Integer            2
+   #87 = Integer            3
+   #88 = Integer            0
+   #89 = Utf8               k
+   #90 = Integer            1
+   #91 = Utf8               xi
+   #92 = Integer            48
+   #93 = Utf8               d1
+   #94 = Utf8               \u0000\b\n\u0002\b\"\n\u0002\b\u0001\b\u0006\u0018\u0000*\u0006\b\u0000\u0010\u0001 \u00022\u00020\u0002B\u0011\b\u0006\u0012\u0006\u0010\u0003\u001a\u00028\u0000¢\u0006\u0004\b\u0004\u0010\u0005B\u0019\b\u0016\u0012\u0006\u0010\u0003\u001a\u00028\u0000\u0012\u0006\u0010\u0006\u001a\u00020\u0007¢\u0006\u0004\b\u0004\u0010\bJ\u001fH\u0006\u0010\t\"\u0006\b\u0001\u0010\n \u0002\u001a\u00028\u00012\u0006\u0010\u000b\u001a\u00028\u0001¢\u0006\u0004\b\t\u0010\fJ#H\u0006\u0010\r\"\n\b\u0001\u0010\n \u0002*\u00020\u000e\u001a\u00028\u00012\u0006\u0010\u000b\u001a\u00028\u0001¢\u0006\u0004\b\r\u0010\u000fJ#H\u0006\u0010\u0010\"\n\b\u0001\u0010\n \u0002*\u00020\u000e\u001a\u00020\u00112\u0006\u0010\u000b\u001a\u00028\u0001¢\u0006\u0004\b\u0010\u0010\u0012J\u001fH\u0006\u0010\u0013\"\u0006\b\u0001\u0010\n \u0002\u001a\u00028\u00002\u0006\u0010\u000b\u001a\u00028\u0001¢\u0006\u0004\b\u0013\u0010\fJ/H\u0006\u0010\u0014\"\u0006\b\u0001\u0010\n \u0002\"\u0006\b\u0002\u0010\u0015 \u0002\u001a\u00028\u00022\u0006\u0010\u0016\u001a\u00028\u00012\u0006\u0010\u0014\u001a\u00028\u0002¢\u0006\u0004\b\u0014\u0010\u0017J%H\u0006\u0010\u0016\"\u0006\b\u0001\u0010\n \u0002\u001a\u00028\u00012\f\u0010\u0018\u001a\b\u0012\u0004\u0012\u00028\u00010\u0019¢\u0006\u0004\b\u0016\u0010\u001aJ3H\u0006\u0010\u001b\"\u0006\b\u0001\u0010\n \u0002\u001a\u00020\u00112\u0006\u0010\u000b\u001a\u00028\u00012\u0012\u0010\u001c\u001a\u000e\u0012\u0004\u0012\u00028\u0001\u0012\u0004\u0012\u00020\u00110\u001d¢\u0006\u0004\b\u001b\u0010\u001eR\u0018X\u0086\u0004\u0010\u0003\u001a\u00028\u0000¢\u0006\f\n\u0004\b\u0003\u0010\u001f\u001a\u0004\b \u0010!¨\u0006\"
+   #95 = Utf8               d2
+   #96 = Utf8               C
+   #97 = Utf8               kotlin/Any
+   #98 = Utf8               ignored
+   #99 = Utf8               kotlin/Int
+  #100 = Utf8               T
+  #101 = Utf8               kotlin/String
+  #102 = Utf8               S
+  #103 = Utf8               kotlin/collections/List
+  #104 = Utf8               kotlin/Function1
+  #105 = Utf8               nov21_generics
+  #106 = Utf8               RuntimeVisibleAnnotations
+{
+  private final C seed;
+    descriptor: Ljava/lang/Object;
+    flags: (0x0012) ACC_PRIVATE, ACC_FINAL
+    Signature: #8                           // TC;
+
+  public methodgenerics.Generic(C);
+    descriptor: (Ljava/lang/Object;)V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=6, locals=2, args_size=2
+         0: aload_0
+         1: invokespecial #12                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: aload         1
+         7: putfield      #14                 // Field seed:Ljava/lang/Object;
+        10: return
+        11: nop
+        12: athrow
+      StackMapTable: number_of_entries = 7
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this, class java/lang/Object ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class java/lang/Object ]
+          stack = [ class methodgenerics/Generic ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class methodgenerics/Generic, class java/lang/Object ]
+          stack = [ class methodgenerics/Generic, class java/lang/Object ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+    Signature: #17                          // (TC;)V
+
+  public methodgenerics.Generic(C, int);
+    descriptor: (Ljava/lang/Object;I)V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=4, locals=4, args_size=3
+         0: aload_0
+         1: aload         1
+         3: invokespecial #22                 // Method "<init>":(Ljava/lang/Object;)V
+         6: return
+         7: nop
+         8: nop
+         9: athrow
+      StackMapTable: number_of_entries = 6
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this, class java/lang/Object, int ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this, class java/lang/Object, int ]
+          stack = [ this, class java/lang/Object ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class java/lang/Object, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class java/lang/Object, int ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class java/lang/Object, int ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class java/lang/Object, int ]
+          stack = [ class java/lang/Throwable ]
+    Signature: #24                          // (TC;I)V
+
+  public final <T extends java.lang.Object> T echo(T);
+    descriptor: (Ljava/lang/Object;)Ljava/lang/Object;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload         1
+         2: areturn
+         3: nop
+         4: athrow
+      StackMapTable: number_of_entries = 3
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class java/lang/Object ]
+          stack = [ class java/lang/Object ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+    Signature: #27                          // <T:Ljava/lang/Object;>(TT;)TT;
+
+  public final <T extends methodgenerics.Label> T bounded(T);
+    descriptor: (Lmethodgenerics/Label;)Lmethodgenerics/Label;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload         1
+         2: ldc_w         #29                 // String value
+         5: invokestatic  #35                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         1
+        10: areturn
+        11: nop
+        12: athrow
+      StackMapTable: number_of_entries = 6
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class methodgenerics/Label ]
+          stack = [ class methodgenerics/Label ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class methodgenerics/Label ]
+          stack = [ class methodgenerics/Label, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class methodgenerics/Label ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class methodgenerics/Generic, class methodgenerics/Label ]
+          stack = [ class methodgenerics/Label ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class methodgenerics/Label ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class methodgenerics/Label ]
+          stack = [ class java/lang/Throwable ]
+    Signature: #38                          // <T::Lmethodgenerics/Label;>(TT;)TT;
+    RuntimeInvisibleAnnotations:
+      0: #40()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #40()
+          org.jetbrains.annotations.NotNull
+
+  public final <T extends methodgenerics.Label> java.lang.String text(T);
+    descriptor: (Lmethodgenerics/Label;)Ljava/lang/String;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=3, locals=2, args_size=2
+         0: aload         1
+         2: ldc_w         #29                 // String value
+         5: invokestatic  #35                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         1
+        10: checkcast     #43                 // class methodgenerics/Label
+        13: invokeinterface #49,  1           // InterfaceMethod methodgenerics/Label.text:()Ljava/lang/String;
+        18: areturn
+        19: nop
+        20: athrow
+      StackMapTable: number_of_entries = 8
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class methodgenerics/Label ]
+          stack = [ class methodgenerics/Label ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class methodgenerics/Label ]
+          stack = [ class methodgenerics/Label, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class methodgenerics/Label ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class methodgenerics/Generic, class methodgenerics/Label ]
+          stack = [ class methodgenerics/Label ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class methodgenerics/Label ]
+          stack = [ class methodgenerics/Label ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 4
+          locals = [ class methodgenerics/Generic, class methodgenerics/Label ]
+          stack = [ class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class methodgenerics/Label ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class methodgenerics/Label ]
+          stack = [ class java/lang/Throwable ]
+    Signature: #51                          // <T::Lmethodgenerics/Label;>(TT;)Ljava/lang/String;
+    RuntimeInvisibleAnnotations:
+      0: #40()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #40()
+          org.jetbrains.annotations.NotNull
+
+  public final <T extends java.lang.Object> C choose(T);
+    descriptor: (Ljava/lang/Object;)Ljava/lang/Object;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=2, args_size=2
+         0: aload         0
+         2: getfield      #14                 // Field seed:Ljava/lang/Object;
+         5: areturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class java/lang/Object ]
+          stack = [ class methodgenerics/Generic ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class java/lang/Object ]
+          stack = [ class java/lang/Object ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+    Signature: #53                          // <T:Ljava/lang/Object;>(TT;)TC;
+
+  public final <T extends java.lang.Object, S extends java.lang.Object> S second(T, S);
+    descriptor: (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=2, locals=3, args_size=3
+         0: aload         2
+         2: areturn
+         3: nop
+         4: athrow
+      StackMapTable: number_of_entries = 3
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class java/lang/Object, class java/lang/Object ]
+          stack = [ class java/lang/Object ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class java/lang/Object, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class java/lang/Object, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+    Signature: #56                          // <T:Ljava/lang/Object;S:Ljava/lang/Object;>(TT;TS;)TS;
+
+  public final <T extends java.lang.Object> T first(java.util.List<? extends T>);
+    descriptor: (Ljava/util/List;)Ljava/lang/Object;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=4, locals=2, args_size=2
+         0: aload         1
+         2: ldc_w         #58                 // String values
+         5: invokestatic  #35                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         1
+        10: checkcast     #60                 // class java/util/List
+        13: iconst_0
+        14: invokeinterface #64,  2           // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+        19: areturn
+        20: nop
+        21: athrow
+      StackMapTable: number_of_entries = 9
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class java/util/List ]
+          stack = [ class java/util/List ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class java/util/List ]
+          stack = [ class java/util/List, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class java/util/List ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class methodgenerics/Generic, class java/util/List ]
+          stack = [ class java/util/List ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class java/util/List ]
+          stack = [ class java/util/List ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class java/util/List ]
+          stack = [ class java/util/List, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 4
+          locals = [ class methodgenerics/Generic, class java/util/List ]
+          stack = [ class java/lang/Object ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class java/util/List ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class java/util/List ]
+          stack = [ class java/lang/Throwable ]
+    Signature: #67                          // <T:Ljava/lang/Object;>(Ljava/util/List<+TT;>;)TT;
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #40()
+          org.jetbrains.annotations.NotNull
+
+  public final <T extends java.lang.Object> java.lang.String transform(T, kotlin.jvm.functions.Function1<? super T, java.lang.String>);
+    descriptor: (Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=5, locals=3, args_size=3
+         0: aload         2
+         2: ldc_w         #69                 // String block
+         5: invokestatic  #35                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         2
+        10: aload         1
+        12: invokeinterface #74,  2           // InterfaceMethod kotlin/jvm/functions/Function1.invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+        17: checkcast     #45                 // class java/lang/String
+        20: areturn
+        21: nop
+        22: athrow
+      StackMapTable: number_of_entries = 9
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class java/lang/Object, class kotlin/jvm/functions/Function1 ]
+          stack = [ class kotlin/jvm/functions/Function1 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class java/lang/Object, class kotlin/jvm/functions/Function1 ]
+          stack = [ class kotlin/jvm/functions/Function1, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class java/lang/Object, class kotlin/jvm/functions/Function1 ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class methodgenerics/Generic, class java/lang/Object, class kotlin/jvm/functions/Function1 ]
+          stack = [ class kotlin/jvm/functions/Function1 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class methodgenerics/Generic, class java/lang/Object, class kotlin/jvm/functions/Function1 ]
+          stack = [ class kotlin/jvm/functions/Function1, class java/lang/Object ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 4
+          locals = [ class methodgenerics/Generic, class java/lang/Object, class kotlin/jvm/functions/Function1 ]
+          stack = [ class java/lang/Object ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic, class java/lang/Object, class kotlin/jvm/functions/Function1 ]
+          stack = [ class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class java/lang/Object, class kotlin/jvm/functions/Function1 ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic, class java/lang/Object, class kotlin/jvm/functions/Function1 ]
+          stack = [ class java/lang/Throwable ]
+    Signature: #77                          // <T:Ljava/lang/Object;>(TT;Lkotlin/jvm/functions/Function1<-TT;Ljava/lang/String;>;)Ljava/lang/String;
+    RuntimeInvisibleAnnotations:
+      0: #40()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+      parameter 1:
+        0: #40()
+          org.jetbrains.annotations.NotNull
+
+  public final C getSeed();
+    descriptor: ()Ljava/lang/Object;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #14                 // Field seed:Ljava/lang/Object;
+         5: areturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic ]
+          stack = [ class methodgenerics/Generic ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class methodgenerics/Generic ]
+          stack = [ class java/lang/Object ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class methodgenerics/Generic ]
+          stack = [ class java/lang/Throwable ]
+    Signature: #80                          // ()TC;
+}
+Signature: #81                          // <C:Ljava/lang/Object;>Ljava/lang/Object;
+SourceFile: "Use.kt"
+RuntimeVisibleAnnotations:
+  0: #84(#85=[I#86,I#87,I#88],#89=I#90,#91=I#92,#93=[s#94],#95=[s#1,s#96,s#97,s#5,s#9,s#15,s#98,s#99,s#23,s#25,s#100,s#28,s#26,s#36,s#42,s#37,s#46,s#101,s#50,s#52,s#54,s#102,s#65,s#55,s#57,s#103,s#66,s#75,s#68,s#104,s#76,s#6,s#78,s#79,s#105])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\b\n\u0002\b\"\n\u0002\b\u0001\b\u0006\u0018\u0000*\u0006\b\u0000\u0010\u0001 \u00022\u00020\u0002B\u0011\b\u0006\u0012\u0006\u0010\u0003\u001a\u00028\u0000¢\u0006\u0004\b\u0004\u0010\u0005B\u0019\b\u0016\u0012\u0006\u0010\u0003\u001a\u00028\u0000\u0012\u0006\u0010\u0006\u001a\u00020\u0007¢\u0006\u0004\b\u0004\u0010\bJ\u001fH\u0006\u0010\t\"\u0006\b\u0001\u0010\n \u0002\u001a\u00028\u00012\u0006\u0010\u000b\u001a\u00028\u0001¢\u0006\u0004\b\t\u0010\fJ#H\u0006\u0010\r\"\n\b\u0001\u0010\n \u0002*\u00020\u000e\u001a\u00028\u00012\u0006\u0010\u000b\u001a\u00028\u0001¢\u0006\u0004\b\r\u0010\u000fJ#H\u0006\u0010\u0010\"\n\b\u0001\u0010\n \u0002*\u00020\u000e\u001a\u00020\u00112\u0006\u0010\u000b\u001a\u00028\u0001¢\u0006\u0004\b\u0010\u0010\u0012J\u001fH\u0006\u0010\u0013\"\u0006\b\u0001\u0010\n \u0002\u001a\u00028\u00002\u0006\u0010\u000b\u001a\u00028\u0001¢\u0006\u0004\b\u0013\u0010\fJ/H\u0006\u0010\u0014\"\u0006\b\u0001\u0010\n \u0002\"\u0006\b\u0002\u0010\u0015 \u0002\u001a\u00028\u00022\u0006\u0010\u0016\u001a\u00028\u00012\u0006\u0010\u0014\u001a\u00028\u0002¢\u0006\u0004\b\u0014\u0010\u0017J%H\u0006\u0010\u0016\"\u0006\b\u0001\u0010\n \u0002\u001a\u00028\u00012\f\u0010\u0018\u001a\b\u0012\u0004\u0012\u00028\u00010\u0019¢\u0006\u0004\b\u0016\u0010\u001aJ3H\u0006\u0010\u001b\"\u0006\b\u0001\u0010\n \u0002\u001a\u00020\u00112\u0006\u0010\u000b\u001a\u00028\u00012\u0012\u0010\u001c\u001a\u000e\u0012\u0004\u0012\u00028\u0001\u0012\u0004\u0012\u00020\u00110\u001d¢\u0006\u0004\b\u001b\u0010\u001eR\u0018X\u0086\u0004\u0010\u0003\u001a\u00028\u0000¢\u0006\f\n\u0004\b\u0003\u0010\u001f\u001a\u0004\b \u0010!¨\u0006\""]
+      d2=["methodgenerics/Generic","C","kotlin/Any","seed","<init>","(Ljava/lang/Object;)V","ignored","kotlin/Int","(Ljava/lang/Object;I)V","echo","T","value","(Ljava/lang/Object;)Ljava/lang/Object;","bounded","methodgenerics/Label","(Lmethodgenerics/Label;)Lmethodgenerics/Label;","text","kotlin/String","(Lmethodgenerics/Label;)Ljava/lang/String;","choose","second","S","first","(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;","values","kotlin/collections/List","(Ljava/util/List;)Ljava/lang/Object;","transform","block","kotlin/Function1","(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;","Ljava/lang/Object;","getSeed","()Ljava/lang/Object;","nov21_generics"]
+    )

@@ -1,0 +1,3500 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-21T06:30:16.274382+00:00",
+  "status": "completed",
+  "compiler": {
+    "binary": "target/nov21-final-v3/korrust",
+    "binary_sha256": "9acdceb9a14f3ae7ad2689eef2f1b84c868bd053df4acc7ead5965bd87aa61ae",
+    "source_root": ".",
+    "source_revision": "c2ab871533215e4c3c5a8fac588b9ba5a0c367c8"
+  },
+  "baseline_compiler": {
+    "binary": "target/next10-final-v3/korrust",
+    "binary_sha256": "58990f36b6aba59d2b92c5417cbde8a3daff1396ea3eda01c1e85c4b5c3dc574"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8",
+      "-module-name",
+      "nov21_generics"
+    ],
+    "launcher_sha256": "90750c977cc043dd2b05c69dd4e052c10377554925dd5a155e74ef732be28c7d",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "inputs": {
+    "files_sha256": {
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/sync/SyncUtils.kt": "8989169cfb0def01dc4a4abc8854a1138e1b6419f84b90597c2e644a2a5168c0",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/datatransfer/process/ExportProcess.kt": "8ef0d376a08d285f40633873ce6a0fa708e42acf935da25432dbacb3f51354a6",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt": "a4e4177e9fad6c0be4ac15947e0d14b9cb8e0a0fa83a1617dba880e0c0b32c31",
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "references/kotlin/compiler/backend/src/org/jetbrains/kotlin/codegen/state/typeMappingUtil.kt": "7c5b2bf6fe40ba276f98f518766fd1434bb0a89e4bdf236d3458e002378db81c",
+      "references/kotlin/compiler/backend.common.jvm/src/org/jetbrains/kotlin/load/kotlin/TypeMappingModeExtensions.kt": "e0d97d61855bc797f0ea1e73c30e75af3b0eae85b201ab9b43041f847bdd0866",
+      "references/kotlin/core/compiler.common.jvm/src/org/jetbrains/kotlin/load/kotlin/TypeMappingMode.kt": "fd199d8bf0eafe0b7be6cb04cc2de023b5ba7f44662e42853082662844bd585b",
+      "references/kotlin-spec/docs/src/md/kotlin.core/type-system.md": "f0b9a51178b98ff722b8a2f77fee0c2c2ab0b777f92ca5784c0c9167c047fd62",
+      "references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+      "src/annotation_declarations.rs": "ac237d773c71a2fc26faeb2d79b837265c6d557ef7bb31aab748fa8b1c7572be",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/annotation_files.rs": "4f3c136aaa2ed30b85d2a4cc2a9be8331b2da9682d450f6a4dcc135ef04ab86a",
+      "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "src/bytecode/class_companion.rs": "2dacd7b21d48fcdd59955fa30b58a6e88bb67642d4bd6dd9d845842b1880417a",
+      "src/bytecode/data.rs": "c99cb60546cbe8873ef99d1ab057aa7439f4239fce13927d324dfea078dbe98c",
+      "src/bytecode/defaults.rs": "ebdb1c988443c1b984081aa8555c5bb2f649685e3bbfef011cd138c0bf29aecd",
+      "src/bytecode/enums.rs": "25fe788c54554741347ba6bb4b84cbee7c324db6925209a434fb139ceb66b2b1",
+      "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+      "src/bytecode/inline.rs": "e598575c521153d592face8dd19018beaf89be45fbde985ae3845526e5a0be44",
+      "src/bytecode/interfaces.rs": "02e19cc9024bda962e06cedec8e15ebfc8b9f1ccd7f95ec11980ab46de917ae6",
+      "src/bytecode/lambdas.rs": "75a4ad990edd822dffaadc1be8cccf6d6cb345848f147e6b3a30c17dc0351360",
+      "src/bytecode/objects.rs": "142f8e5c70f0ac61423c3887447c54865b7b657768cf683fc553fde398a17e7e",
+      "src/bytecode/suspend.rs": "79e1064dd35da268956f91b167a779ce0957cefa8fef629789a2fb3afee987b7",
+      "src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+      "src/bytecode.rs": "d610c4766d35743cc7864a44fec87f93715b5c4c486cb6c3f6790b738434f26b",
+      "src/check.rs": "ca3bfcb0b12d4e3f2cbd304c6045f374da8e00e5916bddc2905cf10efc09544c",
+      "src/check_annotation_placements.rs": "b6c899c4a5c2f3269ae1b93268b2ede0f29f4ce68c5ef42b833d7edcecf2d2cc",
+      "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "src/check_anonymous.rs": "fd523e4ff9173f209bde5b6cec9c5e13bae942da680e752611b242b0d8cc0f53",
+      "src/check_captures.rs": "18ad01412f9b7da141573f44d422e3987ac14df12175fcda3b2aa69ac90463e4",
+      "src/check_class_delegation.rs": "25cd077ed2b3b51158a53efb2c8190296064fe607db399ab416a3d51a4df2be0",
+      "src/check_classes.rs": "d67e980fdceb784bad7f4c0ee73752d2f9123d973c3c4952c5ad87d623432987",
+      "src/check_contracts.rs": "f798b12790c9ca239e1617b6a25eeea2c93ce1586308b30f05be69d715020026",
+      "src/check_control.rs": "19e7fe2376f65209fd0d9b04be9254ec868fed288707d34631f30e841f3eaca7",
+      "src/check_declarations.rs": "f9702e12d2928736af2b0fcf7e3319a6c3fff26a9e09ad9315d10d1d3a641812",
+      "src/check_delegates.rs": "6ba1fb0aa2ba511c31accd8a06282490a94b8cbf4857c5687ddab3a71236beb2",
+      "src/check_enums.rs": "2a16c9e4dbae29a8c479ab5cddefad66f0bdd09143e2a0cde8428d2d0c174d8b",
+      "src/check_functions.rs": "567bb05543fe7d8788be999969451be38c590672dd22d4b793047889a169c762",
+      "src/check_inner_classes.rs": "60a4cdbfef5b069e0312c3ea7511b0de6a862d20ff393c464ea080968aa233cd",
+      "src/check_interfaces.rs": "c733506c29aeb5738c3266d03579e420bf26719ec59bd09fc4fc4d542c149f15",
+      "src/check_ir_walk.rs": "11b8f21285e9743b5a71fdb7de6826cc3e85689d9622380fae58fc676dce0195",
+      "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+      "src/check_library.rs": "4f21a889fc7a64f09eb5dfbfb4aac8bfbe1acecc54cf1be313980cbcf4c2def2",
+      "src/check_member_extensions.rs": "c97b70cbd56da4588817a5cdd294cb724009feee3abbcb29a5dde2846bb8d3f9",
+      "src/check_objects.rs": "1b73e97a598d8dd17d977304f77532c7262c2b9286e4196153782f6eaf6e7ba4",
+      "src/check_operations.rs": "5cf3a864ff737ff1d96660d578fb43d6a9a7aa097886f0dacd254ba96c17735e",
+      "src/check_overloads.rs": "d418fb5ed0880483b5d6ac58ce8093d0eb13804ff1b4176e19abd4b1a3e589cd",
+      "src/check_references.rs": "3a4fd327b7a13f48e69d5fbd059c76cbb8d2ce50ae2e140a762a06d9e1e6eab8",
+      "src/check_relations.rs": "b68377816cd0642ce6184886f09792aacedade20c14c6c115a1b43e1e7904ad5",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+      "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+      "src/check_variant_signatures.rs": "487fea7351445905782f472e297e15080a4244ce34a4a4aa9904b30c01263a86",
+      "src/classpath/aliases.rs": "745fa67edb3216b77ce5e65f63b75c51ac221f5b49d3e08a4327990bd9e6f4c5",
+      "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+      "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+      "src/classpath/metadata.rs": "ad587038956087ed383d6f0d6f970d5609d5a60ac59632b2fecc311ce4c1e045",
+      "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/signature.rs": "2dbed1bcacc67d8ffadd01d466676a969dc849eaa7d397d6c390e61a4ec12c7c",
+      "src/classpath/source.rs": "a106e68b8627c11244fbec6ca33bb00b0d64dae66394da41029bf59b813702b9",
+      "src/classpath/source_enums.rs": "a3ed1a550007856e482624b65d024249e503524b577aa2a5f99b9db334ee1374",
+      "src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+      "src/classpath.rs": "826166f31a0c0e8f2a3cc7a5a327bc0a9bffa571543d743cf605b9f229900095",
+      "src/compiled_inline.rs": "7acd0769184152ea2659a9217886608cff7219eea5a47d25cf573e0f0318d7fa",
+      "src/const_eval.rs": "6714c1d6296d1c3f60fab09891a492f66a9850b3ff3ee2b5a7df42400dfdcdaa",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+      "src/lib.rs": "fa65d18a3567992124b03314127594cefa2abd36dd70af78e8ded63b8801f6a2",
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/metadata.rs": "556b933de58c6c9927da29159891fd00f97b11b1ef7a2325d0dab92c6a7dbe84",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+      "src/syntax.rs": "39153a0deb47a7a18059ee5e6add94e400b2401cc8767119aafdf6509364e441",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/visibility.rs": "0268165a314fe1a169d5604fdda38968b0bbda07f11c60db92d36a7247f879c7",
+      "tests/next10_generics.rs": "d97417386d298ccfae6ec969e3cd6a19668cd74d3ed3dcac1c046a38cc19c5a6",
+      "tests/nov21_generics/BaselineInterface.kt": "9f6cd2d495312fef4b1c51a694db03865f27a86ff55f486c14b96da49a679519",
+      "tests/nov21_generics/BaselineMembers.kt": "69810e6442cf52484e4b292adfa8f3a508a75ddfe824d6b3b712d88a32ee71b6",
+      "tests/nov21_generics/BaselineWild.kt": "15e5a588ed70cf116b5694550711683e73138ee8fc209103071f87c835d41302",
+      "tests/nov21_generics/Calls.java": "73912560fdb4ba414a5672a7a6f038c3bad90abbe056a47f014c69dc97d2c8b1",
+      "tests/nov21_generics/Consumer.kt": "4bdf731345456584860a87176acf40e5594fec0b9350a24fd90f7632d8e39832",
+      "tests/nov21_generics/ConsumerCalls.java": "5424f4d0c5c932711de35d8f3241017c13599b37a3dc069e1ccc08f010f9e8e9",
+      "tests/nov21_generics/InvalidConsumer.kt": "280d8e11b5e96a40a10ac255632e8d70c49e42b56e913b3102d20cd7f53aaaa7",
+      "tests/nov21_generics/Rejections.json": "7f391725113004c558880bf0e239df0f704a802484152a38b3f35f4f83f83652",
+      "tests/nov21_generics/Use.kt": "8de16cec67f312ee795d6033af92802cfaf9f3718e63ed7ff3ba4167e3062737",
+      "tests/nov21_generics.rs": "853b3043432488bbffb81bf99470a4c1114686b2f4053e1446e818167a2debc1",
+      "tools/check_nov21_generics.py": "2d7fe545372fe1251510b97e45e754a7c477975ebfec90e190e1d6f6f284a936"
+    },
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_nov21_generics.py",
+      "--candidate",
+      "target/nov21-final-v3/korrust",
+      "--source-root",
+      "/workspace/korrust",
+      "--reference-root",
+      "/workspace/korrust",
+      "--baseline",
+      "/workspace/korrust/target/next10-final-v3/korrust"
+    ]
+  ],
+  "commands": [
+    {
+      "label": "Baseline rejects new scope BaselineMembers.kt",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/nov21_generics/BaselineMembers.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/baseline-BaselineMembers.kt"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/000-stderr.txt"
+    },
+    {
+      "label": "Baseline rejects new scope BaselineWild.kt",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/nov21_generics/BaselineWild.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/baseline-BaselineWild.kt"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/001-stderr.txt"
+    },
+    {
+      "label": "Baseline rejects new scope BaselineInterface.kt",
+      "argv": [
+        "/workspace/korrust/target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/nov21_generics/BaselineInterface.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/baseline-BaselineInterface.kt"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/002-stderr.txt"
+    },
+    {
+      "label": "Compile official Use.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_generics/Use.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/003-stderr.txt"
+    },
+    {
+      "label": "Compile official BaselineMembers.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_generics/BaselineMembers.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official-BaselineMembers.kt"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/004-stderr.txt"
+    },
+    {
+      "label": "Compile official BaselineWild.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_generics/BaselineWild.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official-BaselineWild.kt"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/005-stderr.txt"
+    },
+    {
+      "label": "Compile official BaselineInterface.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_generics/BaselineInterface.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official-BaselineInterface.kt"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/006-stderr.txt"
+    },
+    {
+      "label": "Compile candidate Use.kt",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/tests/nov21_generics/Use.kt",
+        "--module-name",
+        "nov21_generics",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/007-stderr.txt"
+    },
+    {
+      "label": "Compile candidate BaselineMembers.kt",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/tests/nov21_generics/BaselineMembers.kt",
+        "--module-name",
+        "nov21_generics",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate-BaselineMembers.kt"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/008-stderr.txt"
+    },
+    {
+      "label": "Compile candidate BaselineWild.kt",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/tests/nov21_generics/BaselineWild.kt",
+        "--module-name",
+        "nov21_generics",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate-BaselineWild.kt"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/009-stderr.txt"
+    },
+    {
+      "label": "Compile candidate BaselineInterface.kt",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/tests/nov21_generics/BaselineInterface.kt",
+        "--module-name",
+        "nov21_generics",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate-BaselineInterface.kt"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/010-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java caller against official output",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/callers",
+        "/workspace/korrust/tests/nov21_generics/Calls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/011-stderr.txt"
+    },
+    {
+      "label": "Java signature source compile official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/java-official",
+        "/workspace/korrust/tests/nov21_generics/Calls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/012-stderr.txt"
+    },
+    {
+      "label": "Verified fixed Java caller official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/callers:/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/013-stderr.txt"
+    },
+    {
+      "label": "Compile official Consumer.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_generics/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official-official-consumer"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/014-stderr.txt"
+    },
+    {
+      "label": "Reject imported method bound official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_generics/InvalidConsumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official-official-invalid"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/015-stderr.txt"
+    },
+    {
+      "label": "Compile consumer launcher",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official-official-consumer:/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official-official-launcher",
+        "/workspace/korrust/tests/nov21_generics/ConsumerCalls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/016-stderr.txt"
+    },
+    {
+      "label": "Verified metadata consumer official/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official-official-launcher:/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official-official-consumer:/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCalls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/017-stderr.txt"
+    },
+    {
+      "label": "Compile candidate Consumer.kt",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/tests/nov21_generics/Consumer.kt",
+        "--module-name",
+        "nov21_generics",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official-candidate-consumer"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/018-stderr.txt"
+    },
+    {
+      "label": "Reject imported method bound official/candidate",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/tests/nov21_generics/InvalidConsumer.kt",
+        "--module-name",
+        "nov21_generics",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official-candidate-invalid"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/019-stderr.txt"
+    },
+    {
+      "label": "Compile consumer launcher",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official-candidate-consumer:/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official-candidate-launcher",
+        "/workspace/korrust/tests/nov21_generics/ConsumerCalls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/020-stderr.txt"
+    },
+    {
+      "label": "Verified metadata consumer official/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official-candidate-launcher:/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official-candidate-consumer:/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCalls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/021-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures official/Generic",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official",
+        "methodgenerics.Generic"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/022-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures official/GenericApi",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official",
+        "methodgenerics.GenericApi"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/023-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures official/Helpers",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official",
+        "methodgenerics.Helpers"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/024-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures official/Cov",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official",
+        "methodgenerics.Cov"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/025-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures official/Con",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official",
+        "methodgenerics.Con"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/026-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures official/Inv",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official",
+        "methodgenerics.Inv"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/027-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures official/UseKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official",
+        "methodgenerics.UseKt"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/028-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/028-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures official/WildMethods",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official",
+        "methodgenerics.WildMethods"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/029-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/029-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures official/WildApi",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official",
+        "methodgenerics.WildApi"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/030-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/030-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures official/WildDefaults",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official",
+        "methodgenerics.WildDefaults"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/031-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/031-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures official/WildDefaults$Companion",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official",
+        "methodgenerics.WildDefaults$Companion"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/032-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/032-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures official/WildDefaultApi",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official",
+        "methodgenerics.WildDefaultApi"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/033-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/033-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures official/WildDefaultApi$DefaultImpls",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official",
+        "methodgenerics.WildDefaultApi$DefaultImpls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/034-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/034-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures official/WildDefaultImpl",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/official",
+        "methodgenerics.WildDefaultImpl"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/035-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/035-stderr.txt"
+    },
+    {
+      "label": "Java signature source compile candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/java-candidate",
+        "/workspace/korrust/tests/nov21_generics/Calls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/036-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/036-stderr.txt"
+    },
+    {
+      "label": "Verified fixed Java caller candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/callers:/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/037-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/037-stderr.txt"
+    },
+    {
+      "label": "Compile official Consumer.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_generics/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate-official-consumer"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/038-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/038-stderr.txt"
+    },
+    {
+      "label": "Reject imported method bound candidate/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_generics/InvalidConsumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate-official-invalid"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/039-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/039-stderr.txt"
+    },
+    {
+      "label": "Compile consumer launcher",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate-official-consumer:/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate-official-launcher",
+        "/workspace/korrust/tests/nov21_generics/ConsumerCalls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/040-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/040-stderr.txt"
+    },
+    {
+      "label": "Verified metadata consumer candidate/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate-official-launcher:/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate-official-consumer:/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCalls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/041-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/041-stderr.txt"
+    },
+    {
+      "label": "Compile candidate Consumer.kt",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/tests/nov21_generics/Consumer.kt",
+        "--module-name",
+        "nov21_generics",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate-candidate-consumer"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/042-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/042-stderr.txt"
+    },
+    {
+      "label": "Reject imported method bound candidate/candidate",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/tests/nov21_generics/InvalidConsumer.kt",
+        "--module-name",
+        "nov21_generics",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate-candidate-invalid"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/043-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/043-stderr.txt"
+    },
+    {
+      "label": "Compile consumer launcher",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate-candidate-consumer:/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate-candidate-launcher",
+        "/workspace/korrust/tests/nov21_generics/ConsumerCalls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/044-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/044-stderr.txt"
+    },
+    {
+      "label": "Verified metadata consumer candidate/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate-candidate-launcher:/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate-candidate-consumer:/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCalls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/045-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/045-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures candidate/Generic",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate",
+        "methodgenerics.Generic"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/046-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/046-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures candidate/GenericApi",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate",
+        "methodgenerics.GenericApi"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/047-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/047-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures candidate/Helpers",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate",
+        "methodgenerics.Helpers"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/048-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/048-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures candidate/Cov",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate",
+        "methodgenerics.Cov"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/049-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/049-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures candidate/Con",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate",
+        "methodgenerics.Con"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/050-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/050-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures candidate/Inv",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate",
+        "methodgenerics.Inv"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/051-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/051-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures candidate/UseKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate",
+        "methodgenerics.UseKt"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/052-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/052-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures candidate/WildMethods",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate",
+        "methodgenerics.WildMethods"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/053-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/053-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures candidate/WildApi",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate",
+        "methodgenerics.WildApi"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/054-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/054-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures candidate/WildDefaults",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate",
+        "methodgenerics.WildDefaults"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/055-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/055-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures candidate/WildDefaults$Companion",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate",
+        "methodgenerics.WildDefaults$Companion"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/056-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/056-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures candidate/WildDefaultApi",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate",
+        "methodgenerics.WildDefaultApi"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/057-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/057-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures candidate/WildDefaultApi$DefaultImpls",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate",
+        "methodgenerics.WildDefaultApi$DefaultImpls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/058-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/058-stderr.txt"
+    },
+    {
+      "label": "javap callable signatures candidate/WildDefaultImpl",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/candidate",
+        "methodgenerics.WildDefaultImpl"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/059-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/059-stderr.txt"
+    },
+    {
+      "label": "Official boundary recursive-method-bound",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/recursive-method-bound/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/recursive-method-bound/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/060-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/060-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary recursive-method-bound",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/recursive-method-bound/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/recursive-method-bound/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/061-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/061-stderr.txt"
+    },
+    {
+      "label": "Official boundary dependent-method-bound",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/dependent-method-bound/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/dependent-method-bound/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/062-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/062-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary dependent-method-bound",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/dependent-method-bound/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/dependent-method-bound/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/063-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/063-stderr.txt"
+    },
+    {
+      "label": "Official boundary method-shadowing",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/method-shadowing/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/method-shadowing/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/064-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/064-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary method-shadowing",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/method-shadowing/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/method-shadowing/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/065-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/065-stderr.txt"
+    },
+    {
+      "label": "Official boundary generic-member-default",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-member-default/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-member-default/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/066-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/066-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary generic-member-default",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-member-default/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-member-default/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/067-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/067-stderr.txt"
+    },
+    {
+      "label": "Official boundary generic-member-capture",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-member-capture/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-member-capture/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/068-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/068-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary generic-member-capture",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-member-capture/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-member-capture/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/069-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/069-stderr.txt"
+    },
+    {
+      "label": "Official boundary generic-interface-default",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-interface-default/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-interface-default/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/070-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/070-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary generic-interface-default",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-interface-default/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-interface-default/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/071-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/071-stderr.txt"
+    },
+    {
+      "label": "Official boundary generic-nongeneric-interface-default",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-nongeneric-interface-default/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-nongeneric-interface-default/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/072-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/072-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary generic-nongeneric-interface-default",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-nongeneric-interface-default/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-nongeneric-interface-default/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/073-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/073-stderr.txt"
+    },
+    {
+      "label": "Official boundary generic-override",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-override/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-override/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/074-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/074-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary generic-override",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-override/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-override/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/075-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/075-stderr.txt"
+    },
+    {
+      "label": "Official boundary wrong-method-bound",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/wrong-method-bound/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/wrong-method-bound/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/076-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/076-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary wrong-method-bound",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/wrong-method-bound/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/wrong-method-bound/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/077-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/077-stderr.txt"
+    },
+    {
+      "label": "Official boundary nullable-method-bound",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/nullable-method-bound/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/nullable-method-bound/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/078-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/078-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary nullable-method-bound",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/nullable-method-bound/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/nullable-method-bound/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/079-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/079-stderr.txt"
+    },
+    {
+      "label": "Official boundary variance-opposition",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/variance-opposition/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/variance-opposition/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/080-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/080-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary variance-opposition",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/variance-opposition/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/variance-opposition/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/081-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/081-stderr.txt"
+    },
+    {
+      "label": "Official boundary wrong-generic-interface-bound",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/wrong-generic-interface-bound/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/wrong-generic-interface-bound/official"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/082-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/082-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary wrong-generic-interface-bound",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/wrong-generic-interface-bound/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/wrong-generic-interface-bound/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/083-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/083-stderr.txt"
+    },
+    {
+      "label": "Official boundary variant-classifier-bound",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/variant-classifier-bound/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/variant-classifier-bound/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/084-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/084-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary variant-classifier-bound",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/variant-classifier-bound/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/variant-classifier-bound/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/085-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/085-stderr.txt"
+    },
+    {
+      "label": "Official boundary variant-nested-supertype",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/variant-nested-supertype/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/variant-nested-supertype/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/086-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/086-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary variant-nested-supertype",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/variant-nested-supertype/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/variant-nested-supertype/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/087-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/087-stderr.txt"
+    },
+    {
+      "label": "Official boundary multiple-method-bounds",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/multiple-method-bounds/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/multiple-method-bounds/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/088-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/088-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary multiple-method-bounds",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/multiple-method-bounds/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/multiple-method-bounds/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/089-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/089-stderr.txt"
+    },
+    {
+      "label": "Official boundary projected-exposed-field",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/projected-exposed-field/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/projected-exposed-field/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/090-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/090-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary projected-exposed-field",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/projected-exposed-field/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/projected-exposed-field/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/091-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/091-stderr.txt"
+    },
+    {
+      "label": "Official boundary projected-exposed-field-alias",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/projected-exposed-field-alias/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/projected-exposed-field-alias/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/092-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/092-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary projected-exposed-field-alias",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/projected-exposed-field-alias/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/projected-exposed-field-alias/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/093-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/093-stderr.txt"
+    },
+    {
+      "label": "Official boundary projected-exposed-constructor-field",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/projected-exposed-constructor-field/Boundary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_generics",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/projected-exposed-constructor-field/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/094-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/094-stderr.txt"
+    },
+    {
+      "label": "Candidate boundary projected-exposed-constructor-field",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v3/korrust",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/projected-exposed-constructor-field/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/projected-exposed-constructor-field/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/095-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T063016274382Z-nov21-generics/095-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "baseline/BaselineMembers.kt",
+      "outcome": "pass",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/nov21_generics/BaselineMembers.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "GENERIC_CLASS_MEMBER_TYPE_PARAMETERS_UNSUPPORTED",
+          "message": "Generic members inside source generic classes are unsupported",
+          "path": "/workspace/korrust/tests/nov21_generics/BaselineMembers.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "baseline/BaselineWild.kt",
+      "outcome": "pass",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/nov21_generics/BaselineWild.kt",
+          "offset": 21,
+          "category": "unsupported_language",
+          "code": "VARIANT_JVM_SIGNATURE_UNSUPPORTED",
+          "message": "Exposed declaration variance requires unsupported JVM wildcard signature lowering",
+          "path": "/workspace/korrust/tests/nov21_generics/BaselineWild.kt",
+          "line": 2,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "baseline/BaselineInterface.kt",
+      "outcome": "pass",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/nov21_generics/BaselineInterface.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "GENERIC_INTERFACE_BODY_UNSUPPORTED",
+          "message": "Generic interface defaults, generic members, companions, and nested declarations are unsupported",
+          "path": "/workspace/korrust/tests/nov21_generics/BaselineInterface.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "new-scope/official/BaselineMembers.kt",
+      "outcome": "pass"
+    },
+    {
+      "id": "new-scope/official/BaselineWild.kt",
+      "outcome": "pass"
+    },
+    {
+      "id": "new-scope/official/BaselineInterface.kt",
+      "outcome": "pass"
+    },
+    {
+      "id": "new-scope/candidate/BaselineMembers.kt",
+      "outcome": "pass"
+    },
+    {
+      "id": "new-scope/candidate/BaselineWild.kt",
+      "outcome": "pass"
+    },
+    {
+      "id": "new-scope/candidate/BaselineInterface.kt",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "imported-bound/official/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/official/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "imported-bound/official/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/official/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "imported-bound/candidate/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/candidate/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "imported-bound/candidate/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer/candidate/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/Generic",
+      "outcome": "pass",
+      "expected": {
+        "methodgenerics.Generic(Ljava/lang/Object;)V": {
+          "descriptor": "(Ljava/lang/Object;)V",
+          "signature": "(TC;)V"
+        },
+        "getSeed()Ljava/lang/Object;": {
+          "descriptor": "()Ljava/lang/Object;",
+          "signature": "()TC;"
+        },
+        "methodgenerics.Generic(Ljava/lang/Object;I)V": {
+          "descriptor": "(Ljava/lang/Object;I)V",
+          "signature": "(TC;I)V"
+        },
+        "echo(Ljava/lang/Object;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;>(TT;)TT;"
+        },
+        "bounded(Lmethodgenerics/Label;)Lmethodgenerics/Label;": {
+          "descriptor": "(Lmethodgenerics/Label;)Lmethodgenerics/Label;",
+          "signature": "<T::Lmethodgenerics/Label;>(TT;)TT;"
+        },
+        "text(Lmethodgenerics/Label;)Ljava/lang/String;": {
+          "descriptor": "(Lmethodgenerics/Label;)Ljava/lang/String;",
+          "signature": "<T::Lmethodgenerics/Label;>(TT;)Ljava/lang/String;"
+        },
+        "choose(Ljava/lang/Object;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;>(TT;)TC;"
+        },
+        "second(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;S:Ljava/lang/Object;>(TT;TS;)TS;"
+        },
+        "first(Ljava/util/List;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/util/List;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;>(Ljava/util/List<+TT;>;)TT;"
+        },
+        "transform(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;": {
+          "descriptor": "(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;",
+          "signature": "<T:Ljava/lang/Object;>(TT;Lkotlin/jvm/functions/Function1<-TT;Ljava/lang/String;>;)Ljava/lang/String;"
+        }
+      },
+      "actual": {
+        "methodgenerics.Generic(Ljava/lang/Object;)V": {
+          "descriptor": "(Ljava/lang/Object;)V",
+          "signature": "(TC;)V"
+        },
+        "methodgenerics.Generic(Ljava/lang/Object;I)V": {
+          "descriptor": "(Ljava/lang/Object;I)V",
+          "signature": "(TC;I)V"
+        },
+        "echo(Ljava/lang/Object;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;>(TT;)TT;"
+        },
+        "bounded(Lmethodgenerics/Label;)Lmethodgenerics/Label;": {
+          "descriptor": "(Lmethodgenerics/Label;)Lmethodgenerics/Label;",
+          "signature": "<T::Lmethodgenerics/Label;>(TT;)TT;"
+        },
+        "text(Lmethodgenerics/Label;)Ljava/lang/String;": {
+          "descriptor": "(Lmethodgenerics/Label;)Ljava/lang/String;",
+          "signature": "<T::Lmethodgenerics/Label;>(TT;)Ljava/lang/String;"
+        },
+        "choose(Ljava/lang/Object;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;>(TT;)TC;"
+        },
+        "second(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;S:Ljava/lang/Object;>(TT;TS;)TS;"
+        },
+        "first(Ljava/util/List;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/util/List;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;>(Ljava/util/List<+TT;>;)TT;"
+        },
+        "transform(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;": {
+          "descriptor": "(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;",
+          "signature": "<T:Ljava/lang/Object;>(TT;Lkotlin/jvm/functions/Function1<-TT;Ljava/lang/String;>;)Ljava/lang/String;"
+        },
+        "getSeed()Ljava/lang/Object;": {
+          "descriptor": "()Ljava/lang/Object;",
+          "signature": "()TC;"
+        }
+      }
+    },
+    {
+      "id": "signature/GenericApi",
+      "outcome": "pass",
+      "expected": {
+        "identity(Lmethodgenerics/Label;)Lmethodgenerics/Label;": {
+          "descriptor": "(Lmethodgenerics/Label;)Lmethodgenerics/Label;",
+          "signature": "<T::Lmethodgenerics/Label;>(TT;)TT;"
+        },
+        "choose(Ljava/lang/Object;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;>(TT;)TC;"
+        }
+      },
+      "actual": {
+        "identity(Lmethodgenerics/Label;)Lmethodgenerics/Label;": {
+          "descriptor": "(Lmethodgenerics/Label;)Lmethodgenerics/Label;",
+          "signature": "<T::Lmethodgenerics/Label;>(TT;)TT;"
+        },
+        "choose(Ljava/lang/Object;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;>(TT;)TC;"
+        }
+      }
+    },
+    {
+      "id": "signature/Helpers",
+      "outcome": "pass",
+      "expected": {
+        "bounded(Lmethodgenerics/Label;)Lmethodgenerics/Label;": {
+          "descriptor": "(Lmethodgenerics/Label;)Lmethodgenerics/Label;",
+          "signature": "<T::Lmethodgenerics/Label;>(TT;)TT;"
+        },
+        "echo(Ljava/lang/Object;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;>(TT;)TT;"
+        }
+      },
+      "actual": {
+        "bounded(Lmethodgenerics/Label;)Lmethodgenerics/Label;": {
+          "descriptor": "(Lmethodgenerics/Label;)Lmethodgenerics/Label;",
+          "signature": "<T::Lmethodgenerics/Label;>(TT;)TT;"
+        },
+        "echo(Ljava/lang/Object;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;>(TT;)TT;"
+        }
+      }
+    },
+    {
+      "id": "signature/Cov",
+      "outcome": "pass",
+      "expected": {
+        "methodgenerics.Cov(Ljava/lang/Object;)V": {
+          "descriptor": "(Ljava/lang/Object;)V",
+          "signature": "(TT;)V"
+        },
+        "getValue()Ljava/lang/Object;": {
+          "descriptor": "()Ljava/lang/Object;",
+          "signature": "()TT;"
+        }
+      },
+      "actual": {
+        "methodgenerics.Cov(Ljava/lang/Object;)V": {
+          "descriptor": "(Ljava/lang/Object;)V",
+          "signature": "(TT;)V"
+        },
+        "getValue()Ljava/lang/Object;": {
+          "descriptor": "()Ljava/lang/Object;",
+          "signature": "()TT;"
+        }
+      }
+    },
+    {
+      "id": "signature/Con",
+      "outcome": "pass",
+      "expected": {
+        "methodgenerics.Con()V": {
+          "descriptor": "()V",
+          "signature": null
+        },
+        "accept(Ljava/lang/Object;)I": {
+          "descriptor": "(Ljava/lang/Object;)I",
+          "signature": "(TT;)I"
+        }
+      },
+      "actual": {
+        "methodgenerics.Con()V": {
+          "descriptor": "()V",
+          "signature": null
+        },
+        "accept(Ljava/lang/Object;)I": {
+          "descriptor": "(Ljava/lang/Object;)I",
+          "signature": "(TT;)I"
+        }
+      }
+    },
+    {
+      "id": "signature/Inv",
+      "outcome": "pass",
+      "expected": {
+        "methodgenerics.Inv(Ljava/lang/Object;)V": {
+          "descriptor": "(Ljava/lang/Object;)V",
+          "signature": "(TT;)V"
+        },
+        "getValue()Ljava/lang/Object;": {
+          "descriptor": "()Ljava/lang/Object;",
+          "signature": "()TT;"
+        }
+      },
+      "actual": {
+        "methodgenerics.Inv(Ljava/lang/Object;)V": {
+          "descriptor": "(Ljava/lang/Object;)V",
+          "signature": "(TT;)V"
+        },
+        "getValue()Ljava/lang/Object;": {
+          "descriptor": "()Ljava/lang/Object;",
+          "signature": "()TT;"
+        }
+      }
+    },
+    {
+      "id": "signature/UseKt",
+      "outcome": "pass",
+      "expected": {
+        "through(Lmethodgenerics/GenericApi;Lmethodgenerics/Named;)Lmethodgenerics/Named;": {
+          "descriptor": "(Lmethodgenerics/GenericApi;Lmethodgenerics/Named;)Lmethodgenerics/Named;",
+          "signature": "(Lmethodgenerics/GenericApi<Ljava/lang/String;>;Lmethodgenerics/Named;)Lmethodgenerics/Named;"
+        },
+        "chooseThrough(Lmethodgenerics/GenericApi;)Ljava/lang/String;": {
+          "descriptor": "(Lmethodgenerics/GenericApi;)Ljava/lang/String;",
+          "signature": "(Lmethodgenerics/GenericApi<Ljava/lang/String;>;)Ljava/lang/String;"
+        },
+        "localCalls()Ljava/lang/String;": {
+          "descriptor": "()Ljava/lang/String;",
+          "signature": null
+        },
+        "p1(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)I"
+        },
+        "p2(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<Lmethodgenerics/Final;>;)I"
+        },
+        "p3(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;)I"
+        },
+        "p4(Lmethodgenerics/Con;)I": {
+          "descriptor": "(Lmethodgenerics/Con;)I",
+          "signature": "(Lmethodgenerics/Con<Ljava/lang/Object;>;)I"
+        },
+        "p5(Lmethodgenerics/Con;)I": {
+          "descriptor": "(Lmethodgenerics/Con;)I",
+          "signature": "(Lmethodgenerics/Con<-Lmethodgenerics/Final;>;)I"
+        },
+        "p6(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)I"
+        },
+        "p7(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<Lmethodgenerics/Final;>;)I"
+        },
+        "p8(Lmethodgenerics/Con;)I": {
+          "descriptor": "(Lmethodgenerics/Con;)I",
+          "signature": "(Lmethodgenerics/Con<-Lmethodgenerics/Final;>;)I"
+        },
+        "p9(Lmethodgenerics/Inv;)I": {
+          "descriptor": "(Lmethodgenerics/Inv;)I",
+          "signature": "(Lmethodgenerics/Inv<Lmethodgenerics/Cov<Lmethodgenerics/Open;>;>;)I"
+        },
+        "p10(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lmethodgenerics/Con<-Lmethodgenerics/Final;>;>;)I"
+        },
+        "p11(Lkotlin/jvm/functions/Function1;)I": {
+          "descriptor": "(Lkotlin/jvm/functions/Function1;)I",
+          "signature": "(Lkotlin/jvm/functions/Function1<-Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;+Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;>;)I"
+        },
+        "p12(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lkotlin/jvm/functions/Function1<-Lmethodgenerics/Open;+Lmethodgenerics/Open;>;>;)I"
+        },
+        "p13(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "<T:Ljava/lang/Object;>(Lmethodgenerics/Cov<+TT;>;)I"
+        },
+        "p14([Lmethodgenerics/Cov;)I": {
+          "descriptor": "([Lmethodgenerics/Cov;)I",
+          "signature": "([Lmethodgenerics/Cov<Lmethodgenerics/Open;>;)I"
+        },
+        "p15(Lkotlin/jvm/functions/Function1;)I": {
+          "descriptor": "(Lkotlin/jvm/functions/Function1;)I",
+          "signature": "(Lkotlin/jvm/functions/Function1<Ljava/lang/Object;+Ljava/lang/Object;>;)I"
+        },
+        "r1()Lmethodgenerics/Cov;": {
+          "descriptor": "()Lmethodgenerics/Cov;",
+          "signature": "()Lmethodgenerics/Cov<Lmethodgenerics/Open;>;"
+        },
+        "r2()Lmethodgenerics/Cov;": {
+          "descriptor": "()Lmethodgenerics/Cov;",
+          "signature": "()Lmethodgenerics/Cov<Lmethodgenerics/Open;>;"
+        },
+        "r3()Lmethodgenerics/Con;": {
+          "descriptor": "()Lmethodgenerics/Con;",
+          "signature": "()Lmethodgenerics/Con<Lmethodgenerics/Final;>;"
+        },
+        "r4()Lmethodgenerics/Inv;": {
+          "descriptor": "()Lmethodgenerics/Inv;",
+          "signature": "()Lmethodgenerics/Inv<Lmethodgenerics/Cov<Lmethodgenerics/Open;>;>;"
+        },
+        "r5()Lkotlin/jvm/functions/Function1;": {
+          "descriptor": "()Lkotlin/jvm/functions/Function1;",
+          "signature": "()Lkotlin/jvm/functions/Function1<Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;Lmethodgenerics/Cov<Lmethodgenerics/Open;>;>;"
+        }
+      },
+      "actual": {
+        "through(Lmethodgenerics/GenericApi;Lmethodgenerics/Named;)Lmethodgenerics/Named;": {
+          "descriptor": "(Lmethodgenerics/GenericApi;Lmethodgenerics/Named;)Lmethodgenerics/Named;",
+          "signature": "(Lmethodgenerics/GenericApi<Ljava/lang/String;>;Lmethodgenerics/Named;)Lmethodgenerics/Named;"
+        },
+        "chooseThrough(Lmethodgenerics/GenericApi;)Ljava/lang/String;": {
+          "descriptor": "(Lmethodgenerics/GenericApi;)Ljava/lang/String;",
+          "signature": "(Lmethodgenerics/GenericApi<Ljava/lang/String;>;)Ljava/lang/String;"
+        },
+        "localCalls()Ljava/lang/String;": {
+          "descriptor": "()Ljava/lang/String;",
+          "signature": null
+        },
+        "p1(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)I"
+        },
+        "p2(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<Lmethodgenerics/Final;>;)I"
+        },
+        "p3(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;)I"
+        },
+        "p4(Lmethodgenerics/Con;)I": {
+          "descriptor": "(Lmethodgenerics/Con;)I",
+          "signature": "(Lmethodgenerics/Con<Ljava/lang/Object;>;)I"
+        },
+        "p5(Lmethodgenerics/Con;)I": {
+          "descriptor": "(Lmethodgenerics/Con;)I",
+          "signature": "(Lmethodgenerics/Con<-Lmethodgenerics/Final;>;)I"
+        },
+        "p6(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)I"
+        },
+        "p7(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<Lmethodgenerics/Final;>;)I"
+        },
+        "p8(Lmethodgenerics/Con;)I": {
+          "descriptor": "(Lmethodgenerics/Con;)I",
+          "signature": "(Lmethodgenerics/Con<-Lmethodgenerics/Final;>;)I"
+        },
+        "p9(Lmethodgenerics/Inv;)I": {
+          "descriptor": "(Lmethodgenerics/Inv;)I",
+          "signature": "(Lmethodgenerics/Inv<Lmethodgenerics/Cov<Lmethodgenerics/Open;>;>;)I"
+        },
+        "p10(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lmethodgenerics/Con<-Lmethodgenerics/Final;>;>;)I"
+        },
+        "p11(Lkotlin/jvm/functions/Function1;)I": {
+          "descriptor": "(Lkotlin/jvm/functions/Function1;)I",
+          "signature": "(Lkotlin/jvm/functions/Function1<-Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;+Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;>;)I"
+        },
+        "p12(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lkotlin/jvm/functions/Function1<-Lmethodgenerics/Open;+Lmethodgenerics/Open;>;>;)I"
+        },
+        "p13(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "<T:Ljava/lang/Object;>(Lmethodgenerics/Cov<+TT;>;)I"
+        },
+        "p14([Lmethodgenerics/Cov;)I": {
+          "descriptor": "([Lmethodgenerics/Cov;)I",
+          "signature": "([Lmethodgenerics/Cov<Lmethodgenerics/Open;>;)I"
+        },
+        "p15(Lkotlin/jvm/functions/Function1;)I": {
+          "descriptor": "(Lkotlin/jvm/functions/Function1;)I",
+          "signature": "(Lkotlin/jvm/functions/Function1<Ljava/lang/Object;+Ljava/lang/Object;>;)I"
+        },
+        "r1()Lmethodgenerics/Cov;": {
+          "descriptor": "()Lmethodgenerics/Cov;",
+          "signature": "()Lmethodgenerics/Cov<Lmethodgenerics/Open;>;"
+        },
+        "r2()Lmethodgenerics/Cov;": {
+          "descriptor": "()Lmethodgenerics/Cov;",
+          "signature": "()Lmethodgenerics/Cov<Lmethodgenerics/Open;>;"
+        },
+        "r3()Lmethodgenerics/Con;": {
+          "descriptor": "()Lmethodgenerics/Con;",
+          "signature": "()Lmethodgenerics/Con<Lmethodgenerics/Final;>;"
+        },
+        "r4()Lmethodgenerics/Inv;": {
+          "descriptor": "()Lmethodgenerics/Inv;",
+          "signature": "()Lmethodgenerics/Inv<Lmethodgenerics/Cov<Lmethodgenerics/Open;>;>;"
+        },
+        "r5()Lkotlin/jvm/functions/Function1;": {
+          "descriptor": "()Lkotlin/jvm/functions/Function1;",
+          "signature": "()Lkotlin/jvm/functions/Function1<Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;Lmethodgenerics/Cov<Lmethodgenerics/Open;>;>;"
+        }
+      }
+    },
+    {
+      "id": "signature/WildMethods",
+      "outcome": "pass",
+      "expected": {
+        "methodgenerics.WildMethods(Lmethodgenerics/Cov;)V": {
+          "descriptor": "(Lmethodgenerics/Cov;)V",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)V"
+        },
+        "getInput()Lmethodgenerics/Cov;": {
+          "descriptor": "()Lmethodgenerics/Cov;",
+          "signature": "()Lmethodgenerics/Cov<Ljava/lang/Object;>;"
+        },
+        "take(Lmethodgenerics/Con;)I": {
+          "descriptor": "(Lmethodgenerics/Con;)I",
+          "signature": "(Lmethodgenerics/Con<-Lmethodgenerics/Final;>;)I"
+        },
+        "result()Lmethodgenerics/Cov;": {
+          "descriptor": "()Lmethodgenerics/Cov;",
+          "signature": "()Lmethodgenerics/Cov<Lmethodgenerics/Open;>;"
+        }
+      },
+      "actual": {
+        "methodgenerics.WildMethods(Lmethodgenerics/Cov;)V": {
+          "descriptor": "(Lmethodgenerics/Cov;)V",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)V"
+        },
+        "take(Lmethodgenerics/Con;)I": {
+          "descriptor": "(Lmethodgenerics/Con;)I",
+          "signature": "(Lmethodgenerics/Con<-Lmethodgenerics/Final;>;)I"
+        },
+        "result()Lmethodgenerics/Cov;": {
+          "descriptor": "()Lmethodgenerics/Cov;",
+          "signature": "()Lmethodgenerics/Cov<Lmethodgenerics/Open;>;"
+        },
+        "getInput()Lmethodgenerics/Cov;": {
+          "descriptor": "()Lmethodgenerics/Cov;",
+          "signature": "()Lmethodgenerics/Cov<Ljava/lang/Object;>;"
+        }
+      }
+    },
+    {
+      "id": "signature/WildApi",
+      "outcome": "pass",
+      "expected": {
+        "take(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;)I"
+        },
+        "getResult()Lmethodgenerics/Cov;": {
+          "descriptor": "()Lmethodgenerics/Cov;",
+          "signature": "()Lmethodgenerics/Cov<Lmethodgenerics/Open;>;"
+        }
+      },
+      "actual": {
+        "getResult()Lmethodgenerics/Cov;": {
+          "descriptor": "()Lmethodgenerics/Cov;",
+          "signature": "()Lmethodgenerics/Cov<Lmethodgenerics/Open;>;"
+        },
+        "take(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;)I"
+        }
+      }
+    },
+    {
+      "id": "signature/WildDefaults",
+      "outcome": "pass",
+      "expected": {
+        "methodgenerics.WildDefaults()V": {
+          "descriptor": "()V",
+          "signature": null
+        },
+        "take(Lmethodgenerics/Cov;I)I": {
+          "descriptor": "(Lmethodgenerics/Cov;I)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;I)I"
+        },
+        "take$default(Lmethodgenerics/WildDefaults;Lmethodgenerics/Cov;IILjava/lang/Object;)I": {
+          "descriptor": "(Lmethodgenerics/WildDefaults;Lmethodgenerics/Cov;IILjava/lang/Object;)I",
+          "signature": null
+        },
+        "take(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)I"
+        },
+        "takeStatic(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)I"
+        }
+      },
+      "actual": {
+        "methodgenerics.WildDefaults()V": {
+          "descriptor": "()V",
+          "signature": null
+        },
+        "take(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)I"
+        },
+        "take(Lmethodgenerics/Cov;I)I": {
+          "descriptor": "(Lmethodgenerics/Cov;I)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;I)I"
+        },
+        "take$default(Lmethodgenerics/WildDefaults;Lmethodgenerics/Cov;IILjava/lang/Object;)I": {
+          "descriptor": "(Lmethodgenerics/WildDefaults;Lmethodgenerics/Cov;IILjava/lang/Object;)I",
+          "signature": null
+        },
+        "takeStatic(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)I"
+        }
+      }
+    },
+    {
+      "id": "signature/WildDefaults$Companion",
+      "outcome": "pass",
+      "expected": {
+        "takeStatic(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)I"
+        },
+        "methodgenerics.WildDefaults$Companion(Lkotlin/jvm/internal/DefaultConstructorMarker;)V": {
+          "descriptor": "(Lkotlin/jvm/internal/DefaultConstructorMarker;)V",
+          "signature": null
+        }
+      },
+      "actual": {
+        "takeStatic(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)I"
+        },
+        "methodgenerics.WildDefaults$Companion(Lkotlin/jvm/internal/DefaultConstructorMarker;)V": {
+          "descriptor": "(Lkotlin/jvm/internal/DefaultConstructorMarker;)V",
+          "signature": null
+        }
+      }
+    },
+    {
+      "id": "signature/WildDefaultApi",
+      "outcome": "pass",
+      "expected": {
+        "take(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;)I"
+        },
+        "access$take$jd(Lmethodgenerics/WildDefaultApi;Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/WildDefaultApi;Lmethodgenerics/Cov;)I",
+          "signature": null
+        }
+      },
+      "actual": {
+        "take(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;)I"
+        },
+        "access$take$jd(Lmethodgenerics/WildDefaultApi;Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/WildDefaultApi;Lmethodgenerics/Cov;)I",
+          "signature": null
+        }
+      }
+    },
+    {
+      "id": "signature/WildDefaultApi$DefaultImpls",
+      "outcome": "pass",
+      "expected": {
+        "take(Lmethodgenerics/WildDefaultApi;Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/WildDefaultApi;Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/WildDefaultApi;Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;)I"
+        }
+      },
+      "actual": {
+        "take(Lmethodgenerics/WildDefaultApi;Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/WildDefaultApi;Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/WildDefaultApi;Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;)I"
+        }
+      }
+    },
+    {
+      "id": "signature/WildDefaultImpl",
+      "outcome": "pass",
+      "expected": {
+        "methodgenerics.WildDefaultImpl()V": {
+          "descriptor": "()V",
+          "signature": null
+        },
+        "take(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;)I"
+        }
+      },
+      "actual": {
+        "methodgenerics.WildDefaultImpl()V": {
+          "descriptor": "()V",
+          "signature": null
+        },
+        "take(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;)I"
+        }
+      }
+    },
+    {
+      "id": "boundary/recursive-method-bound",
+      "outcome": "unsupported_language",
+      "source_sha256": "6f5f4215600161346875c87dcaf042904d4ec120a78a7119f3a6470543923788",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/recursive-method-bound/Boundary.kt",
+          "offset": 15,
+          "category": "unsupported_language",
+          "code": "DEPENDENT_GENERIC_BOUND_UNSUPPORTED",
+          "message": "Dependent and recursive classifier bounds are unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/recursive-method-bound/Boundary.kt",
+          "line": 1,
+          "column": 16
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/dependent-method-bound",
+      "outcome": "unsupported_language",
+      "source_sha256": "0d597561f9cc3f7614920d991ff23af24e46adbfb48cff6ec505301f683bf132",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/dependent-method-bound/Boundary.kt",
+          "offset": 15,
+          "category": "unsupported_language",
+          "code": "DEPENDENT_GENERIC_BOUND_UNSUPPORTED",
+          "message": "Dependent and recursive classifier bounds are unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/dependent-method-bound/Boundary.kt",
+          "line": 1,
+          "column": 16
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/method-shadowing",
+      "outcome": "unsupported_language",
+      "source_sha256": "1a9dff36d2ec668777c8b1f0e856c0b6ab04dbfadc956c1a9183e25a4666a0f2",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/method-shadowing/Boundary.kt",
+          "offset": 21,
+          "category": "unsupported_language",
+          "code": "TYPE_PARAMETER_SHADOW_UNSUPPORTED",
+          "message": "Shadowing an enclosing type parameter is unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/method-shadowing/Boundary.kt",
+          "line": 1,
+          "column": 22
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/generic-member-default",
+      "outcome": "unsupported_language",
+      "source_sha256": "b6be5e0c0320ad3bc90c23fcf3a6730e46622560972d079b1d2749d313c0e94a",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-member-default/Boundary.kt",
+          "offset": 15,
+          "category": "unsupported_language",
+          "code": "GENERIC_MEMBER_COMPLEXITY_UNSUPPORTED",
+          "message": "Generic source member overrides, inline, suspend, varargs and defaults are unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-member-default/Boundary.kt",
+          "line": 1,
+          "column": 16
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/generic-member-capture",
+      "outcome": "unsupported_language",
+      "source_sha256": "790259b973d445111bda7432c301083540baa4b493568e54c6cf4b16c79d85e8",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-member-capture/Boundary.kt",
+          "offset": 15,
+          "category": "unsupported_language",
+          "code": "GENERIC_MEMBER_LAMBDA_UNSUPPORTED",
+          "message": "Lambdas in generic source members are unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-member-capture/Boundary.kt",
+          "line": 1,
+          "column": 16
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/generic-interface-default",
+      "outcome": "unsupported_language",
+      "source_sha256": "aa2b2f604546586ac9fc333ca0637d3ccc0adc40845acc9571544ca46496e46e",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-interface-default/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "GENERIC_INTERFACE_BODY_UNSUPPORTED",
+          "message": "Generic interface defaults, companions, and nested declarations are unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-interface-default/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/generic-nongeneric-interface-default",
+      "outcome": "unsupported_language",
+      "source_sha256": "71d14ae98508afcfd3ba15eecba1815cf2cf9ee5a341d6ede789cdc31057549c",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-nongeneric-interface-default/Boundary.kt",
+          "offset": 16,
+          "category": "unsupported_language",
+          "code": "GENERIC_INTERFACE_METHOD_BODY_UNSUPPORTED",
+          "message": "Generic source interface default bodies are unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-nongeneric-interface-default/Boundary.kt",
+          "line": 1,
+          "column": 17
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/generic-override",
+      "outcome": "unsupported_language",
+      "source_sha256": "831fd5068dc866fd53d51ad3e7bed8f2c289dab51046892c6eb56a582f8a725a",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-override/Boundary.kt",
+          "offset": 52,
+          "category": "unsupported_language",
+          "code": "GENERIC_MEMBER_COMPLEXITY_UNSUPPORTED",
+          "message": "Generic source member overrides, inline, suspend, varargs and defaults are unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/generic-override/Boundary.kt",
+          "line": 2,
+          "column": 18
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/wrong-method-bound",
+      "outcome": "invalid_rejected",
+      "source_sha256": "c671b1fcb86234159f08d63a2a39aaf59cd1ab972ea2baf92aba999eaef9746c",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/wrong-method-bound/Boundary.kt",
+          "offset": 75,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Type argument violates upper bound of T",
+          "path": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/wrong-method-bound/Boundary.kt",
+          "line": 3,
+          "column": 18
+        }
+      ],
+      "official_accepted": false
+    },
+    {
+      "id": "boundary/nullable-method-bound",
+      "outcome": "invalid_rejected",
+      "source_sha256": "7d6dbfe6844202d6d50885007656451575ea8bbf5949a75b8a6417c82f1a7314",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/nullable-method-bound/Boundary.kt",
+          "offset": 82,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Type argument violates upper bound of T",
+          "path": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/nullable-method-bound/Boundary.kt",
+          "line": 3,
+          "column": 25
+        }
+      ],
+      "official_accepted": false
+    },
+    {
+      "id": "boundary/variance-opposition",
+      "outcome": "invalid_rejected",
+      "source_sha256": "420887b7f4e34199c8d497a9719b3e8e105adcc2cce4713b7e849c8b68d682d4",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/variance-opposition/Boundary.kt",
+          "offset": 21,
+          "category": "invalid_kotlin",
+          "code": "TYPE_PROJECTION_CONFLICT",
+          "message": "Type projection conflicts with declaration-site variance",
+          "path": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/variance-opposition/Boundary.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "official_accepted": false
+    },
+    {
+      "id": "boundary/wrong-generic-interface-bound",
+      "outcome": "invalid_rejected",
+      "source_sha256": "c82244c757a306fb9ee4b168a149097950171be9a7ba4d3324be6936e96e520c",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/wrong-generic-interface-bound/Boundary.kt",
+          "offset": 90,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Type argument violates upper bound of T",
+          "path": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/wrong-generic-interface-bound/Boundary.kt",
+          "line": 3,
+          "column": 31
+        }
+      ],
+      "official_accepted": false
+    },
+    {
+      "id": "boundary/variant-classifier-bound",
+      "outcome": "unsupported_language",
+      "source_sha256": "f94a4de8d6ec76f9fe08c435b889d24b609ef0574c7cbed67e1f25430b5eb212",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/variant-classifier-bound/Boundary.kt",
+          "offset": 21,
+          "category": "unsupported_language",
+          "code": "VARIANT_CLASSIFIER_SIGNATURE_UNSUPPORTED",
+          "message": "Contextual variant classifier bounds and nested supertypes are unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/variant-classifier-bound/Boundary.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/variant-nested-supertype",
+      "outcome": "unsupported_language",
+      "source_sha256": "c9b43afa3cbdad069e24371081ee32260def52f9d5b60b28f6ca3de267e3742c",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/variant-nested-supertype/Boundary.kt",
+          "offset": 38,
+          "category": "unsupported_language",
+          "code": "VARIANT_CLASSIFIER_SIGNATURE_UNSUPPORTED",
+          "message": "Contextual variant classifier bounds and nested supertypes are unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/variant-nested-supertype/Boundary.kt",
+          "line": 3,
+          "column": 1
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/multiple-method-bounds",
+      "outcome": "unsupported_language",
+      "source_sha256": "72e4094efcac30a6960d3cbf53f4b6612848c215f68c182f828ab2bd53543935",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/multiple-method-bounds/Boundary.kt",
+          "offset": 48,
+          "category": "unsupported_language",
+          "code": "SOURCE_WHERE_BOUND_UNSUPPORTED",
+          "message": "Multiple type parameter bounds in where clauses are unsupported",
+          "path": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/multiple-method-bounds/Boundary.kt",
+          "line": 2,
+          "column": 33
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/projected-exposed-field",
+      "outcome": "unsupported_language",
+      "source_sha256": "24081c429087f26b474b070e23f70f56fd69b70516cca17754b73816360c8dd0",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/projected-exposed-field/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "VARIANT_FIELD_SIGNATURE_UNSUPPORTED",
+          "message": "Projected variant JVM fields require unsupported field signature lowering",
+          "path": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/projected-exposed-field/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/projected-exposed-field-alias",
+      "outcome": "unsupported_language",
+      "source_sha256": "d481dd7f9d5b8174704dc0333e401ed43bbf4c60c69066442ebf911a1bb81a43",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/projected-exposed-field-alias/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "VARIANT_FIELD_SIGNATURE_UNSUPPORTED",
+          "message": "Projected variant JVM fields require unsupported field signature lowering",
+          "path": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/projected-exposed-field-alias/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "boundary/projected-exposed-constructor-field",
+      "outcome": "unsupported_language",
+      "source_sha256": "b5cb3499b34487485756435d5a6d37a84509ff2d24fe9568e8c52eb94bbd9999",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/projected-exposed-constructor-field/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "VARIANT_FIELD_SIGNATURE_UNSUPPORTED",
+          "message": "Projected variant JVM fields require unsupported field signature lowering",
+          "path": "/workspace/korrust/target/checks/2026-11-21T063016274382Z-nov21-generics/boundaries/projected-exposed-constructor-field/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "official_accepted": true
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "pass",
+      "changed": []
+    }
+  ],
+  "evidence": [],
+  "limitations": [
+    "Newly supported: independent method type parameters in supported ordinary generic source classes and abstract generic source interfaces; interface generic-call registration, method substitution/erasure and exact callable JVM/Kotlin metadata are checked. Ordinary nongeneric class/object generic methods already existed and are regression evidence, not a new feature count.",
+    "Contextual declaration-variance callable signatures cover final/open/type-parameter arguments, nested final variant classifiers, invariant nesting, projections, input/output/function-type modes, arrays, class constructors and interface/class/object members. Private backing-field generic signatures are not parity claims; projected exposed JVM fields and variant classifier bounds/nested supertypes remain explicit boundaries.",
+    "Independent single reference upper bounds; method shadowing, recursive/dependent/multiple bounds, generic overrides/defaults/inline/suspend/varargs, generic interface bodies and lambdas in generic members remain explicit boundaries. Existing generic classifier nested/data restrictions remain.",
+    "Fixed Java caller compiled against official output is reused with -Xverify:all. All four official/candidate Kotlin provider/consumer pairs execute. AndroidBible files are relevance evidence only; this report claims no new unchanged app-file or full-app coverage."
+  ],
+  "callable_signatures": {
+    "official": {
+      "Generic": {
+        "methodgenerics.Generic(Ljava/lang/Object;)V": {
+          "descriptor": "(Ljava/lang/Object;)V",
+          "signature": "(TC;)V"
+        },
+        "getSeed()Ljava/lang/Object;": {
+          "descriptor": "()Ljava/lang/Object;",
+          "signature": "()TC;"
+        },
+        "methodgenerics.Generic(Ljava/lang/Object;I)V": {
+          "descriptor": "(Ljava/lang/Object;I)V",
+          "signature": "(TC;I)V"
+        },
+        "echo(Ljava/lang/Object;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;>(TT;)TT;"
+        },
+        "bounded(Lmethodgenerics/Label;)Lmethodgenerics/Label;": {
+          "descriptor": "(Lmethodgenerics/Label;)Lmethodgenerics/Label;",
+          "signature": "<T::Lmethodgenerics/Label;>(TT;)TT;"
+        },
+        "text(Lmethodgenerics/Label;)Ljava/lang/String;": {
+          "descriptor": "(Lmethodgenerics/Label;)Ljava/lang/String;",
+          "signature": "<T::Lmethodgenerics/Label;>(TT;)Ljava/lang/String;"
+        },
+        "choose(Ljava/lang/Object;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;>(TT;)TC;"
+        },
+        "second(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;S:Ljava/lang/Object;>(TT;TS;)TS;"
+        },
+        "first(Ljava/util/List;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/util/List;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;>(Ljava/util/List<+TT;>;)TT;"
+        },
+        "transform(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;": {
+          "descriptor": "(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;",
+          "signature": "<T:Ljava/lang/Object;>(TT;Lkotlin/jvm/functions/Function1<-TT;Ljava/lang/String;>;)Ljava/lang/String;"
+        }
+      },
+      "GenericApi": {
+        "identity(Lmethodgenerics/Label;)Lmethodgenerics/Label;": {
+          "descriptor": "(Lmethodgenerics/Label;)Lmethodgenerics/Label;",
+          "signature": "<T::Lmethodgenerics/Label;>(TT;)TT;"
+        },
+        "choose(Ljava/lang/Object;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;>(TT;)TC;"
+        }
+      },
+      "Helpers": {
+        "bounded(Lmethodgenerics/Label;)Lmethodgenerics/Label;": {
+          "descriptor": "(Lmethodgenerics/Label;)Lmethodgenerics/Label;",
+          "signature": "<T::Lmethodgenerics/Label;>(TT;)TT;"
+        },
+        "echo(Ljava/lang/Object;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;>(TT;)TT;"
+        }
+      },
+      "Cov": {
+        "methodgenerics.Cov(Ljava/lang/Object;)V": {
+          "descriptor": "(Ljava/lang/Object;)V",
+          "signature": "(TT;)V"
+        },
+        "getValue()Ljava/lang/Object;": {
+          "descriptor": "()Ljava/lang/Object;",
+          "signature": "()TT;"
+        }
+      },
+      "Con": {
+        "methodgenerics.Con()V": {
+          "descriptor": "()V",
+          "signature": null
+        },
+        "accept(Ljava/lang/Object;)I": {
+          "descriptor": "(Ljava/lang/Object;)I",
+          "signature": "(TT;)I"
+        }
+      },
+      "Inv": {
+        "methodgenerics.Inv(Ljava/lang/Object;)V": {
+          "descriptor": "(Ljava/lang/Object;)V",
+          "signature": "(TT;)V"
+        },
+        "getValue()Ljava/lang/Object;": {
+          "descriptor": "()Ljava/lang/Object;",
+          "signature": "()TT;"
+        }
+      },
+      "UseKt": {
+        "through(Lmethodgenerics/GenericApi;Lmethodgenerics/Named;)Lmethodgenerics/Named;": {
+          "descriptor": "(Lmethodgenerics/GenericApi;Lmethodgenerics/Named;)Lmethodgenerics/Named;",
+          "signature": "(Lmethodgenerics/GenericApi<Ljava/lang/String;>;Lmethodgenerics/Named;)Lmethodgenerics/Named;"
+        },
+        "chooseThrough(Lmethodgenerics/GenericApi;)Ljava/lang/String;": {
+          "descriptor": "(Lmethodgenerics/GenericApi;)Ljava/lang/String;",
+          "signature": "(Lmethodgenerics/GenericApi<Ljava/lang/String;>;)Ljava/lang/String;"
+        },
+        "localCalls()Ljava/lang/String;": {
+          "descriptor": "()Ljava/lang/String;",
+          "signature": null
+        },
+        "p1(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)I"
+        },
+        "p2(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<Lmethodgenerics/Final;>;)I"
+        },
+        "p3(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;)I"
+        },
+        "p4(Lmethodgenerics/Con;)I": {
+          "descriptor": "(Lmethodgenerics/Con;)I",
+          "signature": "(Lmethodgenerics/Con<Ljava/lang/Object;>;)I"
+        },
+        "p5(Lmethodgenerics/Con;)I": {
+          "descriptor": "(Lmethodgenerics/Con;)I",
+          "signature": "(Lmethodgenerics/Con<-Lmethodgenerics/Final;>;)I"
+        },
+        "p6(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)I"
+        },
+        "p7(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<Lmethodgenerics/Final;>;)I"
+        },
+        "p8(Lmethodgenerics/Con;)I": {
+          "descriptor": "(Lmethodgenerics/Con;)I",
+          "signature": "(Lmethodgenerics/Con<-Lmethodgenerics/Final;>;)I"
+        },
+        "p9(Lmethodgenerics/Inv;)I": {
+          "descriptor": "(Lmethodgenerics/Inv;)I",
+          "signature": "(Lmethodgenerics/Inv<Lmethodgenerics/Cov<Lmethodgenerics/Open;>;>;)I"
+        },
+        "p10(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lmethodgenerics/Con<-Lmethodgenerics/Final;>;>;)I"
+        },
+        "p11(Lkotlin/jvm/functions/Function1;)I": {
+          "descriptor": "(Lkotlin/jvm/functions/Function1;)I",
+          "signature": "(Lkotlin/jvm/functions/Function1<-Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;+Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;>;)I"
+        },
+        "p12(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lkotlin/jvm/functions/Function1<-Lmethodgenerics/Open;+Lmethodgenerics/Open;>;>;)I"
+        },
+        "p13(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "<T:Ljava/lang/Object;>(Lmethodgenerics/Cov<+TT;>;)I"
+        },
+        "p14([Lmethodgenerics/Cov;)I": {
+          "descriptor": "([Lmethodgenerics/Cov;)I",
+          "signature": "([Lmethodgenerics/Cov<Lmethodgenerics/Open;>;)I"
+        },
+        "p15(Lkotlin/jvm/functions/Function1;)I": {
+          "descriptor": "(Lkotlin/jvm/functions/Function1;)I",
+          "signature": "(Lkotlin/jvm/functions/Function1<Ljava/lang/Object;+Ljava/lang/Object;>;)I"
+        },
+        "r1()Lmethodgenerics/Cov;": {
+          "descriptor": "()Lmethodgenerics/Cov;",
+          "signature": "()Lmethodgenerics/Cov<Lmethodgenerics/Open;>;"
+        },
+        "r2()Lmethodgenerics/Cov;": {
+          "descriptor": "()Lmethodgenerics/Cov;",
+          "signature": "()Lmethodgenerics/Cov<Lmethodgenerics/Open;>;"
+        },
+        "r3()Lmethodgenerics/Con;": {
+          "descriptor": "()Lmethodgenerics/Con;",
+          "signature": "()Lmethodgenerics/Con<Lmethodgenerics/Final;>;"
+        },
+        "r4()Lmethodgenerics/Inv;": {
+          "descriptor": "()Lmethodgenerics/Inv;",
+          "signature": "()Lmethodgenerics/Inv<Lmethodgenerics/Cov<Lmethodgenerics/Open;>;>;"
+        },
+        "r5()Lkotlin/jvm/functions/Function1;": {
+          "descriptor": "()Lkotlin/jvm/functions/Function1;",
+          "signature": "()Lkotlin/jvm/functions/Function1<Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;Lmethodgenerics/Cov<Lmethodgenerics/Open;>;>;"
+        }
+      },
+      "WildMethods": {
+        "methodgenerics.WildMethods(Lmethodgenerics/Cov;)V": {
+          "descriptor": "(Lmethodgenerics/Cov;)V",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)V"
+        },
+        "getInput()Lmethodgenerics/Cov;": {
+          "descriptor": "()Lmethodgenerics/Cov;",
+          "signature": "()Lmethodgenerics/Cov<Ljava/lang/Object;>;"
+        },
+        "take(Lmethodgenerics/Con;)I": {
+          "descriptor": "(Lmethodgenerics/Con;)I",
+          "signature": "(Lmethodgenerics/Con<-Lmethodgenerics/Final;>;)I"
+        },
+        "result()Lmethodgenerics/Cov;": {
+          "descriptor": "()Lmethodgenerics/Cov;",
+          "signature": "()Lmethodgenerics/Cov<Lmethodgenerics/Open;>;"
+        }
+      },
+      "WildApi": {
+        "take(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;)I"
+        },
+        "getResult()Lmethodgenerics/Cov;": {
+          "descriptor": "()Lmethodgenerics/Cov;",
+          "signature": "()Lmethodgenerics/Cov<Lmethodgenerics/Open;>;"
+        }
+      },
+      "WildDefaults": {
+        "methodgenerics.WildDefaults()V": {
+          "descriptor": "()V",
+          "signature": null
+        },
+        "take(Lmethodgenerics/Cov;I)I": {
+          "descriptor": "(Lmethodgenerics/Cov;I)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;I)I"
+        },
+        "take$default(Lmethodgenerics/WildDefaults;Lmethodgenerics/Cov;IILjava/lang/Object;)I": {
+          "descriptor": "(Lmethodgenerics/WildDefaults;Lmethodgenerics/Cov;IILjava/lang/Object;)I",
+          "signature": null
+        },
+        "take(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)I"
+        },
+        "takeStatic(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)I"
+        }
+      },
+      "WildDefaults$Companion": {
+        "takeStatic(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)I"
+        },
+        "methodgenerics.WildDefaults$Companion(Lkotlin/jvm/internal/DefaultConstructorMarker;)V": {
+          "descriptor": "(Lkotlin/jvm/internal/DefaultConstructorMarker;)V",
+          "signature": null
+        }
+      },
+      "WildDefaultApi": {
+        "take(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;)I"
+        },
+        "access$take$jd(Lmethodgenerics/WildDefaultApi;Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/WildDefaultApi;Lmethodgenerics/Cov;)I",
+          "signature": null
+        }
+      },
+      "WildDefaultApi$DefaultImpls": {
+        "take(Lmethodgenerics/WildDefaultApi;Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/WildDefaultApi;Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/WildDefaultApi;Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;)I"
+        }
+      },
+      "WildDefaultImpl": {
+        "methodgenerics.WildDefaultImpl()V": {
+          "descriptor": "()V",
+          "signature": null
+        },
+        "take(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;)I"
+        }
+      }
+    },
+    "candidate": {
+      "Generic": {
+        "methodgenerics.Generic(Ljava/lang/Object;)V": {
+          "descriptor": "(Ljava/lang/Object;)V",
+          "signature": "(TC;)V"
+        },
+        "methodgenerics.Generic(Ljava/lang/Object;I)V": {
+          "descriptor": "(Ljava/lang/Object;I)V",
+          "signature": "(TC;I)V"
+        },
+        "echo(Ljava/lang/Object;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;>(TT;)TT;"
+        },
+        "bounded(Lmethodgenerics/Label;)Lmethodgenerics/Label;": {
+          "descriptor": "(Lmethodgenerics/Label;)Lmethodgenerics/Label;",
+          "signature": "<T::Lmethodgenerics/Label;>(TT;)TT;"
+        },
+        "text(Lmethodgenerics/Label;)Ljava/lang/String;": {
+          "descriptor": "(Lmethodgenerics/Label;)Ljava/lang/String;",
+          "signature": "<T::Lmethodgenerics/Label;>(TT;)Ljava/lang/String;"
+        },
+        "choose(Ljava/lang/Object;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;>(TT;)TC;"
+        },
+        "second(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;S:Ljava/lang/Object;>(TT;TS;)TS;"
+        },
+        "first(Ljava/util/List;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/util/List;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;>(Ljava/util/List<+TT;>;)TT;"
+        },
+        "transform(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;": {
+          "descriptor": "(Ljava/lang/Object;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;",
+          "signature": "<T:Ljava/lang/Object;>(TT;Lkotlin/jvm/functions/Function1<-TT;Ljava/lang/String;>;)Ljava/lang/String;"
+        },
+        "getSeed()Ljava/lang/Object;": {
+          "descriptor": "()Ljava/lang/Object;",
+          "signature": "()TC;"
+        }
+      },
+      "GenericApi": {
+        "identity(Lmethodgenerics/Label;)Lmethodgenerics/Label;": {
+          "descriptor": "(Lmethodgenerics/Label;)Lmethodgenerics/Label;",
+          "signature": "<T::Lmethodgenerics/Label;>(TT;)TT;"
+        },
+        "choose(Ljava/lang/Object;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;>(TT;)TC;"
+        }
+      },
+      "Helpers": {
+        "bounded(Lmethodgenerics/Label;)Lmethodgenerics/Label;": {
+          "descriptor": "(Lmethodgenerics/Label;)Lmethodgenerics/Label;",
+          "signature": "<T::Lmethodgenerics/Label;>(TT;)TT;"
+        },
+        "echo(Ljava/lang/Object;)Ljava/lang/Object;": {
+          "descriptor": "(Ljava/lang/Object;)Ljava/lang/Object;",
+          "signature": "<T:Ljava/lang/Object;>(TT;)TT;"
+        }
+      },
+      "Cov": {
+        "methodgenerics.Cov(Ljava/lang/Object;)V": {
+          "descriptor": "(Ljava/lang/Object;)V",
+          "signature": "(TT;)V"
+        },
+        "getValue()Ljava/lang/Object;": {
+          "descriptor": "()Ljava/lang/Object;",
+          "signature": "()TT;"
+        }
+      },
+      "Con": {
+        "methodgenerics.Con()V": {
+          "descriptor": "()V",
+          "signature": null
+        },
+        "accept(Ljava/lang/Object;)I": {
+          "descriptor": "(Ljava/lang/Object;)I",
+          "signature": "(TT;)I"
+        }
+      },
+      "Inv": {
+        "methodgenerics.Inv(Ljava/lang/Object;)V": {
+          "descriptor": "(Ljava/lang/Object;)V",
+          "signature": "(TT;)V"
+        },
+        "getValue()Ljava/lang/Object;": {
+          "descriptor": "()Ljava/lang/Object;",
+          "signature": "()TT;"
+        }
+      },
+      "UseKt": {
+        "through(Lmethodgenerics/GenericApi;Lmethodgenerics/Named;)Lmethodgenerics/Named;": {
+          "descriptor": "(Lmethodgenerics/GenericApi;Lmethodgenerics/Named;)Lmethodgenerics/Named;",
+          "signature": "(Lmethodgenerics/GenericApi<Ljava/lang/String;>;Lmethodgenerics/Named;)Lmethodgenerics/Named;"
+        },
+        "chooseThrough(Lmethodgenerics/GenericApi;)Ljava/lang/String;": {
+          "descriptor": "(Lmethodgenerics/GenericApi;)Ljava/lang/String;",
+          "signature": "(Lmethodgenerics/GenericApi<Ljava/lang/String;>;)Ljava/lang/String;"
+        },
+        "localCalls()Ljava/lang/String;": {
+          "descriptor": "()Ljava/lang/String;",
+          "signature": null
+        },
+        "p1(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)I"
+        },
+        "p2(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<Lmethodgenerics/Final;>;)I"
+        },
+        "p3(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;)I"
+        },
+        "p4(Lmethodgenerics/Con;)I": {
+          "descriptor": "(Lmethodgenerics/Con;)I",
+          "signature": "(Lmethodgenerics/Con<Ljava/lang/Object;>;)I"
+        },
+        "p5(Lmethodgenerics/Con;)I": {
+          "descriptor": "(Lmethodgenerics/Con;)I",
+          "signature": "(Lmethodgenerics/Con<-Lmethodgenerics/Final;>;)I"
+        },
+        "p6(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)I"
+        },
+        "p7(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<Lmethodgenerics/Final;>;)I"
+        },
+        "p8(Lmethodgenerics/Con;)I": {
+          "descriptor": "(Lmethodgenerics/Con;)I",
+          "signature": "(Lmethodgenerics/Con<-Lmethodgenerics/Final;>;)I"
+        },
+        "p9(Lmethodgenerics/Inv;)I": {
+          "descriptor": "(Lmethodgenerics/Inv;)I",
+          "signature": "(Lmethodgenerics/Inv<Lmethodgenerics/Cov<Lmethodgenerics/Open;>;>;)I"
+        },
+        "p10(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lmethodgenerics/Con<-Lmethodgenerics/Final;>;>;)I"
+        },
+        "p11(Lkotlin/jvm/functions/Function1;)I": {
+          "descriptor": "(Lkotlin/jvm/functions/Function1;)I",
+          "signature": "(Lkotlin/jvm/functions/Function1<-Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;+Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;>;)I"
+        },
+        "p12(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lkotlin/jvm/functions/Function1<-Lmethodgenerics/Open;+Lmethodgenerics/Open;>;>;)I"
+        },
+        "p13(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "<T:Ljava/lang/Object;>(Lmethodgenerics/Cov<+TT;>;)I"
+        },
+        "p14([Lmethodgenerics/Cov;)I": {
+          "descriptor": "([Lmethodgenerics/Cov;)I",
+          "signature": "([Lmethodgenerics/Cov<Lmethodgenerics/Open;>;)I"
+        },
+        "p15(Lkotlin/jvm/functions/Function1;)I": {
+          "descriptor": "(Lkotlin/jvm/functions/Function1;)I",
+          "signature": "(Lkotlin/jvm/functions/Function1<Ljava/lang/Object;+Ljava/lang/Object;>;)I"
+        },
+        "r1()Lmethodgenerics/Cov;": {
+          "descriptor": "()Lmethodgenerics/Cov;",
+          "signature": "()Lmethodgenerics/Cov<Lmethodgenerics/Open;>;"
+        },
+        "r2()Lmethodgenerics/Cov;": {
+          "descriptor": "()Lmethodgenerics/Cov;",
+          "signature": "()Lmethodgenerics/Cov<Lmethodgenerics/Open;>;"
+        },
+        "r3()Lmethodgenerics/Con;": {
+          "descriptor": "()Lmethodgenerics/Con;",
+          "signature": "()Lmethodgenerics/Con<Lmethodgenerics/Final;>;"
+        },
+        "r4()Lmethodgenerics/Inv;": {
+          "descriptor": "()Lmethodgenerics/Inv;",
+          "signature": "()Lmethodgenerics/Inv<Lmethodgenerics/Cov<Lmethodgenerics/Open;>;>;"
+        },
+        "r5()Lkotlin/jvm/functions/Function1;": {
+          "descriptor": "()Lkotlin/jvm/functions/Function1;",
+          "signature": "()Lkotlin/jvm/functions/Function1<Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;Lmethodgenerics/Cov<Lmethodgenerics/Open;>;>;"
+        }
+      },
+      "WildMethods": {
+        "methodgenerics.WildMethods(Lmethodgenerics/Cov;)V": {
+          "descriptor": "(Lmethodgenerics/Cov;)V",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)V"
+        },
+        "take(Lmethodgenerics/Con;)I": {
+          "descriptor": "(Lmethodgenerics/Con;)I",
+          "signature": "(Lmethodgenerics/Con<-Lmethodgenerics/Final;>;)I"
+        },
+        "result()Lmethodgenerics/Cov;": {
+          "descriptor": "()Lmethodgenerics/Cov;",
+          "signature": "()Lmethodgenerics/Cov<Lmethodgenerics/Open;>;"
+        },
+        "getInput()Lmethodgenerics/Cov;": {
+          "descriptor": "()Lmethodgenerics/Cov;",
+          "signature": "()Lmethodgenerics/Cov<Ljava/lang/Object;>;"
+        }
+      },
+      "WildApi": {
+        "getResult()Lmethodgenerics/Cov;": {
+          "descriptor": "()Lmethodgenerics/Cov;",
+          "signature": "()Lmethodgenerics/Cov<Lmethodgenerics/Open;>;"
+        },
+        "take(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;)I"
+        }
+      },
+      "WildDefaults": {
+        "methodgenerics.WildDefaults()V": {
+          "descriptor": "()V",
+          "signature": null
+        },
+        "take(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)I"
+        },
+        "take(Lmethodgenerics/Cov;I)I": {
+          "descriptor": "(Lmethodgenerics/Cov;I)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;I)I"
+        },
+        "take$default(Lmethodgenerics/WildDefaults;Lmethodgenerics/Cov;IILjava/lang/Object;)I": {
+          "descriptor": "(Lmethodgenerics/WildDefaults;Lmethodgenerics/Cov;IILjava/lang/Object;)I",
+          "signature": null
+        },
+        "takeStatic(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)I"
+        }
+      },
+      "WildDefaults$Companion": {
+        "takeStatic(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Ljava/lang/Object;>;)I"
+        },
+        "methodgenerics.WildDefaults$Companion(Lkotlin/jvm/internal/DefaultConstructorMarker;)V": {
+          "descriptor": "(Lkotlin/jvm/internal/DefaultConstructorMarker;)V",
+          "signature": null
+        }
+      },
+      "WildDefaultApi": {
+        "take(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;)I"
+        },
+        "access$take$jd(Lmethodgenerics/WildDefaultApi;Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/WildDefaultApi;Lmethodgenerics/Cov;)I",
+          "signature": null
+        }
+      },
+      "WildDefaultApi$DefaultImpls": {
+        "take(Lmethodgenerics/WildDefaultApi;Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/WildDefaultApi;Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/WildDefaultApi;Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;)I"
+        }
+      },
+      "WildDefaultImpl": {
+        "methodgenerics.WildDefaultImpl()V": {
+          "descriptor": "()V",
+          "signature": null
+        },
+        "take(Lmethodgenerics/Cov;)I": {
+          "descriptor": "(Lmethodgenerics/Cov;)I",
+          "signature": "(Lmethodgenerics/Cov<+Lmethodgenerics/Open;>;)I"
+        }
+      }
+    }
+  },
+  "emitted_classes_sha256": {
+    "official": {
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/official/methodgenerics/WildDefaultImpl.class": "e7ad8f4cbbfbc9cedc0bcc214040b1a25970820c77fb5be1a8cb62c345eb9157",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/official/methodgenerics/WildApi.class": "8f1bd51cec088a13aa4d3fd745692575f4a1502123ca9ce536472e1e76088ee7",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/official/methodgenerics/GenericApi.class": "daab0874728fc00ae19a2e49f53d3b79d2c8a2f4d3b0dfa15c30537a094f1d95",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/official/methodgenerics/Named.class": "452bcc41508692e1daee3c5c6c60fe4406e356348e7688fa81ce0f4f72fd2619",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/official/methodgenerics/Helpers.class": "7f6849b09d29a57e850c65d6bc0cdbd953d634a5599609a6cff2e603b7188cd1",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/official/methodgenerics/WildDefaultApi$DefaultImpls.class": "44933a5cc91c17faafe3234b0dc8d467e431826a3b507ecad94cc6723344c628",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/official/methodgenerics/WildDefaults.class": "aa8a15226dd2eeab186fcf84d8a382402f732f6adcc9f5fabfa448c1b6df0d55",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/official/methodgenerics/WildDefaultApi.class": "59321c32177c54159b63542572237a081c233aa39bda8c1ce291d3a35bc980bd",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/official/methodgenerics/WildMethods.class": "2291a8deff1ca486f0fe55a3e02b70ef2b8e6c55c1ecf99d65c0df6631c178d0",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/official/methodgenerics/Final.class": "0f10ed39461843c6324cf347b616a0000b95edc57b587a1ffef3f263bfe83a6f",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/official/methodgenerics/Open.class": "5d541ab449d0a7b56ae3f937f0dffd0d1b91983294c1fb905fa91684b91b23f2",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/official/methodgenerics/Con.class": "4a3b169df3285fc827bbfaa5be5ce0e93cd47bd92151de014fb7a986a39ba76e",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/official/methodgenerics/Cov.class": "4a258c4f0d47bbf9770d2b39ffe611b5a0790e709c536d1e8f9290d758708361",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/official/methodgenerics/WildDefaults$Companion.class": "3e0693029518182201ca9c43af57ad7151f82f0c97bcb9d8665232a42a8ada8c",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/official/methodgenerics/Inv.class": "cf44aa5a1baedfb675738289ae9e0e933070d8057ad552753f0019248e879cac",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/official/methodgenerics/UseKt.class": "abb3da66c95d1247818f5f65b3029fc3ed9dc9fc243ee908fb1abacdf48fef5f",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/official/methodgenerics/Generic.class": "faf5ee3ddfa7697563e97e9b3020f844bbd5f9b9d63b473b3cdc6b3c5b20c9df",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/official/methodgenerics/Label.class": "c219a81cddd23510fabd829fad67f1e0770882317f3066abe0ba7d998582e7e9"
+    },
+    "candidate": {
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/candidate/methodgenerics/WildDefaultImpl.class": "4f0224299226dd5b98abba32b2b243dd84b85730a60ce3752c6653b68d52ede0",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/candidate/methodgenerics/WildApi.class": "93e03f86efdd597ba94fd9b06975b1da4fbf6c727c1d2be234121d2d2366f3a8",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/candidate/methodgenerics/GenericApi.class": "6ef4e1d5fae62da6ae6dd33a70a936b5c1c9235bc1858f9492ab493086ee3373",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/candidate/methodgenerics/Named.class": "899ee95dad94f1642f8c194bb8a66dd375ce0255dd3b4408ef64191d1e1bb3e4",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/candidate/methodgenerics/Helpers.class": "c140c48942d3b8f7d1ef65e2d69b239f1187be8c48d0f2b7ef84191044d8fe28",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/candidate/methodgenerics/WildDefaultApi$DefaultImpls.class": "558430a14c8465a446d57bfc7641346e293cbdbb6ac24a6be1a6b37741972324",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/candidate/methodgenerics/WildDefaults.class": "534b725d088d64c4d1b502ff721f88340cd9dfad8078d1cbe3ab848da88f2d54",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/candidate/methodgenerics/WildDefaultApi.class": "3c9cec5769bf53d15239f40eb360b3e29cdc2852ed3e651a82e9e06e14f1f5ea",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/candidate/methodgenerics/WildMethods.class": "9c53e02b0fd1c48ff5941cf07dc6b6c8ed1eb482b06c6a313e386cf2e83499f9",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/candidate/methodgenerics/Final.class": "d47590c2f02576144e79ce2d73a5bdacaf9da12ed07ebc54eeb37737877d0f5f",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/candidate/methodgenerics/Open.class": "61a1fa4e63049cbab8086052b04b54e37a525c34200bb568f7bd17d6791489bb",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/candidate/methodgenerics/Con.class": "80cb9d50117beeb98f0960afa74fcdd177b9d7cebf51f1f422159660661ae531",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/candidate/methodgenerics/UseKt$lambda$2102$0.class": "435d0960389f892484318ce53ba90ccbe7d31dad3458dd82d40324861de43fea",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/candidate/methodgenerics/Cov.class": "2cf01a8388e6c9e0c5d6949800270637e0fc29720148c383e552304101fea879",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/candidate/methodgenerics/WildDefaults$Companion.class": "19571eb93ab6cfc6b1b0e8fe51baa7b8272e4ec433021ed9fe0e09ccd0fea923",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/candidate/methodgenerics/Inv.class": "12a2b7668162f1da02b28d446e685ad3a7d4e23582a3ed0120d54c37c89aad01",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/candidate/methodgenerics/UseKt.class": "a6bb2d4127c096989816a21e5eab759d1a5eb062ce238f584c7ee7c4f57deae0",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/candidate/methodgenerics/Generic.class": "7d99de01d648c23f921dbf26276839849f2cf1313b93ad0472ea63875cb9308c",
+      "target/checks/2026-11-21T063016274382Z-nov21-generics/candidate/methodgenerics/Label.class": "764a339af7044505d01c35e5ff25bdfb3e122dfd35bc12ff94eee67e82b1efa7"
+    }
+  },
+  "counts": {
+    "pass": 34,
+    "unsupported_language": 14,
+    "invalid_rejected": 4
+  },
+  "feature_acceptance": {
+    "family": "contextual_variant_signatures_and_generic_members",
+    "status": "passed",
+    "derived_counts": {
+      "pass": 34,
+      "unsupported_language": 14,
+      "invalid_rejected": 4
+    }
+  }
+}

@@ -133,6 +133,14 @@ impl Code<'_> {
             }
             let following = &body.instructions[index + 1].kind;
             let shape = match operation {
+                0 => matches!(
+                    following,
+                    InlineOp::Reference {
+                        opcode: 0xbd,
+                        constant: InlineConstant::Class(_),
+                        ..
+                    }
+                ),
                 1 | 2 => matches!(
                     following,
                     InlineOp::Reference {
@@ -249,10 +257,28 @@ impl Code<'_> {
         if self.reified_marker(ty, operation)? {
             if operation == 4 {
                 self.class_reference(0x13, "java/lang/Object")?;
+            } else if operation == 0 {
+                self.class_reference(0xbd, "java/lang/Object")?;
             } else {
                 self.class_reference(if operation == 3 { 0xc1 } else { 0xc0 }, "java/lang/Object")?;
             }
             return Ok(());
+        }
+        if operation == 0 {
+            let component = match ty.base() {
+                Type::Nullable(inner) => inner.as_ref(),
+                ty => ty,
+            };
+            let component = if component.is_reference() {
+                reference_class(component)?
+            } else if component == &Type::Unit {
+                return Err(reified_unsupported(
+                    "Reified Unit array components are unsupported",
+                ));
+            } else {
+                boxed_owner(component).into()
+            };
+            return self.class_reference(0xbd, &component);
         }
         if operation == 4 {
             if !ty.is_reference() {

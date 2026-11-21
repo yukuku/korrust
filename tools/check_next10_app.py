@@ -18,7 +18,10 @@ def main():
     parser.add_argument('--baseline', type=Path, required=True)
     parser.add_argument('--candidate', type=Path, required=True)
     parser.add_argument('--source-root', type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument('--timeout-seconds', type=int, default=120)
     args = parser.parse_args()
+    if args.timeout_seconds <= 0:
+        parser.error('--timeout-seconds must be positive')
     root = args.source_root.resolve()
     binaries = {name: getattr(args, name).resolve() for name in ('baseline', 'candidate')}
     stamp = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H%M%S%fZ')
@@ -46,8 +49,8 @@ def main():
         'source_revision': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=root, text=True).strip(),
         'environment': {'JAVA_HOME': os.environ.get('JAVA_HOME')}, 'frozen_input_hashes': frozen,
         'cases': [], 'commands': [], 'evidence': [],
-        'limitations': ['This survey does not establish runtime, Kotlin metadata, Android-device, full-module or whole-application compatibility. QueryTokenizer runtime and fixed Java caller evidence is recorded separately by the operators harness.'],
-        'reproduction_commands': [['python3', 'tools/check_next10_app.py', '--baseline', str(binaries['baseline']), '--candidate', str(binaries['candidate'])]],
+        'limitations': ['This survey does not establish runtime, Kotlin metadata, Android-device, full-module or whole-application compatibility.'],
+        'reproduction_commands': [['python3', 'tools/check_next10_app.py', '--baseline', str(binaries['baseline']), '--candidate', str(binaries['candidate']), '--timeout-seconds', str(args.timeout_seconds)]],
     }
     for index, source in enumerate(sources):
         case = {'id': str(source.relative_to(root)), 'sha256': sha(source), 'providers': {}}
@@ -55,7 +58,7 @@ def main():
             command = [str(binary), str(source), '-cp', str(stdlib), '-d', str(work / provider / str(index))]
             log = evidence / f'{index:02d}-{provider}.log'
             try:
-                result = subprocess.run(command, cwd=root, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=120)
+                result = subprocess.run(command, cwd=root, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, timeout=args.timeout_seconds)
                 log.write_text(result.stdout)
                 observation = {'outcome': 'compiled' if result.returncode == 0 else 'rejected', 'exit_code': result.returncode}
             except subprocess.TimeoutExpired as error:

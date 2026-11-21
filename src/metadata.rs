@@ -3765,6 +3765,7 @@ mod tests {
                 type_params: Vec::new(),
                 defaults: Vec::new(),
                 name: "echo".into(),
+                jvm_signature: None,
                 jvm_name: None,
                 private: false,
                 is_override: false,

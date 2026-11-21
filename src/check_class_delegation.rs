@@ -556,6 +556,7 @@ pub(super) fn forwarders(
             extension_receiver: false,
             class_type_params: Vec::new(),
             jvm_result,
+            jvm_signature: None,
             jvm_name: None,
             annotations: Vec::new(),
             vararg: false,

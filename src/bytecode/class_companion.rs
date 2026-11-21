@@ -132,6 +132,15 @@ pub(super) fn outer(
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
+                jvm_signature: select_signature(
+                    function.jvm_signature.as_deref(),
+                    &function
+                        .params
+                        .iter()
+                        .map(|p| params.iter().any(|q| p.0 == q.0))
+                        .collect::<Vec<_>>(),
+                    "",
+                ),
                 jvm_name: function.jvm_name.clone(),
                 annotations: function.annotations.clone(),
                 vararg: function.vararg && params.last() == function.params.last(),

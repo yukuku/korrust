@@ -843,18 +843,15 @@ impl Checker<'_> {
 mod tests {
     use super::*;
     #[test]
-    fn class_literal_template_boundary_has_an_explicit_unsupported_diagnostic() {
-        let error = crate::compile_with_classpath(
+    fn class_literal_reference_is_a_supported_template_value() {
+        crate::compile_with_classpath(
             "fun boundary(): String { val token = String::class; return \"$token\" }",
             "Boundary.kt",
             &[std::path::PathBuf::from(
                 "references/kotlinc/lib/kotlin-stdlib.jar",
             )],
         )
-        .err()
         .unwrap();
-        assert_eq!(error.kind, crate::DiagnosticKind::UnsupportedLanguage);
-        assert_eq!(error.code, "STRING_TEMPLATE_VALUE_UNSUPPORTED");
     }
 
     #[test]

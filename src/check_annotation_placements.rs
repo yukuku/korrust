@@ -267,6 +267,22 @@ pub(crate) fn annotation_placements(
             )?;
         }
         for function in &class.methods {
+            if !function.has_body {
+                for annotation in &function.function.annotations {
+                    if annotations::annotation_owner(&annotation.name, classpath, &imports)
+                        == "kotlin/jvm/Synchronized"
+                    {
+                        return Err(Diagnostic::new(
+                            annotation.offset,
+                            "Synchronized is not allowed on abstract methods",
+                        )
+                        .with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "SYNCHRONIZED_ABSTRACT_INVALID",
+                        ));
+                    }
+                }
+            }
             function_parameters(&function.function, classpath, &imports, owner, &mut output)?;
         }
         if let Some(companion) = &class.companion {
@@ -809,8 +825,8 @@ fn property_annotations(
         let annotation = &placed;
         let site = annotation.use_site.clone();
         let target = site.as_deref().unwrap_or("field");
-        let identity = imports.get(&annotation.name).unwrap_or(&annotation.name);
-        if !seen.insert((target.to_owned(), identity.clone())) {
+        let identity = annotations::annotation_owner(&annotation.name, classpath, imports);
+        if !seen.insert((target.to_owned(), identity)) {
             return Err(Diagnostic::new(
                 annotation.offset,
                 "Repeated property annotations require a repeatable declaration",
@@ -940,6 +956,7 @@ fn function_parameters(
     owner: &str,
     output: &mut ClassAnnotations,
 ) -> Result<()> {
+    annotations::validate_jvm_function(function, classpath, imports)?;
     if function.param_annotations.iter().all(Vec::is_empty) {
         return Ok(());
     }

@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-21T06:31:03.497443+00:00",
+  "status": "pass",
+  "compiler": {
+    "path": "target/checks/nov21-inline-integrated-acceptance-v3/korrust-frozen",
+    "sha256": "9acdceb9a14f3ae7ad2689eef2f1b84c868bd053df4acc7ead5965bd87aa61ae",
+    "source_revision": "c2ab871533215e4c3c5a8fac588b9ba5a0c367c8"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_nov21_inline.py",
+      "--candidate",
+      "/workspace/korrust/target/nov21-final-v3/korrust",
+      "--skip-app",
+      "--baseline",
+      "/workspace/korrust/target/next10-final-v3/korrust"
+    ]
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-21T063103497443Z-nov21-inline.json"
+  ],
+  "features": [
+    {
+      "name": "Reified reference array allocation from compiled inline bodies",
+      "status": "supported",
+      "scope": "marker0 plus ANEWARRAY with concrete reference, nullable, boxed primitive and direct nested array components",
+      "restrictions": [
+        "Reified nested array marker encodings beyond a single substituted parameter and existing parameterized generic/function classifier boundaries remain unsupported; direct concrete array components are tested.",
+        "Inline exception tables, generated nested allocations, context-sensitive invokespecial and array-owner method references retain explicit rejection boundaries."
+      ],
+      "evidence_report": "reports/correctness/2026-11-21T063103497443Z-nov21-inline.json",
+      "evidence_cases": [
+        "runtime/candidate",
+        "metadata/candidate"
+      ]
+    },
+    {
+      "name": "Arbitrary reference string template values",
+      "status": "supported",
+      "scope": "Object and nullable dispatch, null rendering, primitive/reference-array identity representation, evaluation order and thrown toString propagation",
+      "restrictions": [
+        "Unit-returning expressions, nullable Unit and arrays with nullable Unit components in templates, and direct reified Unit array allocation remain explicitly unsupported; Unit singleton references are supported."
+      ],
+      "evidence_report": "reports/correctness/2026-11-21T063103497443Z-nov21-inline.json",
+      "evidence_cases": [
+        "runtime/candidate",
+        "upstream/twoArgumentStringTemplate"
+      ]
+    }
+  ]
+}

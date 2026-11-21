@@ -191,6 +191,16 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 151. ShortArray construction, indexing, mutation, iteration and supported JVM/Kotlin interoperation.
 152. File-level JvmName facade naming with annotation validation, package metadata and output ownership.
 153. Private and internal primary constructors on supported ordinary final classes, with access checks and JVM/Kotlin visibility.
+154. Expected types in explicit return expressions, including generic calls and reference array initializers.
+155. Smart casts for stable values from supported Boolean and nullable Boolean return contracts in compiled Kotlin metadata.
+156. Reference array allocation in compiled inline functions with reified type parameters.
+157. String templates for reference values using JVM string conversion and virtual toString dispatch.
+158. Checked exception declarations on supported JVM functions, ordinary methods and interface methods.
+159. Synchronized JVM methods with Kotlin-compatible monitor ownership.
+160. Custom increment and decrement operators on supported assignable expressions, with prefix and postfix results.
+161. Compound assignments on properties and indexed values, with checked operator selection and ordered evaluation.
+162. JVM wildcard signatures for supported uses of declaration-site variance.
+163. Independent method type parameters on generic source classifiers and supported generic interface dispatch.
 
 ## Project contract
 

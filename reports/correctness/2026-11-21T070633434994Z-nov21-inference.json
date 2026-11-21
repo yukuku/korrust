@@ -1,0 +1,2146 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-21T07:06:33.434994+00:00",
+  "status": "complete",
+  "compiler": {
+    "path": "target/nov21-final-v4/inference/korrust-frozen",
+    "sha256": "05c52d1012b3c0d9452291d2e022df4b4196669d2eed80d71dea457a533b452e",
+    "source_revision": "c2ab871533215e4c3c5a8fac588b9ba5a0c367c8"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "frozen_input_hashes": {
+    "src/annotation_declarations.rs": "ac237d773c71a2fc26faeb2d79b837265c6d557ef7bb31aab748fa8b1c7572be",
+    "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+    "src/bytecode/annotation_files.rs": "4f3c136aaa2ed30b85d2a4cc2a9be8331b2da9682d450f6a4dcc135ef04ab86a",
+    "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+    "src/bytecode/class_companion.rs": "2dacd7b21d48fcdd59955fa30b58a6e88bb67642d4bd6dd9d845842b1880417a",
+    "src/bytecode/data.rs": "c99cb60546cbe8873ef99d1ab057aa7439f4239fce13927d324dfea078dbe98c",
+    "src/bytecode/defaults.rs": "ebdb1c988443c1b984081aa8555c5bb2f649685e3bbfef011cd138c0bf29aecd",
+    "src/bytecode/enums.rs": "25fe788c54554741347ba6bb4b84cbee7c324db6925209a434fb139ceb66b2b1",
+    "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+    "src/bytecode/inline.rs": "e598575c521153d592face8dd19018beaf89be45fbde985ae3845526e5a0be44",
+    "src/bytecode/interfaces.rs": "02e19cc9024bda962e06cedec8e15ebfc8b9f1ccd7f95ec11980ab46de917ae6",
+    "src/bytecode/lambdas.rs": "75a4ad990edd822dffaadc1be8cccf6d6cb345848f147e6b3a30c17dc0351360",
+    "src/bytecode/objects.rs": "142f8e5c70f0ac61423c3887447c54865b7b657768cf683fc553fde398a17e7e",
+    "src/bytecode/suspend.rs": "79e1064dd35da268956f91b167a779ce0957cefa8fef629789a2fb3afee987b7",
+    "src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+    "src/bytecode.rs": "d610c4766d35743cc7864a44fec87f93715b5c4c486cb6c3f6790b738434f26b",
+    "src/check.rs": "ca3bfcb0b12d4e3f2cbd304c6045f374da8e00e5916bddc2905cf10efc09544c",
+    "src/check_annotation_placements.rs": "b6c899c4a5c2f3269ae1b93268b2ede0f29f4ce68c5ef42b833d7edcecf2d2cc",
+    "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+    "src/check_anonymous.rs": "fd523e4ff9173f209bde5b6cec9c5e13bae942da680e752611b242b0d8cc0f53",
+    "src/check_captures.rs": "18ad01412f9b7da141573f44d422e3987ac14df12175fcda3b2aa69ac90463e4",
+    "src/check_class_delegation.rs": "25cd077ed2b3b51158a53efb2c8190296064fe607db399ab416a3d51a4df2be0",
+    "src/check_classes.rs": "d67e980fdceb784bad7f4c0ee73752d2f9123d973c3c4952c5ad87d623432987",
+    "src/check_contracts.rs": "8bba31d6987b61295aed4c18eee29136f26724e00b5ab69b743655f4469f08c6",
+    "src/check_control.rs": "19e7fe2376f65209fd0d9b04be9254ec868fed288707d34631f30e841f3eaca7",
+    "src/check_declarations.rs": "f9702e12d2928736af2b0fcf7e3319a6c3fff26a9e09ad9315d10d1d3a641812",
+    "src/check_delegates.rs": "6ba1fb0aa2ba511c31accd8a06282490a94b8cbf4857c5687ddab3a71236beb2",
+    "src/check_enums.rs": "2a16c9e4dbae29a8c479ab5cddefad66f0bdd09143e2a0cde8428d2d0c174d8b",
+    "src/check_functions.rs": "567bb05543fe7d8788be999969451be38c590672dd22d4b793047889a169c762",
+    "src/check_inner_classes.rs": "60a4cdbfef5b069e0312c3ea7511b0de6a862d20ff393c464ea080968aa233cd",
+    "src/check_interfaces.rs": "c733506c29aeb5738c3266d03579e420bf26719ec59bd09fc4fc4d542c149f15",
+    "src/check_ir_walk.rs": "11b8f21285e9743b5a71fdb7de6826cc3e85689d9622380fae58fc676dce0195",
+    "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+    "src/check_library.rs": "4f21a889fc7a64f09eb5dfbfb4aac8bfbe1acecc54cf1be313980cbcf4c2def2",
+    "src/check_member_extensions.rs": "c97b70cbd56da4588817a5cdd294cb724009feee3abbcb29a5dde2846bb8d3f9",
+    "src/check_objects.rs": "1b73e97a598d8dd17d977304f77532c7262c2b9286e4196153782f6eaf6e7ba4",
+    "src/check_operations.rs": "2493c252f3a0787dd06bb0a9cf1c6cb931d9f20ad88c2638e03d4132cb4d0196",
+    "src/check_overloads.rs": "d418fb5ed0880483b5d6ac58ce8093d0eb13804ff1b4176e19abd4b1a3e589cd",
+    "src/check_references.rs": "3a4fd327b7a13f48e69d5fbd059c76cbb8d2ce50ae2e140a762a06d9e1e6eab8",
+    "src/check_relations.rs": "b68377816cd0642ce6184886f09792aacedade20c14c6c115a1b43e1e7904ad5",
+    "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+    "src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+    "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+    "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+    "src/check_variant_signatures.rs": "487fea7351445905782f472e297e15080a4244ce34a4a4aa9904b30c01263a86",
+    "src/classpath/aliases.rs": "745fa67edb3216b77ce5e65f63b75c51ac221f5b49d3e08a4327990bd9e6f4c5",
+    "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+    "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+    "src/classpath/metadata.rs": "ad587038956087ed383d6f0d6f970d5609d5a60ac59632b2fecc311ce4c1e045",
+    "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+    "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+    "src/classpath/signature.rs": "2dbed1bcacc67d8ffadd01d466676a969dc849eaa7d397d6c390e61a4ec12c7c",
+    "src/classpath/source.rs": "a106e68b8627c11244fbec6ca33bb00b0d64dae66394da41029bf59b813702b9",
+    "src/classpath/source_enums.rs": "a3ed1a550007856e482624b65d024249e503524b577aa2a5f99b9db334ee1374",
+    "src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+    "src/classpath.rs": "826166f31a0c0e8f2a3cc7a5a327bc0a9bffa571543d743cf605b9f229900095",
+    "src/compiled_inline.rs": "7acd0769184152ea2659a9217886608cff7219eea5a47d25cf573e0f0318d7fa",
+    "src/const_eval.rs": "6714c1d6296d1c3f60fab09891a492f66a9850b3ff3ee2b5a7df42400dfdcdaa",
+    "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+    "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+    "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+    "src/lib.rs": "fa65d18a3567992124b03314127594cefa2abd36dd70af78e8ded63b8801f6a2",
+    "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+    "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+    "src/metadata.rs": "556b933de58c6c9927da29159891fd00f97b11b1ef7a2325d0dab92c6a7dbe84",
+    "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+    "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+    "src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+    "src/syntax.rs": "39153a0deb47a7a18059ee5e6add94e400b2401cc8767119aafdf6509364e441",
+    "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+    "src/visibility.rs": "0268165a314fe1a169d5604fdda38968b0bbda07f11c60db92d36a7247f879c7",
+    "tests/nov21_inference/BaselineBounds.kt": "c9e7fe0ef0ead666348d2b526436dac5708ee4ee7462b50750e9f4528cabe362",
+    "tests/nov21_inference/BaselineContext.kt": "37b38221d84a1b7b838835a6d7d29f8cb346a0a58df6c497f9dd008a8e65cbe5",
+    "tests/nov21_inference/BaselineContract.kt": "348f71abd8f00ab760ac68bd5f3439cfec31a49008cd3064177bc66d11bffa39",
+    "tests/nov21_inference/BaselineNullableFunction.kt": "09754b540bfee332a0c23e3434b8509fe5b375209ff8b6e4d4b7fcea2e320d8d",
+    "tests/nov21_inference/BaselinePlatformArray.kt": "6d9275cba9ec52991098608c7c224aef3ecfef0a7ad7b387bf2af6126af94040",
+    "tests/nov21_inference/BaselineReturn.kt": "bb80c09b387ad51bab631078ac30d22f1625a7bcaa956af3af9320f341c206a2",
+    "tests/nov21_inference/Calls.java": "02e07ccfc459d39962982ddf0b56ae492d22fe1ab7010100c1723d0ba4b32808",
+    "tests/nov21_inference/Consumer.kt": "80a766f674117e635fbfa452d2f2037162d9a2a6f090bc7af4c5db54bed26aee",
+    "tests/nov21_inference/Dependency.kt": "4aaaecf837eed2a0dd0472f69ca0814fb6fe352ddf1d22eb34efb1f86a8cd705",
+    "tests/nov21_inference/InvalidAnyEqualsFalse.kt": "2d3ff9bd9a9f3c5e2978740bead7494f2f9efb689c4ddbb1775dcfbc141b676d",
+    "tests/nov21_inference/InvalidAnyEqualsFalseReverse.kt": "ce4b9ee66c8e3395f400e27c656406def2d9173bb20fbc28502f2dcf7166a4c3",
+    "tests/nov21_inference/InvalidAnyEqualsTrue.kt": "732ab013d0808f2ac2af1d8782f63840391c1b9513acff471ce3b511b7512b65",
+    "tests/nov21_inference/InvalidAnyEqualsTrueReverse.kt": "7547fef86e7990ac884c186d9d5683a5b6dcd279c67e9c41e389abb14443d8b3",
+    "tests/nov21_inference/InvalidAnyNot.kt": "43cd3011f1c3188ad8dfe669c4a83a26dbfc57b1932ee26186571b4866a06d76",
+    "tests/nov21_inference/InvalidArray.kt": "a9f9ddb5be7e5af89b647995bfc36b1394b9a803eae2d8961e1890db43c818c3",
+    "tests/nov21_inference/InvalidCapturedMutated.kt": "c1365ee075e5edfb37f04c057f7bd5402a54d6d9ef1e7b8830332427f4b3c754",
+    "tests/nov21_inference/InvalidChain.kt": "7bfbb05b3023f0f328cd9cb2e6a83a5b35e28ed19c05cc8d7a6501ce79f0ead9",
+    "tests/nov21_inference/InvalidDisjunction.kt": "cce824971e8ee11ba1f6ba0b693781ffd365d62cc78fd89d22b5be09159993c4",
+    "tests/nov21_inference/InvalidExplicitArray.kt": "73f97a5179733974658cce49bc09b941d00e0afdb080ce1282c1a3d78d318068",
+    "tests/nov21_inference/InvalidExplicitBound.kt": "9b81ba64e0c0bd9009fd1d287ce7fde744eb09ab96d72556737e64364727a867",
+    "tests/nov21_inference/InvalidMutated.kt": "49bd956674908a0f1e506828b0208fbe9a30fb31f83a15b29758dff971dd16a7",
+    "tests/nov21_inference/InvalidNoContract.kt": "22b07663aa2be8e6e5853b83d0912266690e465bc73225205e47e3d39ac3c5db",
+    "tests/nov21_inference/InvalidNullComplement.kt": "69f2bf270d388e8c534b30fa43ffba417d1aef39be9a1cc4b3d071caa610c54f",
+    "tests/nov21_inference/InvalidNullableComplement.kt": "8e9c27b9c0253b7185b04a5cdd62f6643a12b2a3f4ef32130bd75444692f4480",
+    "tests/nov21_inference/InvalidNullableComplementReverse.kt": "d8d1e6c5482b1a054d37a2edc55e4e870af3093d40faede779f372dfbca0db83",
+    "tests/nov21_inference/InvalidNullableFalseComplement.kt": "f93d492529994eaa8d140b11d9e04b4a99859c6e9020edeee1f8618b2341ad10",
+    "tests/nov21_inference/InvalidNullableFalseComplementReverse.kt": "4c7082a376441dd0d1c365e523ec83c462a37b80035adc265cc314b49b05db73",
+    "tests/nov21_inference/InvalidNullableFunction.kt": "a165d69e7f83df47085f576f7cbc707658b34d29899cd9cb26f1554acd202886",
+    "tests/nov21_inference/InvalidNullableNot.kt": "ad9db867b583a578c8aa9cb8830ca045a2ea00b8fe5e500f5902e9a5660dc571",
+    "tests/nov21_inference/InvalidNullableReference.kt": "0fb32d8d99ccccbc83fe5e4db4e5cc2ed254b4a9e9ce3396b331aba1cb5a6422",
+    "tests/nov21_inference/InvalidOpposite.kt": "14dd73efd43eb59f4192ee866951ebecb886aef64b95bfbb91d14b165e3b52c5",
+    "tests/nov21_inference/InvalidOverload.kt": "ee33b0145af1f73d37245b3fd2a18dbcbec58f37308913d086b97c662707df7b",
+    "tests/nov21_inference/InvalidShortCircuitAnd.kt": "086f47cb4f046962b510173d0258167b8039f6b4f05bde8a2b989c4583c848f6",
+    "tests/nov21_inference/InvalidShortCircuitOr.kt": "6761f63ae89117692303251726ad4e7d7fa03eef5bdce874afd048b5d754ea31",
+    "tests/nov21_inference/Models.kt": "69336ef669b0cd2220ac1c36454fd216f105f59670cd60534cfadda0eb07b7dc",
+    "tests/nov21_inference/NullReturn.kt": "ee506b2ed3cef1a0514f68cce8d622a8d46989b5210bc3c4c2c8f664ed3ae109",
+    "tests/nov21_inference/UnsupportedCaptured.kt": "a546683e6007836f29bad70deed7d3094f91ed5ac7dff98d71a09edc91a0accd",
+    "tests/nov21_inference/UnsupportedMutable.kt": "c19a5b5d86171bd60f6da6d484aaa15ab0dc86374e304111e55b42d737261dac",
+    "tests/nov21_inference/UnsupportedReifiedNullableUnit.kt": "ac2937c1c8cabcbb6fa9098ee83f8313e645449ca3d8ab157b7dec8f62569fbc",
+    "tests/nov21_inference/UnsupportedReifiedUnit.kt": "d86f6242fec2ecea04269287275cbdf87f9d18760b69ea1a8fe68720c8b816da",
+    "tests/nov21_inference/UnsupportedTrailing.kt": "c1786067fc7ef6ad42a773f95affb4ab942629bd4d5fedc5886b75ee197a6b23",
+    "tests/nov21_inference.rs": "a66448715b068c4a60ffc39f24b8beb9ad308e912cfcc6b0c190e48ea9caa19b",
+    "tools/check_nov21_inference.py": "71e7fb8b7d4832e2cececfe41c24cc35b4b1d969a30b177175f839045877056f",
+    "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+    "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+    "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/QueryTokenizer.kt": "f28172f76561e583bd046a5d28e65468f8c8f358fec3a5553c4399b537b8e7f1",
+    "target/nov21-final-v4/inference/korrust-frozen": "05c52d1012b3c0d9452291d2e022df4b4196669d2eed80d71dea457a533b452e",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "input_bundle": {
+    "path": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/inputs.zip",
+    "sha256": "0b732624158f5a666c491e4131244d636d3b9feac8089b77f4254ab8edc834bc"
+  },
+  "effective_options": {
+    "jvm_target": "1.8",
+    "language_version": "2.3",
+    "api_version": "2.3"
+  },
+  "supersedes": null,
+  "scope": "Expected results through explicit return expressions, block and try/catch tails, contextual generic reference-array construction, canonical StringArray constraints, direct interparameter bounds, compiled extension result contexts and nullable functional lambda/reference contexts; imported metadata conditional contract facts for stable immutable locals and parameters",
+  "limitations": [
+    "No source contract DSL authoring",
+    "Contract facts apply to compiled static/top-level and extension calls; instance-member contracts are not applied",
+    "returns(null) facts are decoded but not applied; pinned compiler also rejects the tested external null-return implication consumer",
+    "No mutable/captured-cell contract smartcasts",
+    "No disjunction or negative-type implications",
+    "No calls-in-place analysis or returns-not-null/unconditional-return effect support",
+    "General expected-result propagation through when and Elvis remains outside this slice",
+    "Trailing lambdas after omitted default parameters remain unsupported because the parser does not retain outside-parentheses argument placement",
+    "Nullable Unit type-argument errors are currently swallowed by speculative call parsing; the direct reified Unit case has the structured classifier diagnostic",
+    "No full application build or performance claim"
+  ],
+  "evidence": {
+    "work_directory": "target/nov21-final-v4/inference",
+    "logs": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands"
+  },
+  "cases": [
+    {
+      "id": "semantic_fixture_compile",
+      "outcome": "pass",
+      "detail": "Matching sources and classpath; arbitrary metadata contract names and generic bounds, standard-library guard and contextual array elements"
+    },
+    {
+      "id": "fixed_java_caller_both_providers",
+      "outcome": "pass",
+      "detail": {
+        "caller_sha256": {
+          "target/nov21-final-v4/inference/java/inference/Calls.class": "26ec793e58293ebeffdec360e8465c820f5cb5879633031d0984d6b6c664b618"
+        },
+        "assertions": "Null/empty/UTF-16 guards, true/false/nullability polarity, overload selection, type implications, named conjunction arguments, return arrays, Java platform array elements, nullable generic bound joins, contextual compiled extensions and nullable function parameters with lambda/reference/null arguments"
+      }
+    },
+    {
+      "id": "jvm_descriptors",
+      "outcome": "pass",
+      "detail": [
+        [
+          "early",
+          "descriptor: (Z)[Ljava/lang/String;"
+        ],
+        [
+          "guarded",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "reversed",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "receiver",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "typeResult",
+          "descriptor: (Ljava/lang/Object;)I"
+        ],
+        [
+          "both",
+          "descriptor: (Ljava/lang/String;Ljava/lang/String;)I"
+        ],
+        [
+          "standard",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "standardBoolean",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "initialized",
+          "descriptor: (Z)[Ljava/lang/String;"
+        ],
+        [
+          "caught",
+          "descriptor: (Z)[Ljava/lang/String;"
+        ],
+        [
+          "matchers",
+          "descriptor: ()[Ljava/util/regex/Matcher;"
+        ],
+        [
+          "bound",
+          "descriptor: (Ljava/lang/String;)Ljava/lang/String;"
+        ],
+        [
+          "standardBound",
+          "descriptor: (Ljava/lang/String;)Ljava/lang/String;"
+        ],
+        [
+          "contextExtension",
+          "descriptor: (Ljava/lang/String;)[Ljava/lang/String;"
+        ],
+        [
+          "selection",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "nullableEquality",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "nullableFalseEquality",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "nullableFunction",
+          "descriptor: (I)Ljava/lang/String;"
+        ],
+        [
+          "nullableFunctionRef",
+          "descriptor: (I)Ljava/lang/String;"
+        ],
+        [
+          "absentFunction",
+          "descriptor: (I)Ljava/lang/String;"
+        ],
+        [
+          "nullableJoined",
+          "descriptor: (Ljava/util/List;)Ljava/lang/String;"
+        ],
+        [
+          "nullableJoinedFull",
+          "descriptor: (Ljava/util/List;)Ljava/lang/String;"
+        ],
+        [
+          "directBoolean",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "equalsTrue",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "equalsTrueReverse",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "notEqualsFalse",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "notEqualsFalseReverse",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "equalsFalse",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "equalsFalseReverse",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "notEqualsTrue",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "notEqualsTrueReverse",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "nullableEqualityReverse",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "nullableFalseEqualityReverse",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "shortCircuitAnd",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "shortCircuitOr",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "ordinaryAny",
+          "descriptor: (Ljava/lang/String;)Ljava/lang/Object;"
+        ],
+        [
+          "importedAlias",
+          "descriptor: (Ljava/lang/String;)I"
+        ],
+        [
+          "access$label",
+          "descriptor: (I)Ljava/lang/String;"
+        ]
+      ]
+    },
+    {
+      "id": "kotlin_consumer_official",
+      "outcome": "pass",
+      "detail": "Official Kotlin consumer reads emitted ordinary function metadata; cross-run against both providers"
+    },
+    {
+      "id": "kotlin_consumer_candidate",
+      "outcome": "pass",
+      "detail": "Official Kotlin consumer reads emitted ordinary function metadata; cross-run against both providers"
+    },
+    {
+      "id": "InvalidAnyEqualsFalse",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidAnyEqualsFalse.kt\",\"offset\":125,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidAnyEqualsFalse.kt\",\"line\":4,\"column\":42}\n"
+      }
+    },
+    {
+      "id": "InvalidAnyEqualsFalseReverse",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidAnyEqualsFalseReverse.kt\",\"offset\":125,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidAnyEqualsFalseReverse.kt\",\"line\":4,\"column\":42}\n"
+      }
+    },
+    {
+      "id": "InvalidAnyEqualsTrue",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidAnyEqualsTrue.kt\",\"offset\":122,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidAnyEqualsTrue.kt\",\"line\":4,\"column\":40}\n"
+      }
+    },
+    {
+      "id": "InvalidAnyEqualsTrueReverse",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidAnyEqualsTrueReverse.kt\",\"offset\":122,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidAnyEqualsTrueReverse.kt\",\"line\":4,\"column\":40}\n"
+      }
+    },
+    {
+      "id": "InvalidAnyNot",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidAnyNot.kt\",\"offset\":156,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidAnyNot.kt\",\"line\":5,\"column\":34}\n"
+      }
+    },
+    {
+      "id": "InvalidArray",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidArray.kt\",\"offset\":54,\"category\":\"invalid_kotlin\",\"code\":\"TYPE_MISMATCH\",\"message\":\"Type mismatch: expected String, found Null\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidArray.kt\",\"line\":2,\"column\":39}\n"
+      }
+    },
+    {
+      "id": "InvalidCapturedMutated",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidCapturedMutated.kt\",\"offset\":121,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Lambdas are supported only in private ThreadLocal array initializers\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidCapturedMutated.kt\",\"line\":5,\"column\":18}\n"
+      }
+    },
+    {
+      "id": "InvalidChain",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidChain.kt\",\"offset\":166,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidChain.kt\",\"line\":5,\"column\":40}\n"
+      }
+    },
+    {
+      "id": "InvalidDisjunction",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidDisjunction.kt\",\"offset\":119,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidDisjunction.kt\",\"line\":4,\"column\":30}\n"
+      }
+    },
+    {
+      "id": "InvalidExplicitArray",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidExplicitArray.kt\",\"offset\":43,\"category\":\"invalid_kotlin\",\"code\":\"TYPE_MISMATCH\",\"message\":\"Type mismatch: expected StringArray, found Array(Int)\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidExplicitArray.kt\",\"line\":2,\"column\":28}\n"
+      }
+    },
+    {
+      "id": "InvalidExplicitBound",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidExplicitBound.kt\",\"offset\":68,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Conflicting interdependent type parameter bounds\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidExplicitBound.kt\",\"line\":3,\"column\":18}\n"
+      }
+    },
+    {
+      "id": "InvalidMutated",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidMutated.kt\",\"offset\":166,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidMutated.kt\",\"line\":7,\"column\":12}\n"
+      }
+    },
+    {
+      "id": "InvalidNoContract",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidNoContract.kt\",\"offset\":157,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidNoContract.kt\",\"line\":5,\"column\":12}\n"
+      }
+    },
+    {
+      "id": "InvalidNullComplement",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidNullComplement.kt\",\"offset\":120,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidNullComplement.kt\",\"line\":4,\"column\":39}\n"
+      }
+    },
+    {
+      "id": "InvalidNullableComplement",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidNullableComplement.kt\",\"offset\":123,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidNullableComplement.kt\",\"line\":4,\"column\":47}\n"
+      }
+    },
+    {
+      "id": "InvalidNullableComplementReverse",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidNullableComplementReverse.kt\",\"offset\":135,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidNullableComplementReverse.kt\",\"line\":4,\"column\":47}\n"
+      }
+    },
+    {
+      "id": "InvalidNullableFalseComplement",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidNullableFalseComplement.kt\",\"offset\":122,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidNullableFalseComplement.kt\",\"line\":4,\"column\":46}\n"
+      }
+    },
+    {
+      "id": "InvalidNullableFalseComplementReverse",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidNullableFalseComplementReverse.kt\",\"offset\":134,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidNullableFalseComplementReverse.kt\",\"line\":4,\"column\":46}\n"
+      }
+    },
+    {
+      "id": "InvalidNullableFunction",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidNullableFunction.kt\",\"offset\":86,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Lambda parameter type differs from expected type\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidNullableFunction.kt\",\"line\":3,\"column\":34}\n"
+      }
+    },
+    {
+      "id": "InvalidNullableNot",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidNullableNot.kt\",\"offset\":141,\"category\":\"unsupported_language\",\"code\":\"NOMINAL_NULLABLE_UNARY_OPERATOR_UNSUPPORTED\",\"message\":\"Nullable unary operator resolution is unsupported\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidNullableNot.kt\",\"line\":5,\"column\":9}\n"
+      }
+    },
+    {
+      "id": "InvalidNullableReference",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidNullableReference.kt\",\"offset\":126,\"category\":\"invalid_kotlin\",\"code\":\"TYPE_MISMATCH\",\"message\":\"Type mismatch: expected String, found Int\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidNullableReference.kt\",\"line\":4,\"column\":34}\n"
+      }
+    },
+    {
+      "id": "InvalidOpposite",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidOpposite.kt\",\"offset\":113,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidOpposite.kt\",\"line\":4,\"column\":32}\n"
+      }
+    },
+    {
+      "id": "InvalidOverload",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidOverload.kt\",\"offset\":119,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidOverload.kt\",\"line\":4,\"column\":36}\n"
+      }
+    },
+    {
+      "id": "InvalidShortCircuitAnd",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidShortCircuitAnd.kt\",\"offset\":134,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidShortCircuitAnd.kt\",\"line\":5,\"column\":12}\n"
+      }
+    },
+    {
+      "id": "InvalidShortCircuitOr",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/InvalidShortCircuitOr.kt\",\"offset\":120,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/InvalidShortCircuitOr.kt\",\"line\":4,\"column\":39}\n"
+      }
+    },
+    {
+      "id": "UnsupportedCaptured",
+      "outcome": "unsupported_language",
+      "detail": {
+        "reason": "Contracts currently refine immutable local JVM slots and parameters only; captured values and mutable bindings are excluded",
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/UnsupportedCaptured.kt\",\"offset\":119,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/UnsupportedCaptured.kt\",\"line\":4,\"column\":24}\n"
+      }
+    },
+    {
+      "id": "UnsupportedMutable",
+      "outcome": "unsupported_language",
+      "detail": {
+        "reason": "Contracts currently refine immutable local JVM slots and parameters only; captured values and mutable bindings are excluded",
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/UnsupportedMutable.kt\",\"offset\":154,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/UnsupportedMutable.kt\",\"line\":6,\"column\":12}\n"
+      }
+    },
+    {
+      "id": "UnsupportedReifiedNullableUnit",
+      "outcome": "unsupported_language",
+      "detail": {
+        "reason": "Nullable Unit is rejected by the existing parser, whose speculative generic-call path currently swallows its structured unsupported diagnostic",
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/UnsupportedReifiedNullableUnit.kt\",\"offset\":88,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Expected a newline or semicolon\",\"path\":\"/workspace/korrust/tests/nov21_inference/UnsupportedReifiedNullableUnit.kt\",\"line\":3,\"column\":34}\n"
+      }
+    },
+    {
+      "id": "UnsupportedReifiedUnit",
+      "outcome": "unsupported_language",
+      "detail": {
+        "reason": "Reified Unit and nullable Unit classifier representation remains unsupported",
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/UnsupportedReifiedUnit.kt\",\"offset\":74,\"category\":\"unsupported_language\",\"code\":\"REIFIED_ARGUMENT_CLASSIFIER_UNSUPPORTED\",\"message\":\"This reified argument classifier is unsupported\",\"path\":\"/workspace/korrust/tests/nov21_inference/UnsupportedReifiedUnit.kt\",\"line\":3,\"column\":20}\n"
+      }
+    },
+    {
+      "id": "UnsupportedTrailing",
+      "outcome": "unsupported_language",
+      "detail": {
+        "reason": "Outside-parentheses trailing lambda placement after omitted defaults is not retained by the parser; supported tests use named transform or all arguments inside parentheses",
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/UnsupportedTrailing.kt\",\"offset\":58,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: joinToString\",\"path\":\"/workspace/korrust/tests/nov21_inference/UnsupportedTrailing.kt\",\"line\":2,\"column\":42}\n"
+      }
+    },
+    {
+      "id": "null_return_contract_boundary",
+      "outcome": "unsupported_language",
+      "detail": {
+        "reason": "Metadata decoder retains returns(null), but flow application is deferred after pinned2.3.21 rejects this external smartcast consumer",
+        "reference_diagnostic": "tests/nov21_inference/NullReturn.kt:4:44: error: only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'String?'.\n    if (marker(value) == null) return value.length\n                                           ^\n",
+        "candidate_diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/NullReturn.kt\",\"offset\":129,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/NullReturn.kt\",\"line\":4,\"column\":39}\n"
+      }
+    },
+    {
+      "id": "BaselineBounds",
+      "outcome": "baseline_rejected",
+      "detail": {
+        "sha256": "58990f36b6aba59d2b92c5417cbde8a3daff1396ea3eda01c1e85c4b5c3dc574",
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/BaselineBounds.kt\",\"offset\":88,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved member or imported extension: choose\",\"path\":\"/workspace/korrust/tests/nov21_inference/BaselineBounds.kt\",\"line\":3,\"column\":37}\n"
+      }
+    },
+    {
+      "id": "BaselineContext",
+      "outcome": "baseline_rejected",
+      "detail": {
+        "sha256": "58990f36b6aba59d2b92c5417cbde8a3daff1396ea3eda01c1e85c4b5c3dc574",
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/BaselineContext.kt\",\"offset\":97,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Cannot infer type parameter T\",\"path\":\"/workspace/korrust/tests/nov21_inference/BaselineContext.kt\",\"line\":3,\"column\":45}\n"
+      }
+    },
+    {
+      "id": "BaselineContract",
+      "outcome": "baseline_rejected",
+      "detail": {
+        "sha256": "58990f36b6aba59d2b92c5417cbde8a3daff1396ea3eda01c1e85c4b5c3dc574",
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/BaselineContract.kt\",\"offset\":130,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: length\",\"path\":\"/workspace/korrust/tests/nov21_inference/BaselineContract.kt\",\"line\":5,\"column\":12}\n"
+      }
+    },
+    {
+      "id": "BaselineNullableFunction",
+      "outcome": "baseline_rejected",
+      "detail": {
+        "sha256": "58990f36b6aba59d2b92c5417cbde8a3daff1396ea3eda01c1e85c4b5c3dc574",
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/BaselineNullableFunction.kt\",\"offset\":107,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Lambda requires a function or SAM expected type\",\"path\":\"/workspace/korrust/tests/nov21_inference/BaselineNullableFunction.kt\",\"line\":3,\"column\":54}\n"
+      }
+    },
+    {
+      "id": "BaselinePlatformArray",
+      "outcome": "baseline_rejected",
+      "detail": {
+        "sha256": "58990f36b6aba59d2b92c5417cbde8a3daff1396ea3eda01c1e85c4b5c3dc574",
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/BaselinePlatformArray.kt\",\"offset\":97,\"category\":\"invalid_kotlin\",\"code\":\"TYPE_MISMATCH\",\"message\":\"Type mismatch: expected Array(Java(\\\"java/util/regex/Matcher\\\")), found Array(Platform(Java(\\\"java/util/regex/Matcher\\\")))\",\"path\":\"/workspace/korrust/tests/nov21_inference/BaselinePlatformArray.kt\",\"line\":3,\"column\":50}\n"
+      }
+    },
+    {
+      "id": "BaselineReturn",
+      "outcome": "baseline_rejected",
+      "detail": {
+        "sha256": "58990f36b6aba59d2b92c5417cbde8a3daff1396ea3eda01c1e85c4b5c3dc574",
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/tests/nov21_inference/BaselineReturn.kt\",\"offset\":80,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Cannot infer type parameter T\",\"path\":\"/workspace/korrust/tests/nov21_inference/BaselineReturn.kt\",\"line\":3,\"column\":22}\n"
+      }
+    },
+    {
+      "id": "unchanged_query_tokenizer_compile",
+      "outcome": "pass",
+      "detail": {
+        "source_sha256": "f28172f76561e583bd046a5d28e65468f8c8f358fec3a5553c4399b537b8e7f1",
+        "claim": "Unchanged source compiles; no standalone app runtime claim in this harness"
+      }
+    }
+  ],
+  "commands": [
+    {
+      "label": "official arbitrary contract and generic providers",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/Dependency.kt",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/000.txt"
+    },
+    {
+      "label": "official semantic fixtures",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/Models.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/001.txt"
+    },
+    {
+      "label": "candidate semantic fixtures",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/Models.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/002.txt"
+    },
+    {
+      "label": "fixed independent Java caller compiled against official only",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/official:/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/java",
+        "/workspace/korrust/tests/nov21_inference/Calls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/003.txt"
+    },
+    {
+      "label": "official independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/official:/workspace/korrust/target/nov21-final-v4/inference/java:/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "inference.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/004.txt"
+    },
+    {
+      "label": "candidate independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/candidate:/workspace/korrust/target/nov21-final-v4/inference/java:/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "inference.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/005.txt"
+    },
+    {
+      "label": "official JVM descriptors",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-classpath",
+        "/workspace/korrust/target/nov21-final-v4/inference/official",
+        "inference.ModelsKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/006.txt"
+    },
+    {
+      "label": "candidate JVM descriptors",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-classpath",
+        "/workspace/korrust/target/nov21-final-v4/inference/candidate",
+        "inference.ModelsKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/007.txt"
+    },
+    {
+      "label": "official Kotlin metadata consumer against official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/Consumer.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/official:/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/008.txt"
+    },
+    {
+      "label": "Kotlin consumer official on official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/consumer-official:/workspace/korrust/target/nov21-final-v4/inference/official:/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/009.txt"
+    },
+    {
+      "label": "Kotlin consumer official on candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/consumer-official:/workspace/korrust/target/nov21-final-v4/inference/candidate:/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/010.txt"
+    },
+    {
+      "label": "official Kotlin metadata consumer against candidate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/Consumer.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/candidate:/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/011.txt"
+    },
+    {
+      "label": "Kotlin consumer candidate on official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/consumer-candidate:/workspace/korrust/target/nov21-final-v4/inference/official:/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/012.txt"
+    },
+    {
+      "label": "Kotlin consumer candidate on candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/consumer-candidate:/workspace/korrust/target/nov21-final-v4/inference/candidate:/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/013.txt"
+    },
+    {
+      "label": "official invalid InvalidAnyEqualsFalse",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidAnyEqualsFalse.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidAnyEqualsFalse",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/014.txt"
+    },
+    {
+      "label": "candidate invalid InvalidAnyEqualsFalse",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidAnyEqualsFalse.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidAnyEqualsFalse",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/015.txt"
+    },
+    {
+      "label": "official invalid InvalidAnyEqualsFalseReverse",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidAnyEqualsFalseReverse.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidAnyEqualsFalseReverse",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/016.txt"
+    },
+    {
+      "label": "candidate invalid InvalidAnyEqualsFalseReverse",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidAnyEqualsFalseReverse.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidAnyEqualsFalseReverse",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/017.txt"
+    },
+    {
+      "label": "official invalid InvalidAnyEqualsTrue",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidAnyEqualsTrue.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidAnyEqualsTrue",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/018.txt"
+    },
+    {
+      "label": "candidate invalid InvalidAnyEqualsTrue",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidAnyEqualsTrue.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidAnyEqualsTrue",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/019.txt"
+    },
+    {
+      "label": "official invalid InvalidAnyEqualsTrueReverse",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidAnyEqualsTrueReverse.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidAnyEqualsTrueReverse",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/020.txt"
+    },
+    {
+      "label": "candidate invalid InvalidAnyEqualsTrueReverse",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidAnyEqualsTrueReverse.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidAnyEqualsTrueReverse",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/021.txt"
+    },
+    {
+      "label": "official invalid InvalidAnyNot",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidAnyNot.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidAnyNot",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/022.txt"
+    },
+    {
+      "label": "candidate invalid InvalidAnyNot",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidAnyNot.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidAnyNot",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/023.txt"
+    },
+    {
+      "label": "official invalid InvalidArray",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidArray.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidArray",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/024.txt"
+    },
+    {
+      "label": "candidate invalid InvalidArray",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidArray.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidArray",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/025.txt"
+    },
+    {
+      "label": "official invalid InvalidCapturedMutated",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidCapturedMutated.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidCapturedMutated",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/026.txt"
+    },
+    {
+      "label": "candidate invalid InvalidCapturedMutated",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidCapturedMutated.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidCapturedMutated",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/027.txt"
+    },
+    {
+      "label": "official invalid InvalidChain",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidChain.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidChain",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/028.txt"
+    },
+    {
+      "label": "candidate invalid InvalidChain",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidChain.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidChain",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/029.txt"
+    },
+    {
+      "label": "official invalid InvalidDisjunction",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidDisjunction.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidDisjunction",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/030.txt"
+    },
+    {
+      "label": "candidate invalid InvalidDisjunction",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidDisjunction.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidDisjunction",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/031.txt"
+    },
+    {
+      "label": "official invalid InvalidExplicitArray",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidExplicitArray.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidExplicitArray",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/032.txt"
+    },
+    {
+      "label": "candidate invalid InvalidExplicitArray",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidExplicitArray.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidExplicitArray",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/033.txt"
+    },
+    {
+      "label": "official invalid InvalidExplicitBound",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidExplicitBound.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidExplicitBound",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/034.txt"
+    },
+    {
+      "label": "candidate invalid InvalidExplicitBound",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidExplicitBound.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidExplicitBound",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/035.txt"
+    },
+    {
+      "label": "official invalid InvalidMutated",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidMutated.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidMutated",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/036.txt"
+    },
+    {
+      "label": "candidate invalid InvalidMutated",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidMutated.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidMutated",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/037.txt"
+    },
+    {
+      "label": "official invalid InvalidNoContract",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidNoContract.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidNoContract",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/038.txt"
+    },
+    {
+      "label": "candidate invalid InvalidNoContract",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidNoContract.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidNoContract",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/039.txt"
+    },
+    {
+      "label": "official invalid InvalidNullComplement",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidNullComplement.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidNullComplement",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/040.txt"
+    },
+    {
+      "label": "candidate invalid InvalidNullComplement",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidNullComplement.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidNullComplement",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/041.txt"
+    },
+    {
+      "label": "official invalid InvalidNullableComplement",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidNullableComplement.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidNullableComplement",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/042.txt"
+    },
+    {
+      "label": "candidate invalid InvalidNullableComplement",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidNullableComplement.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidNullableComplement",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/043.txt"
+    },
+    {
+      "label": "official invalid InvalidNullableComplementReverse",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidNullableComplementReverse.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidNullableComplementReverse",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/044.txt"
+    },
+    {
+      "label": "candidate invalid InvalidNullableComplementReverse",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidNullableComplementReverse.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidNullableComplementReverse",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/045.txt"
+    },
+    {
+      "label": "official invalid InvalidNullableFalseComplement",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidNullableFalseComplement.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidNullableFalseComplement",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/046.txt"
+    },
+    {
+      "label": "candidate invalid InvalidNullableFalseComplement",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidNullableFalseComplement.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidNullableFalseComplement",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/047.txt"
+    },
+    {
+      "label": "official invalid InvalidNullableFalseComplementReverse",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidNullableFalseComplementReverse.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidNullableFalseComplementReverse",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/048.txt"
+    },
+    {
+      "label": "candidate invalid InvalidNullableFalseComplementReverse",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidNullableFalseComplementReverse.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidNullableFalseComplementReverse",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/049.txt"
+    },
+    {
+      "label": "official invalid InvalidNullableFunction",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidNullableFunction.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidNullableFunction",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/050.txt"
+    },
+    {
+      "label": "candidate invalid InvalidNullableFunction",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidNullableFunction.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidNullableFunction",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/051.txt"
+    },
+    {
+      "label": "official invalid InvalidNullableNot",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidNullableNot.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidNullableNot",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/052.txt"
+    },
+    {
+      "label": "candidate invalid InvalidNullableNot",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidNullableNot.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidNullableNot",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/053.txt"
+    },
+    {
+      "label": "official invalid InvalidNullableReference",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidNullableReference.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidNullableReference",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/054.txt"
+    },
+    {
+      "label": "candidate invalid InvalidNullableReference",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidNullableReference.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidNullableReference",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/055.txt"
+    },
+    {
+      "label": "official invalid InvalidOpposite",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidOpposite.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidOpposite",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/056.txt"
+    },
+    {
+      "label": "candidate invalid InvalidOpposite",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidOpposite.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidOpposite",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/057.txt"
+    },
+    {
+      "label": "official invalid InvalidOverload",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidOverload.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidOverload",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/058.txt"
+    },
+    {
+      "label": "candidate invalid InvalidOverload",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidOverload.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidOverload",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/059.txt"
+    },
+    {
+      "label": "official invalid InvalidShortCircuitAnd",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidShortCircuitAnd.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidShortCircuitAnd",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/060.txt"
+    },
+    {
+      "label": "candidate invalid InvalidShortCircuitAnd",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidShortCircuitAnd.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidShortCircuitAnd",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/061.txt"
+    },
+    {
+      "label": "official invalid InvalidShortCircuitOr",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/InvalidShortCircuitOr.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/oracle-InvalidShortCircuitOr",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/062.txt"
+    },
+    {
+      "label": "candidate invalid InvalidShortCircuitOr",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/InvalidShortCircuitOr.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/InvalidShortCircuitOr",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/063.txt"
+    },
+    {
+      "label": "official valid contract boundary UnsupportedCaptured",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/UnsupportedCaptured.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/official-UnsupportedCaptured",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/064.txt"
+    },
+    {
+      "label": "candidate contract boundary UnsupportedCaptured",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/UnsupportedCaptured.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/candidate-UnsupportedCaptured",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/065.txt"
+    },
+    {
+      "label": "official valid contract boundary UnsupportedMutable",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/UnsupportedMutable.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/official-UnsupportedMutable",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/066.txt"
+    },
+    {
+      "label": "candidate contract boundary UnsupportedMutable",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/UnsupportedMutable.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/candidate-UnsupportedMutable",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/067.txt"
+    },
+    {
+      "label": "official valid contract boundary UnsupportedReifiedNullableUnit",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/UnsupportedReifiedNullableUnit.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/official-UnsupportedReifiedNullableUnit",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/068.txt"
+    },
+    {
+      "label": "candidate contract boundary UnsupportedReifiedNullableUnit",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/UnsupportedReifiedNullableUnit.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/candidate-UnsupportedReifiedNullableUnit",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/069.txt"
+    },
+    {
+      "label": "official valid contract boundary UnsupportedReifiedUnit",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/UnsupportedReifiedUnit.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/official-UnsupportedReifiedUnit",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/070.txt"
+    },
+    {
+      "label": "candidate contract boundary UnsupportedReifiedUnit",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/UnsupportedReifiedUnit.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/candidate-UnsupportedReifiedUnit",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/071.txt"
+    },
+    {
+      "label": "official valid contract boundary UnsupportedTrailing",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/UnsupportedTrailing.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/official-UnsupportedTrailing",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/072.txt"
+    },
+    {
+      "label": "candidate contract boundary UnsupportedTrailing",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/UnsupportedTrailing.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/candidate-UnsupportedTrailing",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/073.txt"
+    },
+    {
+      "label": "pinned null-return implication consumer boundary",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/NullReturn.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/official-null-return",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/074.txt"
+    },
+    {
+      "label": "candidate deferred null-return implication consumer",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inference/NullReturn.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/candidate-null-return",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/075.txt"
+    },
+    {
+      "label": "official isolated baseline feature BaselineBounds",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/BaselineBounds.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/official-BaselineBounds",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/076.txt"
+    },
+    {
+      "label": "pre-milestone baseline rejects BaselineBounds",
+      "argv": [
+        "target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/nov21_inference/BaselineBounds.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/BaselineBounds",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/077.txt"
+    },
+    {
+      "label": "official isolated baseline feature BaselineContext",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/BaselineContext.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/official-BaselineContext",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/078.txt"
+    },
+    {
+      "label": "pre-milestone baseline rejects BaselineContext",
+      "argv": [
+        "target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/nov21_inference/BaselineContext.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/BaselineContext",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/079.txt"
+    },
+    {
+      "label": "official isolated baseline feature BaselineContract",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/BaselineContract.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/official-BaselineContract",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/080.txt"
+    },
+    {
+      "label": "pre-milestone baseline rejects BaselineContract",
+      "argv": [
+        "target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/nov21_inference/BaselineContract.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/BaselineContract",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/081.txt"
+    },
+    {
+      "label": "official isolated baseline feature BaselineNullableFunction",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/BaselineNullableFunction.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/official-BaselineNullableFunction",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/082.txt"
+    },
+    {
+      "label": "pre-milestone baseline rejects BaselineNullableFunction",
+      "argv": [
+        "target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/nov21_inference/BaselineNullableFunction.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/BaselineNullableFunction",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/083.txt"
+    },
+    {
+      "label": "official isolated baseline feature BaselinePlatformArray",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/BaselinePlatformArray.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/official-BaselinePlatformArray",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/084.txt"
+    },
+    {
+      "label": "pre-milestone baseline rejects BaselinePlatformArray",
+      "argv": [
+        "target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/nov21_inference/BaselinePlatformArray.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/BaselinePlatformArray",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/085.txt"
+    },
+    {
+      "label": "official isolated baseline feature BaselineReturn",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inference/BaselineReturn.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/official-BaselineReturn",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/086.txt"
+    },
+    {
+      "label": "pre-milestone baseline rejects BaselineReturn",
+      "argv": [
+        "target/next10-final-v3/korrust",
+        "/workspace/korrust/tests/nov21_inference/BaselineReturn.kt",
+        "-cp",
+        "/workspace/korrust/target/nov21-final-v4/inference/dependency:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/BaselineReturn",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/087.txt"
+    },
+    {
+      "label": "official unchanged QueryTokenizer",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/QueryTokenizer.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/official-query",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/088.txt"
+    },
+    {
+      "label": "candidate unchanged QueryTokenizer",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v4/inference/korrust-frozen",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/QueryTokenizer.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/nov21-final-v4/inference/candidate-query",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T070633434994Z-nov21-inference/commands/089.txt"
+    }
+  ],
+  "reproduction_command": [
+    "python3",
+    "tools/check_nov21_inference.py",
+    "--candidate",
+    "target/nov21-final-v4/korrust",
+    "--baseline",
+    "target/next10-final-v3/korrust",
+    "--output",
+    "target/nov21-final-v4/inference",
+    "--evidence-directory",
+    "reports/correctness/2026-11-21T070633434994Z-nov21-inference"
+  ],
+  "counts": {
+    "pass": 6,
+    "invalid_rejected": 25,
+    "unsupported_language": 6,
+    "baseline_rejected": 6
+  }
+}

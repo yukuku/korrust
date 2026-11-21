@@ -342,6 +342,9 @@ fn erase_generic_variables(ty: &Type) -> Type {
 }
 
 fn generic_function(function: &crate::check::Function) -> Option<String> {
+    if let Some(signature) = &function.jvm_signature {
+        return Some(signature.clone());
+    }
     if function.suspend_ {
         return Some(format!(
             "({}{})Ljava/lang/Object;",
@@ -498,6 +501,52 @@ fn generic_function(function: &crate::check::Function) -> Option<String> {
         scoped(&function.result, &names, false)
     );
     (signature != function.descriptor()).then_some(signature)
+}
+
+fn select_signature(signature: Option<&str>, keep: &[bool], prefix: &str) -> Option<String> {
+    let signature = signature?;
+    let open = signature.find('(')?;
+    let bytes = signature.as_bytes();
+    let mut cursor = open + 1;
+    let mut result = signature[..=open].to_owned();
+    result.push_str(prefix);
+    let mut index = 0;
+    while bytes.get(cursor) != Some(&b')') {
+        let start = cursor;
+        while bytes.get(cursor) == Some(&b'[') {
+            cursor += 1;
+        }
+        match *bytes.get(cursor)? {
+            b'L' => {
+                let mut depth = 0;
+                loop {
+                    match *bytes.get(cursor)? {
+                        b'<' => depth += 1,
+                        b'>' => depth -= 1,
+                        b';' if depth == 0 => {
+                            cursor += 1;
+                            break;
+                        }
+                        _ => {}
+                    }
+                    cursor += 1;
+                }
+            }
+            b'T' => {
+                while *bytes.get(cursor)? != b';' {
+                    cursor += 1;
+                }
+                cursor += 1;
+            }
+            _ => cursor += 1,
+        }
+        if *keep.get(index).unwrap_or(&true) {
+            result.push_str(&signature[start..cursor]);
+        }
+        index += 1;
+    }
+    result.push_str(&signature[cursor..]);
+    Some(result)
 }
 
 fn nullable_result(pool: &mut Pool, method: &mut Vec<u8>, ty: &Type) -> Result<()> {
@@ -4435,7 +4484,9 @@ fn emit_class_with(
                     } else {
                         usize::from(class.inner)
                     };
-                    if hidden != 0 {
+                    if let Some(signature) = &class.constructor_signature {
+                        Some(signature.clone())
+                    } else if hidden != 0 {
                         Some(
                             generic_method(&class.params[hidden..], &Type::Unit).unwrap_or_else(
                                 || {
@@ -4610,7 +4661,7 @@ fn emit_class_with(
             "<init>",
             &descriptor,
             code,
-            generic_method(&secondary.function.params, &Type::Unit).as_deref(),
+            generic_function(&secondary.function).as_deref(),
             false,
         )?;
         parameter_annotations(&mut pool, &mut method, &secondary.function.params)?;

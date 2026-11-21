@@ -1,0 +1,21 @@
+tests/nov21_generics/Use.kt:41:19: warning: projection is redundant: the corresponding type parameter of 'Cov<out Any>' has the same variance.
+fun p6(value: Cov<out Any>): Int = 6
+                  ^^^
+tests/nov21_generics/Use.kt:42:19: warning: projection is redundant: the corresponding type parameter of 'Cov<out Final>' has the same variance.
+fun p7(value: Cov<out Final>): Int = 7
+                  ^^^
+tests/nov21_generics/Use.kt:43:19: warning: projection is redundant: the corresponding type parameter of 'Con<in Final>' has the same variance.
+fun p8(value: Con<in Final>): Int = 8
+                  ^^
+tests/nov21_generics/Use.kt:52:15: warning: projection is redundant: the corresponding type parameter of 'Cov<out Open>' has the same variance.
+fun r2(): Cov<out Open> = Cov<Open>(Open())
+              ^^^
+tests/nov21_generics/Use.kt:53:15: warning: projection is redundant: the corresponding type parameter of 'Con<in Final>' has the same variance.
+fun r3(): Con<in Final> = Con<Final>()
+              ^^
+tests/nov21_generics/Use.kt:58:23: warning: projection is redundant: the corresponding type parameter of 'Cov<out Open>' has the same variance.
+    fun result(): Cov<out Open> = Cov<Open>(Open())
+                      ^^^
+tests/nov21_generics/Use.kt:60:70: warning: projection is redundant: the corresponding type parameter of 'Cov<out Open>' has the same variance.
+interface WildApi { fun take(value: Cov<Open>): Int; val result: Cov<out Open> }
+                                                                     ^^^

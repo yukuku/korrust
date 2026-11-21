@@ -1,0 +1,206 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-21T05:45:53.701872+00:00",
+  "status": "complete",
+  "compiler": {
+    "path": "/workspace/korrust/target/nov21-final-v1/korrust",
+    "sha256": "305f89e79ad03933b9c45edde416d01116e2db9a8570c170ec8915d139fb56f6"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "frozen_input_hashes": {
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/QueryTokenizer.kt": "f28172f76561e583bd046a5d28e65468f8c8f358fec3a5553c4399b537b8e7f1",
+    "target/nov21-final-v1/korrust": "305f89e79ad03933b9c45edde416d01116e2db9a8570c170ec8915d139fb56f6",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "reports/correctness/2026-11-21-next-ten-final-v1/frozen-inputs.json": "a39e0ea89c991d92274e4e37c1236aed813152cd51bf553d9b8f13afcb9981dc",
+    "/workspace/korrust-setup/jdk-21/jmods/java.base.jmod": "f8d258a856a691c81ad9dd16964635bbc8a8fdd7f40edec37dcf3d904feb7ae1",
+    "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/QueryCheck.java": "c966bebee2641db2dbcb4c4ad3737d61a884f0c728d3c348b1f58ab05b49c19c",
+    "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/replay.py": "daf47bf298c2f8e539f6242f16877cb89e597a64a66649e65c11d40626f46b2a"
+  },
+  "cases": [
+    {
+      "id": "official_compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate_compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass",
+      "assertions": 10,
+      "stdout": "10 cases passed\n"
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass",
+      "assertions": 10,
+      "stdout": "10 cases passed\n"
+    },
+    {
+      "id": "runtime_and_public_abi_agree",
+      "outcome": "pass"
+    },
+    {
+      "id": "fixed_caller_integrity",
+      "outcome": "pass",
+      "class_hashes": {
+        "caller/QueryCheck.class": "d58ca02c8eb4d0f756330fc1cb909e362694c6e3e9d51b79ab11c4edadc26a87"
+      }
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "pass",
+      "changed": []
+    }
+  ],
+  "commands": [
+    {
+      "label": "Compile unchanged official source",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/QueryTokenizer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_app",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T054553364047Z-nov21-query-tokenizer/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/00-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/00-stderr.txt"
+    },
+    {
+      "label": "Compile unchanged candidate source",
+      "argv": [
+        "/workspace/korrust/target/nov21-final-v1/korrust",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/util/QueryTokenizer.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "nov21_app",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T054553364047Z-nov21-query-tokenizer/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/01-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/01-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java caller against official output",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T054553364047Z-nov21-query-tokenizer/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-21T054553364047Z-nov21-query-tokenizer/caller",
+        "/workspace/korrust/reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/QueryCheck.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/02-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/02-stderr.txt"
+    },
+    {
+      "label": "Verify Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T054553364047Z-nov21-query-tokenizer/caller:/workspace/korrust/target/checks/2026-11-21T054553364047Z-nov21-query-tokenizer/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "QueryCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/03-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/03-stderr.txt"
+    },
+    {
+      "label": "Inspect public ABI official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T054553364047Z-nov21-query-tokenizer/official",
+        "yuku.alkitab.base.util.QueryTokenizer"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/04-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/04-stderr.txt"
+    },
+    {
+      "label": "Verify Java caller against candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-21T054553364047Z-nov21-query-tokenizer/caller:/workspace/korrust/target/checks/2026-11-21T054553364047Z-nov21-query-tokenizer/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "QueryCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/05-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/05-stderr.txt"
+    },
+    {
+      "label": "Inspect public ABI candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-21T054553364047Z-nov21-query-tokenizer/candidate",
+        "yuku.alkitab.base.util.QueryTokenizer"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/06-stdout.txt",
+      "stderr": "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/06-stderr.txt"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/00-stdout.txt",
+    "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/00-stderr.txt",
+    "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/01-stdout.txt",
+    "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/01-stderr.txt",
+    "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/02-stdout.txt",
+    "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/02-stderr.txt",
+    "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/03-stdout.txt",
+    "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/03-stderr.txt",
+    "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/04-stdout.txt",
+    "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/04-stderr.txt",
+    "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/05-stdout.txt",
+    "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/05-stderr.txt",
+    "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/06-stdout.txt",
+    "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/06-stderr.txt"
+  ],
+  "selection": "Unchanged AndroidBible QueryTokenizer.kt. Fixed Java caller compiled against official Kotlin and run against both providers with JVM verification.",
+  "limitations": [
+    "Single unchanged file and tested behavior only; no full Android module/application or performance claim."
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "reports/correctness/2026-11-21T054553364047Z-nov21-query-tokenizer/replay.py",
+      "--candidate",
+      "/workspace/korrust/target/nov21-final-v1/korrust",
+      "--snapshot",
+      "/workspace/korrust/reports/correctness/2026-11-21-next-ten-final-v1/frozen-inputs.json"
+    ]
+  ],
+  "counts": {
+    "pass": 7
+  }
+}

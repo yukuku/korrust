@@ -465,6 +465,7 @@ pub(super) fn attach_with_declarations(
                     method.kotlin_params = Some(params);
                     method.kotlin_result = Some(result);
                     method.library = Some(LibraryMethod {
+                        contracts: Vec::new(),
                         value_dispatch: false,
                         suspend_: false,
                         kotlin_declared: false,

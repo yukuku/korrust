@@ -71,6 +71,8 @@ pub(crate) struct Classpath {
     origins: std::cell::RefCell<std::collections::HashMap<String, PathBuf>>,
     cache: std::cell::RefCell<std::collections::HashMap<String, JavaClass>>,
     passive_annotations: std::cell::RefCell<std::collections::HashMap<String, bool>>,
+    exception_contracts:
+        std::cell::RefCell<std::collections::HashMap<(String, String, String), Vec<String>>>,
     package_names: std::cell::RefCell<std::collections::HashMap<String, Vec<String>>>,
     sources: std::cell::RefCell<std::collections::HashSet<String>>,
     package_index: std::cell::RefCell<std::collections::HashMap<String, PackageIndex>>,
@@ -200,6 +202,7 @@ pub(crate) struct LibraryTypeAlias {
 
 #[derive(Clone, Debug)]
 pub(crate) struct LibraryMethod {
+    pub contracts: Vec<ContractEffect>,
     pub value_dispatch: bool,
     pub suspend_: bool,
     pub kotlin_declared: bool,
@@ -216,6 +219,18 @@ pub(crate) struct LibraryMethod {
     pub operator: bool,
     pub inline: bool,
     pub code: Option<JavaCode>,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum ContractReturn {
+    Boolean(bool),
+    Null,
+}
+
+#[derive(Clone, Debug)]
+pub(crate) struct ContractEffect {
+    pub returned: ContractReturn,
+    pub requirements: Vec<(usize, Option<Type>)>,
 }
 
 #[derive(Clone, Debug)]
@@ -331,6 +346,29 @@ impl Classpath {
         }
         method
     }
+    pub(crate) fn register_exception_contract(&self, method: &JavaMethod, exceptions: Vec<String>) {
+        self.exception_contracts.borrow_mut().insert(
+            (
+                method.owner.clone(),
+                method.name.clone(),
+                method.descriptor.clone(),
+            ),
+            exceptions,
+        );
+    }
+
+    pub(crate) fn method_exceptions(&self, method: &JavaMethod) -> Vec<String> {
+        self.exception_contracts
+            .borrow()
+            .get(&(
+                method.owner.clone(),
+                method.name.clone(),
+                method.descriptor.clone(),
+            ))
+            .cloned()
+            .unwrap_or_default()
+    }
+
     pub(crate) fn value_classes(&self) -> crate::value_abi::Registry {
         self.cache
             .borrow()
@@ -892,6 +930,7 @@ impl Classpath {
             origins: Default::default(),
             cache: Default::default(),
             passive_annotations: Default::default(),
+            exception_contracts: Default::default(),
             package_names: Default::default(),
             sources: Default::default(),
             package_index: Default::default(),
@@ -1066,6 +1105,9 @@ impl Classpath {
 
     fn parse_with_declarations(&self, bytes: &[u8], expected: &str) -> Result<JavaClass> {
         let (mut class, attrs, method_attrs) = parse_details(bytes, expected)?;
+        for (method, attributes) in class.methods.iter().zip(&method_attrs) {
+            self.register_exception_contract(method, attributes.exceptions.clone());
+        }
         for (child, parent, _, _) in &attrs.inner_classes {
             self.register_lexical_parent(child, parent);
         }
@@ -1535,6 +1577,7 @@ struct Annotation {
 
 #[derive(Default)]
 struct Attributes {
+    exceptions: Vec<String>,
     unsupported: bool,
     annotated: bool,
     annotations: Vec<Annotation>,
@@ -1674,6 +1717,16 @@ fn attributes(
         let mut data = Reader { bytes, offset: 0 };
         result.annotated |= name.contains("Annotations");
         match name {
+            "Exceptions" => {
+                if !type_attribute_names.insert(name) {
+                    return Err(invalid());
+                }
+                for _ in 0..data.u2()? {
+                    result
+                        .exceptions
+                        .push(class_name(pool, data.u2()?)?.to_owned());
+                }
+            }
             "RuntimeVisibleAnnotations" | "RuntimeInvisibleAnnotations" => {
                 for _ in 0..data.u2()? {
                     result.annotations.push(annotation(&mut data, pool, 0)?);

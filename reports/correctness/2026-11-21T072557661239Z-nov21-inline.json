@@ -1,0 +1,833 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-21T07:25:57.661239+00:00",
+  "status": "pass",
+  "compiler": {
+    "path": "target/checks/nov21-inline-integrated-acceptance-v5/korrust-frozen",
+    "sha256": "193fcdd9fd7af09271cbad17e47d126dc28d27a0528d49996a866862bb349c50",
+    "source_revision": "c2ab871533215e4c3c5a8fac588b9ba5a0c367c8"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "frozen_input_hashes": {
+    "src/annotation_declarations.rs": "ac237d773c71a2fc26faeb2d79b837265c6d557ef7bb31aab748fa8b1c7572be",
+    "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+    "src/bytecode/annotation_files.rs": "4f3c136aaa2ed30b85d2a4cc2a9be8331b2da9682d450f6a4dcc135ef04ab86a",
+    "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+    "src/bytecode/class_companion.rs": "2dacd7b21d48fcdd59955fa30b58a6e88bb67642d4bd6dd9d845842b1880417a",
+    "src/bytecode/data.rs": "c99cb60546cbe8873ef99d1ab057aa7439f4239fce13927d324dfea078dbe98c",
+    "src/bytecode/defaults.rs": "ebdb1c988443c1b984081aa8555c5bb2f649685e3bbfef011cd138c0bf29aecd",
+    "src/bytecode/enums.rs": "25fe788c54554741347ba6bb4b84cbee7c324db6925209a434fb139ceb66b2b1",
+    "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+    "src/bytecode/inline.rs": "e598575c521153d592face8dd19018beaf89be45fbde985ae3845526e5a0be44",
+    "src/bytecode/interfaces.rs": "02e19cc9024bda962e06cedec8e15ebfc8b9f1ccd7f95ec11980ab46de917ae6",
+    "src/bytecode/lambdas.rs": "75a4ad990edd822dffaadc1be8cccf6d6cb345848f147e6b3a30c17dc0351360",
+    "src/bytecode/objects.rs": "142f8e5c70f0ac61423c3887447c54865b7b657768cf683fc553fde398a17e7e",
+    "src/bytecode/suspend.rs": "79e1064dd35da268956f91b167a779ce0957cefa8fef629789a2fb3afee987b7",
+    "src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+    "src/bytecode.rs": "d610c4766d35743cc7864a44fec87f93715b5c4c486cb6c3f6790b738434f26b",
+    "src/check.rs": "dd958fca4985ff8f1e112c5307e5881cd2241199d9487be4fed09c227b912972",
+    "src/check_annotation_placements.rs": "b6c899c4a5c2f3269ae1b93268b2ede0f29f4ce68c5ef42b833d7edcecf2d2cc",
+    "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+    "src/check_anonymous.rs": "fd523e4ff9173f209bde5b6cec9c5e13bae942da680e752611b242b0d8cc0f53",
+    "src/check_captures.rs": "18ad01412f9b7da141573f44d422e3987ac14df12175fcda3b2aa69ac90463e4",
+    "src/check_class_delegation.rs": "25cd077ed2b3b51158a53efb2c8190296064fe607db399ab416a3d51a4df2be0",
+    "src/check_classes.rs": "d67e980fdceb784bad7f4c0ee73752d2f9123d973c3c4952c5ad87d623432987",
+    "src/check_contracts.rs": "8bba31d6987b61295aed4c18eee29136f26724e00b5ab69b743655f4469f08c6",
+    "src/check_control.rs": "19e7fe2376f65209fd0d9b04be9254ec868fed288707d34631f30e841f3eaca7",
+    "src/check_declarations.rs": "f9702e12d2928736af2b0fcf7e3319a6c3fff26a9e09ad9315d10d1d3a641812",
+    "src/check_delegates.rs": "6ba1fb0aa2ba511c31accd8a06282490a94b8cbf4857c5687ddab3a71236beb2",
+    "src/check_enums.rs": "2a16c9e4dbae29a8c479ab5cddefad66f0bdd09143e2a0cde8428d2d0c174d8b",
+    "src/check_functions.rs": "567bb05543fe7d8788be999969451be38c590672dd22d4b793047889a169c762",
+    "src/check_inner_classes.rs": "60a4cdbfef5b069e0312c3ea7511b0de6a862d20ff393c464ea080968aa233cd",
+    "src/check_interfaces.rs": "c733506c29aeb5738c3266d03579e420bf26719ec59bd09fc4fc4d542c149f15",
+    "src/check_ir_walk.rs": "11b8f21285e9743b5a71fdb7de6826cc3e85689d9622380fae58fc676dce0195",
+    "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+    "src/check_library.rs": "4f21a889fc7a64f09eb5dfbfb4aac8bfbe1acecc54cf1be313980cbcf4c2def2",
+    "src/check_member_extensions.rs": "c97b70cbd56da4588817a5cdd294cb724009feee3abbcb29a5dde2846bb8d3f9",
+    "src/check_objects.rs": "1b73e97a598d8dd17d977304f77532c7262c2b9286e4196153782f6eaf6e7ba4",
+    "src/check_operations.rs": "7e4f574fc274ccf92a525f8a6b3054958ab312fa702288e95e5fc591112f96c4",
+    "src/check_overloads.rs": "d418fb5ed0880483b5d6ac58ce8093d0eb13804ff1b4176e19abd4b1a3e589cd",
+    "src/check_references.rs": "3a4fd327b7a13f48e69d5fbd059c76cbb8d2ce50ae2e140a762a06d9e1e6eab8",
+    "src/check_relations.rs": "b68377816cd0642ce6184886f09792aacedade20c14c6c115a1b43e1e7904ad5",
+    "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+    "src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+    "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+    "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+    "src/check_variant_signatures.rs": "487fea7351445905782f472e297e15080a4244ce34a4a4aa9904b30c01263a86",
+    "src/classpath/aliases.rs": "745fa67edb3216b77ce5e65f63b75c51ac221f5b49d3e08a4327990bd9e6f4c5",
+    "src/classpath/archive.rs": "a61348418574891572d2361946f9e9320a18de43ae394648c9d78051f23521d1",
+    "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+    "src/classpath/metadata.rs": "ad587038956087ed383d6f0d6f970d5609d5a60ac59632b2fecc311ce4c1e045",
+    "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+    "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+    "src/classpath/signature.rs": "2dbed1bcacc67d8ffadd01d466676a969dc849eaa7d397d6c390e61a4ec12c7c",
+    "src/classpath/source.rs": "a106e68b8627c11244fbec6ca33bb00b0d64dae66394da41029bf59b813702b9",
+    "src/classpath/source_enums.rs": "a3ed1a550007856e482624b65d024249e503524b577aa2a5f99b9db334ee1374",
+    "src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+    "src/classpath.rs": "826166f31a0c0e8f2a3cc7a5a327bc0a9bffa571543d743cf605b9f229900095",
+    "src/compiled_inline.rs": "7acd0769184152ea2659a9217886608cff7219eea5a47d25cf573e0f0318d7fa",
+    "src/const_eval.rs": "6714c1d6296d1c3f60fab09891a492f66a9850b3ff3ee2b5a7df42400dfdcdaa",
+    "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+    "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+    "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+    "src/lib.rs": "fa65d18a3567992124b03314127594cefa2abd36dd70af78e8ded63b8801f6a2",
+    "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+    "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+    "src/metadata.rs": "556b933de58c6c9927da29159891fd00f97b11b1ef7a2325d0dab92c6a7dbe84",
+    "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+    "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+    "src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+    "src/syntax.rs": "39153a0deb47a7a18059ee5e6add94e400b2401cc8767119aafdf6509364e441",
+    "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+    "src/visibility.rs": "0268165a314fe1a169d5604fdda38968b0bbda07f11c60db92d36a7247f879c7",
+    "tests/nov21_inline/Calls.java": "14685988796d11add05b013c14d367d39125d0be116530075bf79fdfbceff909",
+    "tests/nov21_inline/Consumer.kt": "7f4a6f05ee64822ed174876bf8ff3e9a6949809d64cf956a561f0bafe1446c73",
+    "tests/nov21_inline/Effects.java": "e7e08235d6cba16ecb3f2e94fe1f5a9e8ade71bf7eb6ede2dba577a2fe655fbf",
+    "tests/nov21_inline/Forward.kt": "6ce140630356e43262a34e9453a3904496740198a386d58952717b3bd8f44071",
+    "tests/nov21_inline/Leaf.java": "c25d73765b28b511322d5483192285f861e57630497b328be30528dd96a00ed1",
+    "tests/nov21_inline/Library.kt": "94072614db28de14a55cfba3dd6dde350c863cd92f646e3efd4587c481645ad9",
+    "tests/nov21_inline/Roots.java": "ce207bb9e35ef25dc1e4507585fd4ea183d07a2a892105a10f738935500e7b9a",
+    "tests/nov21_inline/Values.kt": "d4d5c5cf16c6f055d354cfd10ced91234dd63558d3aa3bbe492732d605261d32",
+    "tests/nov21_inline/Visible.java": "b1b7bc7cd03a1dccb326841db964ede66b1f4814a9780792ecc3de4f2d752734",
+    "tests/nov21_inline/baseline/object_template.kt": "727fee7f6bd5c7448e450aaa9beb291ac1cf4dd21b0364c77dc45062bfea1838",
+    "tests/nov21_inline/baseline/reified_array.kt": "18695bc341d381ead62f06b270e218c9b5ebf96852b119b72d35a2af8b6a23b9",
+    "tests/nov21_inline/unsupported/nested_marker.kt": "ddae15515c9cad99c5febf1ea070515f1a166ce56a2c775e41cfb0f185c17934",
+    "tests/nov21_inline/unsupported/nullable_unit.kt": "cf3cbd2ea613a1a82d0f55af6a42be0617c72700a12c6f3a868c06f182c37ea7",
+    "tests/nov21_inline/unsupported/nullable_unit_array_template.kt": "ae1a3b89cff0049d64b89aa1dc734f4834771f7afffce344d0c4be81e2ea1b60",
+    "tests/nov21_inline/unsupported/unit.kt": "b7cd5135fbed7b3b28652045deb7c0451d31445a54206fdbee080b30ea3d465e",
+    "tests/nov21_inline/unsupported/unit_array.kt": "ab3dc40f29c5c80847bfe57c2b20b93f98adc4603055af385460aaf91f89343a",
+    "tests/nov21_inline.rs": "0db02031112f3ba9c9a6545c39898d06ddee7d89abe6376fff6c8e1c2efd61ad",
+    "tools/check_nov21_inline.py": "c990b09db5a28d464415fd550f31a537ec2c18af1f55de4d51d4709ebf934ae8",
+    "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+    "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+    "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "references/kotlin/compiler/testData/codegen/box/strings/twoArgumentStringTemplate.kt": "dde8d382e608ecfe2f10dff2f54ba1e36b1f36fc09d21aa73b4ce2b24b6f5231",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt": "0f8bd02878e33edeca3d9e08a65b6ed96a44e6266c11053696816d69ca51db55",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "target/checks/nov21-inline-integrated-acceptance-v5/korrust-frozen": "193fcdd9fd7af09271cbad17e47d126dc28d27a0528d49996a866862bb349c50"
+  },
+  "input_bundle": {
+    "path": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/inputs.zip",
+    "sha256": "67ec582a6662d9c394edda163a45c52052fec18f6f6252df1691d70d2f5ae506"
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_nov21_inline.py",
+      "--candidate",
+      "/workspace/korrust/target/nov21-final-v5/korrust",
+      "--skip-app",
+      "--baseline",
+      "/workspace/korrust/target/next10-final-v3/korrust"
+    ]
+  ],
+  "effective_options": {
+    "jvm_target": "1.8",
+    "language_version": "2.3",
+    "api_version": "2.3",
+    "module_name": "nov21_inline"
+  },
+  "commands": [
+    {
+      "label": "Pinned compiler version",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/000.txt"
+    },
+    {
+      "label": "JDK version",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-version"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/001.txt"
+    },
+    {
+      "label": "Baseline object_template",
+      "argv": [
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/baseline-frozen",
+        "/workspace/korrust/tests/nov21_inline/baseline/object_template.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/baseline-object_template"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/002.txt"
+    },
+    {
+      "label": "Baseline reified_array",
+      "argv": [
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/baseline-frozen",
+        "/workspace/korrust/tests/nov21_inline/baseline/reified_array.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/baseline-reified_array"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/003.txt"
+    },
+    {
+      "label": "Java dependencies",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers",
+        "/workspace/korrust/tests/nov21_inline/Roots.java",
+        "/workspace/korrust/tests/nov21_inline/Leaf.java",
+        "/workspace/korrust/tests/nov21_inline/Visible.java",
+        "/workspace/korrust/tests/nov21_inline/Effects.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/004.txt"
+    },
+    {
+      "label": "Compile official/library",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inline/Library.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/library"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/005.txt"
+    },
+    {
+      "label": "Compile official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inline/Values.kt",
+        "/workspace/korrust/tests/nov21_inline/Forward.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/006.txt"
+    },
+    {
+      "label": "Compile candidate/candidate",
+      "argv": [
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inline/Values.kt",
+        "/workspace/korrust/tests/nov21_inline/Forward.kt",
+        "--module-name",
+        "nov21_inline",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/007.txt"
+    },
+    {
+      "label": "Fixed official Java caller",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/official:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/callers",
+        "/workspace/korrust/tests/nov21_inline/Calls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/008.txt"
+    },
+    {
+      "label": "Verified runtime official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/callers:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/official:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/009.txt"
+    },
+    {
+      "label": "Compile official/metadata-official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inline/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/official:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/metadata-official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/010.txt"
+    },
+    {
+      "label": "Metadata consumer official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/metadata-official:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/official:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "metadata.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/011.txt"
+    },
+    {
+      "label": "Verified runtime candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/callers:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/candidate:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/012.txt"
+    },
+    {
+      "label": "Compile official/metadata-candidate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inline/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/candidate:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/metadata-candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/013.txt"
+    },
+    {
+      "label": "Metadata consumer candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/metadata-candidate:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/candidate:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "metadata.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/014.txt"
+    },
+    {
+      "label": "JVM signatures official/consumer.ValuesKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/official",
+        "consumer.ValuesKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/015.txt"
+    },
+    {
+      "label": "JVM signatures candidate/consumer.ValuesKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/candidate",
+        "consumer.ValuesKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/016.txt"
+    },
+    {
+      "label": "JVM signatures official/consumer.ForwardKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/official",
+        "consumer.ForwardKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/017.txt"
+    },
+    {
+      "label": "JVM signatures candidate/consumer.ForwardKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/candidate",
+        "consumer.ForwardKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/018.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-nested_marker",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inline/unsupported/nested_marker.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/library:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/boundary-official-nested_marker"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/019.txt"
+    },
+    {
+      "label": "Unsupported nested_marker",
+      "argv": [
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inline/unsupported/nested_marker.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/library:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/boundary-candidate-nested_marker"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/020.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-nullable_unit",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inline/unsupported/nullable_unit.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/library:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/boundary-official-nullable_unit"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/021.txt"
+    },
+    {
+      "label": "Unsupported nullable_unit",
+      "argv": [
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inline/unsupported/nullable_unit.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/library:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/boundary-candidate-nullable_unit"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/022.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-nullable_unit_array_template",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inline/unsupported/nullable_unit_array_template.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/library:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/boundary-official-nullable_unit_array_template"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/023.txt"
+    },
+    {
+      "label": "Unsupported nullable_unit_array_template",
+      "argv": [
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inline/unsupported/nullable_unit_array_template.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/library:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/boundary-candidate-nullable_unit_array_template"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/024.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-unit",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inline/unsupported/unit.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/library:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/boundary-official-unit"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/025.txt"
+    },
+    {
+      "label": "Unsupported unit",
+      "argv": [
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inline/unsupported/unit.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/library:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/boundary-candidate-unit"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/026.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-unit_array",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inline/unsupported/unit_array.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/library:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/boundary-official-unit_array"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/027.txt"
+    },
+    {
+      "label": "Unsupported unit_array",
+      "argv": [
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inline/unsupported/unit_array.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/library:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/boundary-candidate-unit_array"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/028.txt"
+    },
+    {
+      "label": "Compile official/upstream-official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/references/kotlin/compiler/testData/codegen/box/strings/twoArgumentStringTemplate.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/upstream-official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/029.txt"
+    },
+    {
+      "label": "Compile candidate/upstream-candidate",
+      "argv": [
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/korrust-frozen",
+        "/workspace/korrust/references/kotlin/compiler/testData/codegen/box/strings/twoArgumentStringTemplate.kt",
+        "--module-name",
+        "nov21_inline",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/upstream-candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/030.txt"
+    },
+    {
+      "label": "Upstream caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/upstream-official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/upstream-java",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/Upstream.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/031.txt"
+    },
+    {
+      "label": "Unchanged upstream official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/upstream-java:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/upstream-official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Upstream"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/032.txt"
+    },
+    {
+      "label": "Unchanged upstream candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/upstream-java:/workspace/korrust/target/checks/nov21-inline-integrated-acceptance-v5/upstream-candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Upstream"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-21T072557661239Z-nov21-inline/commands/033.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "baseline/object_template",
+      "outcome": "baseline_unsupported",
+      "diagnostic": "/workspace/korrust/tests/nov21_inline/baseline/object_template.kt:1:37: error: String templates support only String, supported primitives, their nullable forms, and null\n"
+    },
+    {
+      "id": "baseline/reified_array",
+      "outcome": "baseline_unsupported",
+      "diagnostic": "/workspace/korrust/tests/nov21_inline/baseline/reified_array.kt:1:1: error: Unsupported reified operation bytecode shape\n"
+    },
+    {
+      "id": "compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass",
+      "independent_assertions": 50,
+      "fixed_official_java_caller": true
+    },
+    {
+      "id": "metadata/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass",
+      "independent_assertions": 50,
+      "fixed_official_java_caller": true
+    },
+    {
+      "id": "metadata/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/consumer.ValuesKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/consumer.ForwardKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "boundary/nested_marker",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/nov21_inline/unsupported/nested_marker.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "REIFIED_BYTECODE_UNSUPPORTED",
+          "message": "Reified type substitution is unavailable",
+          "path": "/workspace/korrust/tests/nov21_inline/unsupported/nested_marker.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "boundary/nullable_unit",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/nov21_inline/unsupported/nullable_unit.kt",
+          "offset": 29,
+          "category": "unsupported_language",
+          "code": "NULLABLE_UNIT_UNSUPPORTED",
+          "message": "Nullable Unit is not supported",
+          "path": "/workspace/korrust/tests/nov21_inline/unsupported/nullable_unit.kt",
+          "line": 1,
+          "column": 30
+        }
+      ]
+    },
+    {
+      "id": "boundary/nullable_unit_array_template",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/nov21_inline/unsupported/nullable_unit_array_template.kt",
+          "offset": 40,
+          "category": "unsupported_language",
+          "code": "NULLABLE_UNIT_UNSUPPORTED",
+          "message": "Nullable Unit is not supported",
+          "path": "/workspace/korrust/tests/nov21_inline/unsupported/nullable_unit_array_template.kt",
+          "line": 1,
+          "column": 41
+        }
+      ]
+    },
+    {
+      "id": "boundary/unit",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/nov21_inline/unsupported/unit.kt",
+          "offset": 46,
+          "category": "unsupported_language",
+          "code": "STRING_TEMPLATE_VALUE_UNSUPPORTED",
+          "message": "String templates require a reference or a supported primitive value",
+          "path": "/workspace/korrust/tests/nov21_inline/unsupported/unit.kt",
+          "line": 2,
+          "column": 33
+        }
+      ]
+    },
+    {
+      "id": "boundary/unit_array",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/nov21_inline/unsupported/unit_array.kt",
+          "offset": 45,
+          "category": "unsupported_language",
+          "code": "REIFIED_ARGUMENT_CLASSIFIER_UNSUPPORTED",
+          "message": "This reified argument classifier is unsupported",
+          "path": "/workspace/korrust/tests/nov21_inline/unsupported/unit_array.kt",
+          "line": 2,
+          "column": 19
+        }
+      ]
+    },
+    {
+      "id": "app/AudioHttpErrorBody",
+      "outcome": "not_run",
+      "reason": "Application assessment not run in this invocation; see separate app evidence."
+    },
+    {
+      "id": "upstream/twoArgumentStringTemplate",
+      "outcome": "pass",
+      "unchanged": true,
+      "path": "references/kotlin/compiler/testData/codegen/box/strings/twoArgumentStringTemplate.kt",
+      "sha256": "dde8d382e608ecfe2f10dff2f54ba1e36b1f36fc09d21aa73b4ce2b24b6f5231"
+    }
+  ],
+  "limitations": [
+    "Unit-returning expressions, nullable Unit and arrays with nullable Unit components in templates, and direct reified Unit array allocation remain explicitly unsupported; Unit singleton references are supported.",
+    "Reified nested array marker encodings beyond a single substituted parameter and existing parameterized generic/function classifier boundaries remain unsupported; direct concrete array components are tested.",
+    "Inline exception tables, generated nested allocations, context-sensitive invokespecial and array-owner method references retain explicit rejection boundaries.",
+    "Root Object references and inherited field resolution are prerequisite correctness repairs, not counted features.",
+    "No full Android build or performance claim."
+  ],
+  "counts": {
+    "baseline_unsupported": 2,
+    "pass": 9,
+    "unsupported_language": 5,
+    "not_run": 1
+  },
+  "baseline_compiler": {
+    "path": "target/checks/nov21-inline-integrated-acceptance-v5/baseline-frozen",
+    "sha256": "58990f36b6aba59d2b92c5417cbde8a3daff1396ea3eda01c1e85c4b5c3dc574"
+  },
+  "official_compiled_java_callers_sha256": {
+    "target/checks/nov21-inline-integrated-acceptance-v5/callers/consumer/Calls$1.class": "c4929c0511bef43c13803f7ba50303cefa2c4434fb2470d709702d591f110e71",
+    "target/checks/nov21-inline-integrated-acceptance-v5/callers/consumer/Calls.class": "1461d53dd73646e2635d96c4cb369c9b422d7f06086e8931dfded7e7827dc93f"
+  }
+}

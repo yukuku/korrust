@@ -93,6 +93,12 @@ fn declaration_payload(
 ) -> Result<Option<Vec<u8>>> {
     let selected: Vec<_> = values
         .iter()
+        .filter(|value| {
+            !matches!(
+                value.descriptor.as_str(),
+                "Lkotlin/jvm/Throws;" | "Lkotlin/jvm/Synchronized;"
+            )
+        })
         .filter(|value| value.runtime == runtime)
         .collect();
     if selected.is_empty() {
@@ -329,6 +335,79 @@ fn merge_member(
     Ok(())
 }
 
+fn jvm_method_attributes(
+    pool: &mut Pool,
+    member: &mut Vec<u8>,
+    values: &[DeclarationAnnotation],
+) -> Result<()> {
+    for value in values {
+        match value.descriptor.as_str() {
+            "Lkotlin/jvm/Synchronized;" => {
+                let flags = u16::from_be_bytes([member[0], member[1]]);
+                if flags & 0x0400 != 0 {
+                    return Err(crate::Diagnostic::new(
+                        0,
+                        "Synchronized is not allowed on abstract methods",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "SYNCHRONIZED_ABSTRACT_INVALID",
+                    ));
+                }
+                member[..2].copy_from_slice(&(flags | 0x0020).to_be_bytes());
+            }
+            "Lkotlin/jvm/Throws;" => {
+                let [(name, DeclarationAnnotationValue::Array(classes))] = value.values.as_slice()
+                else {
+                    return Err(failure("Malformed checked Throws annotation"));
+                };
+                if name != "exceptionClasses" {
+                    return Err(failure("Malformed checked Throws arguments"));
+                }
+                if classes.is_empty() {
+                    continue;
+                }
+                let attribute_name = pool.utf8("Exceptions")?;
+                let mut reader = Reader::new(member);
+                reader.take(6)?;
+                let count = reader.short()?;
+                for _ in 0..count {
+                    let name = reader.short()?;
+                    let length = reader.length()?;
+                    reader.take(length)?;
+                    if name == attribute_name {
+                        return Err(failure("Duplicate JVM Exceptions attribute"));
+                    }
+                }
+                reader.finish()?;
+                let mut payload = Vec::new();
+                u2(
+                    &mut payload,
+                    u16::try_from(classes.len())
+                        .map_err(|_| failure("Too many declared exceptions"))?,
+                );
+                for class in classes {
+                    let DeclarationAnnotationValue::Class { descriptor, .. } = class else {
+                        return Err(failure("Malformed checked Throws class"));
+                    };
+                    let owner = descriptor
+                        .strip_prefix('L')
+                        .and_then(|name| name.strip_suffix(';'))
+                        .ok_or_else(|| failure("Malformed checked Throws descriptor"))?;
+                    u2(&mut payload, pool.class(owner)?);
+                }
+                let updated_count = count
+                    .checked_add(1)
+                    .ok_or_else(|| failure("Too many method attributes"))?;
+                member[6..8].copy_from_slice(&updated_count.to_be_bytes());
+                member.extend(attribute(attribute_name, &payload)?);
+            }
+            _ => {}
+        }
+    }
+    Ok(())
+}
+
 pub(super) fn append_annotations(
     pool: &mut Pool,
     member: &mut Vec<u8>,
@@ -337,6 +416,7 @@ pub(super) fn append_annotations(
     if values.is_empty() {
         return Ok(());
     }
+    jvm_method_attributes(pool, member, values)?;
     let added = [
         declaration_payload(pool, values, true)?,
         declaration_payload(pool, values, false)?,
