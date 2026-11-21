@@ -1,0 +1,258 @@
+$ /workspace/korrust-setup/jdk-21/bin/javap -p -s -v -classpath /workspace/work/audio33/target/checks/2026-11-21T110143376167Z-instance-jvm-fields/candidate fieldapi.Legacy
+Classfile /workspace/work/audio33/target/checks/2026-11-21T110143376167Z-instance-jvm-fields/candidate/fieldapi/Legacy.class
+  Last modified Nov 21, 2026; size 1498 bytes
+  SHA-256 checksum 0878d0d95ede85b0306b4183cd8361d8adfc046eed89c4b755890f353da156e4
+  Compiled from "Models.kt"
+public final class fieldapi.Legacy
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // fieldapi/Legacy
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 1, methods: 3, attributes: 2
+Constant pool:
+   #1 = Utf8               fieldapi/Legacy
+   #2 = Class              #1             // fieldapi/Legacy
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               text
+   #6 = Utf8               Ljava/lang/String;
+   #7 = Utf8               RuntimeInvisibleAnnotations
+   #8 = Utf8               Lorg/jetbrains/annotations/NotNull;
+   #9 = Utf8               <init>
+  #10 = Utf8               ()V
+  #11 = NameAndType        #9:#10         // "<init>":()V
+  #12 = Methodref          #4.#11         // java/lang/Object."<init>":()V
+  #13 = Utf8               Code
+  #14 = Utf8               java/lang/Throwable
+  #15 = Class              #14            // java/lang/Throwable
+  #16 = Utf8               StackMapTable
+  #17 = NameAndType        #5:#6          // text:Ljava/lang/String;
+  #18 = Fieldref           #2.#17         // fieldapi/Legacy.text:Ljava/lang/String;
+  #19 = Utf8               kotlin/UninitializedPropertyAccessException
+  #20 = Class              #19            // kotlin/UninitializedPropertyAccessException
+  #21 = Utf8               lateinit property text has not been initialized
+  #22 = String             #21            // lateinit property text has not been initialized
+  #23 = Utf8               (Ljava/lang/String;)V
+  #24 = NameAndType        #9:#23         // "<init>":(Ljava/lang/String;)V
+  #25 = Methodref          #20.#24        // kotlin/UninitializedPropertyAccessException."<init>":(Ljava/lang/String;)V
+  #26 = Utf8               getText
+  #27 = Utf8               ()Ljava/lang/String;
+  #28 = Utf8               java/lang/String
+  #29 = Class              #28            // java/lang/String
+  #30 = Utf8               <set-?>
+  #31 = String             #30            // <set-?>
+  #32 = Utf8               kotlin/jvm/internal/Intrinsics
+  #33 = Class              #32            // kotlin/jvm/internal/Intrinsics
+  #34 = Utf8               checkNotNullParameter
+  #35 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+  #36 = NameAndType        #34:#35        // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #37 = Methodref          #33.#36        // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #38 = Utf8               setText
+  #39 = Utf8               RuntimeInvisibleParameterAnnotations
+  #40 = Utf8               SourceFile
+  #41 = Utf8               Models.kt
+  #42 = Utf8               Lkotlin/Metadata;
+  #43 = Utf8               mv
+  #44 = Integer            2
+  #45 = Integer            3
+  #46 = Integer            0
+  #47 = Utf8               k
+  #48 = Integer            1
+  #49 = Utf8               xi
+  #50 = Integer            48
+  #51 = Utf8               d1
+  #52 = Utf8               \u0000\u0004\n\u0002\b\u000b\b\u0006\u0018\u00002\u00020\u0001B\t\b\u0006¢\u0006\u0004\b\u0002\u0010\u0003R\u001eX\u0086.\u0010\u0004\u001a\u00020\u0005¢\u0006\u0012\n\u0004\b\u0004\u0010\u0006\u001a\u0004\b\u0007\u0010\b\"\u0004\b\t\u0010\n
+  #53 = Utf8               d2
+  #54 = Utf8               kotlin/Any
+  #55 = Utf8               kotlin/String
+  #56 = Utf8               RuntimeVisibleAnnotations
+{
+  public java.lang.String text;
+    descriptor: Ljava/lang/String;
+    flags: (0x0001) ACC_PUBLIC
+    RuntimeInvisibleAnnotations:
+      0: #8()
+        org.jetbrains.annotations.NotNull
+
+  public fieldapi.Legacy();
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #12                 // Method java/lang/Object."<init>":()V
+         4: return
+         5: nop
+         6: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class fieldapi/Legacy ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class fieldapi/Legacy ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class fieldapi/Legacy ]
+          stack = [ class java/lang/Throwable ]
+
+  public final java.lang.String getText();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #18                 // Field text:Ljava/lang/String;
+         5: ifnull        12
+         8: iconst_0
+         9: goto          13
+        12: iconst_1
+        13: ifeq          27
+        16: new           #20                 // class kotlin/UninitializedPropertyAccessException
+        19: dup
+        20: ldc_w         #22                 // String lateinit property text has not been initialized
+        23: invokespecial #25                 // Method kotlin/UninitializedPropertyAccessException."<init>":(Ljava/lang/String;)V
+        26: athrow
+        27: aload         0
+        29: getfield      #18                 // Field text:Ljava/lang/String;
+        32: areturn
+        33: nop
+        34: athrow
+      StackMapTable: number_of_entries = 16
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class fieldapi/Legacy ]
+          stack = [ class fieldapi/Legacy ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class fieldapi/Legacy ]
+          stack = [ class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class fieldapi/Legacy ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class fieldapi/Legacy ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class fieldapi/Legacy ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class fieldapi/Legacy ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class fieldapi/Legacy ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class fieldapi/Legacy ]
+          stack = [ uninitialized 16 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class fieldapi/Legacy ]
+          stack = [ uninitialized 16, uninitialized 16 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class fieldapi/Legacy ]
+          stack = [ uninitialized 16, uninitialized 16, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class fieldapi/Legacy ]
+          stack = [ class kotlin/UninitializedPropertyAccessException ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class fieldapi/Legacy ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class fieldapi/Legacy ]
+          stack = [ class fieldapi/Legacy ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class fieldapi/Legacy ]
+          stack = [ class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class fieldapi/Legacy ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class fieldapi/Legacy ]
+          stack = [ class java/lang/Throwable ]
+    RuntimeInvisibleAnnotations:
+      0: #8()
+        org.jetbrains.annotations.NotNull
+
+  public final void setText(java.lang.String);
+    descriptor: (Ljava/lang/String;)V
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=2, args_size=2
+         0: aload         1
+         2: ldc_w         #31                 // String <set-?>
+         5: invokestatic  #37                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         0
+        10: aload         1
+        12: putfield      #18                 // Field text:Ljava/lang/String;
+        15: return
+        16: nop
+        17: athrow
+      StackMapTable: number_of_entries = 8
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class fieldapi/Legacy, class java/lang/String ]
+          stack = [ class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class fieldapi/Legacy, class java/lang/String ]
+          stack = [ class java/lang/String, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class fieldapi/Legacy, class java/lang/String ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class fieldapi/Legacy, class java/lang/String ]
+          stack = [ class fieldapi/Legacy ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class fieldapi/Legacy, class java/lang/String ]
+          stack = [ class fieldapi/Legacy, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class fieldapi/Legacy, class java/lang/String ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class fieldapi/Legacy, class java/lang/String ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class fieldapi/Legacy, class java/lang/String ]
+          stack = [ class java/lang/Throwable ]
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #8()
+          org.jetbrains.annotations.NotNull
+}
+SourceFile: "Models.kt"
+RuntimeVisibleAnnotations:
+  0: #42(#43=[I#44,I#45,I#46],#47=I#48,#49=I#50,#51=[s#52],#53=[s#1,s#54,s#9,s#10,s#5,s#55,s#6,s#26,s#27,s#38,s#23])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\u0004\n\u0002\b\u000b\b\u0006\u0018\u00002\u00020\u0001B\t\b\u0006¢\u0006\u0004\b\u0002\u0010\u0003R\u001eX\u0086.\u0010\u0004\u001a\u00020\u0005¢\u0006\u0012\n\u0004\b\u0004\u0010\u0006\u001a\u0004\b\u0007\u0010\b\"\u0004\b\t\u0010\n"]
+      d2=["fieldapi/Legacy","kotlin/Any","<init>","()V","text","kotlin/String","Ljava/lang/String;","getText","()Ljava/lang/String;","setText","(Ljava/lang/String;)V"]
+    )

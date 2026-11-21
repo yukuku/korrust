@@ -1,0 +1,7 @@
+$ /workspace/work/audio33/references/kotlinc/bin/kotlinc /workspace/work/audio33/tests/jvm_fields/InvalidDelegate.kt -cp /workspace/work/audio33/target/checks/2026-11-21T110143376167Z-instance-jvm-fields/official:/workspace/work/audio33/target/checks/2026-11-21T110143376167Z-instance-jvm-fields/dependency:/workspace/work/audio33/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/audio33/target/checks/2026-11-21T110143376167Z-instance-jvm-fields/official-InvalidDelegate -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -no-stdlib -no-reflect
+tests/jvm_fields/InvalidDelegate.kt:2:5: error: jvmField cannot be applied to delegated property.
+    @JvmField val value: String by lazy { "delegated" }
+    ^^^^^^^^^
+tests/jvm_fields/InvalidDelegate.kt:2:5: error: this annotation is not applicable to target 'member property with delegate'. Applicable targets: field
+    @JvmField val value: String by lazy { "delegated" }
+    ^^^^^^^^^

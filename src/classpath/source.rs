@@ -295,6 +295,31 @@ fn empty(owner: &str) -> JavaClass {
     }
 }
 
+fn exposed_property_field(
+    owner: &str,
+    name: &str,
+    ty: Type,
+    mutable: bool,
+    visibility: crate::syntax::PropertyVisibility,
+) -> JavaField {
+    JavaField {
+        java_type: None,
+        kotlin: Some(KotlinField {
+            stable: false,
+            name: name.into(),
+            ty: ty.clone(),
+            visibility: (visibility.metadata() >> 1) as u8,
+            constant: false,
+        }),
+        constant: None,
+        owner: owner.into(),
+        name: name.into(),
+        descriptor: ty.descriptor(),
+        access: visibility.access() | if mutable { 0 } else { 0x10 },
+        unsupported: false,
+    }
+}
+
 pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<JavaClass> {
     if module.annotation_decl.is_some() {
         return crate::annotation_declarations::header(module, owner, cp);
@@ -523,8 +548,39 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                 kotlin_internal: false,
             });
         }
-        for (name, ty) in &source.params {
+        let mut annotation_imports = imports.clone();
+        for annotation in source.param_annotations.iter().flatten().chain(
+            source
+                .properties
+                .iter()
+                .flat_map(|property| &property.annotations),
+        ) {
+            if !annotation_imports.contains_key(&annotation.name) && !module.package.is_empty() {
+                let local = format!("{}/{}", module.package.replace('.', "/"), annotation.name);
+                if cp.load(&local).is_ok() {
+                    annotation_imports.insert(annotation.name.clone(), local);
+                }
+            }
+        }
+        for (index, (name, ty)) in source.params.iter().enumerate() {
             if source.param_properties.contains(name) {
+                if crate::check::has_jvm_field(
+                    source
+                        .param_annotations
+                        .get(index)
+                        .map_or(&[], Vec::as_slice),
+                    cp,
+                    &annotation_imports,
+                ) {
+                    class.fields.push(exposed_property_field(
+                        owner,
+                        name,
+                        resolve(ty, module, cp),
+                        source.mutable_params.contains(name),
+                        crate::syntax::PropertyVisibility::Public,
+                    ));
+                    continue;
+                }
                 let mut methods = accessor(
                     owner,
                     name,
@@ -543,6 +599,16 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         for property in &source.properties {
             let ty = (!property.inferred).then(|| resolve(&property.ty, module, cp));
             if let Some(ty) = ty {
+                if crate::check::has_jvm_field(&property.annotations, cp, &annotation_imports) {
+                    class.fields.push(exposed_property_field(
+                        owner,
+                        &property.name,
+                        ty,
+                        property.mutable,
+                        property.visibility(),
+                    ));
+                    continue;
+                }
                 let mut methods = property_accessors(
                     cp,
                     owner,

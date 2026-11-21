@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-21T11:01:43.376167+00:00",
+  "status": "pass",
+  "compiler": {
+    "path": "target/checks/2026-11-21T110143376167Z-instance-jvm-fields/korrust-frozen",
+    "sha256": "28ded0f81f6cc2d9626376257e32cbc3c3dfb375120bd312bca0b1dff162805e",
+    "source_revision": "280e7a49118de4594b98ec59ce10c17a72709ec7"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_jvm_fields.py",
+      "--candidate",
+      "/workspace/korrust/target/audio33/debug/korrust",
+      "--app-classpaths",
+      "/workspace/work/deps33/classpaths.json",
+      "--output",
+      "target/checks/2026-11-21T110143376167Z-instance-jvm-fields",
+      "--evidence-directory",
+      "reports/correctness/2026-11-21T110143376167Z-instance-jvm-fields",
+      "--baseline",
+      "/workspace/work/audio33/target/checks/2026-11-21T101431658451Z-trailing-lambdas/korrust-frozen"
+    ]
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-21T110143376167Z-instance-jvm-fields.json"
+  ],
+  "features": [
+    {
+      "name": "JvmField instance constructor and body properties",
+      "status": "supported",
+      "scope": "Public/protected JVM instance fields, final val and writable var storage, absent generated accessors, field-only Kotlin metadata, generic producer signatures, inferred declaration initializers and constructor/declaration-order initialization; canonical explicit-import and same-package annotation identity.",
+      "restrictions": [
+        "Static/object/companion and enum field lowering are outside this instance slice",
+        "JvmField value-class carrier properties, accessor annotations, volatile modifier combinations and declarations assigned later in init retain explicit unsupported boundaries",
+        "Generic field reading by Korrust retains existing independent interop bounds; generic field emission is checked through fixed Java/Kotlin consumers",
+        "No full Android module/application or performance claim",
+        "Shared wildcard/default classifier import priority requires a separate correction; that combination is outside this evidence snapshot."
+      ],
+      "evidence_report": "reports/correctness/2026-11-21T110143376167Z-instance-jvm-fields.json",
+      "evidence_cases": [
+        "semantic_fixture_compile",
+        "fixed_java_caller_both_providers",
+        "public_protected_jvm_abi",
+        "kotlin_consumer_official",
+        "kotlin_consumer_candidate",
+        "compiled_library_field_reads_writes",
+        "InvalidArguments",
+        "InvalidConst",
+        "InvalidDelegate",
+        "InvalidGetter",
+        "InvalidLateinit",
+        "InvalidOpen",
+        "InvalidOverride",
+        "InvalidPrivate",
+        "InvalidReadOnly",
+        "InvalidRepeat",
+        "InvalidRestrictedSetter",
+        "InvalidSetter",
+        "InvalidTarget",
+        "InvalidValueType",
+        "app/AppServices_fixed_java_and_abi",
+        "app_kotlin_consumer_official",
+        "app_kotlin_consumer_candidate",
+        "frozen_inputs"
+      ]
+    }
+  ]
+}

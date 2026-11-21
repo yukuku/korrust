@@ -92,6 +92,7 @@ pub(super) fn check_class_with_constants(
     } else {
         source
     };
+    let jvm_fields = jvm_fields::class_fields(source, classpath, imports)?;
     let inline_marker = source.annotations.iter().any(|annotation| {
         annotations::annotation_owner(&annotation.name, classpath, imports)
             == "kotlin/jvm/JvmInline"
@@ -602,6 +603,7 @@ pub(super) fn check_class_with_constants(
     for (i, (name, ty)) in params.iter().enumerate() {
         if source.param_properties.contains(name) {
             class_fields.push(ClassField {
+                jvm_field: jvm_fields.contains(name),
                 name: name.clone(),
                 ty: ty.clone(),
                 private: !source.public_params.contains(name),
@@ -907,6 +909,7 @@ pub(super) fn check_class_with_constants(
                 mutable_fields.insert(property.name.clone());
             }
             class_fields.push(ClassField {
+                jvm_field: jvm_fields.contains(&property.name),
                 name: property.name.clone(),
                 ty,
                 private: property.private,
@@ -934,6 +937,7 @@ pub(super) fn check_class_with_constants(
                 fields.insert(property.name.clone(), ty.clone());
                 mutable_fields.insert(property.name.clone());
                 class_fields.push(ClassField {
+                    jvm_field: jvm_fields.contains(&property.name),
                     name: property.name.clone(),
                     ty,
                     private: property.private,
@@ -953,6 +957,7 @@ pub(super) fn check_class_with_constants(
                     mutable_fields.insert(property.name.clone());
                 }
                 class_fields.push(ClassField {
+                    jvm_field: jvm_fields.contains(&property.name),
                     name: property.name.clone(),
                     ty,
                     private: property.private,
@@ -1551,6 +1556,9 @@ pub(super) fn check_class_with_constants(
         methods.push(method);
     }
     for field in &class_fields {
+        if field.jvm_field {
+            continue;
+        }
         let property_override = source
             .properties
             .iter()
@@ -2160,21 +2168,28 @@ pub(super) fn check_class_with_constants(
         super_types,
         generic_bridges,
         exposed_fields: source
-            .properties
+            .params
             .iter()
-            .filter(|p| p.lateinit)
-            .map(|p| {
-                (
-                    p.name.clone(),
-                    if p.private {
-                        2
-                    } else if p.protected {
-                        4
-                    } else {
-                        1
-                    },
-                )
-            })
+            .filter(|(name, _)| jvm_fields.contains(name))
+            .map(|(name, _)| (name.clone(), 1))
+            .chain(
+                source
+                    .properties
+                    .iter()
+                    .filter(|p| p.lateinit || jvm_fields.contains(&p.name))
+                    .map(|p| {
+                        (
+                            p.name.clone(),
+                            if p.private {
+                                2
+                            } else if p.protected {
+                                4
+                            } else {
+                                1
+                            },
+                        )
+                    }),
+            )
             .collect(),
         delegated_properties,
         primary_constructor: source.primary_constructor,

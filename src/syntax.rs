@@ -4420,8 +4420,8 @@ impl Parser {
         if initializer.is_none() && delegate.is_none() && body.is_empty() && !lateinit {
             return Err(Diagnostic::new(
                 offset,
-                "Properties require an initializer, delegate, getter, or lateinit modifier",
-            ));
+                "Property declarations without an initializer, delegate, getter, or lateinit modifier are unsupported",
+            ).with_kind(DiagnosticKind::UnsupportedLanguage, "PROPERTY_INITIALIZER_FORM_UNSUPPORTED"));
         }
         Ok(PropertyDecl {
             receiver,

@@ -1187,11 +1187,18 @@ fn class_metadata(
         if !class.param_properties.contains(name) {
             continue;
         }
+        let exposed = checked.is_some_and(|class| {
+            class
+                .fields
+                .iter()
+                .any(|field| field.name == *name && field.jvm_field)
+        });
         let mut property = Proto::default();
         let public = class.public_params.contains(name);
         property.number(
             11,
-            (if public { 518 } else { 514 })
+            (if public { 6 } else { 2 })
+                | if exposed { 0 } else { 512 }
                 | u32::from(property_has_annotations(
                     class
                         .param_annotations
@@ -1204,7 +1211,7 @@ fn class_metadata(
                     0
                 }
                 | if class.mutable_params.contains(name) {
-                    256 | 1024
+                    256 | if exposed { 0 } else { 1024 }
                 } else {
                     0
                 },
@@ -1216,7 +1223,7 @@ fn class_metadata(
             1,
             &method_signature(name, &descriptor(ty, imports)?, &mut strings)?,
         );
-        if public {
+        if public && !exposed {
             signature.message(
                 3,
                 &method_signature(
@@ -1226,7 +1233,7 @@ fn class_metadata(
                 )?,
             );
         }
-        if public && class.mutable_params.contains(name) {
+        if public && !exposed && class.mutable_params.contains(name) {
             signature.message(
                 4,
                 &method_signature(
@@ -1245,22 +1252,24 @@ fn class_metadata(
             name,
             &mut strings,
         )?;
-        accessor_annotation_flags(
-            &mut property,
-            class
-                .param_annotations
-                .get(index)
-                .map_or(&[], Vec::as_slice),
-            ty,
-            if public { 6 } else { 2 },
-            if public { 6 } else { 2 },
-            false,
-            false,
-            class.mutable_params.contains(name),
-            "<set-?>",
-            imports,
-            &mut strings,
-        )?;
+        if !exposed {
+            accessor_annotation_flags(
+                &mut property,
+                class
+                    .param_annotations
+                    .get(index)
+                    .map_or(&[], Vec::as_slice),
+                ty,
+                if public { 6 } else { 2 },
+                if public { 6 } else { 2 },
+                false,
+                false,
+                class.mutable_params.contains(name),
+                "<set-?>",
+                imports,
+                &mut strings,
+            )?;
+        }
         property.message(100, &signature);
         proto.message(10, &property);
     }
@@ -1323,6 +1332,12 @@ fn class_metadata(
         }
     }
     for property in &class.properties {
+        let exposed = checked.is_some_and(|class| {
+            class
+                .fields
+                .iter()
+                .any(|field| field.name == property.name && field.jvm_field)
+        });
         let mut declaration = Proto::default();
         let ty = checked
             .and_then(|class| {
@@ -1353,9 +1368,13 @@ fn class_metadata(
         declaration.number(
             11,
             flags
-                | 512
+                | if exposed { 0 } else { 512 }
                 | u32::from(property_has_annotations(&property.annotations))
-                | if property.mutable { 256 | 1024 } else { 0 }
+                | if property.mutable {
+                    256 | if exposed { 0 } else { 1024 }
+                } else {
+                    0
+                }
                 | if property.lateinit { 4096 } else { 0 }
                 | if property.delegate.is_some() {
                     32768
@@ -1385,7 +1404,7 @@ fn class_metadata(
                 &method_signature(&property.name, &descriptor(ty, imports)?, &mut strings)?,
             );
         }
-        if !property.private {
+        if !property.private && !exposed {
             signature.message(
                 3,
                 &method_signature(
@@ -1396,6 +1415,7 @@ fn class_metadata(
             );
         }
         if !property.private
+            && !exposed
             && property.mutable
             && (property.setter_visibility() != crate::syntax::PropertyVisibility::Private
                 || property.setter.is_some()
@@ -1417,26 +1437,28 @@ fn class_metadata(
             &property.name,
             &mut strings,
         )?;
-        accessor_annotation_flags(
-            &mut declaration,
-            &property.annotations,
-            ty,
-            property.getter_visibility().metadata() | if property.open { 16 } else { 0 },
-            property.setter_visibility().metadata() | if property.open { 16 } else { 0 },
-            !property.body.is_empty() || property.delegate.is_some(),
-            property.setter.is_some() || property.delegate.is_some(),
-            property.mutable,
-            property.setter.as_ref().map_or(
-                if property.delegate.is_some() {
-                    "<set-?>"
-                } else {
-                    property.name.as_str()
-                },
-                |(name, _)| name,
-            ),
-            imports,
-            &mut strings,
-        )?;
+        if !exposed {
+            accessor_annotation_flags(
+                &mut declaration,
+                &property.annotations,
+                ty,
+                property.getter_visibility().metadata() | if property.open { 16 } else { 0 },
+                property.setter_visibility().metadata() | if property.open { 16 } else { 0 },
+                !property.body.is_empty() || property.delegate.is_some(),
+                property.setter.is_some() || property.delegate.is_some(),
+                property.mutable,
+                property.setter.as_ref().map_or(
+                    if property.delegate.is_some() {
+                        "<set-?>"
+                    } else {
+                        property.name.as_str()
+                    },
+                    |(name, _)| name,
+                ),
+                imports,
+                &mut strings,
+            )?;
+        }
         declaration.message(100, &signature);
         proto.message(10, &declaration);
     }

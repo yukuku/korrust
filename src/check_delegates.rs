@@ -249,6 +249,7 @@ pub(super) fn check_property(
     };
     Ok(DelegatedProperty {
         field: ClassField {
+            jvm_field: false,
             name: field_name,
             ty: delegate_type,
             private: true,

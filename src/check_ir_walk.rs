@@ -515,6 +515,7 @@ mod tests {
                 open: false,
                 secondary_constructors: Vec::new(),
                 fields: vec![ClassField {
+                    jvm_field: false,
                     name: "p".into(),
                     ty: Type::Int,
                     private: true,

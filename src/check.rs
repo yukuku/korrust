@@ -1,5 +1,8 @@
 #[path = "check_annotation_placements.rs"]
 mod annotation_placements;
+#[path = "check_jvm_fields.rs"]
+mod jvm_fields;
+pub(crate) use jvm_fields::has_jvm_field;
 #[path = "check_class_delegation.rs"]
 mod class_delegation;
 #[path = "check_sealed.rs"]
@@ -197,6 +200,7 @@ pub enum CompanionValue {
     },
 }
 pub struct ClassField {
+    pub jvm_field: bool,
     pub name: String,
     pub ty: Type,
     pub private: bool,
@@ -6595,6 +6599,7 @@ pub fn check_with_owner(
     let lexical_owner = owner;
     classpath.register_value_scope(owner, source, Vec::new());
     annotation_placements::preflight_property_visibility(source, classpath)?;
+    jvm_fields::preflight(source, classpath)?;
     if source.object_decl.as_ref().is_some_and(|object| {
         !object.annotations.is_empty()
             || !object.interfaces.is_empty()
