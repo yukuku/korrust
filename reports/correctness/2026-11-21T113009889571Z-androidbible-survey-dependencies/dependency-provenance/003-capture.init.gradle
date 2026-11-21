@@ -1,0 +1,22 @@
+import groovy.json.JsonOutput
+gradle.projectsEvaluated {
+  def app = gradle.rootProject.project(':Alkitab')
+  app.tasks.register('captureDeps33') {
+    dependsOn app.tasks.named('compilePlainDebugJavaWithJavac')
+    doLast {
+      def kt = app.tasks.named('compilePlainDebugKotlin').get()
+      def javac = app.tasks.named('compilePlainDebugJavaWithJavac').get()
+      def model = [
+        kotlin_classpath: kt.libraries.files.collect { it.absolutePath },
+        kotlin_sources: kt.sources.files.collect { it.absolutePath },
+        kotlin_output: kt.destinationDirectory.get().asFile.absolutePath,
+        java_classpath: javac.classpath.files.collect { it.absolutePath },
+        java_output: javac.destinationDirectory.get().asFile.absolutePath,
+        compiler_classpath: kt.'getDefaultCompilerClasspath$kotlin_gradle_plugin_common'().files.collect { it.absolutePath },
+        compiler_version: kt.'getKotlinCompilerVersion$kotlin_gradle_plugin_common'().get().toString(),
+        plugin_classpath: kt.pluginClasspath.files.collect { it.absolutePath },
+      ]
+      new File('/workspace/work/deps33/official-model.json').text = JsonOutput.prettyPrint(JsonOutput.toJson(model))
+    }
+  }
+}
