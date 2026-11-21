@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-21T10:56:34.321337+00:00",
+  "status": "complete",
+  "compiler": {
+    "path": "target/checks/2026-11-21T105303515876Z-enum-field-annotations/korrust-frozen",
+    "sha256": "024aa8f69dc771f02eed0f1c4675f0d6506b903f18dd0bd1781ac2d2ff11bf62",
+    "source_revision": "8905f69f7adea8309a8c9e25561625ad21badf98"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "artifact_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_enum_field_annotations.py",
+      "--candidate",
+      "/workspace/korrust/target/song33/release/korrust",
+      "--historical",
+      "target/checks/2026-11-21T104728336504Z-enum-field-annotations/korrust-frozen",
+      "--supersedes",
+      "reports/correctness/2026-11-21T104728336504Z-enum-field-annotations.json",
+      "--baseline",
+      "/workspace/korrust/target/checks/2026-11-21T101933803222Z-stable-properties/korrust-frozen"
+    ]
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-21T105303515876Z-enum-field-annotations.json"
+  ],
+  "features": [
+    {
+      "name": "Passive imported enum field annotations with payloads",
+      "status": "supported",
+      "scope": "Exact public/static/final self-typed enum constant reads with runtime or binary declaration annotations carrying scalar and array values; verified Kotlin and Java enum dependencies",
+      "restrictions": [
+        "Exact public/static/final enum constants with self-typed descriptors only",
+        "No recovery for ordinary annotated fields, field signatures, type-use annotations, synthetic fields, nullability/type-qualifier annotations or Kotlin semantic annotations and opt-in meta-annotations",
+        "Passive annotation inspection checks structural class metadata and qualifier meta-annotations without requiring annotation implementation Kotlin metadata to be at the compiler pin",
+        "Pinned 2.3.21 accepts the tested HIDDEN enum entry from another module; candidate conservatively rejects Kotlin semantic field annotations",
+        "No application build or performance claim"
+      ],
+      "evidence_report": "reports/correctness/2026-11-21T105303515876Z-enum-field-annotations.json",
+      "evidence_cases": [
+        "enum_field_compile",
+        "fixed_java_caller_both_providers",
+        "kotlin_consumer_candidate",
+        "InvalidOptIn",
+        "UnsupportedKotlinSemantic",
+        "UnsupportedNullable",
+        "patched_type_use",
+        "patched_synthetic",
+        "patched_duplicate_annotation_table",
+        "patched_malformed_signature",
+        "historical_opt_in_wrong_acceptance"
+      ]
+    }
+  ]
+}

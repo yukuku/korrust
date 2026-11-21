@@ -1109,7 +1109,8 @@ impl Classpath {
     }
 
     fn parse_with_declarations(&self, bytes: &[u8], expected: &str) -> Result<JavaClass> {
-        let (mut class, attrs, method_attrs) = parse_details(bytes, expected)?;
+        let (mut class, attrs, method_attrs, field_attrs) =
+            parse_details_with_fields(bytes, expected)?;
         for (method, attributes) in class.methods.iter().zip(&method_attrs) {
             self.register_exception_contract(method, attributes.exceptions.clone());
         }
@@ -1175,6 +1176,47 @@ impl Classpath {
                 &mut |annotation| self.passive_declaration_annotation(annotation),
             );
         }
+        if class.access & 0x4000 != 0 {
+            for (field, attributes) in class.fields.iter_mut().zip(&field_attrs) {
+                if !field.unsupported
+                    || attributes.annotations.is_empty()
+                    || field.access != 0x4019
+                    || field.descriptor != format!("L{};", class.name)
+                    || attributes.unsupported
+                    || attributes.signature.is_some()
+                    || attributes.constant.is_some()
+                    || !attributes.type_annotation_targets.is_empty()
+                    || !attributes.parameter_annotations.is_empty()
+                    || !attributes.exceptions.is_empty()
+                    || !attributes.only_input_type_parameters.is_empty()
+                    || attributes.code.is_some()
+                    || attributes.annotation_default
+                    || !attributes.inner_classes.is_empty()
+                {
+                    continue;
+                }
+                let mut names = std::collections::HashSet::new();
+                let mut passive = true;
+                for annotation in &attributes.annotations {
+                    let owner = annotation
+                        .name
+                        .strip_prefix('L')
+                        .and_then(|name| name.strip_suffix(';'));
+                    if !owner.is_some_and(valid_name)
+                        || !names.insert(&annotation.name)
+                        || annotation.name.starts_with("Lkotlin/")
+                        || annotation.name == "Ljava/lang/Deprecated;"
+                        || !self.passive_declaration_annotation(annotation)?
+                    {
+                        passive = false;
+                        break;
+                    }
+                }
+                if passive {
+                    field.unsupported = false;
+                }
+            }
+        }
         Ok(class)
     }
 
@@ -1217,13 +1259,15 @@ impl Classpath {
         let Some(bytes) = bytes else {
             return Ok(true);
         };
-        let (_, attrs, _) = parse_details(&bytes, owner)?;
+        let (_, attrs, _, _) = parse_details_impl(&bytes, owner, false)?;
         Ok(!attrs.annotations.iter().any(|annotation| {
             matches!(
                 annotation.name.as_str(),
                 "Ljavax/annotation/meta/TypeQualifier;"
                     | "Ljavax/annotation/meta/TypeQualifierNickname;"
                     | "Ljavax/annotation/meta/TypeQualifierDefault;"
+                    | "Lkotlin/RequiresOptIn;"
+                    | "Lkotlin/Experimental;"
             )
         }))
     }
@@ -1749,6 +1793,9 @@ fn attributes(
                 }
             }
             "RuntimeVisibleAnnotations" | "RuntimeInvisibleAnnotations" => {
+                if !type_attribute_names.insert(name) {
+                    return Err(invalid());
+                }
                 for _ in 0..data.u2()? {
                     result.annotations.push(annotation(&mut data, pool, 0)?);
                 }
@@ -3164,6 +3211,22 @@ fn parse(bytes: &[u8], expected: &str) -> Result<JavaClass> {
 }
 
 fn parse_details(bytes: &[u8], expected: &str) -> Result<(JavaClass, Attributes, Vec<Attributes>)> {
+    let (class, attrs, methods, _) = parse_details_with_fields(bytes, expected)?;
+    Ok((class, attrs, methods))
+}
+
+fn parse_details_with_fields(
+    bytes: &[u8],
+    expected: &str,
+) -> Result<(JavaClass, Attributes, Vec<Attributes>, Vec<Attributes>)> {
+    parse_details_impl(bytes, expected, true)
+}
+
+fn parse_details_impl(
+    bytes: &[u8],
+    expected: &str,
+    annotation_definitions: bool,
+) -> Result<(JavaClass, Attributes, Vec<Attributes>, Vec<Attributes>)> {
     let mut reader = Reader { bytes, offset: 0 };
     if reader.u4()? != 0xcafebabe {
         return Err(invalid());
@@ -3409,7 +3472,7 @@ fn parse_details(bytes: &[u8], expected: &str) -> Result<(JavaClass, Attributes,
     } else {
         let _ = signature::attach(&mut class, &attrs, &method_attributes);
     }
-    if class.access & 0x2000 != 0 {
+    if annotation_definitions && class.access & 0x2000 != 0 {
         class.annotation_definition =
             annotation_definition(&class, &attrs, &method_attributes, &pool)?;
         if let Some(definition) = &class.annotation_definition {
@@ -3457,7 +3520,7 @@ fn parse_details(bytes: &[u8], expected: &str) -> Result<(JavaClass, Attributes,
         }
         class.unsupported = class.annotation_definition.is_none();
     }
-    Ok((class, attrs, method_attributes))
+    Ok((class, attrs, method_attributes, field_attributes))
 }
 
 #[cfg(test)]

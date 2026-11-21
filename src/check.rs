@@ -3207,6 +3207,16 @@ impl Checker<'_> {
         if field.unsupported
             || field.access & 1 == 0 && !field.kotlin.as_ref().is_some_and(|field| field.constant)
         {
+            if field.access & 0x4000 != 0 {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Enum constant carries unsupported field metadata",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "ENUM_CONSTANT_METADATA_UNSUPPORTED",
+                ));
+            }
             return Err(Diagnostic::new(
                 offset,
                 "Java field is inaccessible or unsupported",
