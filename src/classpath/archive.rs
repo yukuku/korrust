@@ -1,7 +1,7 @@
 use super::{Diagnostic, Result};
 use std::{
     fs,
-    io::Read,
+    io::{BufReader, Read},
     path::{Path, PathBuf},
 };
 
@@ -11,9 +11,11 @@ fn error(path: &Path, error: impl std::fmt::Display) -> Diagnostic {
     Diagnostic::new(0, format!("Classpath {}: {error}", path.display()))
 }
 
-fn open(path: &Path) -> Result<zip::ZipArchive<fs::File>> {
-    zip::ZipArchive::new(fs::File::open(path).map_err(|e| error(path, e))?)
-        .map_err(|e| error(path, e))
+fn open(path: &Path) -> Result<zip::ZipArchive<BufReader<fs::File>>> {
+    zip::ZipArchive::new(BufReader::new(
+        fs::File::open(path).map_err(|e| error(path, e))?,
+    ))
+    .map_err(|e| error(path, e))
 }
 
 fn module_descriptor(name: &str) -> bool {
@@ -252,6 +254,48 @@ mod tests {
             assert_eq!(read(&file.0, "p/A.class").unwrap().unwrap(), b"class data");
             assert!(read(&file.0, "p/Missing.class").unwrap().is_none());
             assert_eq!(names(&file.0, "p").unwrap(), ["p/A.class"]);
+        }
+    }
+    #[test]
+    fn archive_reads_preserve_payloads_across_buffer_boundaries_and_seeks() {
+        let mut state = 17u32;
+        let payload = (0..32_769)
+            .map(|_| {
+                state ^= state << 13;
+                state ^= state >> 17;
+                state ^= state << 5;
+                state as u8
+            })
+            .collect::<Vec<_>>();
+        for method in [
+            zip::CompressionMethod::Stored,
+            zip::CompressionMethod::Deflated,
+        ] {
+            let mut writer = zip::ZipWriter::new(Cursor::new(Vec::new()));
+            for name in ["p/First.class", "p/Middle.class", "p/Last.class"] {
+                writer
+                    .start_file(
+                        name,
+                        zip::write::FileOptions::default().compression_method(method),
+                    )
+                    .unwrap();
+                writer.write_all(&payload).unwrap();
+            }
+            let file = Temp::new(&writer.finish().unwrap().into_inner());
+            validate(std::slice::from_ref(&file.0)).unwrap();
+            for name in [
+                "p/Last.class",
+                "p/First.class",
+                "p/Middle.class",
+                "p/First.class",
+            ] {
+                assert_eq!(read(&file.0, name).unwrap().unwrap(), payload);
+            }
+            assert!(read(&file.0, "p/Missing.class").unwrap().is_none());
+            assert_eq!(
+                names(&file.0, "p").unwrap(),
+                ["p/First.class", "p/Last.class", "p/Middle.class"]
+            );
         }
     }
     #[test]
