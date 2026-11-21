@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-21T19:37:34.081152+00:00",
+  "status": "pass",
+  "compiler": {
+    "path": "target/checks/2026-11-21T193734081152Z-static-jvm-fields/korrust-frozen",
+    "sha256": "3342130e872be1cae477b0ecdc8740d9b845bb5e22f1b2e9634280d9b00ab220",
+    "source_revision": "4796fcd588ab73fa222cec6e9c9af246b3100a93"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_static_jvm_fields.py",
+      "--candidate",
+      "/workspace/korrust/target/static33/release/korrust",
+      "--app-classpaths",
+      "/workspace/work/deps33/classpaths.json",
+      "--output",
+      "target/checks/2026-11-21T193734081152Z-static-jvm-fields",
+      "--evidence-directory",
+      "reports/correctness/2026-11-21T193734081152Z-static-jvm-fields",
+      "--baseline",
+      "/workspace/korrust/target/audio33/release/korrust"
+    ]
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-21T193734081152Z-static-jvm-fields.json"
+  ],
+  "features": [
+    {
+      "name": "Static JvmField properties in ordinary class companions and named objects",
+      "status": "supported",
+      "scope": "Static JvmField on ordinary class companions and named objects: outer/object storage, initialization order, field-only metadata, absent generated accessors, source reads and writes, Java and Kotlin consumers, unchanged VersesUiModel",
+      "restrictions": [
+        "Enum and interface companions, internal visibility, collisions with instance backing fields or singleton names retain explicit unsupported boundaries",
+        "Effectful object receiver expressions retain an explicit boundary; pinned compiler evaluation discrepancy is recorded separately",
+        "Existing value-class, volatile and accessor-annotation restrictions remain; no full Android module or performance claim",
+        "Compiled Kotlin static field consumption by Korrust is not claimed; independent official Kotlin consumers exercise emitted metadata"
+      ],
+      "evidence_report": "reports/correctness/2026-11-21T193734081152Z-static-jvm-fields.json",
+      "evidence_cases": [
+        "semantic_fixture_compile",
+        "fixed_java_caller_both_providers",
+        "public_protected_abi",
+        "kotlin_metadata_consumer_official",
+        "kotlin_metadata_consumer_candidate",
+        "InvalidFinal",
+        "InvalidGetter",
+        "InvalidPrivate",
+        "InvalidSetter",
+        "UnsupportedCompanionCollision",
+        "UnsupportedEnum",
+        "UnsupportedInstanceCollision",
+        "UnsupportedInterface",
+        "UnsupportedInternal",
+        "UnsupportedReceiver",
+        "UnsupportedSingletonCollision",
+        "oracle_static_object_receiver_evaluation",
+        "app/VersesUiModel_fixed_java_and_abi",
+        "app_kotlin_consumer_official",
+        "app_kotlin_consumer_candidate",
+        "baseline_static_field_boundary",
+        "frozen_inputs"
+      ]
+    }
+  ]
+}

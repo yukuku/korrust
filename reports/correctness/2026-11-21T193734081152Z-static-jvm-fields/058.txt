@@ -1,0 +1,1895 @@
+$ /workspace/korrust-setup/jdk-21/bin/javap -p -s -v -classpath /workspace/work/static33/target/checks/2026-11-21T193734081152Z-static-jvm-fields/app-candidate yuku.alkitab.base.verses.VersesUiModel
+Classfile /workspace/work/static33/target/checks/2026-11-21T193734081152Z-static-jvm-fields/app-candidate/yuku/alkitab/base/verses/VersesUiModel.class
+  Last modified Nov 22, 2026; size 11507 bytes
+  SHA-256 checksum eec845f05c740c809fbb2fe3b50655c71cdb073c051a8e897ee906f06c6b31f6
+  Compiled from "VersesUiModel.kt"
+public final class yuku.alkitab.base.verses.VersesUiModel
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // yuku/alkitab/base/verses/VersesUiModel
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 7, methods: 18, attributes: 3
+Constant pool:
+    #1 = Utf8               yuku/alkitab/base/verses/VersesUiModel
+    #2 = Class              #1            // yuku/alkitab/base/verses/VersesUiModel
+    #3 = Utf8               java/lang/Object
+    #4 = Class              #3            // java/lang/Object
+    #5 = Utf8               textSizeMult
+    #6 = Utf8               F
+    #7 = Utf8               verseSelectionMode
+    #8 = Utf8               Lyuku/alkitab/base/verses/VersesController$VerseSelectionMode;
+    #9 = Utf8               RuntimeInvisibleAnnotations
+   #10 = Utf8               Lorg/jetbrains/annotations/NotNull;
+   #11 = Utf8               isVerseNumberShown
+   #12 = Utf8               Z
+   #13 = Utf8               dictionaryModeAris
+   #14 = Utf8               Ljava/util/Set;
+   #15 = Utf8               Signature
+   #16 = Utf8               Ljava/util/Set<Ljava/lang/Integer;>;
+   #17 = Utf8               readingGuide
+   #18 = Utf8               Lyuku/alkitab/base/verses/ReadingGuide;
+   #19 = String             #7            // verseSelectionMode
+   #20 = Utf8               kotlin/jvm/internal/Intrinsics
+   #21 = Class              #20           // kotlin/jvm/internal/Intrinsics
+   #22 = Utf8               checkNotNullParameter
+   #23 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+   #24 = NameAndType        #22:#23       // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+   #25 = Methodref          #21.#24       // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+   #26 = String             #13           // dictionaryModeAris
+   #27 = String             #17           // readingGuide
+   #28 = Utf8               <init>
+   #29 = Utf8               ()V
+   #30 = NameAndType        #28:#29       // "<init>":()V
+   #31 = Methodref          #4.#30        // java/lang/Object."<init>":()V
+   #32 = NameAndType        #5:#6         // textSizeMult:F
+   #33 = Fieldref           #2.#32        // yuku/alkitab/base/verses/VersesUiModel.textSizeMult:F
+   #34 = NameAndType        #7:#8         // verseSelectionMode:Lyuku/alkitab/base/verses/VersesController$VerseSelectionMode;
+   #35 = Fieldref           #2.#34        // yuku/alkitab/base/verses/VersesUiModel.verseSelectionMode:Lyuku/alkitab/base/verses/VersesController$VerseSelectionMode;
+   #36 = NameAndType        #11:#12       // isVerseNumberShown:Z
+   #37 = Fieldref           #2.#36        // yuku/alkitab/base/verses/VersesUiModel.isVerseNumberShown:Z
+   #38 = NameAndType        #13:#14       // dictionaryModeAris:Ljava/util/Set;
+   #39 = Fieldref           #2.#38        // yuku/alkitab/base/verses/VersesUiModel.dictionaryModeAris:Ljava/util/Set;
+   #40 = NameAndType        #17:#18       // readingGuide:Lyuku/alkitab/base/verses/ReadingGuide;
+   #41 = Fieldref           #2.#40        // yuku/alkitab/base/verses/VersesUiModel.readingGuide:Lyuku/alkitab/base/verses/ReadingGuide;
+   #42 = Utf8               (FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set;Lyuku/alkitab/base/verses/ReadingGuide;)V
+   #43 = Utf8               Code
+   #44 = Utf8               (FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set<Ljava/lang/Integer;>;Lyuku/alkitab/base/verses/ReadingGuide;)V
+   #45 = Utf8               RuntimeInvisibleParameterAnnotations
+   #46 = Utf8               yuku/alkitab/base/verses/VersesController$VerseSelectionMode
+   #47 = Class              #46           // yuku/alkitab/base/verses/VersesController$VerseSelectionMode
+   #48 = Utf8               java/util/Set
+   #49 = Class              #48           // java/util/Set
+   #50 = Utf8               yuku/alkitab/base/verses/ReadingGuide
+   #51 = Class              #50           // yuku/alkitab/base/verses/ReadingGuide
+   #52 = Utf8               java/lang/String
+   #53 = Class              #52           // java/lang/String
+   #54 = Utf8               java/lang/Throwable
+   #55 = Class              #54           // java/lang/Throwable
+   #56 = Utf8               StackMapTable
+   #57 = Utf8               Companion
+   #58 = Utf8               Lyuku/alkitab/base/verses/ReadingGuide$Companion;
+   #59 = NameAndType        #57:#58       // Companion:Lyuku/alkitab/base/verses/ReadingGuide$Companion;
+   #60 = Fieldref           #51.#59       // yuku/alkitab/base/verses/ReadingGuide.Companion:Lyuku/alkitab/base/verses/ReadingGuide$Companion;
+   #61 = Utf8               yuku/alkitab/base/verses/ReadingGuide$Companion
+   #62 = Class              #61           // yuku/alkitab/base/verses/ReadingGuide$Companion
+   #63 = Utf8               getNONE
+   #64 = Utf8               ()Lyuku/alkitab/base/verses/ReadingGuide;
+   #65 = NameAndType        #63:#64       // getNONE:()Lyuku/alkitab/base/verses/ReadingGuide;
+   #66 = Methodref          #62.#65       // yuku/alkitab/base/verses/ReadingGuide$Companion.getNONE:()Lyuku/alkitab/base/verses/ReadingGuide;
+   #67 = NameAndType        #28:#42       // "<init>":(FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set;Lyuku/alkitab/base/verses/ReadingGuide;)V
+   #68 = Methodref          #2.#67        // yuku/alkitab/base/verses/VersesUiModel."<init>":(FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set;Lyuku/alkitab/base/verses/ReadingGuide;)V
+   #69 = Utf8               (FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set;Lyuku/alkitab/base/verses/ReadingGuide;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+   #70 = Utf8               kotlin/jvm/internal/DefaultConstructorMarker
+   #71 = Class              #70           // kotlin/jvm/internal/DefaultConstructorMarker
+   #72 = Utf8               component1
+   #73 = Utf8               ()F
+   #74 = Utf8               component2
+   #75 = Utf8               ()Lyuku/alkitab/base/verses/VersesController$VerseSelectionMode;
+   #76 = Utf8               component3
+   #77 = Utf8               ()Z
+   #78 = Utf8               component4
+   #79 = Utf8               ()Ljava/util/Set;
+   #80 = Utf8               ()Ljava/util/Set<Ljava/lang/Integer;>;
+   #81 = Utf8               component5
+   #82 = Utf8               copy
+   #83 = Utf8               (FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set;Lyuku/alkitab/base/verses/ReadingGuide;)Lyuku/alkitab/base/verses/VersesUiModel;
+   #84 = Utf8               (FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set<Ljava/lang/Integer;>;Lyuku/alkitab/base/verses/ReadingGuide;)Lyuku/alkitab/base/verses/VersesUiModel;
+   #85 = NameAndType        #82:#83       // copy:(FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set;Lyuku/alkitab/base/verses/ReadingGuide;)Lyuku/alkitab/base/verses/VersesUiModel;
+   #86 = Methodref          #2.#85        // yuku/alkitab/base/verses/VersesUiModel.copy:(FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set;Lyuku/alkitab/base/verses/ReadingGuide;)Lyuku/alkitab/base/verses/VersesUiModel;
+   #87 = Utf8               copy$default
+   #88 = Utf8               (Lyuku/alkitab/base/verses/VersesUiModel;FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set;Lyuku/alkitab/base/verses/ReadingGuide;ILjava/lang/Object;)Lyuku/alkitab/base/verses/VersesUiModel;
+   #89 = Utf8               java/lang/StringBuilder
+   #90 = Class              #89           // java/lang/StringBuilder
+   #91 = Methodref          #90.#30       // java/lang/StringBuilder."<init>":()V
+   #92 = Utf8               VersesUiModel(textSizeMult=
+   #93 = String             #92           // VersesUiModel(textSizeMult=
+   #94 = Utf8               append
+   #95 = Utf8               (Ljava/lang/String;)Ljava/lang/StringBuilder;
+   #96 = NameAndType        #94:#95       // append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+   #97 = Methodref          #90.#96       // java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+   #98 = Utf8               (F)Ljava/lang/StringBuilder;
+   #99 = NameAndType        #94:#98       // append:(F)Ljava/lang/StringBuilder;
+  #100 = Methodref          #90.#99       // java/lang/StringBuilder.append:(F)Ljava/lang/StringBuilder;
+  #101 = Utf8               , verseSelectionMode=
+  #102 = String             #101          // , verseSelectionMode=
+  #103 = Utf8               (Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  #104 = NameAndType        #94:#103      // append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  #105 = Methodref          #90.#104      // java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+  #106 = Utf8               , isVerseNumberShown=
+  #107 = String             #106          // , isVerseNumberShown=
+  #108 = Utf8               (Z)Ljava/lang/StringBuilder;
+  #109 = NameAndType        #94:#108      // append:(Z)Ljava/lang/StringBuilder;
+  #110 = Methodref          #90.#109      // java/lang/StringBuilder.append:(Z)Ljava/lang/StringBuilder;
+  #111 = Utf8               , dictionaryModeAris=
+  #112 = String             #111          // , dictionaryModeAris=
+  #113 = Utf8               , readingGuide=
+  #114 = String             #113          // , readingGuide=
+  #115 = Utf8               (C)Ljava/lang/StringBuilder;
+  #116 = NameAndType        #94:#115      // append:(C)Ljava/lang/StringBuilder;
+  #117 = Methodref          #90.#116      // java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+  #118 = Utf8               toString
+  #119 = Utf8               ()Ljava/lang/String;
+  #120 = NameAndType        #118:#119     // toString:()Ljava/lang/String;
+  #121 = Methodref          #90.#120      // java/lang/StringBuilder.toString:()Ljava/lang/String;
+  #122 = Utf8               java/lang/Float
+  #123 = Class              #122          // java/lang/Float
+  #124 = Utf8               hashCode
+  #125 = Utf8               (F)I
+  #126 = NameAndType        #124:#125     // hashCode:(F)I
+  #127 = Methodref          #123.#126     // java/lang/Float.hashCode:(F)I
+  #128 = Utf8               ()I
+  #129 = NameAndType        #124:#128     // hashCode:()I
+  #130 = Methodref          #4.#129       // java/lang/Object.hashCode:()I
+  #131 = Utf8               java/lang/Boolean
+  #132 = Class              #131          // java/lang/Boolean
+  #133 = Utf8               (Z)I
+  #134 = NameAndType        #124:#133     // hashCode:(Z)I
+  #135 = Methodref          #132.#134     // java/lang/Boolean.hashCode:(Z)I
+  #136 = Utf8               compare
+  #137 = Utf8               (FF)I
+  #138 = NameAndType        #136:#137     // compare:(FF)I
+  #139 = Methodref          #123.#138     // java/lang/Float.compare:(FF)I
+  #140 = Utf8               areEqual
+  #141 = Utf8               (Ljava/lang/Object;Ljava/lang/Object;)Z
+  #142 = NameAndType        #140:#141     // areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z
+  #143 = Methodref          #21.#142      // kotlin/jvm/internal/Intrinsics.areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z
+  #144 = Utf8               equals
+  #145 = Utf8               (Ljava/lang/Object;)Z
+  #146 = Utf8               Lorg/jetbrains/annotations/Nullable;
+  #147 = Utf8               getTextSizeMult
+  #148 = Utf8               getVerseSelectionMode
+  #149 = Utf8               getDictionaryModeAris
+  #150 = Utf8               getReadingGuide
+  #151 = Utf8               Lyuku/alkitab/base/verses/VersesUiModel$Companion;
+  #152 = Utf8               EMPTY
+  #153 = Utf8               Lyuku/alkitab/base/verses/VersesUiModel;
+  #154 = Utf8               yuku/alkitab/base/verses/VersesUiModel$Companion
+  #155 = Class              #154          // yuku/alkitab/base/verses/VersesUiModel$Companion
+  #156 = Utf8               (Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+  #157 = NameAndType        #28:#156      // "<init>":(Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+  #158 = Methodref          #155.#157     // yuku/alkitab/base/verses/VersesUiModel$Companion."<init>":(Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+  #159 = NameAndType        #57:#151      // Companion:Lyuku/alkitab/base/verses/VersesUiModel$Companion;
+  #160 = Fieldref           #2.#159       // yuku/alkitab/base/verses/VersesUiModel.Companion:Lyuku/alkitab/base/verses/VersesUiModel$Companion;
+  #161 = Float              1.0f
+  #162 = Utf8               multiple
+  #163 = NameAndType        #162:#8       // multiple:Lyuku/alkitab/base/verses/VersesController$VerseSelectionMode;
+  #164 = Fieldref           #47.#163      // yuku/alkitab/base/verses/VersesController$VerseSelectionMode.multiple:Lyuku/alkitab/base/verses/VersesController$VerseSelectionMode;
+  #165 = String             #162          // multiple
+  #166 = Utf8               checkNotNullExpressionValue
+  #167 = NameAndType        #166:#23      // checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+  #168 = Methodref          #21.#167      // kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+  #169 = Utf8               kotlin/collections/SetsKt
+  #170 = Class              #169          // kotlin/collections/SetsKt
+  #171 = Utf8               emptySet
+  #172 = NameAndType        #171:#79      // emptySet:()Ljava/util/Set;
+  #173 = Methodref          #170.#172     // kotlin/collections/SetsKt.emptySet:()Ljava/util/Set;
+  #174 = NameAndType        #28:#69       // "<init>":(FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set;Lyuku/alkitab/base/verses/ReadingGuide;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+  #175 = Methodref          #2.#174       // yuku/alkitab/base/verses/VersesUiModel."<init>":(FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set;Lyuku/alkitab/base/verses/ReadingGuide;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+  #176 = NameAndType        #152:#153     // EMPTY:Lyuku/alkitab/base/verses/VersesUiModel;
+  #177 = Fieldref           #2.#176       // yuku/alkitab/base/verses/VersesUiModel.EMPTY:Lyuku/alkitab/base/verses/VersesUiModel;
+  #178 = Utf8               <clinit>
+  #179 = Utf8               InnerClasses
+  #180 = Utf8               SourceFile
+  #181 = Utf8               VersesUiModel.kt
+  #182 = Utf8               Lkotlin/Metadata;
+  #183 = Utf8               mv
+  #184 = Integer            2
+  #185 = Integer            3
+  #186 = Integer            0
+  #187 = Utf8               k
+  #188 = Integer            1
+  #189 = Utf8               xi
+  #190 = Integer            48
+  #191 = Utf8               d1
+  #192 = Utf8               \u0000\u0004\n\u0002\b-\b\u0086\b\u0018\u00002\u00020\u0001 \u00028\u0002B;\b\u0006\u0012\u0006\u0010\u0003\u001a\u00020\u0004\u0012\u0006\u0010\u0005\u001a\u00020\u0006\u0012\u0006\u0010\u0007\u001a\u00020\b\u0012\u000e\u0010\t\u001a\n\u0012\u0006\b\u0002\u0012\u00020\n0\u000b\u0012\b\u0010\f\u001a\u00020\r\b\u0002¢\u0006\u0004\b\u000e\u0010\u000fR\u0018X\u0086\u0004\u0010\u0003\u001a\u00020\u0004¢\u0006\f\n\u0004\b\u0003\u0010\u0010\u001a\u0004\b\u0011\u0010\u0012R\u0018X\u0086\u0004\u0010\u0005\u001a\u00020\u0006¢\u0006\f\n\u0004\b\u0005\u0010\u0013\u001a\u0004\b\u0014\u0010\u0015R\u0018X\u0086\u0004\u0010\u0007\u001a\u00020\b¢\u0006\f\n\u0004\b\u0007\u0010\u0016\u001a\u0004\b\u0007\u0010\u0017R X\u0086\u0004\u0010\t\u001a\n\u0012\u0006\b\u0002\u0012\u00020\n0\u000b¢\u0006\f\n\u0004\b\t\u0010\u0018\u001a\u0004\b\u0019\u0010\u001aR\u0018X\u0086\u0004\u0010\f\u001a\u00020\r¢\u0006\f\n\u0004\b\f\u0010\u001b\u001a\u0004\b\u001c\u0010\u001dJ\u0010HÆ\u0003\u0010\u001e\u001a\u00020\u0004¢\u0006\u0004\b\u001e\u0010\u0012J\u0010HÆ\u0003\u0010\u001f\u001a\u00020\u0006¢\u0006\u0004\b\u001f\u0010\u0015J\u0010HÆ\u0003\u0010 \u001a\u00020\b¢\u0006\u0004\b \u0010\u0017J\u0018HÆ\u0003\u0010!\u001a\n\u0012\u0006\b\u0002\u0012\u00020\n0\u000b¢\u0006\u0004\b!\u0010\u001aJ\u0010HÆ\u0003\u0010\"\u001a\u00020\r¢\u0006\u0004\b\"\u0010\u001dJJHÆ\u0001\u0010#\u001a\u00020\u00002\b\u0010\u0003\u001a\u00020\u0004\b\u00022\b\u0010\u0005\u001a\u00020\u0006\b\u00022\b\u0010\u0007\u001a\u00020\b\b\u00022\u0010\u0010\t\u001a\n\u0012\u0006\b\u0002\u0012\u00020\n0\u000b\b\u00022\b\u0010\f\u001a\u00020\r\b\u0002¢\u0006\u0004\b#\u0010$J\u001bHÖ\u0083\u0004\u0010%\u001a\u00020\b2\b\u0010&\u001a\u00040\u0001\u0018\u0001¢\u0006\u0004\b%\u0010\'J\u0011HÖ\u0081\u0004\u0010(\u001a\u00020\n¢\u0006\u0004\b(\u0010)J\u0011HÖ\u0081\u0004\u0010*\u001a\u00020+¢\u0006\u0004\b*\u0010,
+  #193 = Utf8               d2
+  #194 = Utf8               kotlin/Any
+  #195 = Utf8               kotlin/Float
+  #196 = Utf8               yuku/alkitab/base/verses/VersesController.VerseSelectionMode
+  #197 = Utf8               kotlin/Boolean
+  #198 = Utf8               kotlin/Int
+  #199 = Utf8               kotlin/collections/Set
+  #200 = Utf8               other
+  #201 = Utf8               kotlin/String
+  #202 = Utf8               RuntimeVisibleAnnotations
+  #203 = Utf8               Lkotlin/jvm/JvmField;
+{
+  private final float textSizeMult;
+    descriptor: F
+    flags: (0x0012) ACC_PRIVATE, ACC_FINAL
+
+  private final yuku.alkitab.base.verses.VersesController$VerseSelectionMode verseSelectionMode;
+    descriptor: Lyuku/alkitab/base/verses/VersesController$VerseSelectionMode;
+    flags: (0x0012) ACC_PRIVATE, ACC_FINAL
+    RuntimeInvisibleAnnotations:
+      0: #10()
+        org.jetbrains.annotations.NotNull
+
+  private final boolean isVerseNumberShown;
+    descriptor: Z
+    flags: (0x0012) ACC_PRIVATE, ACC_FINAL
+
+  private final java.util.Set<java.lang.Integer> dictionaryModeAris;
+    descriptor: Ljava/util/Set;
+    flags: (0x0012) ACC_PRIVATE, ACC_FINAL
+    Signature: #16                          // Ljava/util/Set<Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #10()
+        org.jetbrains.annotations.NotNull
+
+  private final yuku.alkitab.base.verses.ReadingGuide readingGuide;
+    descriptor: Lyuku/alkitab/base/verses/ReadingGuide;
+    flags: (0x0012) ACC_PRIVATE, ACC_FINAL
+    RuntimeInvisibleAnnotations:
+      0: #10()
+        org.jetbrains.annotations.NotNull
+
+  public static final yuku.alkitab.base.verses.VersesUiModel$Companion Companion;
+    descriptor: Lyuku/alkitab/base/verses/VersesUiModel$Companion;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    RuntimeInvisibleAnnotations:
+      0: #10()
+        org.jetbrains.annotations.NotNull
+
+  public static final yuku.alkitab.base.verses.VersesUiModel EMPTY;
+    descriptor: Lyuku/alkitab/base/verses/VersesUiModel;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    RuntimeInvisibleAnnotations:
+      0: #10()
+        org.jetbrains.annotations.NotNull
+      1: #203()
+        kotlin.jvm.JvmField
+
+  public yuku.alkitab.base.verses.VersesUiModel(float, yuku.alkitab.base.verses.VersesController$VerseSelectionMode, boolean, java.util.Set<java.lang.Integer>, yuku.alkitab.base.verses.ReadingGuide);
+    descriptor: (FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set;Lyuku/alkitab/base/verses/ReadingGuide;)V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=6, locals=8, args_size=6
+         0: aload         2
+         2: ldc_w         #19                 // String verseSelectionMode
+         5: invokestatic  #25                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         4
+        10: ldc_w         #26                 // String dictionaryModeAris
+        13: invokestatic  #25                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+        16: aload         5
+        18: ldc_w         #27                 // String readingGuide
+        21: invokestatic  #25                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+        24: aload_0
+        25: invokespecial #31                 // Method java/lang/Object."<init>":()V
+        28: aload_0
+        29: fload         1
+        31: putfield      #33                 // Field textSizeMult:F
+        34: aload_0
+        35: aload         2
+        37: putfield      #35                 // Field verseSelectionMode:Lyuku/alkitab/base/verses/VersesController$VerseSelectionMode;
+        40: aload_0
+        41: iload         3
+        43: putfield      #37                 // Field isVerseNumberShown:Z
+        46: aload_0
+        47: aload         4
+        49: putfield      #39                 // Field dictionaryModeAris:Ljava/util/Set;
+        52: aload_0
+        53: aload         5
+        55: putfield      #41                 // Field readingGuide:Lyuku/alkitab/base/verses/ReadingGuide;
+        58: return
+        59: nop
+        60: athrow
+      StackMapTable: number_of_entries = 28
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class yuku/alkitab/base/verses/VersesController$VerseSelectionMode ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class java/util/Set ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class java/util/Set, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class yuku/alkitab/base/verses/ReadingGuide ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class yuku/alkitab/base/verses/ReadingGuide, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel, float ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel, class java/util/Set ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel, class yuku/alkitab/base/verses/ReadingGuide ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class java/lang/Throwable ]
+    Signature: #44                          // (FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set<Ljava/lang/Integer;>;Lyuku/alkitab/base/verses/ReadingGuide;)V
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+      parameter 1:
+        0: #10()
+          org.jetbrains.annotations.NotNull
+      parameter 2:
+      parameter 3:
+        0: #10()
+          org.jetbrains.annotations.NotNull
+      parameter 4:
+        0: #10()
+          org.jetbrains.annotations.NotNull
+
+  public yuku.alkitab.base.verses.VersesUiModel(float, yuku.alkitab.base.verses.VersesController$VerseSelectionMode, boolean, java.util.Set, yuku.alkitab.base.verses.ReadingGuide, int, kotlin.jvm.internal.DefaultConstructorMarker);
+    descriptor: (FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set;Lyuku/alkitab/base/verses/ReadingGuide;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+    flags: (0x1001) ACC_PUBLIC, ACC_SYNTHETIC
+    Code:
+      stack=6, locals=8, args_size=8
+         0: iload         6
+         2: bipush        16
+         4: iand
+         5: ifeq          19
+         8: getstatic     #60                 // Field yuku/alkitab/base/verses/ReadingGuide.Companion:Lyuku/alkitab/base/verses/ReadingGuide$Companion;
+        11: checkcast     #62                 // class yuku/alkitab/base/verses/ReadingGuide$Companion
+        14: invokevirtual #66                 // Method yuku/alkitab/base/verses/ReadingGuide$Companion.getNONE:()Lyuku/alkitab/base/verses/ReadingGuide;
+        17: astore        5
+        19: aload_0
+        20: fload         1
+        22: aload         2
+        24: iload         3
+        26: aload         4
+        28: aload         5
+        30: invokespecial #68                 // Method "<init>":(FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set;Lyuku/alkitab/base/verses/ReadingGuide;)V
+        33: return
+        34: nop
+        35: athrow
+      StackMapTable: number_of_entries = 17
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ class yuku/alkitab/base/verses/ReadingGuide$Companion ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ class yuku/alkitab/base/verses/ReadingGuide$Companion ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ class yuku/alkitab/base/verses/ReadingGuide ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ this, float ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ this, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class kotlin/jvm/internal/DefaultConstructorMarker ]
+          stack = [ class java/lang/Throwable ]
+
+  public final float component1();
+    descriptor: ()F
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #33                 // Field textSizeMult:F
+         5: freturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ float ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+
+  public final yuku.alkitab.base.verses.VersesController$VerseSelectionMode component2();
+    descriptor: ()Lyuku/alkitab/base/verses/VersesController$VerseSelectionMode;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #35                 // Field verseSelectionMode:Lyuku/alkitab/base/verses/VersesController$VerseSelectionMode;
+         5: areturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesController$VerseSelectionMode ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+    RuntimeInvisibleAnnotations:
+      0: #10()
+        org.jetbrains.annotations.NotNull
+
+  public final boolean component3();
+    descriptor: ()Z
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #37                 // Field isVerseNumberShown:Z
+         5: ireturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+
+  public final java.util.Set<java.lang.Integer> component4();
+    descriptor: ()Ljava/util/Set;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #39                 // Field dictionaryModeAris:Ljava/util/Set;
+         5: areturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/util/Set ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+    Signature: #80                          // ()Ljava/util/Set<Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #10()
+        org.jetbrains.annotations.NotNull
+
+  public final yuku.alkitab.base.verses.ReadingGuide component5();
+    descriptor: ()Lyuku/alkitab/base/verses/ReadingGuide;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #41                 // Field readingGuide:Lyuku/alkitab/base/verses/ReadingGuide;
+         5: areturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/ReadingGuide ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+    RuntimeInvisibleAnnotations:
+      0: #10()
+        org.jetbrains.annotations.NotNull
+
+  public final yuku.alkitab.base.verses.VersesUiModel copy(float, yuku.alkitab.base.verses.VersesController$VerseSelectionMode, boolean, java.util.Set<java.lang.Integer>, yuku.alkitab.base.verses.ReadingGuide);
+    descriptor: (FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set;Lyuku/alkitab/base/verses/ReadingGuide;)Lyuku/alkitab/base/verses/VersesUiModel;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=7, locals=6, args_size=6
+         0: aload         2
+         2: ldc_w         #19                 // String verseSelectionMode
+         5: invokestatic  #25                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         4
+        10: ldc_w         #26                 // String dictionaryModeAris
+        13: invokestatic  #25                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+        16: aload         5
+        18: ldc_w         #27                 // String readingGuide
+        21: invokestatic  #25                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+        24: new           #2                  // class yuku/alkitab/base/verses/VersesUiModel
+        27: dup
+        28: fload         1
+        30: aload         2
+        32: iload         3
+        34: aload         4
+        36: aload         5
+        38: invokespecial #68                 // Method "<init>":(FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set;Lyuku/alkitab/base/verses/ReadingGuide;)V
+        41: areturn
+        42: nop
+        43: athrow
+      StackMapTable: number_of_entries = 19
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class yuku/alkitab/base/verses/VersesController$VerseSelectionMode ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class java/util/Set ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class java/util/Set, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class yuku/alkitab/base/verses/ReadingGuide ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class yuku/alkitab/base/verses/ReadingGuide, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ uninitialized 24 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ uninitialized 24, uninitialized 24 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ uninitialized 24, uninitialized 24, float ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ uninitialized 24, uninitialized 24, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ uninitialized 24, uninitialized 24, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ uninitialized 24, uninitialized 24, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ uninitialized 24, uninitialized 24, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+          stack = [ class java/lang/Throwable ]
+    Signature: #84                          // (FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set<Ljava/lang/Integer;>;Lyuku/alkitab/base/verses/ReadingGuide;)Lyuku/alkitab/base/verses/VersesUiModel;
+    RuntimeInvisibleAnnotations:
+      0: #10()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+      parameter 1:
+        0: #10()
+          org.jetbrains.annotations.NotNull
+      parameter 2:
+      parameter 3:
+        0: #10()
+          org.jetbrains.annotations.NotNull
+      parameter 4:
+        0: #10()
+          org.jetbrains.annotations.NotNull
+
+  public static yuku.alkitab.base.verses.VersesUiModel copy$default(yuku.alkitab.base.verses.VersesUiModel, float, yuku.alkitab.base.verses.VersesController$VerseSelectionMode, boolean, java.util.Set, yuku.alkitab.base.verses.ReadingGuide, int, java.lang.Object);
+    descriptor: (Lyuku/alkitab/base/verses/VersesUiModel;FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set;Lyuku/alkitab/base/verses/ReadingGuide;ILjava/lang/Object;)Lyuku/alkitab/base/verses/VersesUiModel;
+    flags: (0x1009) ACC_PUBLIC, ACC_STATIC, ACC_SYNTHETIC
+    Code:
+      stack=6, locals=8, args_size=8
+         0: iload         6
+         2: iconst_1
+         3: iand
+         4: ifeq          14
+         7: aload         0
+         9: getfield      #33                 // Field textSizeMult:F
+        12: fstore        1
+        14: iload         6
+        16: iconst_2
+        17: iand
+        18: ifeq          28
+        21: aload         0
+        23: getfield      #35                 // Field verseSelectionMode:Lyuku/alkitab/base/verses/VersesController$VerseSelectionMode;
+        26: astore        2
+        28: iload         6
+        30: iconst_4
+        31: iand
+        32: ifeq          42
+        35: aload         0
+        37: getfield      #37                 // Field isVerseNumberShown:Z
+        40: istore        3
+        42: iload         6
+        44: bipush        8
+        46: iand
+        47: ifeq          57
+        50: aload         0
+        52: getfield      #39                 // Field dictionaryModeAris:Ljava/util/Set;
+        55: astore        4
+        57: iload         6
+        59: bipush        16
+        61: iand
+        62: ifeq          72
+        65: aload         0
+        67: getfield      #41                 // Field readingGuide:Lyuku/alkitab/base/verses/ReadingGuide;
+        70: astore        5
+        72: aload_0
+        73: fload         1
+        75: aload         2
+        77: iload         3
+        79: aload         4
+        81: aload         5
+        83: invokevirtual #86                 // Method copy:(FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set;Lyuku/alkitab/base/verses/ReadingGuide;)Lyuku/alkitab/base/verses/VersesUiModel;
+        86: areturn
+        87: nop
+        88: athrow
+      StackMapTable: number_of_entries = 44
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ float ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ class yuku/alkitab/base/verses/VersesController$VerseSelectionMode ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ class java/util/Set ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ class yuku/alkitab/base/verses/ReadingGuide ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel, float ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, class yuku/alkitab/base/verses/ReadingGuide, int, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+
+  public java.lang.String toString();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=6, locals=1, args_size=1
+         0: new           #90                 // class java/lang/StringBuilder
+         3: dup
+         4: invokespecial #91                 // Method java/lang/StringBuilder."<init>":()V
+         7: ldc_w         #93                 // String VersesUiModel(textSizeMult=
+        10: invokevirtual #97                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        13: aload         0
+        15: getfield      #33                 // Field textSizeMult:F
+        18: invokevirtual #100                // Method java/lang/StringBuilder.append:(F)Ljava/lang/StringBuilder;
+        21: ldc_w         #102                // String , verseSelectionMode=
+        24: invokevirtual #97                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        27: aload         0
+        29: getfield      #35                 // Field verseSelectionMode:Lyuku/alkitab/base/verses/VersesController$VerseSelectionMode;
+        32: invokevirtual #105                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+        35: ldc_w         #107                // String , isVerseNumberShown=
+        38: invokevirtual #97                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        41: aload         0
+        43: getfield      #37                 // Field isVerseNumberShown:Z
+        46: invokevirtual #110                // Method java/lang/StringBuilder.append:(Z)Ljava/lang/StringBuilder;
+        49: ldc_w         #112                // String , dictionaryModeAris=
+        52: invokevirtual #97                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        55: aload         0
+        57: getfield      #39                 // Field dictionaryModeAris:Ljava/util/Set;
+        60: invokevirtual #105                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+        63: ldc_w         #114                // String , readingGuide=
+        66: invokevirtual #97                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        69: aload         0
+        71: getfield      #41                 // Field readingGuide:Lyuku/alkitab/base/verses/ReadingGuide;
+        74: invokevirtual #105                // Method java/lang/StringBuilder.append:(Ljava/lang/Object;)Ljava/lang/StringBuilder;
+        77: bipush        41
+        79: invokevirtual #117                // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+        82: invokevirtual #121                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+        85: areturn
+        86: nop
+        87: athrow
+      StackMapTable: number_of_entries = 33
+        frame_type = 255 /* full_frame */
+          offset_delta = 3
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ uninitialized 0 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ uninitialized 0, uninitialized 0 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder, class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder, float ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder, class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder, class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder, class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder, class java/util/Set ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder, class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder, class yuku/alkitab/base/verses/ReadingGuide ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/StringBuilder ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+    RuntimeInvisibleAnnotations:
+      0: #10()
+        org.jetbrains.annotations.NotNull
+
+  public int hashCode();
+    descriptor: ()I
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=6, locals=2, args_size=1
+         0: aload         0
+         2: getfield      #33                 // Field textSizeMult:F
+         5: invokestatic  #127                // Method java/lang/Float.hashCode:(F)I
+         8: istore        1
+        10: iload_1
+        11: bipush        31
+        13: imul
+        14: aload         0
+        16: getfield      #35                 // Field verseSelectionMode:Lyuku/alkitab/base/verses/VersesController$VerseSelectionMode;
+        19: invokevirtual #130                // Method java/lang/Object.hashCode:()I
+        22: iadd
+        23: istore        1
+        25: iload_1
+        26: bipush        31
+        28: imul
+        29: aload         0
+        31: getfield      #37                 // Field isVerseNumberShown:Z
+        34: invokestatic  #135                // Method java/lang/Boolean.hashCode:(Z)I
+        37: iadd
+        38: istore        1
+        40: iload_1
+        41: bipush        31
+        43: imul
+        44: aload         0
+        46: getfield      #39                 // Field dictionaryModeAris:Ljava/util/Set;
+        49: invokevirtual #130                // Method java/lang/Object.hashCode:()I
+        52: iadd
+        53: istore        1
+        55: iload_1
+        56: bipush        31
+        58: imul
+        59: aload         0
+        61: getfield      #41                 // Field readingGuide:Lyuku/alkitab/base/verses/ReadingGuide;
+        64: invokevirtual #130                // Method java/lang/Object.hashCode:()I
+        67: iadd
+        68: istore        1
+        70: iload         1
+        72: ireturn
+        73: nop
+        74: athrow
+      StackMapTable: number_of_entries = 39
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ float ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int, class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int, class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int, class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int, class java/util/Set ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int, class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int, class yuku/alkitab/base/verses/ReadingGuide ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, int ]
+          stack = [ class java/lang/Throwable ]
+
+  public boolean equals(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=6, locals=3, args_size=2
+         0: aload_0
+         1: aload_1
+         2: if_acmpeq     95
+         5: aload_1
+         6: instanceof    #2                  // class yuku/alkitab/base/verses/VersesUiModel
+         9: ifeq          97
+        12: aload_1
+        13: checkcast     #2                  // class yuku/alkitab/base/verses/VersesUiModel
+        16: astore        2
+        18: aload         0
+        20: getfield      #33                 // Field textSizeMult:F
+        23: aload         2
+        25: getfield      #33                 // Field textSizeMult:F
+        28: invokestatic  #139                // Method java/lang/Float.compare:(FF)I
+        31: ifne          97
+        34: aload         0
+        36: getfield      #35                 // Field verseSelectionMode:Lyuku/alkitab/base/verses/VersesController$VerseSelectionMode;
+        39: aload         2
+        41: getfield      #35                 // Field verseSelectionMode:Lyuku/alkitab/base/verses/VersesController$VerseSelectionMode;
+        44: invokestatic  #143                // Method kotlin/jvm/internal/Intrinsics.areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z
+        47: ifeq          97
+        50: aload         0
+        52: getfield      #37                 // Field isVerseNumberShown:Z
+        55: aload         2
+        57: getfield      #37                 // Field isVerseNumberShown:Z
+        60: if_icmpne     97
+        63: aload         0
+        65: getfield      #39                 // Field dictionaryModeAris:Ljava/util/Set;
+        68: aload         2
+        70: getfield      #39                 // Field dictionaryModeAris:Ljava/util/Set;
+        73: invokestatic  #143                // Method kotlin/jvm/internal/Intrinsics.areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z
+        76: ifeq          97
+        79: aload         0
+        81: getfield      #41                 // Field readingGuide:Lyuku/alkitab/base/verses/ReadingGuide;
+        84: aload         2
+        86: getfield      #41                 // Field readingGuide:Lyuku/alkitab/base/verses/ReadingGuide;
+        89: invokestatic  #143                // Method kotlin/jvm/internal/Intrinsics.areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z
+        92: ifeq          97
+        95: iconst_1
+        96: ireturn
+        97: iconst_0
+        98: ireturn
+        99: nop
+       100: athrow
+      StackMapTable: number_of_entries = 43
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object ]
+          stack = [ class java/lang/Object ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object ]
+          stack = [ class java/lang/Object ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ float ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ float, class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ float, float ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesController$VerseSelectionMode ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ int, class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/util/Set ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/util/Set, class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/util/Set, class java/util/Set ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/ReadingGuide ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/ReadingGuide, class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/ReadingGuide, class yuku/alkitab/base/verses/ReadingGuide ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object, class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #146()
+          org.jetbrains.annotations.Nullable
+
+  public final float getTextSizeMult();
+    descriptor: ()F
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #33                 // Field textSizeMult:F
+         5: freturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ float ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+
+  public final yuku.alkitab.base.verses.VersesController$VerseSelectionMode getVerseSelectionMode();
+    descriptor: ()Lyuku/alkitab/base/verses/VersesController$VerseSelectionMode;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #35                 // Field verseSelectionMode:Lyuku/alkitab/base/verses/VersesController$VerseSelectionMode;
+         5: areturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesController$VerseSelectionMode ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+    RuntimeInvisibleAnnotations:
+      0: #10()
+        org.jetbrains.annotations.NotNull
+
+  public final boolean isVerseNumberShown();
+    descriptor: ()Z
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #37                 // Field isVerseNumberShown:Z
+         5: ireturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+
+  public final java.util.Set<java.lang.Integer> getDictionaryModeAris();
+    descriptor: ()Ljava/util/Set;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #39                 // Field dictionaryModeAris:Ljava/util/Set;
+         5: areturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/util/Set ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+    Signature: #80                          // ()Ljava/util/Set<Ljava/lang/Integer;>;
+    RuntimeInvisibleAnnotations:
+      0: #10()
+        org.jetbrains.annotations.NotNull
+
+  public final yuku.alkitab.base.verses.ReadingGuide getReadingGuide();
+    descriptor: ()Lyuku/alkitab/base/verses/ReadingGuide;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #41                 // Field readingGuide:Lyuku/alkitab/base/verses/ReadingGuide;
+         5: areturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class yuku/alkitab/base/verses/ReadingGuide ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class yuku/alkitab/base/verses/VersesUiModel ]
+          stack = [ class java/lang/Throwable ]
+    RuntimeInvisibleAnnotations:
+      0: #10()
+        org.jetbrains.annotations.NotNull
+
+  static {};
+    descriptor: ()V
+    flags: (0x0008) ACC_STATIC
+    Code:
+      stack=11, locals=0, args_size=0
+         0: new           #155                // class yuku/alkitab/base/verses/VersesUiModel$Companion
+         3: dup
+         4: aconst_null
+         5: invokespecial #158                // Method yuku/alkitab/base/verses/VersesUiModel$Companion."<init>":(Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+         8: putstatic     #160                // Field Companion:Lyuku/alkitab/base/verses/VersesUiModel$Companion;
+        11: new           #2                  // class yuku/alkitab/base/verses/VersesUiModel
+        14: dup
+        15: ldc_w         #161                // float 1.0f
+        18: getstatic     #164                // Field yuku/alkitab/base/verses/VersesController$VerseSelectionMode.multiple:Lyuku/alkitab/base/verses/VersesController$VerseSelectionMode;
+        21: dup
+        22: ldc_w         #165                // String multiple
+        25: invokestatic  #168                // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+        28: iconst_0
+        29: invokestatic  #173                // Method kotlin/collections/SetsKt.emptySet:()Ljava/util/Set;
+        32: aconst_null
+        33: bipush        16
+        35: aconst_null
+        36: invokespecial #175                // Method "<init>":(FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set;Lyuku/alkitab/base/verses/ReadingGuide;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+        39: putstatic     #177                // Field EMPTY:Lyuku/alkitab/base/verses/VersesUiModel;
+        42: return
+        43: nop
+        44: athrow
+      StackMapTable: number_of_entries = 21
+        frame_type = 255 /* full_frame */
+          offset_delta = 3
+          locals = []
+          stack = [ uninitialized 0 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ uninitialized 0, uninitialized 0 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ uninitialized 0, uninitialized 0, null ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel$Companion ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = [ uninitialized 11 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ uninitialized 11, uninitialized 11 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = [ uninitialized 11, uninitialized 11, float ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = [ uninitialized 11, uninitialized 11, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ uninitialized 11, uninitialized 11, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = [ uninitialized 11, uninitialized 11, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = [ uninitialized 11, uninitialized 11, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ uninitialized 11, uninitialized 11, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = [ uninitialized 11, uninitialized 11, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ uninitialized 11, uninitialized 11, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, null ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = []
+          stack = [ uninitialized 11, uninitialized 11, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, null, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ uninitialized 11, uninitialized 11, float, class yuku/alkitab/base/verses/VersesController$VerseSelectionMode, int, class java/util/Set, null, int, null ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = [ class yuku/alkitab/base/verses/VersesUiModel ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ class java/lang/Throwable ]
+}
+InnerClasses:
+  public static final #57= #155 of #2;    // Companion=class yuku/alkitab/base/verses/VersesUiModel$Companion of class yuku/alkitab/base/verses/VersesUiModel
+SourceFile: "VersesUiModel.kt"
+RuntimeVisibleAnnotations:
+  0: #182(#183=[I#184,I#185,I#186],#187=I#188,#189=I#190,#191=[s#192],#193=[s#1,s#194,s#57,s#5,s#195,s#7,s#196,s#11,s#197,s#13,s#198,s#199,s#17,s#50,s#28,s#42,s#6,s#147,s#73,s#8,s#148,s#75,s#12,s#77,s#14,s#149,s#79,s#18,s#150,s#64,s#72,s#74,s#76,s#78,s#81,s#82,s#83,s#144,s#200,s#145,s#124,s#128,s#118,s#201,s#119])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\u0004\n\u0002\b-\b\u0086\b\u0018\u00002\u00020\u0001 \u00028\u0002B;\b\u0006\u0012\u0006\u0010\u0003\u001a\u00020\u0004\u0012\u0006\u0010\u0005\u001a\u00020\u0006\u0012\u0006\u0010\u0007\u001a\u00020\b\u0012\u000e\u0010\t\u001a\n\u0012\u0006\b\u0002\u0012\u00020\n0\u000b\u0012\b\u0010\f\u001a\u00020\r\b\u0002¢\u0006\u0004\b\u000e\u0010\u000fR\u0018X\u0086\u0004\u0010\u0003\u001a\u00020\u0004¢\u0006\f\n\u0004\b\u0003\u0010\u0010\u001a\u0004\b\u0011\u0010\u0012R\u0018X\u0086\u0004\u0010\u0005\u001a\u00020\u0006¢\u0006\f\n\u0004\b\u0005\u0010\u0013\u001a\u0004\b\u0014\u0010\u0015R\u0018X\u0086\u0004\u0010\u0007\u001a\u00020\b¢\u0006\f\n\u0004\b\u0007\u0010\u0016\u001a\u0004\b\u0007\u0010\u0017R X\u0086\u0004\u0010\t\u001a\n\u0012\u0006\b\u0002\u0012\u00020\n0\u000b¢\u0006\f\n\u0004\b\t\u0010\u0018\u001a\u0004\b\u0019\u0010\u001aR\u0018X\u0086\u0004\u0010\f\u001a\u00020\r¢\u0006\f\n\u0004\b\f\u0010\u001b\u001a\u0004\b\u001c\u0010\u001dJ\u0010HÆ\u0003\u0010\u001e\u001a\u00020\u0004¢\u0006\u0004\b\u001e\u0010\u0012J\u0010HÆ\u0003\u0010\u001f\u001a\u00020\u0006¢\u0006\u0004\b\u001f\u0010\u0015J\u0010HÆ\u0003\u0010 \u001a\u00020\b¢\u0006\u0004\b \u0010\u0017J\u0018HÆ\u0003\u0010!\u001a\n\u0012\u0006\b\u0002\u0012\u00020\n0\u000b¢\u0006\u0004\b!\u0010\u001aJ\u0010HÆ\u0003\u0010\"\u001a\u00020\r¢\u0006\u0004\b\"\u0010\u001dJJHÆ\u0001\u0010#\u001a\u00020\u00002\b\u0010\u0003\u001a\u00020\u0004\b\u00022\b\u0010\u0005\u001a\u00020\u0006\b\u00022\b\u0010\u0007\u001a\u00020\b\b\u00022\u0010\u0010\t\u001a\n\u0012\u0006\b\u0002\u0012\u00020\n0\u000b\b\u00022\b\u0010\f\u001a\u00020\r\b\u0002¢\u0006\u0004\b#\u0010$J\u001bHÖ\u0083\u0004\u0010%\u001a\u00020\b2\b\u0010&\u001a\u00040\u0001\u0018\u0001¢\u0006\u0004\b%\u0010\'J\u0011HÖ\u0081\u0004\u0010(\u001a\u00020\n¢\u0006\u0004\b(\u0010)J\u0011HÖ\u0081\u0004\u0010*\u001a\u00020+¢\u0006\u0004\b*\u0010,"]
+      d2=["yuku/alkitab/base/verses/VersesUiModel","kotlin/Any","Companion","textSizeMult","kotlin/Float","verseSelectionMode","yuku/alkitab/base/verses/VersesController.VerseSelectionMode","isVerseNumberShown","kotlin/Boolean","dictionaryModeAris","kotlin/Int","kotlin/collections/Set","readingGuide","yuku/alkitab/base/verses/ReadingGuide","<init>","(FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set;Lyuku/alkitab/base/verses/ReadingGuide;)V","F","getTextSizeMult","()F","Lyuku/alkitab/base/verses/VersesController$VerseSelectionMode;","getVerseSelectionMode","()Lyuku/alkitab/base/verses/VersesController$VerseSelectionMode;","Z","()Z","Ljava/util/Set;","getDictionaryModeAris","()Ljava/util/Set;","Lyuku/alkitab/base/verses/ReadingGuide;","getReadingGuide","()Lyuku/alkitab/base/verses/ReadingGuide;","component1","component2","component3","component4","component5","copy","(FLyuku/alkitab/base/verses/VersesController$VerseSelectionMode;ZLjava/util/Set;Lyuku/alkitab/base/verses/ReadingGuide;)Lyuku/alkitab/base/verses/VersesUiModel;","equals","other","(Ljava/lang/Object;)Z","hashCode","()I","toString","kotlin/String","()Ljava/lang/String;"]
+    )

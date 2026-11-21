@@ -1,0 +1,123 @@
+$ /workspace/korrust-setup/jdk-21/bin/javap -p -s -v -classpath /workspace/work/static33/target/checks/2026-11-21T193734081152Z-static-jvm-fields/official staticprobe.shadow.Shadowed
+Classfile /workspace/work/static33/target/checks/2026-11-21T193734081152Z-static-jvm-fields/official/staticprobe/shadow/Shadowed.class
+  Last modified Nov 22, 2026; size 862 bytes
+  SHA-256 checksum 0b015deda15b948d2de00ebdd765ab50024f36bd5b031a6074b363b10ddf45ef
+  Compiled from "Shadow.kt"
+public final class staticprobe.shadow.Shadowed
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // staticprobe/shadow/Shadowed
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 2, methods: 3, attributes: 2
+Constant pool:
+   #1 = Utf8               staticprobe/shadow/Shadowed
+   #2 = Class              #1             // staticprobe/shadow/Shadowed
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               <init>
+   #6 = Utf8               ()V
+   #7 = NameAndType        #5:#6          // "<init>":()V
+   #8 = Methodref          #4.#7          // java/lang/Object."<init>":()V
+   #9 = Utf8               this
+  #10 = Utf8               Lstaticprobe/shadow/Shadowed;
+  #11 = Utf8               getValue
+  #12 = Utf8               ()I
+  #13 = Utf8               value
+  #14 = Utf8               I
+  #15 = NameAndType        #13:#14        // value:I
+  #16 = Fieldref           #2.#15         // staticprobe/shadow/Shadowed.value:I
+  #17 = Utf8               <clinit>
+  #18 = Methodref          #2.#7          // staticprobe/shadow/Shadowed."<init>":()V
+  #19 = Utf8               INSTANCE
+  #20 = NameAndType        #19:#10        // INSTANCE:Lstaticprobe/shadow/Shadowed;
+  #21 = Fieldref           #2.#20         // staticprobe/shadow/Shadowed.INSTANCE:Lstaticprobe/shadow/Shadowed;
+  #22 = Utf8               Lorg/jetbrains/annotations/NotNull;
+  #23 = Utf8               Lstaticprobe/shadow/JvmField;
+  #24 = Utf8               Lkotlin/Metadata;
+  #25 = Utf8               mv
+  #26 = Integer            2
+  #27 = Integer            3
+  #28 = Integer            0
+  #29 = Utf8               k
+  #30 = Integer            1
+  #31 = Utf8               xi
+  #32 = Integer            48
+  #33 = Utf8               d1
+  #34 = Utf8               \u0000\u0014\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0003\n\u0002\u0010\b\n\u0002\b\u0002\bÆ\u0002\u0018\u00002\u00020\u0001B\t\b\u0002¢\u0006\u0004\b\u0002\u0010\u0003R\u0016\u0010\u0004\u001a\u00020\u00058\u0006X\u0087D¢\u0006\b\n\u0000\u001a\u0004\b\u0006\u0010\u0007
+  #35 = Utf8               d2
+  #36 = Utf8
+  #37 = Utf8               Shadow.kt
+  #38 = Utf8               RuntimeInvisibleAnnotations
+  #39 = Utf8               Code
+  #40 = Utf8               LineNumberTable
+  #41 = Utf8               LocalVariableTable
+  #42 = Utf8               SourceFile
+  #43 = Utf8               RuntimeVisibleAnnotations
+{
+  public static final staticprobe.shadow.Shadowed INSTANCE;
+    descriptor: Lstaticprobe/shadow/Shadowed;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    RuntimeInvisibleAnnotations:
+      0: #22()
+        org.jetbrains.annotations.NotNull
+
+  private static final int value;
+    descriptor: I
+    flags: (0x001a) ACC_PRIVATE, ACC_STATIC, ACC_FINAL
+    RuntimeInvisibleAnnotations:
+      0: #23()
+        staticprobe.shadow.JvmField
+
+  private staticprobe.shadow.Shadowed();
+    descriptor: ()V
+    flags: (0x0002) ACC_PRIVATE
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #8                  // Method java/lang/Object."<init>":()V
+         4: return
+      LineNumberTable:
+        line 5: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   Lstaticprobe/shadow/Shadowed;
+
+  public final int getValue();
+    descriptor: ()I
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: getstatic     #16                 // Field value:I
+         3: ireturn
+      LineNumberTable:
+        line 5: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       4     0  this   Lstaticprobe/shadow/Shadowed;
+
+  static {};
+    descriptor: ()V
+    flags: (0x0008) ACC_STATIC
+    Code:
+      stack=2, locals=0, args_size=0
+         0: new           #2                  // class staticprobe/shadow/Shadowed
+         3: dup
+         4: invokespecial #18                 // Method "<init>":()V
+         7: putstatic     #21                 // Field INSTANCE:Lstaticprobe/shadow/Shadowed;
+        10: iconst_3
+        11: putstatic     #16                 // Field value:I
+        14: return
+      LineNumberTable:
+        line 5: 10
+}
+SourceFile: "Shadow.kt"
+RuntimeVisibleAnnotations:
+  0: #24(#25=[I#26,I#27,I#28],#29=I#30,#31=I#32,#33=[s#34],#35=[s#10,s#36,s#5,s#6,s#13,s#36,s#11,s#12])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\u0014\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0003\n\u0002\u0010\b\n\u0002\b\u0002\bÆ\u0002\u0018\u00002\u00020\u0001B\t\b\u0002¢\u0006\u0004\b\u0002\u0010\u0003R\u0016\u0010\u0004\u001a\u00020\u00058\u0006X\u0087D¢\u0006\b\n\u0000\u001a\u0004\b\u0006\u0010\u0007"]
+      d2=["Lstaticprobe/shadow/Shadowed;","","<init>","()V","value","","getValue","()I"]
+    )

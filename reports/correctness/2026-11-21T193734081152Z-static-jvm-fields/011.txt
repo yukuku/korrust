@@ -1,0 +1,96 @@
+$ /workspace/korrust-setup/jdk-21/bin/javap -p -s -v -classpath /workspace/work/static33/target/checks/2026-11-21T193734081152Z-static-jvm-fields/official staticprobe.Carrier
+Classfile /workspace/work/static33/target/checks/2026-11-21T193734081152Z-static-jvm-fields/official/staticprobe/Carrier.class
+  Last modified Nov 22, 2026; size 641 bytes
+  SHA-256 checksum d9ca2c7c43d22f69a05e30c7fda6a99cbe0b183604723dc508aef090c5db8916
+  Compiled from "Extra.kt"
+public final class staticprobe.Carrier
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // staticprobe/Carrier
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 1, methods: 2, attributes: 2
+Constant pool:
+   #1 = Utf8               staticprobe/Carrier
+   #2 = Class              #1             // staticprobe/Carrier
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               <init>
+   #6 = Utf8               (I)V
+   #7 = Utf8               ()V
+   #8 = NameAndType        #5:#7          // "<init>":()V
+   #9 = Methodref          #4.#8          // java/lang/Object."<init>":()V
+  #10 = Utf8               value
+  #11 = Utf8               I
+  #12 = NameAndType        #10:#11        // value:I
+  #13 = Fieldref           #2.#12         // staticprobe/Carrier.value:I
+  #14 = Utf8               this
+  #15 = Utf8               Lstaticprobe/Carrier;
+  #16 = Utf8               getValue
+  #17 = Utf8               ()I
+  #18 = Utf8               Lkotlin/Metadata;
+  #19 = Utf8               mv
+  #20 = Integer            2
+  #21 = Integer            3
+  #22 = Integer            0
+  #23 = Utf8               k
+  #24 = Integer            1
+  #25 = Utf8               xi
+  #26 = Integer            48
+  #27 = Utf8               d1
+  #28 = Utf8               \u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\b\n\u0002\b\u0004\u0018\u00002\u00020\u0001B\u000f\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0004\u0010\u0005R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0006\u0010\u0007
+  #29 = Utf8               d2
+  #30 = Utf8
+  #31 = Utf8               Extra.kt
+  #32 = Utf8               Code
+  #33 = Utf8               LineNumberTable
+  #34 = Utf8               LocalVariableTable
+  #35 = Utf8               SourceFile
+  #36 = Utf8               RuntimeVisibleAnnotations
+{
+  private final int value;
+    descriptor: I
+    flags: (0x0012) ACC_PRIVATE, ACC_FINAL
+
+  public staticprobe.Carrier(int);
+    descriptor: (I)V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload_0
+         1: invokespecial #9                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: iload_1
+         6: putfield      #13                 // Field value:I
+         9: return
+      LineNumberTable:
+        line 3: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      10     0  this   Lstaticprobe/Carrier;
+            0      10     1 value   I
+
+  public final int getValue();
+    descriptor: ()I
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: getfield      #13                 // Field value:I
+         4: ireturn
+      LineNumberTable:
+        line 3: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   Lstaticprobe/Carrier;
+}
+SourceFile: "Extra.kt"
+RuntimeVisibleAnnotations:
+  0: #18(#19=[I#20,I#21,I#22],#23=I#24,#25=I#26,#27=[s#28],#29=[s#15,s#30,s#10,s#30,s#5,s#6,s#16,s#17])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\b\n\u0002\b\u0004\u0018\u00002\u00020\u0001B\u000f\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0004\u0010\u0005R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0006\u0010\u0007"]
+      d2=["Lstaticprobe/Carrier;","","value","","<init>","(I)V","getValue","()I"]
+    )
