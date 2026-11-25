@@ -895,6 +895,7 @@ impl Checker<'_> {
             }
             implementations.push(Function {
                 suspend_: false,
+                inline: false,
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result,
@@ -915,6 +916,7 @@ impl Checker<'_> {
         }
         let first = implementations.first().cloned().unwrap_or(Function {
             suspend_: false,
+            inline: false,
             extension_receiver: false,
             class_type_params: Vec::new(),
             jvm_result: None,

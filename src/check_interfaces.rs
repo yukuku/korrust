@@ -1108,6 +1108,7 @@ fn check_function(
     };
     Ok(Function {
         suspend_: false,
+        inline: false,
         extension_receiver: false,
         class_type_params: Vec::new(),
         jvm_result: None,

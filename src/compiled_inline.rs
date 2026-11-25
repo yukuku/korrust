@@ -239,10 +239,12 @@ pub(crate) fn decode(code: &JavaCode) -> Result<InlineBody> {
                     operands: operand.to_be_bytes().to_vec(),
                 }
             }
-            0x00..=0x0f | 0x2e..=0x35 | 0x4f..=0x83 | 0x85..=0x98 | 0xbe | 0xbf | 0xc2 | 0xc3 => InlineOp::Raw {
-                opcode,
-                operands: Vec::new(),
-            },
+            0x00..=0x0f | 0x2e..=0x35 | 0x4f..=0x83 | 0x85..=0x98 | 0xbe | 0xbf | 0xc2 | 0xc3 => {
+                InlineOp::Raw {
+                    opcode,
+                    operands: Vec::new(),
+                }
+            }
             _ => {
                 return Err(unsupported(format!(
                     "JVM opcode 0x{opcode:02x} at byte {offset}"
@@ -981,6 +983,39 @@ mod tests {
             }
         ));
         lambda_calls(&body, &BTreeSet::new()).unwrap();
+    }
+
+    #[test]
+    fn exception_handlers_seed_lambda_flow_and_require_instruction_boundaries() {
+        let mut input = code(&[
+            0x2a, 0xb9, 0, 1, 1, 0, 0xb0, 0x4c, 0x2a, 0xb9, 0, 1, 1, 0, 0xb0,
+        ]);
+        std::sync::Arc::make_mut(&mut input.constants).insert(
+            1,
+            method(
+                "kotlin/jvm/functions/Function0",
+                "invoke",
+                "()Ljava/lang/Object;",
+            ),
+        );
+        input.exception_handlers.push(JavaExceptionHandler {
+            start: 0,
+            end: 6,
+            handler: 7,
+            catch_type: Some("java/lang/Throwable".into()),
+        });
+        let body = decode(&input).unwrap();
+        assert_eq!(
+            lambda_calls(&body, &BTreeSet::from([0])).unwrap(),
+            BTreeMap::from([(1, 0), (9, 0)])
+        );
+        input.exception_handlers[0].end = 3;
+        assert!(
+            decode(&input)
+                .unwrap_err()
+                .message
+                .contains("exception region")
+        );
     }
 
     #[test]

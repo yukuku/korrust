@@ -300,6 +300,7 @@ pub struct ClassDecl {
 #[derive(Clone)]
 pub struct Function {
     pub suspend_: bool,
+    pub inline: bool,
     pub extension_receiver: bool,
     pub class_type_params: Vec<String>,
     pub jvm_result: Option<Type>,
@@ -4684,7 +4685,7 @@ impl Checker<'_> {
                     return Ok(Value {
                         ty: ty.clone(),
                         kind: ValueKind::JavaField {
-                            descriptor: None,
+                            descriptor: Some(ty.descriptor()),
                             owner: owner.clone(),
                             name: name.clone(),
                             receiver: Some(Box::new(Value {
@@ -7631,6 +7632,7 @@ pub fn check_with_owner(
         }
         result.push(Function {
             suspend_: function.suspend_,
+            inline: function.inline,
             extension_receiver: function.receiver.is_some(),
             class_type_params: Vec::new(),
             jvm_result: function

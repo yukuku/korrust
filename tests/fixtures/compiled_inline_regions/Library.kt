@@ -55,3 +55,7 @@ inline fun <reified T> classify(value: Any?, log: IntArray): Boolean {
         log[0] = log[0] * 10 + 9
     }
 }
+
+inline fun guarded(lock: Any, log: IntArray, block: () -> Int): Int = synchronized(lock) {
+    bracket(log, 2) { block() }
+}

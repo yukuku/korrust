@@ -1436,6 +1436,7 @@ pub(super) fn check_class_with_constants(
             .find(|method| method.function.offset == offset && method.function.name == name);
         let method = Function {
             suspend_: source_method.is_some_and(|method| method.function.suspend_),
+            inline: false,
             extension_receiver: source_method
                 .is_some_and(|method| method.function.receiver.is_some()),
             class_type_params: Vec::new(),
@@ -1600,6 +1601,7 @@ pub(super) fn check_class_with_constants(
             {
                 methods.push(Function {
                     suspend_: false,
+                    inline: false,
                     extension_receiver: false,
                     class_type_params: Vec::new(),
                     jvm_result: None,
@@ -1646,6 +1648,7 @@ pub(super) fn check_class_with_constants(
             {
                 methods.push(Function {
                     suspend_: false,
+                    inline: false,
                     extension_receiver: false,
                     class_type_params: Vec::new(),
                     jvm_result: None,
@@ -2003,6 +2006,7 @@ pub(super) fn check_class_with_constants(
             initializer_local_base,
             function: Function {
                 suspend_: false,
+                inline: false,
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
@@ -2391,6 +2395,7 @@ impl<'a> DeclarationContext<'a> {
         }
         Ok(Function {
             suspend_: false,
+            inline: false,
             extension_receiver: source.receiver.is_some(),
             class_type_params: Vec::new(),
             jvm_result: None,
@@ -3449,6 +3454,7 @@ pub(super) fn check_static_state(
         let mut getter = if property.body.is_empty() {
             Function {
                 suspend_: false,
+                inline: false,
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
@@ -3527,6 +3533,7 @@ pub(super) fn check_static_state(
                 };
                 Function {
                     suspend_: false,
+                    inline: false,
                     extension_receiver: false,
                     class_type_params: Vec::new(),
                     jvm_result: None,

@@ -592,6 +592,7 @@ impl Checker<'_> {
             captures: fields,
             function: Function {
                 suspend_,
+                inline: false,
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: suspend_

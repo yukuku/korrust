@@ -545,6 +545,7 @@ pub(super) fn forwarders(
         };
         let function = Function {
             suspend_: false,
+            inline: false,
             extension_receiver: false,
             class_type_params: Vec::new(),
             jvm_result,

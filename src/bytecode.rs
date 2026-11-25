@@ -811,6 +811,7 @@ impl Pool {
 struct Code<'a> {
     coroutine: bool,
     suspension: Option<suspend::State>,
+    inline_markers: bool,
     pool: &'a mut Pool,
     functions: &'a [crate::check::Function],
     owner: &'a str,
@@ -978,6 +979,16 @@ impl Code<'_> {
         self.loop_finally_depths.pop();
         self.loop_names.pop();
     }
+    fn finally_marker(&mut self, name: &str, depth: usize) -> Result<()> {
+        if self.inline_markers {
+            self.integer(
+                i32::try_from(depth)
+                    .map_err(|_| failure("Finally depth exceeds JVM integer range"))?,
+            )?;
+            self.method_reference(0xb8, "kotlin/jvm/internal/InlineMarker", name, "(I)V")?;
+        }
+        Ok(())
+    }
     fn emit_finalizers(&mut self, depth: usize) -> Result<()> {
         let saved = self.finalizers.clone();
         for index in (depth..saved.len()).rev() {
@@ -997,7 +1008,11 @@ impl Code<'_> {
             let loop_names =
                 std::mem::replace(&mut self.loop_names, saved[index].loop_names.clone());
             match &saved[index].body {
-                FinallyBody::Source(body) => self.block(body)?,
+                FinallyBody::Source(body) => {
+                    self.finally_marker("finallyStart", index + 1)?;
+                    self.block(body)?;
+                    self.finally_marker("finallyEnd", index + 1)?;
+                }
                 FinallyBody::Compiled {
                     expansion,
                     start,
@@ -1013,7 +1028,10 @@ impl Code<'_> {
             self.loop_finally_depths = loop_depths;
             self.loop_names = loop_names;
             for frame in &saved[index..] {
-                frame.exclusions.borrow_mut().push((start, self.bytes.len()));
+                frame
+                    .exclusions
+                    .borrow_mut()
+                    .push((start, self.bytes.len()));
             }
         }
         self.finalizers = saved;
@@ -1379,7 +1397,9 @@ impl Code<'_> {
             }
             let exception_slot = self.local_slot(exception_slot)?;
             self.bytes.extend([0x3a, exception_slot]);
+            self.finally_marker("finallyStart", depth + 1)?;
             self.block(finally)?;
+            self.finally_marker("finallyEnd", depth + 1)?;
             self.bytes.extend([0x19, exception_slot, 0xbf]);
         }
         self.mark(done);
@@ -3012,6 +3032,7 @@ pub(crate) fn emit_with_bridges(
         let mut code = Code {
             coroutine: false,
             suspension: None,
+            inline_markers: function.inline,
             pool: &mut pool,
             functions: &module.functions,
             owner,
@@ -3123,6 +3144,7 @@ pub(crate) fn emit_with_bridges(
         let mut code = Code {
             coroutine: false,
             suspension: None,
+            inline_markers: false,
             pool: &mut pool,
             functions: &module.functions,
             owner,
@@ -3302,6 +3324,7 @@ fn checked_method(
     let mut code = Code {
         coroutine: false,
         suspension: None,
+        inline_markers: function.inline,
         pool,
         functions,
         owner,
@@ -4429,6 +4452,7 @@ fn emit_class_with(
         let mut code = Code {
             coroutine: false,
             suspension: None,
+            inline_markers: false,
             pool: &mut pool,
             functions: &class.methods,
             owner,
@@ -4654,6 +4678,7 @@ fn emit_class_with(
         let mut code = Code {
             coroutine: false,
             suspension: None,
+            inline_markers: false,
             pool: &mut pool,
             functions: &class.methods,
             owner,
@@ -4845,6 +4870,7 @@ fn emit_class_with(
         let mut code = Code {
             coroutine: false,
             suspension: None,
+            inline_markers: false,
             pool: &mut pool,
             functions: &class.methods,
             owner,
@@ -4990,6 +5016,7 @@ fn emit_class_with(
         let mut code = Code {
             coroutine: false,
             suspension: None,
+            inline_markers: false,
             pool: &mut pool,
             functions: &class.methods,
             owner,

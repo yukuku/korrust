@@ -327,6 +327,7 @@ mod tests {
     fn function_with(number: i32) -> Function {
         Function {
             suspend_: false,
+            inline: false,
             extension_receiver: false,
             class_type_params: Vec::new(),
             jvm_result: None,

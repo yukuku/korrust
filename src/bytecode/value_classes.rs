@@ -4,6 +4,7 @@ fn emitter<'a>(pool: &'a mut Pool, owner: &'a str) -> Code<'a> {
     Code {
         coroutine: false,
         suspension: None,
+        inline_markers: false,
         pool,
         functions: &[],
         owner,

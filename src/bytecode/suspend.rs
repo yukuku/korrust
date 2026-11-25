@@ -653,6 +653,7 @@ fn code<'a>(
     Code {
         coroutine: true,
         suspension: None,
+        inline_markers: false,
         pool,
         functions,
         owner,

@@ -25,6 +25,17 @@ public class Calls {
         check(ProbeKt.reified(null, log) && log[0] == 9);
         log[0] = 0;
         check(!ProbeKt.reified(3, log) && log[0] == 9);
-        System.out.println("12 checks");
+        log[0] = 0;
+        try {
+            ProbeKt.outerThrow(log);
+            throw new AssertionError();
+        } catch (IllegalStateException expected) {
+            check(expected.getMessage().equals("outer") && log[0] == 12);
+        }
+        log[0] = 0;
+        check(SourceKt.sourceReturn(log) == 81 && log[0] == 3);
+        log[0] = 0;
+        check(ProbeKt.monitorReturn(log) == 91 && log[0] == 2 && !Thread.holdsLock(log));
+        System.out.println("15 checks");
     }
 }

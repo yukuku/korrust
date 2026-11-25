@@ -22,6 +22,7 @@ pub(super) fn function(
     let mut body = Code {
         coroutine: false,
         suspension: None,
+        inline_markers: false,
         pool,
         functions,
         owner,
@@ -150,6 +151,7 @@ pub(super) fn constructors_with_offset(
     let mut body = Code {
         coroutine: false,
         suspension: None,
+        inline_markers: false,
         pool,
         functions: &class.methods,
         owner,
@@ -365,6 +367,7 @@ pub(super) fn overloads(
         omitted.insert(index);
         let reduced = crate::check::Function {
             suspend_: false,
+            inline: false,
             extension_receiver: function.extension_receiver,
             class_type_params: function.class_type_params.clone(),
             jvm_result: function.jvm_result.clone(),

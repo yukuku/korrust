@@ -33,22 +33,36 @@ fn compiled_regions_preserve_exceptions_finally_nonlocal_returns_and_reified_typ
     let classpath = std::env::join_paths([&library, &standard]).unwrap();
     run(Command::new(&compiler)
         .arg(fixtures.join("Probe.kt"))
+        .arg(fixtures.join("Source.kt"))
         .arg("-cp")
         .arg(&classpath)
         .arg("-jvm-target")
         .arg("1.8")
         .arg("-d")
         .arg(&official));
-    for class in compile_all_with_classpath(
-        include_str!("fixtures/compiled_inline_regions/Probe.kt"),
-        "Probe.kt",
-        &[library.clone(), standard.clone()],
-    )
-    .unwrap()
-    {
-        let path = candidate.join(format!("{}.class", class.internal_name));
-        std::fs::create_dir_all(path.parent().unwrap()).unwrap();
-        std::fs::write(path, class.bytes).unwrap();
+    for (name, source) in [
+        (
+            "Probe.kt",
+            include_str!("fixtures/compiled_inline_regions/Probe.kt"),
+        ),
+        (
+            "Source.kt",
+            include_str!("fixtures/compiled_inline_regions/Source.kt"),
+        ),
+    ] {
+        let dependencies = [library.clone(), standard.clone()];
+        let classes = std::thread::Builder::new()
+            .stack_size(32 * 1024 * 1024)
+            .spawn(move || compile_all_with_classpath(source, name, &dependencies))
+            .unwrap()
+            .join()
+            .unwrap()
+            .unwrap();
+        for class in classes {
+            let path = candidate.join(format!("{}.class", class.internal_name));
+            std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+            std::fs::write(path, class.bytes).unwrap();
+        }
     }
     run(Command::new("javac")
         .arg("-cp")
@@ -63,8 +77,42 @@ fn compiled_regions_preserve_exceptions_finally_nonlocal_returns_and_reified_typ
                 .arg("-cp")
                 .arg(std::env::join_paths([provider, &driver, &library, &standard]).unwrap())
                 .arg("Calls")),
-            b"12 checks\n"
+            b"15 checks\n"
         );
+    }
+    for (name, provider) in [("official", &official), ("candidate", &candidate)] {
+        let consumer = root.join(format!("consumer-{name}"));
+        run(Command::new(&compiler)
+            .arg(fixtures.join("Consumer.kt"))
+            .arg("-cp")
+            .arg(std::env::join_paths([provider, &standard]).unwrap())
+            .arg("-jvm-target")
+            .arg("1.8")
+            .arg("-d")
+            .arg(&consumer));
+        assert_eq!(
+            run(Command::new("java")
+                .arg("-Xverify:all")
+                .arg("-cp")
+                .arg(std::env::join_paths([&consumer, provider, &standard]).unwrap())
+                .arg("ConsumerKt")),
+            b"2 consumer checks\n"
+        );
+    }
+    for classifier in ["ProbeKt", "SourceKt"] {
+        let expected = run(Command::new("javap")
+            .arg("-public")
+            .arg("-s")
+            .arg("-cp")
+            .arg(&official)
+            .arg(classifier));
+        let actual = run(Command::new("javap")
+            .arg("-public")
+            .arg("-s")
+            .arg("-cp")
+            .arg(&candidate)
+            .arg(classifier));
+        assert_eq!(actual, expected, "{classifier} signatures");
     }
     std::fs::remove_dir_all(root).unwrap();
 }

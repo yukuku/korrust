@@ -36,3 +36,19 @@ fun overrideReturn(log: IntArray): Int {
 }
 fun localReturn(log: IntArray): Int = bracket<Int>(log, 1) point@ { return@point 71 }
 fun reified(value: Any?, log: IntArray): Boolean = classify<String?>(value, log)
+fun outerThrow(log: IntArray): Int {
+    try {
+        bracket<Int>(log, 1) { return 81 }
+        return 0
+    } finally {
+        log[0] = log[0] * 10 + 2
+        throw IllegalStateException("outer")
+    }
+}
+fun monitorReturn(log: IntArray): Int {
+    guarded(log, log) {
+        if (!Thread.holdsLock(log)) { throw IllegalStateException("unlocked") }
+        return 91
+    }
+    return 0
+}

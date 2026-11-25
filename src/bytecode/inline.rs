@@ -11,6 +11,8 @@ fn reified_unsupported(message: &str) -> Diagnostic {
     )
 }
 
+type RegionExclusions = Rc<RefCell<Vec<(usize, usize)>>>;
+
 #[derive(Clone)]
 pub(super) struct InlineExpansion {
     body: InlineBody,
@@ -22,7 +24,7 @@ pub(super) struct InlineExpansion {
     skipped: BTreeSet<usize>,
     end: usize,
     finalizers: BTreeMap<usize, (usize, usize)>,
-    exclusions: BTreeMap<usize, Rc<RefCell<Vec<(usize, usize)>>>>,
+    exclusions: BTreeMap<usize, RegionExclusions>,
 }
 
 fn finally_marker(instruction: &crate::compiled_inline::InlineInstruction, name: &str) -> bool {
@@ -80,27 +82,58 @@ fn finalizer_regions(body: &InlineBody) -> BTreeMap<usize, (usize, usize)> {
                 }
             }
         }
-        if !regions.contains_key(&handler.handler) {
-            let indices: BTreeMap<_, _> = body.instructions.iter().enumerate().map(|(index, instruction)| (instruction.offset, index)).collect();
+        if let std::collections::btree_map::Entry::Vacant(entry) = regions.entry(handler.handler) {
+            let indices: BTreeMap<_, _> = body
+                .instructions
+                .iter()
+                .enumerate()
+                .map(|(index, instruction)| (instruction.offset, index))
+                .collect();
             let mut pending = vec![start];
             let mut visited = BTreeSet::new();
             let mut valid = true;
             while let Some(index) = pending.pop() {
-                if index >= body.instructions.len() { valid = false; break; }
-                if !visited.insert(index) { continue; }
+                if index >= body.instructions.len() {
+                    valid = false;
+                    break;
+                }
+                if !visited.insert(index) {
+                    continue;
+                }
                 match &body.instructions[index].kind {
-                    InlineOp::Return(_) | InlineOp::Raw { opcode: 0xbf, .. } => {},
+                    InlineOp::Return(_) | InlineOp::Raw { opcode: 0xbf, .. } => {}
                     InlineOp::Branch { opcode, target } => {
-                        if *target < body.instructions[start].offset { valid = false; break; }
+                        if *target < body.instructions[start].offset {
+                            valid = false;
+                            break;
+                        }
                         pending.push(indices[target]);
-                        if *opcode != 0xa7 { pending.push(index + 1); }
-                    },
+                        if *opcode != 0xa7 {
+                            pending.push(index + 1);
+                        }
+                    }
+                    InlineOp::Switch { default, cases } => {
+                        for target in
+                            std::iter::once(default).chain(cases.iter().map(|(_, target)| target))
+                        {
+                            if *target < body.instructions[start].offset {
+                                valid = false;
+                                break;
+                            }
+                            pending.push(indices[target]);
+                        }
+                    }
                     _ => pending.push(index + 1),
                 }
             }
             if valid {
                 let end = visited.last().copied().unwrap() + 1;
-                regions.insert(handler.handler, (body.instructions[start].offset, body.instructions.get(end).map_or(body.code_size, |instruction| instruction.offset)));
+                entry.insert((
+                    body.instructions[start].offset,
+                    body.instructions
+                        .get(end)
+                        .map_or(body.code_size, |instruction| instruction.offset),
+                ));
             }
         }
     }
@@ -377,8 +410,13 @@ impl Code<'_> {
                     let Some((start, end)) = expansion.finalizers.get(&handler.handler).copied()
                     else {
                         if contains_nonlocal(&lambda.function, self.lambdas) {
-                            return Err(failure(
+                            return Err(Diagnostic::new(
+                                0,
                                 "Non-local return crosses an unsupported compiled finally region",
+                            )
+                            .with_kind(
+                                crate::DiagnosticKind::UnsupportedLanguage,
+                                "COMPILED_INLINE_FINALLY_UNSUPPORTED",
                             ));
                         }
                         continue;
@@ -439,7 +477,12 @@ impl Code<'_> {
                 } => {
                     self.inline_reference(*opcode, constant, *interface_count)?;
                 }
-                InlineOp::Branch { opcode, target } => self.branch(*opcode, labels[target]),
+                InlineOp::Branch { opcode, target } => self.branch(
+                    *opcode,
+                    *labels.get(target).ok_or_else(|| {
+                        failure("Compiled finally branch escapes its expansion region")
+                    })?,
+                ),
                 InlineOp::Switch { default, cases } => {
                     for (key, target) in cases {
                         self.bytes.push(0x59);
@@ -447,11 +490,21 @@ impl Code<'_> {
                         let next = self.label();
                         self.branch(0xa0, next);
                         self.bytes.push(0x57);
-                        self.branch(0xa7, labels[target]);
+                        self.branch(
+                            0xa7,
+                            *labels.get(target).ok_or_else(|| {
+                                failure("Compiled finally switch escapes its expansion region")
+                            })?,
+                        );
                         self.mark(next);
                     }
                     self.bytes.push(0x57);
-                    self.branch(0xa7, labels[default]);
+                    self.branch(
+                        0xa7,
+                        *labels.get(default).ok_or_else(|| {
+                            failure("Compiled finally switch escapes its expansion region")
+                        })?,
+                    );
                 }
                 InlineOp::Return(_) => self.branch(0xa7, expansion.end),
             }

@@ -439,6 +439,7 @@ fn legacy_check(
         methods.push(ObjectMethod {
             function: Function {
                 suspend_: false,
+                inline: false,
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
@@ -1141,6 +1142,7 @@ pub(super) fn check(
         let function = if field.body.is_empty() {
             Function {
                 suspend_: false,
+                inline: false,
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
@@ -1204,6 +1206,7 @@ pub(super) fn check(
             methods.push(ObjectMethod {
                 function: Function {
                     suspend_: false,
+                    inline: false,
                     extension_receiver: false,
                     class_type_params: Vec::new(),
                     jvm_result: None,
