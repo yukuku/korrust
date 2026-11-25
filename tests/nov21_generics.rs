@@ -51,10 +51,6 @@ fn unsupported_generic_member_complexities_are_explicit() {
             "GENERIC_MEMBER_COMPLEXITY_UNSUPPORTED",
         ),
         (
-            "class Box<C> { fun <T> f(x:T):()->T = { x } }",
-            "GENERIC_MEMBER_LAMBDA_UNSUPPORTED",
-        ),
-        (
             "interface Api<C> { fun <T> f(x:T):T=x }",
             "GENERIC_INTERFACE_BODY_UNSUPPORTED",
         ),

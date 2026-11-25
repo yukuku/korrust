@@ -1,0 +1,6 @@
+[
+ {"id":"class-result", "source":"class Box<C>(val seed:C) { fun capture():()->String = { seed } }"},
+ {"id":"method-result", "source":"class Box<C> { fun <T> capture(x:T):()->String = { x } }"},
+ {"id":"constant-result", "source":"class Box<C> { fun <T> capture(x:T):()->T = { 1 } }"},
+ {"id":"nullable-result", "source":"class Box<C> { fun <T:Any> capture(x:T):()->T = { null } }"}
+]

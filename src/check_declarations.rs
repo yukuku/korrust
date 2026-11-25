@@ -187,7 +187,6 @@ pub(super) fn check_class_with_constants(
         validate_function_variance(&source.type_params, &method.function, classpath, imports)
             .map_err(|e| variance_visibility_error(e, method.function.private))?;
     }
-    let initial_lambda_count = lambdas.borrow().len();
     validate_constructor_assignments(source)?;
     for method in &source.methods {
         validate_operator(&method.function, true)?;
@@ -1402,24 +1401,11 @@ pub(super) fn check_class_with_constants(
                 "Abstract methods require an abstract class",
             ));
         }
-        let initial_lambda_count = lambdas.borrow().len();
         let (mut body, returns) = if has_body {
             checker.block(body)?
         } else {
             (Vec::new(), true)
         };
-        if source_method.is_some_and(|m| !m.function.type_params.is_empty())
-            && lambdas.borrow().len() != initial_lambda_count
-        {
-            return Err(Diagnostic::new(
-                offset,
-                "Lambdas in generic source members are unsupported",
-            )
-            .with_kind(
-                crate::DiagnosticKind::UnsupportedLanguage,
-                "GENERIC_MEMBER_LAMBDA_UNSUPPORTED",
-            ));
-        }
         if !returns {
             if result != Type::Unit {
                 return Err(Diagnostic::new(
@@ -1691,16 +1677,6 @@ pub(super) fn check_class_with_constants(
                 });
             }
         }
-    }
-    if !type_params.is_empty() && lambdas.borrow().len() > initial_lambda_count {
-        return Err(Diagnostic::new(
-            source.offset,
-            "Lambdas capturing generic source classifier scopes are unsupported",
-        )
-        .with_kind(
-            crate::DiagnosticKind::UnsupportedLanguage,
-            "GENERIC_CLASS_LAMBDA_UNSUPPORTED",
-        ));
     }
     let (forwarders, interface_delegated_members) = class_delegation::forwarders(
         &interface_contracts,
@@ -2396,18 +2372,7 @@ impl<'a> DeclarationContext<'a> {
             source_defaults.insert(0, None);
         }
         let defaults = checker.checked_defaults(&source_defaults, &params, source.offset)?;
-        let initial_lambda_count = self.lambdas.borrow().len();
         let (mut body, returns) = checker.block(&source.body)?;
-        if !source.type_params.is_empty() && self.lambdas.borrow().len() != initial_lambda_count {
-            return Err(Diagnostic::new(
-                source.offset,
-                "Lambdas in generic source members are unsupported",
-            )
-            .with_kind(
-                crate::DiagnosticKind::UnsupportedLanguage,
-                "GENERIC_MEMBER_LAMBDA_UNSUPPORTED",
-            ));
-        }
         if !returns {
             if result != Type::Unit {
                 return Err(Diagnostic::new(
