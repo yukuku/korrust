@@ -1,12 +1,12 @@
 """Validate ordered compiler classpaths without extracting or rewriting dependencies.
 
 Ordinary stored/deflated archives and directories preserve Kotlin package metadata.
-Module descriptors are ignored by the compiler; other versioned classes reject,
-regardless of the manifest. The first dependency defining a class takes precedence.
+The pinned Kotlin compiler uses base entries, including for multi-release JARs;
+versioned classes and metadata are ignored regardless of manifest or JVM target.
+Module descriptors are ignored. The first dependency defining a class wins.
 """
 
 import hashlib
-import os
 from pathlib import Path
 import zipfile
 
@@ -25,19 +25,6 @@ def _valid_name(name):
     )
 
 
-def _validate_multi_release(path, name):
-    if (
-        name.startswith("META-INF/versions/")
-        and name.endswith(".class")
-        and name.rsplit("/", 1)[-1] != "module-info.class"
-    ):
-        raise ValueError(f"Classpath {path}: multi-release JAR class overrides are unsupported")
-
-
-def _raise(error):
-    raise error
-
-
 def validate_classpath(paths):
     """Return provenance in input order after matching the compiler's archive policy."""
     records = []
@@ -45,14 +32,6 @@ def validate_classpath(paths):
         path = Path(item)
         try:
             if path.is_dir():
-                versions = path / "META-INF/versions"
-                if versions.exists():
-                    for parent, directories, files in os.walk(versions, onerror=_raise):
-                        directories.sort()
-                        for name in sorted(files):
-                            _validate_multi_release(
-                                path, (Path(parent) / name).relative_to(path).as_posix()
-                            )
                 records.append({"path": str(path), "kind": "directory"})
                 continue
             if not path.is_file():
@@ -63,7 +42,6 @@ def validate_classpath(paths):
                     name = entry.orig_filename
                     if not _valid_name(name):
                         raise ValueError(f"Classpath {path}: malformed ZIP entry name")
-                    _validate_multi_release(path, name)
                     if name in names:
                         raise ValueError(f"Classpath {path}: duplicate ZIP entry names are unsupported")
                     names.add(name)

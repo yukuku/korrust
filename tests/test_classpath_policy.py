@@ -41,7 +41,7 @@ class ClasspathPolicyTests(unittest.TestCase):
             self.assertEqual(records[0]["sha256"], hashlib.sha256(stored.read_bytes()).hexdigest())
             self.assertEqual(before, {path: path.read_bytes() for path in before})
 
-    def test_multi_release_overrides_reject_for_directories_and_archives(self):
+    def test_multi_release_content_is_accepted_without_rewriting_dependencies(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             entries = [("dep/Library.class", b"base"), ("META-INF/versions/9/dep/Library.class", b"override")]
@@ -50,10 +50,18 @@ class ClasspathPolicyTests(unittest.TestCase):
                 output = directory / name
                 output.parent.mkdir(parents=True, exist_ok=True)
                 output.write_bytes(content)
-            archive = self.archive(root / "library.jar", entries)
-            for path in [directory, archive]:
-                with self.subTest(path=path), self.assertRaisesRegex(ValueError, "multi-release JAR class overrides are unsupported"):
-                    policy.validate_classpath([path])
+            for manifest in [None, b"Manifest-Version: 1.0\nMulti-Release: true\n\n", b"Manifest-Version: 1.0\nMulti-Release: false\n\n"]:
+                contents = entries + [("META-INF/versions/21/dep/Only.class", b"version only"),
+                                      ("META-INF/versions/99/META-INF/main.kotlin_module", b"future metadata")]
+                if manifest is not None:
+                    contents.append(("META-INF/MANIFEST.MF", manifest))
+                archive = self.archive(root / "library.jar", contents)
+                original = archive.read_bytes()
+                with self.subTest(manifest=manifest):
+                    records = policy.validate_classpath([directory, archive])
+                    self.assertEqual([record["kind"] for record in records], ["directory", "jar"])
+                    self.assertEqual(records[1]["sha256"], hashlib.sha256(original).hexdigest())
+                    self.assertEqual(archive.read_bytes(), original)
             self.assertEqual((directory / entries[1][0]).read_bytes(), b"override")
 
     def test_malformed_duplicate_and_missing_inputs_reject(self):

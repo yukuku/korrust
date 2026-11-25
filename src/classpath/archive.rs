@@ -22,17 +22,9 @@ fn module_descriptor(name: &str) -> bool {
     name.rsplit('/').next() == Some("module-info.class")
 }
 
-fn validate_multi_release(path: &Path, name: &str) -> Result<()> {
-    if name.starts_with("META-INF/versions/")
-        && name.ends_with(".class")
-        && !module_descriptor(name)
-    {
-        return Err(error(
-            path,
-            "multi-release JAR class overrides are unsupported",
-        ));
-    }
-    Ok(())
+// The pinned Kotlin compiler resolves base entries even for newer JVM targets.
+fn versioned_entry(name: &str) -> bool {
+    name.starts_with("META-INF/versions/")
 }
 
 fn valid_entry_name(name: &str) -> bool {
@@ -46,11 +38,6 @@ fn valid_entry_name(name: &str) -> bool {
 pub(super) fn validate(paths: &[PathBuf]) -> Result<()> {
     for path in paths {
         if path.is_dir() {
-            let mut names = Vec::new();
-            collect(path, "META-INF/versions", true, &mut names)?;
-            for name in names {
-                validate_multi_release(path, &name)?;
-            }
             continue;
         }
         if !path.is_file() {
@@ -66,7 +53,6 @@ pub(super) fn validate(paths: &[PathBuf]) -> Result<()> {
             if !valid_entry_name(entry.name()) {
                 return Err(error(path, "malformed ZIP entry name"));
             }
-            validate_multi_release(path, entry.name())?;
             if !names.insert(entry.name().to_owned()) {
                 return Err(error(path, "duplicate ZIP entry names are unsupported"));
             }
@@ -85,7 +71,7 @@ pub(super) fn validate(paths: &[PathBuf]) -> Result<()> {
 }
 
 pub(super) fn read(path: &Path, name: &str) -> Result<Option<Vec<u8>>> {
-    if module_descriptor(name) {
+    if module_descriptor(name) || versioned_entry(name) {
         return Ok(None);
     }
     if path.is_dir() {
@@ -179,7 +165,7 @@ pub(super) fn names(path: &Path, package: &str) -> Result<Vec<String>> {
             }
         }
     }
-    result.retain(|name| !module_descriptor(name));
+    result.retain(|name| !module_descriptor(name) && !versioned_entry(name));
     result.sort();
     result.dedup();
     Ok(result)
@@ -316,24 +302,6 @@ mod tests {
         );
     }
     #[test]
-    fn multi_release_class_overrides_are_diagnosed() {
-        let mut writer = zip::ZipWriter::new(Cursor::new(Vec::new()));
-        writer
-            .start_file(
-                "META-INF/versions/9/p/A.class",
-                zip::write::FileOptions::default(),
-            )
-            .unwrap();
-        writer.write_all(b"data").unwrap();
-        let file = Temp::new(&writer.finish().unwrap().into_inner());
-        assert!(
-            validate(std::slice::from_ref(&file.0))
-                .unwrap_err()
-                .message
-                .contains("multi-release")
-        );
-    }
-    #[test]
     fn metadata_and_module_descriptors_follow_the_same_directory_and_archive_policy() {
         let contents: &[(&str, &[u8])] = &[
             ("p/A.class", b"class data"),
@@ -368,27 +336,49 @@ mod tests {
         }
     }
     #[test]
-    fn directories_reject_multi_release_class_overrides_like_archives() {
-        let contents: &[(&str, &[u8])] = &[
-            ("p/A.class", b"base"),
-            ("META-INF/versions/9/p/A.class", b"override"),
-        ];
-        let mut diagnostics = Vec::new();
-        for path in [directory(contents), entries(contents)] {
-            diagnostics.push(
-                validate(std::slice::from_ref(&path.0))
-                    .unwrap_err()
-                    .message
-                    .rsplit_once(": ")
-                    .unwrap()
-                    .1
-                    .to_owned(),
-            );
+    fn multi_release_entries_preserve_the_base_view() {
+        for manifest in [
+            b"Manifest-Version: 1.0\nMulti-Release: true\n\n".as_slice(),
+            b"Manifest-Version: 1.0\nMulti-Release: false\n\n".as_slice(),
+            b"".as_slice(),
+        ] {
+            let contents: &[(&str, &[u8])] = &[
+                ("p/A.class", b"base"),
+                ("META-INF/base.kotlin_module", b"base metadata"),
+                ("META-INF/MANIFEST.MF", manifest),
+                ("META-INF/versions/9/p/A.class", b"override"),
+                ("META-INF/versions/21/p/Only.class", b"version only"),
+                ("META-INF/versions/99/p/A.class", b"future override"),
+                (
+                    "META-INF/versions/9/META-INF/base.kotlin_module",
+                    b"override metadata",
+                ),
+            ];
+            for path in [directory(contents), entries(contents)] {
+                validate(std::slice::from_ref(&path.0)).unwrap();
+                assert_eq!(read(&path.0, "p/A.class").unwrap().unwrap(), b"base");
+                assert!(read(&path.0, "p/Only.class").unwrap().is_none());
+                assert!(
+                    read(&path.0, "META-INF/versions/9/p/A.class")
+                        .unwrap()
+                        .is_none()
+                );
+                assert_eq!(
+                    names(&path.0, "p").unwrap(),
+                    ["META-INF/base.kotlin_module", "p/A.class"]
+                );
+                assert_eq!(
+                    names(&path.0, "META-INF/versions/9/p").unwrap(),
+                    ["META-INF/base.kotlin_module"]
+                );
+                assert_eq!(
+                    read(&path.0, "META-INF/base.kotlin_module")
+                        .unwrap()
+                        .unwrap(),
+                    b"base metadata"
+                );
+            }
         }
-        assert_eq!(
-            diagnostics,
-            ["multi-release JAR class overrides are unsupported"; 2]
-        );
     }
     #[test]
     fn malformed_archive_names_are_diagnosed() {
