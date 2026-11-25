@@ -51,9 +51,21 @@ public final class Calls {
         check(ModelsKt.scalarReference().invoke("abc", new Done()).equals(3));
         check(ModelsKt.unitReference().invoke("unit", new Done()) == kotlin.Unit.INSTANCE);
         check("private!".equals(ModelsKt.privateReference().invoke("private", new Done())));
+        Step localStep = new Step();
+        Done localDone = new Done();
+        check(ModelsKt.localReference(localStep).invoke("local", localDone) == SUSPENDED);
+        check(localDone.count == 0 && localStep.inputs.equals(List.of("local")));
+        localStep.resume("captured");
+        check("captured".equals(localDone.success()));
+        Step nestedStep = new Step();
+        Done nestedDone = new Done();
+        check(ModelsKt.nestedLocalReference(nestedStep).invoke().invoke("nested", nestedDone) == SUSPENDED);
+        check(nestedDone.count == 0 && nestedStep.inputs.equals(List.of("nested")));
+        nestedStep.resume("nested-capture");
+        check("nested-capture".equals(nestedDone.success()));
     }
     static void members() {
-        for (int kind = 0; kind < 5; kind++) {
+        for (int kind = 0; kind < 6; kind++) {
             Step step = new Step();
             Worker worker = new Worker("P", step);
             Holder holder = new Holder(worker);
@@ -66,6 +78,7 @@ public final class Calls {
                     case 0 -> ModelsKt.boundReference(worker);
                     case 2 -> ModelsKt.interfaceReference(worker);
                     case 3 -> ModelsKt.evaluatedReference(holder);
+                    case 5 -> ModelsKt.nestedBoundReference(worker).invoke();
                     default -> ModelsKt.nullableReference(worker);
                 };
                 check(reference instanceof kotlin.coroutines.jvm.internal.SuspendFunction);

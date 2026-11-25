@@ -524,14 +524,12 @@ pub(crate) fn validate(
         if lambda.function.suspend_ {
             validate_function(&lambda.function, &module.functions, forbidden_owners)?;
         } else if contains_suspension(&lambda.function.body, &module.functions) {
-            return Err(Diagnostic::new(
-                0,
-                "Suspension inside source lambda bodies is unsupported",
-            )
-            .with_kind(
-                crate::DiagnosticKind::UnsupportedLanguage,
-                "SUSPEND_LAMBDA_BODY_UNSUPPORTED",
-            ));
+            return Err(
+                Diagnostic::new(0, "Suspend calls require a suspend function context").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "SUSPEND_CALL_CONTEXT_INVALID",
+                ),
+            );
         }
     }
     Ok(())

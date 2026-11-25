@@ -37,3 +37,13 @@ suspend fun consume(value: String): Unit { }
 fun unitReference(): suspend (String) -> Unit = ::consume
 private suspend fun hidden(value: String): String = value + "!"
 fun privateReference(): suspend (String) -> String = ::hidden
+fun localReference(step: suspend (String) -> String): suspend (String) -> String {
+    suspend fun local(value: String): String = step(value)
+    return ::local
+}
+fun nestedLocalReference(step: suspend (String) -> String): () -> (suspend (String) -> String) {
+    suspend fun local(value: String): String = step(value)
+    val factory: () -> (suspend (String) -> String) = { ::local }
+    return factory
+}
+fun nestedBoundReference(worker: Worker): () -> (suspend (String) -> String) = { worker::read }

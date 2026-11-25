@@ -76,12 +76,20 @@ impl Checker<'_> {
                         return Err(Diagnostic::new(
                             offset,
                             "Unbound member reference requires a receiver parameter",
+                        )
+                        .with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "CALLABLE_REFERENCE_RECEIVER_MISMATCH",
                         ));
                     };
                     if !self.subtype(&params[0], &Type::Java(owner.clone())) {
                         return Err(Diagnostic::new(
                             offset,
                             "Unbound callable reference receiver differs from its expected parameter",
+                        )
+                        .with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "CALLABLE_REFERENCE_RECEIVER_MISMATCH",
                         ));
                     }
                     (
