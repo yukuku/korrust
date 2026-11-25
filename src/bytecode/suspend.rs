@@ -189,11 +189,6 @@ fn plan(function: &crate::check::Function, functions: &[crate::check::Function])
         }
     }
     segments.push(segment);
-    if points.len() > 8 {
-        return Err(unsupported(
-            "Suspend functions support at most eight suspension points",
-        ));
-    }
     Ok(Plan {
         segments,
         points,
