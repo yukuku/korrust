@@ -7694,6 +7694,41 @@ pub(crate) fn source_delegated_members(
     class_delegation::headers(classpath, target)
 }
 
+pub(crate) fn inherit_bridge_defaults(
+    classpath: &Classpath,
+    bridge: &JavaMethod,
+    parent: &JavaMethod,
+    methods: &mut [JavaMethod],
+) -> Result<()> {
+    let declaring = classpath.load(&bridge.owner)?;
+    let receiver = declarations::classifier_type(
+        &declaring.name,
+        declaring
+            .library
+            .as_ref()
+            .map(|library| library.type_parameters.as_slice())
+            .unwrap_or(&[]),
+    );
+    let inherited = library::specialize_receiver(parent.clone(), &receiver, &declaring, classpath);
+    for method in methods.iter_mut().filter(|method| {
+        method.owner == bridge.owner
+            && method.name == bridge.name
+            && method.access & 0x40 == 0
+            && !method.unsupported
+    }) {
+        let (params, result) = class_method_types(method)?;
+        let type_params = method
+            .library
+            .as_ref()
+            .map(|library| library.type_parameters.as_slice())
+            .unwrap_or(&[]);
+        if declarations::override_generic_signature(&inherited, &params, &result, type_params)? {
+            method.inherit_defaults(parent);
+        }
+    }
+    Ok(())
+}
+
 pub(crate) fn source_jvm_result(
     classpath: &Classpath,
     supertypes: &[Type],

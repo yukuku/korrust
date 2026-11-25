@@ -1426,18 +1426,25 @@ impl Classpath {
             }
             let class = cp.load(name)?;
             for method in class.methods {
-                if let Some(previous) = methods
-                    .iter_mut()
-                    .find(|m| m.name == method.name && m.descriptor == method.descriptor)
+                if let Some(index) = methods
+                    .iter()
+                    .position(|m| m.name == method.name && m.descriptor == method.descriptor)
                 {
-                    if previous.access & 0x40 != 0
+                    if methods[index].access & 0x40 != 0
                         && method.access & 0x40 == 0
-                        && method.kotlin_params.is_some()
+                        && method
+                            .kotlin_params
+                            .as_ref()
+                            .is_some_and(|params| params.iter().any(|param| param.2))
                     {
-                        *previous = method;
-                    } else {
-                        previous.inherit_defaults(&method);
+                        crate::check::inherit_bridge_defaults(
+                            cp,
+                            &methods[index].clone(),
+                            &method,
+                            methods,
+                        )?;
                     }
+                    methods[index].inherit_defaults(&method);
                 } else {
                     methods.push(method);
                 }
