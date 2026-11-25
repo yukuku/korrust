@@ -66,7 +66,7 @@ fn suspension_outside_the_bounded_state_machine_rejects_explicitly() {
         "suspend fun <T> bounded(value: T): T = value",
         "suspend fun bounded(value: Int = 1): Int = value",
         "class Member { private suspend fun bounded(): String = \"x\" }",
-        "suspend fun original(): String = \"x\"\nfun bounded(): suspend () -> String = ::original",
+        "class C; fun bounded(): suspend () -> C = ::C",
     ] {
         let error =
             compile_all_with_classpath(source, "Bounded.kt", std::slice::from_ref(&standard))
