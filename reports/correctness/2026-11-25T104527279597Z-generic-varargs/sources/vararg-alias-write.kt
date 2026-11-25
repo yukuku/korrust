@@ -1,0 +1,1 @@
+class Box<C> { fun <T> bad(x:T, vararg items:T) { val alias=items; alias[0]=x } }

@@ -1,0 +1,1 @@
+class Box<C> { fun <T:Any> f(x:T=null):T=x }

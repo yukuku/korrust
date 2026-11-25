@@ -1,0 +1,3 @@
+target/checks/2026-11-25T104712003903Z-big-generic-overrides/parameter-order.kt:2:50: error: return type of 'fun <X, Y> echo(x: X, y: Y): Y' is not a subtype of the return type of the overridden member 'fun <A, B> echo(x: A, y: B): A' defined in 'Api'.
+class Bad:Api { override fun <X,Y> echo(x:X,y:Y):Y=y }
+                                                 ^

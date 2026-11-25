@@ -1,0 +1,278 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-11-25T10:58:43.704786+00:00",
+  "compiler": {
+    "path": "target/three-gaps-6400e179e4/korrust",
+    "sha256": "3313c2a9df7df901210759f8dbbbca0bb3ff1d10ebce24f18d544f0108b3d5ad"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "source_revision": "6400e179e4e9ec40a15d603e2c24f4769269790d",
+  "kind": "features",
+  "status": "assessed",
+  "selection": "Integrated compiler verification for anonymous subclasses, generic member functions and coroutine support.",
+  "commands": [
+    {
+      "argv": [
+        "cargo",
+        "fmt",
+        "--",
+        "--check"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T105843704786Z-kotlin-language-gaps/fmt.log"
+    },
+    {
+      "argv": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T105843704786Z-kotlin-language-gaps/python.log"
+    },
+    {
+      "argv": [
+        "cargo",
+        "clippy",
+        "--all-targets",
+        "--locked",
+        "--offline",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T105843704786Z-kotlin-language-gaps/clippy.log"
+    },
+    {
+      "argv": [
+        "cargo",
+        "test",
+        "--release",
+        "--locked",
+        "--offline",
+        "--no-fail-fast"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T105843704786Z-kotlin-language-gaps/rust.log"
+    },
+    {
+      "argv": [
+        "bash",
+        "/workspace/work/three-gaps/modules.sh",
+        "target/three-gaps-6400e179e4/korrust",
+        "three-gaps-6400e179e4"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T105843704786Z-kotlin-language-gaps/modules.log"
+    },
+    {
+      "argv": [
+        "python3",
+        "tools/check_androidbible_survey.py",
+        "--candidate",
+        "target/three-gaps-6400e179e4/korrust",
+        "--dependencies",
+        "/workspace/work/survey33/classpaths.json",
+        "--standalone-oracle-evidence",
+        "/workspace/work/survey33/standalone/results.json",
+        "--skip-html"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T105843704786Z-kotlin-language-gaps/survey.log"
+    },
+    {
+      "argv": [
+        "python3",
+        "tools/check_big_generic_captures.py",
+        "--candidate",
+        "target/three-gaps-6400e179e4/korrust",
+        "--reference-root",
+        "/workspace/korrust"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T105843704786Z-kotlin-language-gaps/captures.log"
+    },
+    {
+      "argv": [
+        "python3",
+        "tools/check_big_generic_overrides.py",
+        "--candidate",
+        "target/three-gaps-6400e179e4/korrust",
+        "--reference-root",
+        "/workspace/korrust"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T105843704786Z-kotlin-language-gaps/overrides.log"
+    },
+    {
+      "argv": [
+        "python3",
+        "tools/check_big_generic_inherited.py",
+        "--candidate",
+        "target/three-gaps-6400e179e4/korrust",
+        "--reference-root",
+        "/workspace/korrust"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T105843704786Z-kotlin-language-gaps/inherited.log"
+    },
+    {
+      "argv": [
+        "python3",
+        "tools/check_big_generic_vararg_captures.py",
+        "--candidate",
+        "target/three-gaps-6400e179e4/korrust",
+        "--reference-root",
+        "/workspace/korrust"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T105843704786Z-kotlin-language-gaps/vararg_captures.log"
+    },
+    {
+      "argv": [
+        "python3",
+        "tools/check_generic_arguments.py",
+        "--candidate",
+        "target/three-gaps-6400e179e4/korrust",
+        "--reference-root",
+        "/workspace/korrust",
+        "--family",
+        "defaults",
+        "--skip-html"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T105843704786Z-kotlin-language-gaps/defaults.log"
+    },
+    {
+      "argv": [
+        "python3",
+        "tools/check_generic_arguments.py",
+        "--candidate",
+        "target/three-gaps-6400e179e4/korrust",
+        "--reference-root",
+        "/workspace/korrust",
+        "--family",
+        "varargs",
+        "--skip-html"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T105843704786Z-kotlin-language-gaps/varargs.log"
+    },
+    {
+      "argv": [
+        "python3",
+        "tools/check_generic_arguments.py",
+        "--candidate",
+        "target/three-gaps-6400e179e4/korrust",
+        "--reference-root",
+        "/workspace/korrust",
+        "--family",
+        "interface-varargs",
+        "--skip-html"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T105843704786Z-kotlin-language-gaps/interface-varargs.log"
+    },
+    {
+      "argv": [
+        "python3",
+        "tools/check_anonymous_subclasses.py",
+        "--compiler",
+        "target/three-gaps-6400e179e4/korrust"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T105843704786Z-kotlin-language-gaps/anonymous.log"
+    },
+    {
+      "argv": [
+        "python3",
+        "tools/check_suspend_references.py",
+        "--candidate",
+        "target/three-gaps-6400e179e4/korrust"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T105843704786Z-kotlin-language-gaps/references.log"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-25T105843704786Z-kotlin-language-gaps.json",
+    "reports/correctness/2026-11-25T104342907443Z-generic-defaults.json",
+    "reports/correctness/2026-11-25T104342909609Z-big-generic-captures.json",
+    "reports/correctness/2026-11-25T104343011997Z-anonymous-subclasses.json",
+    "reports/correctness/2026-11-25T104344700796Z-androidbible-class-listener.json",
+    "reports/correctness/2026-11-25T104502513497Z-model-io-downstream-consumers.json",
+    "reports/correctness/2026-11-25T104527279597Z-generic-varargs.json",
+    "reports/correctness/2026-11-25T104649991224Z-generic-interface-varargs.json",
+    "reports/correctness/2026-11-25T104651473628Z-androidbible-survey-dependencies.json",
+    "reports/correctness/2026-11-25T104712003903Z-big-generic-overrides.json",
+    "reports/correctness/2026-11-25T104836551451Z-suspend-references.json",
+    "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited.json",
+    "reports/correctness/2026-11-25T105206751045Z-big-generic-vararg-captures.json"
+  ],
+  "features": [
+    {
+      "name": "Anonymous subclasses and multiple interfaces",
+      "status": "partial",
+      "scope": "Construct nongeneric source Kotlin, compiled Kotlin and Java base classes, pass constructor arguments and dispatch overrides that capture local and outer state. Additional supported interfaces and empty bodies are accepted. The unchanged AndroidBible VersesListeners class is checked with genuine dependencies.",
+      "restrictions": [
+        "Generic anonymous bases, new properties in the anonymous body, and covariant or erased override bridges on anonymous classes remain limited. Anonymous reflection metadata is incomplete."
+      ],
+      "evidence_cases": [
+        "anonymous",
+        "2026-11-25T104343011997Z-anonymous-subclasses",
+        "2026-11-25T104344700796Z-androidbible-class-listener"
+      ]
+    },
+    {
+      "name": "Generic members with captures, overrides, defaults and varargs",
+      "status": "partial",
+      "scope": "Capture method and classifier type parameters in lambdas, override supported generic methods with renamed parameters and erased bridges, inherit default arguments, and dispatch checked reference varargs through generic abstract interfaces. The compiler checks read-only projected array access and publishes vararg metadata.",
+      "restrictions": [
+        "Generic interface method bodies, dependent or multiple method bounds, and type-parameter shadowing remain limited. Source varargs must come last. Nongeneric reference-vararg methods on generic classes and inference from the result alone remain limited."
+      ],
+      "evidence_cases": [
+        "captures",
+        "overrides",
+        "inherited",
+        "vararg_captures",
+        "defaults",
+        "varargs",
+        "interface-varargs",
+        "2026-11-25T104342907443Z-generic-defaults",
+        "2026-11-25T104342909609Z-big-generic-captures",
+        "2026-11-25T104527279597Z-generic-varargs",
+        "2026-11-25T104649991224Z-generic-interface-varargs",
+        "2026-11-25T104712003903Z-big-generic-overrides",
+        "2026-11-25T105008998680Z-big-generic-inherited",
+        "2026-11-25T105206751045Z-big-generic-vararg-captures"
+      ]
+    },
+    {
+      "name": "Sequential suspension, captured local suspend functions and callable references",
+      "status": "partial",
+      "scope": "Compile more than eight sequential suspension points, lower supported captured local suspend functions, and adapt supported top-level, local and member callable references to expected suspend function types. Fixed JVM callers exercise overlapping calls, delayed resumption and exception identity.",
+      "restrictions": [
+        "Nested suspension control flow, recursion in local suspend declarations and general source suspend lambda literals remain limited. Generated methods must fit the supported JVM method, branch and local slot ranges."
+      ],
+      "evidence_cases": [
+        "rust",
+        "references",
+        "2026-11-25T104836551451Z-suspend-references"
+      ]
+    }
+  ]
+}

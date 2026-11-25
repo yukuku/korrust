@@ -1,0 +1,144 @@
+Classfile /workspace/korrust/target/checks/2026-11-25T104712003903Z-big-generic-overrides/official/genericdispatch/Base.class
+  Last modified Nov 25, 2026; size 1212 bytes
+  SHA-256 checksum 18af7fc26abdd274acae0de66631c9d202e38cd1334031eb9a4b453da9f49d6d
+  Compiled from "Overrides.kt"
+public class genericdispatch.Base<C extends java.lang.Object> extends java.lang.Object
+  minor version: 0
+  major version: 52
+  flags: (0x0021) ACC_PUBLIC, ACC_SUPER
+  this_class: #2                          // genericdispatch/Base
+  super_class: #5                         // java/lang/Object
+  interfaces: 0, fields: 1, methods: 4, attributes: 3
+Constant pool:
+   #1 = Utf8               genericdispatch/Base
+   #2 = Class              #1             // genericdispatch/Base
+   #3 = Utf8               <C:Ljava/lang/Object;>Ljava/lang/Object;
+   #4 = Utf8               java/lang/Object
+   #5 = Class              #4             // java/lang/Object
+   #6 = Utf8               <init>
+   #7 = Utf8               (Ljava/lang/Object;)V
+   #8 = Utf8               (TC;)V
+   #9 = Utf8               ()V
+  #10 = NameAndType        #6:#9          // "<init>":()V
+  #11 = Methodref          #5.#10         // java/lang/Object."<init>":()V
+  #12 = Utf8               seed
+  #13 = Utf8               Ljava/lang/Object;
+  #14 = NameAndType        #12:#13        // seed:Ljava/lang/Object;
+  #15 = Fieldref           #2.#14         // genericdispatch/Base.seed:Ljava/lang/Object;
+  #16 = Utf8               this
+  #17 = Utf8               Lgenericdispatch/Base;
+  #18 = Utf8               getSeed
+  #19 = Utf8               ()Ljava/lang/Object;
+  #20 = Utf8               ()TC;
+  #21 = Utf8               echo
+  #22 = Utf8               (Ljava/lang/Object;)Ljava/lang/Object;
+  #23 = Utf8               <T:Ljava/lang/Object;>(TT;)TT;
+  #24 = Utf8               value
+  #25 = Utf8               choose
+  #26 = Utf8               <T:Ljava/lang/Object;>(TT;)TC;
+  #27 = Utf8               TC;
+  #28 = Utf8               Lkotlin/Metadata;
+  #29 = Utf8               mv
+  #30 = Integer            2
+  #31 = Integer            3
+  #32 = Integer            0
+  #33 = Utf8               k
+  #34 = Integer            1
+  #35 = Utf8               xi
+  #36 = Integer            48
+  #37 = Utf8               d1
+  #38 = Utf8               \u0000\u000e\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0000\n\u0002\b\f\b\u0016\u0018\u0000*\u0004\b\u0000\u0010\u00012\u00020\u0002B\u000f\u0012\u0006\u0010\u0003\u001a\u00028\u0000¢\u0006\u0004\b\u0004\u0010\u0005J\u001b\u0010\t\u001a\u0002H\n\"\u0004\b\u0001\u0010\n2\u0006\u0010\u000b\u001a\u0002H\nH\u0016¢\u0006\u0002\u0010\fJ\u001b\u0010\r\u001a\u00028\u0000\"\u0004\b\u0001\u0010\n2\u0006\u0010\u000b\u001a\u0002H\nH\u0016¢\u0006\u0002\u0010\fR\u0013\u0010\u0003\u001a\u00028\u0000¢\u0006\n\n\u0002\u0010\b\u001a\u0004\b\u0006\u0010\u0007¨\u0006\u000e
+  #39 = Utf8               d2
+  #40 = Utf8               C
+  #41 = Utf8
+  #42 = Utf8               T
+  #43 = Utf8               generic_capture
+  #44 = Utf8               Overrides.kt
+  #45 = Utf8               Signature
+  #46 = Utf8               Code
+  #47 = Utf8               LineNumberTable
+  #48 = Utf8               LocalVariableTable
+  #49 = Utf8               SourceFile
+  #50 = Utf8               RuntimeVisibleAnnotations
+{
+  private final C seed;
+    descriptor: Ljava/lang/Object;
+    flags: (0x0012) ACC_PRIVATE, ACC_FINAL
+    Signature: #27                          // TC;
+
+  public genericdispatch.Base(C);
+    descriptor: (Ljava/lang/Object;)V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload_0
+         1: invokespecial #11                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: aload_1
+         6: putfield      #15                 // Field seed:Ljava/lang/Object;
+         9: return
+      LineNumberTable:
+        line 25: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      10     0  this   Lgenericdispatch/Base;
+            0      10     1  seed   Ljava/lang/Object;
+    Signature: #8                           // (TC;)V
+
+  public final C getSeed();
+    descriptor: ()Ljava/lang/Object;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: getfield      #15                 // Field seed:Ljava/lang/Object;
+         4: areturn
+      LineNumberTable:
+        line 25: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   Lgenericdispatch/Base;
+    Signature: #20                          // ()TC;
+
+  public <T extends java.lang.Object> T echo(T);
+    descriptor: (Ljava/lang/Object;)Ljava/lang/Object;
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=1, locals=2, args_size=2
+         0: aload_1
+         1: areturn
+      LineNumberTable:
+        line 26: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       2     0  this   Lgenericdispatch/Base;
+            0       2     1 value   Ljava/lang/Object;
+    Signature: #23                          // <T:Ljava/lang/Object;>(TT;)TT;
+
+  public <T extends java.lang.Object> C choose(T);
+    descriptor: (Ljava/lang/Object;)Ljava/lang/Object;
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=1, locals=2, args_size=2
+         0: aload_0
+         1: getfield      #15                 // Field seed:Ljava/lang/Object;
+         4: areturn
+      LineNumberTable:
+        line 27: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   Lgenericdispatch/Base;
+            0       5     1 value   Ljava/lang/Object;
+    Signature: #26                          // <T:Ljava/lang/Object;>(TT;)TC;
+}
+Signature: #3                           // <C:Ljava/lang/Object;>Ljava/lang/Object;
+SourceFile: "Overrides.kt"
+RuntimeVisibleAnnotations:
+  0: #28(#29=[I#30,I#31,I#32],#33=I#34,#35=I#36,#37=[s#38],#39=[s#17,s#40,s#41,s#12,s#6,s#7,s#18,s#19,s#13,s#21,s#42,s#24,s#22,s#25,s#43])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\u000e\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0000\n\u0002\b\f\b\u0016\u0018\u0000*\u0004\b\u0000\u0010\u00012\u00020\u0002B\u000f\u0012\u0006\u0010\u0003\u001a\u00028\u0000¢\u0006\u0004\b\u0004\u0010\u0005J\u001b\u0010\t\u001a\u0002H\n\"\u0004\b\u0001\u0010\n2\u0006\u0010\u000b\u001a\u0002H\nH\u0016¢\u0006\u0002\u0010\fJ\u001b\u0010\r\u001a\u00028\u0000\"\u0004\b\u0001\u0010\n2\u0006\u0010\u000b\u001a\u0002H\nH\u0016¢\u0006\u0002\u0010\fR\u0013\u0010\u0003\u001a\u00028\u0000¢\u0006\n\n\u0002\u0010\b\u001a\u0004\b\u0006\u0010\u0007¨\u0006\u000e"]
+      d2=["Lgenericdispatch/Base;","C","","seed","<init>","(Ljava/lang/Object;)V","getSeed","()Ljava/lang/Object;","Ljava/lang/Object;","echo","T","value","(Ljava/lang/Object;)Ljava/lang/Object;","choose","generic_capture"]
+    )

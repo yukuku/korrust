@@ -1,0 +1,4 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /workspace/korrust/tests/anonymous_subclasses/boundaries/InvalidFinalMethod.kt -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -cp /workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/korrust/target/checks/2026-11-25T104343011997Z-anonymous-subclasses/InvalidFinalMethod/official
+tests/anonymous_subclasses/boundaries/InvalidFinalMethod.kt:2:37: error: 'value' in 'Base' is final and cannot be overridden.
+fun bad(): Base = object : Base() { override fun value(): Int = 2 }
+                                    ^^^^^^^^
