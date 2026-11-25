@@ -1,0 +1,1 @@
+interface Api { fun <T> count(vararg items:T):Int=items.size }

@@ -1,0 +1,16 @@
+reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/sources/interface-vararg-nullability.kt:2:1: error: class 'Impl' is not abstract and does not implement abstract member:
+fun <T> count(vararg items: T): Int
+class Impl<C>:Api<C> { override fun <R> count(vararg items:R?):Int=items.size }
+^^^^^^^^^^
+reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/sources/interface-vararg-nullability.kt:2:7: error: conflicting overloads:
+fun <R> count(vararg items: R?): Int
+class Impl<C>:Api<C> { override fun <R> count(vararg items:R?):Int=items.size }
+      ^^^^
+reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/sources/interface-vararg-nullability.kt:2:24: error: 'count' overrides nothing. Potential signatures for overriding:
+fun <T> count(vararg items: T): Int
+class Impl<C>:Api<C> { override fun <R> count(vararg items:R?):Int=items.size }
+                       ^^^^^^^^
+reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/sources/interface-vararg-nullability.kt:2:33: error: conflicting overloads:
+fun <T> count(vararg items: T): Int
+class Impl<C>:Api<C> { override fun <R> count(vararg items:R?):Int=items.size }
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
