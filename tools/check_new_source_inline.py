@@ -45,7 +45,7 @@ def main():
     frozen += [Path(os.path.normpath(ROOT / 'references/kotlin/compiler/testData/codegen/box' / name)) for name in UPSTREAM]
     frozen = [path for path in frozen if path.is_file()]
     hashes = {str(path.relative_to(ROOT)): sha(path) for path in frozen}
-    report['resource_limits'] = dict(source_inline_dependency_depth=64, command_seconds=180)
+    report['resource_limits'] = dict(source_inline_dependency_depth=64, command_seconds=180, upstream_batch_seconds=180 * len(UPSTREAM))
     report['inputs'] = dict(files_sha256=hashes, compiler_sha256=sha(compiler), stdlib_sha256=sha(stdlib), compiler_jar_sha256=sha(reference / 'lib/kotlin-compiler.jar'))
     with zipfile.ZipFile(output / 'source-only.zip', 'w', zipfile.ZIP_DEFLATED) as archive:
         for path in frozen:
@@ -53,9 +53,9 @@ def main():
     commands = output / 'commands'
     commands.mkdir()
 
-    def run(label, command, success=True):
+    def run(label, command, success=True, timeout=180):
         index = len(report['commands'])
-        completed = subprocess.run([str(value) for value in command], cwd=ROOT, text=True, capture_output=True, timeout=180)
+        completed = subprocess.run([str(value) for value in command], cwd=ROOT, text=True, capture_output=True, timeout=timeout)
         log = commands / f'{index:03d}.txt'
         log.write_text(completed.stdout + completed.stderr)
         report['commands'].append(dict(label=label, argv=[str(value) for value in command], exit_code=completed.returncode, log=str(log.relative_to(output))))
@@ -134,7 +134,7 @@ def main():
             matrix['cases'].append(dict(id='upstream_' + str(index), family='source_inline_reified', root='boxInline' if '/boxInline/' in source.as_posix() else 'box', path=str(source.relative_to(ROOT)), tier='acceptance', kind='box', sha256=sha(source)))
         matrix_path = output / 'upstream-matrix.json'
         matrix_path.write_text(json.dumps(matrix, indent=2) + '\n')
-        run('Unchanged upstream originals', [sys.executable, ROOT / 'tools/upstream_jvm.py', '--matrix', matrix_path, '--candidate', compiler, '--output', output / 'upstream'])
+        run('Unchanged upstream originals', [sys.executable, ROOT / 'tools/upstream_jvm.py', '--matrix', matrix_path, '--candidate', compiler, '--output', output / 'upstream'], timeout=180 * len(UPSTREAM))
         upstream = json.loads((output / 'upstream/report.json').read_text())
         for item in upstream['cases']:
             case(item['id'], item['outcome'], source=item['source'], report='upstream/report.json')
