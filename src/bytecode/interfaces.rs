@@ -855,6 +855,11 @@ fn companion_classes(
         builder.field(&property.name, &property.ty.descriptor(), 0x001a, true)?;
     }
     if let Some(state) = &companion.state {
+        for constant in &state.constants {
+            builder
+                .fields
+                .push(constant_field(&mut builder.pool, constant)?);
+        }
         for property in &state.properties {
             builder.fields.push(class_field(
                 &mut builder.pool,
@@ -1124,6 +1129,13 @@ fn interface_classes(
     }
     if let Some(companion) = &interface.companion {
         builder.field("Companion", &format!("L{};", companion.owner), 0x0019, true)?;
+        if let Some(state) = &companion.state {
+            for constant in state.constants.iter().filter(|constant| !constant.private) {
+                builder
+                    .fields
+                    .push(constant_field(&mut builder.pool, constant)?);
+            }
+        }
     }
     for method in &interface.methods {
         if method.source_property.as_ref().is_some_and(|property| {

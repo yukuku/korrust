@@ -1473,6 +1473,29 @@ fn remember_callable(
     Ok(())
 }
 
+pub(super) fn companion_has_constants(annotation: &Annotation) -> Result<bool> {
+    if integer(annotation, "k")?.unwrap_or(1) != 1 {
+        return Ok(false);
+    }
+    let bytes = decode(&strings(annotation, "d1")?)?;
+    let mut reader = Reader {
+        bytes: &bytes,
+        offset: 0,
+    };
+    let length = usize::try_from(varint(&mut reader)?).map_err(|_| invalid())?;
+    reader.take(length)?;
+    let proto = Proto::parse(reader.take(bytes.len() - reader.offset)?)?;
+    if (proto.integer(1)?.unwrap_or(6) >> 6) & 7 != 6 {
+        return Ok(false);
+    }
+    for property in proto.messages(10)? {
+        if Proto::parse(property)?.integer(11)?.unwrap_or(0) & 2048 != 0 {
+            return Ok(true);
+        }
+    }
+    Ok(false)
+}
+
 pub(super) fn attach(
     annotation: &Annotation,
     class: &mut JavaClass,

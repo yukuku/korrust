@@ -30,6 +30,9 @@ pub(super) fn outer(
         &Type::Java(companion.owner.clone()),
         0x0019,
     )?);
+    for constant in &companion.constants {
+        fields.extend(constant_field(pool, constant)?);
+    }
     for property in &companion.properties {
         fields.extend(class_field(
             pool,

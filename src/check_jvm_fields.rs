@@ -261,6 +261,25 @@ pub(super) fn preflight(source: &syntax::Module, classpath: &Classpath) -> Resul
     if let Some(class) = &source.class_decl {
         class_fields(class, classpath, &imports)?;
         if let Some(companion) = &class.companion {
+            constants(&companion.constants)?;
+            for constant in &companion.constants {
+                if constant.name == "Companion"
+                    || class.param_properties.contains(&constant.name)
+                    || class
+                        .properties
+                        .iter()
+                        .any(|property| property.name == constant.name)
+                {
+                    return Err(Diagnostic::new(
+                        constant.offset,
+                        "Companion constant names colliding with class storage are unsupported",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "CONST_COMPANION_STORAGE_COLLISION_UNSUPPORTED",
+                    ));
+                }
+            }
             let exposed = static_fields(&companion.properties, classpath, &imports)?;
             if exposed.iter().any(|name| {
                 name == "Companion"
@@ -268,6 +287,35 @@ pub(super) fn preflight(source: &syntax::Module, classpath: &Classpath) -> Resul
                     || class.properties.iter().any(|p| &p.name == name)
             }) {
                 return Err(Diagnostic::new(class.offset, "JvmField names colliding with class storage require unsupported field disambiguation").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "JVM_FIELD_STATIC_COLLISION_UNSUPPORTED"));
+            }
+        }
+    }
+    if let Some(enumeration) = &source.enum_decl {
+        if let Some(companion) = &enumeration.body.companion {
+            constants(&companion.constants)?;
+            if let Some(constant) = companion.constants.iter().find(|constant| {
+                constant.name == "Companion"
+                    || enumeration.body.param_properties.contains(&constant.name)
+                    || enumeration
+                        .body
+                        .properties
+                        .iter()
+                        .any(|property| property.name == constant.name)
+                    || enumeration
+                        .entries
+                        .iter()
+                        .any(|(name, _)| *name == constant.name)
+                    || constant.name == "$VALUES"
+                    || constant.name == "$ENTRIES"
+            }) {
+                return Err(Diagnostic::new(
+                    constant.offset,
+                    "Companion constant names colliding with enum storage are unsupported",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "CONST_COMPANION_STORAGE_COLLISION_UNSUPPORTED",
+                ));
             }
         }
     }
@@ -285,6 +333,21 @@ pub(super) fn preflight(source: &syntax::Module, classpath: &Classpath) -> Resul
             }
         }
         if let Some(companion) = &interface.companion {
+            constants(&companion.constants)?;
+            if let Some(constant) = companion
+                .constants
+                .iter()
+                .find(|constant| constant.name == "Companion")
+            {
+                return Err(Diagnostic::new(
+                    constant.offset,
+                    "Companion constant names colliding with generated storage are unsupported",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "CONST_COMPANION_STORAGE_COLLISION_UNSUPPORTED",
+                ));
+            }
             static_properties(
                 companion
                     .fields

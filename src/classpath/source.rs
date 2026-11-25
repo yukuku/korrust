@@ -714,6 +714,10 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         if let Some(companion) = &source.companion {
             let companion_owner = format!("{owner}$Companion");
             let mut nested = empty(&companion_owner);
+            constants(&mut class, &companion.constants)?;
+            let mut companion_constants = empty(owner);
+            constants(&mut companion_constants, &companion.constants)?;
+            nested.fields.extend(companion_constants.fields);
             nested.methods.extend(
                 companion
                     .methods
@@ -816,6 +820,18 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         if let Some(companion) = &source.companion {
             let companion_owner = format!("{owner}$Companion");
             let mut nested = empty(&companion_owner);
+            constants(
+                &mut class,
+                &companion
+                    .constants
+                    .iter()
+                    .filter(|constant| !constant.private)
+                    .cloned()
+                    .collect::<Vec<_>>(),
+            )?;
+            let mut companion_constants = empty(&companion_owner);
+            constants(&mut companion_constants, &companion.constants)?;
+            nested.fields.extend(companion_constants.fields);
             nested.methods.extend(
                 companion
                     .methods

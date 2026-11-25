@@ -36,6 +36,23 @@ pub(super) fn check_class_with_constants(
     lambdas: &Rc<RefCell<Vec<LambdaDecl>>>,
     constants: &HashMap<String, (Type, Expr)>,
 ) -> Result<ClassDecl> {
+    let mut constants = constants.clone();
+    if let Some(companion) = &source.companion {
+        for constant in &companion.constants {
+            let (ty, kind) = constant_expr(&constant.value)?;
+            constants.insert(
+                constant.name.clone(),
+                (
+                    ty,
+                    Expr {
+                        kind,
+                        offset: constant.offset,
+                    },
+                ),
+            );
+        }
+    }
+    let constants = &constants;
     if source.constructor_visibility != 1
         && (source.defaults.iter().any(Option::is_some)
             || !source.secondary_constructors.is_empty()
@@ -981,6 +998,7 @@ pub(super) fn check_class_with_constants(
             &format!("{owner}$Companion"),
             &owner,
             &companion.properties,
+            &companion.constants,
             &companion.methods,
             &companion.initializers,
             true,
@@ -2710,12 +2728,17 @@ fn infer_source_results_impl(
     }
     let lambdas = Rc::new(RefCell::new(Vec::new()));
     let mut context = DeclarationContext::new(owner, classpath, &imports, &classes, &lambdas);
-    for constant in source.constants.iter().chain(
-        source
-            .object_decl
-            .iter()
-            .flat_map(|object| object.constants.iter()),
-    ) {
+    for constant in source
+        .constants
+        .iter()
+        .chain(
+            source
+                .object_decl
+                .iter()
+                .flat_map(|object| object.constants.iter()),
+        )
+        .chain(source.companion_constants())
+    {
         let (ty, kind) = constant_expr(&constant.value)?;
         context.constants.insert(
             constant.name.clone(),
@@ -2905,6 +2928,19 @@ fn infer_source_results_impl(
             let companion_owner = format!("{owner}$Companion");
             let mut comp_context =
                 DeclarationContext::new(&companion_owner, classpath, &imports, &classes, &lambdas);
+            for constant in &companion.constants {
+                let (ty, kind) = constant_expr(&constant.value)?;
+                comp_context.constants.insert(
+                    constant.name.clone(),
+                    (
+                        ty,
+                        Expr {
+                            kind,
+                            offset: constant.offset,
+                        },
+                    ),
+                );
+            }
             load_context_members(&mut comp_context);
             progress += infer_static_properties(
                 &mut companion.properties,
@@ -3028,6 +3064,19 @@ fn infer_source_results_impl(
             let companion_owner = format!("{owner}$Companion");
             let mut comp_context =
                 DeclarationContext::new(&companion_owner, classpath, &imports, &classes, &lambdas);
+            for constant in &companion.constants {
+                let (ty, kind) = constant_expr(&constant.value)?;
+                comp_context.constants.insert(
+                    constant.name.clone(),
+                    (
+                        ty,
+                        Expr {
+                            kind,
+                            offset: constant.offset,
+                        },
+                    ),
+                );
+            }
             load_context_members(&mut comp_context);
             progress += infer_static_properties(
                 &mut companion.fields,
@@ -3172,6 +3221,7 @@ pub(super) fn check_static_state(
     owner: &str,
     storage_owner: &str,
     source_properties: &[syntax::ClassCompanionProperty],
+    source_constants: &[syntax::ConstDecl],
     source_methods: &[syntax::ClassMethod],
     source_initializers: &[(usize, Vec<syntax::Statement>)],
     receiver: bool,
@@ -3182,6 +3232,19 @@ pub(super) fn check_static_state(
 ) -> Result<ClassCompanion> {
     let jvm_fields = jvm_fields::static_fields(source_properties, classpath, imports)?;
     let mut context = DeclarationContext::new(owner, classpath, imports, classes, lambdas);
+    for constant in source_constants {
+        let (ty, kind) = constant_expr(&constant.value)?;
+        context.constants.insert(
+            constant.name.clone(),
+            (
+                ty,
+                Expr {
+                    kind,
+                    offset: constant.offset,
+                },
+            ),
+        );
+    }
     if let Ok(class) = classpath.load(owner) {
         for method in class.methods {
             if method.name.starts_with('<') {
@@ -3586,6 +3649,7 @@ pub(super) fn check_static_state(
         }
     }
     Ok(ClassCompanion {
+        constants: source_constants.to_vec(),
         exposed_fields: source_properties
             .iter()
             .filter(|p| p.lateinit || jvm_fields.contains(&p.name))

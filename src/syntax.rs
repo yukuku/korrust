@@ -296,6 +296,27 @@ pub struct Module {
     pub interface_decl: Option<InterfaceDecl>,
     pub declarations: Vec<Declaration>,
 }
+impl Module {
+    pub(crate) fn companion_constants(&self) -> &[ConstDecl] {
+        self.class_decl
+            .as_ref()
+            .and_then(|class| class.companion.as_ref())
+            .map(|companion| companion.constants.as_slice())
+            .or_else(|| {
+                self.enum_decl
+                    .as_ref()
+                    .and_then(|enumeration| enumeration.body.companion.as_ref())
+                    .map(|companion| companion.constants.as_slice())
+            })
+            .or_else(|| {
+                self.interface_decl
+                    .as_ref()
+                    .and_then(|interface| interface.companion.as_ref())
+                    .map(|companion| companion.constants.as_slice())
+            })
+            .unwrap_or(&[])
+    }
+}
 #[derive(Clone, Debug)]
 pub struct TypeAliasDecl {
     pub type_params: Vec<TypeParameter>,
@@ -384,6 +405,7 @@ pub struct InterfaceMethod {
 }
 #[derive(Clone, Debug)]
 pub struct CompanionDecl {
+    pub constants: Vec<ConstDecl>,
     pub properties: Vec<CompanionProperty>,
     pub fields: Vec<ClassCompanionProperty>,
     pub methods: Vec<ClassMethod>,
@@ -542,6 +564,7 @@ pub struct InterfaceDelegate {
 }
 #[derive(Clone, Debug)]
 pub struct ClassCompanion {
+    pub constants: Vec<ConstDecl>,
     pub properties: Vec<ClassCompanionProperty>,
     pub methods: Vec<ClassMethod>,
     pub initializers: Vec<(usize, Vec<Statement>)>,
@@ -2748,7 +2771,11 @@ impl Parser {
                 declaration.mutable_params.clear();
                 declaration.interfaces.clear();
                 declaration.super_types.clear();
-                self.class_members(&mut declaration, &mut std::collections::HashSet::new())?;
+                self.class_members(
+                    &mut declaration,
+                    &mut std::collections::HashSet::new(),
+                    None,
+                )?;
                 if declaration.companion.is_some()
                     || !declaration.nested.is_empty()
                     || !declaration.secondary_constructors.is_empty()
@@ -2799,7 +2826,7 @@ impl Parser {
                         "ENUM_ENTRY_TERMINATOR_REPEATED",
                     ));
             }
-            self.class_members(&mut body, &mut property_names)?;
+            self.class_members(&mut body, &mut property_names, None)?;
             if let Some(property) = body.properties.iter().find(|p| p.new_visibility()) {
                 return Err(Diagnostic::new(property.offset, "Independent accessor and internal property visibility in enum members is unsupported").with_kind(DiagnosticKind::UnsupportedLanguage, "PROPERTY_VISIBILITY_CONTEXT_UNSUPPORTED"));
             }
@@ -3313,7 +3340,7 @@ impl Parser {
             self.lines();
         }
         if !is_const || !self.take("val") {
-            return Err(self.error("Only const val literal properties are supported"));
+            return Err(self.error("Only const val properties are supported"));
         }
         self.lines();
         let name = self.declaration_name()?;
@@ -3486,7 +3513,7 @@ impl Parser {
             }
             return Err(self.error("Expected a class body or declaration separator"));
         }
-        self.class_members(&mut declaration, &mut property_names)?;
+        self.class_members(&mut declaration, &mut property_names, None)?;
         declaration.primary_constructor =
             has_constructor || declaration.secondary_constructors.is_empty();
         self.type_parameters.truncate(scope);
@@ -4013,6 +4040,7 @@ impl Parser {
         &mut self,
         declaration: &mut ClassDecl,
         property_names: &mut std::collections::HashSet<String>,
+        mut constants: Option<&mut Vec<ConstDecl>>,
     ) -> Result<()> {
         self.separators();
         while !self.at("}") {
@@ -4020,7 +4048,23 @@ impl Parser {
                 return Err(self.error("Unterminated class body"));
             }
             let offset = self.token().offset;
-            if self.take("init") {
+            if self.starts_declaration("const") {
+                let constant = self.constant()?;
+                let Some(constants) = constants.as_mut() else {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Const properties require a top-level, object, or companion scope",
+                    )
+                    .with_kind(
+                        DiagnosticKind::InvalidKotlin,
+                        "INVALID_CONST_PROPERTY_SCOPE",
+                    ));
+                };
+                if !property_names.insert(constant.name.clone()) {
+                    return Err(Diagnostic::new(offset, "Duplicate companion property name"));
+                }
+                constants.push(constant);
+            } else if self.take("init") {
                 self.lines();
                 declaration.initializers.push((offset, self.block()?));
             } else if !self.at("companion")
@@ -4587,6 +4631,7 @@ impl Parser {
             self.pos = after_header;
             if matches!(self.token().text.as_str(), "\n" | ";" | "}" | "<eof>") {
                 return Ok(ClassCompanion {
+                    constants: Vec::new(),
                     properties: Vec::new(),
                     methods: Vec::new(),
                     initializers: Vec::new(),
@@ -4633,7 +4678,23 @@ impl Parser {
             open: false,
             abstract_: false,
         };
-        self.class_members(&mut declaration, &mut std::collections::HashSet::new())?;
+        let mut constants = Vec::new();
+        self.class_members(
+            &mut declaration,
+            &mut std::collections::HashSet::new(),
+            Some(&mut constants),
+        )?;
+        if !declaration.nested.is_empty()
+            || declaration.companion.is_some()
+            || !declaration.secondary_constructors.is_empty()
+        {
+            return Err(self
+                .error("Nested declarations and constructors in companions are unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "COMPANION_MEMBER_SHAPE_UNSUPPORTED",
+                ));
+        }
         let mut properties = Vec::new();
         for property in declaration.properties {
             Self::validate_static_property_visibility(&property)?;
@@ -4659,6 +4720,7 @@ impl Parser {
             });
         }
         Ok(ClassCompanion {
+            constants,
             properties,
             methods: declaration.methods,
             initializers: declaration.initializers,
@@ -4971,6 +5033,7 @@ impl Parser {
         self.expect("object")?;
         let after_header = self.pos;
         self.lines();
+        let mut constants = Vec::new();
         let mut properties = Vec::new();
         let mut fields = Vec::new();
         let mut methods = Vec::new();
@@ -4979,6 +5042,7 @@ impl Parser {
             self.pos = after_header;
             if matches!(self.token().text.as_str(), "\n" | ";" | "}" | "<eof>") {
                 return Ok(CompanionDecl {
+                    constants,
                     properties,
                     fields,
                     methods,
@@ -4999,6 +5063,15 @@ impl Parser {
                 return Err(self.error("Unterminated companion object"));
             }
             let offset = self.token().offset;
+            if self.starts_declaration("const") {
+                let constant = self.constant()?;
+                if !names.insert(constant.name.clone()) {
+                    return Err(Diagnostic::new(offset, "Duplicate companion property name"));
+                }
+                constants.push(constant);
+                self.end()?;
+                continue;
+            }
             if self.take("init") {
                 self.lines();
                 initializers.push((offset, self.block()?));
@@ -5192,7 +5265,7 @@ impl Parser {
                     open: false,
                     abstract_: false,
                 };
-                self.class_members(&mut object, &mut std::collections::HashSet::new())?;
+                self.class_members(&mut object, &mut std::collections::HashSet::new(), None)?;
                 if let Some(property) = object.properties.iter().find(|p| p.new_visibility()) {
                     return Err(Diagnostic::new(property.offset, "Independent accessor and internal property visibility in anonymous object members is unsupported").with_kind(DiagnosticKind::UnsupportedLanguage, "PROPERTY_VISIBILITY_CONTEXT_UNSUPPORTED"));
                 }
@@ -5214,6 +5287,7 @@ impl Parser {
         }
         self.expect("}")?;
         Ok(CompanionDecl {
+            constants,
             properties,
             fields,
             methods,

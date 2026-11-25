@@ -694,6 +694,22 @@ fn check_interface(
             }
         }
     }
+    let mut constants = HashMap::new();
+    if let Some(companion) = &source.companion {
+        for constant in &companion.constants {
+            let (ty, kind) = constant_expr(&constant.value)?;
+            constants.insert(
+                constant.name.clone(),
+                (
+                    ty,
+                    Expr {
+                        kind,
+                        offset: constant.offset,
+                    },
+                ),
+            );
+        }
+    }
     let mut methods = Vec::new();
     let mut operator_offsets = HashSet::new();
     let context =
@@ -733,6 +749,7 @@ fn check_interface(
             classes,
             &members,
             &companion_fields,
+            &constants,
             lambdas,
         )?;
         methods.push(InterfaceMethod {
@@ -759,6 +776,7 @@ fn check_interface(
                     classes,
                     &members,
                     &companion_fields,
+                    &constants,
                     lambdas,
                 )?,
                 has_body: false,
@@ -791,6 +809,7 @@ fn check_interface(
             classes,
             &members,
             &companion_fields,
+            &constants,
             lambdas,
         )?;
         annotations::validate_jvm_function(source_function, classpath, &imports)?;
@@ -872,7 +891,8 @@ fn check_interface(
             });
         }
         Some(CompanionDecl {
-            state: if companion.fields.is_empty()
+            state: if companion.constants.is_empty()
+                && companion.fields.is_empty()
                 && companion.methods.is_empty()
                 && companion.initializers.is_empty()
             {
@@ -882,6 +902,7 @@ fn check_interface(
                     &format!("{owner}$Companion"),
                     &format!("{owner}$Companion"),
                     &companion.fields,
+                    &companion.constants,
                     &companion.methods,
                     &companion.initializers,
                     true,
@@ -1040,6 +1061,7 @@ fn check_function(
     classes: &HashMap<String, JavaClass>,
     members: &HashMap<String, JavaMethod>,
     companion_fields: &HashMap<String, (String, Type)>,
+    constants: &HashMap<String, (Type, Expr)>,
     lambdas: &Rc<RefCell<Vec<LambdaDecl>>>,
 ) -> Result<Function> {
     let result = resolve_type_checked(result, imports, offset, classpath, classes)?;
@@ -1064,7 +1086,7 @@ fn check_function(
         lambda_owner: owner.into(),
         inline_result: None,
         nonlocal_result: None,
-        constants: &HashMap::new(),
+        constants,
         constructor: None,
         defaults: &Vec::new(),
         function_names: &[],

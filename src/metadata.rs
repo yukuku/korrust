@@ -166,6 +166,9 @@ pub(crate) fn annotation_source(
             Ok(())
         }
         fn class_companion(&self, companion: &mut crate::syntax::ClassCompanion) -> Result<()> {
+            for constant in &mut companion.constants {
+                self.uses(&mut constant.annotations, false)?;
+            }
             for property in &mut companion.properties {
                 self.property_uses(&mut property.annotations)?;
             }
@@ -219,6 +222,9 @@ pub(crate) fn annotation_source(
                 self.interface(nested)?;
             }
             if let Some(companion) = &mut interface.companion {
+                for constant in &mut companion.constants {
+                    self.uses(&mut constant.annotations, false)?;
+                }
                 for property in &mut companion.properties {
                     self.property_uses(&mut property.annotations)?;
                     if let CompanionValue::Object(class) = &mut property.value {
@@ -1887,6 +1893,9 @@ pub(crate) fn for_class_companion(
             )?,
         );
     }
+    for constant in &source.constants {
+        proto.message(10, &constant_proto(constant, imports, &mut strings)?);
+    }
     for property in &source.properties {
         let exposed = companion
             .properties
@@ -2168,6 +2177,9 @@ fn companion_metadata(
     constructor.number(1, 2);
     constructor.message(100, &method_signature("<init>", "()V", &mut strings)?);
     proto.message(8, &constructor);
+    for constant in &companion.constants {
+        proto.message(10, &constant_proto(constant, imports, &mut strings)?);
+    }
     for property in &companion.properties {
         let ty = match &property.value {
             CompanionValue::StringArray(_) => Type::StringArray,

@@ -340,6 +340,24 @@ pub(super) fn static_import_owner(
             "SINGLETON_EXTENSION_IMPORT_UNSUPPORTED",
         ));
     }
+    if class
+        .library
+        .as_ref()
+        .and_then(|library| library.companion_name.as_deref())
+        == Some("Companion")
+        && class.fields.iter().any(|field| {
+            field.name == member && field.kotlin.as_ref().is_some_and(|field| field.constant)
+        })
+    {
+        return Err(Diagnostic::new(
+            offset,
+            "Companion constant imports require the companion qualifier",
+        )
+        .with_kind(
+            crate::DiagnosticKind::InvalidKotlin,
+            "CONST_IMPORT_QUALIFIER_INVALID",
+        ));
+    }
     let matching_field = classpath
         .field_candidates(owner, member)?
         .iter()

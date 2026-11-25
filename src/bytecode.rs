@@ -5236,10 +5236,9 @@ fn emit_class_with(
             + class.interface_delegate_storage.len()
             + extra_field_count
             + class.delegated_properties.len()
-            + class
-                .companion
-                .as_ref()
-                .map_or(0, |companion| companion.properties.len() + 1)) as u16,
+            + class.companion.as_ref().map_or(0, |companion| {
+                companion.properties.len() + companion.constants.len() + 1
+            })) as u16,
     );
     out.extend(fields);
     u2(&mut out, methods.len() as u16);
