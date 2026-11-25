@@ -108,6 +108,8 @@ pub struct DeclarationAnnotation {
 }
 
 pub struct AnonymousSuper {
+    pub supertypes: Vec<Type>,
+    pub bridges: Vec<GenericBridge>,
     pub owner: String,
     pub descriptor: String,
     pub params: Vec<Type>,
@@ -5747,10 +5749,22 @@ impl Checker<'_> {
                         let parent = class
                             .super_name
                             .ok_or_else(|| Diagnostic::new(offset, "Class has no superclass"))?;
+                        let parent_type =
+                            relations::as_supertype(self.classpath, &this.ty, &parent)
+                                .unwrap_or_else(|| Type::Java(parent.clone()));
+                        let parent_class = self.classpath.load(&parent)?;
                         let methods = self
                             .classpath
                             .methods(&parent)?
                             .into_iter()
+                            .map(|method| {
+                                library::specialize_receiver(
+                                    method,
+                                    &parent_type,
+                                    &parent_class,
+                                    self.classpath,
+                                )
+                            })
                             .filter(|m| {
                                 m.source_name() == name
                                     && m.instance_dispatch()

@@ -40,7 +40,6 @@ fn anonymous_objects_emit_lexical_classes_and_shared_cells() {
 fn unsupported_anonymous_shapes_reject_explicitly() {
     for source in [
         include_str!("anonymous_objects/boundaries/Property.kt"),
-        include_str!("anonymous_objects/boundaries/Generic.kt"),
         include_str!("anonymous_objects/boundaries/ExtraMember.kt"),
     ] {
         let error = compile(source)
@@ -226,4 +225,57 @@ fn public_anonymous_intersection_inference_rejects() {
 #[test]
 fn explicit_public_anonymous_results_and_private_inference_compile() {
     compile(include_str!("anonymous_subclasses/Exposure.kt")).unwrap();
+}
+
+#[test]
+fn generic_anonymous_bases_substitute_and_emit_bridges() {
+    let source = format!(
+        "{}\n{}",
+        include_str!("anonymous_generics/Base.kt"),
+        include_str!("anonymous_generics/Source.kt")
+            .trim_start_matches("package anonymousgeneric\n")
+    );
+    let outputs = compile(&source).unwrap();
+    assert!(outputs.iter().any(|output| {
+        output
+            .output
+            .bytes
+            .windows(b"anonymousgeneric/Base<Ljava/lang/Integer;>".len())
+            .any(|bytes| bytes == b"anonymousgeneric/Base<Ljava/lang/Integer;>")
+    }));
+    compile(include_str!("anonymous_objects/boundaries/Generic.kt")).unwrap();
+    compile(include_str!("anonymous_objects/boundaries/GenericJava.kt")).unwrap();
+    compile(include_str!("anonymous_subclasses/boundaries/Generic.kt")).unwrap();
+}
+
+#[test]
+fn invalid_generic_anonymous_arguments_and_overrides_reject() {
+    for source in [
+        "interface A<T> { fun f(x: T): T }; fun bad(): A<Int> = object : A<Int> { override fun f(x: String): Int = 1 }",
+        "interface A<T> { fun f(x: T): T }; fun bad(): A<Int> = object : A<Int> { override fun f(x: Int): String = \"bad\" }",
+        "interface A<T>; fun bad(): A<Int> = object : A<out Int> {}",
+        "interface A<T>; fun bad(): A<Int> = object : A<*> {}",
+        "open class A<T>(x: T); fun bad(): A<Int> = object : A<Int>(\"bad\") {}",
+        "interface A<T : Number>; fun bad(): A<String> = object : A<String> {}",
+    ] {
+        assert!(compile(source).is_err(), "{source}");
+    }
+}
+
+#[test]
+fn anonymous_supertype_enclosing_parameters_reject_explicitly() {
+    for source in [
+        include_str!("anonymous_generics/boundaries/EnclosingParameter.kt"),
+        include_str!("anonymous_generics/boundaries/EnclosingNestedParameter.kt"),
+    ] {
+        let error = compile(source)
+            .err()
+            .expect("Enclosing type parameters require metadata support");
+        assert_eq!(
+            error.kind,
+            DiagnosticKind::UnsupportedLanguage,
+            "{}",
+            error.message
+        );
+    }
 }

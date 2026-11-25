@@ -224,14 +224,21 @@ pub(super) fn emit(
         }
         let stack = code.max_stack as u16;
         let completed = code.into_simple(function.locals, stack)?;
+        let signature = generic_function(function).map(|mut signature| {
+            if function.jvm_result.is_some() {
+                signature.truncate(signature.rfind(')').unwrap() + 1);
+                signature.push_str(&function.physical_result().descriptor());
+            }
+            signature
+        });
         let implementation = simple_method(
             &mut pool,
             0x0011,
             function.jvm_name(),
             &function.descriptor(),
             completed,
-            generic_function(function).as_deref(),
-            nonnull(&function.result),
+            signature.as_deref(),
+            nonnull(function.physical_result()),
         )?;
         methods.push(implementation);
     }
@@ -306,6 +313,11 @@ pub(super) fn emit(
             false,
         )?);
     }
+    if let Some(parent) = &lambda.anonymous_super {
+        for bridge in &parent.bridges {
+            methods.push(generic_override_bridge(&mut pool, owner, bridge)?);
+        }
+    }
     for default in &lambda.defaults {
         let (params, result) = invocation_types(&default.descriptor)?;
         let slots = 1 + params.iter().map(Type::slots).sum::<usize>();
@@ -336,6 +348,19 @@ pub(super) fn emit(
             false,
         )?);
     }
+    let signature = lambda.anonymous_super.as_ref().and_then(|parent| {
+        classifier_signature(
+            &[],
+            &HashSet::new(),
+            &parent.supertypes,
+            &parent.owner,
+            &parent.interfaces,
+        )
+    });
+    let signature = signature
+        .as_deref()
+        .map(|signature| signature_attribute(&mut pool, signature))
+        .transpose()?;
     let source_name = pool.utf8("SourceFile")?;
     let source_file = pool.utf8(file)?;
     let mut bytes = Vec::new();
@@ -356,7 +381,10 @@ pub(super) fn emit(
     for method in methods {
         bytes.extend(method);
     }
-    u2(&mut bytes, 1);
+    u2(&mut bytes, 1 + u16::from(signature.is_some()));
+    if let Some(signature) = signature {
+        bytes.extend(signature);
+    }
     u2(&mut bytes, source_name);
     u4(&mut bytes, 2);
     u2(&mut bytes, source_file);

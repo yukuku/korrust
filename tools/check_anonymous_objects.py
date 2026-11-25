@@ -13,8 +13,8 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / 'tests/anonymous_objects'
 UPSTREAM = ROOT / 'references/kotlin/compiler/testData'
-UNSUPPORTED = {'Property', 'Generic', 'GenericMethod', 'GenericJava', 'ExtraMember', 'NoSupertype', 'Covariant', 'InferredCovariant', 'AbruptInlineInference'}
-SUPPORTED = {'ClassSupertype', 'Multiple', 'Marker'}
+UNSUPPORTED = {'Property', 'GenericMethod', 'ExtraMember', 'NoSupertype', 'Covariant', 'InferredCovariant', 'AbruptInlineInference'}
+SUPPORTED = {'ClassSupertype', 'Multiple', 'Marker', 'Generic', 'GenericJava'}
 INVALID = {'Missing', 'Duplicate', 'WrongParameter', 'WrongResult', 'NullResult', 'Uninitialized', 'ValWrite', 'Sealed', 'InferredWrongNumeric'}
 
 
