@@ -1,0 +1,8 @@
+target/checks/2026-11-25T095116573254Z-big-generic-overrides/change-bound.kt:2:1: error: class 'Bad' is not abstract and does not implement abstract member:
+fun <T : Any> echo(x: T): T
+class Bad:Api { override fun <R> echo(x:R):R=x }
+^^^^^^^^^
+target/checks/2026-11-25T095116573254Z-big-generic-overrides/change-bound.kt:2:17: error: 'echo' overrides nothing. Potential signatures for overriding:
+fun <T : Any> echo(x: T): T
+class Bad:Api { override fun <R> echo(x:R):R=x }
+                ^^^^^^^^

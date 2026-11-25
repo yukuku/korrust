@@ -1047,15 +1047,7 @@ pub(super) fn check(
         if let Some(parent) = required.get(&inherited_key) {
             if function.descriptor() != parent.descriptor
                 || parent.source_property.is_some()
-                || !declarations::override_signature(
-                    parent,
-                    &function
-                        .params
-                        .iter()
-                        .map(|p| p.1.clone())
-                        .collect::<Vec<_>>(),
-                    &function.result,
-                )?
+                || !declarations::override_function_signature(parent, &function)?
             {
                 return Err(Diagnostic::new(
                     method.function.offset,

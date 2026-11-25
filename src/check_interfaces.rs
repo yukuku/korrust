@@ -968,6 +968,16 @@ fn check_override(
         Some(parent)
             if is_override
                 && method.descriptor == parent.descriptor
+                && declarations::override_generic_signature(
+                    parent,
+                    &class_method_types(method)?.0,
+                    &class_method_types(method)?.1,
+                    method
+                        .library
+                        .as_ref()
+                        .map(|l| l.type_parameters.as_slice())
+                        .unwrap_or(&[]),
+                )?
                 && method.source_property == parent.source_property =>
         {
             Ok(())

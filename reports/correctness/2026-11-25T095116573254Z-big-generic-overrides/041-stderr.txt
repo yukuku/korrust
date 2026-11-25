@@ -1,0 +1,3 @@
+target/checks/2026-11-25T095116573254Z-big-generic-overrides/widen-result.kt:2:44: error: return type of 'fun <R> echo(x: R): Any?' is not a subtype of the return type of the overridden member 'fun <T> echo(x: T): T' defined in 'Api'.
+class Bad:Api { override fun <R> echo(x:R):Any?=x }
+                                           ^^^^

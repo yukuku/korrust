@@ -1485,10 +1485,7 @@ pub(super) fn check_class_with_constants(
                     .iter()
                     .map(|p| p.1.clone())
                     .collect::<Vec<_>>();
-                if is_override
-                    && !private
-                    && !override_signature(required, &parameters, &method.result)?
-                {
+                if is_override && !private && !override_function_signature(required, &method)? {
                     let (inherited_parameters, inherited_result) = class_method_types(required)?;
                     if inherited_parameters == parameters
                         && checker.subtype(&method.result, &inherited_result)
@@ -1505,15 +1502,7 @@ pub(super) fn check_class_with_constants(
                 }
                 if !is_override
                     || private
-                    || !override_signature(
-                        required,
-                        &method
-                            .params
-                            .iter()
-                            .map(|p| p.1.clone())
-                            .collect::<Vec<_>>(),
-                        &method.result,
-                    )?
+                    || !override_function_signature(required, &method)?
                     || required.source_property.as_deref() != source_property
                 {
                     return Err(Diagnostic::new(
@@ -1746,12 +1735,7 @@ pub(super) fn check_class_with_constants(
                         .library
                         .as_ref()
                         .is_some_and(|library| library.suspend_)
-                && override_signature(
-                    &method,
-                    &m.params.iter().map(|p| p.1.clone()).collect::<Vec<_>>(),
-                    &m.result,
-                )
-                .unwrap_or(false)
+                && override_function_signature(&method, m).unwrap_or(false)
         }) {
             if target.descriptor() != method.descriptor {
                 if target.suspend_ {
@@ -3698,6 +3682,99 @@ pub(super) fn validate_operator(function: &syntax::Function, member: bool) -> Re
         ));
     }
     Ok(())
+}
+
+pub(super) fn override_function_signature(
+    method: &JavaMethod,
+    function: &Function,
+) -> Result<bool> {
+    override_generic_signature(
+        method,
+        &function
+            .params
+            .iter()
+            .map(|p| p.1.clone())
+            .collect::<Vec<_>>(),
+        &function.result,
+        &function.type_params,
+    )
+}
+
+pub(super) fn override_generic_signature(
+    method: &JavaMethod,
+    params: &[Type],
+    result: &Type,
+    type_params: &[syntax::TypeParameter],
+) -> Result<bool> {
+    let inherited = method
+        .library
+        .as_ref()
+        .map(|l| l.type_parameters.as_slice())
+        .unwrap_or(&[]);
+    if inherited.len() != type_params.len() {
+        return Ok(false);
+    }
+    let substitutions = inherited
+        .iter()
+        .zip(type_params)
+        .map(|(expected, actual)| {
+            (
+                expected.name.clone(),
+                Type::Parameter {
+                    name: actual.name.clone(),
+                    upper_bound: Box::new(actual.bounds.first().cloned().unwrap_or_else(|| {
+                        Type::Nullable(Box::new(Type::Java("java/lang/Object".into())))
+                    })),
+                },
+            )
+        })
+        .collect::<HashMap<_, _>>();
+    fn bounds(parameters: &syntax::TypeParameter) -> Vec<Type> {
+        let values = parameters
+            .bounds
+            .iter()
+            .filter(|t| !matches!(t, Type::Java(n) if n.is_empty()))
+            .cloned()
+            .collect::<Vec<_>>();
+        if values.is_empty() {
+            vec![Type::Nullable(Box::new(Type::Java(
+                "java/lang/Object".into(),
+            )))]
+        } else {
+            values
+        }
+    }
+    for (expected, actual) in inherited.iter().zip(type_params) {
+        let expected = bounds(expected)
+            .iter()
+            .map(|t| relations::substitute(t, &substitutions))
+            .collect::<Vec<_>>();
+        if expected != bounds(actual) {
+            return Ok(false);
+        }
+    }
+    let (expected_params, expected_result) = class_method_types(method)?;
+    let mut renamed = method.clone();
+    if let Some(library) = &mut renamed.library {
+        library.receiver = None;
+    }
+    renamed.kotlin_params = Some(
+        expected_params
+            .iter()
+            .map(|t| {
+                (
+                    String::new(),
+                    relations::substitute(t, &substitutions),
+                    false,
+                )
+            })
+            .collect(),
+    );
+    renamed.kotlin_result = Some(relations::substitute(&expected_result, &substitutions));
+    if let Some(library) = &mut renamed.library {
+        library.receiver = None;
+    }
+    override_signature(&renamed, params, result)
 }
 
 pub(super) fn override_signature(
