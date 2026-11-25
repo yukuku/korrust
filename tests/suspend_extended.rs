@@ -284,3 +284,11 @@ fn anonymous_reader_uses_a_generic_capture_and_resumes_through_a_suspend_referen
         include_str!("fixtures/language_interactions/Calls.java"),
     );
 }
+
+#[test]
+fn generic_dispatch_nonlocal_inline_return_and_nested_suspension_compose() {
+    compare(
+        include_str!("fixtures/generic_coroutine_inline/Extended.kt"),
+        include_str!("fixtures/generic_coroutine_inline/Calls.java"),
+    );
+}
