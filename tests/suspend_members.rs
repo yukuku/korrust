@@ -42,7 +42,7 @@ fn unsupported_suspend_member_shapes_and_control_flow_reject_explicitly() {
         "open class C { open suspend fun read(): String = \"x\" }",
         "class C { suspend fun <T> read(value: T): T = value }",
         "class C { suspend fun read(value: String = \"x\"): String = value }",
-        "class C { suspend fun read(step: suspend () -> String): String = step() + \"x\" }",
+        "class C { suspend fun read(step: suspend () -> String): String = step().substring(0) }",
     ] {
         let error =
             compile_all_with_classpath(source, "Unsupported.kt", std::slice::from_ref(&standard))

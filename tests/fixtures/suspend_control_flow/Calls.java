@@ -66,6 +66,35 @@ public class Calls {
             Step skipped = new Step(quick);
             check(FlowKt.localBranch(false, skipped, new Done()).equals(4) && skipped.calls.isEmpty());
         }
+        for (boolean quick : new boolean[] {false, true}) {
+            Step step = new Step(quick); Done done = new Done(); int[] log = new int[] {0};
+            Object result = FlowKt.operands(log, step, done);
+            check(log[0] == 1);
+            if (quick) check(result.equals(46) && done.count == 0);
+            else {
+                check(result == SUSPENDED && done.count == 0);
+                step.finish(3, 20, 4, 20, 4, 20, 4, 20, 4, 7);
+                check(done.count == 1 && done.result.equals(46) && log[0] == 1);
+            }
+            Step pair = new Step(quick); Done pairDone = new Done();
+            result = FlowKt.pair(pair, pairDone);
+            if (quick) check(result.equals(10) && pairDone.count == 0);
+            else { check(result == SUSPENDED); pair.finish(2, 3); check(pairDone.count == 1 && pairDone.result.equals(10)); }
+            Step wide = new Step(quick); Done wideDone = new Done();
+            result = FlowKt.wide(10000000000L, wide, wideDone);
+            if (quick) check(result.equals(10000000004L) && wideDone.count == 0);
+            else { check(result == SUSPENDED); wide.finish(2); check(wideDone.count == 1 && wideDone.result.equals(10000000004L)); }
+            Step untouched = new Step(quick);
+            try { FlowKt.failBefore(untouched, new Done()); throw new AssertionError(); }
+            catch (IllegalStateException error) { check(error.getMessage().equals("left") && untouched.calls.isEmpty()); }
+        }
+        Step failedOperand = new Step(false); Done operandDone = new Done(); int[] operandLog = new int[] {0};
+        check(FlowKt.operands(operandLog, failedOperand, operandDone) == SUSPENDED && operandLog[0] == 1);
+        RuntimeException operandError = new RuntimeException("right");
+        failedOperand.pending.resumeWith(ResultKt.createFailure(operandError));
+        check(operandDone.count == 1 && operandLog[0] == 1 && failedOperand.calls.equals(List.of(3)));
+        try { ResultKt.throwOnFailure(operandDone.result); throw new AssertionError(); }
+        catch (RuntimeException caught) { check(caught == operandError); }
         Step failing = new Step(false); Done failed = new Done();
         check(FlowKt.loops(4, failing, failed) == SUSPENDED);
         failing.pending.resumeWith(22);

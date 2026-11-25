@@ -58,3 +58,26 @@ suspend fun condition(enabled: Boolean, step: suspend () -> Boolean): Int {
     if (enabled && step()) return 11
     return 22
 }
+
+fun before(log: IntArray): Int {
+    log[0] += 1
+    return log[0]
+}
+
+suspend fun operands(log: IntArray, step: suspend (Int) -> Int): Int {
+    var total = before(log) + step(3) * 2
+    while (total < step(20)) {
+        total += step(4)
+        if (total > 40) break
+    }
+    if (step(7) > 0) total += 1
+    return total
+}
+
+suspend fun pair(step: suspend (Int) -> Int): Int = step(2) + step(3)
+
+fun throwBefore(): Int = throw IllegalStateException("left")
+
+suspend fun failBefore(step: suspend (Int) -> Int): Int = throwBefore() + step(1)
+
+suspend fun wide(seed: Long, step: suspend (Int) -> Int): Long = seed + step(2)

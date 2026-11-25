@@ -166,15 +166,15 @@ def main():
         case('invalid_' + str(index), rejection)
 
     unsupported = [
-        'suspend fun bounded(step: suspend () -> String): String = step() + "x"',
-        'suspend fun bounded(step: suspend () -> String): String { while (true) { val result = step() + "nested" }; return "x" }',
-        'suspend fun bounded(step: suspend () -> String): String = step() + step()',
+        'suspend fun bounded(step: suspend () -> String): String = step().substring(0)',
+        'suspend fun bounded(step: suspend () -> String): String { while (true) { val result = step().substring(0) }; return "x" }',
+        'suspend fun bounded(step: suspend () -> String): String = step().substring(step().length)',
         'suspend fun <T> bounded(value: T): T = value',
         'suspend fun bounded(value: Int = 1): Int = value',
         'class Member { private suspend fun bounded(): String = "x" }',
         'suspend fun bounded(step: suspend () -> String): String { val value: suspend () -> String = { "x" }; return step() }',
         'class C; fun bounded(): suspend () -> C = ::C',
-        'suspend fun bounded(step: suspend () -> String): String = step() + step()',
+        'suspend fun bounded(step: suspend () -> String): String = step().substring(step().length)',
         'suspend fun bounded(step: suspend (Unit) -> String): String = step(Unit)',
         'suspend fun bounded(): Unit? = null',
         '@JvmInline value class V(val raw: Int)\nsuspend fun bounded(value: V): V = value',

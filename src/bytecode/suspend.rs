@@ -10,6 +10,7 @@ struct Plan {
     body: Vec<Statement>,
     points: Vec<Point>,
     fields: BTreeMap<u8, Type>,
+    locals: u16,
 }
 
 pub(super) struct State {
@@ -96,6 +97,7 @@ fn plan(function: &crate::check::Function, functions: &[crate::check::Function])
         error: Option<Diagnostic>,
         suspend_: bool,
         counts: Vec<usize>,
+        locals: u16,
     }
     impl crate::check::ir_walk::Visitor for Planner<'_> {
         fn enter_value(&mut self, _: &Value) {
@@ -106,6 +108,61 @@ fn plan(function: &crate::check::Function, functions: &[crate::check::Function])
             let count = self.counts.pop().unwrap() + usize::from(direct);
             if let Some(parent) = self.counts.last_mut() {
                 *parent += count;
+            }
+            if count != 0 && !direct {
+                let slots = match &value.kind {
+                    ValueKind::Binary(operator, left, right)
+                        if operator != "&&" && operator != "||" =>
+                    {
+                        Some(left.ty.slots() + right.ty.slots())
+                    }
+                    _ => None,
+                };
+                if let Some(slots) = slots {
+                    if self.locals as usize + slots > 255 {
+                        self.error = Some(unsupported(
+                            "Suspend expression temporaries exceed JVM local limit",
+                        ));
+                    } else {
+                        let ValueKind::Binary(operator, left, right) =
+                            std::mem::replace(&mut value.kind, ValueKind::Unit)
+                        else {
+                            unreachable!()
+                        };
+                        let left_slot = self.locals as u8;
+                        self.locals += left.ty.slots() as u16;
+                        let right_slot = self.locals as u8;
+                        self.locals += right.ty.slots() as u16;
+                        self.fields.insert(left_slot, left.ty.clone());
+                        self.fields.insert(right_slot, right.ty.clone());
+                        let result = Value {
+                            ty: value.ty.clone(),
+                            kind: ValueKind::Binary(
+                                operator,
+                                Box::new(Value {
+                                    ty: left.ty.clone(),
+                                    kind: ValueKind::Local(left_slot),
+                                }),
+                                Box::new(Value {
+                                    ty: right.ty.clone(),
+                                    kind: ValueKind::Local(right_slot),
+                                }),
+                            ),
+                        };
+                        value.kind = ValueKind::Let {
+                            slot: left_slot,
+                            value: left,
+                            body: Box::new(Value {
+                                ty: value.ty.clone(),
+                                kind: ValueKind::Let {
+                                    slot: right_slot,
+                                    value: right,
+                                    body: Box::new(result),
+                                },
+                            }),
+                        };
+                    }
+                }
             }
             if direct {
                 if count != 1 {
@@ -227,6 +284,7 @@ fn plan(function: &crate::check::Function, functions: &[crate::check::Function])
         error: None,
         suspend_: function.suspend_,
         counts: Vec::new(),
+        locals: function.locals,
     };
     let mut body = function.body.clone();
     crate::check::ir_walk::statements(&mut body, "", &mut planner);
@@ -237,6 +295,7 @@ fn plan(function: &crate::check::Function, functions: &[crate::check::Function])
         body,
         points: planner.points,
         fields: planner.fields,
+        locals: planner.locals,
     })
 }
 
@@ -863,7 +922,7 @@ pub(super) fn emit_method_in(
     let plan = plan(planned, functions)?;
     let mut code = code(pool, functions, lambdas, facade);
     code.in_lambda = owner != facade;
-    let mut locals = function.locals;
+    let mut locals = plan.locals;
     if plan.points.is_empty() {
         code.block(&plan.body)?;
     } else {
@@ -894,14 +953,14 @@ pub(super) fn emit_method_in(
             })
             .max()
             .unwrap_or(0);
-        if function.locals as usize + 3 + temporaries > 255 {
+        if plan.locals as usize + 3 + temporaries > 255 {
             return Err(unsupported("Suspend frame exceeds JVM local limit"));
         }
-        let frame = function.locals as u8;
+        let frame = plan.locals as u8;
         let result = frame + 1;
         let marker = frame + 2;
         let temporary = frame + 3;
-        locals = function.locals + 3 + temporaries as u16;
+        locals = plan.locals + 3 + temporaries as u16;
         let frame_owner = frame_owner(owner, index);
         let parameters = planned
             .params

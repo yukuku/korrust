@@ -61,8 +61,8 @@ fn suspension_outside_the_bounded_state_machine_rejects_explicitly() {
         return;
     }
     for source in [
-        "suspend fun bounded(step: suspend () -> String): String = step() + \"x\"",
-        "suspend fun bounded(step: suspend () -> String): String = step() + step()",
+        "suspend fun bounded(step: suspend () -> String): String = step().substring(0)",
+        "suspend fun bounded(step: suspend () -> String): String = step().substring(step().length)",
         "suspend fun <T> bounded(value: T): T = value",
         "suspend fun bounded(value: Int = 1): Int = value",
         "class Member { private suspend fun bounded(): String = \"x\" }",
