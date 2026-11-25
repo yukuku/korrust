@@ -1,4 +1,4 @@
-use korrust::compile_all_with_classpath;
+use korrust::{SourceInput, compile_batch_with_classpath};
 use std::path::Path;
 use std::process::Command;
 
@@ -40,7 +40,7 @@ fn compiled_regions_preserve_exceptions_finally_nonlocal_returns_and_reified_typ
         .arg("1.8")
         .arg("-d")
         .arg(&official));
-    for (name, source) in [
+    let inputs = [
         (
             "Probe.kt",
             include_str!("fixtures/compiled_inline_regions/Probe.kt"),
@@ -49,20 +49,24 @@ fn compiled_regions_preserve_exceptions_finally_nonlocal_returns_and_reified_typ
             "Source.kt",
             include_str!("fixtures/compiled_inline_regions/Source.kt"),
         ),
-    ] {
-        let dependencies = [library.clone(), standard.clone()];
-        let classes = std::thread::Builder::new()
-            .stack_size(32 * 1024 * 1024)
-            .spawn(move || compile_all_with_classpath(source, name, &dependencies))
-            .unwrap()
-            .join()
-            .unwrap()
-            .unwrap();
-        for class in classes {
-            let path = candidate.join(format!("{}.class", class.internal_name));
-            std::fs::create_dir_all(path.parent().unwrap()).unwrap();
-            std::fs::write(path, class.bytes).unwrap();
-        }
+    ]
+    .map(|(name, source)| SourceInput {
+        identity: name.into(),
+        file_name: name.into(),
+        source: source.into(),
+    });
+    let dependencies = [library.clone(), standard.clone()];
+    let outputs = std::thread::Builder::new()
+        .stack_size(32 * 1024 * 1024)
+        .spawn(move || compile_batch_with_classpath(&inputs, &dependencies, "main"))
+        .unwrap()
+        .join()
+        .unwrap()
+        .unwrap();
+    for item in outputs {
+        let path = candidate.join(item.output.relative_path);
+        std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+        std::fs::write(path, item.output.bytes).unwrap();
     }
     run(Command::new("javac")
         .arg("-cp")
