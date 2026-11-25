@@ -998,7 +998,7 @@ impl Classpath {
                 .ok_or_else(invalid)?;
             let body = crate::compiled_inline::decode(code)?;
             let mut slots = std::collections::BTreeSet::new();
-            let mut slot = 0u16;
+            let mut slot = function.receiver.as_ref().map_or(0, |ty| ty.slots() as u16);
             for ((_, ty), mode) in function.params.iter().zip(&function.parameter_modes) {
                 if matches!(ty, Type::Function { .. } | Type::ReceiverFunction { .. })
                     && *mode != crate::syntax::InlineParameterMode::Noinline
@@ -1007,7 +1007,14 @@ impl Classpath {
                 }
                 slot += ty.slots() as u16;
             }
-            crate::compiled_inline::lambda_calls(&body, &slots).map_err(|error| if error.message.contains("inline lambda escapes") { Diagnostic::new(function.offset, "Inline function parameters may only be invoked directly or forwarded to an inline parameter").with_kind(crate::DiagnosticKind::InvalidKotlin, "INLINE_PARAMETER_ESCAPES") } else { error })?;
+            crate::compiled_inline::lambda_calls(&body, &slots).map_err(|error| {
+                if error.message.contains("inline lambda escapes") {
+                    Diagnostic::new(function.offset, "Generated local aliases while forwarding inline parameters are unsupported")
+                        .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "SOURCE_INLINE_CONTEXT_UNSUPPORTED")
+                } else {
+                    error
+                }
+            })?;
             if !function.private && !function.internal {
                 for instruction in &body.instructions {
                     let crate::compiled_inline::InlineOp::Reference { constant, .. } =
