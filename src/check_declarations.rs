@@ -1163,6 +1163,9 @@ pub(super) fn check_class_with_constants(
     }
     for method in members.values_mut() {
         if method.owner == owner && !method.name.starts_with('<') && method.access & 8 == 0 {
+            if let Some(parent) = required.get(&logical_member_key(method)?) {
+                method.inherit_defaults(parent);
+            }
             if let Some(result) = source_jvm_result(classpath, &super_types, method)? {
                 method.descriptor = format!(
                     "{}){}",

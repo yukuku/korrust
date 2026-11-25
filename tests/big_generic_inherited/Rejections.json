@@ -1,0 +1,4 @@
+[
+ {"id":"override-redeclares-default", "source":"open class Parent { open fun <T> echo(x:T, extra:Int=1):T=x }\nclass Bad:Parent() { override fun <R> echo(x:R,extra:Int=2):R=x }"},
+ {"id":"required-argument", "source":"open class Parent { open fun <T> echo(x:T,extra:Int):T=x }\nclass Child:Parent() { override fun <R> echo(x:R,extra:Int):R=x }\nfun bad():String=Child().echo(\"x\")"}
+]

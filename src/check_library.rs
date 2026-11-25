@@ -130,8 +130,112 @@ pub(super) fn remove_overridden(
                         })
             })
         })
-        .cloned()
+        .map(|method| {
+            let mut method = method.clone();
+            for parent in &methods {
+                if parent.owner != method.owner
+                    && parent.source_name() == method.source_name()
+                    && relations::as_supertype(
+                        classpath,
+                        &Type::Java(method.owner.clone()),
+                        &parent.owner,
+                    )
+                    .is_some()
+                    && class_method_types(parent)
+                        .ok()
+                        .zip(class_method_types(&method).ok())
+                        .is_some_and(|((a, _), (b, _))| {
+                            a.iter()
+                                .map(Type::descriptor)
+                                .eq(b.iter().map(Type::descriptor))
+                        })
+                {
+                    method.inherit_defaults(parent);
+                }
+            }
+            method
+        })
         .collect()
+}
+
+pub(super) fn default_argument_method(
+    classpath: &Classpath,
+    method: &JavaMethod,
+) -> Result<JavaMethod> {
+    let declaring = classpath.load(&method.owner)?;
+    let Some(target) = declaring.methods.iter().find(|candidate| {
+        candidate.name == method.name
+            && candidate.descriptor == method.descriptor
+            && candidate.access & 0x40 == 0
+    }) else {
+        return Ok(method.clone());
+    };
+    if target
+        .kotlin_params
+        .as_ref()
+        .is_some_and(|params| params.iter().any(|p| p.2))
+    {
+        return Ok(target.clone());
+    }
+    let receiver = declarations::classifier_type(
+        &declaring.name,
+        declaring
+            .library
+            .as_ref()
+            .map(|library| library.type_parameters.as_slice())
+            .unwrap_or(&[]),
+    );
+    let (params, result) = class_method_types(target)?;
+    let type_params = target
+        .library
+        .as_ref()
+        .map(|library| library.type_parameters.as_slice())
+        .unwrap_or(&[]);
+    let mut pending = declaring.super_name.iter().cloned().collect::<Vec<_>>();
+    let mut seen = HashSet::new();
+    while let Some(owner) = pending.pop() {
+        if !seen.insert(owner.clone()) {
+            continue;
+        }
+        if seen.len() > 256 {
+            return Err(Diagnostic::new(
+                0,
+                "Default argument inheritance exceeds the supported hierarchy depth",
+            ));
+        }
+        let parent = classpath.load(&owner)?;
+        for candidate in &parent.methods {
+            if candidate.name != target.name
+                || !candidate.instance_dispatch()
+                || candidate.access & 0x42 != 0
+                || !candidate
+                    .kotlin_params
+                    .as_ref()
+                    .is_some_and(|params| params.iter().any(|p| p.2))
+            {
+                continue;
+            }
+            let specialized =
+                specialize_receiver(candidate.clone(), &receiver, &declaring, classpath);
+            if declarations::override_generic_signature(
+                &specialized,
+                &params,
+                &result,
+                type_params,
+            )? {
+                return Ok(candidate.clone());
+            }
+        }
+        pending.extend(parent.super_name);
+    }
+    Err(Diagnostic::new(
+        0,
+        "Inherited default arguments require a supported matching class declaration",
+    )
+    .with_kind(
+        crate::DiagnosticKind::UnsupportedLanguage,
+        "INHERITED_DEFAULT_PROVIDER_UNSUPPORTED",
+    ))
 }
 
 pub(super) fn static_import_owner(

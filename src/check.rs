@@ -2396,6 +2396,7 @@ impl Checker<'_> {
                 }
             }
         } else {
+            let method = library::default_argument_method(self.classpath, &method)?;
             let descriptor = format!(
                 "(L{};{}{}Ljava/lang/Object;){}",
                 method.owner,

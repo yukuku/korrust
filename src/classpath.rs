@@ -266,6 +266,24 @@ pub(crate) enum InlineConstant {
 }
 
 impl JavaMethod {
+    pub(crate) fn inherit_defaults(&mut self, parent: &JavaMethod) {
+        if !self.instance_dispatch()
+            || !parent.instance_dispatch()
+            || parent.access & 2 != 0
+            || self.name.starts_with('<')
+            || self.source_property.is_some()
+            || parent.source_property.is_some()
+        {
+            return;
+        }
+        if let (Some(params), Some(inherited)) = (&mut self.kotlin_params, &parent.kotlin_params) {
+            if params.len() == inherited.len() {
+                for (param, inherited) in params.iter_mut().zip(inherited) {
+                    param.2 |= inherited.2;
+                }
+            }
+        }
+    }
     pub(crate) fn instance_dispatch(&self) -> bool {
         self.access & 8 == 0
             || self
@@ -1401,10 +1419,19 @@ impl Classpath {
             }
             let class = cp.load(name)?;
             for method in class.methods {
-                if !methods
-                    .iter()
-                    .any(|m| m.name == method.name && m.descriptor == method.descriptor)
+                if let Some(previous) = methods
+                    .iter_mut()
+                    .find(|m| m.name == method.name && m.descriptor == method.descriptor)
                 {
+                    if previous.access & 0x40 != 0
+                        && method.access & 0x40 == 0
+                        && method.kotlin_params.is_some()
+                    {
+                        *previous = method;
+                    } else {
+                        previous.inherit_defaults(&method);
+                    }
+                } else {
                     methods.push(method);
                 }
             }
