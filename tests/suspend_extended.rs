@@ -145,6 +145,12 @@ suspend fun immediate(seed: Long, value: Long): Long {
     suspend fun identity(argument: Long): Long = argument + seed
     return identity(value)
 }
+abstract class Source { abstract fun read(): String }
+class TextSource(val text: String): Source() { override fun read(): String = text }
+suspend fun fetch(source: Source, step: suspend (String) -> String): String {
+    suspend fun next(): String = step(source.read())
+    return next()
+}
 class Host(val seed: Int) {
     suspend fun member(step: suspend (Int) -> Int): Int {
         suspend fun next(argument: Int): Int {
@@ -192,6 +198,16 @@ public class Calls {
         check(new Host(10).member(memberStep, memberDone) == SUSPENDED);
         memberStep.pending.resumeWith(3);
         check(memberDone.count == 1 && memberDone.result.equals(13));
+        final Continuation<?>[] textPending = new Continuation<?>[1];
+        final Object[] textResult = new Object[1];
+        Continuation<String> textDone = new Continuation<String>() {
+            public CoroutineContext getContext() { return EmptyCoroutineContext.INSTANCE; }
+            public void resumeWith(Object value) { textResult[0] = value; }
+        };
+        check(ExtendedKt.fetch(new TextSource("verse"), (value, completion) -> {
+            check(value.equals("verse")); textPending[0] = completion; return SUSPENDED;
+        }, textDone) == SUSPENDED);
+        textPending[0].resumeWith("OK"); check(textResult[0].equals("OK"));
         System.out.println("OK");
     }
 }
@@ -223,4 +239,39 @@ fn local_suspend_boundaries_remain_explicit() {
         .err()
         .unwrap();
     assert_eq!(error.kind, korrust::DiagnosticKind::UnsupportedLanguage);
+}
+
+#[test]
+fn recursive_local_suspend_functions_reject_explicitly() {
+    let standard =
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("references/kotlinc/lib/kotlin-stdlib.jar");
+    for source in [
+        "suspend fun outer(): String { suspend fun again(): String = again(); return again() }",
+        "suspend fun outer(): Int { suspend fun count(n: Int): Int { if (n == 0) return 0; return count(n - 1) }; return count(3) }",
+    ] {
+        let error =
+            compile_all_with_classpath(source, "Recursive.kt", std::slice::from_ref(&standard))
+                .err()
+                .expect(source);
+        assert_eq!(error.kind, korrust::DiagnosticKind::UnsupportedLanguage);
+        assert_eq!(error.code, "SUSPEND_LOCAL_RECURSION_UNSUPPORTED");
+    }
+}
+
+#[test]
+fn unsupported_local_suspend_declaration_shapes_reject_explicitly() {
+    let standard =
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("references/kotlinc/lib/kotlin-stdlib.jar");
+    for source in [
+        "fun outer(): Int { suspend fun inner(value: Int = 1): Int = value; return 1 }",
+        "fun outer(): Int { suspend fun inner(vararg values: Int): Int = 1; return 1 }",
+        "fun outer(): Int { suspend fun <T> inner(value: T): T = value; return 1 }",
+        "fun outer(): Int { suspend fun String.inner(): String = this; return 1 }",
+    ] {
+        let error = compile_all_with_classpath(source, "Shape.kt", std::slice::from_ref(&standard))
+            .err()
+            .expect(source);
+        assert_eq!(error.kind, korrust::DiagnosticKind::UnsupportedLanguage);
+        assert_eq!(error.code, "SUSPEND_LOCAL_DECLARATION_SHAPE_UNSUPPORTED");
+    }
 }

@@ -1011,6 +1011,21 @@ impl Checker<'_> {
         &mut self,
         function: &syntax::Function,
     ) -> Result<(Vec<Statement>, bool)> {
+        if function.suspend_
+            && (!function.type_params.is_empty()
+                || function.receiver.is_some()
+                || function.defaults.iter().any(Option::is_some)
+                || function.vararg
+                || function.inline
+                || !function.annotations.is_empty()
+                || function
+                    .param_annotations
+                    .iter()
+                    .any(|annotations| !annotations.is_empty()))
+        {
+            return Err(Diagnostic::new(function.offset, "Generic, extension, defaulted, vararg, inline, and annotated local suspend functions are unsupported")
+                .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "SUSPEND_LOCAL_DECLARATION_SHAPE_UNSUPPORTED"));
+        }
         if !function.type_params.is_empty()
             || function.receiver.is_some()
             || function.defaults.iter().any(Option::is_some)
@@ -1114,6 +1129,23 @@ impl Checker<'_> {
             },
         };
         let value = self.lambda_context(&expr, &ty, None, true, Some(&function.name))?;
+        if function.suspend_
+            && self.lambdas.borrow().last().is_some_and(|lambda| {
+                lambda
+                    .captures
+                    .iter()
+                    .any(|(name, _)| name == &function.name)
+            })
+        {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Recursive local suspend functions are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "SUSPEND_LOCAL_RECURSION_UNSUPPORTED",
+            ));
+        }
         body.push(self.cell_store(cell, ty, value, function.offset)?);
         Ok((body, false))
     }

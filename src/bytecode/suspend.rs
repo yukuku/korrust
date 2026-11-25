@@ -1053,7 +1053,8 @@ pub(super) fn emit_frames_in(
                 .params
                 .iter()
                 .map(|(_, ty)| ty.slots())
-                .sum::<usize>()) as u16,
+                .sum::<usize>())
+            .max(3) as u16,
             2,
         );
         invoke.bytes.extend([0x2a, 0x2b]);
