@@ -275,3 +275,11 @@ fn unsupported_local_suspend_declaration_shapes_reject_explicitly() {
         assert_eq!(error.code, "SUSPEND_LOCAL_DECLARATION_SHAPE_UNSUPPORTED");
     }
 }
+
+#[test]
+fn anonymous_reader_uses_a_generic_capture_and_resumes_through_a_suspend_reference() {
+    compare(
+        include_str!("fixtures/language_interactions/Extended.kt"),
+        include_str!("fixtures/language_interactions/Calls.java"),
+    );
+}
