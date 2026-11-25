@@ -2170,6 +2170,7 @@ impl Checker<'_> {
                     })
                     .map(|m| library::specialize_receiver(m, &receiver.ty, &class, self.classpath))
                     .collect::<Vec<_>>();
+                let methods = library::remove_overridden(methods, self.classpath);
                 if !methods.is_empty() {
                     match self.select_method(&methods, args, offset) {
                         Ok(method) => return self.member_call(method, receiver, args, offset),
