@@ -1,0 +1,3 @@
+target/checks/2026-11-25T100705970966Z-big-generic-vararg-captures/captured-array-escape.kt:1:61: error: return type mismatch: expected 'Array<T (of fun <T> bad)>', actual 'Array<CapturedType(out T)>'.
+class Box<C> { fun <T> bad(vararg values:T):()->Array<T> = {values} }
+                                                            ^^^^^^
