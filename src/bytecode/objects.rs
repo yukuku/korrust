@@ -50,6 +50,8 @@ fn method(
     }
     let mut code = Code {
         coroutine: false,
+        suspension: None,
+        inline_markers: false,
         pool,
         functions: &[],
         owner,
@@ -186,6 +188,8 @@ fn factory(
     };
     let mut code = Code {
         coroutine: false,
+        suspension: None,
+        inline_markers: false,
         pool,
         functions: &[],
         owner,
@@ -487,6 +491,14 @@ pub fn emit_dynamic_object(
             builder.methods.push(default);
         }
     }
+    for function in &object.default_functions {
+        builder.methods.push(interface_default_function(
+            &mut builder.pool,
+            owner,
+            function,
+            lambdas,
+        )?);
+    }
     for bridge in &object.bridges {
         builder
             .methods
@@ -583,6 +595,8 @@ pub fn emit_dynamic_object(
     }
     let mut code = Code {
         coroutine: false,
+        suspension: None,
+        inline_markers: false,
         pool: &mut builder.pool,
         functions: &[],
         owner,

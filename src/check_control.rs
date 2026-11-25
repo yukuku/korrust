@@ -54,7 +54,7 @@ impl Checker<'_> {
         let (body, abrupt) = self.block_scoped(prefix, false)?;
         let result = if abrupt {
             Value {
-                ty: Type::Unit,
+                ty: expected.cloned().unwrap_or(Type::Unit),
                 kind: ValueKind::Abrupt(Vec::new()),
             }
         } else if let Some(expr) = tail {

@@ -1436,6 +1436,7 @@ pub(super) fn check_class_with_constants(
             .find(|method| method.function.offset == offset && method.function.name == name);
         let method = Function {
             suspend_: source_method.is_some_and(|method| method.function.suspend_),
+            inline: false,
             extension_receiver: source_method
                 .is_some_and(|method| method.function.receiver.is_some()),
             class_type_params: Vec::new(),
@@ -1600,6 +1601,7 @@ pub(super) fn check_class_with_constants(
             {
                 methods.push(Function {
                     suspend_: false,
+                    inline: false,
                     extension_receiver: false,
                     class_type_params: Vec::new(),
                     jvm_result: None,
@@ -1646,6 +1648,7 @@ pub(super) fn check_class_with_constants(
             {
                 methods.push(Function {
                     suspend_: false,
+                    inline: false,
                     extension_receiver: false,
                     class_type_params: Vec::new(),
                     jvm_result: None,
@@ -1734,6 +1737,7 @@ pub(super) fn check_class_with_constants(
         .collect::<Vec<_>>();
     bridges.sort_by(|a, b| a.name.cmp(&b.name).then(a.descriptor.cmp(&b.descriptor)));
     bridges.dedup_by(|a, b| a.name == b.name && a.descriptor == b.descriptor);
+    let mut default_functions = Vec::new();
     let mut required: Vec<_> = required.into_values().collect();
     required.sort_by(|a, b| a.name.cmp(&b.name));
     for method in required {
@@ -1785,12 +1789,33 @@ pub(super) fn check_class_with_constants(
             .get(&method.owner)
             .is_some_and(|c| c.kotlin_interface)
         {
-            bridges.push(direct_default_bridge(
-                method,
-                &interfaces,
-                classpath,
-                source.offset,
-            )?);
+            let method = direct_default_bridge(method, &interfaces, classpath, source.offset)?;
+            if !method.library.as_ref().is_some_and(|l| l.suspend_)
+                && (!method
+                    .library
+                    .as_ref()
+                    .is_none_or(|l| l.type_parameters.is_empty())
+                    || {
+                        let (params, result) = class_method_types(&method)?;
+                        format!(
+                            "({}){}",
+                            params.iter().map(Type::descriptor).collect::<String>(),
+                            result.descriptor()
+                        ) != method.descriptor
+                    })
+            {
+                let function = inherited_default_function(&method, &owner, &type_params, false)?;
+                if function.descriptor() != method.descriptor {
+                    generic_bridges.push(GenericBridge {
+                        erased: method,
+                        target_params: function.params.iter().map(|p| p.1.clone()).collect(),
+                        target_result: function.physical_result().clone(),
+                    });
+                }
+                default_functions.push(function);
+            } else {
+                bridges.push(method);
+            }
         }
     }
     if !source.interface_delegates.is_empty() {
@@ -2003,6 +2028,7 @@ pub(super) fn check_class_with_constants(
             initializer_local_base,
             function: Function {
                 suspend_: false,
+                inline: false,
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
@@ -2124,6 +2150,7 @@ pub(super) fn check_class_with_constants(
     }
     let abstract_methods = method_keys(|m| !m.has_body);
     Ok(ClassDecl {
+        default_functions,
         operator_offsets,
         lexical_bridges: !source.nested.is_empty(),
         inner: source.inner,
@@ -2391,6 +2418,7 @@ impl<'a> DeclarationContext<'a> {
         }
         Ok(Function {
             suspend_: false,
+            inline: false,
             extension_receiver: source.receiver.is_some(),
             class_type_params: Vec::new(),
             jvm_result: None,
@@ -3449,6 +3477,7 @@ pub(super) fn check_static_state(
         let mut getter = if property.body.is_empty() {
             Function {
                 suspend_: false,
+                inline: false,
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
@@ -3527,6 +3556,7 @@ pub(super) fn check_static_state(
                 };
                 Function {
                     suspend_: false,
+                    inline: false,
                     extension_receiver: false,
                     class_type_params: Vec::new(),
                     jvm_result: None,
@@ -4317,6 +4347,101 @@ fn constructor_read(
         _ => {}
     }
     Ok(())
+}
+
+pub(super) fn inherited_default_function(
+    method: &JavaMethod,
+    owner: &str,
+    class_parameters: &[syntax::TypeParameter],
+    interface_helper: bool,
+) -> Result<Function> {
+    let (parameters, result) = class_method_types(method)?;
+    let params: Vec<_> = parameters
+        .into_iter()
+        .enumerate()
+        .map(|(i, ty)| {
+            (
+                method
+                    .kotlin_params
+                    .as_ref()
+                    .and_then(|p| p.get(i))
+                    .map(|p| p.0.clone())
+                    .unwrap_or_else(|| format!("p{i}")),
+                ty,
+            )
+        })
+        .collect();
+    let erased_result = crate::jvm_descriptor::method_types(&method.descriptor)?.1;
+    let jvm_result =
+        if !result.is_reference() && result != Type::Unit && erased_result.is_reference() {
+            let descriptor = Type::Nullable(Box::new(result.clone())).descriptor();
+            Some(Type::Java(
+                descriptor
+                    .trim_start_matches('L')
+                    .trim_end_matches(';')
+                    .into(),
+            ))
+        } else {
+            None
+        };
+    let physical_result = jvm_result.as_ref().unwrap_or(&result).clone();
+    let mut target = method.clone();
+    if interface_helper {
+        target.owner = format!("{}$DefaultImpls", method.owner);
+        target.descriptor = format!("(L{};{}", method.owner, &method.descriptor[1..]);
+        target.access = 9;
+        target.library = None;
+    }
+    let mut args = vec![Value {
+        ty: classifier_type(owner, class_parameters),
+        kind: ValueKind::Local(0),
+    }];
+    let mut next = 1u16;
+    for (_, ty) in &params {
+        args.push(Value {
+            ty: ty.clone(),
+            kind: ValueKind::Local(next as u8),
+        });
+        next += ty.slots() as u16;
+    }
+    Ok(Function {
+        inline: false,
+        suspend_: false,
+        extension_receiver: false,
+        class_type_params: class_parameters.iter().map(|p| p.name.clone()).collect(),
+        jvm_result,
+        jvm_signature: None,
+        jvm_name: None,
+        annotations: Vec::new(),
+        vararg: method.access & 0x80 != 0,
+        type_params: method
+            .library
+            .as_ref()
+            .map(|l| l.type_parameters.clone())
+            .unwrap_or_default(),
+        defaults: Vec::new(),
+        name: method.name.clone(),
+        private: false,
+        is_override: true,
+        params,
+        result: result.clone(),
+        locals: next,
+        body: vec![Statement::Return(Value {
+            ty: physical_result,
+            kind: if interface_helper {
+                ValueKind::JavaCall {
+                    method: target,
+                    args,
+                }
+            } else {
+                ValueKind::SuperCall {
+                    interface: true,
+                    method: target,
+                    args,
+                }
+            },
+        })],
+    })
 }
 
 pub(super) fn direct_default_bridge(

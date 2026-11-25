@@ -240,8 +240,16 @@ pub(crate) struct JavaCode {
     pub max_stack: u16,
     pub max_locals: u16,
     pub bytes: Vec<u8>,
-    pub exception_handlers: u16,
+    pub exception_handlers: Vec<JavaExceptionHandler>,
     pub constants: std::sync::Arc<std::collections::BTreeMap<u16, InlineConstant>>,
+}
+
+#[derive(Clone, Debug)]
+pub(crate) struct JavaExceptionHandler {
+    pub start: usize,
+    pub end: usize,
+    pub handler: usize,
+    pub catch_type: Option<String>,
 }
 
 #[derive(Clone, Debug)]
@@ -990,7 +998,7 @@ impl Classpath {
                 .ok_or_else(invalid)?;
             let body = crate::compiled_inline::decode(code)?;
             let mut slots = std::collections::BTreeSet::new();
-            let mut slot = 0u16;
+            let mut slot = function.receiver.as_ref().map_or(0, |ty| ty.slots() as u16);
             for ((_, ty), mode) in function.params.iter().zip(&function.parameter_modes) {
                 if matches!(ty, Type::Function { .. } | Type::ReceiverFunction { .. })
                     && *mode != crate::syntax::InlineParameterMode::Noinline
@@ -999,7 +1007,14 @@ impl Classpath {
                 }
                 slot += ty.slots() as u16;
             }
-            crate::compiled_inline::lambda_calls(&body, &slots).map_err(|error| if error.message.contains("inline lambda escapes") { Diagnostic::new(function.offset, "Inline function parameters may only be invoked directly or forwarded to an inline parameter").with_kind(crate::DiagnosticKind::InvalidKotlin, "INLINE_PARAMETER_ESCAPES") } else { error })?;
+            crate::compiled_inline::lambda_calls(&body, &slots).map_err(|error| {
+                if error.message.contains("inline lambda escapes") {
+                    Diagnostic::new(function.offset, "Generated local aliases while forwarding inline parameters are unsupported")
+                        .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "SOURCE_INLINE_CONTEXT_UNSUPPORTED")
+                } else {
+                    error
+                }
+            })?;
             if !function.private && !function.internal {
                 for instruction in &body.instructions {
                     let crate::compiled_inline::InlineOp::Reference { constant, .. } =
@@ -1941,8 +1956,27 @@ fn attributes(
                     return Err(invalid());
                 }
                 let code = data.take(size)?.to_vec();
-                let exception_handlers = data.u2()?;
-                data.take(usize::from(exception_handlers) * 8)?;
+                let mut exception_handlers = Vec::new();
+                for _ in 0..data.u2()? {
+                    let start = usize::from(data.u2()?);
+                    let end = usize::from(data.u2()?);
+                    let handler = usize::from(data.u2()?);
+                    let catch_index = data.u2()?;
+                    let catch_type = if catch_index == 0 {
+                        None
+                    } else {
+                        Some(class_name(pool, catch_index)?.to_owned())
+                    };
+                    if start >= end || end > code.len() || handler >= code.len() {
+                        return Err(invalid());
+                    }
+                    exception_handlers.push(JavaExceptionHandler {
+                        start,
+                        end,
+                        handler,
+                        catch_type,
+                    });
+                }
                 for _ in 0..data.u2()? {
                     utf8(pool, data.u2()?)?;
                     let size = usize::try_from(data.u4()?).map_err(|_| invalid())?;

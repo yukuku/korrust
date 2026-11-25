@@ -1,0 +1,12 @@
+$ /workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc /workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidProjection.kt -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -cp /workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/InvalidProjection/official
+tests/anonymous_generics/boundaries/InvalidProjection.kt:2:33: error: class '<anonymous>' is not abstract and does not implement abstract member:
+fun map(value: T): T
+fun bad(): Mapper<out String> = object : Mapper<out String> { override fun map(value: String): String = value }
+                                ^^^^^^
+tests/anonymous_generics/boundaries/InvalidProjection.kt:2:49: error: projections for immediate arguments of a supertype are prohibited.
+fun bad(): Mapper<out String> = object : Mapper<out String> { override fun map(value: String): String = value }
+                                                ^^^
+tests/anonymous_generics/boundaries/InvalidProjection.kt:2:63: error: 'map' overrides nothing. Potential signatures for overriding:
+fun map(value: CapturedType(out String)): CapturedType(out String)
+fun bad(): Mapper<out String> = object : Mapper<out String> { override fun map(value: String): String = value }
+                                                              ^^^^^^^^

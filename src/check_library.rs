@@ -3,6 +3,49 @@ use super::*;
 
 pub(super) use crate::classpath::DEFAULT_KOTLIN_PACKAGES as DEFAULT_PACKAGES;
 
+fn kotlin_default_bridge(
+    classpath: &Classpath,
+    owner: &str,
+    method: &JavaMethod,
+    seen: &mut HashSet<String>,
+) -> Result<Option<JavaMethod>> {
+    if !seen.insert(owner.into()) || seen.len() > 256 {
+        return Ok(None);
+    }
+    let class = classpath.load(owner)?;
+    let receiver = declarations::classifier_type(
+        &class.name,
+        class
+            .library
+            .as_ref()
+            .map(|l| l.type_parameters.as_slice())
+            .unwrap_or(&[]),
+    );
+    for parent in class.super_name.iter().chain(&class.interfaces) {
+        let declaring = classpath.load(parent)?;
+        if declaring.kotlin_interface {
+            for candidate in declaring.methods.iter().filter(|candidate| {
+                candidate.name == method.name
+                    && candidate.access & 0x409 == 1
+                    && !candidate.unsupported
+            }) {
+                let specialized =
+                    specialize_receiver(candidate.clone(), &receiver, &declaring, classpath);
+                if candidate.descriptor == method.descriptor
+                    || declarations::logical_member_key(&specialized)?
+                        == declarations::member_key(&method.name, &method.descriptor)
+                {
+                    return Ok(Some(candidate.clone()));
+                }
+            }
+        }
+        if let Some(candidate) = kotlin_default_bridge(classpath, parent, method, seen)? {
+            return Ok(Some(candidate));
+        }
+    }
+    Ok(None)
+}
+
 pub(super) fn ordinary_member_methods(
     classpath: &Classpath,
     owner: &str,
@@ -14,6 +57,13 @@ pub(super) fn ordinary_member_methods(
         .into_iter()
         .map(|method| {
             if method.access & 0x40 != 0 && method.access & 9 == 1 {
+                if method.unsupported
+                    && classpath.load(owner)?.kotlin_class
+                    && let Some(declaration) =
+                        kotlin_default_bridge(classpath, owner, &method, &mut HashSet::new())?
+                {
+                    return Ok(declaration);
+                }
                 if let Some(declaration) = java_properties::accessibility_bridge(
                     classpath,
                     owner,
@@ -26,6 +76,14 @@ pub(super) fn ordinary_member_methods(
             Ok(method)
         })
         .collect::<Result<Vec<_>>>()?;
+    let mut seen = HashSet::new();
+    methods.retain(|method| {
+        seen.insert((
+            method.owner.clone(),
+            method.name.clone(),
+            method.descriptor.clone(),
+        ))
+    });
     for mapping in crate::classpath::jvm_builtins::PROPERTY_MAPPINGS
         .iter()
         .filter(|mapping| mapping.jvm_name == name)
@@ -447,6 +505,32 @@ impl Checker<'_> {
             self.member_call(method, receiver, args, offset)?
         };
         Ok(Some(value))
+    }
+
+    pub(super) fn inline_static_property_accessors(
+        &self,
+        name: &str,
+        arity: usize,
+    ) -> Result<Vec<JavaMethod>> {
+        if !self.public_inline_body {
+            return Ok(Vec::new());
+        }
+        let Some((owner, _)) = self.object_fields.get(name) else {
+            return Ok(Vec::new());
+        };
+        Ok(self
+            .classpath
+            .methods(owner)?
+            .into_iter()
+            .filter(|method| {
+                method.access & 8 != 0
+                    && method.source_property.as_deref() == Some(name)
+                    && method
+                        .kotlin_params
+                        .as_ref()
+                        .is_some_and(|params| params.len() == arity)
+            })
+            .collect())
     }
 
     pub(super) fn library_candidates(&self, name: &str) -> Vec<JavaMethod> {

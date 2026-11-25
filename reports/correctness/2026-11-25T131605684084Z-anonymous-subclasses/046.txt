@@ -1,0 +1,10 @@
+$ /workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc /workspace/work/next-anonymous-typevars/tests/anonymous_typevars/boundaries/InvalidEnclosingBound.kt -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -cp /workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/InvalidEnclosingBound/official
+tests/anonymous_typevars/boundaries/InvalidEnclosingBound.kt:2:49: error: type argument is not within its bounds: must be subtype of 'Number'.
+fun <T : CharSequence> invalid(value: T): Bound<T> = object : Bound<T>(value) {}
+                                                ^
+tests/anonymous_typevars/boundaries/InvalidEnclosingBound.kt:2:63: error: inapplicable candidate(s): constructor<X : Number>(value: X): Bound<X>
+fun <T : CharSequence> invalid(value: T): Bound<T> = object : Bound<T>(value) {}
+                                                              ^^^^^^^^
+tests/anonymous_typevars/boundaries/InvalidEnclosingBound.kt:2:69: error: type argument is not within its bounds: must be subtype of 'Number'.
+fun <T : CharSequence> invalid(value: T): Bound<T> = object : Bound<T>(value) {}
+                                                                    ^

@@ -132,6 +132,7 @@ pub(super) fn outer(
             }
             let reduced = crate::check::Function {
                 suspend_: false,
+                inline: false,
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
@@ -179,6 +180,8 @@ pub(super) fn outer(
     }
     let mut code = Code {
         coroutine: false,
+        suspension: None,
+        inline_markers: false,
         pool,
         functions: &[],
         owner,
@@ -357,6 +360,8 @@ pub(super) fn emit(
         }
         let mut code = Code {
             coroutine: false,
+            suspension: None,
+            inline_markers: false,
             pool: &mut pool,
             functions: &companion.methods,
             owner: &companion.owner,

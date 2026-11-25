@@ -1,0 +1,2183 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-25T13:35:59.069323+00:00",
+  "status": "completed",
+  "compiler": {
+    "binary": "target/four-kotlin-83b83fd274/korrust",
+    "sha256": "b34b50492ccb5ddf122f5924bcf1bf472f39435df4de96d346f77a40176d16b2",
+    "identity_source": "Fresh candidate Gradle build receipt; this runner does not rebuild production classes."
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "consumer_options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "21",
+      "-module-name",
+      "nov25_downstream"
+    ]
+  },
+  "inputs": {
+    "files_sha256": {
+      "benchmarks/source-files.sha256.json": "48e5d343ebfb4b24c87485a754bdfb237164a1c574b7c40cce7cbc8fc0357a4c",
+      "benchmarks/sources/androidbible/AlkitabIo/src/main/java/yuku/alkitab/io/BibleReader.java": "43d99d61578efb081c55b6b063044a8297afbe45ecd51be6bd37ac0d09ea5d09",
+      "benchmarks/sources/androidbible/AlkitabIo/src/main/java/yuku/alkitab/io/OptionalGzipInputStream.java": "11dea2874cfc7f1614d7ac89bfe11f45a564797849a7fe07dee047aa4e44e46d",
+      "benchmarks/sources/androidbible/AlkitabIo/src/main/java/yuku/alkitab/io/Utf8Decoder.kt": "acf20f118b8599b2fb4a6265edc9528b9f19107fabf790709451256edc8738d3",
+      "benchmarks/sources/androidbible/AlkitabIo/src/test/java/yuku/alkitab/io/OptionalGzipInputStreamTest.java": "9a6123733f7ab4e1cd16e80c49977269e845faf0094cecfa33076e8ce698b8ba",
+      "benchmarks/sources/androidbible/AlkitabIo/src/test/java/yuku/alkitab/io/Utf8DecoderTest.java": "7905ab14a5fc176ed3e6541debfbe9d04eae1a4be2ee77775522c05e7fd314bd",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/Book.java": "b2252ed24845fc39467c38d1371c62c8da3b933688565dcc5cfdbb119ce8436a",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/FootnoteEntry.java": "09d7a792ad60d7932c7f34c6c77bfe4e2e652c88027ceed6fecb8df5d8d25a88",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/InternalBook.java": "a76c87e74346cf3fad7b2f6212e2e558b1f26f0698ef09c9f4327cea8a4e7efe",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/Label.java": "dd24b8d19ff96f5110e4c49279f86bab7c5fe3311de6e5abdb0a969d489352ce",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/Marker.java": "c00148ecc4e220f7639274c1b8b495e4f8e80a4cd15f35d5903ad446c1da7678",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/Marker_Label.java": "09eea73779ebe0100f4aa0c37e20f6b1ab1f41dd7bf84e1066aba96e31667a53",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/PericopeBlock.java": "404d98f14b3be77a611e743c089c3713c882bfa80883d5f1001daf78f68597d4",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/PericopeIndex.java": "391c6547ae374729fcf91677cbac242653e10e9b5ad50aec9989298f8efdeee8",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/ProgressMark.java": "ac773a4d0335119a59ba6918a70222b2d9ee21a55d86a9046d980bae056c1822",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/ProgressMarkHistory.java": "89bad497f3fd90859db8dd0839f1c7e20ffe37fb35772542810c1996f0ddbbe9",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/SingleChapterVerses.kt": "1ffdebcffa174e2c119205b2ed7698fc9d47a0dd2deaf9e816eb84faa388ab02",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/Version.java": "32fe177df4c6c46b75c571ea99b4d3dd6bc402719e7e6a99e0244e0a6f7023fc",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/XrefEntry.java": "1d38e6427f58f92f7a9b7ee505965aa9751223744c84b2e3974feb255b5db8ff",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/model/util/Gid.java": "fb9fda2d2b1e291eef2723f2106085054b1f044fa29b714e396bda6bdc334a4b",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/util/Ari.java": "9a10ecc9388ccd4194e81f5b42200ed3fd72efa03a0a3aaf3649158ab6b04515",
+      "benchmarks/sources/androidbible/AlkitabModel/src/main/java/yuku/alkitab/util/IntArrayList.java": "b5cbcca6e5c785a3b96bb9d56091a13fe23fc95318506d28af0503a5b68db88c",
+      "benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/Yes2SingleChapterVerses.kt": "0162f744a5d6a09e955a1111c68b50b3b3864ca36f7f9ba65936440de10b7290",
+      "benchmarks/sources.json": "d88269921818e783935300c3aa8873595466293da3e8fe5b02f26522f39abfd4",
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+      "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+      "target/four-kotlin-83b83fd274/korrust": "b34b50492ccb5ddf122f5924bcf1bf472f39435df4de96d346f77a40176d16b2",
+      "target/four-kotlin-83b83fd274-artifacts/korrust/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar": "abeff073929aa4f0d082f641d5bc39de0372ce9480b34bebe62b8d7365ec2804",
+      "target/four-kotlin-83b83fd274-artifacts/korrust/modules/AlkitabIo/module-build/outputs/aar/AlkitabIo-release.aar": "25d26e8b7d89427d4a013461566649bb23426881f22a81669d41872b650d7828",
+      "target/four-kotlin-83b83fd274-artifacts/korrust/modules/AlkitabModel/module-build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar": "c0241e3c302f852847268e2add1d3eb7b70899d3316bfa6a5e061fcbf3275f8a",
+      "target/four-kotlin-83b83fd274-artifacts/korrust/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar": "16aac87d200ab186fb701fcec8cffbb0f271d9b845dec8d3303c8a49ab50be32",
+      "target/four-kotlin-83b83fd274-artifacts/korrust/modules/AlkitabModel/module-build/outputs/aar/AlkitabModel-release.aar": "45e7f3d29b9511179ee2bf8e0bc3154044b97bdc8480823495925260dcb9c379",
+      "target/four-kotlin-83b83fd274-build.json": "d096b0e3676d89c7f1f84ebe4b07f25fc94a33b9c182b69f0e7d788441ee7b6f",
+      "target/four-kotlin-83b83fd274-project/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar": "a94964515b553bdccbc6ff68c46416384c3214584d2e898ab78821e0a1327c06",
+      "target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar": "abeff073929aa4f0d082f641d5bc39de0372ce9480b34bebe62b8d7365ec2804",
+      "target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/outputs/aar/AlkitabIo-release.aar": "d2aaf6beb36f92d7c69c2da136418896f9c9e8d34e861b52127947833ae02cb6",
+      "target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar": "1c4441f5cea6e05d7e3ded0a5e920c528b742fb9280a641f05fd80dcb4c22df4",
+      "target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar": "16aac87d200ab186fb701fcec8cffbb0f271d9b845dec8d3303c8a49ab50be32",
+      "target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/outputs/aar/AlkitabModel-release.aar": "2d7ceaffd06df91b456ab8f0a5c51311663264a06d31dcbc1da6caa66c839200",
+      "target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar": "a94964515b553bdccbc6ff68c46416384c3214584d2e898ab78821e0a1327c06",
+      "tests/fixtures/InterfaceAssertions.java": "f560e4eacfb57ae417f7279831befbc561a98faec38c0a90785117bab0419ad1",
+      "tests/fixtures/ModelCheck.java": "9042abcb3930cca80e011d82a7ea8dbec759cf9ebb813bc40e2a02163ab3e486",
+      "tests/fixtures/ModuleClassVerification.java": "a1cda2b94555795253ae8a250279a84c5ffd9e0b91f337be7189ba229b23e414",
+      "tests/fixtures/consumers/IoNullAccess.kt": "1f7b032981de1078556f60b2fdad29575fb53505d171d15b539673984e2f394e",
+      "tests/fixtures/consumers/IoPrivateAccess.kt": "7a672286c880c63e9da9457da71263401d845e38e95bb7ab3ea026eab60010b5",
+      "tests/fixtures/consumers/ModelPrivateAccess.kt": "05278b8a30ef0f7b612213dd72a2f68b043b042ac390f91be2e4b7d5675f1eda",
+      "tests/fixtures/io/IoCheck.java": "6cb717f576ba759c6bb569550b8559c2df3be4e483e237f4f167bb3c6dea1cac",
+      "tests/fixtures/io/SupplierCheck.java": "6f9e85886eacb6f8ac99e47c59ac0ae9068bfe571cdbec96e5ac95eb05650de4",
+      "tests/fixtures/model_io_consumers/BridgeCheck.java": "6e49e4fc65da907405d45e7c11d69eddedd94afe99a839f160ee3ee11ab63cf8",
+      "tests/fixtures/model_io_consumers/Consumer.kt": "93b4deef33c8f2cb108c559a73ec65344cc01837c28964cced325581646c61ea",
+      "tools/check_androidbible_io.py": "9615392b18317d170e2ffd25144d9cd95515a82d15e08626d83ff292acb889fd",
+      "tools/check_androidbible_model_io_consumers.py": "12e3e1d8582cd1ba018b5b7321f700d329a5b1102c42d1047a9c180265b851f1",
+      "tools/check_androidbible_module.py": "9f15b985bc4d72455f2555149061e5747f4dd7539a5f473a6a80e622f848a1ee",
+      "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar": "60b10b5ef5769b79570172e015b8159405c92f034ba88b9391a977589c9deb4e",
+      "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478",
+      "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+      "/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar": "2feb8df434cae3218ed9ffe9bae01ddec101d1dc5e12824c4209f61e283e0d3d",
+      "/workspace/work/deps33/sdk/platforms/android-36/android.jar": "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a",
+      "/workspace/work/modelio25/official-build.json": "998154426edd587b2142222f4e7066be162ed3ac212119b9922cb2834adfedee"
+    },
+    "build_receipts": {
+      "official": {
+        "path": "/workspace/work/modelio25/official-build.json",
+        "sha256": "998154426edd587b2142222f4e7066be162ed3ac212119b9922cb2834adfedee"
+      },
+      "candidate": {
+        "path": "target/four-kotlin-83b83fd274-build.json",
+        "sha256": "d096b0e3676d89c7f1f84ebe4b07f25fc94a33b9c182b69f0e7d788441ee7b6f"
+      }
+    },
+    "build_evidence": null,
+    "downstream_original_source": "benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/Yes2SingleChapterVerses.kt",
+    "androidbible_revision": "624629093af37d0d7f85699bfa0caa562fc41e61",
+    "artifacts": {
+      "official": {
+        "AlkitabModel": {
+          "aar": "target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/outputs/aar/AlkitabModel-release.aar",
+          "aar_sha256": "2d7ceaffd06df91b456ab8f0a5c51311663264a06d31dcbc1da6caa66c839200",
+          "classes_jar": "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+          "classes_jar_sha256": "3c061cec50d0c8dded93a53552c7359646136b5696ed95eca0e01dc4b23b510d",
+          "classes_sha256": {
+            "yuku/alkitab/model/Book$1.class": "250ba3de8a334b24e9a99ae5c0904aa41792178fa8ba9bb70ad12eaa9b178ced",
+            "yuku/alkitab/model/Book.class": "b03744fea976013984f293a62ba3f8e92bd3a63d11adf5e6bd9138b069dfb385",
+            "yuku/alkitab/model/FootnoteEntry.class": "fb4788f607c0f4a74a6e777cf47207ac9166c42ba7facdbdd160e8cb2456a152",
+            "yuku/alkitab/model/InternalBook.class": "6b7f0d3c6aec2474bb5f5ddcaf4207b53716d4e6479b797874afab79c11daad7",
+            "yuku/alkitab/model/Label.class": "43afc72b822f769940963501be7608f281e9a2467daee5cabffca6b28d3d655d",
+            "yuku/alkitab/model/Marker$Kind.class": "f4c4e49c9e74cf1615c41284f5170b6264241183809cc88d9afb028166a5726b",
+            "yuku/alkitab/model/Marker.class": "93abbc305f0095be828f82d9faf300be81f5c43f41a87de9ac0194ecf96a107a",
+            "yuku/alkitab/model/Marker_Label.class": "9e15ec6c2c7860f5e5fb4cb93d836d1a8f8675e93810fd068d5f736b88107055",
+            "yuku/alkitab/model/PericopeBlock.class": "4325d8665b442d9bde6130e5ecb9ce198ba2f475c68feb6ff7514366e58d4f61",
+            "yuku/alkitab/model/PericopeIndex.class": "a5c1c0ff60a10bdf65181893516862779622bd7975b9d386830786d586b4098a",
+            "yuku/alkitab/model/ProgressMark.class": "aa58a8a0c4b1e254ae1f2088f1848b5b0fd8300115ff075d151240636d18ff1f",
+            "yuku/alkitab/model/ProgressMarkHistory.class": "6b009df8c43106d1f967b55baf519c6f014baa48be89544221627908f44a6105",
+            "yuku/alkitab/model/SingleChapterVerses$Companion$EMPTY$1.class": "413d07de3ee9ce087a1b0e656a6d8c87313bce4315838c314c2d17ed695a3825",
+            "yuku/alkitab/model/SingleChapterVerses$Companion.class": "cc48fab324d1d6d219c423334c94fe0c2c2e7204581868d0ba051085503bc842",
+            "yuku/alkitab/model/SingleChapterVerses$DefaultImpls.class": "0db704f79eab8d0ae128cebcce6a48c17bcb1a4f6d1bd93447422512fd80d57a",
+            "yuku/alkitab/model/SingleChapterVerses$WithTextSizeMult$DefaultImpls.class": "4b040ba774fa3131715b16a6614ba03335c2124d15a1418ce501aca502632723",
+            "yuku/alkitab/model/SingleChapterVerses$WithTextSizeMult.class": "b84f8fa022a9293895cb2f74b3c3d56203ee3c0b472d38c571720c4c99f848b1",
+            "yuku/alkitab/model/SingleChapterVerses.class": "cd6c3c8e5d5757363de3f4d25bbee26c10ceb8947eb6c803ce0f5097be9427cc",
+            "yuku/alkitab/model/Version$UnavailableBookNames.class": "6eff270225bbacc0433ffcc2566bd4f3651a89318f05a742c0265d4c2160cb08",
+            "yuku/alkitab/model/Version.class": "369bf42d7127dc99791f73224e2420b4ac9a4d615a497a324bafc5f1077d16c6",
+            "yuku/alkitab/model/XrefEntry.class": "af2b4b3eb641f039aabe908b4f597ca88a19e66cb4413f16df48ae385b098bfe",
+            "yuku/alkitab/model/util/Gid.class": "dbf5be27864c8bf9fb2c23c21102e154880345c39fc510b3760907383ae1d3eb",
+            "yuku/alkitab/util/Ari.class": "6d97cc9fc11646d2db93c9c086f8f284a6129716c71d5575e166497a7ee8299a",
+            "yuku/alkitab/util/IntArrayList$1.class": "bd48ca1d088550d87f5177098a5f86be163ee99aa88e3ac4de7e3b9fcb200312",
+            "yuku/alkitab/util/IntArrayList.class": "eea23a10c566e84bf89fb109228aec8cc317ddb58a298f41212dcc41ef5160cd"
+          }
+        },
+        "AlkitabIo": {
+          "aar": "target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/outputs/aar/AlkitabIo-release.aar",
+          "aar_sha256": "d2aaf6beb36f92d7c69c2da136418896f9c9e8d34e861b52127947833ae02cb6",
+          "classes_jar": "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabIo.jar",
+          "classes_jar_sha256": "58743b9ec9b90c2c43076ff303333ffdac03f762e7dfc43a0de90067e4d7c22d",
+          "classes_sha256": {
+            "yuku/alkitab/io/BibleReader.class": "744f19b546e8c8af85f5334667698248a751138f807369820f5daa49e362b959",
+            "yuku/alkitab/io/OptionalGzipInputStream$PeekInputStream.class": "d192abc846fbd06b5c15b0dcc7f4b24cdecd5a0d1e428590f01d0a74c7f36269",
+            "yuku/alkitab/io/OptionalGzipInputStream.class": "2e32a300aefa656eeca7a97aa918696b786afe397b4b604ea9aa7f73bd4e8835",
+            "yuku/alkitab/io/Utf8Decoder.class": "bb1ebe8622a0893803f5890412bceaf3c41410975a3abb10ed1c2fe4bd5b646e"
+          }
+        }
+      },
+      "candidate": {
+        "AlkitabModel": {
+          "aar": "target/four-kotlin-83b83fd274-artifacts/korrust/modules/AlkitabModel/module-build/outputs/aar/AlkitabModel-release.aar",
+          "aar_sha256": "45e7f3d29b9511179ee2bf8e0bc3154044b97bdc8480823495925260dcb9c379",
+          "classes_jar": "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+          "classes_jar_sha256": "d3dc500c698b3d547199d070678c44c3a8b26b0fe4f132a7e4fe7f00d918633c",
+          "classes_sha256": {
+            "yuku/alkitab/model/Book$1.class": "250ba3de8a334b24e9a99ae5c0904aa41792178fa8ba9bb70ad12eaa9b178ced",
+            "yuku/alkitab/model/Book.class": "b03744fea976013984f293a62ba3f8e92bd3a63d11adf5e6bd9138b069dfb385",
+            "yuku/alkitab/model/FootnoteEntry.class": "fb4788f607c0f4a74a6e777cf47207ac9166c42ba7facdbdd160e8cb2456a152",
+            "yuku/alkitab/model/InternalBook.class": "6b7f0d3c6aec2474bb5f5ddcaf4207b53716d4e6479b797874afab79c11daad7",
+            "yuku/alkitab/model/Label.class": "43afc72b822f769940963501be7608f281e9a2467daee5cabffca6b28d3d655d",
+            "yuku/alkitab/model/Marker$Kind.class": "f4c4e49c9e74cf1615c41284f5170b6264241183809cc88d9afb028166a5726b",
+            "yuku/alkitab/model/Marker.class": "93abbc305f0095be828f82d9faf300be81f5c43f41a87de9ac0194ecf96a107a",
+            "yuku/alkitab/model/Marker_Label.class": "9e15ec6c2c7860f5e5fb4cb93d836d1a8f8675e93810fd068d5f736b88107055",
+            "yuku/alkitab/model/PericopeBlock.class": "4325d8665b442d9bde6130e5ecb9ce198ba2f475c68feb6ff7514366e58d4f61",
+            "yuku/alkitab/model/PericopeIndex.class": "a5c1c0ff60a10bdf65181893516862779622bd7975b9d386830786d586b4098a",
+            "yuku/alkitab/model/ProgressMark.class": "aa58a8a0c4b1e254ae1f2088f1848b5b0fd8300115ff075d151240636d18ff1f",
+            "yuku/alkitab/model/ProgressMarkHistory.class": "6b009df8c43106d1f967b55baf519c6f014baa48be89544221627908f44a6105",
+            "yuku/alkitab/model/SingleChapterVerses$Companion$EMPTY$1.class": "7b720a307f5b62cbf28ffd28358d015a5b46be6f98adcadab65b999e399f9227",
+            "yuku/alkitab/model/SingleChapterVerses$Companion.class": "21f642087db140d6638d910efc7cea065d8a1179ff286b1253d6b9354b874a74",
+            "yuku/alkitab/model/SingleChapterVerses$DefaultImpls.class": "03b4195884fe9342a1e3d989592f3e775e00ada9b89bbfbb46a117287451b7c9",
+            "yuku/alkitab/model/SingleChapterVerses$WithTextSizeMult$DefaultImpls.class": "a6e5e947438816581a389a26844b8dcf405d9e6ded99b06c8332a22bc79448e4",
+            "yuku/alkitab/model/SingleChapterVerses$WithTextSizeMult.class": "54c59b07fcbcc71b269ab23e592058121ba0df839389d68657213a0a5b017207",
+            "yuku/alkitab/model/SingleChapterVerses.class": "a763aedad922255c91f0be702778b9b72d860a8e0f588f4a6ddb7def5a4550be",
+            "yuku/alkitab/model/Version$UnavailableBookNames.class": "6eff270225bbacc0433ffcc2566bd4f3651a89318f05a742c0265d4c2160cb08",
+            "yuku/alkitab/model/Version.class": "369bf42d7127dc99791f73224e2420b4ac9a4d615a497a324bafc5f1077d16c6",
+            "yuku/alkitab/model/XrefEntry.class": "af2b4b3eb641f039aabe908b4f597ca88a19e66cb4413f16df48ae385b098bfe",
+            "yuku/alkitab/model/util/Gid.class": "dbf5be27864c8bf9fb2c23c21102e154880345c39fc510b3760907383ae1d3eb",
+            "yuku/alkitab/util/Ari.class": "6d97cc9fc11646d2db93c9c086f8f284a6129716c71d5575e166497a7ee8299a",
+            "yuku/alkitab/util/IntArrayList$1.class": "bd48ca1d088550d87f5177098a5f86be163ee99aa88e3ac4de7e3b9fcb200312",
+            "yuku/alkitab/util/IntArrayList.class": "eea23a10c566e84bf89fb109228aec8cc317ddb58a298f41212dcc41ef5160cd"
+          }
+        },
+        "AlkitabIo": {
+          "aar": "target/four-kotlin-83b83fd274-artifacts/korrust/modules/AlkitabIo/module-build/outputs/aar/AlkitabIo-release.aar",
+          "aar_sha256": "25d26e8b7d89427d4a013461566649bb23426881f22a81669d41872b650d7828",
+          "classes_jar": "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabIo.jar",
+          "classes_jar_sha256": "486ba983665198a64ff5f9a57cfe46bb7fb47518371df033fe5f132c304e51a4",
+          "classes_sha256": {
+            "yuku/alkitab/io/BibleReader.class": "744f19b546e8c8af85f5334667698248a751138f807369820f5daa49e362b959",
+            "yuku/alkitab/io/OptionalGzipInputStream$PeekInputStream.class": "d192abc846fbd06b5c15b0dcc7f4b24cdecd5a0d1e428590f01d0a74c7f36269",
+            "yuku/alkitab/io/OptionalGzipInputStream.class": "2e32a300aefa656eeca7a97aa918696b786afe397b4b604ea9aa7f73bd4e8835",
+            "yuku/alkitab/io/Utf8Decoder$byteBuffer$Supplier.class": "59bab804218628521cd0ffe98fccddfd8769e9f2b0f6fb7271cf70355c0264a1",
+            "yuku/alkitab/io/Utf8Decoder$charBuffer$Supplier.class": "566af545587afaa56ca99bf38a69ce1023d1a22a02153308987ae337958dc019",
+            "yuku/alkitab/io/Utf8Decoder.class": "91275800903edf84bfa368c9a24d01cbf5de8ef25706adfb29393a6717d416cf"
+          }
+        }
+      }
+    },
+    "shared_classpath": [
+      "/workspace/work/deps33/sdk/platforms/android-36/android.jar",
+      "/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+      "target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar",
+      "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar",
+      "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar",
+      "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+      "target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar",
+      "target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar"
+    ],
+    "omitted_selected_compile_jars": {
+      "official": [
+        {
+          "path": "target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+          "sha256": "1c4441f5cea6e05d7e3ded0a5e920c528b742fb9280a641f05fd80dcb4c22df4",
+          "reason": "Selected module compile output replaced by its freshly packaged AAR classes.jar"
+        }
+      ],
+      "candidate": [
+        {
+          "path": "target/four-kotlin-83b83fd274-artifacts/korrust/modules/AlkitabModel/module-build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+          "sha256": "c0241e3c302f852847268e2add1d3eb7b70899d3316bfa6a5e061fcbf3275f8a",
+          "reason": "Selected module compile output replaced by its freshly packaged AAR classes.jar"
+        }
+      ]
+    },
+    "shadowed_external_class_entries": {
+      "official": [
+        {
+          "class": "java/lang/invoke/CallSite.class",
+          "path": "/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+          "sha256": "af7c0e52cce24adce45f8559f226a53978a40ba890f0908e7d594b374222fa90",
+          "effective_sha256": "f4cf36cb5f5fd0da654b58d9496d59bed2d40fa6ab840494d5cb45787bdfcd86"
+        },
+        {
+          "class": "java/lang/invoke/LambdaConversionException.class",
+          "path": "/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+          "sha256": "0ae4899d74b278cb9c323b5794830268f93b849ad1d7e0f46eed8d516fbf200e",
+          "effective_sha256": "fbb6f04f1ba72df3e620929ec60465a5764f3d5b8c8421bc083e942700f3388e"
+        },
+        {
+          "class": "java/lang/invoke/MethodHandle.class",
+          "path": "/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+          "sha256": "2b33f0ebd048f78c8d8185be7b6e70b1c722aa2f4fe5ce7e7407940f5d51c768",
+          "effective_sha256": "68ff9e3f3a1283b5a1c1f780ba1ba19735ee779dc7f1f9c4d55fb4681cb6bdef"
+        },
+        {
+          "class": "java/lang/invoke/MethodHandles$Lookup.class",
+          "path": "/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+          "sha256": "194f881d48ae979576f8d46c303a8e4df4cf2c59dbd7f3e0677fd8aa966564da",
+          "effective_sha256": "d9e6b1e13fecb7269203a6135db51b53347eb668ccfccd39ca42fb4b534a73b9"
+        },
+        {
+          "class": "java/lang/invoke/MethodHandles.class",
+          "path": "/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+          "sha256": "b6a48dc5e5c24da03778736508f0b4e9c471c4aacb2b109a2ee5eecad8cdf635",
+          "effective_sha256": "5777768836bd59081059259894f7bd2cebd052de13e7448c70fffcb009b1d1de"
+        },
+        {
+          "class": "java/lang/invoke/MethodType.class",
+          "path": "/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+          "sha256": "f3b42d95ea40db416245a18a845476c9a18034886e890242f696dd73ac76113e",
+          "effective_sha256": "daaa34550a83941f1c9081aff70dd2e2ec48bf54be4261adc5e12c9503aabe8d"
+        },
+        {
+          "class": "java/lang/invoke/StringConcatException.class",
+          "path": "/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+          "sha256": "8a7a5d0621d55631d19d28f4656c2eedd5b2c610fde26460d60ee6d5a56c899d",
+          "effective_sha256": "8bef179c24de0eee938065ed68ed349a317d0dde110d198dcfccbe01929947c6"
+        },
+        {
+          "class": "java/lang/runtime/SwitchBootstraps.class",
+          "path": "/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+          "sha256": "b848983705450e7ff75d704c06996440dde7d91d29f8d6d87215c2eeea789c77",
+          "effective_sha256": "f41495ab380849f6b15154376995ee6e1f5878bbde07c6baaef0ce9383268632"
+        }
+      ],
+      "candidate": [
+        {
+          "class": "java/lang/invoke/CallSite.class",
+          "path": "/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+          "sha256": "af7c0e52cce24adce45f8559f226a53978a40ba890f0908e7d594b374222fa90",
+          "effective_sha256": "f4cf36cb5f5fd0da654b58d9496d59bed2d40fa6ab840494d5cb45787bdfcd86"
+        },
+        {
+          "class": "java/lang/invoke/LambdaConversionException.class",
+          "path": "/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+          "sha256": "0ae4899d74b278cb9c323b5794830268f93b849ad1d7e0f46eed8d516fbf200e",
+          "effective_sha256": "fbb6f04f1ba72df3e620929ec60465a5764f3d5b8c8421bc083e942700f3388e"
+        },
+        {
+          "class": "java/lang/invoke/MethodHandle.class",
+          "path": "/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+          "sha256": "2b33f0ebd048f78c8d8185be7b6e70b1c722aa2f4fe5ce7e7407940f5d51c768",
+          "effective_sha256": "68ff9e3f3a1283b5a1c1f780ba1ba19735ee779dc7f1f9c4d55fb4681cb6bdef"
+        },
+        {
+          "class": "java/lang/invoke/MethodHandles$Lookup.class",
+          "path": "/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+          "sha256": "194f881d48ae979576f8d46c303a8e4df4cf2c59dbd7f3e0677fd8aa966564da",
+          "effective_sha256": "d9e6b1e13fecb7269203a6135db51b53347eb668ccfccd39ca42fb4b534a73b9"
+        },
+        {
+          "class": "java/lang/invoke/MethodHandles.class",
+          "path": "/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+          "sha256": "b6a48dc5e5c24da03778736508f0b4e9c471c4aacb2b109a2ee5eecad8cdf635",
+          "effective_sha256": "5777768836bd59081059259894f7bd2cebd052de13e7448c70fffcb009b1d1de"
+        },
+        {
+          "class": "java/lang/invoke/MethodType.class",
+          "path": "/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+          "sha256": "f3b42d95ea40db416245a18a845476c9a18034886e890242f696dd73ac76113e",
+          "effective_sha256": "daaa34550a83941f1c9081aff70dd2e2ec48bf54be4261adc5e12c9503aabe8d"
+        },
+        {
+          "class": "java/lang/invoke/StringConcatException.class",
+          "path": "/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+          "sha256": "8a7a5d0621d55631d19d28f4656c2eedd5b2c610fde26460d60ee6d5a56c899d",
+          "effective_sha256": "8bef179c24de0eee938065ed68ed349a317d0dde110d198dcfccbe01929947c6"
+        },
+        {
+          "class": "java/lang/runtime/SwitchBootstraps.class",
+          "path": "/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar",
+          "sha256": "b848983705450e7ff75d704c06996440dde7d91d29f8d6d87215c2eeea789c77",
+          "effective_sha256": "f41495ab380849f6b15154376995ee6e1f5878bbde07c6baaef0ce9383268632"
+        }
+      ]
+    },
+    "external_class_map_sha256": "e98416c33b94b76207bd2cb40b98772f726ab702a8df4d0475f0a8174c5c5b1d"
+  },
+  "reproduction_commands": [
+    [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "tools/check_androidbible_model_io_consumers.py",
+      "--official-json",
+      "/workspace/work/modelio25/official-build.json",
+      "--candidate-json",
+      "/workspace/korrust/target/four-kotlin-83b83fd274-build.json"
+    ]
+  ],
+  "commands": [
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.Book$1",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.Book$1"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/000-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.Book$1",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.Book$1"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/001-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.Book",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.Book"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/002-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.Book",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.Book"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/003-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.FootnoteEntry",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.FootnoteEntry"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/004-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.FootnoteEntry",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.FootnoteEntry"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/005-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.InternalBook",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.InternalBook"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/006-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.InternalBook",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.InternalBook"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/007-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.Label",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.Label"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/008-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.Label",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.Label"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/009-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.Marker$Kind",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.Marker$Kind"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/010-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.Marker$Kind",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.Marker$Kind"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/011-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.Marker",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.Marker"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/012-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.Marker",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.Marker"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/013-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.Marker_Label",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.Marker_Label"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/014-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.Marker_Label",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.Marker_Label"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/015-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.PericopeBlock",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.PericopeBlock"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/016-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.PericopeBlock",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.PericopeBlock"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/017-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.PericopeIndex",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.PericopeIndex"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/018-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.PericopeIndex",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.PericopeIndex"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/019-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.ProgressMark",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.ProgressMark"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/020-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.ProgressMark",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.ProgressMark"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/021-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.ProgressMarkHistory",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.ProgressMarkHistory"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/022-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.ProgressMarkHistory",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.ProgressMarkHistory"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/023-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.SingleChapterVerses$Companion$EMPTY$1",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.SingleChapterVerses$Companion$EMPTY$1"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/024-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.SingleChapterVerses$Companion$EMPTY$1",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.SingleChapterVerses$Companion$EMPTY$1"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/025-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.SingleChapterVerses$Companion",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.SingleChapterVerses$Companion"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/026-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.SingleChapterVerses$Companion",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.SingleChapterVerses$Companion"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/027-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.SingleChapterVerses$DefaultImpls",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.SingleChapterVerses$DefaultImpls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/028-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/028-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.SingleChapterVerses$DefaultImpls",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.SingleChapterVerses$DefaultImpls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/029-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/029-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult$DefaultImpls",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult$DefaultImpls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/030-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/030-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult$DefaultImpls",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult$DefaultImpls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/031-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/031-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/032-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/032-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/033-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/033-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.SingleChapterVerses",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.SingleChapterVerses"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/034-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/034-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.SingleChapterVerses",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.SingleChapterVerses"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/035-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/035-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.Version$UnavailableBookNames",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.Version$UnavailableBookNames"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/036-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/036-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.Version$UnavailableBookNames",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.Version$UnavailableBookNames"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/037-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/037-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.Version",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.Version"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/038-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/038-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.Version",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.Version"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/039-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/039-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.XrefEntry",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.XrefEntry"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/040-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/040-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.XrefEntry",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.XrefEntry"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/041-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/041-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.model.util.Gid",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.model.util.Gid"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/042-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/042-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.model.util.Gid",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.model.util.Gid"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/043-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/043-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.util.Ari",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.util.Ari"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/044-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/044-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.util.Ari",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.util.Ari"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/045-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/045-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.util.IntArrayList$1",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.util.IntArrayList$1"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/046-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/046-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.util.IntArrayList$1",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.util.IntArrayList$1"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/047-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/047-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.util.IntArrayList",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "yuku.alkitab.util.IntArrayList"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/048-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/048-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.util.IntArrayList",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "yuku.alkitab.util.IntArrayList"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/049-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/049-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.io.BibleReader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabIo.jar",
+        "yuku.alkitab.io.BibleReader"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/050-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/050-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.io.BibleReader",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabIo.jar",
+        "yuku.alkitab.io.BibleReader"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/051-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/051-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.io.OptionalGzipInputStream$PeekInputStream",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabIo.jar",
+        "yuku.alkitab.io.OptionalGzipInputStream$PeekInputStream"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/052-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/052-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.io.OptionalGzipInputStream$PeekInputStream",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabIo.jar",
+        "yuku.alkitab.io.OptionalGzipInputStream$PeekInputStream"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/053-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/053-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.io.OptionalGzipInputStream",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabIo.jar",
+        "yuku.alkitab.io.OptionalGzipInputStream"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/054-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/054-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.io.OptionalGzipInputStream",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabIo.jar",
+        "yuku.alkitab.io.OptionalGzipInputStream"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/055-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/055-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI official/yuku.alkitab.io.Utf8Decoder",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabIo.jar",
+        "yuku.alkitab.io.Utf8Decoder"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/056-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/056-stderr.txt"
+    },
+    {
+      "label": "Source JVM ABI candidate/yuku.alkitab.io.Utf8Decoder",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabIo.jar",
+        "yuku.alkitab.io.Utf8Decoder"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/057-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/057-stderr.txt"
+    },
+    {
+      "label": "Official Kotlin downstream consumer compile against official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/Yes2SingleChapterVerses.kt",
+        "/workspace/korrust/tests/fixtures/model_io_consumers/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "nov25_downstream",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-kotlin-consumer"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/058-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/058-stderr.txt"
+    },
+    {
+      "label": "Official Kotlin downstream consumer compile against candidate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/benchmarks/sources/androidbible/AlkitabYes2/src/main/java/yuku/alkitab/yes2/Yes2SingleChapterVerses.kt",
+        "/workspace/korrust/tests/fixtures/model_io_consumers/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "nov25_downstream",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-kotlin-consumer"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/059-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/059-stderr.txt"
+    },
+    {
+      "label": "Compile fixed Java callers against official AARs and official Kotlin consumer",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-kotlin-consumer:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers",
+        "/workspace/korrust/tests/fixtures/InterfaceAssertions.java",
+        "/workspace/korrust/tests/fixtures/ModelCheck.java",
+        "/workspace/korrust/tests/fixtures/ModuleClassVerification.java",
+        "/workspace/korrust/tests/fixtures/io/IoCheck.java",
+        "/workspace/korrust/tests/fixtures/io/SupplierCheck.java",
+        "/workspace/korrust/tests/fixtures/model_io_consumers/BridgeCheck.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/060-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/060-stderr.txt"
+    },
+    {
+      "label": "Fixed Java ModelCheck/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "ModelCheck"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/061-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/061-stderr.txt"
+    },
+    {
+      "label": "Fixed Java ModelCheck/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "ModelCheck"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/062-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/062-stderr.txt"
+    },
+    {
+      "label": "Fixed Java IoCheck/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "IoCheck"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/063-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/063-stderr.txt"
+    },
+    {
+      "label": "Fixed Java IoCheck/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "IoCheck"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/064-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/064-stderr.txt"
+    },
+    {
+      "label": "Fixed Java and Kotlin downstream runtime official/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-kotlin-consumer:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "nov25.moduleconsumer.BridgeCheck",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabIo.jar",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-kotlin-consumer"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/065-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/065-stderr.txt"
+    },
+    {
+      "label": "Fixed Java and Kotlin downstream runtime official/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-kotlin-consumer:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "nov25.moduleconsumer.BridgeCheck",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabIo.jar",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-kotlin-consumer"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/066-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/066-stderr.txt"
+    },
+    {
+      "label": "Fixed Java and Kotlin downstream runtime candidate/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-kotlin-consumer:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "nov25.moduleconsumer.BridgeCheck",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabIo.jar",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-kotlin-consumer"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/067-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/067-stderr.txt"
+    },
+    {
+      "label": "Fixed Java and Kotlin downstream runtime candidate/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-kotlin-consumer:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "nov25.moduleconsumer.BridgeCheck",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabIo.jar",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-kotlin-consumer"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/068-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/068-stderr.txt"
+    },
+    {
+      "label": "All-class JVM linkage official/AlkitabModel",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "ModuleClassVerification",
+        "yuku.alkitab.model.Book$1",
+        "yuku.alkitab.model.Book",
+        "yuku.alkitab.model.FootnoteEntry",
+        "yuku.alkitab.model.InternalBook",
+        "yuku.alkitab.model.Label",
+        "yuku.alkitab.model.Marker$Kind",
+        "yuku.alkitab.model.Marker",
+        "yuku.alkitab.model.Marker_Label",
+        "yuku.alkitab.model.PericopeBlock",
+        "yuku.alkitab.model.PericopeIndex",
+        "yuku.alkitab.model.ProgressMark",
+        "yuku.alkitab.model.ProgressMarkHistory",
+        "yuku.alkitab.model.SingleChapterVerses$Companion$EMPTY$1",
+        "yuku.alkitab.model.SingleChapterVerses$Companion",
+        "yuku.alkitab.model.SingleChapterVerses$DefaultImpls",
+        "yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult$DefaultImpls",
+        "yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult",
+        "yuku.alkitab.model.SingleChapterVerses",
+        "yuku.alkitab.model.Version$UnavailableBookNames",
+        "yuku.alkitab.model.Version",
+        "yuku.alkitab.model.XrefEntry",
+        "yuku.alkitab.model.util.Gid",
+        "yuku.alkitab.util.Ari",
+        "yuku.alkitab.util.IntArrayList$1",
+        "yuku.alkitab.util.IntArrayList"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/069-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/069-stderr.txt"
+    },
+    {
+      "label": "All-class JVM linkage official/AlkitabIo",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "ModuleClassVerification",
+        "yuku.alkitab.io.BibleReader",
+        "yuku.alkitab.io.OptionalGzipInputStream$PeekInputStream",
+        "yuku.alkitab.io.OptionalGzipInputStream",
+        "yuku.alkitab.io.Utf8Decoder"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/070-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/070-stderr.txt"
+    },
+    {
+      "label": "All-class JVM linkage candidate/AlkitabModel",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "ModuleClassVerification",
+        "yuku.alkitab.model.Book$1",
+        "yuku.alkitab.model.Book",
+        "yuku.alkitab.model.FootnoteEntry",
+        "yuku.alkitab.model.InternalBook",
+        "yuku.alkitab.model.Label",
+        "yuku.alkitab.model.Marker$Kind",
+        "yuku.alkitab.model.Marker",
+        "yuku.alkitab.model.Marker_Label",
+        "yuku.alkitab.model.PericopeBlock",
+        "yuku.alkitab.model.PericopeIndex",
+        "yuku.alkitab.model.ProgressMark",
+        "yuku.alkitab.model.ProgressMarkHistory",
+        "yuku.alkitab.model.SingleChapterVerses$Companion$EMPTY$1",
+        "yuku.alkitab.model.SingleChapterVerses$Companion",
+        "yuku.alkitab.model.SingleChapterVerses$DefaultImpls",
+        "yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult$DefaultImpls",
+        "yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult",
+        "yuku.alkitab.model.SingleChapterVerses",
+        "yuku.alkitab.model.Version$UnavailableBookNames",
+        "yuku.alkitab.model.Version",
+        "yuku.alkitab.model.XrefEntry",
+        "yuku.alkitab.model.util.Gid",
+        "yuku.alkitab.util.Ari",
+        "yuku.alkitab.util.IntArrayList$1",
+        "yuku.alkitab.util.IntArrayList"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/071-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/071-stderr.txt"
+    },
+    {
+      "label": "All-class JVM linkage candidate/AlkitabIo",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "ModuleClassVerification",
+        "yuku.alkitab.io.BibleReader",
+        "yuku.alkitab.io.OptionalGzipInputStream$PeekInputStream",
+        "yuku.alkitab.io.OptionalGzipInputStream",
+        "yuku.alkitab.io.Utf8Decoder$byteBuffer$Supplier",
+        "yuku.alkitab.io.Utf8Decoder$charBuffer$Supplier",
+        "yuku.alkitab.io.Utf8Decoder"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/072-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/072-stderr.txt"
+    },
+    {
+      "label": "Verify candidate synthetic Supplier lowering",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "SupplierCheck",
+        "yuku.alkitab.io.Utf8Decoder"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/073-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/073-stderr.txt"
+    },
+    {
+      "label": "Kotlin metadata rejection official/ModelPrivateAccess.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/consumers/ModelPrivateAccess.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "nov25_downstream",
+        "-Xrender-internal-diagnostic-names",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-reject-ModelPrivateAccess.kt"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/074-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/074-stderr.txt"
+    },
+    {
+      "label": "Kotlin metadata rejection official/IoPrivateAccess.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/consumers/IoPrivateAccess.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "nov25_downstream",
+        "-Xrender-internal-diagnostic-names",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-reject-IoPrivateAccess.kt"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/075-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/075-stderr.txt"
+    },
+    {
+      "label": "Kotlin metadata rejection official/IoNullAccess.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/consumers/IoNullAccess.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "nov25_downstream",
+        "-Xrender-internal-diagnostic-names",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-reject-IoNullAccess.kt"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/076-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/076-stderr.txt"
+    },
+    {
+      "label": "Kotlin metadata rejection candidate/ModelPrivateAccess.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/consumers/ModelPrivateAccess.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "nov25_downstream",
+        "-Xrender-internal-diagnostic-names",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-reject-ModelPrivateAccess.kt"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/077-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/077-stderr.txt"
+    },
+    {
+      "label": "Kotlin metadata rejection candidate/IoPrivateAccess.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/consumers/IoPrivateAccess.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "nov25_downstream",
+        "-Xrender-internal-diagnostic-names",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-reject-IoPrivateAccess.kt"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/078-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/078-stderr.txt"
+    },
+    {
+      "label": "Kotlin metadata rejection candidate/IoNullAccess.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/consumers/IoNullAccess.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "21",
+        "-module-name",
+        "nov25_downstream",
+        "-Xrender-internal-diagnostic-names",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabModel.jar:/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-AlkitabIo.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabModel/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/workspace/korrust/target/modelio25-artifacts/official/official/modules/AlkitabIo/module-build/intermediates/compile_r_class_jar/release/generateReleaseRFile/R.jar:/workspace/korrust/target/modelio25-official/Bintex/build/intermediates/compile_library_classes_jar/release/bundleLibCompileToJarRelease/classes.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-reject-IoNullAccess.kt"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/079-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/079-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "fresh_completed_build_inputs",
+      "outcome": "pass",
+      "selected_modules": [
+        "AlkitabModel",
+        "AlkitabIo"
+      ]
+    },
+    {
+      "id": "aar_inventory/AlkitabModel",
+      "outcome": "pass",
+      "official_classes": 25,
+      "candidate_classes": 25,
+      "legitimate_candidate_extras": []
+    },
+    {
+      "id": "aar_inventory/AlkitabIo",
+      "outcome": "pass",
+      "official_classes": 4,
+      "candidate_classes": 6,
+      "legitimate_candidate_extras": [
+        "yuku/alkitab/io/Utf8Decoder$byteBuffer$Supplier.class",
+        "yuku/alkitab/io/Utf8Decoder$charBuffer$Supplier.class"
+      ]
+    },
+    {
+      "id": "shared_external_dependencies",
+      "outcome": "pass",
+      "selected_classes_disjoint": true
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.Book$1",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.Book",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.FootnoteEntry",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.InternalBook",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.Label",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.Marker$Kind",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.Marker",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.Marker_Label",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.PericopeBlock",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.PericopeIndex",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.ProgressMark",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.ProgressMarkHistory",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.SingleChapterVerses$Companion$EMPTY$1",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.SingleChapterVerses$Companion",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.SingleChapterVerses$DefaultImpls",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult$DefaultImpls",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.SingleChapterVerses$WithTextSizeMult",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.SingleChapterVerses",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.Version$UnavailableBookNames",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.Version",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.XrefEntry",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.model.util.Gid",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.util.Ari",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.util.IntArrayList$1",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.util.IntArrayList",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.io.BibleReader",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.io.OptionalGzipInputStream$PeekInputStream",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.io.OptionalGzipInputStream",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm_source_abi/yuku.alkitab.io.Utf8Decoder",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin_metadata_consumer_compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin_metadata_consumer_compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "fixed_official_java_caller_compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "fixed_java_runtime/ModelCheck/official",
+      "outcome": "pass",
+      "runtime_assertions": 122,
+      "observation_sha256": "c9f325c06b255c7b1c22ed587e901c29956e1f0dc2c3402379e39a8c14c1c7c2"
+    },
+    {
+      "id": "fixed_java_runtime/ModelCheck/candidate",
+      "outcome": "pass",
+      "runtime_assertions": 122,
+      "observation_sha256": "c9f325c06b255c7b1c22ed587e901c29956e1f0dc2c3402379e39a8c14c1c7c2"
+    },
+    {
+      "id": "fixed_java_runtime/IoCheck/official",
+      "outcome": "pass",
+      "runtime_assertions": 2135,
+      "observation_sha256": "60bd6f6b7c4ea6b4634b10f30e2d0d6a67b37de3c1faa643112c027b137cdae6"
+    },
+    {
+      "id": "fixed_java_runtime/IoCheck/candidate",
+      "outcome": "pass",
+      "runtime_assertions": 2135,
+      "observation_sha256": "60bd6f6b7c4ea6b4634b10f30e2d0d6a67b37de3c1faa643112c027b137cdae6"
+    },
+    {
+      "id": "downstream_pair_runtime/official/official",
+      "outcome": "pass",
+      "runtime_assertions": 16,
+      "class_origins_verified": true
+    },
+    {
+      "id": "downstream_pair_runtime/official/candidate",
+      "outcome": "pass",
+      "runtime_assertions": 16,
+      "class_origins_verified": true
+    },
+    {
+      "id": "downstream_pair_runtime/candidate/official",
+      "outcome": "pass",
+      "runtime_assertions": 16,
+      "class_origins_verified": true
+    },
+    {
+      "id": "downstream_pair_runtime/candidate/candidate",
+      "outcome": "pass",
+      "runtime_assertions": 16,
+      "class_origins_verified": true
+    },
+    {
+      "id": "all_class_linkage/official/AlkitabModel",
+      "outcome": "pass",
+      "classes": 25
+    },
+    {
+      "id": "all_class_linkage/official/AlkitabIo",
+      "outcome": "pass",
+      "classes": 4
+    },
+    {
+      "id": "all_class_linkage/candidate/AlkitabModel",
+      "outcome": "pass",
+      "classes": 25
+    },
+    {
+      "id": "all_class_linkage/candidate/AlkitabIo",
+      "outcome": "pass",
+      "classes": 6
+    },
+    {
+      "id": "candidate_supplier_lowering",
+      "outcome": "pass"
+    },
+    {
+      "id": "metadata_rejection/official/ModelPrivateAccess.kt",
+      "outcome": "invalid_rejected",
+      "expected_diagnostic_names": [
+        "INVISIBLE_MEMBER",
+        "INVISIBLE_REFERENCE"
+      ]
+    },
+    {
+      "id": "metadata_rejection/official/IoPrivateAccess.kt",
+      "outcome": "invalid_rejected",
+      "expected_diagnostic_names": [
+        "INVISIBLE_MEMBER",
+        "INVISIBLE_REFERENCE"
+      ]
+    },
+    {
+      "id": "metadata_rejection/official/IoNullAccess.kt",
+      "outcome": "invalid_rejected",
+      "expected_diagnostic_names": [
+        "NULL_FOR_NONNULL_TYPE"
+      ]
+    },
+    {
+      "id": "metadata_rejection/candidate/ModelPrivateAccess.kt",
+      "outcome": "invalid_rejected",
+      "expected_diagnostic_names": [
+        "INVISIBLE_MEMBER",
+        "INVISIBLE_REFERENCE"
+      ]
+    },
+    {
+      "id": "metadata_rejection/candidate/IoPrivateAccess.kt",
+      "outcome": "invalid_rejected",
+      "expected_diagnostic_names": [
+        "INVISIBLE_MEMBER",
+        "INVISIBLE_REFERENCE"
+      ]
+    },
+    {
+      "id": "metadata_rejection/candidate/IoNullAccess.kt",
+      "outcome": "invalid_rejected",
+      "expected_diagnostic_names": [
+        "NULL_FOR_NONNULL_TYPE"
+      ]
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "pass",
+      "changed": []
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/000-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/000-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/001-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/001-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/002-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/002-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/003-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/003-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/004-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/004-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/005-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/005-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/006-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/006-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/007-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/007-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/008-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/008-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/009-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/009-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/010-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/010-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/011-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/011-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/012-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/012-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/013-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/013-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/014-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/014-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/015-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/015-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/016-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/016-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/017-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/017-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/018-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/018-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/019-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/019-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/020-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/020-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/021-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/021-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/022-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/022-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/023-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/023-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/024-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/024-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/025-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/025-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/026-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/026-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/027-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/027-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/028-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/028-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/029-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/029-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/030-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/030-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/031-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/031-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/032-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/032-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/033-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/033-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/034-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/034-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/035-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/035-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/036-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/036-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/037-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/037-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/038-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/038-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/039-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/039-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/040-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/040-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/041-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/041-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/042-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/042-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/043-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/043-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/044-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/044-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/045-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/045-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/046-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/046-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/047-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/047-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/048-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/048-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/049-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/049-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/050-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/050-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/051-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/051-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/052-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/052-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/053-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/053-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/054-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/054-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/055-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/055-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/056-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/056-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/057-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/057-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/058-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/058-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/059-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/059-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/060-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/060-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/061-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/061-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/062-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/062-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/063-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/063-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/064-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/064-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/065-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/065-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/066-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/066-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/067-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/067-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/068-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/068-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/069-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/069-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/070-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/070-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/071-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/071-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/072-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/072-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/073-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/073-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/074-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/074-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/075-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/075-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/076-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/076-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/077-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/077-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/078-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/078-stderr.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/079-stdout.txt",
+    "reports/correctness/2026-11-25T133559069323Z-model-io-downstream-consumers/079-stderr.txt"
+  ],
+  "scope": "Fresh AlkitabModel/AlkitabIo AAR downstream consumption, with fixed official Java and official-Kotlin consumer bytecode, unchanged real downstream Yes2SingleChapterVerses source and independently asserted behavior.",
+  "limitations": [
+    "Existing module coverage is revalidated; no compiler feature or newly supported module is counted. Production Gradle/source-ownership/original-unit-test evidence is linked separately rather than duplicated.",
+    "Only classes.jar from each fresh AAR supplies selected production classes. Shared genuine external dependencies are checked disjoint from every selected class, and runtime class origins are asserted for both module APIs and the unchanged downstream source.",
+    "Source-facing JVM ABI comparison reuses the existing module checker, excluding only the two exact synthetic Supplier access bridges. The two legitimate candidate Supplier helpers are independently verified through the existing SupplierCheck.",
+    "The Kotlin consumer is compiled by pinned official Kotlin twice, against each provider pair; the Java caller compiled against the official pair is fixed. All four consumer/provider combinations execute with -Xverify:all. The unchanged internal Yes2 implementation is compiled in the consumer module, without changing its visibility or friend access.",
+    "The Android SDK jar provides linkage types for original Parcelable declarations; no Android framework method implementation or device/emulator behavior is tested. No D8, complete app, incremental compilation or performance claim."
+  ],
+  "runtime_observations": {
+    "ModelCheck": {
+      "official": {
+        "checks": 122,
+        "sha256": "c9f325c06b255c7b1c22ed587e901c29956e1f0dc2c3402379e39a8c14c1c7c2"
+      },
+      "candidate": {
+        "checks": 122,
+        "sha256": "c9f325c06b255c7b1c22ed587e901c29956e1f0dc2c3402379e39a8c14c1c7c2"
+      }
+    },
+    "IoCheck": {
+      "official": {
+        "checks": 2135,
+        "sha256": "60bd6f6b7c4ea6b4634b10f30e2d0d6a67b37de3c1faa643112c027b137cdae6"
+      },
+      "candidate": {
+        "checks": 2135,
+        "sha256": "60bd6f6b7c4ea6b4634b10f30e2d0d6a67b37de3c1faa643112c027b137cdae6"
+      }
+    }
+  },
+  "fixed_callers_classes_sha256": {
+    "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers/IoCheck$Action.class": "38918a7f10b2fb202f8a4c7ba3cb35130b6a5fadb5149c2422280a5f8c70e788",
+    "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers/SupplierCheck.class": "42e62061831c275fc83d21aeed860c690bac77809c9989bdfb0b4f0c82fa0b5e",
+    "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers/ModelCheck$Typed.class": "9362eabd36ed5513078e9b35c454b582a80e0caaab55a06b4ce47ba46c720202",
+    "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers/ModelCheck$Overridden.class": "f175687b8b3874a9384a95bc8e888b7c2a2275dea11922432b18b73ee1664452",
+    "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers/InterfaceAssertions.class": "55b65725b744856a6fe0e671aff9959a5bc798d8bd453a233960a8943e92a09a",
+    "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers/ModelCheck.class": "7cdc5ce10d6e960c62cfb154c1ba24440b6f7d9d66f102890974e60e24197a69",
+    "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers/ModuleClassVerification.class": "d6862da070402def1fca95ff080f146297c261bd67a4cd618227cc2b2acac513",
+    "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers/IoCheck.class": "46b9363b23939a8e52cbe734572248725b76de36e5c66eb1287a7b7ba079c2c8",
+    "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers/SupplierCheck$Attempt.class": "d23df2badbb581bc96d29551224e1cb28851f1ced19758c678053914c7c00a59",
+    "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers/nov25/moduleconsumer/BridgeCheck.class": "2ecd7e38fb660a8bafc945b1e7cf71d61153c26795f2358d6c2ec654152ee1de",
+    "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/fixed-official-java-callers/nov25/moduleconsumer/BridgeCheck$Reader.class": "f90ad7b3e8c0446cea19b7a796a3dd20607cfc5bddcd3fe6020153e49b9d6163"
+  },
+  "kotlin_consumer_classes_sha256": {
+    "official": {
+      "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-kotlin-consumer/yuku/alkitab/yes2/Yes2SingleChapterVerses.class": "26dceaed4d95f4039fee8b5a3ead7068646ee8f9eea42fd8e2d65f0d62c497b7",
+      "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-kotlin-consumer/nov25/moduleconsumer/ConsumerKt$verify$styled$1.class": "ab58cad9a1717b4272a8f98fca4503c40962f160c853ddac90f535168b144f4e",
+      "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/official-kotlin-consumer/nov25/moduleconsumer/ConsumerKt.class": "9c17fe9ebaf077229c3c229578d658b9877eea02c868b80b18a47768ccc86dfd"
+    },
+    "candidate": {
+      "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-kotlin-consumer/yuku/alkitab/yes2/Yes2SingleChapterVerses.class": "26dceaed4d95f4039fee8b5a3ead7068646ee8f9eea42fd8e2d65f0d62c497b7",
+      "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-kotlin-consumer/nov25/moduleconsumer/ConsumerKt$verify$styled$1.class": "ab58cad9a1717b4272a8f98fca4503c40962f160c853ddac90f535168b144f4e",
+      "target/checks/2026-11-25T133559069323Z-model-io-downstream-consumers/candidate-kotlin-consumer/nov25/moduleconsumer/ConsumerKt.class": "9c17fe9ebaf077229c3c229578d658b9877eea02c868b80b18a47768ccc86dfd"
+    }
+  },
+  "counts": {
+    "pass": 50,
+    "invalid_rejected": 6
+  }
+}

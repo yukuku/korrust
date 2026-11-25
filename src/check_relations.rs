@@ -783,6 +783,10 @@ pub(super) fn validate_type_arguments_with_classes(
                             return Err(Diagnostic::new(
                                 offset,
                                 format!("Type argument violates upper bound of {}", parameter.name),
+                            )
+                            .with_kind(
+                                crate::DiagnosticKind::InvalidKotlin,
+                                "TYPE_ARGUMENT_BOUND_VIOLATED",
                             ));
                         }
                     }

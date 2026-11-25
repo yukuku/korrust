@@ -1,0 +1,833 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-25T13:41:47.508231+00:00",
+  "status": "pass",
+  "compiler": {
+    "path": "../work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/korrust-frozen",
+    "sha256": "b34b50492ccb5ddf122f5924bcf1bf472f39435df4de96d346f77a40176d16b2",
+    "source_revision": "63d27e5867f7eb99ba181511e5329ab89f2965a6"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "frozen_input_hashes": {
+    "src/annotation_declarations.rs": "ac237d773c71a2fc26faeb2d79b837265c6d557ef7bb31aab748fa8b1c7572be",
+    "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+    "src/bytecode/annotation_files.rs": "349e861501424f9c02a177074fd7fb847837d24772ae4773e598ca8c656638c4",
+    "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+    "src/bytecode/anonymous_context.rs": "e48d7aba57745c9e3ecb0a2317ea627f3b6d9b2d86805563bae680d79a301910",
+    "src/bytecode/class_companion.rs": "a0abcc09e62134cb4bf152b89e5cfb1bb9b0b1ad1800649507ebef05fcb4126f",
+    "src/bytecode/data.rs": "f72c9cc44b3ddd71b3e965cfc85003e69916c39c63e590315f602bc5c7c1856d",
+    "src/bytecode/defaults.rs": "488aa0bdb27d63f5ce50a70206e044a3d2b996733fb0155fcdfee3793f925886",
+    "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+    "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+    "src/bytecode/inline.rs": "ca8a4f4da8f11e405a3cdcbcf87c3bfde49635e331f9712fb7b2f4aca0f84d25",
+    "src/bytecode/interfaces.rs": "c619f97cd206f8809faeb6ccf15bffe85bf60eee9da210cb38fc7b8675f14d72",
+    "src/bytecode/lambdas.rs": "d9e6820d2a435480657c8cbb5efe62d2ad6224a752452c3ac127c761d76d3637",
+    "src/bytecode/objects.rs": "75ded91f42716902fc84a609bbbf04bc2d5fd6e4c2bf48c728f1fdd0ebae366a",
+    "src/bytecode/suspend.rs": "3d652198dfcba69ea1e298b99bd4328e29bd2016d9c1cb297ae667a2dd53f22d",
+    "src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+    "src/bytecode/value_classes.rs": "302e1a0c0570f01c41ed66acedb952fd40b676944e7c3113fe9facdd09fc1f01",
+    "src/bytecode.rs": "8fdc6edc224964ec0ef393a1ce01abeaf6dfcba5d966c11bc15528adab7ad500",
+    "src/check.rs": "d5d213624ff9009bb1eeb7e3b1cb46ab0988bfbf441b17dd1049672ef841878b",
+    "src/check_annotation_placements.rs": "51340570de824f5a5463c8a39570e8c669f4589b8a92890e932940065d49720a",
+    "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+    "src/check_anonymous.rs": "c100534b577e31bb01002d5886c640032bfbaab6198783931cb2f21ce4ef147f",
+    "src/check_captures.rs": "631da2f03869c02fdb5dba3e11cea6ff566855533adc0abb81cd3d4ffe2e4c5f",
+    "src/check_class_delegation.rs": "171fec70b3ce6632bbbd704ea92e040f1ef841fbebd02659388fe88ba97135f2",
+    "src/check_classes.rs": "eaa5547ca75d6f4bef4f21d200a050bb8a47362c9c7ea3e4f47b3a66e1cca4b3",
+    "src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+    "src/check_control.rs": "39b6e0a056b1bb0f7de0f923aa503020566f1a4e78b972549f51537bea2f4d3d",
+    "src/check_declarations.rs": "f861524a7648411f7cf3a9279d96e1ebff1f3df7b0a10f6f5a0359ee3770d8da",
+    "src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+    "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+    "src/check_functions.rs": "209f4c7fd09fd44341e19b58e7791fa122e4a069e593822b463f2296684ff091",
+    "src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+    "src/check_interfaces.rs": "996279bf4cc5f87c2dc9176a5192363fd9f4f6f99ac1673b26796a291195216e",
+    "src/check_ir_walk.rs": "c985d804b580b2bf7c6a1ba965001b539120de8200fafc1701bc4b1320f6fd3c",
+    "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+    "src/check_jvm_fields.rs": "ce5eb721e88e725c21d5dc21a49332637e46de586878cdce9facd58ca87989d4",
+    "src/check_library.rs": "bed441e01dd02fad7b2685616d5d2147881906ad9f0d75991f0bd1e5ab9d0d6b",
+    "src/check_member_extensions.rs": "66a4cfa55e05e5699d510113566c91fd54fa79e1257f769df334338c0f7201e5",
+    "src/check_objects.rs": "149bbaa4c8a9cab9cf634edc131bd17a37b8411493c77235311ae860a65c1766",
+    "src/check_operations.rs": "5a0b0b380559259c1d11e8a2ec109a3955e1ad85f62c1b655df8632ac5362c8f",
+    "src/check_overloads.rs": "cd57712984b4c3b52eee025ab50b2b10f7d41612c1540f52f40145af7e4909dd",
+    "src/check_references.rs": "61a780d0816443007725e52f992c717eeab828f7b971749ed3242318a8d80077",
+    "src/check_relations.rs": "5774b3f66fea8c12768633c096728361dae026af9f3534495dff344fc275ea14",
+    "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+    "src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+    "src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+    "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+    "src/check_varargs.rs": "9928a6be54a33a83360cec67726e8beffba6ed00366a7f3d378f030f1055f90d",
+    "src/check_variant_signatures.rs": "ea8be16effafa3af58d46e0e732d196feeca4ef1468d4b373c2e1c29ee984ed3",
+    "src/classpath/aliases.rs": "2ad31713a22f8eb0607ed96d838aa96fecedf7a6b261f07473aef66b8bdb8827",
+    "src/classpath/archive.rs": "875c9119ee5386c40848c8570a27b90964d1a7c5ce65f941217652ae59f1b16c",
+    "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+    "src/classpath/metadata.rs": "45c98d86e202e8679f420585e6315c15b65dd38ad80ef3dc6bed5cb7fdd6d1d1",
+    "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+    "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+    "src/classpath/signature.rs": "11e1e7c67cfe84b56892cddf6b6fa85daa19dfec4f34846a215a18605dfb3bec",
+    "src/classpath/source.rs": "894f00588fbdd2d13bc030d82cf7c69b0d15b3d41f8591595bbaf3fa1491515d",
+    "src/classpath/source_enums.rs": "3ae8bea81669d8feec40a16fae21a80f4a9d8006acd23c3f4f68d5d177f79be3",
+    "src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+    "src/classpath.rs": "f9ce2cfd39f09ced9b21f3918be5e0a6eb983836be147114c1bef88aa7606d87",
+    "src/compiled_inline.rs": "694e4535cb5da5254818eea8ca6818a5ad919dd4f6556d890b36a40e613d489e",
+    "src/const_eval.rs": "6714c1d6296d1c3f60fab09891a492f66a9850b3ff3ee2b5a7df42400dfdcdaa",
+    "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+    "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+    "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+    "src/lib.rs": "d48fefb21db0abb39de2a77c500ddb8829f0ac6a16ecf8eae864d45aa4f19a14",
+    "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+    "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+    "src/metadata.rs": "a093d40336ffd6bbaa42b3c74fab1e59b6aa982ed66371209cb8123b35d89980",
+    "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+    "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+    "src/source_inline.rs": "50bee0804aaea9cd3e2b8c8e0f162784e0e0e0b16b9e0770dd8c27fca764add2",
+    "src/syntax.rs": "b08f83a7b9fa9f48d40a2da89b7b88157e5b2ec7a1d1f69dbcfe10fb0b311681",
+    "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+    "src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525",
+    "tests/nov21_inline/Calls.java": "14685988796d11add05b013c14d367d39125d0be116530075bf79fdfbceff909",
+    "tests/nov21_inline/Consumer.kt": "7f4a6f05ee64822ed174876bf8ff3e9a6949809d64cf956a561f0bafe1446c73",
+    "tests/nov21_inline/Effects.java": "e7e08235d6cba16ecb3f2e94fe1f5a9e8ade71bf7eb6ede2dba577a2fe655fbf",
+    "tests/nov21_inline/Forward.kt": "6ce140630356e43262a34e9453a3904496740198a386d58952717b3bd8f44071",
+    "tests/nov21_inline/Leaf.java": "c25d73765b28b511322d5483192285f861e57630497b328be30528dd96a00ed1",
+    "tests/nov21_inline/Library.kt": "94072614db28de14a55cfba3dd6dde350c863cd92f646e3efd4587c481645ad9",
+    "tests/nov21_inline/Roots.java": "ce207bb9e35ef25dc1e4507585fd4ea183d07a2a892105a10f738935500e7b9a",
+    "tests/nov21_inline/Values.kt": "d4d5c5cf16c6f055d354cfd10ced91234dd63558d3aa3bbe492732d605261d32",
+    "tests/nov21_inline/Visible.java": "b1b7bc7cd03a1dccb326841db964ede66b1f4814a9780792ecc3de4f2d752734",
+    "tests/nov21_inline/baseline/object_template.kt": "727fee7f6bd5c7448e450aaa9beb291ac1cf4dd21b0364c77dc45062bfea1838",
+    "tests/nov21_inline/baseline/reified_array.kt": "18695bc341d381ead62f06b270e218c9b5ebf96852b119b72d35a2af8b6a23b9",
+    "tests/nov21_inline/unsupported/nested_marker.kt": "ddae15515c9cad99c5febf1ea070515f1a166ce56a2c775e41cfb0f185c17934",
+    "tests/nov21_inline/unsupported/nullable_unit.kt": "cf3cbd2ea613a1a82d0f55af6a42be0617c72700a12c6f3a868c06f182c37ea7",
+    "tests/nov21_inline/unsupported/nullable_unit_array_template.kt": "ae1a3b89cff0049d64b89aa1dc734f4834771f7afffce344d0c4be81e2ea1b60",
+    "tests/nov21_inline/unsupported/unit.kt": "b7cd5135fbed7b3b28652045deb7c0451d31445a54206fdbee080b30ea3d465e",
+    "tests/nov21_inline/unsupported/unit_array.kt": "ab3dc40f29c5c80847bfe57c2b20b93f98adc4603055af385460aaf91f89343a",
+    "tests/nov21_inline.rs": "0db02031112f3ba9c9a6545c39898d06ddee7d89abe6376fff6c8e1c2efd61ad",
+    "tools/check_nov21_inline.py": "c8d24ffe9fbf8135cdd4f1b88447769ed881f150f37c1b669df225479724ab5a",
+    "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+    "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+    "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "references/kotlin/compiler/testData/codegen/box/strings/twoArgumentStringTemplate.kt": "dde8d382e608ecfe2f10dff2f54ba1e36b1f36fc09d21aa73b4ce2b24b6f5231",
+    "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt": "0f8bd02878e33edeca3d9e08a65b6ed96a44e6266c11053696816d69ca51db55",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "../work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/korrust-frozen": "b34b50492ccb5ddf122f5924bcf1bf472f39435df4de96d346f77a40176d16b2"
+  },
+  "input_bundle": {
+    "path": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/inputs.zip",
+    "sha256": "1287efb7ecd28194ecfc35337468288138d042506ed79a4e1d808bd4313f718b"
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_nov21_inline.py",
+      "--candidate",
+      "/workspace/korrust/target/four-kotlin-83b83fd274/korrust"
+    ]
+  ],
+  "effective_options": {
+    "jvm_target": "1.8",
+    "language_version": "2.3",
+    "api_version": "2.3",
+    "module_name": "nov21_inline"
+  },
+  "commands": [
+    {
+      "label": "Pinned compiler version",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "-version"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/000.txt"
+    },
+    {
+      "label": "JDK version",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-version"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/001.txt"
+    },
+    {
+      "label": "Java dependencies",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers",
+        "/workspace/korrust/tests/nov21_inline/Roots.java",
+        "/workspace/korrust/tests/nov21_inline/Leaf.java",
+        "/workspace/korrust/tests/nov21_inline/Visible.java",
+        "/workspace/korrust/tests/nov21_inline/Effects.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/002.txt"
+    },
+    {
+      "label": "Compile official/library",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inline/Library.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/library"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/003.txt"
+    },
+    {
+      "label": "Compile official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inline/Values.kt",
+        "/workspace/korrust/tests/nov21_inline/Forward.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/004.txt"
+    },
+    {
+      "label": "Compile candidate/candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inline/Values.kt",
+        "/workspace/korrust/tests/nov21_inline/Forward.kt",
+        "--module-name",
+        "nov21_inline",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/005.txt"
+    },
+    {
+      "label": "Fixed official Java caller",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/official:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/callers",
+        "/workspace/korrust/tests/nov21_inline/Calls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/006.txt"
+    },
+    {
+      "label": "Verified runtime official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/callers:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/official:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/007.txt"
+    },
+    {
+      "label": "Compile official/metadata-official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inline/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/official:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/metadata-official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/008.txt"
+    },
+    {
+      "label": "Metadata consumer official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/metadata-official:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/official:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "metadata.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/009.txt"
+    },
+    {
+      "label": "Verified runtime candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/callers:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/candidate:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/010.txt"
+    },
+    {
+      "label": "Compile official/metadata-candidate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inline/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/candidate:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/metadata-candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/011.txt"
+    },
+    {
+      "label": "Metadata consumer candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/metadata-candidate:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/candidate:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "metadata.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/012.txt"
+    },
+    {
+      "label": "JVM signatures official/consumer.ValuesKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/official",
+        "consumer.ValuesKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/013.txt"
+    },
+    {
+      "label": "JVM signatures candidate/consumer.ValuesKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/candidate",
+        "consumer.ValuesKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/014.txt"
+    },
+    {
+      "label": "JVM signatures official/consumer.ForwardKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/official",
+        "consumer.ForwardKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/015.txt"
+    },
+    {
+      "label": "JVM signatures candidate/consumer.ForwardKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/candidate",
+        "consumer.ForwardKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/016.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-nested_marker",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inline/unsupported/nested_marker.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/library:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/boundary-official-nested_marker"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/017.txt"
+    },
+    {
+      "label": "Unsupported nested_marker",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inline/unsupported/nested_marker.kt",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/library:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/boundary-candidate-nested_marker"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/018.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-nullable_unit",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inline/unsupported/nullable_unit.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/library:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/boundary-official-nullable_unit"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/019.txt"
+    },
+    {
+      "label": "Unsupported nullable_unit",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inline/unsupported/nullable_unit.kt",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/library:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/boundary-candidate-nullable_unit"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/020.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-nullable_unit_array_template",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inline/unsupported/nullable_unit_array_template.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/library:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/boundary-official-nullable_unit_array_template"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/021.txt"
+    },
+    {
+      "label": "Unsupported nullable_unit_array_template",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inline/unsupported/nullable_unit_array_template.kt",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/library:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/boundary-candidate-nullable_unit_array_template"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/022.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-unit",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inline/unsupported/unit.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/library:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/boundary-official-unit"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/023.txt"
+    },
+    {
+      "label": "Unsupported unit",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inline/unsupported/unit.kt",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/library:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/boundary-candidate-unit"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/024.txt"
+    },
+    {
+      "label": "Compile official/boundary-official-unit_array",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nov21_inline/unsupported/unit_array.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/library:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/boundary-official-unit_array"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/025.txt"
+    },
+    {
+      "label": "Unsupported unit_array",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/korrust-frozen",
+        "/workspace/korrust/tests/nov21_inline/unsupported/unit_array.kt",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/library:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/helpers:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/boundary-candidate-unit_array"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/026.txt"
+    },
+    {
+      "label": "Compile official/app-official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/app-official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/027.txt"
+    },
+    {
+      "label": "Compile candidate/app-candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/korrust-frozen",
+        "/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt",
+        "--module-name",
+        "nov21_inline",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/app-candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/028.txt"
+    },
+    {
+      "label": "Compile official/upstream-official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/references/kotlin/compiler/testData/codegen/box/strings/twoArgumentStringTemplate.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nov21_inline",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/upstream-official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/029.txt"
+    },
+    {
+      "label": "Compile candidate/upstream-candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/korrust-frozen",
+        "/workspace/korrust/references/kotlin/compiler/testData/codegen/box/strings/twoArgumentStringTemplate.kt",
+        "--module-name",
+        "nov21_inline",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/upstream-candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/030.txt"
+    },
+    {
+      "label": "Upstream caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/upstream-official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/upstream-java",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/Upstream.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/031.txt"
+    },
+    {
+      "label": "Unchanged upstream official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/upstream-java:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/upstream-official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Upstream"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/032.txt"
+    },
+    {
+      "label": "Unchanged upstream candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/upstream-java:/workspace/work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/upstream-candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Upstream"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T134147508231Z-nov21-inline/commands/033.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass",
+      "independent_assertions": 50,
+      "fixed_official_java_caller": true
+    },
+    {
+      "id": "metadata/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass",
+      "independent_assertions": 50,
+      "fixed_official_java_caller": true
+    },
+    {
+      "id": "metadata/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/consumer.ValuesKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "signature/consumer.ForwardKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "boundary/nested_marker",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/nov21_inline/unsupported/nested_marker.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "REIFIED_BYTECODE_UNSUPPORTED",
+          "message": "Reified type substitution is unavailable",
+          "path": "/workspace/korrust/tests/nov21_inline/unsupported/nested_marker.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "boundary/nullable_unit",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/nov21_inline/unsupported/nullable_unit.kt",
+          "offset": 29,
+          "category": "unsupported_language",
+          "code": "NULLABLE_UNIT_UNSUPPORTED",
+          "message": "Nullable Unit is not supported",
+          "path": "/workspace/korrust/tests/nov21_inline/unsupported/nullable_unit.kt",
+          "line": 1,
+          "column": 30
+        }
+      ]
+    },
+    {
+      "id": "boundary/nullable_unit_array_template",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/nov21_inline/unsupported/nullable_unit_array_template.kt",
+          "offset": 40,
+          "category": "unsupported_language",
+          "code": "NULLABLE_UNIT_UNSUPPORTED",
+          "message": "Nullable Unit is not supported",
+          "path": "/workspace/korrust/tests/nov21_inline/unsupported/nullable_unit_array_template.kt",
+          "line": 1,
+          "column": 41
+        }
+      ]
+    },
+    {
+      "id": "boundary/unit",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/nov21_inline/unsupported/unit.kt",
+          "offset": 46,
+          "category": "unsupported_language",
+          "code": "STRING_TEMPLATE_VALUE_UNSUPPORTED",
+          "message": "String templates require a reference or a supported primitive value",
+          "path": "/workspace/korrust/tests/nov21_inline/unsupported/unit.kt",
+          "line": 2,
+          "column": 33
+        }
+      ]
+    },
+    {
+      "id": "boundary/unit_array",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/nov21_inline/unsupported/unit_array.kt",
+          "offset": 45,
+          "category": "unsupported_language",
+          "code": "REIFIED_ARGUMENT_CLASSIFIER_UNSUPPORTED",
+          "message": "This reified argument classifier is unsupported",
+          "path": "/workspace/korrust/tests/nov21_inline/unsupported/unit_array.kt",
+          "line": 2,
+          "column": 19
+        }
+      ]
+    },
+    {
+      "id": "app/AudioHttpErrorBody",
+      "outcome": "pass",
+      "unchanged": true,
+      "path": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/audio/AudioHttpErrorBody.kt",
+      "sha256": "0f8bd02878e33edeca3d9e08a65b6ed96a44e6266c11053696816d69ca51db55",
+      "scope": "compile only; independent app runtime evidence recorded by integration harness"
+    },
+    {
+      "id": "upstream/twoArgumentStringTemplate",
+      "outcome": "pass",
+      "unchanged": true,
+      "path": "references/kotlin/compiler/testData/codegen/box/strings/twoArgumentStringTemplate.kt",
+      "sha256": "dde8d382e608ecfe2f10dff2f54ba1e36b1f36fc09d21aa73b4ce2b24b6f5231"
+    }
+  ],
+  "limitations": [
+    "Unit-returning expressions, nullable Unit and arrays with nullable Unit components in templates, and direct reified Unit array allocation remain explicitly unsupported; Unit singleton references are supported.",
+    "Reified nested array marker encodings beyond a single substituted parameter and existing parameterized generic/function classifier boundaries remain unsupported; direct concrete array components are tested.",
+    "Generated nested allocations, context-sensitive invokespecial and array-owner method references retain explicit rejection boundaries.",
+    "Root Object references and inherited field resolution are prerequisite correctness repairs, not counted features.",
+    "No full Android build or performance claim."
+  ],
+  "counts": {
+    "pass": 10,
+    "unsupported_language": 5
+  },
+  "official_compiled_java_callers_sha256": {
+    "../work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/callers/consumer/Calls$1.class": "c4929c0511bef43c13803f7ba50303cefa2c4434fb2470d709702d591f110e71",
+    "../work/four-kotlin/four-kotlin-83b83fd274/compiled-inline/callers/consumer/Calls.class": "1461d53dd73646e2635d96c4cb369c9b422d7f06086e8931dfded7e7827dc93f"
+  }
+}

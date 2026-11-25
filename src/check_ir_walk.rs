@@ -1,6 +1,8 @@
 use super::*;
 
 pub(crate) trait Visitor {
+    fn enter_value(&mut self, _node: &Value) {}
+
     fn value(&mut self, node: &mut Value, owner: &str);
 
     fn statement(&mut self, _node: &mut Statement, _owner: &str) {}
@@ -13,6 +15,7 @@ impl<F: FnMut(&mut Value, &str)> Visitor for F {
 }
 
 pub(crate) fn value(node: &mut Value, owner: &str, visitor: &mut impl Visitor) {
+    visitor.enter_value(node);
     match &mut node.kind {
         ValueKind::SuperCall { args, .. }
         | ValueKind::CompiledInline { args, .. }
@@ -246,6 +249,9 @@ pub(crate) fn class(node: &mut ClassDecl, owner: &str, visitor: &mut impl Visito
         statements(&mut constructor.initializers, owner, visitor);
         function(&mut constructor.function, owner, visitor);
     }
+    for method in &mut node.default_functions {
+        function(method, owner, visitor);
+    }
     for method in &mut node.methods {
         function(method, owner, visitor);
     }
@@ -256,6 +262,9 @@ pub(crate) fn class(node: &mut ClassDecl, owner: &str, visitor: &mut impl Visito
 
 fn interface(node: &mut InterfaceDecl, visitor: &mut impl Visitor) {
     let helper_owner = format!("{}$DefaultImpls", node.owner);
+    for method in &mut node.default_functions {
+        function(method, &helper_owner, visitor);
+    }
     for method in &mut node.methods {
         function(&mut method.function, &helper_owner, visitor);
     }
@@ -285,6 +294,9 @@ fn object(node: &mut DynamicObject, visitor: &mut impl Visitor) {
         }
     }
     statements(&mut node.initializers, &node.owner, visitor);
+    for method in &mut node.default_functions {
+        function(method, &node.owner, visitor);
+    }
     for method in &mut node.methods {
         function(&mut method.function, &node.owner, visitor);
     }
@@ -324,6 +336,7 @@ mod tests {
     fn function_with(number: i32) -> Function {
         Function {
             suspend_: false,
+            inline: false,
             extension_receiver: false,
             class_type_params: Vec::new(),
             jvm_result: None,
@@ -489,6 +502,7 @@ mod tests {
                 interface: None,
             }],
             class_decl: Some(ClassDecl {
+                default_functions: Vec::new(),
                 operator_offsets: HashSet::new(),
                 lexical_bridges: false,
                 inner: false,
@@ -535,6 +549,7 @@ mod tests {
                 bridges: Vec::new(),
             }),
             interface_decl: Some(InterfaceDecl {
+                default_functions: Vec::new(),
                 operator_offsets: HashSet::new(),
                 sealed_: false,
                 sealed_subclasses: Vec::new(),
@@ -557,6 +572,7 @@ mod tests {
                 }),
             }),
             object_decl: Some(DynamicObject {
+                default_functions: Vec::new(),
                 bridges: Vec::new(),
                 exposed_fields: HashMap::new(),
                 constants: Vec::new(),

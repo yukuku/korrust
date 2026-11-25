@@ -108,6 +108,8 @@ pub struct DeclarationAnnotation {
 }
 
 pub struct AnonymousSuper {
+    pub supertypes: Vec<Type>,
+    pub bridges: Vec<GenericBridge>,
     pub owner: String,
     pub descriptor: String,
     pub params: Vec<Type>,
@@ -135,6 +137,7 @@ pub struct Module {
     pub object_decl: Option<DynamicObject>,
 }
 pub struct DynamicObject {
+    pub default_functions: Vec<Function>,
     pub bridges: Vec<JavaMethod>,
     pub exposed_fields: HashMap<String, u16>,
     pub constants: Vec<syntax::ConstDecl>,
@@ -171,6 +174,7 @@ pub struct ObjectMethod {
     pub inline: bool,
 }
 pub struct InterfaceDecl {
+    pub default_functions: Vec<Function>,
     pub operator_offsets: HashSet<usize>,
     pub sealed_: bool,
     pub sealed_subclasses: Vec<String>,
@@ -258,6 +262,7 @@ pub struct InterfaceDelegatedMember {
     pub jvm_descriptor: String,
 }
 pub struct ClassDecl {
+    pub default_functions: Vec<Function>,
     pub operator_offsets: HashSet<usize>,
     pub lexical_bridges: bool,
     pub inner: bool,
@@ -298,6 +303,7 @@ pub struct ClassDecl {
 #[derive(Clone)]
 pub struct Function {
     pub suspend_: bool,
+    pub inline: bool,
     pub extension_receiver: bool,
     pub class_type_params: Vec<String>,
     pub jvm_result: Option<Type>,
@@ -426,6 +432,7 @@ pub struct Catch {
 pub enum ValueKind {
     ClassLiteral(Type),
     SuperCall {
+        interface: bool,
         method: JavaMethod,
         args: Vec<Value>,
     },
@@ -3807,7 +3814,7 @@ impl Checker<'_> {
                             continue;
                         }
                     }
-                    if self.local(name).is_none() {
+                    if self.local(name).is_none() && !self.captured.contains_key(name) {
                         if let Some(method) = self.members.get(&format!("#set:{name}")) {
                             let value = if !method.instance_dispatch() {
                                 self.library_static_call(
@@ -3849,6 +3856,22 @@ impl Checker<'_> {
                                     );
                                     continue;
                                 }
+                            }
+                        }
+                        if self.public_inline_body && self.object_fields.contains_key(name) {
+                            let setters = self.inline_static_property_accessors(name, 1)?;
+                            if !setters.is_empty() {
+                                let method = self.select_method(
+                                    &setters,
+                                    std::slice::from_ref(expr),
+                                    offset,
+                                )?;
+                                body.push(Statement::Expression(self.library_static_call(
+                                    method,
+                                    std::slice::from_ref(expr),
+                                    offset,
+                                )?));
+                                continue;
                             }
                         }
                         if let Some((owner, ty)) = self.object_fields.get(name) {
@@ -4644,20 +4667,22 @@ impl Checker<'_> {
                 if let Some(value) = self.imported_value(name, offset)? {
                     return Ok(value);
                 }
-                let getters = self
-                    .library_candidates(name)
-                    .into_iter()
-                    .filter(|m| {
-                        m.source_property.is_some()
-                            && m.kotlin_params.as_ref().is_some_and(|p| p.is_empty())
-                    })
-                    .collect::<Vec<_>>();
+                let mut getters = self.inline_static_property_accessors(name, 0)?;
+                getters.extend(
+                    self.library_candidates(name)
+                        .into_iter()
+                        .filter(|m| {
+                            m.source_property.is_some()
+                                && m.kotlin_params.as_ref().is_some_and(|p| p.is_empty())
+                        })
+                        .collect::<Vec<_>>(),
+                );
                 if !getters.is_empty()
                     && self.local(name).is_none()
                     && !self.captured.contains_key(name)
                     && !self.fields.contains_key(name)
                     && !self.constants.contains_key(name)
-                    && !self.object_fields.contains_key(name)
+                    && (!self.object_fields.contains_key(name) || self.public_inline_body)
                     && !self.companion_fields.contains_key(name)
                 {
                     let method = self.select_method(&getters, &[], offset)?;
@@ -4682,7 +4707,7 @@ impl Checker<'_> {
                     return Ok(Value {
                         ty: ty.clone(),
                         kind: ValueKind::JavaField {
-                            descriptor: None,
+                            descriptor: Some(ty.descriptor()),
                             owner: owner.clone(),
                             name: name.clone(),
                             receiver: Some(Box::new(Value {
@@ -5747,10 +5772,22 @@ impl Checker<'_> {
                         let parent = class
                             .super_name
                             .ok_or_else(|| Diagnostic::new(offset, "Class has no superclass"))?;
+                        let parent_type =
+                            relations::as_supertype(self.classpath, &this.ty, &parent)
+                                .unwrap_or_else(|| Type::Java(parent.clone()));
+                        let parent_class = self.classpath.load(&parent)?;
                         let methods = self
                             .classpath
                             .methods(&parent)?
                             .into_iter()
+                            .map(|method| {
+                                library::specialize_receiver(
+                                    method,
+                                    &parent_type,
+                                    &parent_class,
+                                    self.classpath,
+                                )
+                            })
                             .filter(|m| {
                                 m.source_name() == name
                                     && m.instance_dispatch()
@@ -5763,7 +5800,11 @@ impl Checker<'_> {
                             ValueKind::JavaCall { args, .. }
                             | ValueKind::MemberCall { args, .. } => Ok(Value {
                                 ty: call.ty,
-                                kind: ValueKind::SuperCall { method, args },
+                                kind: ValueKind::SuperCall {
+                                    interface: false,
+                                    method,
+                                    args,
+                                },
                             }),
                             _ => Err(Diagnostic::new(
                                 offset,
@@ -5790,18 +5831,21 @@ impl Checker<'_> {
                                     if class.fields.iter().any(|f| {
                                         f.name == "INSTANCE" && f.descriptor == format!("L{owner};")
                                     }) {
-                                        let methods = self
-                                            .classpath
-                                            .methods(owner)?
-                                            .into_iter()
-                                            .filter(|m| {
-                                                m.source_name() == name
-                                                    && m.access & 1 != 0
-                                                    && m.library.as_ref().is_none_or(|library| {
-                                                        library.receiver.is_none()
-                                                    })
-                                            })
-                                            .collect::<Vec<_>>();
+                                        let methods = library::ordinary_member_methods(
+                                            self.classpath,
+                                            owner,
+                                            name,
+                                            args.len(),
+                                        )?
+                                        .into_iter()
+                                        .filter(|m| {
+                                            m.source_name() == name
+                                                && m.access & 1 != 0
+                                                && m.library.as_ref().is_none_or(|library| {
+                                                    library.receiver.is_none()
+                                                })
+                                        })
+                                        .collect::<Vec<_>>();
                                         let method = self.select_method(&methods, args, offset)?;
                                         return if !method.instance_dispatch() {
                                             self.library_static_call(method, args, offset)
@@ -7617,6 +7661,7 @@ pub fn check_with_owner(
         }
         result.push(Function {
             suspend_: function.suspend_,
+            inline: function.inline,
             extension_receiver: function.receiver.is_some(),
             class_type_params: Vec::new(),
             jvm_result: function

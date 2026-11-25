@@ -96,8 +96,14 @@
   {
     "id": "inline_exception_handler",
     "invalid": false,
-    "source": "import interop.lib.handlerGate\nfun boundary(): Int = handlerGate { 3 }",
-    "candidate_diagnostic_regex": "Unsupported compiled inline body"
+    "source": "import interop.lib.handlerGate\nfun boundary(): Int = handlerGate { 3 }\nfun failure(): Int = handlerGate { throw IllegalStateException(\"body\") }\nfun nonlocal(): Int { handlerGate { return 5 }; return 9 }",
+    "candidate_diagnostic_regex": "Unsupported compiled inline body",
+    "supported_regression": {
+      "facade": "Boundary_inline_exception_handlerKt",
+      "java_fixture": "InlineExceptionBoundaryCheck.java",
+      "main_class": "InlineExceptionBoundaryCheck",
+      "scope": "Remapped exception regions around substituted inline lambda bodies, normal return, typed catch dispatch and nonlocal return; identical Java bytecodes independently assert all three paths with JVM verification."
+    }
   },
   {
     "id": "ambiguous_overload_specificity",

@@ -72,8 +72,8 @@ RESTRICTIONS = {
     "callable_references": ["Bound/unbound ordinary method references and top-level function references lower to typed lambdas; expected function type is required. Property/constructor references, reference reflection and mixed static/instance same-name overload sets are unsupported."],
     "inherited_dispatch": ["Recorded inherited virtual and interface method lookup, including runtime override selection; generic hierarchy substitution is bounded by supported signatures and source inheritance remains outside this suite."],
     "java_sam": ["Recorded IntUnaryOperator conversion with immutable Int capture; target must expose one supported abstract method. No arbitrary SAM constructor, intersection type, generic SAM or default-method compatibility claim."],
-    "compiled_inline": ["Only supported static inline bodies, with direct literal-lambda FunctionN.invoke or null-check uses. Escaping, aliased or forwarded literal lambdas and incompatible lambda identities at control-flow joins reject. Reified functions, reordered named/default inline arguments, unsupported numeric/conversion opcodes and relocated locals beyond 256 reject."],
-    "nonlocal_inline_returns": ["Recorded non-local Int/Long/String returns, conditional captures and pending caller operands through supported static inline bodies. noinline/crossinline contracts and ordinary non-inline lambda returns have separate negative outcomes; labeled returns, suspend/reified and arbitrary escaping inline lambdas are unsupported."],
+    "compiled_inline": ["Only supported static inline bodies, with direct literal-lambda FunctionN.invoke or null-check uses. Escaping, aliased or forwarded literal lambdas and incompatible lambda identities at control-flow joins reject. Reordered named/default inline arguments and relocated locals beyond 256 reject."],
+    "nonlocal_inline_returns": ["Recorded non-local Int/Long/String returns, conditional captures and pending caller operands through supported static inline bodies. noinline/crossinline contracts and ordinary non-inline lambda returns have separate negative outcomes; suspend and arbitrary escaping inline lambdas are unsupported."],
 }
 
 
@@ -342,7 +342,7 @@ class Harness(LoggedHarness):
             related = {"boundary/" + name for name in FEATURE_BOUNDARIES.get(ident, [])}
             restrictions = [*RESTRICTIONS[ident], "Evidence is bounded to the recorded fixtures and pinned dependencies. No whole-app, Android-device runtime, or compilation-performance claim."]
             if ident in ["compiled_inline", "nonlocal_inline_returns"]:
-                restrictions.append("Ordinary referenced-class allocation in compiled inline bodies is tested under recorded controlled HotSpot identity hash options. Generated/nested inline-owner class regeneration, exception tables, invokedynamic, switches and unsupported stack operations still reject explicitly. This suite exercises Function0/Function1 bodies with branches/loops, primitive and captured values; the remaining exception-handler boundary is a rejection.")
+                restrictions.append("Ordinary referenced-class allocation in compiled inline bodies is tested under recorded controlled HotSpot identity hash options. Generated/nested inline-owner class regeneration and invokedynamic still reject explicitly. This suite exercises Function0/Function1 bodies with branches/loops, primitive and captured values; the former exception-handler boundary now verifies normal, caught-exception and non-local-return execution.")
                 related.update({"boundary/inline_allocation", "boundary/inline_exception_handler"})
             if ident in ["jar_classpath", "compiled_extensions"]:
                 related.update(case["id"] for case in self.report["cases"] if case["id"].startswith("androidbible/"))

@@ -439,6 +439,7 @@ fn legacy_check(
         methods.push(ObjectMethod {
             function: Function {
                 suspend_: false,
+                inline: false,
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
@@ -478,6 +479,7 @@ fn legacy_check(
         class_decl: None,
         interface_decl: None,
         object_decl: Some(DynamicObject {
+            default_functions: Vec::new(),
             bridges: Vec::new(),
             exposed_fields: HashMap::new(),
             constants: source.constants.clone(),
@@ -683,10 +685,37 @@ pub(super) fn check(
             .map(Ok)
             .unwrap_or_else(|| classpath.load(&name))?;
         for method in interfaces::interface_methods(&class, classes, source.offset)?.into_values() {
-            required.insert(
-                declarations::member_key(&method.name, &method.descriptor),
-                method,
-            );
+            let key = declarations::member_key(&method.name, &method.descriptor);
+            if let Some(previous) = required.get(&key) {
+                let previous: &JavaMethod = previous;
+                if previous.owner != method.owner {
+                    if relations::as_supertype(
+                        classpath,
+                        &Type::Java(previous.owner.clone()),
+                        &method.owner,
+                    )
+                    .is_some()
+                    {
+                        continue;
+                    }
+                    if relations::as_supertype(
+                        classpath,
+                        &Type::Java(method.owner.clone()),
+                        &previous.owner,
+                    )
+                    .is_none()
+                        && (previous.access & 0x400 == 0 || method.access & 0x400 == 0)
+                        && !source
+                            .methods
+                            .iter()
+                            .any(|m| m.is_override && m.function.name == method.name)
+                    {
+                        return Err(Diagnostic::new(source.offset, "Conflicting inherited interface implementations require an explicit override")
+                            .with_kind(crate::DiagnosticKind::InvalidKotlin, "INHERITED_IMPLEMENTATION_CONFLICT"));
+                    }
+                }
+            }
+            required.insert(key, method);
         }
         implemented_interfaces.push(name);
     }
@@ -1141,6 +1170,7 @@ pub(super) fn check(
         let function = if field.body.is_empty() {
             Function {
                 suspend_: false,
+                inline: false,
                 extension_receiver: false,
                 class_type_params: Vec::new(),
                 jvm_result: None,
@@ -1204,6 +1234,7 @@ pub(super) fn check(
             methods.push(ObjectMethod {
                 function: Function {
                     suspend_: false,
+                    inline: false,
                     extension_receiver: false,
                     class_type_params: Vec::new(),
                     jvm_result: None,
@@ -1242,6 +1273,7 @@ pub(super) fn check(
             });
         }
     }
+    let mut default_functions = Vec::new();
     let mut bridges = Vec::new();
     for method in required.into_values() {
         if methods
@@ -1260,14 +1292,29 @@ pub(super) fn check(
             .load(&method.owner)
             .is_ok_and(|c| c.kotlin_interface)
         {
-            bridges.push(declarations::direct_default_bridge(
+            let method = declarations::direct_default_bridge(
                 method,
                 &implemented_interfaces,
                 classpath,
                 source.offset,
-            )?);
+            )?;
+            if method
+                .library
+                .as_ref()
+                .is_some_and(|l| !l.type_parameters.is_empty())
+            {
+                default_functions.push(declarations::inherited_default_function(
+                    &method,
+                    &owner,
+                    &[],
+                    false,
+                )?);
+            } else {
+                bridges.push(method);
+            }
         }
     }
+    default_functions.sort_by(|a, b| a.name.cmp(&b.name));
     bridges.sort_by(|a, b| a.name.cmp(&b.name).then(a.descriptor.cmp(&b.descriptor)));
     drop(context);
     Ok(Module {
@@ -1281,6 +1328,7 @@ pub(super) fn check(
         class_decl: None,
         interface_decl: None,
         object_decl: Some(DynamicObject {
+            default_functions,
             bridges,
             exposed_fields: source
                 .fields

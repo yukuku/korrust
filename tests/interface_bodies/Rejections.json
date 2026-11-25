@@ -1,0 +1,22 @@
+[
+  {
+    "id": "mixed-parameters",
+    "official": "reject",
+    "source": "interface Api<C> { fun <T> bad(value:T):C=value }"
+  },
+  {
+    "id": "wrong-result",
+    "official": "reject",
+    "source": "interface Api { fun <T> bad(value:T):T=1 }"
+  },
+  {
+    "id": "wrong-bound",
+    "official": "reject",
+    "source": "interface Label\ninterface Api<C> { fun <T:Label> echo(value:T):T=value }\nfun bad(api:Api<String>):String=api.echo(\"bad\")"
+  },
+  {
+    "id": "object-default-conflict",
+    "official": "reject",
+    "source": "interface First { fun <T> echo(value:T):T=value }\ninterface Second { fun <T> echo(value:T):T=value }\nobject Invalid:First,Second"
+  }
+]

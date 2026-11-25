@@ -35,7 +35,7 @@ def main():
     created = datetime.now(timezone.utc)
     output = (args.output or ROOT / 'target/checks' / (created.strftime('%Y-%m-%dT%H%M%S%fZ') + '-source-inline')).resolve()
     output.mkdir(parents=True, exist_ok=False)
-    report = dict(schema_version=1, kind='correctness', created_at=created.isoformat(), status='running', cases=[], commands=[], limits='Bounded static source inline bodies, real JVM reification, parameter modes, direct lambda expansion and caller-side cleanup. Source body exception tables, captured/generated inline closures, receivers, defaults, varargs, complex reified bounds/classifiers remain explicit boundaries. Scalar Short and direct ShortArray signatures are prerequisite regressions; dedicated integral-promotion and ShortArray coverage is separate. No Android/full app or speed claim.')
+    report = dict(schema_version=1, kind='correctness', created_at=created.isoformat(), status='running', cases=[], commands=[], limits='Bounded static source inline bodies, real JVM reification, parameter modes, direct lambda expansion and caller-side cleanup. Captured/generated inline closures, member receivers, defaults, varargs, complex reified bounds/classifiers remain explicit boundaries. Scalar Short and direct ShortArray signatures are prerequisite regressions; dedicated integral-promotion and ShortArray coverage is separate. No Android/full app or speed claim.')
     reference = ROOT / json.loads((ROOT / 'references/compiler.json').read_text())['path']
     stdlib = reference / 'lib/kotlin-stdlib.jar'
     jdk = Path(os.environ['JAVA_HOME']) / 'bin'
@@ -45,7 +45,7 @@ def main():
     frozen += [Path(os.path.normpath(ROOT / 'references/kotlin/compiler/testData/codegen/box' / name)) for name in UPSTREAM]
     frozen = [path for path in frozen if path.is_file()]
     hashes = {str(path.relative_to(ROOT)): sha(path) for path in frozen}
-    report['resource_limits'] = dict(source_inline_dependency_depth=64, command_seconds=180)
+    report['resource_limits'] = dict(source_inline_dependency_depth=64, command_seconds=180, upstream_batch_seconds=180 * len(UPSTREAM))
     report['inputs'] = dict(files_sha256=hashes, compiler_sha256=sha(compiler), stdlib_sha256=sha(stdlib), compiler_jar_sha256=sha(reference / 'lib/kotlin-compiler.jar'))
     with zipfile.ZipFile(output / 'source-only.zip', 'w', zipfile.ZIP_DEFLATED) as archive:
         for path in frozen:
@@ -53,9 +53,9 @@ def main():
     commands = output / 'commands'
     commands.mkdir()
 
-    def run(label, command, success=True):
+    def run(label, command, success=True, timeout=180):
         index = len(report['commands'])
-        completed = subprocess.run([str(value) for value in command], cwd=ROOT, text=True, capture_output=True, timeout=180)
+        completed = subprocess.run([str(value) for value in command], cwd=ROOT, text=True, capture_output=True, timeout=timeout)
         log = commands / f'{index:03d}.txt'
         log.write_text(completed.stdout + completed.stderr)
         report['commands'].append(dict(label=label, argv=[str(value) for value in command], exit_code=completed.returncode, log=str(log.relative_to(output))))
@@ -107,10 +107,16 @@ def main():
         for folder, expected in [('invalid', 'invalid_kotlin'), ('boundary', 'unsupported_language')]:
             for source in sorted((FIXTURES / folder).glob('*.kt')):
                 name = folder + '_' + source.stem
-                if folder == 'boundary' and source.stem == 'short_array':
+                if folder == 'boundary' and source.stem in ('short_array', 'short_vararg', 'inline_receiver', 'exception_table'):
+                    regression = 'regression_' + source.stem
                     for provider, command in [('official', reference / 'bin/kotlinc'), ('candidate', compiler)]:
-                        run('regression_short_array ' + provider, [command, source, '-cp', stdlib, '-d', output / ('regression-short-array-' + provider)])
-                    case('regression_short_array', 'pass', source=str(source.relative_to(ROOT)), historical_fixture_path_retained=True)
+                        run(regression + ' ' + provider, [command, source, '-cp', stdlib, '-d', output / (regression + '-' + provider)])
+                    if source.stem == 'short_vararg':
+                        caller = output / 'short-vararg-caller'
+                        run('Short vararg fixed Java caller', [jdk / 'javac', '-cp', output / (regression + '-official'), '-d', caller, FIXTURES / 'ShortVarargCheck.java'])
+                        for provider in ['official', 'candidate']:
+                            run('Short vararg JVM ' + provider, [jdk / 'java', '-Xverify:all', '-cp', os.pathsep.join(map(str, [caller, output / (regression + '-' + provider), stdlib])), 'ShortVarargCheck'])
+                    case(regression, 'pass', source=str(source.relative_to(ROOT)), historical_fixture_path_retained=True)
                     continue
                 run(name + ' official', [reference / 'bin/kotlinc', source, '-cp', stdlib, '-d', output / (name + '-official')], success=False)
                 oracle = report['commands'][-1]['exit_code']
@@ -128,7 +134,7 @@ def main():
             matrix['cases'].append(dict(id='upstream_' + str(index), family='source_inline_reified', root='boxInline' if '/boxInline/' in source.as_posix() else 'box', path=str(source.relative_to(ROOT)), tier='acceptance', kind='box', sha256=sha(source)))
         matrix_path = output / 'upstream-matrix.json'
         matrix_path.write_text(json.dumps(matrix, indent=2) + '\n')
-        run('Unchanged upstream originals', [sys.executable, ROOT / 'tools/upstream_jvm.py', '--matrix', matrix_path, '--candidate', compiler, '--output', output / 'upstream'])
+        run('Unchanged upstream originals', [sys.executable, ROOT / 'tools/upstream_jvm.py', '--matrix', matrix_path, '--candidate', compiler, '--output', output / 'upstream'], timeout=180 * len(UPSTREAM))
         upstream = json.loads((output / 'upstream/report.json').read_text())
         for item in upstream['cases']:
             case(item['id'], item['outcome'], source=item['source'], report='upstream/report.json')

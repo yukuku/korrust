@@ -18,18 +18,6 @@
     "source": "class Box<C> { fun <C> f(x:C):C=x }"
   },
   {
-    "id": "generic-interface-default",
-    "official": "accept",
-    "code": "GENERIC_INTERFACE_BODY_UNSUPPORTED",
-    "source": "interface Api<C> { fun <T> f(x:T):T=x }"
-  },
-  {
-    "id": "generic-nongeneric-interface-default",
-    "official": "accept",
-    "code": "GENERIC_INTERFACE_METHOD_BODY_UNSUPPORTED",
-    "source": "interface Api { fun <T> f(x:T):T=x }"
-  },
-  {
     "id": "wrong-method-bound",
     "official": "reject",
     "source": "interface Label\nclass Box<C> { fun <T:Label> f(x:T):T=x }\nfun bad():String=Box<String>().f(\"bad\")"

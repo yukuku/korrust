@@ -39,9 +39,15 @@ fn compare(source: &str, caller: &str) {
             .arg("-d")
             .arg(&official),
     );
-    for class in
-        compile_all_with_classpath(source, "Extended.kt", std::slice::from_ref(&standard)).unwrap()
-    {
+    let source = source.to_owned();
+    let classpath = standard.clone();
+    let classes = std::thread::Builder::new()
+        .stack_size(32 * 1024 * 1024)
+        .spawn(move || compile_all_with_classpath(&source, "Extended.kt", &[classpath]).unwrap())
+        .unwrap()
+        .join()
+        .unwrap();
+    for class in classes {
         let path = candidate.join(format!("{}.class", class.internal_name));
         std::fs::create_dir_all(path.parent().unwrap()).unwrap();
         std::fs::write(path, class.bytes).unwrap();
@@ -234,11 +240,6 @@ fn local_suspend_boundaries_remain_explicit() {
             error.message
         );
     }
-    let source = "suspend fun broken(step: suspend () -> String): String { suspend fun inner(): String = if (true) step() else \"x\"; return inner() }";
-    let error = compile_all_with_classpath(source, "Broken.kt", &[standard])
-        .err()
-        .unwrap();
-    assert_eq!(error.kind, korrust::DiagnosticKind::UnsupportedLanguage);
 }
 
 #[test]
@@ -281,5 +282,13 @@ fn anonymous_reader_uses_a_generic_capture_and_resumes_through_a_suspend_referen
     compare(
         include_str!("fixtures/language_interactions/Extended.kt"),
         include_str!("fixtures/language_interactions/Calls.java"),
+    );
+}
+
+#[test]
+fn generic_dispatch_nonlocal_inline_return_and_nested_suspension_compose() {
+    compare(
+        include_str!("fixtures/generic_coroutine_inline/Extended.kt"),
+        include_str!("fixtures/generic_coroutine_inline/Calls.java"),
     );
 }

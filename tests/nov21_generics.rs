@@ -47,14 +47,6 @@ fn unsupported_generic_member_complexities_are_explicit() {
             "DEPENDENT_GENERIC_BOUND_UNSUPPORTED",
         ),
         (
-            "interface Api<C> { fun <T> f(x:T):T=x }",
-            "GENERIC_INTERFACE_BODY_UNSUPPORTED",
-        ),
-        (
-            "interface Api { fun <T> f(x:T):T=x }",
-            "GENERIC_INTERFACE_METHOD_BODY_UNSUPPORTED",
-        ),
-        (
             "class Box<C> { fun <C> f(x:C):C=x }",
             "TYPE_PARAMETER_SHADOW_UNSUPPORTED",
         ),

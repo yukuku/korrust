@@ -95,3 +95,23 @@ fn when_subject_annotations_are_checked_before_binding() {
         .is_err()
     );
 }
+
+#[test]
+fn abrupt_try_lambda_results_keep_expected_types_without_accepting_unit_results() {
+    accepts(
+        "fun value(): Int { val block: () -> Int = done@ { try { return@done 7 } finally { System.nanoTime() } }; return block() }",
+    );
+    let standard =
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("references/kotlinc/lib/kotlin-stdlib.jar");
+    let error = compile_all_with_classpath(
+        "fun value(): Int = try { } finally { System.nanoTime() }",
+        "Invalid.kt",
+        &[standard],
+    )
+    .err()
+    .unwrap();
+    assert!(
+        error.message.contains("expected Int, found Unit"),
+        "{error:?}"
+    );
+}

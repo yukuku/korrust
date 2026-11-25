@@ -56,14 +56,15 @@ fn abstract_generic_interface_varargs_dispatch_checked_renamed_overrides() {
 
 #[test]
 fn generic_interface_vararg_bodies_remain_explicitly_unsupported() {
-    let error = compile_all(
+    for source in [
         "interface Api { fun <T> count(vararg items:T):Int=items.size }",
-        "Boundary.kt",
-    )
-    .err()
-    .unwrap();
-    assert_eq!(error.kind, korrust::DiagnosticKind::UnsupportedLanguage);
-    assert_eq!(error.code, "GENERIC_INTERFACE_VARARG_BODY_UNSUPPORTED");
+        "interface Api<C> { fun count(vararg items:C):Int=items.size }",
+        "interface Api<C> { fun put(value:C, vararg items:C) { items[0]=value } }",
+    ] {
+        let error = compile_all(source, "Boundary.kt").err().unwrap();
+        assert_eq!(error.kind, korrust::DiagnosticKind::UnsupportedLanguage);
+        assert_eq!(error.code, "GENERIC_INTERFACE_VARARG_BODY_UNSUPPORTED");
+    }
 }
 
 #[test]

@@ -23,15 +23,12 @@ pub(crate) fn stage(
                 if function.params.iter().zip(&function.parameter_modes).any(|((_, ty), mode)| matches!(ty, syntax::Type::Nullable(inner) if matches!(inner.as_ref(), syntax::Type::Function { .. } | syntax::Type::ReceiverFunction { .. })) && *mode != syntax::InlineParameterMode::Noinline) {
                     return Err((owner.clone(), Diagnostic::new(function.offset, "Nullable inline function parameters require noinline").with_kind(DiagnosticKind::InvalidKotlin, "NULLABLE_INLINE_PARAMETER")));
                 }
-                if function.receiver.is_some()
-                    || function.vararg
-                    || function.defaults.iter().any(Option::is_some)
-                {
+                if function.vararg || function.defaults.iter().any(Option::is_some) {
                     return Err((
                         owner.clone(),
                         unsupported(
                             function.offset,
-                            "Source inline receivers, varargs and default arguments are unsupported",
+                            "Source inline varargs and default arguments are unsupported",
                         ),
                     ));
                 }
@@ -240,7 +237,7 @@ fn validate_parameter_uses(
     owner: &str,
 ) -> Result<()> {
     let mut parameters = HashSet::new();
-    let mut slot = 0u16;
+    let mut slot = source.receiver.as_ref().map_or(0, |ty| ty.slots() as u16);
     for ((_, ty), mode) in source.params.iter().zip(&source.parameter_modes) {
         if matches!(
             ty,

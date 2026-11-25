@@ -1,0 +1,2488 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-25T13:41:26.155229+00:00",
+  "status": "pass",
+  "cases": [
+    {
+      "id": "official_provider",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate_provider",
+      "outcome": "pass"
+    },
+    {
+      "id": "official_java_runtime",
+      "outcome": "pass",
+      "assertions": "checks=160"
+    },
+    {
+      "id": "official_kotlin_consumer",
+      "outcome": "pass",
+      "assertions": 17
+    },
+    {
+      "id": "candidate_java_runtime",
+      "outcome": "pass",
+      "assertions": "checks=160"
+    },
+    {
+      "id": "candidate_kotlin_consumer",
+      "outcome": "pass",
+      "assertions": 17
+    },
+    {
+      "id": "signatures_probe.ReifiedKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "signatures_lambdas.EffectsKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "signatures_forward.ForwardKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "signatures_shorts.ShortsKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "signatures_ordering.OrderingKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "expanded_probe.ReifiedKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "expanded_lambdas.EffectsKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "expanded_forward.ForwardKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "expanded_ordering.OrderingKt",
+      "outcome": "pass"
+    },
+    {
+      "id": "invalid_conflicting_modifiers",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/conflicting_modifiers.kt",
+          "offset": 24,
+          "category": "invalid_kotlin",
+          "code": "INLINE_PARAMETER_MODIFIERS_CONFLICT",
+          "message": "Conflicting or repeated inline parameter modifiers",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/conflicting_modifiers.kt",
+          "line": 1,
+          "column": 25
+        }
+      ]
+    },
+    {
+      "id": "invalid_crossinline_nonfunction",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/crossinline_nonfunction.kt",
+          "offset": 41,
+          "category": "invalid_kotlin",
+          "code": "INLINE_PARAMETER_TYPE_INVALID",
+          "message": "Inline parameter modifiers require a function type",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/crossinline_nonfunction.kt",
+          "line": 1,
+          "column": 42
+        }
+      ]
+    },
+    {
+      "id": "invalid_crossinline_nonlocal",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/crossinline_nonlocal.kt",
+          "offset": 89,
+          "category": "invalid_kotlin",
+          "code": "NON_LOCAL_RETURN_NOT_ALLOWED",
+          "message": "Non-local return requires an inline lambda",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/crossinline_nonlocal.kt",
+          "line": 2,
+          "column": 27
+        }
+      ]
+    },
+    {
+      "id": "invalid_crossinline_outside",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/crossinline_outside.kt",
+          "offset": 20,
+          "category": "invalid_kotlin",
+          "code": "INLINE_PARAMETER_OUTSIDE_INLINE",
+          "message": "Inline parameter modifiers require an inline function",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/crossinline_outside.kt",
+          "line": 1,
+          "column": 21
+        }
+      ]
+    },
+    {
+      "id": "invalid_double_short",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/double_short.kt",
+          "offset": 32,
+          "category": "invalid_kotlin",
+          "code": "DEPRECATED_FLOATING_SHORT_CONVERSION",
+          "message": "Direct floating-point conversions to Short are deprecated; convert to Int first",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/double_short.kt",
+          "line": 1,
+          "column": 33
+        }
+      ]
+    },
+    {
+      "id": "invalid_erased_reified",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/erased_reified.kt",
+          "offset": 97,
+          "category": "invalid_kotlin",
+          "code": "ERASED_REIFIED_ARGUMENT",
+          "message": "Cannot use an erased type parameter as a reified argument",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/erased_reified.kt",
+          "line": 2,
+          "column": 36
+        }
+      ]
+    },
+    {
+      "id": "invalid_escaping_crossinline",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/escaping_crossinline.kt",
+          "offset": 0,
+          "category": "invalid_kotlin",
+          "code": "INLINE_PARAMETER_ESCAPES",
+          "message": "Inline function parameters may only be invoked directly or forwarded to an inline parameter",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/escaping_crossinline.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "invalid_escaping_inline",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/escaping_inline.kt",
+          "offset": 0,
+          "category": "invalid_kotlin",
+          "code": "INLINE_PARAMETER_ESCAPES",
+          "message": "Inline function parameters may only be invoked directly or forwarded to an inline parameter",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/escaping_inline.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "invalid_explicit_intrinsic_escape",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/explicit_intrinsic_escape.kt",
+          "offset": 38,
+          "category": "invalid_kotlin",
+          "code": "INLINE_PARAMETER_ESCAPES",
+          "message": "Inline function parameters may only be invoked directly or forwarded to an inline parameter",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/explicit_intrinsic_escape.kt",
+          "line": 2,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "invalid_generic_crossinline",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/generic_crossinline.kt",
+          "offset": 114,
+          "category": "invalid_kotlin",
+          "code": "NON_LOCAL_RETURN_NOT_ALLOWED",
+          "message": "Non-local return requires an inline lambda",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/generic_crossinline.kt",
+          "line": 2,
+          "column": 52
+        }
+      ]
+    },
+    {
+      "id": "invalid_generic_noinline",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/generic_noinline.kt",
+          "offset": 111,
+          "category": "invalid_kotlin",
+          "code": "NON_LOCAL_RETURN_NOT_ALLOWED",
+          "message": "Non-local return requires an inline lambda",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/generic_noinline.kt",
+          "line": 2,
+          "column": 52
+        }
+      ]
+    },
+    {
+      "id": "invalid_mutual_cycle",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/mutual_cycle.kt",
+          "offset": 0,
+          "category": "invalid_kotlin",
+          "code": "INLINE_RECURSION",
+          "message": "Inline functions cannot participate in a recursive source call cycle",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/mutual_cycle.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "invalid_nested_erased",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/nested_erased.kt",
+          "offset": 97,
+          "category": "invalid_kotlin",
+          "code": "NESTED_REIFIED_ARGUMENT_UNSUPPORTED",
+          "message": "Nested type parameters require unsupported array reification",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/nested_erased.kt",
+          "line": 2,
+          "column": 36
+        }
+      ]
+    },
+    {
+      "id": "invalid_noinline_nonfunction",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/noinline_nonfunction.kt",
+          "offset": 34,
+          "category": "invalid_kotlin",
+          "code": "INLINE_PARAMETER_TYPE_INVALID",
+          "message": "Inline parameter modifiers require a function type",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/noinline_nonfunction.kt",
+          "line": 1,
+          "column": 35
+        }
+      ]
+    },
+    {
+      "id": "invalid_noinline_nonlocal",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/noinline_nonlocal.kt",
+          "offset": 86,
+          "category": "invalid_kotlin",
+          "code": "NON_LOCAL_RETURN_NOT_ALLOWED",
+          "message": "Non-local return requires an inline lambda",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/noinline_nonlocal.kt",
+          "line": 2,
+          "column": 27
+        }
+      ]
+    },
+    {
+      "id": "invalid_noinline_outside",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/noinline_outside.kt",
+          "offset": 17,
+          "category": "invalid_kotlin",
+          "code": "INLINE_PARAMETER_OUTSIDE_INLINE",
+          "message": "Inline parameter modifiers require an inline function",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/noinline_outside.kt",
+          "line": 1,
+          "column": 18
+        }
+      ]
+    },
+    {
+      "id": "invalid_noninline_reified",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/noninline_reified.kt",
+          "offset": 5,
+          "category": "invalid_kotlin",
+          "code": "REIFIED_OUTSIDE_INLINE",
+          "message": "Reified type parameters require an inline function",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/noninline_reified.kt",
+          "line": 1,
+          "column": 6
+        }
+      ]
+    },
+    {
+      "id": "invalid_nullable_ordinary",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/nullable_ordinary.kt",
+          "offset": 0,
+          "category": "invalid_kotlin",
+          "code": "NULLABLE_INLINE_PARAMETER",
+          "message": "Nullable inline function parameters require noinline",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/nullable_ordinary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "invalid_public_private",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/public_private.kt",
+          "offset": 36,
+          "category": "invalid_kotlin",
+          "code": "PUBLIC_INLINE_NON_PUBLIC_ACCESS",
+          "message": "Public inline functions cannot access non-public declarations",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/public_private.kt",
+          "line": 2,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "invalid_public_private_inline",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/public_private_inline.kt",
+          "offset": 43,
+          "category": "invalid_kotlin",
+          "code": "PUBLIC_INLINE_NON_PUBLIC_ACCESS",
+          "message": "Public inline functions cannot access non-public source inline declarations",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/public_private_inline.kt",
+          "line": 2,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "invalid_public_private_setter",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/public_private_setter.kt",
+          "offset": 60,
+          "category": "invalid_kotlin",
+          "code": "PUBLIC_INLINE_NON_PUBLIC_ACCESS",
+          "message": "Public inline functions cannot access non-public declarations",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/public_private_setter.kt",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "invalid_recursive",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/recursive.kt",
+          "offset": 0,
+          "category": "invalid_kotlin",
+          "code": "INLINE_RECURSION",
+          "message": "Inline functions cannot participate in a recursive source call cycle",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/recursive.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "invalid_short_literal_overflow",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/short_literal_overflow.kt",
+          "offset": 19,
+          "category": "invalid_kotlin",
+          "code": "TYPE_MISMATCH",
+          "message": "Type mismatch: expected Short, found Int",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/short_literal_overflow.kt",
+          "line": 1,
+          "column": 20
+        }
+      ]
+    },
+    {
+      "id": "boundary_array_creation",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/array_creation.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "SOURCE_INLINE_CONTEXT_UNSUPPORTED",
+          "message": "Array construction with type-parameter components requires unsupported array reification",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/array_creation.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "boundary_captured_crossinline",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/captured_crossinline.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "SOURCE_INLINE_CONTEXT_UNSUPPORTED",
+          "message": "Inline parameters in generated closures or reordered forwarding are unsupported",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/captured_crossinline.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "boundary_dependency_depth",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/dependency_depth.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "SOURCE_INLINE_CONTEXT_UNSUPPORTED",
+          "message": "Source inline dependency depth exceeds 64 declarations",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/dependency_depth.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "regression_exception_table",
+      "outcome": "pass",
+      "source": "tests/fixtures/new_families/source_inline19/boundary/exception_table.kt",
+      "historical_fixture_path_retained": true
+    },
+    {
+      "id": "boundary_generic_array_classifier",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/generic_array_classifier.kt",
+          "offset": 98,
+          "category": "unsupported_language",
+          "code": "REIFIED_ARGUMENT_CLASSIFIER_UNSUPPORTED",
+          "message": "This reified argument classifier is unsupported",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/generic_array_classifier.kt",
+          "line": 2,
+          "column": 37
+        }
+      ]
+    },
+    {
+      "id": "boundary_generic_classifier",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/generic_classifier.kt",
+          "offset": 98,
+          "category": "unsupported_language",
+          "code": "REIFIED_ARGUMENT_CLASSIFIER_UNSUPPORTED",
+          "message": "This reified argument classifier is unsupported",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/generic_classifier.kt",
+          "line": 2,
+          "column": 37
+        }
+      ]
+    },
+    {
+      "id": "boundary_generic_unconditional",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/generic_unconditional.kt",
+          "offset": 80,
+          "category": "unsupported_language",
+          "code": "LAMBDA_ABRUPT_RESULT_INFERENCE_UNSUPPORTED",
+          "message": "Generic lambda results with unconditional nonlocal returns require unsupported Nothing inference",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/generic_unconditional.kt",
+          "line": 2,
+          "column": 30
+        }
+      ]
+    },
+    {
+      "id": "boundary_inline_default",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/inline_default.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "SOURCE_INLINE_CONTEXT_UNSUPPORTED",
+          "message": "Source inline varargs and default arguments are unsupported",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/inline_default.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "boundary_inline_member",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/inline_member.kt",
+          "offset": 17,
+          "category": "unsupported_language",
+          "code": "SOURCE_INLINE_CONTEXT_UNSUPPORTED",
+          "message": "Source member inline functions are unsupported",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/inline_member.kt",
+          "line": 1,
+          "column": 18
+        }
+      ]
+    },
+    {
+      "id": "regression_inline_receiver",
+      "outcome": "pass",
+      "source": "tests/fixtures/new_families/source_inline19/boundary/inline_receiver.kt",
+      "historical_fixture_path_retained": true
+    },
+    {
+      "id": "boundary_inline_vararg",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/inline_vararg.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "SOURCE_INLINE_CONTEXT_UNSUPPORTED",
+          "message": "Source inline varargs and default arguments are unsupported",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/inline_vararg.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "boundary_nested_reified",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/nested_reified.kt",
+          "offset": 117,
+          "category": "unsupported_language",
+          "code": "NESTED_REIFIED_ARGUMENT_UNSUPPORTED",
+          "message": "Nested type parameters require unsupported array reification",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/nested_reified.kt",
+          "line": 2,
+          "column": 56
+        }
+      ]
+    },
+    {
+      "id": "boundary_overload",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/overload.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "SOURCE_INLINE_CONTEXT_UNSUPPORTED",
+          "message": "Overloaded source inline declarations are unsupported",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/overload.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "boundary_published_api",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/published_api.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "ANNOTATION_KOTLIN_SEMANTICS_UNSUPPORTED",
+          "message": "Source inline context contains an annotation requiring unsupported compiler semantics",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/published_api.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "boundary_published_api_alias",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/published_api_alias.kt",
+          "offset": 38,
+          "category": "unsupported_language",
+          "code": "ANNOTATION_KOTLIN_SEMANTICS_UNSUPPORTED",
+          "message": "Source inline context contains an annotation requiring unsupported compiler semantics",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/published_api_alias.kt",
+          "line": 2,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "boundary_reified_array_literal",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/reified_array_literal.kt",
+          "offset": 62,
+          "category": "unsupported_language",
+          "code": "CLASS_LITERAL_UNSUPPORTED",
+          "message": "Nested reified array class literals are unsupported",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/reified_array_literal.kt",
+          "line": 1,
+          "column": 63
+        }
+      ]
+    },
+    {
+      "id": "boundary_reified_bound",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/reified_bound.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "SOURCE_INLINE_CONTEXT_UNSUPPORTED",
+          "message": "Reified source bounds other than Any are unsupported",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/reified_bound.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "regression_short_array",
+      "outcome": "pass",
+      "source": "tests/fixtures/new_families/source_inline19/boundary/short_array.kt",
+      "historical_fixture_path_retained": true
+    },
+    {
+      "id": "boundary_short_constant",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/short_constant.kt",
+          "offset": 28,
+          "category": "unsupported_language",
+          "code": "CONSTANT_EXPRESSION_UNSUPPORTED",
+          "message": "This declared const type is unsupported, including unresolved type aliases",
+          "path": "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/short_constant.kt",
+          "line": 1,
+          "column": 29
+        }
+      ]
+    },
+    {
+      "id": "regression_short_vararg",
+      "outcome": "pass",
+      "source": "tests/fixtures/new_families/source_inline19/boundary/short_vararg.kt",
+      "historical_fixture_path_retained": true
+    },
+    {
+      "id": "upstream_0",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/classLiteral/primitiveClassEquality.kt",
+        "sha256": "64bb8bc84e23ff63081dfc70ba5b8a1b7c5388dcc0119ac77d9e685dd3fc6b88"
+      },
+      "report": "upstream/report.json"
+    },
+    {
+      "id": "upstream_1",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/reified/instanceof.kt",
+        "sha256": "f500737df116ecdd44fa50403bf941dde82da05f55f7e092d75375d79b4d58ea"
+      },
+      "report": "upstream/report.json"
+    },
+    {
+      "id": "upstream_2",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/reified/checkcast.kt",
+        "sha256": "28faaf566b312f5566537154f558cb5b7c03c9b2d655c90f324ecf608dc49d8b"
+      },
+      "report": "upstream/report.json"
+    },
+    {
+      "id": "upstream_3",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/box/reified/safecast.kt",
+        "sha256": "df72bd3d5f751443108af8f82eadff72f50b8faa03d2cab5c0ca76da9b9887fd"
+      },
+      "report": "upstream/report.json"
+    },
+    {
+      "id": "upstream_4",
+      "outcome": "pass",
+      "source": {
+        "path": "references/kotlin/compiler/testData/codegen/boxInline/nonLocalReturns/simpleVoid.kt",
+        "sha256": "b10a8ee1323b6d69ea400193c9088222fb3f6a4c0ac6f6bea98118b0d81d68a0"
+      },
+      "report": "upstream/report.json"
+    }
+  ],
+  "commands": [
+    {
+      "label": "official provider",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/Reified.kt",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/Effects.kt",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/Forward.kt",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/Shorts.kt",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/Ordering.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/official"
+      ],
+      "exit_code": 0,
+      "log": "commands/000.txt"
+    },
+    {
+      "label": "candidate provider",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/Reified.kt",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/Effects.kt",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/Forward.kt",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/Shorts.kt",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/Ordering.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/candidate"
+      ],
+      "exit_code": 0,
+      "log": "commands/001.txt"
+    },
+    {
+      "label": "Fixed Java caller compiled against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/java",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/JavaCheck.java"
+      ],
+      "exit_code": 0,
+      "log": "commands/002.txt"
+    },
+    {
+      "label": "official Java verification",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/java:/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "verify.JavaCheck"
+      ],
+      "exit_code": 0,
+      "log": "commands/003.txt"
+    },
+    {
+      "label": "official independent Kotlin consumer compilation",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/KotlinConsumer.kt",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/official",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/official-consumer"
+      ],
+      "exit_code": 0,
+      "log": "commands/004.txt"
+    },
+    {
+      "label": "official independent Kotlin consumer runtime",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/official-consumer:/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.KotlinConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "commands/005.txt"
+    },
+    {
+      "label": "candidate Java verification",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/java:/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "verify.JavaCheck"
+      ],
+      "exit_code": 0,
+      "log": "commands/006.txt"
+    },
+    {
+      "label": "candidate independent Kotlin consumer compilation",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/KotlinConsumer.kt",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/candidate",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/candidate-consumer"
+      ],
+      "exit_code": 0,
+      "log": "commands/007.txt"
+    },
+    {
+      "label": "candidate independent Kotlin consumer runtime",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/candidate-consumer:/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "consumer.KotlinConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "commands/008.txt"
+    },
+    {
+      "label": "official signatures probe.ReifiedKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-v",
+        "-s",
+        "-public",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/official",
+        "probe.ReifiedKt"
+      ],
+      "exit_code": 0,
+      "log": "commands/009.txt"
+    },
+    {
+      "label": "candidate signatures probe.ReifiedKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-v",
+        "-s",
+        "-public",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/candidate",
+        "probe.ReifiedKt"
+      ],
+      "exit_code": 0,
+      "log": "commands/010.txt"
+    },
+    {
+      "label": "official signatures lambdas.EffectsKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-v",
+        "-s",
+        "-public",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/official",
+        "lambdas.EffectsKt"
+      ],
+      "exit_code": 0,
+      "log": "commands/011.txt"
+    },
+    {
+      "label": "candidate signatures lambdas.EffectsKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-v",
+        "-s",
+        "-public",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/candidate",
+        "lambdas.EffectsKt"
+      ],
+      "exit_code": 0,
+      "log": "commands/012.txt"
+    },
+    {
+      "label": "official signatures forward.ForwardKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-v",
+        "-s",
+        "-public",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/official",
+        "forward.ForwardKt"
+      ],
+      "exit_code": 0,
+      "log": "commands/013.txt"
+    },
+    {
+      "label": "candidate signatures forward.ForwardKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-v",
+        "-s",
+        "-public",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/candidate",
+        "forward.ForwardKt"
+      ],
+      "exit_code": 0,
+      "log": "commands/014.txt"
+    },
+    {
+      "label": "official signatures shorts.ShortsKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-v",
+        "-s",
+        "-public",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/official",
+        "shorts.ShortsKt"
+      ],
+      "exit_code": 0,
+      "log": "commands/015.txt"
+    },
+    {
+      "label": "candidate signatures shorts.ShortsKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-v",
+        "-s",
+        "-public",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/candidate",
+        "shorts.ShortsKt"
+      ],
+      "exit_code": 0,
+      "log": "commands/016.txt"
+    },
+    {
+      "label": "official signatures ordering.OrderingKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-v",
+        "-s",
+        "-public",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/official",
+        "ordering.OrderingKt"
+      ],
+      "exit_code": 0,
+      "log": "commands/017.txt"
+    },
+    {
+      "label": "candidate signatures ordering.OrderingKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-v",
+        "-s",
+        "-public",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/candidate",
+        "ordering.OrderingKt"
+      ],
+      "exit_code": 0,
+      "log": "commands/018.txt"
+    },
+    {
+      "label": "Actual callsite expansion probe.ReifiedKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-c",
+        "-p",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/candidate",
+        "probe.ReifiedKt"
+      ],
+      "exit_code": 0,
+      "log": "commands/019.txt"
+    },
+    {
+      "label": "Actual callsite expansion lambdas.EffectsKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-c",
+        "-p",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/candidate",
+        "lambdas.EffectsKt"
+      ],
+      "exit_code": 0,
+      "log": "commands/020.txt"
+    },
+    {
+      "label": "Actual callsite expansion forward.ForwardKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-c",
+        "-p",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/candidate",
+        "forward.ForwardKt"
+      ],
+      "exit_code": 0,
+      "log": "commands/021.txt"
+    },
+    {
+      "label": "Actual callsite expansion ordering.OrderingKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-c",
+        "-p",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/candidate",
+        "ordering.OrderingKt"
+      ],
+      "exit_code": 0,
+      "log": "commands/022.txt"
+    },
+    {
+      "label": "invalid_conflicting_modifiers official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/conflicting_modifiers.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_conflicting_modifiers-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/023.txt"
+    },
+    {
+      "label": "invalid_conflicting_modifiers candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/conflicting_modifiers.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_conflicting_modifiers-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/024.txt"
+    },
+    {
+      "label": "invalid_crossinline_nonfunction official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/crossinline_nonfunction.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_crossinline_nonfunction-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/025.txt"
+    },
+    {
+      "label": "invalid_crossinline_nonfunction candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/crossinline_nonfunction.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_crossinline_nonfunction-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/026.txt"
+    },
+    {
+      "label": "invalid_crossinline_nonlocal official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/crossinline_nonlocal.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_crossinline_nonlocal-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/027.txt"
+    },
+    {
+      "label": "invalid_crossinline_nonlocal candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/crossinline_nonlocal.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_crossinline_nonlocal-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/028.txt"
+    },
+    {
+      "label": "invalid_crossinline_outside official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/crossinline_outside.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_crossinline_outside-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/029.txt"
+    },
+    {
+      "label": "invalid_crossinline_outside candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/crossinline_outside.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_crossinline_outside-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/030.txt"
+    },
+    {
+      "label": "invalid_double_short official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/double_short.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_double_short-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/031.txt"
+    },
+    {
+      "label": "invalid_double_short candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/double_short.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_double_short-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/032.txt"
+    },
+    {
+      "label": "invalid_erased_reified official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/erased_reified.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_erased_reified-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/033.txt"
+    },
+    {
+      "label": "invalid_erased_reified candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/erased_reified.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_erased_reified-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/034.txt"
+    },
+    {
+      "label": "invalid_escaping_crossinline official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/escaping_crossinline.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_escaping_crossinline-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/035.txt"
+    },
+    {
+      "label": "invalid_escaping_crossinline candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/escaping_crossinline.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_escaping_crossinline-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/036.txt"
+    },
+    {
+      "label": "invalid_escaping_inline official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/escaping_inline.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_escaping_inline-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/037.txt"
+    },
+    {
+      "label": "invalid_escaping_inline candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/escaping_inline.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_escaping_inline-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/038.txt"
+    },
+    {
+      "label": "invalid_explicit_intrinsic_escape official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/explicit_intrinsic_escape.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_explicit_intrinsic_escape-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/039.txt"
+    },
+    {
+      "label": "invalid_explicit_intrinsic_escape candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/explicit_intrinsic_escape.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_explicit_intrinsic_escape-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/040.txt"
+    },
+    {
+      "label": "invalid_generic_crossinline official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/generic_crossinline.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_generic_crossinline-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/041.txt"
+    },
+    {
+      "label": "invalid_generic_crossinline candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/generic_crossinline.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_generic_crossinline-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/042.txt"
+    },
+    {
+      "label": "invalid_generic_noinline official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/generic_noinline.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_generic_noinline-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/043.txt"
+    },
+    {
+      "label": "invalid_generic_noinline candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/generic_noinline.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_generic_noinline-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/044.txt"
+    },
+    {
+      "label": "invalid_mutual_cycle official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/mutual_cycle.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_mutual_cycle-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/045.txt"
+    },
+    {
+      "label": "invalid_mutual_cycle candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/mutual_cycle.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_mutual_cycle-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/046.txt"
+    },
+    {
+      "label": "invalid_nested_erased official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/nested_erased.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_nested_erased-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/047.txt"
+    },
+    {
+      "label": "invalid_nested_erased candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/nested_erased.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_nested_erased-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/048.txt"
+    },
+    {
+      "label": "invalid_noinline_nonfunction official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/noinline_nonfunction.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_noinline_nonfunction-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/049.txt"
+    },
+    {
+      "label": "invalid_noinline_nonfunction candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/noinline_nonfunction.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_noinline_nonfunction-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/050.txt"
+    },
+    {
+      "label": "invalid_noinline_nonlocal official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/noinline_nonlocal.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_noinline_nonlocal-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/051.txt"
+    },
+    {
+      "label": "invalid_noinline_nonlocal candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/noinline_nonlocal.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_noinline_nonlocal-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/052.txt"
+    },
+    {
+      "label": "invalid_noinline_outside official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/noinline_outside.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_noinline_outside-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/053.txt"
+    },
+    {
+      "label": "invalid_noinline_outside candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/noinline_outside.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_noinline_outside-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/054.txt"
+    },
+    {
+      "label": "invalid_noninline_reified official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/noninline_reified.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_noninline_reified-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/055.txt"
+    },
+    {
+      "label": "invalid_noninline_reified candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/noninline_reified.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_noninline_reified-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/056.txt"
+    },
+    {
+      "label": "invalid_nullable_ordinary official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/nullable_ordinary.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_nullable_ordinary-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/057.txt"
+    },
+    {
+      "label": "invalid_nullable_ordinary candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/nullable_ordinary.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_nullable_ordinary-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/058.txt"
+    },
+    {
+      "label": "invalid_public_private official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/public_private.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_public_private-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/059.txt"
+    },
+    {
+      "label": "invalid_public_private candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/public_private.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_public_private-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/060.txt"
+    },
+    {
+      "label": "invalid_public_private_inline official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/public_private_inline.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_public_private_inline-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/061.txt"
+    },
+    {
+      "label": "invalid_public_private_inline candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/public_private_inline.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_public_private_inline-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/062.txt"
+    },
+    {
+      "label": "invalid_public_private_setter official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/public_private_setter.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_public_private_setter-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/063.txt"
+    },
+    {
+      "label": "invalid_public_private_setter candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/public_private_setter.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_public_private_setter-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/064.txt"
+    },
+    {
+      "label": "invalid_recursive official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/recursive.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_recursive-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/065.txt"
+    },
+    {
+      "label": "invalid_recursive candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/recursive.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_recursive-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/066.txt"
+    },
+    {
+      "label": "invalid_short_literal_overflow official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/short_literal_overflow.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_short_literal_overflow-official"
+      ],
+      "exit_code": 1,
+      "log": "commands/067.txt"
+    },
+    {
+      "label": "invalid_short_literal_overflow candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/invalid/short_literal_overflow.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/invalid_short_literal_overflow-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/068.txt"
+    },
+    {
+      "label": "boundary_array_creation official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/array_creation.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_array_creation-official"
+      ],
+      "exit_code": 0,
+      "log": "commands/069.txt"
+    },
+    {
+      "label": "boundary_array_creation candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/array_creation.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_array_creation-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/070.txt"
+    },
+    {
+      "label": "boundary_captured_crossinline official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/captured_crossinline.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_captured_crossinline-official"
+      ],
+      "exit_code": 0,
+      "log": "commands/071.txt"
+    },
+    {
+      "label": "boundary_captured_crossinline candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/captured_crossinline.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_captured_crossinline-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/072.txt"
+    },
+    {
+      "label": "boundary_dependency_depth official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/dependency_depth.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_dependency_depth-official"
+      ],
+      "exit_code": 0,
+      "log": "commands/073.txt"
+    },
+    {
+      "label": "boundary_dependency_depth candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/dependency_depth.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_dependency_depth-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/074.txt"
+    },
+    {
+      "label": "regression_exception_table official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/exception_table.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/regression_exception_table-official"
+      ],
+      "exit_code": 0,
+      "log": "commands/075.txt"
+    },
+    {
+      "label": "regression_exception_table candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/exception_table.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/regression_exception_table-candidate"
+      ],
+      "exit_code": 0,
+      "log": "commands/076.txt"
+    },
+    {
+      "label": "boundary_generic_array_classifier official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/generic_array_classifier.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_generic_array_classifier-official"
+      ],
+      "exit_code": 0,
+      "log": "commands/077.txt"
+    },
+    {
+      "label": "boundary_generic_array_classifier candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/generic_array_classifier.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_generic_array_classifier-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/078.txt"
+    },
+    {
+      "label": "boundary_generic_classifier official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/generic_classifier.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_generic_classifier-official"
+      ],
+      "exit_code": 0,
+      "log": "commands/079.txt"
+    },
+    {
+      "label": "boundary_generic_classifier candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/generic_classifier.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_generic_classifier-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/080.txt"
+    },
+    {
+      "label": "boundary_generic_unconditional official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/generic_unconditional.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_generic_unconditional-official"
+      ],
+      "exit_code": 0,
+      "log": "commands/081.txt"
+    },
+    {
+      "label": "boundary_generic_unconditional candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/generic_unconditional.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_generic_unconditional-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/082.txt"
+    },
+    {
+      "label": "boundary_inline_default official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/inline_default.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_inline_default-official"
+      ],
+      "exit_code": 0,
+      "log": "commands/083.txt"
+    },
+    {
+      "label": "boundary_inline_default candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/inline_default.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_inline_default-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/084.txt"
+    },
+    {
+      "label": "boundary_inline_member official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/inline_member.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_inline_member-official"
+      ],
+      "exit_code": 0,
+      "log": "commands/085.txt"
+    },
+    {
+      "label": "boundary_inline_member candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/inline_member.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_inline_member-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/086.txt"
+    },
+    {
+      "label": "regression_inline_receiver official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/inline_receiver.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/regression_inline_receiver-official"
+      ],
+      "exit_code": 0,
+      "log": "commands/087.txt"
+    },
+    {
+      "label": "regression_inline_receiver candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/inline_receiver.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/regression_inline_receiver-candidate"
+      ],
+      "exit_code": 0,
+      "log": "commands/088.txt"
+    },
+    {
+      "label": "boundary_inline_vararg official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/inline_vararg.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_inline_vararg-official"
+      ],
+      "exit_code": 0,
+      "log": "commands/089.txt"
+    },
+    {
+      "label": "boundary_inline_vararg candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/inline_vararg.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_inline_vararg-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/090.txt"
+    },
+    {
+      "label": "boundary_nested_reified official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/nested_reified.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_nested_reified-official"
+      ],
+      "exit_code": 0,
+      "log": "commands/091.txt"
+    },
+    {
+      "label": "boundary_nested_reified candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/nested_reified.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_nested_reified-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/092.txt"
+    },
+    {
+      "label": "boundary_overload official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/overload.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_overload-official"
+      ],
+      "exit_code": 0,
+      "log": "commands/093.txt"
+    },
+    {
+      "label": "boundary_overload candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/overload.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_overload-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/094.txt"
+    },
+    {
+      "label": "boundary_published_api official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/published_api.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_published_api-official"
+      ],
+      "exit_code": 0,
+      "log": "commands/095.txt"
+    },
+    {
+      "label": "boundary_published_api candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/published_api.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_published_api-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/096.txt"
+    },
+    {
+      "label": "boundary_published_api_alias official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/published_api_alias.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_published_api_alias-official"
+      ],
+      "exit_code": 0,
+      "log": "commands/097.txt"
+    },
+    {
+      "label": "boundary_published_api_alias candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/published_api_alias.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_published_api_alias-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/098.txt"
+    },
+    {
+      "label": "boundary_reified_array_literal official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/reified_array_literal.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_reified_array_literal-official"
+      ],
+      "exit_code": 0,
+      "log": "commands/099.txt"
+    },
+    {
+      "label": "boundary_reified_array_literal candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/reified_array_literal.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_reified_array_literal-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/100.txt"
+    },
+    {
+      "label": "boundary_reified_bound official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/reified_bound.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_reified_bound-official"
+      ],
+      "exit_code": 0,
+      "log": "commands/101.txt"
+    },
+    {
+      "label": "boundary_reified_bound candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/reified_bound.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_reified_bound-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/102.txt"
+    },
+    {
+      "label": "regression_short_array official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/short_array.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/regression_short_array-official"
+      ],
+      "exit_code": 0,
+      "log": "commands/103.txt"
+    },
+    {
+      "label": "regression_short_array candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/short_array.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/regression_short_array-candidate"
+      ],
+      "exit_code": 0,
+      "log": "commands/104.txt"
+    },
+    {
+      "label": "boundary_short_constant official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/short_constant.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_short_constant-official"
+      ],
+      "exit_code": 0,
+      "log": "commands/105.txt"
+    },
+    {
+      "label": "boundary_short_constant candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/short_constant.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/boundary_short_constant-candidate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "commands/106.txt"
+    },
+    {
+      "label": "regression_short_vararg official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/short_vararg.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/regression_short_vararg-official"
+      ],
+      "exit_code": 0,
+      "log": "commands/107.txt"
+    },
+    {
+      "label": "regression_short_vararg candidate",
+      "argv": [
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/boundary/short_vararg.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/regression_short_vararg-candidate"
+      ],
+      "exit_code": 0,
+      "log": "commands/108.txt"
+    },
+    {
+      "label": "Short vararg fixed Java caller",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/regression_short_vararg-official",
+        "-d",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/short-vararg-caller",
+        "/workspace/korrust/tests/fixtures/new_families/source_inline19/ShortVarargCheck.java"
+      ],
+      "exit_code": 0,
+      "log": "commands/109.txt"
+    },
+    {
+      "label": "Short vararg JVM official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/short-vararg-caller:/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/regression_short_vararg-official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ShortVarargCheck"
+      ],
+      "exit_code": 0,
+      "log": "commands/110.txt"
+    },
+    {
+      "label": "Short vararg JVM candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/short-vararg-caller:/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/regression_short_vararg-candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ShortVarargCheck"
+      ],
+      "exit_code": 0,
+      "log": "commands/111.txt"
+    },
+    {
+      "label": "Unchanged upstream originals",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "/workspace/korrust/tools/upstream_jvm.py",
+        "--matrix",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/upstream-matrix.json",
+        "--candidate",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/korrust-frozen",
+        "--output",
+        "/workspace/work/four-kotlin/four-kotlin-83b83fd274/source-inline-verified/upstream"
+      ],
+      "exit_code": 0,
+      "log": "commands/112.txt"
+    }
+  ],
+  "limits": "Bounded static source inline bodies, real JVM reification, parameter modes, direct lambda expansion and caller-side cleanup. Captured/generated inline closures, member receivers, defaults, varargs, complex reified bounds/classifiers remain explicit boundaries. Scalar Short and direct ShortArray signatures are prerequisite regressions; dedicated integral-promotion and ShortArray coverage is separate. No Android/full app or speed claim.",
+  "resource_limits": {
+    "source_inline_dependency_depth": 64,
+    "command_seconds": 180,
+    "upstream_batch_seconds": 900
+  },
+  "inputs": {
+    "files_sha256": {
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "src/annotation_declarations.rs": "ac237d773c71a2fc26faeb2d79b837265c6d557ef7bb31aab748fa8b1c7572be",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/annotation_files.rs": "349e861501424f9c02a177074fd7fb847837d24772ae4773e598ca8c656638c4",
+      "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "src/bytecode/anonymous_context.rs": "e48d7aba57745c9e3ecb0a2317ea627f3b6d9b2d86805563bae680d79a301910",
+      "src/bytecode/class_companion.rs": "a0abcc09e62134cb4bf152b89e5cfb1bb9b0b1ad1800649507ebef05fcb4126f",
+      "src/bytecode/data.rs": "f72c9cc44b3ddd71b3e965cfc85003e69916c39c63e590315f602bc5c7c1856d",
+      "src/bytecode/defaults.rs": "488aa0bdb27d63f5ce50a70206e044a3d2b996733fb0155fcdfee3793f925886",
+      "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+      "src/bytecode/inline.rs": "ca8a4f4da8f11e405a3cdcbcf87c3bfde49635e331f9712fb7b2f4aca0f84d25",
+      "src/bytecode/interfaces.rs": "c619f97cd206f8809faeb6ccf15bffe85bf60eee9da210cb38fc7b8675f14d72",
+      "src/bytecode/lambdas.rs": "d9e6820d2a435480657c8cbb5efe62d2ad6224a752452c3ac127c761d76d3637",
+      "src/bytecode/objects.rs": "75ded91f42716902fc84a609bbbf04bc2d5fd6e4c2bf48c728f1fdd0ebae366a",
+      "src/bytecode/suspend.rs": "3d652198dfcba69ea1e298b99bd4328e29bd2016d9c1cb297ae667a2dd53f22d",
+      "src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+      "src/bytecode/value_classes.rs": "302e1a0c0570f01c41ed66acedb952fd40b676944e7c3113fe9facdd09fc1f01",
+      "src/bytecode.rs": "8fdc6edc224964ec0ef393a1ce01abeaf6dfcba5d966c11bc15528adab7ad500",
+      "src/check.rs": "d5d213624ff9009bb1eeb7e3b1cb46ab0988bfbf441b17dd1049672ef841878b",
+      "src/check_annotation_placements.rs": "51340570de824f5a5463c8a39570e8c669f4589b8a92890e932940065d49720a",
+      "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "src/check_anonymous.rs": "c100534b577e31bb01002d5886c640032bfbaab6198783931cb2f21ce4ef147f",
+      "src/check_captures.rs": "631da2f03869c02fdb5dba3e11cea6ff566855533adc0abb81cd3d4ffe2e4c5f",
+      "src/check_class_delegation.rs": "171fec70b3ce6632bbbd704ea92e040f1ef841fbebd02659388fe88ba97135f2",
+      "src/check_classes.rs": "eaa5547ca75d6f4bef4f21d200a050bb8a47362c9c7ea3e4f47b3a66e1cca4b3",
+      "src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+      "src/check_control.rs": "39b6e0a056b1bb0f7de0f923aa503020566f1a4e78b972549f51537bea2f4d3d",
+      "src/check_declarations.rs": "f861524a7648411f7cf3a9279d96e1ebff1f3df7b0a10f6f5a0359ee3770d8da",
+      "src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+      "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "src/check_functions.rs": "209f4c7fd09fd44341e19b58e7791fa122e4a069e593822b463f2296684ff091",
+      "src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+      "src/check_interfaces.rs": "996279bf4cc5f87c2dc9176a5192363fd9f4f6f99ac1673b26796a291195216e",
+      "src/check_ir_walk.rs": "c985d804b580b2bf7c6a1ba965001b539120de8200fafc1701bc4b1320f6fd3c",
+      "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+      "src/check_jvm_fields.rs": "ce5eb721e88e725c21d5dc21a49332637e46de586878cdce9facd58ca87989d4",
+      "src/check_library.rs": "bed441e01dd02fad7b2685616d5d2147881906ad9f0d75991f0bd1e5ab9d0d6b",
+      "src/check_member_extensions.rs": "66a4cfa55e05e5699d510113566c91fd54fa79e1257f769df334338c0f7201e5",
+      "src/check_objects.rs": "149bbaa4c8a9cab9cf634edc131bd17a37b8411493c77235311ae860a65c1766",
+      "src/check_operations.rs": "5a0b0b380559259c1d11e8a2ec109a3955e1ad85f62c1b655df8632ac5362c8f",
+      "src/check_overloads.rs": "cd57712984b4c3b52eee025ab50b2b10f7d41612c1540f52f40145af7e4909dd",
+      "src/check_references.rs": "61a780d0816443007725e52f992c717eeab828f7b971749ed3242318a8d80077",
+      "src/check_relations.rs": "5774b3f66fea8c12768633c096728361dae026af9f3534495dff344fc275ea14",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+      "src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+      "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "src/check_varargs.rs": "9928a6be54a33a83360cec67726e8beffba6ed00366a7f3d378f030f1055f90d",
+      "src/check_variant_signatures.rs": "ea8be16effafa3af58d46e0e732d196feeca4ef1468d4b373c2e1c29ee984ed3",
+      "src/classpath/aliases.rs": "2ad31713a22f8eb0607ed96d838aa96fecedf7a6b261f07473aef66b8bdb8827",
+      "src/classpath/archive.rs": "875c9119ee5386c40848c8570a27b90964d1a7c5ce65f941217652ae59f1b16c",
+      "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+      "src/classpath/metadata.rs": "45c98d86e202e8679f420585e6315c15b65dd38ad80ef3dc6bed5cb7fdd6d1d1",
+      "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/signature.rs": "11e1e7c67cfe84b56892cddf6b6fa85daa19dfec4f34846a215a18605dfb3bec",
+      "src/classpath/source.rs": "894f00588fbdd2d13bc030d82cf7c69b0d15b3d41f8591595bbaf3fa1491515d",
+      "src/classpath/source_enums.rs": "3ae8bea81669d8feec40a16fae21a80f4a9d8006acd23c3f4f68d5d177f79be3",
+      "src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+      "src/classpath.rs": "f9ce2cfd39f09ced9b21f3918be5e0a6eb983836be147114c1bef88aa7606d87",
+      "src/compiled_inline.rs": "694e4535cb5da5254818eea8ca6818a5ad919dd4f6556d890b36a40e613d489e",
+      "src/const_eval.rs": "6714c1d6296d1c3f60fab09891a492f66a9850b3ff3ee2b5a7df42400dfdcdaa",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+      "src/lib.rs": "d48fefb21db0abb39de2a77c500ddb8829f0ac6a16ecf8eae864d45aa4f19a14",
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/metadata.rs": "a093d40336ffd6bbaa42b3c74fab1e59b6aa982ed66371209cb8123b35d89980",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/source_inline.rs": "50bee0804aaea9cd3e2b8c8e0f162784e0e0e0b16b9e0770dd8c27fca764add2",
+      "src/syntax.rs": "b08f83a7b9fa9f48d40a2da89b7b88157e5b2ec7a1d1f69dbcfe10fb0b311681",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525",
+      "tests/fixtures/new_families/source_inline19/Effects.kt": "a7d1214be6083bed8b20262141ca2cbab783e4c12f0b4d23d9e739683a5d653c",
+      "tests/fixtures/new_families/source_inline19/Forward.kt": "8714271896ce213c60be82e9a055afd95001b12d7e790f6a51956b3088b45014",
+      "tests/fixtures/new_families/source_inline19/JavaCheck.java": "6ad1c36c18e27465403f9d9fe66fd7646aac3a526c7f8a1d9b526fd21c38a6d0",
+      "tests/fixtures/new_families/source_inline19/KotlinConsumer.kt": "5e1d8792bcef1c7424210f38b52d4b1f10e3f856d012d31e001b5370e7a1c6fe",
+      "tests/fixtures/new_families/source_inline19/Ordering.kt": "fdf6b823fe9150c13ca50aee429cf76a8cc9bd053e67b58dd3e1c27071002e57",
+      "tests/fixtures/new_families/source_inline19/Reified.kt": "f4bd41c8f82c6eb56f7ccf27a7806cbdedd3bc7393e19139a9511024cf7a7035",
+      "tests/fixtures/new_families/source_inline19/ShortVarargCheck.java": "e7922e3ad631bf3a8b60abe6d4578b38b05a1748d697ae6feb7d5e4df9253bd8",
+      "tests/fixtures/new_families/source_inline19/Shorts.kt": "85cb08c6fb088ec8a9444eb78038673af1d70806250c69997282a9a386ad3f0e",
+      "tests/fixtures/new_families/source_inline19/boundary/array_creation.kt": "d8bc7fdeb6add66136ab81eba4c2c2ae0429a9a4669f2a8362ca3725fbe5139b",
+      "tests/fixtures/new_families/source_inline19/boundary/captured_crossinline.kt": "65230fdb77d80dd533b72dc4471cfdfdd220ccfc682f1b91c5ae2464266e7011",
+      "tests/fixtures/new_families/source_inline19/boundary/dependency_depth.kt": "7c0cfe97f55fd2395d9b517286cb4042ff20d1e28370c433255bdaedd6c5ca76",
+      "tests/fixtures/new_families/source_inline19/boundary/exception_table.kt": "2f9c189908afd8d671e05510fde921e24f2eec321c7cefad87f2cce966c471be",
+      "tests/fixtures/new_families/source_inline19/boundary/generic_array_classifier.kt": "af4611335bd00ca2ba42734cc8a21ae8078bd96dd9f2247fd26ddc1470eae5e8",
+      "tests/fixtures/new_families/source_inline19/boundary/generic_classifier.kt": "39cda70a0e85fa7b1032a65f14bf32a6da28f2bcf86c5d2ef9d3382704fa2347",
+      "tests/fixtures/new_families/source_inline19/boundary/generic_unconditional.kt": "c756393460dcbfec9795a5994575e9ef450a22dc255f6a25b019556cc38c09f7",
+      "tests/fixtures/new_families/source_inline19/boundary/inline_default.kt": "6ed581b9cbd4bb921706ad6485d987358cee75a1ad6264f536b0965124ef0f96",
+      "tests/fixtures/new_families/source_inline19/boundary/inline_member.kt": "c38c8da2fc70490eac80b4178d279de6357b84a7665996d17173bdb8a40b5c45",
+      "tests/fixtures/new_families/source_inline19/boundary/inline_receiver.kt": "6dc00b2163badaef37a842852d58a49af9b106d2d2a284655d13bdcdb85048d4",
+      "tests/fixtures/new_families/source_inline19/boundary/inline_vararg.kt": "108df73e33b7b300d573fa64e659a0ebc63dc78e37044f4da58b435c0d0ca6e7",
+      "tests/fixtures/new_families/source_inline19/boundary/nested_reified.kt": "c239b52fd6b9507d43ad2a01857b5e8b9f97d5bea5038cb5e5ce647b3f5d5097",
+      "tests/fixtures/new_families/source_inline19/boundary/overload.kt": "8d829e95d2ee056ae24931d9fe169b14fd5b75c8cd22de6828fc77edc012c3f7",
+      "tests/fixtures/new_families/source_inline19/boundary/published_api.kt": "f263d409d1a259296d472c26bf7e09a2af2717819fb5d0d8aeb6515001da3520",
+      "tests/fixtures/new_families/source_inline19/boundary/published_api_alias.kt": "f5416d10d321bfbfec3d765a796c51afcdbfbb2766276f6245a139e9204069aa",
+      "tests/fixtures/new_families/source_inline19/boundary/reified_array_literal.kt": "88ddea1893229fbd5dbcd27555720505dad43194a5abf36d21e3855677c4ec2e",
+      "tests/fixtures/new_families/source_inline19/boundary/reified_bound.kt": "8ba225961b700b859c85ad0fb23d72fa91b2659bad15152979385fd5d4d996f5",
+      "tests/fixtures/new_families/source_inline19/boundary/short_array.kt": "cc84415246ee7e3212c1aa502db989ca0f6a9792e729a9d4e61be84cbdd9400e",
+      "tests/fixtures/new_families/source_inline19/boundary/short_constant.kt": "a4840074a6214abaa7f9d2d550936dff51c028bbe0788a0a39a05051f23ac0d0",
+      "tests/fixtures/new_families/source_inline19/boundary/short_vararg.kt": "38d773c96af2c73ec0ff265bc9709e5c963dafcd0308970022d2cb2f2039fbb1",
+      "tests/fixtures/new_families/source_inline19/invalid/conflicting_modifiers.kt": "594d6a4108ebb0b5d6ce29883a12eec2a97ed1339e666dce8d650951a19548da",
+      "tests/fixtures/new_families/source_inline19/invalid/crossinline_nonfunction.kt": "7d752da0185182aabc7602e909aa06661a77c18d7946d051cde5eff0a1e61ceb",
+      "tests/fixtures/new_families/source_inline19/invalid/crossinline_nonlocal.kt": "076163304dfe407489003e15c71d83604fff19b0a1e88f4d3cdaea56bd0e0dba",
+      "tests/fixtures/new_families/source_inline19/invalid/crossinline_outside.kt": "09ca4a3684bb009b945d97ddf2d765c7dc6c7cd13d2a44b6fe806c5aad575d70",
+      "tests/fixtures/new_families/source_inline19/invalid/double_short.kt": "05a41d3b80557e7003d6c9252f2e187f5e8d0d4743096b4505e3ee187956524f",
+      "tests/fixtures/new_families/source_inline19/invalid/erased_reified.kt": "73d5ac259ea0da3e35289d4b1a386d2135990e01ec3be5ca0ba5c5116240a055",
+      "tests/fixtures/new_families/source_inline19/invalid/escaping_crossinline.kt": "76cf38a643edd18a6d3f6bb29a5c7a69b4c9ecd78f7157ff21ad4c78da501f79",
+      "tests/fixtures/new_families/source_inline19/invalid/escaping_inline.kt": "4011f4d33fc6958a18e8db9332ff03ce5510188c593596b9d897e2fcb6871e95",
+      "tests/fixtures/new_families/source_inline19/invalid/explicit_intrinsic_escape.kt": "a4b9c57f0bffc7e6c4a1d0204aedafe88ed90229393958229f0a6e55f47afca0",
+      "tests/fixtures/new_families/source_inline19/invalid/generic_crossinline.kt": "c3dc31a41cf5322e6546f13e11b6d65e24370a8db2d5c0d4c49ba1c36424dce3",
+      "tests/fixtures/new_families/source_inline19/invalid/generic_noinline.kt": "22492ae83722b9299b9930f0f3693203553e4a63094806eb9b6eb4dc1e98a622",
+      "tests/fixtures/new_families/source_inline19/invalid/mutual_cycle.kt": "8c8eae04abf27c93ed7676ca88ecf2f4ca01c50f33ab0ce4022d1225e85a7f42",
+      "tests/fixtures/new_families/source_inline19/invalid/nested_erased.kt": "cce2c6621906e09426ad54b3e7015af421d08f3a5d87b14c88a1996c1ead1cf5",
+      "tests/fixtures/new_families/source_inline19/invalid/noinline_nonfunction.kt": "ee6159e689d507afe7be4997847138968dc58ff909c365f5a88850dc9eef9ad3",
+      "tests/fixtures/new_families/source_inline19/invalid/noinline_nonlocal.kt": "96aecc0014801febb429fa1a4151eea565409dc3c9a4e845c24abfadf68b0f5d",
+      "tests/fixtures/new_families/source_inline19/invalid/noinline_outside.kt": "8056800ece1c6040f8369f6625095d4a87f862044be174cdeb3fa5b604599a88",
+      "tests/fixtures/new_families/source_inline19/invalid/noninline_reified.kt": "e9c81b4bdb1e8ec8622e5091bac384edad01717300e45ce53e18be5ab754a377",
+      "tests/fixtures/new_families/source_inline19/invalid/nullable_ordinary.kt": "dd262cedc244233003c57752871819c982136c3c0f938df631547ce75f9a1b4c",
+      "tests/fixtures/new_families/source_inline19/invalid/public_private.kt": "ff0127bd6945dc274b77abc180a69266cbb81f78df4e1cc6ffe0b95a4e188d72",
+      "tests/fixtures/new_families/source_inline19/invalid/public_private_inline.kt": "c032035ec5a82a480ae2717837cec63b267c7bb25fabc79ac5cb8d89a81b95a4",
+      "tests/fixtures/new_families/source_inline19/invalid/public_private_setter.kt": "5b6038943984cde9e7765014dfddbcc2a21b7b60bfce5513383e4ba698d4b598",
+      "tests/fixtures/new_families/source_inline19/invalid/recursive.kt": "8f1c55484075947fd129be7cd679b3ef8f6f10f24c448864095007c626047761",
+      "tests/fixtures/new_families/source_inline19/invalid/short_literal_overflow.kt": "b7677875f55ea1cf9eab6fd8df1fee9aaae16efd69945d408960090b19677690",
+      "tools/check_new_source_inline.py": "534dc6e914fc48bf6e24984090e6c1d5d8bd9de416bfa7cf233f49d541649bfb",
+      "tools/upstream_jvm.py": "10a550964853b0b4bfdcbdc48f3522b6b3122d36dde2bb5d5bda26a9855a6674",
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+      "tests/batch_frontend.rs": "f8041b58b448c859c3b265abe24d4fc7568f71f9cd1967f2d9ec963472c5baf2",
+      "references/kotlin/compiler/testData/codegen/box/classLiteral/primitiveClassEquality.kt": "64bb8bc84e23ff63081dfc70ba5b8a1b7c5388dcc0119ac77d9e685dd3fc6b88",
+      "references/kotlin/compiler/testData/codegen/box/reified/instanceof.kt": "f500737df116ecdd44fa50403bf941dde82da05f55f7e092d75375d79b4d58ea",
+      "references/kotlin/compiler/testData/codegen/box/reified/checkcast.kt": "28faaf566b312f5566537154f558cb5b7c03c9b2d655c90f324ecf608dc49d8b",
+      "references/kotlin/compiler/testData/codegen/box/reified/safecast.kt": "df72bd3d5f751443108af8f82eadff72f50b8faa03d2cab5c0ca76da9b9887fd",
+      "references/kotlin/compiler/testData/codegen/boxInline/nonLocalReturns/simpleVoid.kt": "b10a8ee1323b6d69ea400193c9088222fb3f6a4c0ac6f6bea98118b0d81d68a0"
+    },
+    "compiler_sha256": "b34b50492ccb5ddf122f5924bcf1bf472f39435df4de96d346f77a40176d16b2",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "input_integrity": {
+    "status": "unchanged",
+    "changed": []
+  },
+  "counts": {
+    "pass": 24,
+    "invalid_rejected": 23,
+    "unsupported_language": 16
+  }
+}

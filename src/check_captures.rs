@@ -346,7 +346,7 @@ impl Checker<'_> {
             Value {
                 ty: ty.clone(),
                 kind: ValueKind::JavaField {
-                    descriptor: None,
+                    descriptor: Some(ty.descriptor()),
                     owner: owner.clone(),
                     name: name.into(),
                     receiver: Some(Box::new(Value {

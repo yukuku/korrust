@@ -1,4 +1,5 @@
 mod suspend;
+mod suspend_regions;
 pub(crate) use suspend::{frames as emit_suspend_frames, validate as validate_suspend};
 pub(crate) mod annotation_classes;
 pub(crate) mod annotation_files;
@@ -809,6 +810,8 @@ impl Pool {
 }
 struct Code<'a> {
     coroutine: bool,
+    suspension: Option<suspend::State>,
+    inline_markers: bool,
     pool: &'a mut Pool,
     functions: &'a [crate::check::Function],
     owner: &'a str,
@@ -831,13 +834,23 @@ struct Code<'a> {
 }
 #[derive(Clone)]
 struct FinallyFrame {
-    body: Vec<Statement>,
+    body: FinallyBody,
     exclusions: Rc<RefCell<Vec<(usize, usize)>>>,
     local_maps: Vec<Vec<u16>>,
     inline_returns: Vec<(usize, usize)>,
     loops: Vec<(usize, usize)>,
     loop_depths: Vec<usize>,
     loop_names: Vec<Option<String>>,
+}
+#[derive(Clone)]
+enum FinallyBody {
+    Source(Vec<Statement>),
+    Compiled {
+        expansion: Rc<inline::InlineExpansion>,
+        handler: usize,
+        start: usize,
+        end: usize,
+    },
 }
 struct ExceptionHandler {
     start: usize,
@@ -942,6 +955,9 @@ impl Code<'_> {
         if self.finalizers.len() == depth {
             return Ok(());
         }
+        if suspend_regions::preserve(self, ty, depth)? {
+            return Ok(());
+        }
         let temporary = self.temporary_count;
         if ty.base() != &Type::Unit {
             self.temporary_count += ty.slots() as u16;
@@ -963,6 +979,16 @@ impl Code<'_> {
         self.loop_finally_depths.pop();
         self.loop_names.pop();
     }
+    fn finally_marker(&mut self, name: &str, depth: usize) -> Result<()> {
+        if self.inline_markers {
+            self.integer(
+                i32::try_from(depth)
+                    .map_err(|_| failure("Finally depth exceeds JVM integer range"))?,
+            )?;
+            self.method_reference(0xb8, "kotlin/jvm/internal/InlineMarker", name, "(I)V")?;
+        }
+        Ok(())
+    }
     fn emit_finalizers(&mut self, depth: usize) -> Result<()> {
         let saved = self.finalizers.clone();
         for index in (depth..saved.len()).rev() {
@@ -981,16 +1007,32 @@ impl Code<'_> {
             );
             let loop_names =
                 std::mem::replace(&mut self.loop_names, saved[index].loop_names.clone());
-            self.block(&saved[index].body)?;
+            match &saved[index].body {
+                FinallyBody::Source(body) => {
+                    self.finally_marker("finallyStart", index + 1)?;
+                    self.block(body)?;
+                    self.finally_marker("finallyEnd", index + 1)?;
+                }
+                FinallyBody::Compiled {
+                    expansion,
+                    start,
+                    end,
+                    ..
+                } => {
+                    self.emit_inline_region(expansion, *start, *end)?;
+                }
+            }
             self.inline_local_maps = local_maps;
             self.inline_returns = inline_returns;
             self.loops = loops;
             self.loop_finally_depths = loop_depths;
             self.loop_names = loop_names;
-            saved[index]
-                .exclusions
-                .borrow_mut()
-                .push((start, self.bytes.len()));
+            for frame in &saved[index..] {
+                frame
+                    .exclusions
+                    .borrow_mut()
+                    .push((start, self.bytes.len()));
+            }
         }
         self.finalizers = saved;
         self.max_stack += 2;
@@ -1294,7 +1336,7 @@ impl Code<'_> {
         let depth = self.finalizers.len();
         if !finally.is_empty() {
             self.finalizers.push(FinallyFrame {
-                body: finally.to_vec(),
+                body: FinallyBody::Source(finally.to_vec()),
                 exclusions: exclusions.clone(),
                 local_maps: self.inline_local_maps.clone(),
                 inline_returns: self.inline_returns.clone(),
@@ -1355,7 +1397,9 @@ impl Code<'_> {
             }
             let exception_slot = self.local_slot(exception_slot)?;
             self.bytes.extend([0x3a, exception_slot]);
+            self.finally_marker("finallyStart", depth + 1)?;
             self.block(finally)?;
+            self.finally_marker("finallyEnd", depth + 1)?;
             self.bytes.extend([0x19, exception_slot, 0xbf]);
         }
         self.mark(done);
@@ -1591,6 +1635,9 @@ impl Code<'_> {
         Ok(true)
     }
     fn value(&mut self, value: &Value) -> Result<()> {
+        if self.suspension.is_some() && suspend::suspension(value, self.functions) {
+            return suspend::emit_value(self, value);
+        }
         if !self.coroutine && suspend::suspension(value, self.functions) {
             return Err(
                 Diagnostic::new(0, "Suspend calls require a suspend function context").with_kind(
@@ -1616,7 +1663,11 @@ impl Code<'_> {
                 }
             }
 
-            ValueKind::SuperCall { method, args } => {
+            ValueKind::SuperCall {
+                interface,
+                method,
+                args,
+            } => {
                 let (params, result) = invocation_types(&method.descriptor)?;
                 let (receiver, args) = args
                     .split_first()
@@ -1624,7 +1675,16 @@ impl Code<'_> {
                 self.value(receiver)?;
                 self.call_arguments(args, &params)?;
                 self.max_stack += 1;
-                self.method_reference(0xb7, &method.owner, &method.name, &method.descriptor)?;
+                if *interface {
+                    let reference = self.pool.interface_method(
+                        &method.owner,
+                        &method.name,
+                        &method.descriptor,
+                    )?;
+                    self.reference(0xb7, reference);
+                } else {
+                    self.method_reference(0xb7, &method.owner, &method.name, &method.descriptor)?;
+                }
                 self.adapt_value(&result, &value.ty)?;
             }
             ValueKind::Block(body, result) => {
@@ -2984,6 +3044,8 @@ pub(crate) fn emit_with_bridges(
         )?);
         let mut code = Code {
             coroutine: false,
+            suspension: None,
+            inline_markers: function.inline,
             pool: &mut pool,
             functions: &module.functions,
             owner,
@@ -3094,6 +3156,8 @@ pub(crate) fn emit_with_bridges(
     if !module.properties.is_empty() || !module.initializers.is_empty() {
         let mut code = Code {
             coroutine: false,
+            suspension: None,
+            inline_markers: false,
             pool: &mut pool,
             functions: &module.functions,
             owner,
@@ -3272,6 +3336,8 @@ fn checked_method(
     let is_static = flags & 8 != 0;
     let mut code = Code {
         coroutine: false,
+        suspension: None,
+        inline_markers: function.inline,
         pool,
         functions,
         owner,
@@ -3461,57 +3527,63 @@ fn signature_attribute(pool: &mut Pool, signature: &str) -> Result<Vec<u8>> {
     u2(&mut attribute, pool.utf8(signature)?);
     Ok(attribute)
 }
+fn adapt_bridge_value(
+    pool: &mut Pool,
+    code: &mut SimpleCode,
+    from: &Type,
+    to: &Type,
+) -> Result<()> {
+    if from.descriptor() == to.descriptor() {
+        return Ok(());
+    }
+    if from.is_reference() && to.is_reference() {
+        code.reference(0xc0, pool.class(&reference_class(to)?)?);
+    } else if from.is_reference() {
+        let numeric = matches!(
+            to,
+            Type::Int | Type::Long | Type::Float | Type::Double | Type::Byte | Type::Short
+        );
+        let cast = if numeric {
+            "java/lang/Number"
+        } else {
+            boxed_owner(to)
+        };
+        code.reference(0xc0, pool.class(cast)?);
+        let name = match to {
+            Type::Int => "intValue",
+            Type::Long => "longValue",
+            Type::Float => "floatValue",
+            Type::Double => "doubleValue",
+            Type::Byte => "byteValue",
+            Type::Short => "shortValue",
+            Type::Char => "charValue",
+            Type::Boolean => "booleanValue",
+            _ => return Err(failure("Unsupported generic bridge conversion")),
+        };
+        code.reference(
+            0xb6,
+            pool.method(cast, name, &format!("(){}", to.descriptor()))?,
+        );
+    } else if to.is_reference() {
+        code.reference(
+            0xb8,
+            pool.method(
+                boxed_owner(from),
+                "valueOf",
+                &format!("({}){}", from.descriptor(), boxed_descriptor(from)),
+            )?,
+        );
+    } else {
+        return Err(failure("Unsupported generic bridge primitive conversion"));
+    }
+    Ok(())
+}
+
 fn generic_override_bridge(
     pool: &mut Pool,
     owner: &str,
     bridge: &crate::check::GenericBridge,
 ) -> Result<Vec<u8>> {
-    fn adapt(pool: &mut Pool, code: &mut SimpleCode, from: &Type, to: &Type) -> Result<()> {
-        if from.descriptor() == to.descriptor() {
-            return Ok(());
-        }
-        if from.is_reference() && to.is_reference() {
-            code.reference(0xc0, pool.class(&reference_class(to)?)?);
-        } else if from.is_reference() {
-            let numeric = matches!(
-                to,
-                Type::Int | Type::Long | Type::Float | Type::Double | Type::Byte | Type::Short
-            );
-            let cast = if numeric {
-                "java/lang/Number"
-            } else {
-                boxed_owner(to)
-            };
-            code.reference(0xc0, pool.class(cast)?);
-            let name = match to {
-                Type::Int => "intValue",
-                Type::Long => "longValue",
-                Type::Float => "floatValue",
-                Type::Double => "doubleValue",
-                Type::Byte => "byteValue",
-                Type::Short => "shortValue",
-                Type::Char => "charValue",
-                Type::Boolean => "booleanValue",
-                _ => return Err(failure("Unsupported generic bridge conversion")),
-            };
-            code.reference(
-                0xb6,
-                pool.method(cast, name, &format!("(){}", to.descriptor()))?,
-            );
-        } else if to.is_reference() {
-            code.reference(
-                0xb8,
-                pool.method(
-                    boxed_owner(from),
-                    "valueOf",
-                    &format!("({}){}", from.descriptor(), boxed_descriptor(from)),
-                )?,
-            );
-        } else {
-            return Err(failure("Unsupported generic bridge primitive conversion"));
-        }
-        Ok(())
-    }
     let (parameters, result) = invocation_types(&bridge.erased.descriptor)?;
     let slots = 1 + parameters.iter().map(Type::slots).sum::<usize>();
     let mut code = SimpleCode::new((slots + 8) as u16, slots as u16);
@@ -3520,7 +3592,7 @@ fn generic_override_bridge(
     for (from, to) in parameters.iter().zip(&bridge.target_params) {
         code.bytes.extend([load_opcode(from), slot as u8]);
         slot += from.slots();
-        adapt(pool, &mut code, from, to)?;
+        adapt_bridge_value(pool, &mut code, from, to)?;
     }
     let target = format!(
         "({}){}",
@@ -3532,7 +3604,7 @@ fn generic_override_bridge(
         bridge.target_result.descriptor()
     );
     code.reference(0xb6, pool.method(owner, &bridge.erased.name, &target)?);
-    adapt(pool, &mut code, &bridge.target_result, &result)?;
+    adapt_bridge_value(pool, &mut code, &bridge.target_result, &result)?;
     code.bytes.push(return_opcode(&result));
     simple_method(
         pool,
@@ -3543,6 +3615,61 @@ fn generic_override_bridge(
         None,
         false,
     )
+}
+
+fn interface_default_function(
+    pool: &mut Pool,
+    owner: &str,
+    function: &crate::check::Function,
+    lambdas: &[crate::check::LambdaDecl],
+) -> Result<Vec<u8>> {
+    let mut code = Code {
+        coroutine: false,
+        suspension: None,
+        inline_markers: false,
+        pool,
+        functions: &[],
+        owner,
+        bytes: Vec::new(),
+        labels: Vec::new(),
+        branches: Vec::new(),
+        loops: Vec::new(),
+        loop_finally_depths: Vec::new(),
+        loop_names: Vec::new(),
+        pending_loop_name: None,
+        finalizers: Vec::new(),
+        exceptions: Vec::new(),
+        temporary_count: 0,
+        temporary_patches: Vec::new(),
+        lambdas,
+        inline_local_maps: Vec::new(),
+        inline_returns: Vec::new(),
+        in_lambda: false,
+        max_stack: 2,
+    };
+    code.block(&function.body)?;
+    let stack = code.max_stack as u16;
+    let code = code.into_simple(function.locals, stack)?;
+    let mut method = simple_method(
+        pool,
+        0x41 | if function.vararg { 0x80 } else { 0 },
+        function.jvm_name(),
+        &function.descriptor(),
+        code,
+        generic_function(function).as_deref(),
+        nonnull(function.physical_result()),
+    )?;
+    parameter_annotations(pool, &mut method, &function.params)?;
+    nullable_result(pool, &mut method, function.physical_result())?;
+    frames::attach(
+        pool,
+        &mut method,
+        owner,
+        &function.params,
+        function.locals,
+        false,
+    )?;
+    Ok(method)
 }
 
 fn interface_bridge(pool: &mut Pool, bridge: &crate::classpath::JavaMethod) -> Result<Vec<u8>> {
@@ -4398,6 +4525,8 @@ fn emit_class_with(
             .max((constructor_slots + usize::from(class.value_)) as u16);
         let mut code = Code {
             coroutine: false,
+            suspension: None,
+            inline_markers: false,
             pool: &mut pool,
             functions: &class.methods,
             owner,
@@ -4622,6 +4751,8 @@ fn emit_class_with(
     for secondary in &class.secondary_constructors {
         let mut code = Code {
             coroutine: false,
+            suspension: None,
+            inline_markers: false,
             pool: &mut pool,
             functions: &class.methods,
             owner,
@@ -4812,6 +4943,8 @@ fn emit_class_with(
         }
         let mut code = Code {
             coroutine: false,
+            suspension: None,
+            inline_markers: false,
             pool: &mut pool,
             functions: &class.methods,
             owner,
@@ -4911,6 +5044,11 @@ fn emit_class_with(
         }
         methods.push(interface_bridge(&mut pool, bridge)?);
     }
+    for function in &class.default_functions {
+        methods.push(interface_default_function(
+            &mut pool, owner, function, lambdas,
+        )?);
+    }
     for bridge in &class.generic_bridges {
         methods.push(generic_override_bridge(&mut pool, owner, bridge)?);
     }
@@ -4956,6 +5094,8 @@ fn emit_class_with(
     } else if !class.delegated_properties.is_empty() || enum_data.is_some() {
         let mut code = Code {
             coroutine: false,
+            suspension: None,
+            inline_markers: false,
             pool: &mut pool,
             functions: &class.methods,
             owner,

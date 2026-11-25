@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-11-25T13:22:19.752691+00:00",
+  "compiler": {
+    "binary": "/workspace/build-interface/debug/korrust",
+    "binary_sha256": "d2d01f1fc06609e0208317e0645eef9a787278ec15617bac1280e272cf767fc9",
+    "source_revision": "633cb046f54d8f9c4991f05946c632976dc04522"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_interface_bodies.py",
+      "--candidate",
+      "/workspace/build-interface/debug/korrust",
+      "--reference-root",
+      "/workspace/korrust"
+    ]
+  ],
+  "kind": "features",
+  "status": "passed",
+  "evidence": [
+    "reports/correctness/2026-11-25T132219752691Z-interface-bodies.json"
+  ],
+  "features": [
+    {
+      "name": "Generic source interface method bodies and default dispatch",
+      "status": "supported",
+      "scope": "Independent method and classifier parameters in ordinary/generic source interface bodies, own receivers, bounded calls and captures; class and named/empty object defaults, overrides, transitive specialization, typed/erased bridges, DefaultImpls signatures and Java/Kotlin consumers. Anonymous defaults dispatch through exported interface types.",
+      "restrictions": [
+        "Independent single reference upper bounds; dependent/recursive/multiple bounds and parameter shadowing retain existing boundaries.",
+        "Generic interface vararg bodies, source interface default arguments, generic inline/suspend members, generic companions and nested classifiers retain explicit boundaries.",
+        "Parameterized named objects remain unsupported. Anonymous nominal metadata and generic-signature parity are not claimed.",
+        "Inherited interface helper generation diagnoses compiled parents lacking compatible DefaultImpls; direct class dispatch to JVM defaults remains supported and verified against no-compatibility providers.",
+        "No unchanged app-file, full-app, Android device or performance claim."
+      ],
+      "evidence_report": "reports/correctness/2026-11-25T132219752691Z-interface-bodies.json",
+      "evidence_cases": [
+        "fixed-java/official",
+        "kotlin-consumer/official/official",
+        "kotlin-consumer/official/candidate",
+        "fixed-java/candidate",
+        "kotlin-consumer/candidate/official",
+        "kotlin-consumer/candidate/candidate",
+        "JVM-public-callable-signatures",
+        "no-compat/direct-default/official",
+        "no-compat/direct-default/candidate",
+        "no-compat/inherited-interface-helper",
+        "negative/official/mixed-parameters",
+        "negative/candidate/mixed-parameters",
+        "negative/official/wrong-result",
+        "negative/candidate/wrong-result",
+        "negative/official/wrong-bound",
+        "negative/candidate/wrong-bound",
+        "negative/official/object-default-conflict",
+        "negative/candidate/object-default-conflict",
+        "frozen-inputs"
+      ]
+    }
+  ]
+}

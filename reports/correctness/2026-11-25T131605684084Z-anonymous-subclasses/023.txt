@@ -1,0 +1,22 @@
+$ /workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc /workspace/work/next-anonymous-typevars/tests/anonymous_typevars/Model.kt -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -cp /workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-enclosing/official
+tests/anonymous_typevars/Model.kt:10:24: warning: the corresponding parameter in the supertype 'Base' is named 'value'. This may cause problems when calling this function with named arguments.
+    override fun apply(argument: T): T = value
+                       ^^^^^^^^
+tests/anonymous_typevars/Model.kt:13:22: warning: the corresponding parameter in the supertype 'Mapper' is named 'value'. This may cause problems when calling this function with named arguments.
+    override fun map(argument: List<T>): List<T> = value
+                     ^^^^^^^^
+tests/anonymous_typevars/Model.kt:17:28: warning: the corresponding parameter in the supertype 'Base' is named 'value'. This may cause problems when calling this function with named arguments.
+        override fun apply(argument: T): T = value
+                           ^^^^^^^^
+tests/anonymous_typevars/Model.kt:20:26: warning: the corresponding parameter in the supertype 'Mapper' is named 'value'. This may cause problems when calling this function with named arguments.
+        override fun map(other: U): U = argument
+                         ^^^^^
+tests/anonymous_typevars/Model.kt:23:26: warning: the corresponding parameter in the supertype 'Mapper' is named 'value'. This may cause problems when calling this function with named arguments.
+        override fun map(other: T): T = value
+                         ^^^^^
+tests/anonymous_typevars/Model.kt:27:24: warning: the corresponding parameter in the supertype 'Base' is named 'value'. This may cause problems when calling this function with named arguments.
+    override fun apply(argument: T): T = value
+                       ^^^^^^^^
+tests/anonymous_typevars/Model.kt:32:26: warning: the corresponding parameter in the supertype 'Mapper' is named 'value'. This may cause problems when calling this function with named arguments.
+        override fun map(argument: T): T = value
+                         ^^^^^^^^
