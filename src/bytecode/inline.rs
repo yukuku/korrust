@@ -170,7 +170,22 @@ impl Code<'_> {
                 skipped.insert(instruction.offset);
             }
         }
-        if body.instructions.iter().any(|instruction| matches!(&instruction.kind, InlineOp::Branch { target, .. } if skipped.contains(target))) { return Err(reified_unsupported("A branch enters a reified operation sequence")); }
+        if body
+            .instructions
+            .iter()
+            .any(|instruction| match &instruction.kind {
+                InlineOp::Branch { target, .. } => skipped.contains(target),
+                InlineOp::Switch { default, cases } => {
+                    skipped.contains(default)
+                        || cases.iter().any(|(_, target)| skipped.contains(target))
+                }
+                _ => false,
+            })
+        {
+            return Err(reified_unsupported(
+                "A branch enters a reified operation sequence",
+            ));
+        }
         let calls = lambda_calls(
             &body,
             &lambda_arguments.keys().copied().collect::<BTreeSet<_>>(),
@@ -241,6 +256,19 @@ impl Code<'_> {
                     self.inline_reference(*opcode, constant, *interface_count)?;
                 }
                 InlineOp::Branch { opcode, target } => self.branch(*opcode, labels[target]),
+                InlineOp::Switch { default, cases } => {
+                    for (key, target) in cases {
+                        self.bytes.push(0x59);
+                        self.integer(*key)?;
+                        let next = self.label();
+                        self.branch(0xa0, next);
+                        self.bytes.push(0x57);
+                        self.branch(0xa7, labels[target]);
+                        self.mark(next);
+                    }
+                    self.bytes.push(0x57);
+                    self.branch(0xa7, labels[default]);
+                }
                 InlineOp::Return(_) => self.branch(0xa7, end),
             }
         }

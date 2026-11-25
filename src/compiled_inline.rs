@@ -40,6 +40,10 @@ pub(crate) enum InlineOp {
         opcode: u8,
         target: usize,
     },
+    Switch {
+        default: usize,
+        cases: Vec<(i32, usize)>,
+    },
     Return(u8),
 }
 
@@ -100,15 +104,15 @@ pub(crate) fn decode(code: &JavaCode) -> Result<InlineBody> {
         let offset = cursor;
         let opcode = byte(&code.bytes, &mut cursor)?;
         let kind = match opcode {
-            0x15..=0x17 | 0x19 | 0x36..=0x38 | 0x3a => InlineOp::Local {
+            0x15..=0x19 | 0x36..=0x3a => InlineOp::Local {
                 opcode,
                 slot: u16::from(byte(&code.bytes, &mut cursor)?),
             },
-            0x1a..=0x25 | 0x2a..=0x2d => InlineOp::Local {
+            0x1a..=0x2d => InlineOp::Local {
                 opcode: 0x15 + (opcode - 0x1a) / 4,
                 slot: u16::from((opcode - 0x1a) % 4),
             },
-            0x3b..=0x46 | 0x4b..=0x4e => InlineOp::Local {
+            0x3b..=0x4e => InlineOp::Local {
                 opcode: 0x36 + (opcode - 0x3b) / 4,
                 slot: u16::from((opcode - 0x3b) % 4),
             },
@@ -120,7 +124,7 @@ pub(crate) fn decode(code: &JavaCode) -> Result<InlineBody> {
                 let opcode = byte(&code.bytes, &mut cursor)?;
                 let slot = word(&code.bytes, &mut cursor)?;
                 match opcode {
-                    0x15..=0x17 | 0x19 | 0x36..=0x38 | 0x3a => InlineOp::Local { opcode, slot },
+                    0x15..=0x19 | 0x36..=0x3a => InlineOp::Local { opcode, slot },
                     0x84 => InlineOp::Increment {
                         slot,
                         amount: word(&code.bytes, &mut cursor)? as i16,
@@ -153,7 +157,46 @@ pub(crate) fn decode(code: &JavaCode) -> Result<InlineBody> {
                     .ok_or_else(|| unsupported("branch target outside body"))?;
                 InlineOp::Branch { opcode, target }
             }
-            0xac..=0xae | 0xb0 | 0xb1 => InlineOp::Return(opcode),
+            0xaa | 0xab => {
+                while cursor % 4 != 0 {
+                    if byte(&code.bytes, &mut cursor)? != 0 {
+                        return Err(unsupported("nonzero switch padding"));
+                    }
+                }
+                let default = branch_target(offset, signed_word(&code.bytes, &mut cursor)?)?;
+                let mut cases = Vec::new();
+                if opcode == 0xaa {
+                    let low = signed_word(&code.bytes, &mut cursor)?;
+                    let high = signed_word(&code.bytes, &mut cursor)?;
+                    let count = i64::from(high) - i64::from(low) + 1;
+                    if count <= 0 || count as u64 > ((code.bytes.len() - cursor) / 4) as u64 {
+                        return Err(unsupported("invalid tableswitch range"));
+                    }
+                    for key in low..=high {
+                        let target = branch_target(offset, signed_word(&code.bytes, &mut cursor)?)?;
+                        cases.push((key, target));
+                    }
+                } else {
+                    let count = signed_word(&code.bytes, &mut cursor)?;
+                    if count < 0 || count as usize > (code.bytes.len() - cursor) / 8 {
+                        return Err(unsupported("invalid lookupswitch count"));
+                    }
+                    for _ in 0..count {
+                        let key = signed_word(&code.bytes, &mut cursor)?;
+                        if cases.last().is_some_and(|(previous, _)| *previous >= key) {
+                            return Err(unsupported("unordered lookupswitch keys"));
+                        }
+                        let target = branch_target(offset, signed_word(&code.bytes, &mut cursor)?)?;
+                        cases.push((key, target));
+                    }
+                }
+                InlineOp::Switch { default, cases }
+            }
+            0xc8 => InlineOp::Branch {
+                opcode: 0xa7,
+                target: branch_target(offset, signed_word(&code.bytes, &mut cursor)?)?,
+            },
+            0xac..=0xb1 => InlineOp::Return(opcode),
             0xb2..=0xb9 | 0xbb | 0xbd | 0xc0 | 0xc1 => {
                 let constant = constant(code, word(&code.bytes, &mut cursor)?)?;
                 let valid = match &constant {
@@ -184,7 +227,7 @@ pub(crate) fn decode(code: &JavaCode) -> Result<InlineBody> {
             }
             0x10 | 0xbc => {
                 let operand = byte(&code.bytes, &mut cursor)?;
-                if opcode == 0xbc && !matches!(operand, 5 | 8 | 10) {
+                if opcode == 0xbc && !(4..=11).contains(&operand) {
                     return Err(unsupported("primitive array kind"));
                 }
                 InlineOp::Raw {
@@ -199,23 +242,7 @@ pub(crate) fn decode(code: &JavaCode) -> Result<InlineBody> {
                     operands: operand.to_be_bytes().to_vec(),
                 }
             }
-            0x00..=0x0d
-            | 0x2e..=0x30
-            | 0x32..=0x35
-            | 0x4f..=0x51
-            | 0x53..=0x59
-            | 0x60..=0x62
-            | 0x64..=0x66
-            | 0x68..=0x6a
-            | 0x6c..=0x6e
-            | 0x70..=0x72
-            | 0x74..=0x76
-            | 0x78..=0x86
-            | 0x88..=0x89
-            | 0x8b..=0x8c
-            | 0x91..=0x96
-            | 0xbe
-            | 0xbf => InlineOp::Raw {
+            0x00..=0x0f | 0x2e..=0x35 | 0x4f..=0x83 | 0x85..=0x98 | 0xbe | 0xbf => InlineOp::Raw {
                 opcode,
                 operands: Vec::new(),
             },
@@ -226,9 +253,14 @@ pub(crate) fn decode(code: &JavaCode) -> Result<InlineBody> {
             }
         };
         let local = match &kind {
-            InlineOp::Local { opcode, slot } => {
-                Some((*slot, if matches!(opcode, 0x16 | 0x37) { 2 } else { 1 }))
-            }
+            InlineOp::Local { opcode, slot } => Some((
+                *slot,
+                if matches!(opcode, 0x16 | 0x18 | 0x37 | 0x39) {
+                    2
+                } else {
+                    1
+                },
+            )),
             InlineOp::Increment { slot, .. } => Some((*slot, 1)),
             _ => None,
         };
@@ -245,12 +277,17 @@ pub(crate) fn decode(code: &JavaCode) -> Result<InlineBody> {
         .map(|instruction| instruction.offset)
         .collect();
     for instruction in &instructions {
-        if let InlineOp::Branch { target, .. } = instruction.kind {
-            if !boundaries.contains(&target) {
-                return Err(unsupported(
-                    "branch does not target an instruction boundary",
-                ));
-            }
+        let targets = match &instruction.kind {
+            InlineOp::Branch { target, .. } => vec![*target],
+            InlineOp::Switch { default, cases } => std::iter::once(*default)
+                .chain(cases.iter().map(|(_, target)| *target))
+                .collect(),
+            _ => Vec::new(),
+        };
+        if targets.iter().any(|target| !boundaries.contains(target)) {
+            return Err(unsupported(
+                "branch does not target an instruction boundary",
+            ));
         }
     }
     Ok(InlineBody {
@@ -273,6 +310,21 @@ fn word(bytes: &[u8], cursor: &mut usize) -> Result<u16> {
         byte(bytes, cursor)?,
         byte(bytes, cursor)?,
     ]))
+}
+
+fn signed_word(bytes: &[u8], cursor: &mut usize) -> Result<i32> {
+    Ok(i32::from_be_bytes([
+        byte(bytes, cursor)?,
+        byte(bytes, cursor)?,
+        byte(bytes, cursor)?,
+        byte(bytes, cursor)?,
+    ]))
+}
+
+fn branch_target(offset: usize, displacement: i32) -> Result<usize> {
+    offset
+        .checked_add_signed(displacement as isize)
+        .ok_or_else(|| unsupported("branch target outside body"))
 }
 
 fn constant(code: &JavaCode, index: u16) -> Result<InlineConstant> {
@@ -300,6 +352,75 @@ fn pop_operand(stack: &mut Vec<Operand>, allow_lambda: bool) -> Result<Operand> 
     Ok(operand)
 }
 
+fn stack_operation(stack: &mut Vec<Operand>, opcode: u8) -> Result<()> {
+    fn pop(stack: &mut Vec<Operand>, width: u8) -> Result<Operand> {
+        let operand = pop_operand(stack, false)?;
+        if operand != Operand::Value(width) {
+            return Err(unsupported("invalid category for stack instruction"));
+        }
+        Ok(operand)
+    }
+    fn pair(stack: &mut Vec<Operand>) -> Result<Vec<Operand>> {
+        let first = pop_operand(stack, false)?;
+        if first == Operand::Value(2) {
+            Ok(vec![first])
+        } else {
+            let second = pop(stack, 1)?;
+            Ok(vec![second, first])
+        }
+    }
+    match opcode {
+        0x57 => {
+            pop(stack, 1)?;
+        }
+        0x58 => {
+            pair(stack)?;
+        }
+        0x59 => {
+            let value = pop(stack, 1)?;
+            stack.extend([value, value]);
+        }
+        0x5a => {
+            let first = pop(stack, 1)?;
+            let second = pop(stack, 1)?;
+            stack.extend([first, second, first]);
+        }
+        0x5b => {
+            let first = pop(stack, 1)?;
+            let below = pair(stack)?;
+            stack.push(first);
+            stack.extend(below);
+            stack.push(first);
+        }
+        0x5c => {
+            let values = pair(stack)?;
+            stack.extend_from_slice(&values);
+            stack.extend(values);
+        }
+        0x5d => {
+            let values = pair(stack)?;
+            let below = pop(stack, 1)?;
+            stack.extend_from_slice(&values);
+            stack.push(below);
+            stack.extend(values);
+        }
+        0x5e => {
+            let values = pair(stack)?;
+            let below = pair(stack)?;
+            stack.extend_from_slice(&values);
+            stack.extend(below);
+            stack.extend(values);
+        }
+        0x5f => {
+            let first = pop(stack, 1)?;
+            let second = pop(stack, 1)?;
+            stack.extend([first, second]);
+        }
+        _ => unreachable!(),
+    }
+    Ok(())
+}
+
 pub(crate) fn lambda_calls(
     body: &InlineBody,
     lambda_slots: &BTreeSet<u16>,
@@ -325,7 +446,7 @@ pub(crate) fn lambda_calls(
                     }
                     Operand::Lambda(*slot)
                 } else {
-                    Operand::Value(if *opcode == 0x16 { 2 } else { 1 })
+                    Operand::Value(if matches!(*opcode, 0x16 | 0x18) { 2 } else { 1 })
                 });
             }
             InlineOp::Local { slot, .. } => {
@@ -418,6 +539,13 @@ pub(crate) fn lambda_calls(
                 }
                 successors.push(indices[target]);
             }
+            InlineOp::Switch { default, cases } => {
+                if pop_operand(&mut stack, false)? != Operand::Value(1) {
+                    return Err(unsupported("switch selector is not category one"));
+                }
+                successors.push(indices[default]);
+                successors.extend(cases.iter().map(|(_, target)| indices[target]));
+            }
             InlineOp::Return(opcode) => {
                 if *opcode != 0xb1 {
                     pop_operand(&mut stack, false)?;
@@ -426,50 +554,40 @@ pub(crate) fn lambda_calls(
             InlineOp::Raw { opcode, .. } => match opcode {
                 0x00 => {}
                 0x01..=0x08 | 0x0b..=0x0d | 0x10 | 0x11 => stack.push(Operand::Value(1)),
-                0x09..=0x0a => stack.push(Operand::Value(2)),
+                0x09..=0x0a | 0x0e..=0x0f => stack.push(Operand::Value(2)),
                 0x2e..=0x35 => {
                     pop_operand(&mut stack, false)?;
                     pop_operand(&mut stack, false)?;
-                    stack.push(Operand::Value(if *opcode == 0x2f { 2 } else { 1 }));
+                    stack.push(Operand::Value(if matches!(*opcode, 0x2f | 0x31) {
+                        2
+                    } else {
+                        1
+                    }));
                 }
                 0x4f..=0x56 => {
                     for _ in 0..3 {
                         pop_operand(&mut stack, false)?;
                     }
                 }
-                0x57 => {
-                    pop_operand(&mut stack, false)?;
-                }
-                0x58 => {
-                    if pop_operand(&mut stack, false)? != Operand::Value(2) {
-                        pop_operand(&mut stack, false)?;
-                    }
-                }
-                0x59 => {
-                    let operand = pop_operand(&mut stack, false)?;
-                    if operand != Operand::Value(1) {
-                        return Err(unsupported("dup of a category two value"));
-                    }
-                    stack.extend([operand, operand]);
-                }
+                0x57..=0x5f => stack_operation(&mut stack, *opcode)?,
                 0x60..=0x73 | 0x78..=0x83 => {
                     pop_operand(&mut stack, false)?;
                     let operand = pop_operand(&mut stack, false)?;
                     stack.push(operand);
                 }
-                0x74..=0x76 | 0x91..=0x93 => {
+                0x74..=0x77 | 0x91..=0x93 => {
                     let operand = pop_operand(&mut stack, false)?;
                     stack.push(operand);
                 }
-                0x85 | 0x8c => {
+                0x85 | 0x87 | 0x8a | 0x8c..=0x8d | 0x8f => {
                     pop_operand(&mut stack, false)?;
                     stack.push(Operand::Value(2));
                 }
-                0x86 | 0x88 | 0x89 | 0x8b => {
+                0x86 | 0x88..=0x89 | 0x8b | 0x8e | 0x90 => {
                     pop_operand(&mut stack, false)?;
                     stack.push(Operand::Value(1));
                 }
-                0x94..=0x96 => {
+                0x94..=0x98 => {
                     pop_operand(&mut stack, false)?;
                     pop_operand(&mut stack, false)?;
                     stack.push(Operand::Value(1));
@@ -489,6 +607,7 @@ pub(crate) fn lambda_calls(
             InlineOp::Return(_)
                 | InlineOp::Raw { opcode: 0xbf, .. }
                 | InlineOp::Branch { opcode: 0xa7, .. }
+                | InlineOp::Switch { .. }
         );
         if !terminal {
             if index + 1 == body.instructions.len() {
@@ -727,6 +846,88 @@ mod tests {
     }
 
     #[test]
+    fn stack_instructions_accept_all_jvm_category_forms() {
+        for (opcode, input, output) in [
+            (0x57, vec![1], vec![]),
+            (0x58, vec![2], vec![]),
+            (0x58, vec![1, 1], vec![]),
+            (0x59, vec![1], vec![1, 1]),
+            (0x5a, vec![1, 1], vec![1, 1, 1]),
+            (0x5b, vec![2, 1], vec![1, 2, 1]),
+            (0x5b, vec![1, 1, 1], vec![1, 1, 1, 1]),
+            (0x5c, vec![2], vec![2, 2]),
+            (0x5c, vec![1, 1], vec![1, 1, 1, 1]),
+            (0x5d, vec![1, 2], vec![2, 1, 2]),
+            (0x5d, vec![1, 1, 1], vec![1, 1, 1, 1, 1]),
+            (0x5e, vec![2, 2], vec![2, 2, 2]),
+            (0x5e, vec![1, 1, 2], vec![2, 1, 1, 2]),
+            (0x5e, vec![2, 1, 1], vec![1, 1, 2, 1, 1]),
+            (0x5e, vec![1, 1, 1, 1], vec![1, 1, 1, 1, 1, 1]),
+            (0x5f, vec![1, 1], vec![1, 1]),
+        ] {
+            let mut stack = input.into_iter().map(Operand::Value).collect();
+            stack_operation(&mut stack, opcode).unwrap();
+            assert_eq!(
+                stack,
+                output.into_iter().map(Operand::Value).collect::<Vec<_>>()
+            );
+        }
+        for (opcode, input) in [
+            (0x57, vec![Operand::Value(2)]),
+            (0x58, vec![Operand::Value(2), Operand::Value(1)]),
+            (0x59, vec![Operand::Value(2)]),
+            (0x5a, vec![Operand::Value(2), Operand::Value(1)]),
+            (0x5f, vec![Operand::Value(1), Operand::Value(2)]),
+            (0x59, vec![Operand::Lambda(0)]),
+        ] {
+            assert!(stack_operation(&mut input.clone(), opcode).is_err());
+        }
+    }
+
+    #[test]
+    fn switch_decoding_checks_layout_keys_and_instruction_boundaries() {
+        let mut table = vec![0x03, 0xaa, 0, 0];
+        for word in [23i32, 0, 1, 23, 23] {
+            table.extend(word.to_be_bytes());
+        }
+        table.push(0xb1);
+        let body = decode(&code(&table)).unwrap();
+        lambda_calls(&body, &BTreeSet::new()).unwrap();
+        assert!(
+            matches!(&body.instructions[1].kind, InlineOp::Switch { default: 24, cases } if cases == &[(0, 24), (1, 24)])
+        );
+        let mut lookup = vec![0x03, 0xab, 0, 0];
+        for word in [27i32, 2, -100, 27, 100, 27] {
+            lookup.extend(word.to_be_bytes());
+        }
+        lookup.push(0xb1);
+        lambda_calls(&decode(&code(&lookup)).unwrap(), &BTreeSet::new()).unwrap();
+        for position in [2, 7, 11, 19] {
+            let mut invalid = table.clone();
+            invalid[position] = 0xff;
+            assert!(decode(&code(&invalid)).is_err(), "position {position}");
+        }
+        lookup[20..24].copy_from_slice(&(-101i32).to_be_bytes());
+        assert!(
+            decode(&code(&lookup))
+                .unwrap_err()
+                .message
+                .contains("unordered")
+        );
+        for truncated in [vec![0xaa], vec![0xab, 0, 0, 0], vec![0xc8, 0, 0, 0]] {
+            assert!(decode(&code(&truncated)).is_err());
+        }
+        let body = decode(&code(&[0xc8, 0, 0, 0, 5, 0xb1])).unwrap();
+        assert!(matches!(
+            body.instructions[0].kind,
+            InlineOp::Branch {
+                opcode: 0xa7,
+                target: 5
+            }
+        ));
+    }
+
+    #[test]
     fn decodes_backward_branches_and_compact_and_wide_locals() {
         let body = decode(&code(&[
             0x03, 0x3c, 0x84, 1, 1, 0x1b, 0x10, 5, 0xa1, 0xff, 0xfa, 0xc4, 0x15, 0, 1, 0xac,
@@ -775,7 +976,7 @@ mod tests {
                 .message
                 .contains("exception handlers")
         );
-        assert!(decode(&code(&[0x5a, 0xb1])).is_err());
+        assert!(lambda_calls(&decode(&code(&[0x5a, 0xb1])).unwrap(), &BTreeSet::new()).is_err());
         assert!(decode(&code(&[0xba, 0, 1, 0, 0, 0xb1])).is_err());
     }
 
