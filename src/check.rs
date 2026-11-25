@@ -5315,6 +5315,7 @@ impl Checker<'_> {
                                 | Type::DoubleArray
                                 | Type::StringArray
                                 | Type::Array(_)
+                                | Type::OutArray(_)
                         )
                     {
                         return Ok(Value {
@@ -6168,6 +6169,7 @@ fn nested_type_imports(
             }
         }
         Type::Array(inner)
+        | Type::OutArray(inner)
         | Type::Nullable(inner)
         | Type::Platform(inner)
         | Type::List(inner)
@@ -6310,6 +6312,9 @@ fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> 
             upper_bound: Box::new(resolve_type(upper_bound, imports, offset)?),
         }),
         Type::Array(element) => Ok(Type::Array(Box::new(resolve_type(
+            element, imports, offset,
+        )?))),
+        Type::OutArray(element) => Ok(Type::OutArray(Box::new(resolve_type(
             element, imports, offset,
         )?))),
         Type::ReceiverFunction {
@@ -7014,6 +7019,7 @@ pub fn check_with_owner(
             | Type::List(inner)
             | Type::MutableList(inner)
             | Type::Array(inner)
+            | Type::OutArray(inner)
             | Type::ThreadLocal(inner) => collect_type(inner, names),
             Type::Parameterized { name, arguments } => {
                 names.insert(name.clone());

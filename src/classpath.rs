@@ -765,6 +765,7 @@ impl Classpath {
             | Type::List(ty)
             | Type::MutableList(ty)
             | Type::Array(ty)
+            | Type::OutArray(ty)
             | Type::ThreadLocal(ty) => self.check_type_visibility(caller, ty, offset)?,
             Type::Function { params, result } | Type::SuspendFunction { params, result } => {
                 for ty in params {

@@ -201,6 +201,7 @@ fn unsupported_unit_type(ty: &Type) -> bool {
         Type::Nullable(inner) => inner.as_ref() == &Type::Unit || unsupported_unit_type(inner),
         Type::Platform(inner)
         | Type::Array(inner)
+        | Type::OutArray(inner)
         | Type::List(inner)
         | Type::MutableList(inner)
         | Type::ThreadLocal(inner)
@@ -246,6 +247,7 @@ fn forbidden_type(ty: &Type, owners: &std::collections::BTreeSet<String>) -> boo
         Type::Nullable(inner)
         | Type::Platform(inner)
         | Type::Array(inner)
+        | Type::OutArray(inner)
         | Type::List(inner)
         | Type::MutableList(inner)
         | Type::ThreadLocal(inner)

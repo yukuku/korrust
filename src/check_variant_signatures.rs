@@ -186,7 +186,7 @@ fn signature_type(ty: &Type, cp: &Classpath, mode: Mode, names: &[&str], argumen
             mode,
             names,
         ),
-        Type::Array(t) => format!(
+        Type::Array(t) | Type::OutArray(t) => format!(
             "[{}",
             signature_type(
                 t,
@@ -358,6 +358,11 @@ fn projected_type(ty: &Type, cp: &Classpath, mode: Mode) -> Type {
             cp,
             mode.argument(syntax::Variance::Invariant),
         ))),
+        Type::OutArray(t) => Type::OutArray(Box::new(projected_type(
+            t,
+            cp,
+            mode.argument(syntax::Variance::Invariant),
+        ))),
         Type::Parameterized { name, arguments } => {
             classifier(name, arguments, &declaration_variances(name, cp), cp, mode)
         }
@@ -467,6 +472,7 @@ fn exposed_field(ty: &Type, cp: &Classpath) -> Result<()> {
         }
         Type::Nullable(t)
         | Type::Array(t)
+        | Type::OutArray(t)
         | Type::List(t)
         | Type::MutableList(t)
         | Type::ThreadLocal(t) => exposed_field(t, cp)?,

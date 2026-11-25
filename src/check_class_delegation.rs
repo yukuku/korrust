@@ -45,6 +45,7 @@ pub(super) fn normalize_contract(
             Type::Parameter { .. }
             | Type::Parameterized { .. }
             | Type::Array(_)
+            | Type::OutArray(_)
             | Type::StringArray
             | Type::List(_)
             | Type::MutableList(_)

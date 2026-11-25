@@ -157,7 +157,10 @@ impl Checker<'_> {
                 let matching_array_kind = if array.primitive_array_element().is_some() {
                     &array == value.ty.base()
                 } else {
-                    matches!(value.ty.base(), Type::Array(_) | Type::StringArray)
+                    matches!(
+                        value.ty.base(),
+                        Type::Array(_) | Type::OutArray(_) | Type::StringArray
+                    )
                 };
                 if !matching_array_kind || !self.subtype(&actual, &element) {
                     return Err(Diagnostic::new(

@@ -24,6 +24,7 @@ pub enum Type {
     DoubleArray,
     StringArray,
     Array(Box<Type>),
+    OutArray(Box<Type>),
     ReceiverFunction {
         receiver: Box<Type>,
         params: Vec<Type>,
@@ -131,7 +132,7 @@ impl Type {
         self.primitive_array_element()
             .or_else(|| match self.base() {
                 Self::StringArray => Some(Self::String),
-                Self::Array(element) => Some(element.as_ref().clone()),
+                Self::Array(element) | Self::OutArray(element) => Some(element.as_ref().clone()),
                 _ => None,
             })
     }
@@ -183,6 +184,7 @@ impl Type {
                 | Self::DoubleArray
                 | Self::StringArray
                 | Self::Array(_)
+                | Self::OutArray(_)
                 | Self::ReceiverFunction { .. }
                 | Self::String
                 | Self::Java(_)
@@ -228,7 +230,7 @@ impl Type {
             Self::DoubleArray => "[D".into(),
 
             Self::StringArray => "[Ljava/lang/String;".into(),
-            Self::Array(element) => {
+            Self::Array(element) | Self::OutArray(element) => {
                 if **element == Self::Unit {
                     return "[Lkotlin/Unit;".into();
                 }

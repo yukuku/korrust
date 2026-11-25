@@ -9,6 +9,7 @@ fn upper_bounds(ty: &Type, depth: usize) -> Type {
         Type::Nullable(inner) => Type::Nullable(Box::new(upper_bounds(inner, depth + 1))),
         Type::Platform(inner) => Type::Platform(Box::new(upper_bounds(inner, depth + 1))),
         Type::Array(inner) => Type::Array(Box::new(upper_bounds(inner, depth + 1))),
+        Type::OutArray(inner) => Type::OutArray(Box::new(upper_bounds(inner, depth + 1))),
         Type::List(inner) => Type::List(Box::new(upper_bounds(inner, depth + 1))),
         Type::MutableList(inner) => Type::MutableList(Box::new(upper_bounds(inner, depth + 1))),
         Type::ThreadLocal(inner) => Type::ThreadLocal(Box::new(upper_bounds(inner, depth + 1))),

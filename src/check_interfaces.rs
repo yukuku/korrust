@@ -265,6 +265,16 @@ fn register_classes(
     }
     for method in &source.methods {
         let function = &method.function;
+        if function.vararg && !function.type_params.is_empty() {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Generic source interface varargs are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "GENERIC_INTERFACE_VARARG_UNSUPPORTED",
+            ));
+        }
         declarations::validate_member_generics(
             function,
             method.is_override,

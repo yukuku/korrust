@@ -1141,7 +1141,7 @@ pub(super) fn check_class_with_constants(
                 owner: owner.clone(),
                 name: name.clone(),
                 descriptor,
-                access: if *private {
+                access: (if *private {
                     2
                 } else if source
                     .methods
@@ -1155,7 +1155,7 @@ pub(super) fn check_class_with_constants(
                     4
                 } else {
                     1
-                },
+                }) | if source.methods.iter().any(|method| method.function.offset == *offset && method.function.name == *name && method.function.vararg) { 0x80 } else { 0 },
                 unsupported: false,
                 source_property: property.map(str::to_owned),
             },
@@ -1344,6 +1344,10 @@ pub(super) fn check_class_with_constants(
                 "Instance methods support at most 254 parameter slots",
             ));
         }
+        let source_method = source
+            .methods
+            .iter()
+            .find(|method| method.function.offset == offset && method.function.name == name);
         for (param, ty) in source_params {
             let ty = resolve_type_checked(&ty, imports, offset, classpath, classes)?;
             if ty == Type::Unit {
@@ -1352,7 +1356,11 @@ pub(super) fn check_class_with_constants(
                     "Unit and Float parameters are not supported",
                 ));
             }
-            let slot = checker.declare(&param, ty.clone(), false, offset)?;
+            let local_type = source_method.map_or_else(
+                || ty.clone(),
+                |method| reference_vararg_local(&method.function, &param, &ty),
+            );
+            let slot = checker.declare(&param, local_type, false, offset)?;
             if param == "<this>" {
                 let receiver = Local {
                     slot,
@@ -2339,7 +2347,12 @@ impl<'a> DeclarationContext<'a> {
                     "Unit parameters are unsupported",
                 ));
             }
-            checker.declare(name, ty.clone(), false, source.offset)?;
+            checker.declare(
+                name,
+                reference_vararg_local(source, name, &ty),
+                false,
+                source.offset,
+            )?;
             params.push((name.clone(), ty));
         }
         if params.iter().map(|(_, ty)| ty.slots()).sum::<usize>() > if receiver { 254 } else { 255 }
@@ -3563,7 +3576,9 @@ pub(super) fn function_method(
         owner: owner.into(),
         name: function.name.clone(),
         descriptor: function.descriptor(),
-        access: access | if function.private { 2 } else { 1 },
+        access: access
+            | if function.private { 2 } else { 1 }
+            | if function.vararg { 0x80 } else { 0 },
         unsupported: false,
         source_property: property.map(str::to_owned),
         kotlin_params: Some(
@@ -3594,6 +3609,7 @@ pub(super) fn validate_operator(function: &syntax::Function, member: bool) -> Re
         ));
     }
     if function.vararg
+        && (!member || function.type_params.is_empty())
         && !(function.operator && function.name == "compareTo")
         && function
             .params
@@ -4659,10 +4675,10 @@ pub(super) fn validate_member_generics(
     if function.type_params.is_empty() {
         return Ok(());
     }
-    if function.inline || function.suspend_ || function.vararg {
+    if function.inline || function.suspend_ {
         return Err(Diagnostic::new(
             function.offset,
-            "Generic source inline, suspend and vararg members are unsupported",
+            "Generic source inline and suspend members are unsupported",
         )
         .with_kind(
             crate::DiagnosticKind::UnsupportedLanguage,
@@ -4677,4 +4693,21 @@ pub(super) fn validate_member_generics(
         classes,
         function.offset,
     )
+}
+
+fn reference_vararg_local(function: &syntax::Function, name: &str, ty: &Type) -> Type {
+    if function.vararg
+        && !function.type_params.is_empty()
+        && function
+            .params
+            .last()
+            .is_some_and(|(parameter, _)| parameter == name)
+    {
+        match ty {
+            Type::Array(element) => return Type::OutArray(element.clone()),
+            Type::StringArray => return Type::OutArray(Box::new(Type::String)),
+            _ => {}
+        }
+    }
+    ty.clone()
 }

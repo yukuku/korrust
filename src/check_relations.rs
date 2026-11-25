@@ -48,6 +48,7 @@ pub(super) fn substitute(ty: &Type, substitutions: &HashMap<String, Type>) -> Ty
             }
         }
         Type::Array(inner) => Type::Array(Box::new(substitute(inner, substitutions))),
+        Type::OutArray(inner) => Type::OutArray(Box::new(substitute(inner, substitutions))),
         Type::List(inner) => Type::List(Box::new(substitute(inner, substitutions))),
         Type::MutableList(inner) => Type::MutableList(Box::new(substitute(inner, substitutions))),
         Type::ThreadLocal(inner) => Type::ThreadLocal(Box::new(substitute(inner, substitutions))),
@@ -257,6 +258,7 @@ fn mentions(ty: &Type, name: &str) -> bool {
         Type::Nullable(inner)
         | Type::Platform(inner)
         | Type::Array(inner)
+        | Type::OutArray(inner)
         | Type::List(inner)
         | Type::MutableList(inner)
         | Type::ThreadLocal(inner) => mentions(inner, name),
@@ -565,6 +567,16 @@ fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: usize) -> b
                 .all(|(a, e)| subtype_at(cp, e, a, depth + 1))
             && subtype_at(cp, ar, er, depth + 1);
     }
+    if let Type::OutArray(expected) = expected {
+        return actual.primitive_array_element().is_none()
+            && actual
+                .array_element()
+                .is_some_and(|actual| subtype_at(cp, &actual, expected, depth + 1));
+    }
+    if matches!(actual, Type::OutArray(_)) && matches!(expected, Type::Array(_) | Type::StringArray)
+    {
+        return false;
+    }
     if let (Type::Array(a), Type::Array(e)) = (actual, expected) {
         return a == e;
     }
@@ -778,6 +790,7 @@ pub(super) fn validate_type_arguments_with_classes(
             }
             Type::Nullable(inner)
             | Type::Array(inner)
+            | Type::OutArray(inner)
             | Type::List(inner)
             | Type::MutableList(inner)
             | Type::ThreadLocal(inner) => validate(inner, cp, classes, offset, depth + 1)?,
@@ -892,8 +905,8 @@ impl Checker<'_> {
                 };
                 self.infer_constraints(inner, actual, substitutions, fixed, depth + 1)
             }
-            Type::Array(element) => match actual.base() {
-                Type::Array(actual) => {
+            Type::Array(element) | Type::OutArray(element) => match actual.base() {
+                Type::Array(actual) | Type::OutArray(actual) => {
                     self.infer_constraints(element, actual, substitutions, fixed, depth + 1)
                 }
                 Type::StringArray => {
@@ -1615,7 +1628,7 @@ impl Checker<'_> {
                     match ty.base() {
                         Type::Parameter { name, .. } if nested => Some(name),
                         Type::Nullable(inner) => nested_parameter(inner, nested),
-                        Type::Array(inner) => nested_parameter(inner, true),
+                        Type::Array(inner) | Type::OutArray(inner) => nested_parameter(inner, true),
                         _ => None,
                     }
                 }
@@ -1644,7 +1657,9 @@ impl Checker<'_> {
                 };
                 fn unsupported_classifier(ty: &Type) -> bool {
                     match ty {
-                        Type::Nullable(inner) | Type::Array(inner) => unsupported_classifier(inner),
+                        Type::Nullable(inner) | Type::Array(inner) | Type::OutArray(inner) => {
+                            unsupported_classifier(inner)
+                        }
                         Type::Platform(_)
                         | Type::Parameterized { .. }
                         | Type::List(_)
