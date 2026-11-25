@@ -1386,7 +1386,7 @@ fn value_context_bodies<'a>(
             } => (descriptor, args, 0, true),
             check::ValueKind::JavaCall { method, args }
             | check::ValueKind::MemberCall { method, args, .. }
-            | check::ValueKind::SuperCall { method, args }
+            | check::ValueKind::SuperCall { method, args, .. }
             | check::ValueKind::CompiledInline { method, args, .. } => (
                 &method.descriptor,
                 args,

@@ -43,10 +43,6 @@ fn unsupported_classifier_shapes_have_structured_boundaries() {
             "GENERIC_CONSTRUCTOR_INFERENCE_UNSUPPORTED",
         ),
         (
-            "interface Echo<T> { fun echo(value: T): T = value }",
-            "GENERIC_INTERFACE_BODY_UNSUPPORTED",
-        ),
-        (
             "class Box<T : Comparable<T>>(val value: T)",
             "DEPENDENT_GENERIC_BOUND_UNSUPPORTED",
         ),

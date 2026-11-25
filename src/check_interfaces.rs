@@ -17,15 +17,13 @@ pub(super) fn check(
         source.offset,
     )?;
     if !source.type_params.is_empty()
-        && (source.methods.iter().any(|m| m.has_body)
-            || source.properties.iter().any(|p| p.body.is_some())
-            || source.companion.is_some()
+        && (source.companion.is_some()
             || !source.nested.is_empty()
             || !source.declarations.is_empty())
     {
         return Err(Diagnostic::new(
             source.offset,
-            "Generic interface defaults, companions, and nested declarations are unsupported",
+            "Generic interface companions and nested declarations are unsupported",
         )
         .with_kind(
             crate::DiagnosticKind::UnsupportedLanguage,
@@ -265,7 +263,10 @@ fn register_classes(
     }
     for method in &source.methods {
         let function = &method.function;
-        if function.vararg && !function.type_params.is_empty() && method.has_body {
+        if function.vararg
+            && (!function.type_params.is_empty() || !source.type_params.is_empty())
+            && method.has_body
+        {
             return Err(Diagnostic::new(
                 function.offset,
                 "Generic source interface vararg bodies are unsupported",
@@ -767,16 +768,6 @@ fn check_interface(
     }
     for method in &source.methods {
         let source_function = &method.function;
-        if !source_function.type_params.is_empty() && method.has_body {
-            return Err(Diagnostic::new(
-                source_function.offset,
-                "Generic source interface default bodies are unsupported",
-            )
-            .with_kind(
-                crate::DiagnosticKind::UnsupportedLanguage,
-                "GENERIC_INTERFACE_METHOD_BODY_UNSUPPORTED",
-            ));
-        }
         declarations::validate_operator(source_function, true)?;
         let signature = &members[&source_function.name];
         operator_checker.validate_update_declaration(source_function, &Type::Java(owner.into()))?;
@@ -927,6 +918,13 @@ fn check_interface(
         .cloned()
         .collect();
     defaults.sort_by(|a, b| a.name.cmp(&b.name));
+    let default_functions = defaults
+        .iter()
+        .filter(|m| !m.library.as_ref().is_some_and(|l| l.suspend_))
+        .map(|method| {
+            declarations::inherited_default_function(method, owner, &source.type_params, true)
+        })
+        .collect::<Result<Vec<_>>>()?;
     for method in &mut defaults {
         *method = declarations::direct_default_bridge(
             method.clone(),
@@ -936,6 +934,7 @@ fn check_interface(
         )?;
     }
     Ok(InterfaceDecl {
+        default_functions,
         operator_offsets,
         sealed_: source.sealed_,
         sealed_subclasses: class.sealed_subclasses.clone(),
@@ -1056,7 +1055,14 @@ fn check_function(
         source_operator: &HashSet::new(),
         dispatch_receiver: Some(Local {
             slot: 0,
-            ty: Type::Java(owner.into()),
+            ty: declarations::classifier_type(
+                owner,
+                classes
+                    .get(owner)
+                    .and_then(|c| c.library.as_ref())
+                    .map(|l| l.type_parameters.as_slice())
+                    .unwrap_or(&[]),
+            ),
             mutable: false,
         }),
         fields: &fields,

@@ -290,14 +290,51 @@ fn helper_function(
     function: &crate::check::Function,
 ) -> crate::check::Function {
     let mut helper = function.clone();
-    helper.jvm_signature = select_signature(
-        function.jvm_signature.as_deref(),
+    let mut signature = generic_function(function).unwrap_or_else(|| function.descriptor());
+    let class_signature = classifier_signature(
+        &interface.type_params,
+        &interface.interface_bound_parameters,
         &[],
-        &format!("L{};", interface.owner),
+        "java/lang/Object",
+        &[],
     );
+    if !interface.type_params.is_empty() {
+        let class_signature = class_signature.unwrap();
+        let end = class_signature.rfind('>').unwrap();
+        let declarations = &class_signature[1..end];
+        if signature.starts_with('<') {
+            signature.insert_str(1, declarations);
+        } else {
+            signature.insert_str(0, &format!("<{declarations}>"));
+        }
+    }
+    let receiver = if interface.type_params.is_empty() {
+        Type::Java(interface.owner.clone())
+    } else {
+        Type::Parameterized {
+            name: interface.owner.clone(),
+            arguments: interface
+                .type_params
+                .iter()
+                .map(|p| crate::syntax::TypeArgument {
+                    variance: crate::syntax::Variance::Invariant,
+                    ty: Some(Type::Parameter {
+                        name: p.name.clone(),
+                        upper_bound: Box::new(p.bounds.first().cloned().unwrap_or(Type::Nullable(
+                            Box::new(Type::Java("java/lang/Object".into())),
+                        ))),
+                    }),
+                })
+                .collect(),
+        }
+    };
+    let signature = signature.replacen('(', &format!("({}", generic_type(&receiver)), 1);
+    helper.class_type_params.clear();
     helper
-        .params
-        .insert(0, ("$this".into(), Type::Java(interface.owner.clone())));
+        .type_params
+        .splice(0..0, interface.type_params.clone());
+    helper.params.insert(0, ("$this".into(), receiver));
+    helper.jvm_signature = (signature != helper.descriptor()).then_some(signature);
     helper
 }
 
@@ -401,6 +438,45 @@ fn default_access(
     )
 }
 
+fn inherited_access(
+    pool: &mut Pool,
+    interface: &InterfaceDecl,
+    inherited: &crate::classpath::JavaMethod,
+    function: &crate::check::Function,
+) -> Result<Vec<u8>> {
+    let (physical, result) = invocation_types(&inherited.descriptor)?;
+    let slots = 1 + function
+        .params
+        .iter()
+        .map(|(_, t)| t.slots())
+        .sum::<usize>();
+    let mut code = SimpleCode::new((slots + 8) as u16, slots as u16);
+    code.bytes.push(0x2a);
+    for ((slot, (_, ty)), target) in parameter_slots(&function.params, 1)
+        .into_iter()
+        .zip(&function.params)
+        .zip(&physical)
+    {
+        code.bytes.extend([load_opcode(ty), slot as u8]);
+        adapt_bridge_value(pool, &mut code, ty, target)?;
+    }
+    code.reference(
+        0xb7,
+        pool.interface_method(&interface.owner, &inherited.name, &inherited.descriptor)?,
+    );
+    adapt_bridge_value(pool, &mut code, &result, function.physical_result())?;
+    code.bytes.push(return_opcode(function.physical_result()));
+    simple_method(
+        pool,
+        0x1009,
+        &format!("access${}$jd", function.name),
+        &static_descriptor(&interface.owner, &function.descriptor()),
+        code,
+        None,
+        false,
+    )
+}
+
 fn helper_prefix(
     pool: &mut Pool,
     interface: &InterfaceDecl,
@@ -492,14 +568,13 @@ fn helper_body(
         function.jvm_name(),
         &static_descriptor(&interface.owner, &function.descriptor()),
         code,
-        generic_function(function)
-            .map(|signature| signature.replacen('(', &format!("(L{};", interface.owner), 1))
-            .as_deref(),
-        function.result.is_reference(),
+        generic_function(&helper_function(interface, function)).as_deref(),
+        nonnull(function.physical_result()),
     )?;
     let mut params = vec![("$this".into(), Type::Java(interface.owner.clone()))];
     params.extend(function.params.clone());
     parameter_annotations(&mut builder.pool, &mut method, &params)?;
+    nullable_result(&mut builder.pool, &mut method, function.physical_result())?;
     deprecated(&mut builder.pool, &mut method)?;
     annotations::append_annotations(&mut builder.pool, &mut method, &function.annotations)?;
     builder.methods.push(method);
@@ -1091,6 +1166,19 @@ fn interface_classes(
         )?);
     }
     for inherited in &interface.defaults {
+        if let Some(function) = interface
+            .default_functions
+            .iter()
+            .find(|f| f.name == inherited.name)
+        {
+            builder.methods.push(inherited_access(
+                &mut builder.pool,
+                interface,
+                inherited,
+                function,
+            )?);
+            continue;
+        }
         let (types, result) = if inherited
             .library
             .as_ref()
@@ -1168,7 +1256,15 @@ fn interface_classes(
             .collect::<Vec<_>>();
         output.extend(suspend::emit_frames(&helpers, &helper_owner, file, false)?);
         for inherited in &interface.defaults {
-            helper_inherited(&mut builder, interface, inherited)?;
+            if let Some(function) = interface
+                .default_functions
+                .iter()
+                .find(|f| f.name == inherited.name)
+            {
+                helper_body(&mut builder, interface, function, lambdas, 0)?;
+            } else {
+                helper_inherited(&mut builder, interface, inherited)?;
+            }
         }
         let mut relations = ancestors.to_vec();
         relations.push(Relation::member(&helper_owner, &interface.owner, 0x0019));

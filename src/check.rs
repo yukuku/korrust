@@ -173,6 +173,7 @@ pub struct ObjectMethod {
     pub inline: bool,
 }
 pub struct InterfaceDecl {
+    pub default_functions: Vec<Function>,
     pub operator_offsets: HashSet<usize>,
     pub sealed_: bool,
     pub sealed_subclasses: Vec<String>,
@@ -260,6 +261,7 @@ pub struct InterfaceDelegatedMember {
     pub jvm_descriptor: String,
 }
 pub struct ClassDecl {
+    pub default_functions: Vec<Function>,
     pub operator_offsets: HashSet<usize>,
     pub lexical_bridges: bool,
     pub inner: bool,
@@ -429,6 +431,7 @@ pub struct Catch {
 pub enum ValueKind {
     ClassLiteral(Type),
     SuperCall {
+        interface: bool,
         method: JavaMethod,
         args: Vec<Value>,
     },
@@ -5778,7 +5781,11 @@ impl Checker<'_> {
                             ValueKind::JavaCall { args, .. }
                             | ValueKind::MemberCall { args, .. } => Ok(Value {
                                 ty: call.ty,
-                                kind: ValueKind::SuperCall { method, args },
+                                kind: ValueKind::SuperCall {
+                                    interface: false,
+                                    method,
+                                    args,
+                                },
                             }),
                             _ => Err(Diagnostic::new(
                                 offset,

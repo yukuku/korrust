@@ -612,6 +612,9 @@ pub(crate) fn validate_class(
         function(&mut constructor.function, cp, true);
     }
     bridge_types(&mut checked.bridges, cp);
+    for default in &mut checked.default_functions {
+        function(default, cp, true);
+    }
     methods(&source.methods, &mut checked.methods, cp);
     if let (Some(source), Some(checked)) = (&source.companion, &mut checked.companion) {
         methods(&source.methods, &mut checked.methods, cp);
@@ -643,6 +646,16 @@ fn interface(
         source.offset,
     )?;
     bridge_types(&mut checked.defaults, cp);
+    for default in &mut checked.default_functions {
+        function(
+            default,
+            cp,
+            !checked
+                .defaults
+                .iter()
+                .any(|m| m.name == default.name && m.source_property.is_some()),
+        );
+    }
     for method in &mut checked.methods {
         function(&mut method.function, cp, method.source_property.is_none());
     }

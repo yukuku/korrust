@@ -1663,7 +1663,11 @@ impl Code<'_> {
                 }
             }
 
-            ValueKind::SuperCall { method, args } => {
+            ValueKind::SuperCall {
+                interface,
+                method,
+                args,
+            } => {
                 let (params, result) = invocation_types(&method.descriptor)?;
                 let (receiver, args) = args
                     .split_first()
@@ -1671,7 +1675,16 @@ impl Code<'_> {
                 self.value(receiver)?;
                 self.call_arguments(args, &params)?;
                 self.max_stack += 1;
-                self.method_reference(0xb7, &method.owner, &method.name, &method.descriptor)?;
+                if *interface {
+                    let reference = self.pool.interface_method(
+                        &method.owner,
+                        &method.name,
+                        &method.descriptor,
+                    )?;
+                    self.reference(0xb7, reference);
+                } else {
+                    self.method_reference(0xb7, &method.owner, &method.name, &method.descriptor)?;
+                }
                 self.adapt_value(&result, &value.ty)?;
             }
             ValueKind::Block(body, result) => {
@@ -3514,57 +3527,63 @@ fn signature_attribute(pool: &mut Pool, signature: &str) -> Result<Vec<u8>> {
     u2(&mut attribute, pool.utf8(signature)?);
     Ok(attribute)
 }
+fn adapt_bridge_value(
+    pool: &mut Pool,
+    code: &mut SimpleCode,
+    from: &Type,
+    to: &Type,
+) -> Result<()> {
+    if from.descriptor() == to.descriptor() {
+        return Ok(());
+    }
+    if from.is_reference() && to.is_reference() {
+        code.reference(0xc0, pool.class(&reference_class(to)?)?);
+    } else if from.is_reference() {
+        let numeric = matches!(
+            to,
+            Type::Int | Type::Long | Type::Float | Type::Double | Type::Byte | Type::Short
+        );
+        let cast = if numeric {
+            "java/lang/Number"
+        } else {
+            boxed_owner(to)
+        };
+        code.reference(0xc0, pool.class(cast)?);
+        let name = match to {
+            Type::Int => "intValue",
+            Type::Long => "longValue",
+            Type::Float => "floatValue",
+            Type::Double => "doubleValue",
+            Type::Byte => "byteValue",
+            Type::Short => "shortValue",
+            Type::Char => "charValue",
+            Type::Boolean => "booleanValue",
+            _ => return Err(failure("Unsupported generic bridge conversion")),
+        };
+        code.reference(
+            0xb6,
+            pool.method(cast, name, &format!("(){}", to.descriptor()))?,
+        );
+    } else if to.is_reference() {
+        code.reference(
+            0xb8,
+            pool.method(
+                boxed_owner(from),
+                "valueOf",
+                &format!("({}){}", from.descriptor(), boxed_descriptor(from)),
+            )?,
+        );
+    } else {
+        return Err(failure("Unsupported generic bridge primitive conversion"));
+    }
+    Ok(())
+}
+
 fn generic_override_bridge(
     pool: &mut Pool,
     owner: &str,
     bridge: &crate::check::GenericBridge,
 ) -> Result<Vec<u8>> {
-    fn adapt(pool: &mut Pool, code: &mut SimpleCode, from: &Type, to: &Type) -> Result<()> {
-        if from.descriptor() == to.descriptor() {
-            return Ok(());
-        }
-        if from.is_reference() && to.is_reference() {
-            code.reference(0xc0, pool.class(&reference_class(to)?)?);
-        } else if from.is_reference() {
-            let numeric = matches!(
-                to,
-                Type::Int | Type::Long | Type::Float | Type::Double | Type::Byte | Type::Short
-            );
-            let cast = if numeric {
-                "java/lang/Number"
-            } else {
-                boxed_owner(to)
-            };
-            code.reference(0xc0, pool.class(cast)?);
-            let name = match to {
-                Type::Int => "intValue",
-                Type::Long => "longValue",
-                Type::Float => "floatValue",
-                Type::Double => "doubleValue",
-                Type::Byte => "byteValue",
-                Type::Short => "shortValue",
-                Type::Char => "charValue",
-                Type::Boolean => "booleanValue",
-                _ => return Err(failure("Unsupported generic bridge conversion")),
-            };
-            code.reference(
-                0xb6,
-                pool.method(cast, name, &format!("(){}", to.descriptor()))?,
-            );
-        } else if to.is_reference() {
-            code.reference(
-                0xb8,
-                pool.method(
-                    boxed_owner(from),
-                    "valueOf",
-                    &format!("({}){}", from.descriptor(), boxed_descriptor(from)),
-                )?,
-            );
-        } else {
-            return Err(failure("Unsupported generic bridge primitive conversion"));
-        }
-        Ok(())
-    }
     let (parameters, result) = invocation_types(&bridge.erased.descriptor)?;
     let slots = 1 + parameters.iter().map(Type::slots).sum::<usize>();
     let mut code = SimpleCode::new((slots + 8) as u16, slots as u16);
@@ -3573,7 +3592,7 @@ fn generic_override_bridge(
     for (from, to) in parameters.iter().zip(&bridge.target_params) {
         code.bytes.extend([load_opcode(from), slot as u8]);
         slot += from.slots();
-        adapt(pool, &mut code, from, to)?;
+        adapt_bridge_value(pool, &mut code, from, to)?;
     }
     let target = format!(
         "({}){}",
@@ -3585,7 +3604,7 @@ fn generic_override_bridge(
         bridge.target_result.descriptor()
     );
     code.reference(0xb6, pool.method(owner, &bridge.erased.name, &target)?);
-    adapt(pool, &mut code, &bridge.target_result, &result)?;
+    adapt_bridge_value(pool, &mut code, &bridge.target_result, &result)?;
     code.bytes.push(return_opcode(&result));
     simple_method(
         pool,
@@ -4969,6 +4988,53 @@ fn emit_class_with(
             continue;
         }
         methods.push(interface_bridge(&mut pool, bridge)?);
+    }
+    for function in &class.default_functions {
+        let mut code = Code {
+            coroutine: false,
+            pool: &mut pool,
+            functions: &[],
+            owner,
+            bytes: Vec::new(),
+            labels: Vec::new(),
+            branches: Vec::new(),
+            loops: Vec::new(),
+            loop_finally_depths: Vec::new(),
+            loop_names: Vec::new(),
+            pending_loop_name: None,
+            finalizers: Vec::new(),
+            exceptions: Vec::new(),
+            temporary_count: 0,
+            temporary_patches: Vec::new(),
+            lambdas,
+            inline_local_maps: Vec::new(),
+            inline_returns: Vec::new(),
+            in_lambda: false,
+            max_stack: 2,
+        };
+        code.block(&function.body)?;
+        let stack = code.max_stack as u16;
+        let code = code.into_simple(function.locals, stack)?;
+        let mut method = simple_method(
+            &mut pool,
+            0x41 | if function.vararg { 0x80 } else { 0 },
+            function.jvm_name(),
+            &function.descriptor(),
+            code,
+            generic_function(function).as_deref(),
+            nonnull(function.physical_result()),
+        )?;
+        parameter_annotations(&mut pool, &mut method, &function.params)?;
+        nullable_result(&mut pool, &mut method, function.physical_result())?;
+        frames::attach(
+            &mut pool,
+            &mut method,
+            owner,
+            &function.params,
+            function.locals,
+            false,
+        )?;
+        methods.push(method);
     }
     for bridge in &class.generic_bridges {
         methods.push(generic_override_bridge(&mut pool, owner, bridge)?);
