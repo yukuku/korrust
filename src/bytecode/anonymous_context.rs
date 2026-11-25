@@ -160,6 +160,13 @@ fn interface(interface: &crate::check::InterfaceDecl, result: &mut HashMap<Strin
 }
 
 pub(super) fn collect(module: &Module, owner: &str) -> HashMap<String, Enclosing> {
+    if !module
+        .lambdas
+        .iter()
+        .any(|lambda| lambda.anonymous_super.is_some())
+    {
+        return HashMap::new();
+    }
     let mut result = HashMap::new();
     let parameters = HashSet::new();
     scan(
