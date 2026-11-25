@@ -157,7 +157,7 @@ def main():
                          'sibling_entries_sha256': copied, 'excluded_target_classes': excluded, 'omitted_nonexistent_gradle_entries': omitted,
                          'dependency_provenance': provenance, 'input_archive': label(archive_path),
                          'android_runtime': {'path': label(args.android_runtime), 'sha256': RUNTIME_SHA256, 'origin': RUNTIME_URL}},
-              'environment': {'JAVA_HOME': str(jdk), 'official_jvm_target': '21', 'candidate_jvm_target': 'compiler default; versions recorded', 'language_version': '2.3', 'api_version': '2.3'},
+              'environment': {'JAVA_HOME': str(jdk), 'official_jvm_target': '1.8', 'candidate_jvm_target': 'compiler default; actual classfile versions recorded per class', 'language_version': '2.3', 'api_version': '2.3'},
               'reproduction_commands': [[sys.executable, label(Path(__file__)), *sys.argv[1:]]], 'commands': [], 'cases': [], 'evidence': [label(archive_path)],
               'limitations': ['Single unchanged file with genuine official-built sibling dependencies; no full-module, full-app, Android-device, Kotlin-consumer, or performance claim.',
                               'Java caller is compiled against official output once and reused with both providers under -Xverify:all; plain JVM uses actual android-all framework implementations.']}
@@ -193,7 +193,7 @@ def main():
         for provider in ['official', 'candidate']:
             dest = work / (provider + '-output')
             dest.mkdir()
-            command = [ROOT / 'references/kotlinc/bin/kotlinc', '-no-stdlib', '-no-reflect', '-language-version', '2.3', '-api-version', '2.3', '-jvm-target', '21'] if provider == 'official' else [binary]
+            command = [ROOT / 'references/kotlinc/bin/kotlinc', '-no-stdlib', '-no-reflect', '-language-version', '2.3', '-api-version', '2.3', '-jvm-target', '1.8'] if provider == 'official' else [binary]
             code, diagnostic = run('compile-' + provider, [*command, SOURCE, '-cp', cp(classpath), '-d', dest])
             classes = emitted(dest)
             overlap = sorted({c['name'] for c in classes} & names)
