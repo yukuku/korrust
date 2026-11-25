@@ -831,13 +831,23 @@ struct Code<'a> {
 }
 #[derive(Clone)]
 struct FinallyFrame {
-    body: Vec<Statement>,
+    body: FinallyBody,
     exclusions: Rc<RefCell<Vec<(usize, usize)>>>,
     local_maps: Vec<Vec<u16>>,
     inline_returns: Vec<(usize, usize)>,
     loops: Vec<(usize, usize)>,
     loop_depths: Vec<usize>,
     loop_names: Vec<Option<String>>,
+}
+#[derive(Clone)]
+enum FinallyBody {
+    Source(Vec<Statement>),
+    Compiled {
+        expansion: Rc<inline::InlineExpansion>,
+        handler: usize,
+        start: usize,
+        end: usize,
+    },
 }
 struct ExceptionHandler {
     start: usize,
@@ -981,16 +991,25 @@ impl Code<'_> {
             );
             let loop_names =
                 std::mem::replace(&mut self.loop_names, saved[index].loop_names.clone());
-            self.block(&saved[index].body)?;
+            match &saved[index].body {
+                FinallyBody::Source(body) => self.block(body)?,
+                FinallyBody::Compiled {
+                    expansion,
+                    start,
+                    end,
+                    ..
+                } => {
+                    self.emit_inline_region(expansion, *start, *end)?;
+                }
+            }
             self.inline_local_maps = local_maps;
             self.inline_returns = inline_returns;
             self.loops = loops;
             self.loop_finally_depths = loop_depths;
             self.loop_names = loop_names;
-            saved[index]
-                .exclusions
-                .borrow_mut()
-                .push((start, self.bytes.len()));
+            for frame in &saved[index..] {
+                frame.exclusions.borrow_mut().push((start, self.bytes.len()));
+            }
         }
         self.finalizers = saved;
         self.max_stack += 2;
@@ -1294,7 +1313,7 @@ impl Code<'_> {
         let depth = self.finalizers.len();
         if !finally.is_empty() {
             self.finalizers.push(FinallyFrame {
-                body: finally.to_vec(),
+                body: FinallyBody::Source(finally.to_vec()),
                 exclusions: exclusions.clone(),
                 local_maps: self.inline_local_maps.clone(),
                 inline_returns: self.inline_returns.clone(),

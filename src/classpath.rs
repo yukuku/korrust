@@ -240,8 +240,16 @@ pub(crate) struct JavaCode {
     pub max_stack: u16,
     pub max_locals: u16,
     pub bytes: Vec<u8>,
-    pub exception_handlers: u16,
+    pub exception_handlers: Vec<JavaExceptionHandler>,
     pub constants: std::sync::Arc<std::collections::BTreeMap<u16, InlineConstant>>,
+}
+
+#[derive(Clone, Debug)]
+pub(crate) struct JavaExceptionHandler {
+    pub start: usize,
+    pub end: usize,
+    pub handler: usize,
+    pub catch_type: Option<String>,
 }
 
 #[derive(Clone, Debug)]
@@ -1941,8 +1949,27 @@ fn attributes(
                     return Err(invalid());
                 }
                 let code = data.take(size)?.to_vec();
-                let exception_handlers = data.u2()?;
-                data.take(usize::from(exception_handlers) * 8)?;
+                let mut exception_handlers = Vec::new();
+                for _ in 0..data.u2()? {
+                    let start = usize::from(data.u2()?);
+                    let end = usize::from(data.u2()?);
+                    let handler = usize::from(data.u2()?);
+                    let catch_index = data.u2()?;
+                    let catch_type = if catch_index == 0 {
+                        None
+                    } else {
+                        Some(class_name(pool, catch_index)?.to_owned())
+                    };
+                    if start >= end || end > code.len() || handler >= code.len() {
+                        return Err(invalid());
+                    }
+                    exception_handlers.push(JavaExceptionHandler {
+                        start,
+                        end,
+                        handler,
+                        catch_type,
+                    });
+                }
                 for _ in 0..data.u2()? {
                     utf8(pool, data.u2()?)?;
                     let size = usize::try_from(data.u4()?).map_err(|_| invalid())?;

@@ -1,6 +1,6 @@
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 
-use crate::classpath::{InlineConstant, JavaCode, JavaMethod};
+use crate::classpath::{InlineConstant, JavaCode, JavaExceptionHandler, JavaMethod};
 use crate::{Diagnostic, Result};
 
 #[derive(Clone, Debug)]
@@ -8,6 +8,8 @@ pub(crate) struct InlineBody {
     pub instructions: Vec<InlineInstruction>,
     pub max_stack: u16,
     pub max_locals: u16,
+    pub exception_handlers: Vec<JavaExceptionHandler>,
+    pub code_size: usize,
 }
 
 #[derive(Clone, Debug)]
@@ -90,11 +92,6 @@ pub(crate) fn validate(method: &JavaMethod) -> Result<()> {
 }
 
 pub(crate) fn decode(code: &JavaCode) -> Result<InlineBody> {
-    if code.exception_handlers != 0 {
-        return Err(unsupported(
-            "exception handlers and finally regions are not supported",
-        ));
-    }
     if code.bytes.is_empty() {
         return Err(unsupported("empty bytecode"));
     }
@@ -242,7 +239,7 @@ pub(crate) fn decode(code: &JavaCode) -> Result<InlineBody> {
                     operands: operand.to_be_bytes().to_vec(),
                 }
             }
-            0x00..=0x0f | 0x2e..=0x35 | 0x4f..=0x83 | 0x85..=0x98 | 0xbe | 0xbf => InlineOp::Raw {
+            0x00..=0x0f | 0x2e..=0x35 | 0x4f..=0x83 | 0x85..=0x98 | 0xbe | 0xbf | 0xc2 | 0xc3 => InlineOp::Raw {
                 opcode,
                 operands: Vec::new(),
             },
@@ -290,10 +287,23 @@ pub(crate) fn decode(code: &JavaCode) -> Result<InlineBody> {
             ));
         }
     }
+    for handler in &code.exception_handlers {
+        if handler.start >= handler.end
+            || !boundaries.contains(&handler.start)
+            || (handler.end != code.bytes.len() && !boundaries.contains(&handler.end))
+            || !boundaries.contains(&handler.handler)
+        {
+            return Err(unsupported(
+                "exception region does not follow instruction boundaries",
+            ));
+        }
+    }
     Ok(InlineBody {
         instructions,
         max_stack: code.max_stack,
         max_locals: code.max_locals,
+        exception_handlers: code.exception_handlers.clone(),
+        code_size: code.bytes.len(),
     })
 }
 
@@ -434,6 +444,17 @@ pub(crate) fn lambda_calls(
     let mut calls = BTreeMap::new();
     let mut states = BTreeMap::from([(0, Vec::<Operand>::new())]);
     let mut queue = VecDeque::from([0]);
+    for handler in &body.exception_handlers {
+        let index = indices[&handler.handler];
+        let stack = vec![Operand::Value(1)];
+        if states
+            .insert(index, stack.clone())
+            .is_some_and(|existing| existing != stack)
+        {
+            return Err(unsupported("inconsistent exception handler operand flow"));
+        }
+        queue.push_back(index);
+    }
     while let Some(index) = queue.pop_front() {
         let instruction = &body.instructions[index];
         let mut stack = states[&index].clone();
@@ -596,7 +617,7 @@ pub(crate) fn lambda_calls(
                     pop_operand(&mut stack, false)?;
                     stack.push(Operand::Value(1));
                 }
-                0xbf => {
+                0xbf | 0xc2 | 0xc3 => {
                     pop_operand(&mut stack, false)?;
                 }
                 _ => return Err(unsupported("unsupported lambda flow instruction")),
@@ -694,7 +715,15 @@ pub(crate) fn validate_access(
         .as_ref()
         .and_then(|library| library.code.as_ref())
         .ok_or_else(|| unsupported("missing inline bytecode"))?;
-    for instruction in decode(code)?.instructions {
+    let body = decode(code)?;
+    for handler in &body.exception_handlers {
+        if let Some(owner) = &handler.catch_type {
+            if !accessible(classpath.load(owner)?.access, owner) {
+                return Err(unsupported("inaccessible JVM exception handler type"));
+            }
+        }
+    }
+    for instruction in body.instructions {
         let (opcode, constant) = match instruction.kind {
             InlineOp::Reference {
                 opcode, constant, ..
@@ -831,7 +860,7 @@ mod tests {
             max_stack: 8,
             max_locals: 8,
             bytes: bytes.into(),
-            exception_handlers: 0,
+            exception_handlers: Vec::new(),
             constants: BTreeMap::new().into(),
         }
     }
@@ -967,14 +996,19 @@ mod tests {
     }
 
     #[test]
-    fn rejects_exception_regions_and_unsupported_stack_operations() {
+    fn rejects_invalid_exception_regions_and_unsupported_stack_operations() {
         let mut exception = code(&[0xb1]);
-        exception.exception_handlers = 1;
+        exception.exception_handlers.push(JavaExceptionHandler {
+            start: 0,
+            end: 1,
+            handler: 1,
+            catch_type: None,
+        });
         assert!(
             decode(&exception)
                 .unwrap_err()
                 .message
-                .contains("exception handlers")
+                .contains("exception region")
         );
         assert!(lambda_calls(&decode(&code(&[0x5a, 0xb1])).unwrap(), &BTreeSet::new()).is_err());
         assert!(decode(&code(&[0xba, 0, 1, 0, 0, 0xb1])).is_err());

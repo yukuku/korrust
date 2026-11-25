@@ -2,13 +2,109 @@ use std::collections::{BTreeMap, BTreeSet};
 
 use super::*;
 use crate::classpath::{InlineConstant, JavaMethod};
-use crate::compiled_inline::{InlineOp, decode, lambda_calls};
+use crate::compiled_inline::{InlineBody, InlineOp, decode, lambda_calls};
 
 fn reified_unsupported(message: &str) -> Diagnostic {
     Diagnostic::new(0, message).with_kind(
         crate::DiagnosticKind::UnsupportedLanguage,
         "REIFIED_BYTECODE_UNSUPPORTED",
     )
+}
+
+#[derive(Clone)]
+pub(super) struct InlineExpansion {
+    body: InlineBody,
+    local_base: u16,
+    lambda_arguments: BTreeMap<u16, (String, u16)>,
+    calls: BTreeMap<usize, u16>,
+    reified: BTreeMap<usize, (i32, Type)>,
+    reified_temp: Option<u16>,
+    skipped: BTreeSet<usize>,
+    end: usize,
+    finalizers: BTreeMap<usize, (usize, usize)>,
+    exclusions: BTreeMap<usize, Rc<RefCell<Vec<(usize, usize)>>>>,
+}
+
+fn finally_marker(instruction: &crate::compiled_inline::InlineInstruction, name: &str) -> bool {
+    matches!(&instruction.kind, InlineOp::Reference {
+        opcode: 0xb8, constant: InlineConstant::Method { owner, name: actual, descriptor, .. }, ..
+    } if owner == "kotlin/jvm/internal/InlineMarker" && actual == name && descriptor == "(I)V")
+}
+
+fn finalizer_regions(body: &InlineBody) -> BTreeMap<usize, (usize, usize)> {
+    let mut regions = BTreeMap::new();
+    for handler in body
+        .exception_handlers
+        .iter()
+        .filter(|handler| handler.catch_type.is_none())
+    {
+        let Some(index) = body
+            .instructions
+            .iter()
+            .position(|instruction| instruction.offset == handler.handler)
+        else {
+            continue;
+        };
+        if !matches!(
+            body.instructions[index].kind,
+            InlineOp::Local { opcode: 0x3a, .. }
+        ) {
+            continue;
+        }
+        let Some(start) = body
+            .instructions
+            .get(index + 2)
+            .filter(|instruction| finally_marker(instruction, "finallyStart"))
+            .map(|_| index + 3)
+        else {
+            continue;
+        };
+        let mut depth = 1;
+        for end in start..body.instructions.len() {
+            if finally_marker(&body.instructions[end], "finallyStart") {
+                depth += 1;
+            }
+            if finally_marker(&body.instructions[end], "finallyEnd") {
+                depth -= 1;
+                if depth == 0 {
+                    if end > start {
+                        regions.insert(
+                            handler.handler,
+                            (
+                                body.instructions[start].offset,
+                                body.instructions[end - 1].offset,
+                            ),
+                        );
+                    }
+                    break;
+                }
+            }
+        }
+        if !regions.contains_key(&handler.handler) {
+            let indices: BTreeMap<_, _> = body.instructions.iter().enumerate().map(|(index, instruction)| (instruction.offset, index)).collect();
+            let mut pending = vec![start];
+            let mut visited = BTreeSet::new();
+            let mut valid = true;
+            while let Some(index) = pending.pop() {
+                if index >= body.instructions.len() { valid = false; break; }
+                if !visited.insert(index) { continue; }
+                match &body.instructions[index].kind {
+                    InlineOp::Return(_) | InlineOp::Raw { opcode: 0xbf, .. } => {},
+                    InlineOp::Branch { opcode, target } => {
+                        if *target < body.instructions[start].offset { valid = false; break; }
+                        pending.push(indices[target]);
+                        if *opcode != 0xa7 { pending.push(index + 1); }
+                    },
+                    _ => pending.push(index + 1),
+                }
+            }
+            if valid {
+                let end = visited.last().copied().unwrap() + 1;
+                regions.insert(handler.handler, (body.instructions[start].offset, body.instructions.get(end).map_or(body.code_size, |instruction| instruction.offset)));
+            }
+        }
+    }
+    regions
 }
 
 impl Code<'_> {
@@ -73,7 +169,7 @@ impl Code<'_> {
                     .ok_or_else(|| {
                         failure("Compiled inline lambda body unavailable in this declaration")
                     })?;
-                lambda_arguments.insert(slot, (declaration, *base));
+                lambda_arguments.insert(slot, (declaration.owner.clone(), *base));
             }
             slot = slot
                 .checked_add(param.slots() as u16)
@@ -190,10 +286,6 @@ impl Code<'_> {
             &body,
             &lambda_arguments.keys().copied().collect::<BTreeSet<_>>(),
         )?;
-        let mut labels = BTreeMap::new();
-        for instruction in &body.instructions {
-            labels.insert(instruction.offset, self.label());
-        }
         let end = self.label();
         self.max_stack = self.max_stack.max(usize::from(body.max_stack) + 8);
         for ((arg, param), slot) in args.iter().zip(&params).zip(&slots) {
@@ -206,18 +298,108 @@ impl Code<'_> {
             )?;
             self.bytes.extend([store_opcode(param), target]);
         }
-        for instruction in &body.instructions {
+        let finalizers = finalizer_regions(&body);
+        let exclusions = body
+            .exception_handlers
+            .iter()
+            .map(|handler| (handler.handler, Rc::new(RefCell::new(Vec::new()))))
+            .collect();
+        let expansion = Rc::new(InlineExpansion {
+            body,
+            local_base,
+            lambda_arguments,
+            calls,
+            reified,
+            reified_temp,
+            skipped,
+            end,
+            finalizers,
+            exclusions,
+        });
+        self.emit_inline_region(&expansion, 0, expansion.body.code_size)?;
+        self.mark(end);
+        self.adapt_value(&erased_result, result)
+    }
+
+    pub(super) fn emit_inline_region(
+        &mut self,
+        expansion: &Rc<InlineExpansion>,
+        start: usize,
+        finish: usize,
+    ) -> Result<()> {
+        let instructions: Vec<_> = expansion
+            .body
+            .instructions
+            .iter()
+            .filter(|instruction| start <= instruction.offset && instruction.offset < finish)
+            .collect();
+        let mut labels = BTreeMap::new();
+        for instruction in &instructions {
+            labels.insert(instruction.offset, self.label());
+        }
+        labels.insert(finish, self.label());
+        for instruction in &instructions {
             self.mark(labels[&instruction.offset]);
-            if skipped.contains(&instruction.offset) {
+            if expansion.skipped.contains(&instruction.offset) {
                 continue;
             }
-            if let Some((operation, ty)) = reified.get(&instruction.offset) {
-                self.materialize_reified_operation(*operation, ty, reified_temp)?;
+            if let Some((operation, ty)) = expansion.reified.get(&instruction.offset) {
+                self.materialize_reified_operation(*operation, ty, expansion.reified_temp)?;
                 continue;
             }
-            if let Some(slot) = calls.get(&instruction.offset) {
-                let (lambda, base) = lambda_arguments[slot];
-                self.inline_lambda(lambda, base)?;
+            if let Some(slot) = expansion.calls.get(&instruction.offset) {
+                let (owner, base) = &expansion.lambda_arguments[slot];
+                let lambda = self
+                    .lambdas
+                    .iter()
+                    .find(|lambda| &lambda.owner == owner)
+                    .ok_or_else(|| failure("Compiled inline lambda body unavailable"))?;
+                let depth = self.finalizers.len();
+                let mut handlers: Vec<_> = expansion
+                    .body
+                    .exception_handlers
+                    .iter()
+                    .filter(|handler| {
+                        handler.catch_type.is_none()
+                            && handler.start <= instruction.offset
+                            && instruction.offset < handler.end
+                    })
+                    .collect();
+                handlers.sort_by_key(|handler| {
+                    (
+                        std::cmp::Reverse(handler.end - handler.start),
+                        handler.start,
+                    )
+                });
+                let mut seen = BTreeSet::new();
+                for handler in handlers {
+                    if !seen.insert(handler.handler) || self.finalizers.iter().any(|frame| matches!(&frame.body, FinallyBody::Compiled { expansion: active, handler: active_handler, .. } if Rc::ptr_eq(active, expansion) && *active_handler == handler.handler)) { continue; }
+                    let Some((start, end)) = expansion.finalizers.get(&handler.handler).copied()
+                    else {
+                        if contains_nonlocal(&lambda.function, self.lambdas) {
+                            return Err(failure(
+                                "Non-local return crosses an unsupported compiled finally region",
+                            ));
+                        }
+                        continue;
+                    };
+                    self.finalizers.push(FinallyFrame {
+                        body: FinallyBody::Compiled {
+                            expansion: expansion.clone(),
+                            handler: handler.handler,
+                            start,
+                            end,
+                        },
+                        exclusions: expansion.exclusions[&handler.handler].clone(),
+                        local_maps: self.inline_local_maps.clone(),
+                        inline_returns: self.inline_returns.clone(),
+                        loops: self.loops.clone(),
+                        loop_depths: self.loop_finally_depths.clone(),
+                        loop_names: self.loop_names.clone(),
+                    });
+                }
+                self.inline_lambda(lambda, *base)?;
+                self.finalizers.truncate(depth);
                 continue;
             }
             match &instruction.kind {
@@ -227,7 +409,8 @@ impl Code<'_> {
                 }
                 InlineOp::Local { opcode, slot } => {
                     let slot = self.inline_slot(
-                        local_base
+                        expansion
+                            .local_base
                             .checked_add(*slot)
                             .ok_or_else(|| failure("Inline local overflow"))?,
                     )?;
@@ -235,7 +418,8 @@ impl Code<'_> {
                 }
                 InlineOp::Increment { slot, amount } => {
                     let slot = self.inline_slot(
-                        local_base
+                        expansion
+                            .local_base
                             .checked_add(*slot)
                             .ok_or_else(|| failure("Inline local overflow"))?,
                     )?;
@@ -269,11 +453,47 @@ impl Code<'_> {
                     self.bytes.push(0x57);
                     self.branch(0xa7, labels[default]);
                 }
-                InlineOp::Return(_) => self.branch(0xa7, end),
+                InlineOp::Return(_) => self.branch(0xa7, expansion.end),
             }
         }
-        self.mark(end);
-        self.adapt_value(&erased_result, result)
+        self.mark(labels[&finish]);
+        for handler in &expansion.body.exception_handlers {
+            if start <= handler.start
+                && handler.end <= finish
+                && start <= handler.handler
+                && handler.handler < finish
+            {
+                let catch_type = handler
+                    .catch_type
+                    .as_ref()
+                    .map(|owner| self.pool.class(owner))
+                    .transpose()?
+                    .unwrap_or(0);
+                let exclusions = if handler.catch_type.is_none() {
+                    expansion.exclusions[&handler.handler].clone()
+                } else {
+                    expansion
+                        .body
+                        .exception_handlers
+                        .iter()
+                        .find(|candidate| {
+                            candidate.catch_type.is_none()
+                                && candidate.start == handler.start
+                                && candidate.end == handler.end
+                        })
+                        .map(|candidate| expansion.exclusions[&candidate.handler].clone())
+                        .unwrap_or_default()
+                };
+                self.protected_ranges(
+                    self.labels[labels[&handler.start]].unwrap(),
+                    self.labels[labels[&handler.end]].unwrap(),
+                    self.labels[labels[&handler.handler]].unwrap(),
+                    catch_type,
+                    &exclusions,
+                );
+            }
+        }
+        Ok(())
     }
 
     fn materialize_reified_operation(
