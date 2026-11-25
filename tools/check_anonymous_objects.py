@@ -13,7 +13,8 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / 'tests/anonymous_objects'
 UPSTREAM = ROOT / 'references/kotlin/compiler/testData'
-UNSUPPORTED = {'ClassSupertype', 'Multiple', 'Property', 'Generic', 'GenericMethod', 'GenericJava', 'ExtraMember', 'Marker', 'NoSupertype', 'Covariant', 'InferredCovariant', 'AbruptInlineInference'}
+UNSUPPORTED = {'Property', 'Generic', 'GenericMethod', 'GenericJava', 'ExtraMember', 'NoSupertype', 'Covariant', 'InferredCovariant', 'AbruptInlineInference'}
+SUPPORTED = {'ClassSupertype', 'Multiple', 'Marker'}
 INVALID = {'Missing', 'Duplicate', 'WrongParameter', 'WrongResult', 'NullResult', 'Uninitialized', 'ValWrite', 'Sealed', 'InferredWrongNumeric'}
 
 
@@ -67,7 +68,7 @@ def main():
     with zipfile.ZipFile(bundle, 'w', zipfile.ZIP_DEFLATED) as archive:
         for path in inputs:
             archive.writestr(relative(path), path.read_bytes())
-    report = dict(schema_version=1, kind='correctness', created_at=datetime.now(timezone.utc).isoformat(), status='running', compiler={'path': relative(candidate), 'sha256': sha(candidate)}, reference_compiler={**json.loads((ROOT / 'references/compiler.json').read_text()), 'options': options}, inputs={'files_sha256': frozen}, source_archive={'path': relative(bundle), 'sha256': sha(bundle)}, commands=[], cases=[], evidence=[], reproduction_commands=[['python3', 'tools/check_anonymous_objects.py', '--compiler', relative(candidate), '--source-root', relative(args.source_root)]], limitations=['Single nongeneric nonsealed interface with ordinary override methods, exact parameter/result JVM descriptors, lexical captures, fresh allocation, own and enclosing receivers. Properties, class/multiple/generic supertypes, generic methods, empty marker implementations, annotations and covariant/erased bridges remain explicit unsupported boundaries. Generic inline lambdas with unconditional nonlocal returns still require unsupported Nothing inference; conditional method returns are exercised.', 'Same Java caller compiles once against official provider and runs with -Xverify:all against both. Official and candidate Kotlin consumers compile separately against both providers. Public provider ABI is compared; generated anonymous class names and private capture layouts are not ABI claims.', 'Generated classes omit EnclosingMethod and anonymous-class Kotlin metadata. Reflection equivalence for Class.isAnonymousClass, isLocalClass, enclosingMethod and Kotlin reflection is unsupported and unverified.', 'AndroidBible source inspection motivates scope; no unchanged whole AndroidBible file, full application, APK/device or full Kotlin compatibility claim. Upstream CoroutineHelpers requires generic Continuation, Result value class and property support beyond this scope.'])
+    report = dict(schema_version=1, kind='correctness', created_at=datetime.now(timezone.utc).isoformat(), status='running', compiler={'path': relative(candidate), 'sha256': sha(candidate)}, reference_compiler={**json.loads((ROOT / 'references/compiler.json').read_text()), 'options': options}, inputs={'files_sha256': frozen}, source_archive={'path': relative(bundle), 'sha256': sha(bundle)}, commands=[], cases=[], evidence=[], reproduction_commands=[['python3', 'tools/check_anonymous_objects.py', '--compiler', relative(candidate), '--source-root', relative(args.source_root)]], limitations=['Nongeneric nonsealed class and interface supertypes with superclass constructor arguments, ordinary override methods, exact parameter/result JVM descriptors, lexical captures, fresh allocation, own and enclosing receivers. Own properties, generic supertypes and methods, annotations and covariant/erased bridges remain explicit unsupported boundaries. Generic inline lambdas with unconditional nonlocal returns still require unsupported Nothing inference; conditional method returns are exercised.', 'Same Java caller compiles once against official provider and runs with -Xverify:all against both. Official and candidate Kotlin consumers compile separately against both providers. Public provider ABI is compared; generated anonymous class names and private capture layouts are not ABI claims.', 'Generated classes omit EnclosingMethod and anonymous-class Kotlin metadata. Reflection equivalence for Class.isAnonymousClass, isLocalClass, enclosingMethod and Kotlin reflection is unsupported and unverified.', 'AndroidBible source inspection motivates scope; no unchanged whole AndroidBible file, full application, APK/device or full Kotlin compatibility claim. Upstream CoroutineHelpers requires generic Continuation, Result value class and property support beyond this scope.'])
 
     def save():
         report['counts'] = dict(Counter(case['outcome'] for case in report['cases']))
@@ -146,6 +147,10 @@ def main():
         for path in sorted((FIXTURES / 'boundaries').glob('*.kt')):
             oracle = run('boundary/' + path.stem + '/official', [kotlin, path, *options, '-cp', stdlib, '-d', work / 'boundaries' / path.stem / 'official'], accepted=(0, 1))
             result = run('boundary/' + path.stem + '/candidate', [candidate, path, '--diagnostic-format', 'json', '-cp', stdlib, '-d', work / 'boundaries' / path.stem / 'candidate'], accepted=(0, 1))
+            if path.stem in SUPPORTED:
+                assert oracle.returncode == result.returncode == 0, (path, result.stderr)
+                report['cases'].append({'id': 'boundary/' + path.stem, 'outcome': 'pass', 'oracle_exit_code': oracle.returncode, 'candidate_exit_code': result.returncode})
+                continue
             assert result.returncode != 0, path
             diagnostics = [json.loads(line) for line in result.stderr.splitlines() if line.startswith('{')]
             expected = 'unsupported_language' if path.stem in UNSUPPORTED else 'invalid_kotlin'

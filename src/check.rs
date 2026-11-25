@@ -107,7 +107,14 @@ pub struct DeclarationAnnotation {
     pub values: Vec<(String, DeclarationAnnotationValue)>,
 }
 
+pub struct AnonymousSuper {
+    pub owner: String,
+    pub descriptor: String,
+    pub params: Vec<Type>,
+    pub interfaces: Vec<String>,
+}
 pub struct LambdaDecl {
+    pub anonymous_super: Option<AnonymousSuper>,
     pub anonymous_methods: Option<Vec<Function>>,
     pub defaults: Vec<JavaMethod>,
     pub owner: String,
@@ -4325,8 +4332,11 @@ impl Checker<'_> {
                 }
                 (inner, ValueKind::RequireNotNull(Box::new(value)))
             }
-            ExprKind::AnonymousObject { interface, methods } => {
-                return self.anonymous_object(interface, methods, offset);
+            ExprKind::AnonymousObject {
+                supertypes,
+                methods,
+            } => {
+                return self.anonymous_object(supertypes, methods, offset);
             }
             ExprKind::Lambda(_)
             | ExprKind::LambdaWithParams { .. }
@@ -6471,7 +6481,17 @@ fn loses_member_type(_ty: &Type) -> bool {
 }
 fn call_names(expr: &Expr, names: &mut HashSet<String>) {
     match &expr.kind {
-        ExprKind::AnonymousObject { methods, .. } => {
+        ExprKind::AnonymousObject {
+            supertypes,
+            methods,
+        } => {
+            for (_, arguments) in supertypes {
+                if let Some(arguments) = arguments {
+                    for argument in arguments {
+                        call_names(argument, names);
+                    }
+                }
+            }
             for method in methods {
                 body_call_names(&method.body, names);
             }

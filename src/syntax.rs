@@ -919,7 +919,7 @@ pub(crate) fn normalize_result_tail(body: &mut [Statement]) {
 #[derive(Clone, Debug)]
 pub enum ExprKind {
     AnonymousObject {
-        interface: Type,
+        supertypes: Vec<(Type, Option<Vec<Expr>>)>,
         methods: Vec<Function>,
     },
     AnnotationConstant {
@@ -999,7 +999,15 @@ fn shift_expression_offsets(expression: &mut Expr, offset: usize) {
     while let Some(expression) = pending.pop() {
         expression.offset += offset;
         match &mut expression.kind {
-            ExprKind::AnonymousObject { methods, .. } => {
+            ExprKind::AnonymousObject {
+                supertypes,
+                methods,
+            } => {
+                for (_, args) in supertypes {
+                    if let Some(args) = args {
+                        pending.extend(args);
+                    }
+                }
                 for method in methods {
                     method.offset += offset;
                     shift_statement_offsets(&mut method.body, offset);
@@ -6022,22 +6030,28 @@ impl Parser {
             self.lines();
             if !self.take(":") {
                 return Err(self
-                    .error("Anonymous objects require one interface in this subset")
+                    .error("Anonymous objects require a supported superclass or interface")
                     .with_kind(
                         DiagnosticKind::UnsupportedLanguage,
                         "ANONYMOUS_OBJECT_SHAPE_UNSUPPORTED",
                     ));
             }
             self.lines();
-            let interface = self.ty()?;
-            self.lines();
-            if self.at("(") || self.at(",") {
-                return Err(self
-                    .error("Anonymous class supertypes and multiple interfaces are unsupported")
-                    .with_kind(
-                        DiagnosticKind::UnsupportedLanguage,
-                        "ANONYMOUS_OBJECT_SHAPE_UNSUPPORTED",
-                    ));
+            let mut supertypes = Vec::new();
+            loop {
+                let ty = self.ty()?;
+                self.lines();
+                let arguments = if self.at("(") {
+                    Some(self.arguments()?)
+                } else {
+                    None
+                };
+                supertypes.push((ty, arguments));
+                self.lines();
+                if !self.take(",") {
+                    break;
+                }
+                self.lines();
             }
             self.expect("{")?;
             self.separators();
@@ -6071,7 +6085,10 @@ impl Parser {
             }
             return Self::bounded(Expr {
                 offset,
-                kind: ExprKind::AnonymousObject { interface, methods },
+                kind: ExprKind::AnonymousObject {
+                    supertypes,
+                    methods,
+                },
             });
         }
         let offset = self.token().offset;

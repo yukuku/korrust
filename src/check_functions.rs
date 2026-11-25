@@ -586,6 +586,7 @@ impl Checker<'_> {
         };
         self.lambdas.borrow_mut().push(LambdaDecl {
             anonymous_methods: None,
+            anonymous_super: None,
             defaults,
             owner: owner.clone(),
             captures: fields,
