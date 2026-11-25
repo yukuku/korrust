@@ -507,6 +507,32 @@ impl Checker<'_> {
         Ok(Some(value))
     }
 
+    pub(super) fn inline_static_property_accessors(
+        &self,
+        name: &str,
+        arity: usize,
+    ) -> Result<Vec<JavaMethod>> {
+        if !self.public_inline_body {
+            return Ok(Vec::new());
+        }
+        let Some((owner, _)) = self.object_fields.get(name) else {
+            return Ok(Vec::new());
+        };
+        Ok(self
+            .classpath
+            .methods(owner)?
+            .into_iter()
+            .filter(|method| {
+                method.access & 8 != 0
+                    && method.source_property.as_deref() == Some(name)
+                    && method
+                        .kotlin_params
+                        .as_ref()
+                        .is_some_and(|params| params.len() == arity)
+            })
+            .collect())
+    }
+
     pub(super) fn library_candidates(&self, name: &str) -> Vec<JavaMethod> {
         self.library_candidates_with_members(name, true)
     }

@@ -3814,7 +3814,7 @@ impl Checker<'_> {
                             continue;
                         }
                     }
-                    if self.local(name).is_none() {
+                    if self.local(name).is_none() && !self.captured.contains_key(name) {
                         if let Some(method) = self.members.get(&format!("#set:{name}")) {
                             let value = if !method.instance_dispatch() {
                                 self.library_static_call(
@@ -3856,6 +3856,22 @@ impl Checker<'_> {
                                     );
                                     continue;
                                 }
+                            }
+                        }
+                        if self.public_inline_body && self.object_fields.contains_key(name) {
+                            let setters = self.inline_static_property_accessors(name, 1)?;
+                            if !setters.is_empty() {
+                                let method = self.select_method(
+                                    &setters,
+                                    std::slice::from_ref(expr),
+                                    offset,
+                                )?;
+                                body.push(Statement::Expression(self.library_static_call(
+                                    method,
+                                    std::slice::from_ref(expr),
+                                    offset,
+                                )?));
+                                continue;
                             }
                         }
                         if let Some((owner, ty)) = self.object_fields.get(name) {
@@ -4651,20 +4667,22 @@ impl Checker<'_> {
                 if let Some(value) = self.imported_value(name, offset)? {
                     return Ok(value);
                 }
-                let getters = self
-                    .library_candidates(name)
-                    .into_iter()
-                    .filter(|m| {
-                        m.source_property.is_some()
-                            && m.kotlin_params.as_ref().is_some_and(|p| p.is_empty())
-                    })
-                    .collect::<Vec<_>>();
+                let mut getters = self.inline_static_property_accessors(name, 0)?;
+                getters.extend(
+                    self.library_candidates(name)
+                        .into_iter()
+                        .filter(|m| {
+                            m.source_property.is_some()
+                                && m.kotlin_params.as_ref().is_some_and(|p| p.is_empty())
+                        })
+                        .collect::<Vec<_>>(),
+                );
                 if !getters.is_empty()
                     && self.local(name).is_none()
                     && !self.captured.contains_key(name)
                     && !self.fields.contains_key(name)
                     && !self.constants.contains_key(name)
-                    && !self.object_fields.contains_key(name)
+                    && (!self.object_fields.contains_key(name) || self.public_inline_body)
                     && !self.companion_fields.contains_key(name)
                 {
                     let method = self.select_method(&getters, &[], offset)?;

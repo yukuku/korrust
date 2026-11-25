@@ -7,5 +7,7 @@ fun main() {
     val log = intArrayOf(0)
     check(escaped(log) == 37)
     check(log[0] == 4)
-    println("2 consumer checks")
+    check(updateSource(9) == 9)
+    check(localShadow(4) == 5 && sourceState == 9)
+    println("4 consumer checks")
 }

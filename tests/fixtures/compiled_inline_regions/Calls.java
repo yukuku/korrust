@@ -36,6 +36,11 @@ public class Calls {
         check(SourceKt.sourceReturn(log) == 81 && log[0] == 3);
         log[0] = 0;
         check(ProbeKt.monitorReturn(log) == 91 && log[0] == 2 && !Thread.holdsLock(log));
-        System.out.println("15 checks");
+        log[0] = 0;
+        check(SourceKt.sourceTryReturn(log) == 83 && log[0] == 23);
+        check(SourceKt.sourceProperty() == 5 && SourceKt.getSourceState() == 5);
+        check(SourceKt.sourceLocalShadow() == 377 && SourceKt.getSourceState() == 77);
+        check(SourceKt.sourceCapturedShadow() == 33 && SourceKt.getSourceState() == 77);
+        System.out.println("19 checks");
     }
 }

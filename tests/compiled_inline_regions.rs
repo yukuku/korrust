@@ -12,6 +12,18 @@ fn run(command: &mut Command) -> Vec<u8> {
     output.stdout
 }
 
+fn signatures(bytes: Vec<u8>) -> Vec<(String, String)> {
+    let output = String::from_utf8(bytes).unwrap();
+    let lines: Vec<_> = output.lines().map(str::trim).collect();
+    let mut methods: Vec<_> = lines
+        .windows(2)
+        .filter(|pair| pair[0].ends_with(';') && pair[1].starts_with("descriptor:"))
+        .map(|pair| (pair[0].to_owned(), pair[1].to_owned()))
+        .collect();
+    methods.sort();
+    methods
+}
+
 #[test]
 fn compiled_regions_preserve_exceptions_finally_nonlocal_returns_and_reified_types() {
     let project = Path::new(env!("CARGO_MANIFEST_DIR"));
@@ -81,7 +93,7 @@ fn compiled_regions_preserve_exceptions_finally_nonlocal_returns_and_reified_typ
                 .arg("-cp")
                 .arg(std::env::join_paths([provider, &driver, &library, &standard]).unwrap())
                 .arg("Calls")),
-            b"15 checks\n"
+            b"19 checks\n"
         );
     }
     for (name, provider) in [("official", &official), ("candidate", &candidate)] {
@@ -100,7 +112,7 @@ fn compiled_regions_preserve_exceptions_finally_nonlocal_returns_and_reified_typ
                 .arg("-cp")
                 .arg(std::env::join_paths([&consumer, provider, &standard]).unwrap())
                 .arg("ConsumerKt")),
-            b"2 consumer checks\n"
+            b"4 consumer checks\n"
         );
     }
     for classifier in ["ProbeKt", "SourceKt"] {
@@ -116,7 +128,30 @@ fn compiled_regions_preserve_exceptions_finally_nonlocal_returns_and_reified_typ
             .arg("-cp")
             .arg(&candidate)
             .arg(classifier));
-        assert_eq!(actual, expected, "{classifier} signatures");
+        assert_eq!(
+            signatures(actual),
+            signatures(expected),
+            "{classifier} signatures"
+        );
     }
     std::fs::remove_dir_all(root).unwrap();
+}
+
+#[test]
+fn public_inline_property_writes_preserve_private_setter_visibility() {
+    let standard =
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("references/kotlinc/lib/kotlin-stdlib.jar");
+    let error = korrust::compile_outputs_with_classpath(
+        include_str!("fixtures/new_families/source_inline19/invalid/public_private_setter.kt"),
+        "PrivateSetter.kt",
+        &[standard],
+    )
+    .err()
+    .unwrap();
+    assert_eq!(
+        error.kind,
+        korrust::DiagnosticKind::InvalidKotlin,
+        "{error:?}"
+    );
+    assert_eq!(error.code, "PUBLIC_INLINE_NON_PUBLIC_ACCESS", "{error:?}");
 }

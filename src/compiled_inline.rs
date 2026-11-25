@@ -785,7 +785,11 @@ pub(crate) fn validate_access(
                 }
                 let field =
                     inline_field(classpath, &owner, &name, &descriptor, &mut BTreeSet::new())?
-                        .ok_or_else(|| unsupported("unresolved inline field reference"))?;
+                        .ok_or_else(|| {
+                            unsupported(format!(
+                                "unresolved inline field reference {owner}.{name}:{descriptor}"
+                            ))
+                        })?;
                 if matches!(opcode, 0xb2 | 0xb3) != (field.access & 8 != 0) {
                     return Err(unsupported(
                         "inline field access kind disagrees with target",
