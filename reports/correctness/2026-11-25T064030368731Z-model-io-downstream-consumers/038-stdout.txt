@@ -1,0 +1,71 @@
+Compiled from "Version.java"
+public abstract class yuku.alkitab.model.Version {
+  public yuku.alkitab.model.Version();
+    descriptor: ()V
+
+  public abstract java.lang.String getShortName();
+    descriptor: ()Ljava/lang/String;
+
+  public abstract java.lang.String getLongName();
+    descriptor: ()Ljava/lang/String;
+
+  public abstract java.lang.String getLocale();
+    descriptor: ()Ljava/lang/String;
+
+  public abstract int getMaxBookIdPlusOne();
+    descriptor: ()I
+
+  public abstract yuku.alkitab.model.Book[] getConsecutiveBooks();
+    descriptor: ()[Lyuku/alkitab/model/Book;
+
+  public abstract yuku.alkitab.model.Book getBook(int);
+    descriptor: (I)Lyuku/alkitab/model/Book;
+
+  public abstract yuku.alkitab.model.Book getFirstBook();
+    descriptor: ()Lyuku/alkitab/model/Book;
+
+  public abstract java.lang.String loadVerseText(int);
+    descriptor: (I)Ljava/lang/String;
+
+  public abstract java.lang.String loadVerseText(yuku.alkitab.model.Book, int, int);
+    descriptor: (Lyuku/alkitab/model/Book;II)Ljava/lang/String;
+
+  public abstract int loadVersesByAriRanges(yuku.alkitab.util.IntArrayList, yuku.alkitab.util.IntArrayList, java.util.List<java.lang.String>);
+    descriptor: (Lyuku/alkitab/util/IntArrayList;Lyuku/alkitab/util/IntArrayList;Ljava/util/List;)I
+
+  public abstract int loadPericope(int, int, yuku.alkitab.util.IntArrayList, java.util.List<yuku.alkitab.model.PericopeBlock>);
+    descriptor: (IILyuku/alkitab/util/IntArrayList;Ljava/util/List;)I
+
+  public abstract yuku.alkitab.model.SingleChapterVerses loadChapterText(yuku.alkitab.model.Book, int);
+    descriptor: (Lyuku/alkitab/model/Book;I)Lyuku/alkitab/model/SingleChapterVerses;
+
+  public abstract java.lang.String loadChapterTextLowercasedWithoutSplit(yuku.alkitab.model.Book, int);
+    descriptor: (Lyuku/alkitab/model/Book;I)Ljava/lang/String;
+
+  public abstract yuku.alkitab.model.XrefEntry getXrefEntry(int);
+    descriptor: (I)Lyuku/alkitab/model/XrefEntry;
+
+  public abstract yuku.alkitab.model.FootnoteEntry getFootnoteEntry(int);
+    descriptor: (I)Lyuku/alkitab/model/FootnoteEntry;
+
+  public java.lang.String reference(int);
+    descriptor: (I)Ljava/lang/String;
+
+  public java.lang.String referenceWithVerseCount(int, int);
+    descriptor: (II)Ljava/lang/String;
+
+  private java.lang.String getBookOrPlaceholder(int);
+    descriptor: (I)Ljava/lang/String;
+
+  public java.lang.String reference(int, int, int);
+    descriptor: (III)Ljava/lang/String;
+
+  private java.lang.String getLastVerseString(int, int);
+    descriptor: (II)Ljava/lang/String;
+
+  public java.lang.String referenceRange(int, int);
+    descriptor: (II)Ljava/lang/String;
+
+  public java.lang.String getInitials();
+    descriptor: ()Ljava/lang/String;
+}
