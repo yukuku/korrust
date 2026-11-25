@@ -1,0 +1,616 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-25T10:50:08.998680+00:00",
+  "status": "passed",
+  "compiler": {
+    "binary": "target/three-gaps-6400e179e4/korrust",
+    "binary_sha256": "3313c2a9df7df901210759f8dbbbca0bb3ff1d10ebce24f18d544f0108b3d5ad",
+    "source_revision": "6400e179e4e9ec40a15d603e2c24f4769269790d"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "inputs": {
+    "files_sha256": {
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "src/annotation_declarations.rs": "ac237d773c71a2fc26faeb2d79b837265c6d557ef7bb31aab748fa8b1c7572be",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/annotation_files.rs": "349e861501424f9c02a177074fd7fb847837d24772ae4773e598ca8c656638c4",
+      "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "src/bytecode/class_companion.rs": "dfe17d45fd23558a704314107c7da6dbc3cc4f318ffd06966c11774dfed0370d",
+      "src/bytecode/data.rs": "c99cb60546cbe8873ef99d1ab057aa7439f4239fce13927d324dfea078dbe98c",
+      "src/bytecode/defaults.rs": "ebdb1c988443c1b984081aa8555c5bb2f649685e3bbfef011cd138c0bf29aecd",
+      "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+      "src/bytecode/inline.rs": "454a8d821b6d52e6a2a2c613d70dac5e36e7009caff365ac44c7d7b6a947d340",
+      "src/bytecode/interfaces.rs": "bed1910ef6eea768aff4aedf9c09e294b2fdaf14330c20ea15f95c14f6697b84",
+      "src/bytecode/lambdas.rs": "e55a83db13b597a0b3019006a395efc78aedf2f0967bc1b30303c2f59d677ef5",
+      "src/bytecode/objects.rs": "f4677da9f36464b6113710c6cb1ed11aa193930a23b6aca09312b7fc389681b6",
+      "src/bytecode/suspend.rs": "e3f372b0ddf22085d021051977c7dd4327134acb73be1c5521db0217a5ddf089",
+      "src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+      "src/bytecode.rs": "d1878075c952e8513dbbe7cda08f2bae2caaf63253a59bfb6c2327b97a9580d5",
+      "src/check.rs": "56cbc5f284cbaaf54aca27978196ef7970efb2a27fc2d3acbef82c4b63ccfb4a",
+      "src/check_annotation_placements.rs": "51340570de824f5a5463c8a39570e8c669f4589b8a92890e932940065d49720a",
+      "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "src/check_anonymous.rs": "f4dae3aacc0f2f267bc3cb609fb8b9dc27bb9e450659dc3dcc3a08257d83f2e5",
+      "src/check_captures.rs": "7b25a3a2c2d3ff0b30d0bad6662c060f47d08f2ff430ea3d45ff35ae48231200",
+      "src/check_class_delegation.rs": "b78f2218081170250c2eda53f7d3e4fffa8508a8999d047d62b486d0ae7b1830",
+      "src/check_classes.rs": "eaa5547ca75d6f4bef4f21d200a050bb8a47362c9c7ea3e4f47b3a66e1cca4b3",
+      "src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+      "src/check_control.rs": "19e7fe2376f65209fd0d9b04be9254ec868fed288707d34631f30e841f3eaca7",
+      "src/check_declarations.rs": "6de7da35b23367a5190e0d538f5e48c5b4412ee9ef7f2dbb3e1f1476cfc7fcc6",
+      "src/check_delegates.rs": "7fe3b9dcdb8bb1e86c2334e18daac91b90a780338f00cc1170eed1d2cca0e6c2",
+      "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "src/check_functions.rs": "8b0869c6378018078c593636ce8911efa124e4dadbd0d44c14e7a039a2638fd3",
+      "src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+      "src/check_interfaces.rs": "ed640be2b06034d401a2efcee60414b4019019858a56966175ff5de1be5ca3a1",
+      "src/check_ir_walk.rs": "bd4b73a6629825ac338c156e23b8dcc19e2a505c38dd6fe3270eeaf73bfe45b6",
+      "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+      "src/check_jvm_fields.rs": "ce5eb721e88e725c21d5dc21a49332637e46de586878cdce9facd58ca87989d4",
+      "src/check_library.rs": "0625a9402adf09a5811e0f093f5dd370e08b80d2403df73574db5e721b18c0e2",
+      "src/check_member_extensions.rs": "66a4cfa55e05e5699d510113566c91fd54fa79e1257f769df334338c0f7201e5",
+      "src/check_objects.rs": "1495379edcdfb0b95fe25be49a07c2edb742b2c35ba9d89d221bac21ecf4bb21",
+      "src/check_operations.rs": "5a0b0b380559259c1d11e8a2ec109a3955e1ad85f62c1b655df8632ac5362c8f",
+      "src/check_overloads.rs": "cd57712984b4c3b52eee025ab50b2b10f7d41612c1540f52f40145af7e4909dd",
+      "src/check_references.rs": "61a780d0816443007725e52f992c717eeab828f7b971749ed3242318a8d80077",
+      "src/check_relations.rs": "cb8c3c5d1ce807caeca908aa5ebcf93f9eb51a67741b4debdf1b2eeb428d67c1",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+      "src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+      "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "src/check_varargs.rs": "9928a6be54a33a83360cec67726e8beffba6ed00366a7f3d378f030f1055f90d",
+      "src/check_variant_signatures.rs": "6a70fefb6abc04a4233316bfaaa1db9d86d0a18a43d18f35fc57e465802fc05c",
+      "src/classpath/aliases.rs": "2ad31713a22f8eb0607ed96d838aa96fecedf7a6b261f07473aef66b8bdb8827",
+      "src/classpath/archive.rs": "875c9119ee5386c40848c8570a27b90964d1a7c5ce65f941217652ae59f1b16c",
+      "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+      "src/classpath/metadata.rs": "45c98d86e202e8679f420585e6315c15b65dd38ad80ef3dc6bed5cb7fdd6d1d1",
+      "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/signature.rs": "11e1e7c67cfe84b56892cddf6b6fa85daa19dfec4f34846a215a18605dfb3bec",
+      "src/classpath/source.rs": "894f00588fbdd2d13bc030d82cf7c69b0d15b3d41f8591595bbaf3fa1491515d",
+      "src/classpath/source_enums.rs": "3ae8bea81669d8feec40a16fae21a80f4a9d8006acd23c3f4f68d5d177f79be3",
+      "src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+      "src/classpath.rs": "189ef8c0b24d2a6f5738e735951f94609b6878c2ab75e50e2ccda042f7ff794f",
+      "src/compiled_inline.rs": "7acd0769184152ea2659a9217886608cff7219eea5a47d25cf573e0f0318d7fa",
+      "src/const_eval.rs": "6714c1d6296d1c3f60fab09891a492f66a9850b3ff3ee2b5a7df42400dfdcdaa",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+      "src/lib.rs": "fa65d18a3567992124b03314127594cefa2abd36dd70af78e8ded63b8801f6a2",
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/metadata.rs": "cf9a31c7612ef2811ee12263277a7f9b5d3fbd67e24a019f287538e0d7efb537",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+      "src/syntax.rs": "b08f83a7b9fa9f48d40a2da89b7b88157e5b2ec7a1d1f69dbcfe10fb0b311681",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525",
+      "tests/big_generic_inherited/Calls.java": "7ce9fa816f02aa01de23e07591e4b8dc36a975f2080cc33618d2387aac68b7ca",
+      "tests/big_generic_inherited/ConsumeCalls.java": "3952528dfeb1cb6c1687cacff2cb6654c3706641728073f17c68690f9a2ba14a",
+      "tests/big_generic_inherited/Consumer.kt": "22375df1eca55a24b0b042695cac800b7355c0fc519f6e91774b0c040833885b",
+      "tests/big_generic_inherited/Inherited.kt": "bde957d72ac6327c7e8f9134d6a03c1c43565da8608e3d1e724151c011922523",
+      "tests/big_generic_inherited/Rejections.json": "c9ca37ec2c66c4658a8c5973b9fb19193e93b357f3713c74662c08e5954bbbae",
+      "tests/big_generic_inherited.rs": "a8490d541cd3c774623ec715e4f3189813e0460b465ddc085ed7c0f25b84ad2c",
+      "tools/check_big_generic_inherited.py": "46c474d2ad1395f9af8f9f79ed0357664ba27d752d5a20ac83e3947a820c6660",
+      "tools/check_nov21_generics.py": "70fed499f3652d9181c2aabc3baf4e9a7327c436eec67c83d6fe4e4f539e4f86"
+    },
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "commands": [
+    {
+      "label": "compile official Inherited.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/big_generic_inherited/Inherited.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "generic_capture",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/000-stderr.txt"
+    },
+    {
+      "label": "compile candidate Inherited.kt",
+      "argv": [
+        "/workspace/korrust/target/three-gaps-6400e179e4/korrust",
+        "/workspace/korrust/tests/big_generic_inherited/Inherited.kt",
+        "--module-name",
+        "generic_capture",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/001-stderr.txt"
+    },
+    {
+      "label": "compile fixed Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/java",
+        "/workspace/korrust/tests/big_generic_inherited/Calls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/002-stderr.txt"
+    },
+    {
+      "label": "verified fixed Java caller official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/java:/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/003-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official/Parent",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official",
+        "inheriteddefaults.Parent"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/004-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official/TextChild",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official",
+        "inheriteddefaults.TextChild"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/005-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official/GrandChild",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official",
+        "inheriteddefaults.GrandChild"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/006-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official/IntChild",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official",
+        "inheriteddefaults.IntChild"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/007-stderr.txt"
+    },
+    {
+      "label": "compile official Consumer.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/big_generic_inherited/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "generic_capture",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/008-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official:/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official-official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official-official-runner",
+        "/workspace/korrust/tests/big_generic_inherited/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/009-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer official/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official-official-runner:/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official-official:/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/010-stderr.txt"
+    },
+    {
+      "label": "compile candidate Consumer.kt",
+      "argv": [
+        "/workspace/korrust/target/three-gaps-6400e179e4/korrust",
+        "/workspace/korrust/tests/big_generic_inherited/Consumer.kt",
+        "--module-name",
+        "generic_capture",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/011-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official:/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official-candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official-candidate-runner",
+        "/workspace/korrust/tests/big_generic_inherited/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/012-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer official/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official-candidate-runner:/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official-candidate:/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/013-stderr.txt"
+    },
+    {
+      "label": "verified fixed Java caller candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/java:/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/014-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate/Parent",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate",
+        "inheriteddefaults.Parent"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/015-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate/TextChild",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate",
+        "inheriteddefaults.TextChild"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/016-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate/GrandChild",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate",
+        "inheriteddefaults.GrandChild"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/017-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate/IntChild",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate",
+        "inheriteddefaults.IntChild"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/018-stderr.txt"
+    },
+    {
+      "label": "compile official Consumer.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/big_generic_inherited/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "generic_capture",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/019-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate:/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate-official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate-official-runner",
+        "/workspace/korrust/tests/big_generic_inherited/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/020-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer candidate/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate-official-runner:/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate-official:/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/021-stderr.txt"
+    },
+    {
+      "label": "compile candidate Consumer.kt",
+      "argv": [
+        "/workspace/korrust/target/three-gaps-6400e179e4/korrust",
+        "/workspace/korrust/tests/big_generic_inherited/Consumer.kt",
+        "--module-name",
+        "generic_capture",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/022-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate:/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate-candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate-candidate-runner",
+        "/workspace/korrust/tests/big_generic_inherited/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/023-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer candidate/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate-candidate-runner:/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate-candidate:/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/024-stderr.txt"
+    },
+    {
+      "label": "negative official/override-redeclares-default",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/override-redeclares-default.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/025-stderr.txt"
+    },
+    {
+      "label": "negative candidate/override-redeclares-default",
+      "argv": [
+        "/workspace/korrust/target/three-gaps-6400e179e4/korrust",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/override-redeclares-default.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/026-stderr.txt"
+    },
+    {
+      "label": "negative official/required-argument",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/required-argument.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/027-stderr.txt"
+    },
+    {
+      "label": "negative candidate/required-argument",
+      "argv": [
+        "/workspace/korrust/target/three-gaps-6400e179e4/korrust",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/required-argument.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-25T105008998680Z-big-generic-inherited/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/028-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T105008998680Z-big-generic-inherited/028-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "fixed-java/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/official/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/official/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "fixed-java/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/candidate/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/candidate/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "JVM-public-callable-signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/override-redeclares-default",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/override-redeclares-default",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/required-argument",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/required-argument",
+      "outcome": "pass"
+    },
+    {
+      "id": "frozen-inputs",
+      "outcome": "pass"
+    }
+  ],
+  "evidence": [],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_big_generic_inherited.py",
+      "--candidate",
+      "/workspace/korrust/target/three-gaps-6400e179e4/korrust",
+      "--reference-root",
+      "/workspace/korrust"
+    ]
+  ],
+  "limitations": [
+    "Tests cover inherited generic open-class method defaults through base and subclass types, multi-level overrides and implicit receivers, substituted classifier parameters, and erased reference/primitive helper adaptation. Interface default arguments and default bodies remain outside this scope. No full-app or Android compatibility claim."
+  ],
+  "counts": {
+    "pass": 12
+  }
+}

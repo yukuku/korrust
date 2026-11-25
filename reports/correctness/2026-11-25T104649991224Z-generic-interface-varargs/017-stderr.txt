@@ -1,0 +1,8 @@
+reports/correctness/2026-11-25T104649991224Z-generic-interface-varargs/sources/interface-vararg-class-component.kt:2:1: error: class 'Impl' is not abstract and does not implement abstract member:
+fun <T> pick(ignored: T, vararg items: C): C
+class Impl:Api<String> { override fun <R> pick(ignored:R, vararg items:Int):String="bad" }
+^^^^^^^^^^
+reports/correctness/2026-11-25T104649991224Z-generic-interface-varargs/sources/interface-vararg-class-component.kt:2:26: error: 'pick' overrides nothing. Potential signatures for overriding:
+fun <T> pick(ignored: T, vararg items: String): String
+class Impl:Api<String> { override fun <R> pick(ignored:R, vararg items:Int):String="bad" }
+                         ^^^^^^^^

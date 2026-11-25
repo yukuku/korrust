@@ -187,7 +187,6 @@ pub(super) fn check_class_with_constants(
         validate_function_variance(&source.type_params, &method.function, classpath, imports)
             .map_err(|e| variance_visibility_error(e, method.function.private))?;
     }
-    let initial_lambda_count = lambdas.borrow().len();
     validate_constructor_assignments(source)?;
     for method in &source.methods {
         validate_operator(&method.function, true)?;
@@ -288,6 +287,7 @@ pub(super) fn check_class_with_constants(
             | Type::Float
             | Type::Double
             | Type::String
+            | Type::Function { .. }
             | Type::Java(_)
             | Type::Parameterized { .. } => true,
             Type::Nullable(inner) | Type::List(inner) | Type::MutableList(inner) => {
@@ -1141,7 +1141,7 @@ pub(super) fn check_class_with_constants(
                 owner: owner.clone(),
                 name: name.clone(),
                 descriptor,
-                access: if *private {
+                access: (if *private {
                     2
                 } else if source
                     .methods
@@ -1155,7 +1155,7 @@ pub(super) fn check_class_with_constants(
                     4
                 } else {
                     1
-                },
+                }) | if source.methods.iter().any(|method| method.function.offset == *offset && method.function.name == *name && method.function.vararg) { 0x80 } else { 0 },
                 unsupported: false,
                 source_property: property.map(str::to_owned),
             },
@@ -1163,6 +1163,9 @@ pub(super) fn check_class_with_constants(
     }
     for method in members.values_mut() {
         if method.owner == owner && !method.name.starts_with('<') && method.access & 8 == 0 {
+            if let Some(parent) = required.get(&logical_member_key(method)?) {
+                method.inherit_defaults(parent);
+            }
             if let Some(result) = source_jvm_result(classpath, &super_types, method)? {
                 method.descriptor = format!(
                     "{}){}",
@@ -1344,6 +1347,10 @@ pub(super) fn check_class_with_constants(
                 "Instance methods support at most 254 parameter slots",
             ));
         }
+        let source_method = source
+            .methods
+            .iter()
+            .find(|method| method.function.offset == offset && method.function.name == name);
         for (param, ty) in source_params {
             let ty = resolve_type_checked(&ty, imports, offset, classpath, classes)?;
             if ty == Type::Unit {
@@ -1352,7 +1359,11 @@ pub(super) fn check_class_with_constants(
                     "Unit and Float parameters are not supported",
                 ));
             }
-            let slot = checker.declare(&param, ty.clone(), false, offset)?;
+            let local_type = source_method.map_or_else(
+                || ty.clone(),
+                |method| reference_vararg_local(&method.function, &param, &ty),
+            );
+            let slot = checker.declare(&param, local_type, false, offset)?;
             if param == "<this>" {
                 let receiver = Local {
                     slot,
@@ -1402,24 +1413,11 @@ pub(super) fn check_class_with_constants(
                 "Abstract methods require an abstract class",
             ));
         }
-        let initial_lambda_count = lambdas.borrow().len();
         let (mut body, returns) = if has_body {
             checker.block(body)?
         } else {
             (Vec::new(), true)
         };
-        if source_method.is_some_and(|m| !m.function.type_params.is_empty())
-            && lambdas.borrow().len() != initial_lambda_count
-        {
-            return Err(Diagnostic::new(
-                offset,
-                "Lambdas in generic source members are unsupported",
-            )
-            .with_kind(
-                crate::DiagnosticKind::UnsupportedLanguage,
-                "GENERIC_MEMBER_LAMBDA_UNSUPPORTED",
-            ));
-        }
         if !returns {
             if result != Type::Unit {
                 return Err(Diagnostic::new(
@@ -1499,10 +1497,7 @@ pub(super) fn check_class_with_constants(
                     .iter()
                     .map(|p| p.1.clone())
                     .collect::<Vec<_>>();
-                if is_override
-                    && !private
-                    && !override_signature(required, &parameters, &method.result)?
-                {
+                if is_override && !private && !override_function_signature(required, &method)? {
                     let (inherited_parameters, inherited_result) = class_method_types(required)?;
                     if inherited_parameters == parameters
                         && checker.subtype(&method.result, &inherited_result)
@@ -1519,15 +1514,7 @@ pub(super) fn check_class_with_constants(
                 }
                 if !is_override
                     || private
-                    || !override_signature(
-                        required,
-                        &method
-                            .params
-                            .iter()
-                            .map(|p| p.1.clone())
-                            .collect::<Vec<_>>(),
-                        &method.result,
-                    )?
+                    || !override_function_signature(required, &method)?
                     || required.source_property.as_deref() != source_property
                 {
                     return Err(Diagnostic::new(
@@ -1692,16 +1679,6 @@ pub(super) fn check_class_with_constants(
             }
         }
     }
-    if !type_params.is_empty() && lambdas.borrow().len() > initial_lambda_count {
-        return Err(Diagnostic::new(
-            source.offset,
-            "Lambdas capturing generic source classifier scopes are unsupported",
-        )
-        .with_kind(
-            crate::DiagnosticKind::UnsupportedLanguage,
-            "GENERIC_CLASS_LAMBDA_UNSUPPORTED",
-        ));
-    }
     let (forwarders, interface_delegated_members) = class_delegation::forwarders(
         &interface_contracts,
         &methods,
@@ -1770,12 +1747,7 @@ pub(super) fn check_class_with_constants(
                         .library
                         .as_ref()
                         .is_some_and(|library| library.suspend_)
-                && override_signature(
-                    &method,
-                    &m.params.iter().map(|p| p.1.clone()).collect::<Vec<_>>(),
-                    &m.result,
-                )
-                .unwrap_or(false)
+                && override_function_signature(&method, m).unwrap_or(false)
         }) {
             if target.descriptor() != method.descriptor {
                 if target.suspend_ {
@@ -2378,7 +2350,12 @@ impl<'a> DeclarationContext<'a> {
                     "Unit parameters are unsupported",
                 ));
             }
-            checker.declare(name, ty.clone(), false, source.offset)?;
+            checker.declare(
+                name,
+                reference_vararg_local(source, name, &ty),
+                false,
+                source.offset,
+            )?;
             params.push((name.clone(), ty));
         }
         if params.iter().map(|(_, ty)| ty.slots()).sum::<usize>() > if receiver { 254 } else { 255 }
@@ -2396,18 +2373,7 @@ impl<'a> DeclarationContext<'a> {
             source_defaults.insert(0, None);
         }
         let defaults = checker.checked_defaults(&source_defaults, &params, source.offset)?;
-        let initial_lambda_count = self.lambdas.borrow().len();
         let (mut body, returns) = checker.block(&source.body)?;
-        if !source.type_params.is_empty() && self.lambdas.borrow().len() != initial_lambda_count {
-            return Err(Diagnostic::new(
-                source.offset,
-                "Lambdas in generic source members are unsupported",
-            )
-            .with_kind(
-                crate::DiagnosticKind::UnsupportedLanguage,
-                "GENERIC_MEMBER_LAMBDA_UNSUPPORTED",
-            ));
-        }
         if !returns {
             if result != Type::Unit {
                 return Err(Diagnostic::new(
@@ -3060,6 +3026,7 @@ fn infer_source_results_impl(
             progress += 1;
         }
     }
+    anonymous::check_exposed_types(source, classpath)?;
     Ok(progress)
 }
 fn infer_function_record(
@@ -3613,7 +3580,9 @@ pub(super) fn function_method(
         owner: owner.into(),
         name: function.name.clone(),
         descriptor: function.descriptor(),
-        access: access | if function.private { 2 } else { 1 },
+        access: access
+            | if function.private { 2 } else { 1 }
+            | if function.vararg { 0x80 } else { 0 },
         unsupported: false,
         source_property: property.map(str::to_owned),
         kotlin_params: Some(
@@ -3644,6 +3613,7 @@ pub(super) fn validate_operator(function: &syntax::Function, member: bool) -> Re
         ));
     }
     if function.vararg
+        && (!member || function.type_params.is_empty())
         && !(function.operator && function.name == "compareTo")
         && function
             .params
@@ -3733,6 +3703,99 @@ pub(super) fn validate_operator(function: &syntax::Function, member: bool) -> Re
         ));
     }
     Ok(())
+}
+
+pub(super) fn override_function_signature(
+    method: &JavaMethod,
+    function: &Function,
+) -> Result<bool> {
+    override_generic_signature(
+        method,
+        &function
+            .params
+            .iter()
+            .map(|p| p.1.clone())
+            .collect::<Vec<_>>(),
+        &function.result,
+        &function.type_params,
+    )
+}
+
+pub(super) fn override_generic_signature(
+    method: &JavaMethod,
+    params: &[Type],
+    result: &Type,
+    type_params: &[syntax::TypeParameter],
+) -> Result<bool> {
+    let inherited = method
+        .library
+        .as_ref()
+        .map(|l| l.type_parameters.as_slice())
+        .unwrap_or(&[]);
+    if inherited.len() != type_params.len() {
+        return Ok(false);
+    }
+    let substitutions = inherited
+        .iter()
+        .zip(type_params)
+        .map(|(expected, actual)| {
+            (
+                expected.name.clone(),
+                Type::Parameter {
+                    name: actual.name.clone(),
+                    upper_bound: Box::new(actual.bounds.first().cloned().unwrap_or_else(|| {
+                        Type::Nullable(Box::new(Type::Java("java/lang/Object".into())))
+                    })),
+                },
+            )
+        })
+        .collect::<HashMap<_, _>>();
+    fn bounds(parameters: &syntax::TypeParameter) -> Vec<Type> {
+        let values = parameters
+            .bounds
+            .iter()
+            .filter(|t| !matches!(t, Type::Java(n) if n.is_empty()))
+            .cloned()
+            .collect::<Vec<_>>();
+        if values.is_empty() {
+            vec![Type::Nullable(Box::new(Type::Java(
+                "java/lang/Object".into(),
+            )))]
+        } else {
+            values
+        }
+    }
+    for (expected, actual) in inherited.iter().zip(type_params) {
+        let expected = bounds(expected)
+            .iter()
+            .map(|t| relations::substitute(t, &substitutions))
+            .collect::<Vec<_>>();
+        if expected != bounds(actual) {
+            return Ok(false);
+        }
+    }
+    let (expected_params, expected_result) = class_method_types(method)?;
+    let mut renamed = method.clone();
+    if let Some(library) = &mut renamed.library {
+        library.receiver = None;
+    }
+    renamed.kotlin_params = Some(
+        expected_params
+            .iter()
+            .map(|t| {
+                (
+                    String::new(),
+                    relations::substitute(t, &substitutions),
+                    false,
+                )
+            })
+            .collect(),
+    );
+    renamed.kotlin_result = Some(relations::substitute(&expected_result, &substitutions));
+    if let Some(library) = &mut renamed.library {
+        library.receiver = None;
+    }
+    override_signature(&renamed, params, result)
 }
 
 pub(super) fn override_signature(
@@ -4608,7 +4671,7 @@ fn variance_visibility_error(error: Diagnostic, private: bool) -> Diagnostic {
 
 pub(super) fn validate_member_generics(
     function: &syntax::Function,
-    is_override: bool,
+    _is_override: bool,
     classpath: &Classpath,
     imports: &HashMap<String, String>,
     classes: &HashMap<String, JavaClass>,
@@ -4616,13 +4679,15 @@ pub(super) fn validate_member_generics(
     if function.type_params.is_empty() {
         return Ok(());
     }
-    if is_override
-        || function.inline
-        || function.suspend_
-        || function.vararg
-        || function.defaults.iter().any(Option::is_some)
-    {
-        return Err(Diagnostic::new(function.offset, "Generic source member overrides, inline, suspend, varargs and defaults are unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "GENERIC_MEMBER_COMPLEXITY_UNSUPPORTED"));
+    if function.inline || function.suspend_ {
+        return Err(Diagnostic::new(
+            function.offset,
+            "Generic source inline and suspend members are unsupported",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "GENERIC_MEMBER_COMPLEXITY_UNSUPPORTED",
+        ));
     }
     validate_classifier_generics(
         &function.type_params,
@@ -4632,4 +4697,21 @@ pub(super) fn validate_member_generics(
         classes,
         function.offset,
     )
+}
+
+fn reference_vararg_local(function: &syntax::Function, name: &str, ty: &Type) -> Type {
+    if function.vararg
+        && !function.type_params.is_empty()
+        && function
+            .params
+            .last()
+            .is_some_and(|(parameter, _)| parameter == name)
+    {
+        match ty {
+            Type::Array(element) => return Type::OutArray(element.clone()),
+            Type::StringArray => return Type::OutArray(Box::new(Type::String)),
+            _ => {}
+        }
+    }
+    ty.clone()
 }

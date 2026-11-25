@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-11-25T09:49:30.810257+00:00",
+  "compiler": {
+    "path": "/workspace/build/big-anon/debug/korrust",
+    "sha256": "5de230625b597b2c5b3d19de95e98639b5f4ce265d60f8f47659ab1e5e53a7d2"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8"
+    ]
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_anonymous_subclasses.py",
+      "--compiler",
+      "/workspace/build/big-anon/debug/korrust"
+    ]
+  ],
+  "kind": "features",
+  "status": "passed",
+  "evidence": [
+    "reports/correctness/2026-11-25T094930272773Z-anonymous-subclasses.json"
+  ],
+  "features": [
+    {
+      "name": "Anonymous subclasses with superclass arguments and multiple interfaces",
+      "status": "supported",
+      "scope": "Nongeneric source, compiled Kotlin and Java class bases, captured immutable and shared mutable state, captured enclosing receivers, ordinary superclass constructor arguments, inherited getters and protected methods, super calls, multiple interfaces and empty class/marker bodies.",
+      "restrictions": [
+        "Nongeneric class and interface bases; own members must be override functions. Generic supertypes, anonymous properties and erased/covariant bridges remain diagnosed. Superclass default/reordered arguments and conflicting inherited defaults are outside this evidence.",
+        "Generated anonymous classes retain the existing lack of EnclosingMethod and anonymous Kotlin metadata. Reflection equivalence and generic anonymous identity in exported APIs are not claimed.",
+        "Java callers compile once against official Kotlin output, then execute unchanged with verification against both providers."
+      ],
+      "evidence_report": "reports/correctness/2026-11-25T094930272773Z-anonymous-subclasses.json",
+      "evidence_cases": [
+        "source/verify/official",
+        "source/verify/candidate",
+        "source/public-abi-and-fixed-caller",
+        "compiled-base/verify/official",
+        "compiled-base/verify/candidate",
+        "compiled-base/public-abi-and-fixed-caller",
+        "java-base/verify/official",
+        "java-base/verify/candidate",
+        "java-base/public-abi-and-fixed-caller",
+        "boundary/Generic",
+        "boundary/InvalidFinal",
+        "boundary/InvalidFinalMethod",
+        "boundary/InvalidInterfaceCtor",
+        "boundary/InvalidMissing",
+        "boundary/Property"
+      ]
+    }
+  ]
+}

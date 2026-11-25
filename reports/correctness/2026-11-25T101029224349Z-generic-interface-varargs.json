@@ -1,0 +1,621 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-25T10:10:29.244191+00:00",
+  "compiler": {
+    "binary": "target/debug/korrust",
+    "sha256": "ea9c9ce8ce32c01ca645da78708588878bd2df43a30f89eb8db6dbfc18812ed0",
+    "source_revision": "f5b66b6d707ce3674ac99e2bac2eb543302d769d"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8"
+    ],
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "manifest_sha256": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c"
+  },
+  "inputs": {
+    "files_sha256": {
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/annotation_declarations.rs": "ac237d773c71a2fc26faeb2d79b837265c6d557ef7bb31aab748fa8b1c7572be",
+      "src/visibility.rs": "2be70217a6c7322b7a272a647833cf83ed526586f535c0be15dff46e9ef82ee7",
+      "src/check_interfaces.rs": "ed640be2b06034d401a2efcee60414b4019019858a56966175ff5de1be5ca3a1",
+      "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/bytecode.rs": "d1878075c952e8513dbbe7cda08f2bae2caaf63253a59bfb6c2327b97a9580d5",
+      "src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+      "src/check_jvm_fields.rs": "ce5eb721e88e725c21d5dc21a49332637e46de586878cdce9facd58ca87989d4",
+      "src/check_classes.rs": "eaa5547ca75d6f4bef4f21d200a050bb8a47362c9c7ea3e4f47b3a66e1cca4b3",
+      "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+      "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "src/check_class_delegation.rs": "b78f2218081170250c2eda53f7d3e4fffa8508a8999d047d62b486d0ae7b1830",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/metadata.rs": "cf9a31c7612ef2811ee12263277a7f9b5d3fbd67e24a019f287538e0d7efb537",
+      "src/check_member_extensions.rs": "66a4cfa55e05e5699d510113566c91fd54fa79e1257f769df334338c0f7201e5",
+      "src/check_varargs.rs": "9928a6be54a33a83360cec67726e8beffba6ed00366a7f3d378f030f1055f90d",
+      "src/classpath.rs": "e4ce836c38dced4506d073a9657e359712937048d6ec90b9d58b373d6ae4945d",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/check_references.rs": "3a4fd327b7a13f48e69d5fbd059c76cbb8d2ce50ae2e140a762a06d9e1e6eab8",
+      "src/check_functions.rs": "af190fad8967a899e88fd2e322574bdd5d5d0b2e6df55168879b11aae4ce55f6",
+      "src/check.rs": "424bd542a7f8907cf5a68d5e4fda9c50f37f5a500add65936da0d69caa8b8f22",
+      "src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+      "src/lib.rs": "fa65d18a3567992124b03314127594cefa2abd36dd70af78e8ded63b8801f6a2",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/check_operations.rs": "d0640a6871a49358eed4467634efc5692b66c75922232d3d0956292a93bb74fe",
+      "src/check_library.rs": "1737bf4df2e599b838f326cc240574179a3c27bc95c89014a1fdb864114d5bca",
+      "src/check_relations.rs": "cb8c3c5d1ce807caeca908aa5ebcf93f9eb51a67741b4debdf1b2eeb428d67c1",
+      "src/check_declarations.rs": "4df6a4d317e7b8a65baa692d177d76f4207bbfecf73d6cea3c298c494d0d73db",
+      "src/check_overloads.rs": "cd57712984b4c3b52eee025ab50b2b10f7d41612c1540f52f40145af7e4909dd",
+      "src/check_captures.rs": "1fe188fbe396b1585e272edfcb1b09eb0fde9f8b829881a100895c9e56ac540e",
+      "src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+      "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "src/check_delegates.rs": "7fe3b9dcdb8bb1e86c2334e18daac91b90a780338f00cc1170eed1d2cca0e6c2",
+      "src/check_ir_walk.rs": "37800169671f39aa8c6964fa0403d0e76fe122c80c9ae1004a3fe2388045e938",
+      "src/check_variant_signatures.rs": "6a70fefb6abc04a4233316bfaaa1db9d86d0a18a43d18f35fc57e465802fc05c",
+      "src/check_annotation_placements.rs": "51340570de824f5a5463c8a39570e8c669f4589b8a92890e932940065d49720a",
+      "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "src/check_control.rs": "19e7fe2376f65209fd0d9b04be9254ec868fed288707d34631f30e841f3eaca7",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/const_eval.rs": "6714c1d6296d1c3f60fab09891a492f66a9850b3ff3ee2b5a7df42400dfdcdaa",
+      "src/compiled_inline.rs": "7acd0769184152ea2659a9217886608cff7219eea5a47d25cf573e0f0318d7fa",
+      "src/check_objects.rs": "1495379edcdfb0b95fe25be49a07c2edb742b2c35ba9d89d221bac21ecf4bb21",
+      "src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+      "src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+      "src/check_anonymous.rs": "ed4a38c4199786e96d39f1aa72ac94f61b2ca755631d47e0c4e68bc13bdf2a93",
+      "src/syntax.rs": "c6ec336dae5b6e7aeb73e8d71b18550e2a70008aeeecdabb47d93b801d9eedea",
+      "src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+      "src/classpath/signature.rs": "11e1e7c67cfe84b56892cddf6b6fa85daa19dfec4f34846a215a18605dfb3bec",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/metadata.rs": "45c98d86e202e8679f420585e6315c15b65dd38ad80ef3dc6bed5cb7fdd6d1d1",
+      "src/classpath/source_enums.rs": "3ae8bea81669d8feec40a16fae21a80f4a9d8006acd23c3f4f68d5d177f79be3",
+      "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+      "src/classpath/aliases.rs": "2ad31713a22f8eb0607ed96d838aa96fecedf7a6b261f07473aef66b8bdb8827",
+      "src/classpath/archive.rs": "875c9119ee5386c40848c8570a27b90964d1a7c5ce65f941217652ae59f1b16c",
+      "src/classpath/source.rs": "894f00588fbdd2d13bc030d82cf7c69b0d15b3d41f8591595bbaf3fa1491515d",
+      "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+      "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+      "src/bytecode/annotation_files.rs": "349e861501424f9c02a177074fd7fb847837d24772ae4773e598ca8c656638c4",
+      "src/bytecode/data.rs": "c99cb60546cbe8873ef99d1ab057aa7439f4239fce13927d324dfea078dbe98c",
+      "src/bytecode/lambdas.rs": "b056c0ee1525e7be5719860c2335c29cea662906f113166c4a2abec9042e3379",
+      "src/bytecode/inline.rs": "e598575c521153d592face8dd19018beaf89be45fbde985ae3845526e5a0be44",
+      "src/bytecode/class_companion.rs": "dfe17d45fd23558a704314107c7da6dbc3cc4f318ffd06966c11774dfed0370d",
+      "src/bytecode/objects.rs": "f4677da9f36464b6113710c6cb1ed11aa193930a23b6aca09312b7fc389681b6",
+      "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/suspend.rs": "c6b865276171fa0bc854b26c730c9ec028a3ca4103d43e13e293176403368cd4",
+      "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "src/bytecode/interfaces.rs": "bed1910ef6eea768aff4aedf9c09e294b2fdaf14330c20ea15f95c14f6697b84",
+      "src/bytecode/defaults.rs": "ebdb1c988443c1b984081aa8555c5bb2f649685e3bbfef011cd138c0bf29aecd",
+      "src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "tests/generic_arguments/VarargCalls.java": "f67d7bd2c0e3169e6ec8cd010039932555012bd65e6733f6287ebb8e6279ede9",
+      "tests/generic_arguments/InterfaceVarargConsumer.kt": "e280c326e9e7db41bf479cc2235c24a73cb4f3a27837c14eebf6f441f8b113ca",
+      "tests/generic_arguments/InterfaceVarargCalls.java": "234e61d2a31753ebdc21b31d00aa13197df89d8400d9d4ef32c69f0f06a06745",
+      "tests/generic_arguments/Defaults.kt": "738776db1c9fb62944e32fac3a589e8c7c47b78b324ddc703fb7357a2869c3f5",
+      "tests/generic_arguments/InterfaceVarargs.kt": "18c7d7e03b3c3eabd19e46f55c79e2356adaba924aabd1b5594115bac6c3c5cb",
+      "tests/generic_arguments/VarargMetadata.java": "6edd4f6df5b00a916bceb66815d263789a88dcd0508d843934f13bb608872811",
+      "tests/generic_arguments/Rejections.json": "bb778f2226dcd16d5faf2a5f31fb95d50167371c74d1549b33c94115e28e1656",
+      "tests/generic_arguments/VarargConsumer.kt": "ea1c50aaaaec48bf0bbb1cb4520d597648230f122783ab2cb0e856b111982a77",
+      "tests/generic_arguments/Varargs.kt": "1a67843ac41ce37588d78bc35f7f0bfad1401e0b349e183f3f24ef106c219f77",
+      "tests/generic_arguments/DefaultCalls.java": "dafcc56f6e265eefb95bcd9d938f6b775b3956b5b51889678e6aa9b1d26c78db",
+      "tests/generic_arguments/DefaultConsumer.kt": "735caae9a394dd379c8be985320cc3e772111f6f626a63b846785771c873b435",
+      "tests/generic_arguments.rs": "8a134721956af2cccbf643db3eadcfc2074a16eaed5586676b33ec59e9f09f81",
+      "tools/check_generic_arguments.py": "80a2176e394e2d30c22453737e0fcab7fbfcca1621979d463532e37a0137821c"
+    },
+    "kotlin_source_commit": "fea1ad8c18995b80d1ca0e3917056104613d23db"
+  },
+  "commands": [
+    {
+      "label": "provider/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/generic-arguments/tests/generic_arguments/InterfaceVarargs.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/000-stderr.txt"
+    },
+    {
+      "label": "provider/candidate",
+      "argv": [
+        "/workspace/work/generic-arguments/target/debug/korrust",
+        "/workspace/work/generic-arguments/tests/generic_arguments/InterfaceVarargs.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/001-stderr.txt"
+    },
+    {
+      "label": "java/compile-once-against-official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/fixed-java",
+        "/workspace/work/generic-arguments/tests/generic_arguments/InterfaceVarargCalls.java"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/002-stderr.txt"
+    },
+    {
+      "label": "java/verified/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/fixed-java:/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "InterfaceVarargCalls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/003-stderr.txt"
+    },
+    {
+      "label": "kotlin/compile/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/generic-arguments/tests/generic_arguments/InterfaceVarargConsumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/consumer-official"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/004-stderr.txt"
+    },
+    {
+      "label": "kotlin/verified/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/consumer-official:/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "InterfaceVarargConsumerKt"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/005-stderr.txt"
+    },
+    {
+      "label": "abi/official/InterfaceVarargs",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/official",
+        "genericargs.InterfaceVarargs"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/006-stderr.txt"
+    },
+    {
+      "label": "abi/official/InterfaceVarargApi",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/official",
+        "genericargs.InterfaceVarargApi"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/007-stderr.txt"
+    },
+    {
+      "label": "java/verified/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/fixed-java:/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "InterfaceVarargCalls"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/008-stderr.txt"
+    },
+    {
+      "label": "kotlin/compile/candidate",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/generic-arguments/tests/generic_arguments/InterfaceVarargConsumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/consumer-candidate"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/009-stderr.txt"
+    },
+    {
+      "label": "kotlin/verified/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/consumer-candidate:/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "InterfaceVarargConsumerKt"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/010-stderr.txt"
+    },
+    {
+      "label": "abi/candidate/InterfaceVarargs",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/candidate",
+        "genericargs.InterfaceVarargs"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/011-stderr.txt"
+    },
+    {
+      "label": "abi/candidate/InterfaceVarargApi",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-classpath",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/candidate",
+        "genericargs.InterfaceVarargApi"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/012-stderr.txt"
+    },
+    {
+      "label": "reject/official/interface-vararg-nullability",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/generic-arguments/reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/sources/interface-vararg-nullability.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/invalid-official-interface-vararg-nullability"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/013-stderr.txt"
+    },
+    {
+      "label": "reject/candidate/interface-vararg-nullability",
+      "argv": [
+        "/workspace/work/generic-arguments/target/debug/korrust",
+        "/workspace/work/generic-arguments/reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/sources/interface-vararg-nullability.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/invalid-candidate-interface-vararg-nullability"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/014-stderr.txt"
+    },
+    {
+      "label": "reject/official/interface-vararg-bound",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/generic-arguments/reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/sources/interface-vararg-bound.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/invalid-official-interface-vararg-bound"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/015-stderr.txt"
+    },
+    {
+      "label": "reject/candidate/interface-vararg-bound",
+      "argv": [
+        "/workspace/work/generic-arguments/target/debug/korrust",
+        "/workspace/work/generic-arguments/reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/sources/interface-vararg-bound.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/invalid-candidate-interface-vararg-bound"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/016-stderr.txt"
+    },
+    {
+      "label": "reject/official/interface-vararg-class-component",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/generic-arguments/reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/sources/interface-vararg-class-component.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/invalid-official-interface-vararg-class-component"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/017-stderr.txt"
+    },
+    {
+      "label": "reject/candidate/interface-vararg-class-component",
+      "argv": [
+        "/workspace/work/generic-arguments/target/debug/korrust",
+        "/workspace/work/generic-arguments/reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/sources/interface-vararg-class-component.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/invalid-candidate-interface-vararg-class-component"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/018-stderr.txt"
+    },
+    {
+      "label": "reject/official/interface-vararg-call-bound",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/generic-arguments/reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/sources/interface-vararg-call-bound.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/invalid-official-interface-vararg-call-bound"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/019-stderr.txt"
+    },
+    {
+      "label": "reject/candidate/interface-vararg-call-bound",
+      "argv": [
+        "/workspace/work/generic-arguments/target/debug/korrust",
+        "/workspace/work/generic-arguments/reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/sources/interface-vararg-call-bound.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/invalid-candidate-interface-vararg-call-bound"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/020-stderr.txt"
+    },
+    {
+      "label": "reject/official/interface-vararg-body",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/generic-arguments/reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/sources/interface-vararg-body.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/invalid-official-interface-vararg-body"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/021-stderr.txt"
+    },
+    {
+      "label": "reject/candidate/interface-vararg-body",
+      "argv": [
+        "/workspace/work/generic-arguments/target/debug/korrust",
+        "/workspace/work/generic-arguments/reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/sources/interface-vararg-body.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/generic-arguments/target/checks/2026-11-25T101029224349Z-generic-interface-varargs/invalid-candidate-interface-vararg-body"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/022-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "fixed-java/official",
+      "outcome": "pass",
+      "callers_sha256": {
+        "InterfaceVarargCalls.class": "a78463b17ff36fc94cdea01a61ad887c00241692018e2453a6d346d5595a8379",
+        "InterfaceVarargCalls$JavaApi.class": "b59f478130c7418847d7b5fd657117dd3133632864155769ec4fc3e04a9cb810"
+      }
+    },
+    {
+      "id": "kotlin-consumer/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "fixed-java/candidate",
+      "outcome": "pass",
+      "callers_sha256": {
+        "InterfaceVarargCalls.class": "a78463b17ff36fc94cdea01a61ad887c00241692018e2453a6d346d5595a8379",
+        "InterfaceVarargCalls$JavaApi.class": "b59f478130c7418847d7b5fd657117dd3133632864155769ec4fc3e04a9cb810"
+      }
+    },
+    {
+      "id": "kotlin-consumer/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "jvm-signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "reject/interface-vararg-nullability",
+      "outcome": "invalid_rejected",
+      "source": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/sources/interface-vararg-nullability.kt",
+      "source_sha256": "e154ab6676e3c7a1b3b742878882fa5916b2cf07d90ff12fa728c10097a97cfb"
+    },
+    {
+      "id": "reject/interface-vararg-bound",
+      "outcome": "invalid_rejected",
+      "source": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/sources/interface-vararg-bound.kt",
+      "source_sha256": "3ecd9bbf86c578dbe580e110f0e7df759b033ed3fd5681384dff20810ee7e1d6"
+    },
+    {
+      "id": "reject/interface-vararg-class-component",
+      "outcome": "invalid_rejected",
+      "source": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/sources/interface-vararg-class-component.kt",
+      "source_sha256": "0d879841b3fad130353e652cb371856aec16a19b407f46808cce0863ce3fa10d"
+    },
+    {
+      "id": "reject/interface-vararg-call-bound",
+      "outcome": "invalid_rejected",
+      "source": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/sources/interface-vararg-call-bound.kt",
+      "source_sha256": "44a138b45c2803f260b89a61ba4f8ad88498a07a8314e6d9ec3a5462c5f24f88"
+    },
+    {
+      "id": "reject/interface-vararg-body",
+      "outcome": "unsupported_language",
+      "source": "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs/sources/interface-vararg-body.kt",
+      "source_sha256": "18a0d350e80cf5e8f2415b015db2191fa910d2f31cf6e503734d3fefb761b9a1"
+    },
+    {
+      "id": "frozen-inputs",
+      "outcome": "pass"
+    }
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_generic_arguments.py",
+      "--candidate",
+      "target/debug/korrust",
+      "--reference-root",
+      "/workspace/korrust",
+      "--family",
+      "interface-varargs"
+    ]
+  ],
+  "sources": [
+    "tests/generic_arguments/InterfaceVarargs.kt",
+    "tests/generic_arguments/InterfaceVarargCalls.java",
+    "tests/generic_arguments/InterfaceVarargConsumer.kt",
+    "tests/generic_arguments/Rejections.json"
+  ],
+  "limitations": [
+    "Independent generic method parameters in supported ordinary source classes; existing classifier restrictions remain.",
+    "Generic inline/suspend and interface vararg bodies remain explicit unsupported boundaries. General source Array<out T> annotations are not enabled by internal projected vararg body types.",
+    "Java callers compile once against official output and run unchanged against each provider with verification; official Kotlin consumers compile against each provider. No Android, full-app or performance claim."
+  ],
+  "status": "completed",
+  "counts": {
+    "invalid_rejected": 4,
+    "pass": 6,
+    "unsupported_language": 1
+  },
+  "evidence": [
+    "reports/correctness/2026-11-25T101029224349Z-generic-interface-varargs"
+  ],
+  "emitted_classes_sha256": {
+    "official": {
+      "target/checks/2026-11-25T101029224349Z-generic-interface-varargs/official/genericargs/InterfaceVarargs.class": "aa43d033b8512affdea55416278367631097e068d1b8624c3ada2373641a9fce",
+      "target/checks/2026-11-25T101029224349Z-generic-interface-varargs/official/genericargs/InterfaceLabel.class": "10329671d51807a3515d1689fc94c0a56db5974dba08632b322fcaf42ed4fff1",
+      "target/checks/2026-11-25T101029224349Z-generic-interface-varargs/official/genericargs/InterfaceVarargApi.class": "220e9f2e89f24513473d6b4ec5d740178811d490bdd4222a73218c7cfece633e",
+      "target/checks/2026-11-25T101029224349Z-generic-interface-varargs/official/genericargs/InterfaceWord.class": "b3bf1b90fb6bcfa5c0f10db0cfe0affbb97c93e532af75f67df2f73606d992c0",
+      "target/checks/2026-11-25T101029224349Z-generic-interface-varargs/official/genericargs/InterfaceVarargsKt.class": "7f6e00ce4de6c74a382f75a4a0815586070440d0249703aaffd319cd04ea54c1"
+    },
+    "candidate": {
+      "target/checks/2026-11-25T101029224349Z-generic-interface-varargs/candidate/genericargs/InterfaceVarargs.class": "a1eb57373cfbc8cb80a8bda630fab4f1649d9805c88e4bb0c0a68e9f953b7f87",
+      "target/checks/2026-11-25T101029224349Z-generic-interface-varargs/candidate/genericargs/InterfaceLabel.class": "cce01bf754663e3562e7287b714e9e9dc23879c3cbb06eddb2aeaed89e579a1a",
+      "target/checks/2026-11-25T101029224349Z-generic-interface-varargs/candidate/genericargs/InterfaceVarargApi.class": "c84cc31368e7a74e175c0b0e140906cdf0076d17d59845395561318aebac7106",
+      "target/checks/2026-11-25T101029224349Z-generic-interface-varargs/candidate/genericargs/InterfaceWord.class": "e787f5215b21e8e34d4910a6d4bfe24c0f1d3d4c5ae5cc951d695f2845cf613c",
+      "target/checks/2026-11-25T101029224349Z-generic-interface-varargs/candidate/genericargs/InterfaceVarargsKt.class": "e6d06518a7d7b5ec53dbf6df4886a2c4a11a268ee6dd0d4e9f07db753ca658d0"
+    }
+  }
+}

@@ -38,7 +38,9 @@ impl Checker<'_> {
             if callable
                 && matches!(
                     inner.base(),
-                    Type::Function { .. } | Type::ReceiverFunction { .. }
+                    Type::Function { .. }
+                        | Type::ReceiverFunction { .. }
+                        | Type::SuspendFunction { .. }
                 )
             {
                 let value = self.expected_value(expr, inner)?;
@@ -211,18 +213,18 @@ impl Checker<'_> {
         local_return: bool,
         label: Option<&str>,
     ) -> Result<Value> {
-        if matches!(expected.base(), Type::SuspendFunction { .. }) {
-            return Err(Diagnostic::new(
-                expr.offset,
-                "Source suspend lambdas and references are unsupported",
-            )
-            .with_kind(
-                crate::DiagnosticKind::UnsupportedLanguage,
-                "SUSPEND_LAMBDA_UNSUPPORTED",
-            ));
+        if matches!(expected.base(), Type::SuspendFunction { .. }) && !local_return {
+            return Err(
+                Diagnostic::new(expr.offset, "Source suspend lambdas are unsupported").with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "SUSPEND_LAMBDA_UNSUPPORTED",
+                ),
+            );
         }
         let (params, result, receiver_type) = match expected.base() {
-            Type::Function { params, result } => (params, result, None),
+            Type::Function { params, result } | Type::SuspendFunction { params, result } => {
+                (params, result, None)
+            }
             Type::ReceiverFunction {
                 receiver,
                 params,
@@ -485,6 +487,10 @@ impl Checker<'_> {
                 }
             }
         }
+        let suspend_ = matches!(expected.base(), Type::SuspendFunction { .. });
+        if suspend_ {
+            checker.next += 1;
+        }
         let mut receiver_setup = Vec::new();
         for (dispatch, name, ty, labels) in receiver_captures {
             let value = Value {
@@ -580,14 +586,16 @@ impl Checker<'_> {
         };
         self.lambdas.borrow_mut().push(LambdaDecl {
             anonymous_methods: None,
+            anonymous_super: None,
             defaults,
             owner: owner.clone(),
             captures: fields,
             function: Function {
-                suspend_: false,
+                suspend_,
                 extension_receiver: false,
                 class_type_params: Vec::new(),
-                jvm_result: None,
+                jvm_result: suspend_
+                    .then(|| Type::Nullable(Box::new(Type::Java("java/lang/Object".into())))),
                 jvm_signature: None,
                 jvm_name: None,
                 annotations: Vec::new(),
@@ -1004,6 +1012,21 @@ impl Checker<'_> {
         &mut self,
         function: &syntax::Function,
     ) -> Result<(Vec<Statement>, bool)> {
+        if function.suspend_
+            && (!function.type_params.is_empty()
+                || function.receiver.is_some()
+                || function.defaults.iter().any(Option::is_some)
+                || function.vararg
+                || function.inline
+                || !function.annotations.is_empty()
+                || function
+                    .param_annotations
+                    .iter()
+                    .any(|annotations| !annotations.is_empty()))
+        {
+            return Err(Diagnostic::new(function.offset, "Generic, extension, defaulted, vararg, inline, and annotated local suspend functions are unsupported")
+                .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "SUSPEND_LOCAL_DECLARATION_SHAPE_UNSUPPORTED"));
+        }
         if !function.type_params.is_empty()
             || function.receiver.is_some()
             || function.defaults.iter().any(Option::is_some)
@@ -1060,9 +1083,16 @@ impl Checker<'_> {
         } else {
             self.resolve(&function.result, function.offset)?
         };
-        let ty = Type::Function {
-            params,
-            result: Box::new(result),
+        let ty = if function.suspend_ {
+            Type::SuspendFunction {
+                params,
+                result: Box::new(result),
+            }
+        } else {
+            Type::Function {
+                params,
+                result: Box::new(result),
+            }
         };
         let slot = self.declare(&function.name, ty.clone(), false, function.offset)?;
         let owner = Self::cell_owner(&ty);
@@ -1100,6 +1130,23 @@ impl Checker<'_> {
             },
         };
         let value = self.lambda_context(&expr, &ty, None, true, Some(&function.name))?;
+        if function.suspend_
+            && self.lambdas.borrow().last().is_some_and(|lambda| {
+                lambda
+                    .captures
+                    .iter()
+                    .any(|(name, _)| name == &function.name)
+            })
+        {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Recursive local suspend functions are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "SUSPEND_LOCAL_RECURSION_UNSUPPORTED",
+            ));
+        }
         body.push(self.cell_store(cell, ty, value, function.offset)?);
         Ok((body, false))
     }

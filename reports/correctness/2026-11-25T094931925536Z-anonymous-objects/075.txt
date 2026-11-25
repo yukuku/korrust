@@ -1,0 +1,5 @@
+$ /workspace/work/big-anon/references/kotlinc/bin/kotlinc /workspace/work/big-anon/tests/anonymous_objects/boundaries/Missing.kt -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -module-name anonymous_objects -cp /workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/big-anon/target/checks/2026-11-25T094931925536Z-anonymous-objects/boundaries/Missing/official
+tests/anonymous_objects/boundaries/Missing.kt:1:60: error: class '<anonymous>' is not abstract and does not implement abstract member:
+fun m(): Int
+interface A { fun n(): Int; fun m(): Int }; fun bad(): A = object : A { override fun n(): Int = 1 }
+                                                           ^^^^^^

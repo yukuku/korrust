@@ -481,6 +481,7 @@ mod tests {
             functions: vec![top_function],
             lambdas: vec![LambdaDecl {
                 anonymous_methods: None,
+                anonymous_super: None,
                 defaults: Vec::new(),
                 owner: "FileKt$lambda$1".into(),
                 captures: Vec::new(),

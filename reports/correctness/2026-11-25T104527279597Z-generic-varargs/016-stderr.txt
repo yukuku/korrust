@@ -1,0 +1,3 @@
+reports/correctness/2026-11-25T104527279597Z-generic-varargs/sources/vararg-alias-write.kt:1:77: error: receiver type 'Array<out T (of fun <T> bad)>' contains out projection which prohibits the use of 'fun set(index: Int, value: T): Unit'.
+class Box<C> { fun <T> bad(x:T, vararg items:T) { val alias=items; alias[0]=x } }
+                                                                            ^

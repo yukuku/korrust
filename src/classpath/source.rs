@@ -69,6 +69,7 @@ pub(super) fn resolve(ty: &Type, module: &Module, cp: &Classpath) -> Type {
         Type::List(t) => Type::List(Box::new(resolve(t, module, cp))),
         Type::MutableList(t) => Type::MutableList(Box::new(resolve(t, module, cp))),
         Type::Array(t) => Type::Array(Box::new(resolve(t, module, cp))),
+        Type::OutArray(t) => Type::OutArray(Box::new(resolve(t, module, cp))),
         Type::ThreadLocal(t) => Type::Parameterized {
             name: "java/lang/ThreadLocal".into(),
             arguments: vec![TypeArgument {

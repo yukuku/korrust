@@ -266,6 +266,24 @@ pub(crate) enum InlineConstant {
 }
 
 impl JavaMethod {
+    pub(crate) fn inherit_defaults(&mut self, parent: &JavaMethod) {
+        if !self.instance_dispatch()
+            || !parent.instance_dispatch()
+            || parent.access & 2 != 0
+            || self.name.starts_with('<')
+            || self.source_property.is_some()
+            || parent.source_property.is_some()
+        {
+            return;
+        }
+        if let (Some(params), Some(inherited)) = (&mut self.kotlin_params, &parent.kotlin_params) {
+            if params.len() == inherited.len() {
+                for (param, inherited) in params.iter_mut().zip(inherited) {
+                    param.2 |= inherited.2;
+                }
+            }
+        }
+    }
     pub(crate) fn instance_dispatch(&self) -> bool {
         self.access & 8 == 0
             || self
@@ -614,6 +632,13 @@ impl Classpath {
             .insert(owner.into(), (identity.into(), facade));
     }
 
+    pub(crate) fn is_source_facade(&self, owner: &str) -> bool {
+        self.source_files
+            .borrow()
+            .get(owner)
+            .is_some_and(|(_, facade)| *facade)
+    }
+
     pub(crate) fn same_source_file(&self, first: &str, second: &str) -> bool {
         let files = self.source_files.borrow();
         files
@@ -765,6 +790,7 @@ impl Classpath {
             | Type::List(ty)
             | Type::MutableList(ty)
             | Type::Array(ty)
+            | Type::OutArray(ty)
             | Type::ThreadLocal(ty) => self.check_type_visibility(caller, ty, offset)?,
             Type::Function { params, result } | Type::SuspendFunction { params, result } => {
                 for ty in params {
@@ -1400,10 +1426,26 @@ impl Classpath {
             }
             let class = cp.load(name)?;
             for method in class.methods {
-                if !methods
+                if let Some(index) = methods
                     .iter()
-                    .any(|m| m.name == method.name && m.descriptor == method.descriptor)
+                    .position(|m| m.name == method.name && m.descriptor == method.descriptor)
                 {
+                    if methods[index].access & 0x40 != 0
+                        && method.access & 0x40 == 0
+                        && method
+                            .kotlin_params
+                            .as_ref()
+                            .is_some_and(|params| params.iter().any(|param| param.2))
+                    {
+                        crate::check::inherit_bridge_defaults(
+                            cp,
+                            &methods[index].clone(),
+                            &method,
+                            methods,
+                        )?;
+                    }
+                    methods[index].inherit_defaults(&method);
+                } else {
                     methods.push(method);
                 }
             }

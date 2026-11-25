@@ -1,0 +1,8 @@
+reports/correctness/2026-11-25T104649991224Z-generic-interface-varargs/sources/interface-vararg-bound.kt:3:1: error: class 'Impl' is not abstract and does not implement abstract member:
+fun <T : Label> count(vararg items: T): Int
+class Impl<C>:Api<C> { override fun <R> count(vararg items:R):Int=items.size }
+^^^^^^^^^^
+reports/correctness/2026-11-25T104649991224Z-generic-interface-varargs/sources/interface-vararg-bound.kt:3:24: error: 'count' overrides nothing. Potential signatures for overriding:
+fun <T : Label> count(vararg items: T): Int
+class Impl<C>:Api<C> { override fun <R> count(vararg items:R):Int=items.size }
+                       ^^^^^^^^

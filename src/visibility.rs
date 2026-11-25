@@ -46,6 +46,7 @@ struct FunctionInfo {
     params: Vec<(String, Type)>,
     result: Type,
     is_static: bool,
+    suspend_: bool,
     defaults: bool,
     mask_count: usize,
 }
@@ -59,6 +60,7 @@ impl FunctionInfo {
             params: function.params.clone(),
             result: function.result.clone(),
             is_static,
+            suspend_: function.suspend_,
             defaults: function.defaults.iter().any(Option::is_some),
             mask_count: function.value_parameter_count().div_ceil(32),
         }
@@ -317,7 +319,14 @@ impl Planner<'_> {
             }
         }
         let info = self.functions.get(key).cloned();
-        let (params, result) = if let Some(info) = info {
+        let (params, result) = if let Some(mut info) = info {
+            if info.suspend_ {
+                info.params.push((
+                    "$completion".into(),
+                    Type::continuation(&info.result, syntax::Variance::In),
+                ));
+                info.result = Type::Nullable(Box::new(Type::Java("java/lang/Object".into())));
+            }
             (info.params, info.result)
         } else {
             let (mut params, result) =
@@ -369,6 +378,22 @@ impl Planner<'_> {
                     return Ok(());
                 };
                 let key = info.key();
+                if info.suspend_ {
+                    if let Some(mut method) = self.methods.get(&key).cloned() {
+                        let target = self
+                            .call_bridge(&key, caller)?
+                            .unwrap_or_else(|| (key.0.clone(), self.physical(&key), key.2.clone()));
+                        method.owner = target.0;
+                        method.name = target.1;
+                        method.descriptor = target.2;
+                        method.access = 0x0009;
+                        value.kind = ValueKind::JavaCall {
+                            method,
+                            args: std::mem::take(args),
+                        };
+                    }
+                    return Ok(());
+                }
                 if let Some(bridge) = self.call_bridge(&key, caller)? {
                     value.kind = Self::static_call(bridge, std::mem::take(args));
                 } else if caller != info.owner || self.physical(&key) != info.name {
@@ -429,7 +454,18 @@ impl Planner<'_> {
                     method.descriptor.clone(),
                 );
                 if let Some(bridge) = self.call_bridge(&key, caller)? {
-                    value.kind = Self::static_call(bridge, std::mem::take(args));
+                    if method
+                        .library
+                        .as_ref()
+                        .is_some_and(|library| library.suspend_)
+                    {
+                        method.owner = bridge.0;
+                        method.name = bridge.1;
+                        method.descriptor = bridge.2;
+                        method.access = 0x0009;
+                    } else {
+                        value.kind = Self::static_call(bridge, std::mem::take(args));
+                    }
                 } else {
                     method.name = self.physical(&key);
                 }

@@ -252,7 +252,7 @@ fn parameter_checks(
 
 fn abstract_method(pool: &mut Pool, function: &crate::check::Function) -> Result<Vec<u8>> {
     let mut method = Vec::new();
-    u2(&mut method, 0x0401);
+    u2(&mut method, 0x0401 | if function.vararg { 0x80 } else { 0 });
     u2(&mut method, pool.utf8(function.jvm_name())?);
     u2(&mut method, pool.utf8(&function.descriptor())?);
     let signature = generic_function(function);

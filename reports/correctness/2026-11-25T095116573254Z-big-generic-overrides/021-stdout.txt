@@ -1,0 +1,295 @@
+Classfile /workspace/work/big-generic/target/checks/2026-11-25T095116573254Z-big-generic-overrides/candidate/genericdispatch/Impl.class
+  Last modified Nov 25, 2026; size 2263 bytes
+  SHA-256 checksum 6545427c1ce91c1318611ae31858774f1cd648bceab535722bafbceea6b601d4
+  Compiled from "Overrides.kt"
+public final class genericdispatch.Impl<C extends java.lang.Object> extends java.lang.Object implements genericdispatch.Api<C>
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // genericdispatch/Impl
+  super_class: #4                         // java/lang/Object
+  interfaces: 1, fields: 1, methods: 6, attributes: 3
+Constant pool:
+   #1 = Utf8               genericdispatch/Impl
+   #2 = Class              #1             // genericdispatch/Impl
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               genericdispatch/Api
+   #6 = Class              #5             // genericdispatch/Api
+   #7 = Utf8               seed
+   #8 = Utf8               Ljava/lang/Object;
+   #9 = Utf8               Signature
+  #10 = Utf8               TC;
+  #11 = Utf8               <init>
+  #12 = Utf8               ()V
+  #13 = NameAndType        #11:#12        // "<init>":()V
+  #14 = Methodref          #4.#13         // java/lang/Object."<init>":()V
+  #15 = NameAndType        #7:#8          // seed:Ljava/lang/Object;
+  #16 = Fieldref           #2.#15         // genericdispatch/Impl.seed:Ljava/lang/Object;
+  #17 = Utf8               (Ljava/lang/Object;)V
+  #18 = Utf8               Code
+  #19 = Utf8               (TC;)V
+  #20 = Utf8               java/lang/Throwable
+  #21 = Class              #20            // java/lang/Throwable
+  #22 = Utf8               StackMapTable
+  #23 = Utf8               echo
+  #24 = Utf8               (Ljava/lang/Object;)Ljava/lang/Object;
+  #25 = Utf8               <R:Ljava/lang/Object;>(TR;)TR;
+  #26 = Utf8               value
+  #27 = String             #26            // value
+  #28 = Utf8               kotlin/jvm/internal/Intrinsics
+  #29 = Class              #28            // kotlin/jvm/internal/Intrinsics
+  #30 = Utf8               checkNotNullParameter
+  #31 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+  #32 = NameAndType        #30:#31        // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #33 = Methodref          #29.#32        // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #34 = Utf8               bounded
+  #35 = Utf8               (Lgenericdispatch/Label;)Lgenericdispatch/Label;
+  #36 = Utf8               <R::Lgenericdispatch/Label;>(TR;)TR;
+  #37 = Utf8               RuntimeInvisibleAnnotations
+  #38 = Utf8               Lorg/jetbrains/annotations/NotNull;
+  #39 = Utf8               RuntimeInvisibleParameterAnnotations
+  #40 = Utf8               genericdispatch/Label
+  #41 = Class              #40            // genericdispatch/Label
+  #42 = Utf8               java/lang/String
+  #43 = Class              #42            // java/lang/String
+  #44 = Utf8               choose
+  #45 = Utf8               <R:Ljava/lang/Object;>(TR;)TC;
+  #46 = Utf8               take
+  #47 = Utf8               (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+  #48 = Utf8               <R:Ljava/lang/Object;>(TC;TR;)TR;
+  #49 = Utf8               getSeed
+  #50 = Utf8               ()Ljava/lang/Object;
+  #51 = Utf8               ()TC;
+  #52 = Utf8               <C:Ljava/lang/Object;>Ljava/lang/Object;Lgenericdispatch/Api<TC;>;
+  #53 = Utf8               SourceFile
+  #54 = Utf8               Overrides.kt
+  #55 = Utf8               Lkotlin/Metadata;
+  #56 = Utf8               mv
+  #57 = Integer            2
+  #58 = Integer            3
+  #59 = Integer            0
+  #60 = Utf8               k
+  #61 = Integer            1
+  #62 = Utf8               xi
+  #63 = Integer            48
+  #64 = Utf8               d1
+  #65 = Utf8               \u0000\b\n\u0002\b\u0013\n\u0002\b\u0001\b\u0006\u0018\u0000*\u0006\b\u0000\u0010\u0001 \u00022\n\u0012\u0006\b\u0002\u0012\u00028\u00000\u0002B\u0011\b\u0006\u0012\u0006\u0010\u0003\u001a\u00028\u0000¢\u0006\u0004\b\u0004\u0010\u0005J\u001fH\u0016\u0010\u0006\"\u0006\b\u0001\u0010\u0007 \u0002\u001a\u00028\u00012\u0006\u0010\b\u001a\u00028\u0001¢\u0006\u0004\b\u0006\u0010\tJ#H\u0016\u0010\n\"\n\b\u0001\u0010\u0007 \u0002*\u00020\u000b\u001a\u00028\u00012\u0006\u0010\b\u001a\u00028\u0001¢\u0006\u0004\b\n\u0010\fJ\u001fH\u0016\u0010\r\"\u0006\b\u0001\u0010\u0007 \u0002\u001a\u00028\u00002\u0006\u0010\b\u001a\u00028\u0001¢\u0006\u0004\b\r\u0010\tJ\'H\u0016\u0010\u000e\"\u0006\b\u0001\u0010\u0007 \u0002\u001a\u00028\u00012\u0006\u0010\u0003\u001a\u00028\u00002\u0006\u0010\b\u001a\u00028\u0001¢\u0006\u0004\b\u000e\u0010\u000fR\u0018X\u0086\u0004\u0010\u0003\u001a\u00028\u0000¢\u0006\f\n\u0004\b\u0003\u0010\u0010\u001a\u0004\b\u0011\u0010\u0012¨\u0006\u0013
+  #66 = Utf8               d2
+  #67 = Utf8               C
+  #68 = Utf8               R
+  #69 = Utf8               generic_capture
+  #70 = Utf8               RuntimeVisibleAnnotations
+{
+  private final C seed;
+    descriptor: Ljava/lang/Object;
+    flags: (0x0012) ACC_PRIVATE, ACC_FINAL
+    Signature: #10                          // TC;
+
+  public genericdispatch.Impl(C);
+    descriptor: (Ljava/lang/Object;)V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=6, locals=2, args_size=2
+         0: aload_0
+         1: invokespecial #14                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: aload         1
+         7: putfield      #16                 // Field seed:Ljava/lang/Object;
+        10: return
+        11: nop
+        12: athrow
+      StackMapTable: number_of_entries = 7
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this, class java/lang/Object ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class genericdispatch/Impl, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class genericdispatch/Impl, class java/lang/Object ]
+          stack = [ class genericdispatch/Impl ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class genericdispatch/Impl, class java/lang/Object ]
+          stack = [ class genericdispatch/Impl, class java/lang/Object ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class genericdispatch/Impl, class java/lang/Object ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class genericdispatch/Impl, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class genericdispatch/Impl, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+    Signature: #19                          // (TC;)V
+
+  public <R extends java.lang.Object> R echo(R);
+    descriptor: (Ljava/lang/Object;)Ljava/lang/Object;
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload         1
+         2: areturn
+         3: nop
+         4: athrow
+      StackMapTable: number_of_entries = 3
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class genericdispatch/Impl, class java/lang/Object ]
+          stack = [ class java/lang/Object ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class genericdispatch/Impl, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class genericdispatch/Impl, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+    Signature: #25                          // <R:Ljava/lang/Object;>(TR;)TR;
+
+  public <R extends genericdispatch.Label> R bounded(R);
+    descriptor: (Lgenericdispatch/Label;)Lgenericdispatch/Label;
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload         1
+         2: ldc_w         #27                 // String value
+         5: invokestatic  #33                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         1
+        10: areturn
+        11: nop
+        12: athrow
+      StackMapTable: number_of_entries = 6
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class genericdispatch/Impl, class genericdispatch/Label ]
+          stack = [ class genericdispatch/Label ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class genericdispatch/Impl, class genericdispatch/Label ]
+          stack = [ class genericdispatch/Label, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class genericdispatch/Impl, class genericdispatch/Label ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class genericdispatch/Impl, class genericdispatch/Label ]
+          stack = [ class genericdispatch/Label ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class genericdispatch/Impl, class genericdispatch/Label ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class genericdispatch/Impl, class genericdispatch/Label ]
+          stack = [ class java/lang/Throwable ]
+    Signature: #36                          // <R::Lgenericdispatch/Label;>(TR;)TR;
+    RuntimeInvisibleAnnotations:
+      0: #38()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #38()
+          org.jetbrains.annotations.NotNull
+
+  public <R extends java.lang.Object> C choose(R);
+    descriptor: (Ljava/lang/Object;)Ljava/lang/Object;
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=6, locals=2, args_size=2
+         0: aload         0
+         2: getfield      #16                 // Field seed:Ljava/lang/Object;
+         5: areturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class genericdispatch/Impl, class java/lang/Object ]
+          stack = [ class genericdispatch/Impl ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class genericdispatch/Impl, class java/lang/Object ]
+          stack = [ class java/lang/Object ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class genericdispatch/Impl, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class genericdispatch/Impl, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+    Signature: #45                          // <R:Ljava/lang/Object;>(TR;)TC;
+
+  public <R extends java.lang.Object> R take(C, R);
+    descriptor: (Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=3, args_size=3
+         0: aload         2
+         2: areturn
+         3: nop
+         4: athrow
+      StackMapTable: number_of_entries = 3
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class genericdispatch/Impl, class java/lang/Object, class java/lang/Object ]
+          stack = [ class java/lang/Object ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class genericdispatch/Impl, class java/lang/Object, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class genericdispatch/Impl, class java/lang/Object, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+    Signature: #48                          // <R:Ljava/lang/Object;>(TC;TR;)TR;
+
+  public final C getSeed();
+    descriptor: ()Ljava/lang/Object;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #16                 // Field seed:Ljava/lang/Object;
+         5: areturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class genericdispatch/Impl ]
+          stack = [ class genericdispatch/Impl ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class genericdispatch/Impl ]
+          stack = [ class java/lang/Object ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class genericdispatch/Impl ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class genericdispatch/Impl ]
+          stack = [ class java/lang/Throwable ]
+    Signature: #51                          // ()TC;
+}
+Signature: #52                          // <C:Ljava/lang/Object;>Ljava/lang/Object;Lgenericdispatch/Api<TC;>;
+SourceFile: "Overrides.kt"
+RuntimeVisibleAnnotations:
+  0: #55(#56=[I#57,I#58,I#59],#60=I#61,#62=I#63,#64=[s#65],#66=[s#1,s#67,s#5,s#7,s#11,s#17,s#23,s#68,s#26,s#24,s#34,s#40,s#35,s#44,s#46,s#47,s#8,s#49,s#50,s#69])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u0013\n\u0002\b\u0001\b\u0006\u0018\u0000*\u0006\b\u0000\u0010\u0001 \u00022\n\u0012\u0006\b\u0002\u0012\u00028\u00000\u0002B\u0011\b\u0006\u0012\u0006\u0010\u0003\u001a\u00028\u0000¢\u0006\u0004\b\u0004\u0010\u0005J\u001fH\u0016\u0010\u0006\"\u0006\b\u0001\u0010\u0007 \u0002\u001a\u00028\u00012\u0006\u0010\b\u001a\u00028\u0001¢\u0006\u0004\b\u0006\u0010\tJ#H\u0016\u0010\n\"\n\b\u0001\u0010\u0007 \u0002*\u00020\u000b\u001a\u00028\u00012\u0006\u0010\b\u001a\u00028\u0001¢\u0006\u0004\b\n\u0010\fJ\u001fH\u0016\u0010\r\"\u0006\b\u0001\u0010\u0007 \u0002\u001a\u00028\u00002\u0006\u0010\b\u001a\u00028\u0001¢\u0006\u0004\b\r\u0010\tJ\'H\u0016\u0010\u000e\"\u0006\b\u0001\u0010\u0007 \u0002\u001a\u00028\u00012\u0006\u0010\u0003\u001a\u00028\u00002\u0006\u0010\b\u001a\u00028\u0001¢\u0006\u0004\b\u000e\u0010\u000fR\u0018X\u0086\u0004\u0010\u0003\u001a\u00028\u0000¢\u0006\f\n\u0004\b\u0003\u0010\u0010\u001a\u0004\b\u0011\u0010\u0012¨\u0006\u0013"]
+      d2=["genericdispatch/Impl","C","genericdispatch/Api","seed","<init>","(Ljava/lang/Object;)V","echo","R","value","(Ljava/lang/Object;)Ljava/lang/Object;","bounded","genericdispatch/Label","(Lgenericdispatch/Label;)Lgenericdispatch/Label;","choose","take","(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;","Ljava/lang/Object;","getSeed","()Ljava/lang/Object;","generic_capture"]
+    )

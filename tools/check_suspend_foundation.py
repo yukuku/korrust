@@ -53,7 +53,7 @@ def main():
                   cases=[], commands=[], reproduction_command=['python3', relative(__file__), '--candidate', relative(candidate), '--output', relative(directory)],
                   runtime_boxing_oracle=dict(source='references/kotlin/libraries/stdlib/jvm/src/kotlin/coroutines/jvm/internal/boxing.kt', source_sha256=sha(ROOT / 'references/kotlin/libraries/stdlib/jvm/src/kotlin/coroutines/jvm/internal/boxing.kt'), evidence='Java asserts coroutine Int input/result wrappers, boxed Any local, listOf element and nullable-call input are fresh, while a separate ordinary boxing function retains Integer.valueOf cache identity'),
                   scope='Bounded suspend functions with real delayed continuation resumption, saved state, ordinary source/compiled suspend calls, function types, public JVM ABI and logical Kotlin metadata',
-                  limitations=['Source suspend lambdas/references/conversions, suspend member/extension/generic/default/vararg/inline declarations and nested suspension control flow are unsupported', 'Imported suspend inline/default-mask/member calls are unsupported', 'Nullable Unit and Unit-valued suspend callback parameters are unsupported; no source generic kotlin.Result/value-class support or frame DebugMetadata/debugger/stacktrace equivalence claim', 'Public logical function ABI and metadata are compared; generated frame names and spill layouts need not match', 'Authored dependency is an identical external library classpath for both providers; unchanged upstream CoroutineHelpers.kt must be compiled separately by the upstream adapter'])
+                  limitations=['Source suspend lambdas/function-value conversions and constructor references, suspend member/extension/generic/default/vararg/inline declarations and nested suspension control flow are unsupported', 'Imported suspend inline/default-mask/member calls are unsupported', 'Nullable Unit and Unit-valued suspend callback parameters are unsupported; no source generic kotlin.Result/value-class support or frame DebugMetadata/debugger/stacktrace equivalence claim', 'Public logical function ABI and metadata are compared; generated frame names and spill layouts need not match', 'Authored dependency is an identical external library classpath for both providers; unchanged upstream CoroutineHelpers.kt must be compiled separately by the upstream adapter'])
     options = ['-language-version', '2.3', '-api-version', '2.3', '-jvm-target', '1.8']
 
     def save():
@@ -173,7 +173,7 @@ def main():
         'suspend fun bounded(value: Int = 1): Int = value',
         'class Member { private suspend fun bounded(): String = "x" }',
         'suspend fun bounded(step: suspend () -> String): String { val value: suspend () -> String = { "x" }; return step() }',
-        'suspend fun original(): String = "x"\nfun bounded(): suspend () -> String = ::original',
+        'class C; fun bounded(): suspend () -> C = ::C',
         'suspend fun bounded(step: suspend () -> String): String = step() + step()',
         'suspend fun bounded(step: suspend (Unit) -> String): String = step(Unit)',
         'suspend fun bounded(): Unit? = null',

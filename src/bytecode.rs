@@ -133,7 +133,7 @@ fn generic_type(ty: &Type) -> String {
         Type::List(inner) | Type::MutableList(inner) => {
             format!("Ljava/util/List<{}>;", generic_argument(inner))
         }
-        Type::Array(inner) => format!("[{}", generic_argument(inner)),
+        Type::Array(inner) | Type::OutArray(inner) => format!("[{}", generic_argument(inner)),
         Type::SuspendFunction { params, result } => {
             generic_type(&Type::suspend_runtime(params, result))
         }
@@ -308,6 +308,7 @@ fn erase_generic_variables(ty: &Type) -> Type {
         Type::Nullable(t) => Type::Nullable(Box::new(erase_generic_variables(t))),
         Type::Platform(t) => Type::Platform(Box::new(erase_generic_variables(t))),
         Type::Array(t) => Type::Array(Box::new(erase_generic_variables(t))),
+        Type::OutArray(t) => Type::OutArray(Box::new(erase_generic_variables(t))),
         Type::List(t) => Type::List(Box::new(erase_generic_variables(t))),
         Type::MutableList(t) => Type::MutableList(Box::new(erase_generic_variables(t))),
         Type::Parameterized { name, arguments } => Type::Parameterized {
@@ -371,7 +372,9 @@ fn generic_function(function: &crate::check::Function) -> Option<String> {
     }
     fn scoped(ty: &Type, names: &[&str], argument: bool) -> String {
         match ty {
-            Type::Array(inner) => format!("[{}", scoped(inner, names, true)),
+            Type::Array(inner) | Type::OutArray(inner) => {
+                format!("[{}", scoped(inner, names, true))
+            }
             Type::ReceiverFunction {
                 receiver,
                 params,
@@ -634,7 +637,13 @@ fn array_load_opcode(array: &Type) -> Result<u8> {
         Some(Type::Byte | Type::Boolean) => Ok(0x33),
         Some(Type::Short) => Ok(0x35),
         Some(Type::Char) => Ok(0x34),
-        _ if matches!(array.base(), Type::Array(_) | Type::StringArray) => Ok(0x32),
+        _ if matches!(
+            array.base(),
+            Type::Array(_) | Type::OutArray(_) | Type::StringArray
+        ) =>
+        {
+            Ok(0x32)
+        }
         _ => Err(failure("Unsupported array component")),
     }
 }
@@ -1255,7 +1264,9 @@ impl Code<'_> {
     }
     fn allocate_array(&mut self, ty: &Type) -> Result<()> {
         match ty.base() {
-            Type::Array(element) => self.class_reference(0xbd, &cast_class(element)?),
+            Type::Array(element) | Type::OutArray(element) => {
+                self.class_reference(0xbd, &cast_class(element)?)
+            }
             Type::StringArray => self.class_reference(0xbd, "java/lang/String"),
             _ => {
                 self.bytes.extend([0xbc, primitive_array_type(ty)?]);
@@ -2425,7 +2436,7 @@ impl Code<'_> {
                     return Ok(());
                 }
                 self.bytes.push(array_load_opcode(&array.ty)?);
-                if matches!(array.ty.base(), Type::Array(_)) {
+                if matches!(array.ty.base(), Type::Array(_) | Type::OutArray(_)) {
                     self.generic_result(&value.ty)?;
                 }
             }
@@ -2677,7 +2688,9 @@ impl Code<'_> {
                     self.value(array)?;
                     self.value(index)?;
                     self.value(value)?;
-                    if matches!(array.ty.base(), Type::Array(_)) && !value.ty.is_reference() {
+                    if matches!(array.ty.base(), Type::Array(_) | Type::OutArray(_))
+                        && !value.ty.is_reference()
+                    {
                         self.box_value(&value.ty)?;
                     }
                     self.bytes.push(array_store_opcode(&array.ty)?);
@@ -2832,7 +2845,7 @@ impl Code<'_> {
                             self.method_reference(0xb6, "java/lang/String", "charAt", "(I)C")?;
                         } else {
                             self.bytes.push(array_load_opcode(&iterable.ty)?);
-                            if matches!(iterable.ty.base(), Type::Array(_)) {
+                            if matches!(iterable.ty.base(), Type::Array(_) | Type::OutArray(_)) {
                                 self.generic_result(&element)?;
                             }
                         }
@@ -4748,7 +4761,10 @@ fn emit_class_with(
                 ));
             }
             let mut method = Vec::new();
-            u2(&mut method, access | 0x0400);
+            u2(
+                &mut method,
+                access | 0x0400 | if function.vararg { 0x80 } else { 0 },
+            );
             u2(&mut method, pool.utf8(function.jvm_name())?);
             u2(&mut method, pool.utf8(&function.descriptor())?);
             let signature = generic_function(function);
@@ -4846,6 +4862,7 @@ fn emit_class_with(
             access | 0x0010,
         )?);
         let flags = access
+            | if function.vararg { 0x80 } else { 0 }
             | if class.open_methods.contains(&key) || function.is_override {
                 0
             } else {

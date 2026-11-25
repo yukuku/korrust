@@ -1,0 +1,87 @@
+[
+  {
+    "id": "wrong-default",
+    "source": "class Box<C> { fun <T> f(x:T=\"bad\"):T=x }"
+  },
+  {
+    "id": "nonnull-default",
+    "source": "class Box<C> { fun <T:Any> f(x:T=null):T=x }"
+  },
+  {
+    "id": "class-default",
+    "source": "class Box<C> { fun <T> f(x:T, y:C=x):C=y }"
+  },
+  {
+    "id": "later-default",
+    "source": "class Box<C> { fun <T> f(x:T=y, y:T):T=x }"
+  },
+  {
+    "id": "explicit-member-bound",
+    "source": "interface Label\nclass Box<C> { fun <T:Label> fallback(value:T?=null):T?=value }\nfun bad():String?=Box<String>().fallback<String>()"
+  },
+  {
+    "id": "explicit-member-arity",
+    "source": "class Box<C> { fun <T> fallback(value:T?=null):T?=value }\nfun bad():String?=Box<String>().fallback<String,Int>()"
+  },
+  {
+    "id": "nullable-explicit-member",
+    "source": "class Box<C> { fun <T> fallback(value:T?=null):T?=value }\nfun bad(box:Box<String>?):String?=box.fallback<String>()"
+  },
+  {
+    "id": "vararg-write",
+    "family": "varargs",
+    "source": "class Box<C> { fun <T> bad(x:T, vararg items:T) { items[0]=x } }"
+  },
+  {
+    "id": "vararg-alias-write",
+    "family": "varargs",
+    "source": "class Box<C> { fun <T> bad(x:T, vararg items:T) { val alias=items; alias[0]=x } }"
+  },
+  {
+    "id": "vararg-escape",
+    "family": "varargs",
+    "source": "fun <T> mutate(items:Array<T>, value:T) { items[0]=value }\nclass Box<C> { fun <T> bad(x:T, vararg items:T) { mutate(items,x) } }"
+  },
+  {
+    "id": "vararg-bound",
+    "family": "varargs",
+    "source": "interface Label\nclass Box<C> { fun <T:Label> first(vararg items:T):T=items[0] }\nfun bad():String=Box<Int>().first(\"bad\")"
+  },
+  {
+    "id": "vararg-class-component",
+    "family": "varargs",
+    "source": "class Box<C> { fun <T> first(ignored:T, vararg items:C):C=items[0] }\nfun bad():String=Box<String>().first(1,2)"
+  },
+  {
+    "id": "vararg-primitive-spread",
+    "family": "varargs",
+    "source": "class Box<C> { fun <T> first(vararg items:T):T=items[0] }\nfun bad(x:IntArray):Int=Box<String>().first(*x)"
+  },
+  {
+    "id": "interface-vararg-nullability",
+    "family": "interface-varargs",
+    "source": "interface Api<C> { fun <T> count(vararg items:T):Int }\nclass Impl<C>:Api<C> { override fun <R> count(vararg items:R?):Int=items.size }"
+  },
+  {
+    "id": "interface-vararg-bound",
+    "family": "interface-varargs",
+    "source": "interface Label\ninterface Api<C> { fun <T:Label> count(vararg items:T):Int }\nclass Impl<C>:Api<C> { override fun <R> count(vararg items:R):Int=items.size }"
+  },
+  {
+    "id": "interface-vararg-class-component",
+    "family": "interface-varargs",
+    "source": "interface Api<C> { fun <T> pick(ignored:T, vararg items:C):C }\nclass Impl:Api<String> { override fun <R> pick(ignored:R, vararg items:Int):String=\"bad\" }"
+  },
+  {
+    "id": "interface-vararg-call-bound",
+    "family": "interface-varargs",
+    "source": "interface Label\ninterface Api<C> { fun <T:Label> first(vararg items:T):T }\nfun bad(api:Api<String>):String=api.first(\"bad\")"
+  },
+  {
+    "id": "interface-vararg-body",
+    "family": "interface-varargs",
+    "official": "accept",
+    "code": "GENERIC_INTERFACE_VARARG_BODY_UNSUPPORTED",
+    "source": "interface Api { fun <T> count(vararg items:T):Int=items.size }"
+  }
+]

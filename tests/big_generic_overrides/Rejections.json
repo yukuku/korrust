@@ -1,0 +1,8 @@
+[
+ {"id":"parameter-count", "source":"interface Api { fun <T> echo(x:T):T }\nclass Bad:Api { override fun <A,B> echo(x:A):A=x }"},
+ {"id":"missing-parameter", "source":"interface Api { fun <T> echo(x:T):T }\nclass Bad:Api { override fun echo(x:Any?):Any?=x }"},
+ {"id":"parameter-order", "source":"interface Api { fun <A,B> echo(x:A,y:B):A }\nclass Bad:Api { override fun <X,Y> echo(x:X,y:Y):Y=y }"},
+ {"id":"widen-result", "source":"interface Api { fun <T> echo(x:T):T }\nclass Bad:Api { override fun <R> echo(x:R):Any?=x }"},
+ {"id":"change-bound", "source":"interface Api { fun <T:Any> echo(x:T):T }\nclass Bad:Api { override fun <R> echo(x:R):R=x }"},
+ {"id":"interface-bound", "source":"interface Api { fun <T:Any> echo(x:T):T }\ninterface Bad:Api { override fun <R> echo(x:R):R }"}
+]

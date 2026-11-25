@@ -128,6 +128,7 @@ fn expand_at(
         }
         Type::Platform(t) => Type::Platform(Box::new(recurse(t)?)),
         Type::Array(t) => Type::Array(Box::new(recurse(t)?)),
+        Type::OutArray(t) => Type::OutArray(Box::new(recurse(t)?)),
         Type::List(t) => Type::List(Box::new(recurse(t)?)),
         Type::MutableList(t) => Type::MutableList(Box::new(recurse(t)?)),
         Type::ThreadLocal(t) => Type::ThreadLocal(Box::new(recurse(t)?)),
@@ -216,6 +217,7 @@ fn substitute(ty: &Type, arguments: &HashMap<String, TypeArgument>) -> Result<Ty
         }
         Type::Platform(t) => Type::Platform(Box::new(recurse(t)?)),
         Type::Array(t) => Type::Array(Box::new(recurse(t)?)),
+        Type::OutArray(t) => Type::OutArray(Box::new(recurse(t)?)),
         Type::List(t) => Type::List(Box::new(recurse(t)?)),
         Type::MutableList(t) => Type::MutableList(Box::new(recurse(t)?)),
         Type::ThreadLocal(t) => Type::ThreadLocal(Box::new(recurse(t)?)),

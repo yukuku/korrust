@@ -438,6 +438,7 @@ impl Checker<'_> {
             Type::Nullable(inner)
             | Type::Platform(inner)
             | Type::Array(inner)
+            | Type::OutArray(inner)
             | Type::List(inner)
             | Type::MutableList(inner)
             | Type::ThreadLocal(inner) => {
@@ -723,6 +724,7 @@ impl Checker<'_> {
                     ty,
                     Type::Parameterized { .. }
                         | Type::Array(_)
+                        | Type::OutArray(_)
                         | Type::StringArray
                         | Type::List(_)
                         | Type::MutableList(_)

@@ -1,0 +1,4 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /workspace/korrust/tests/fixtures/suspend_references/Consumer.kt -cp /workspace/korrust/target/checks/2026-11-25T104836551451Z-suspend-references/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/korrust/target/checks/2026-11-25T104836551451Z-suspend-references/consumer-official -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/fixtures/suspend_references/Consumer.kt:14:33: warning: the corresponding parameter in the supertype 'Continuation' is named 'result'. This may cause problems when calling this function with named arguments.
+        override fun resumeWith(value: Result<String>) { result = value.getOrThrow() }
+                                ^^^^^

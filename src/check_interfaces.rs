@@ -265,6 +265,16 @@ fn register_classes(
     }
     for method in &source.methods {
         let function = &method.function;
+        if function.vararg && !function.type_params.is_empty() && method.has_body {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Generic source interface vararg bodies are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "GENERIC_INTERFACE_VARARG_BODY_UNSUPPORTED",
+            ));
+        }
         declarations::validate_member_generics(
             function,
             method.is_override,
@@ -424,7 +434,8 @@ fn register_classes(
                         result.descriptor()
                     }
                 ),
-                access: if method.has_body { 1 } else { 0x0401 },
+                access: (if method.has_body { 1 } else { 0x0401 })
+                    | if function.vararg { 0x80 } else { 0 },
                 unsupported: false,
                 source_property: None,
             },
@@ -808,6 +819,7 @@ fn check_interface(
             classes,
         )?;
         function.suspend_ = source_function.suspend_;
+        function.vararg = source_function.vararg;
         if method.is_override && operator_checker.inherited_operator(signature, class) {
             operator_offsets.insert(source_function.offset);
         }
@@ -968,6 +980,16 @@ fn check_override(
         Some(parent)
             if is_override
                 && method.descriptor == parent.descriptor
+                && declarations::override_generic_signature(
+                    parent,
+                    &class_method_types(method)?.0,
+                    &class_method_types(method)?.1,
+                    method
+                        .library
+                        .as_ref()
+                        .map(|l| l.type_parameters.as_slice())
+                        .unwrap_or(&[]),
+                )?
                 && method.source_property == parent.source_property =>
         {
             Ok(())

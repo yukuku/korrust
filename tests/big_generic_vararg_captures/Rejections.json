@@ -1,0 +1,5 @@
+[
+ {"id":"captured-array-escape", "source":"class Box<C> { fun <T> bad(vararg values:T):()->Array<T> = {values} }"},
+ {"id":"captured-array-write", "source":"class Box<C> { fun <T> bad(value:T,vararg values:T):()->Unit = {values[0]=value} }"},
+ {"id":"aliased-captured-array-write", "source":"class Box<C> { fun <T> bad(value:T,vararg values:T):()->Unit = {val copy=values;copy[0]=value} }"}
+]

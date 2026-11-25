@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-11-25T10:07:29.112532+00:00",
+  "compiler": {
+    "path": "/workspace/build/big-anon/debug/korrust",
+    "sha256": "8202c9d8e4503a1eff5df58ca262a2ad528cc26b8bc085ac11a3ca1c457853c0"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8"
+    ]
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_anonymous_subclasses.py",
+      "--compiler",
+      "/workspace/build/big-anon/debug/korrust",
+      "--exposure-only"
+    ]
+  ],
+  "kind": "features",
+  "status": "passed",
+  "evidence": [
+    "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses.json",
+    "reports/correctness/2026-11-25T094931925536Z-anonymous-objects.json"
+  ],
+  "features": [
+    {
+      "name": "Anonymous declaration identity and public inferred result validation",
+      "status": "supported",
+      "scope": "Stable anonymous implementation identity across signature inference and lowering; explicit named public results and properties at file, class, object and companion scopes; private inferred multi-interface factories; public inferred anonymous intersection results rejected consistently with the pinned compiler. Source facades are excluded from captured instance receivers.",
+      "restrictions": [
+        "Nongeneric anonymous class/interface bases and override functions retain the previously recorded bounds.",
+        "Public signatures containing nested anonymous types require unsupported type approximation and reject explicitly.",
+        "Anonymous Kotlin metadata and reflection equivalence remain outside the supported scope."
+      ],
+      "evidence_report": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses.json",
+      "evidence_cases": [
+        "exposure/verify/official",
+        "exposure/verify/candidate",
+        "exposure/public-abi-and-fixed-caller",
+        "boundary/InvalidPublicClassProperty",
+        "boundary/InvalidPublicCompanionProperty",
+        "boundary/InvalidPublicFunction",
+        "boundary/InvalidPublicFunctionMember",
+        "boundary/InvalidPublicHiddenFunction",
+        "boundary/InvalidPublicObjectProperty",
+        "boundary/InvalidPublicProperty"
+      ]
+    }
+  ]
+}

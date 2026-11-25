@@ -174,7 +174,7 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 134. Enum entry-specific subclasses, abstract/open method and interface dispatch, constructor defaults and named arguments, with JVM signatures and Kotlin metadata.
 135. Named inner classes with a stored enclosing instance, outer-state access, qualified construction, bounded constructor references, and JVM/Kotlin consumer metadata.
 136. Nongeneric single-field JVM value classes with Int, Long, String and nullable String carriers, nullable/generic/interface boxing, mangled JVM signatures, and Kotlin metadata.
-137. Bounded top-level suspend functions and suspend function parameters with real continuation state, up to eight sequential suspension points, delayed resumption and exception propagation, JVM signatures and Kotlin metadata.
+137. Bounded top-level suspend functions and suspend function parameters with continuation state across sequential suspension points, delayed resumption and exception propagation, JVM signatures and Kotlin metadata.
 138. UInt and ULong scalar literals, arithmetic, comparisons, bitwise operations, integral conversions and nullable/generic boxing through Kotlin value-class metadata and JVM carriers.
 139. Ordinary file annotations with argument and FILE-target validation, facade-only retention, and imported annotation definitions.
 140. Private nested ordinary and data classes with lexical access checks, public-exposure diagnostics, JVM nesting visibility and Kotlin metadata.
@@ -201,6 +201,10 @@ These are tested subsets; see the [feature reports](reports/features/) for limit
 161. Compound assignments on properties and indexed values, with checked operator selection and ordered evaluation.
 162. JVM wildcard signatures for supported uses of declaration-site variance.
 163. Independent method type parameters on generic source classifiers and supported generic interface dispatch.
+164. Anonymous subclasses of supported Kotlin and Java classes, including superclass constructor arguments, captures, method overrides and additional interfaces.
+165. Lambdas capturing classifier and method type parameters, generic method overrides with renamed parameters and erased bridges, and checked default and vararg arguments on supported generic members.
+166. Captured local suspend functions and expected-type suspend callable references, with continuation dispatch and delayed JVM resumption.
+167. Function-valued data class constructor properties and generated data methods for callback values.
 
 ## Project contract
 

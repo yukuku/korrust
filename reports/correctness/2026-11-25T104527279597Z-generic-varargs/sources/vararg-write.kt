@@ -1,0 +1,1 @@
+class Box<C> { fun <T> bad(x:T, vararg items:T) { items[0]=x } }

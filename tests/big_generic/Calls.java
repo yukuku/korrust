@@ -1,0 +1,1 @@
+public class Calls { public static void main(String[] args) { Box<String> b=new Box<>("C"); if(!b.capture().invoke().equals("C")||!b.freeze(12).invoke().equals(12)||!b.nested("T").invoke().invoke().equals("T")||!b.mutable("M").invoke().equals("M")) throw new AssertionError(); System.out.println("OK"); } }

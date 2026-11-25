@@ -24,6 +24,7 @@ pub enum Type {
     DoubleArray,
     StringArray,
     Array(Box<Type>),
+    OutArray(Box<Type>),
     ReceiverFunction {
         receiver: Box<Type>,
         params: Vec<Type>,
@@ -131,7 +132,7 @@ impl Type {
         self.primitive_array_element()
             .or_else(|| match self.base() {
                 Self::StringArray => Some(Self::String),
-                Self::Array(element) => Some(element.as_ref().clone()),
+                Self::Array(element) | Self::OutArray(element) => Some(element.as_ref().clone()),
                 _ => None,
             })
     }
@@ -183,6 +184,7 @@ impl Type {
                 | Self::DoubleArray
                 | Self::StringArray
                 | Self::Array(_)
+                | Self::OutArray(_)
                 | Self::ReceiverFunction { .. }
                 | Self::String
                 | Self::Java(_)
@@ -228,7 +230,7 @@ impl Type {
             Self::DoubleArray => "[D".into(),
 
             Self::StringArray => "[Ljava/lang/String;".into(),
-            Self::Array(element) => {
+            Self::Array(element) | Self::OutArray(element) => {
                 if **element == Self::Unit {
                     return "[Lkotlin/Unit;".into();
                 }
@@ -919,7 +921,7 @@ pub(crate) fn normalize_result_tail(body: &mut [Statement]) {
 #[derive(Clone, Debug)]
 pub enum ExprKind {
     AnonymousObject {
-        interface: Type,
+        supertypes: Vec<(Type, Option<Vec<Expr>>)>,
         methods: Vec<Function>,
     },
     AnnotationConstant {
@@ -999,7 +1001,15 @@ fn shift_expression_offsets(expression: &mut Expr, offset: usize) {
     while let Some(expression) = pending.pop() {
         expression.offset += offset;
         match &mut expression.kind {
-            ExprKind::AnonymousObject { methods, .. } => {
+            ExprKind::AnonymousObject {
+                supertypes,
+                methods,
+            } => {
+                for (_, args) in supertypes {
+                    if let Some(args) = args {
+                        pending.extend(args);
+                    }
+                }
                 for method in methods {
                     method.offset += offset;
                     shift_statement_offsets(&mut method.body, offset);
@@ -5522,16 +5532,6 @@ impl Parser {
                 ));
         } else if self.starts_declaration("fun") {
             let function = self.function()?;
-            if function.suspend_ {
-                return Err(Diagnostic::new(
-                    function.offset,
-                    "Local suspend function declarations are unsupported",
-                )
-                .with_kind(
-                    DiagnosticKind::UnsupportedLanguage,
-                    "SUSPEND_LOCAL_DECLARATION_UNSUPPORTED",
-                ));
-            }
             StatementKind::LocalFunction(Box::new(function))
         } else if self.at("val") || self.at("var") {
             let mutable = self.take("var");
@@ -6032,22 +6032,28 @@ impl Parser {
             self.lines();
             if !self.take(":") {
                 return Err(self
-                    .error("Anonymous objects require one interface in this subset")
+                    .error("Anonymous objects require a supported superclass or interface")
                     .with_kind(
                         DiagnosticKind::UnsupportedLanguage,
                         "ANONYMOUS_OBJECT_SHAPE_UNSUPPORTED",
                     ));
             }
             self.lines();
-            let interface = self.ty()?;
-            self.lines();
-            if self.at("(") || self.at(",") {
-                return Err(self
-                    .error("Anonymous class supertypes and multiple interfaces are unsupported")
-                    .with_kind(
-                        DiagnosticKind::UnsupportedLanguage,
-                        "ANONYMOUS_OBJECT_SHAPE_UNSUPPORTED",
-                    ));
+            let mut supertypes = Vec::new();
+            loop {
+                let ty = self.ty()?;
+                self.lines();
+                let arguments = if self.at("(") {
+                    Some(self.arguments()?)
+                } else {
+                    None
+                };
+                supertypes.push((ty, arguments));
+                self.lines();
+                if !self.take(",") {
+                    break;
+                }
+                self.lines();
             }
             self.expect("{")?;
             self.separators();
@@ -6081,7 +6087,10 @@ impl Parser {
             }
             return Self::bounded(Expr {
                 offset,
-                kind: ExprKind::AnonymousObject { interface, methods },
+                kind: ExprKind::AnonymousObject {
+                    supertypes,
+                    methods,
+                },
             });
         }
         let offset = self.token().offset;

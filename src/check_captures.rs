@@ -2,7 +2,17 @@ use super::*;
 
 pub(super) fn expression_names(expr: &Expr, names: &mut HashSet<String>) {
     match &expr.kind {
-        ExprKind::AnonymousObject { methods, .. } => {
+        ExprKind::AnonymousObject {
+            supertypes,
+            methods,
+        } => {
+            for (_, args) in supertypes {
+                if let Some(args) = args {
+                    for arg in args {
+                        expression_names(arg, names);
+                    }
+                }
+            }
             for method in methods {
                 names.extend(free_names(
                     &method.body,
@@ -15,7 +25,11 @@ pub(super) fn expression_names(expr: &Expr, names: &mut HashSet<String>) {
                 ));
             }
         }
-        ExprKind::Name(name) => {
+        ExprKind::Name(name)
+        | ExprKind::CallableReference {
+            receiver: None,
+            name,
+        } => {
             names.insert(name.clone());
         }
         ExprKind::Call(target, args) => {
@@ -400,7 +414,17 @@ pub(super) fn free_names(
 ) -> HashSet<String> {
     fn expression(expr: &Expr, bound: &HashSet<String>, free: &mut HashSet<String>) {
         match &expr.kind {
-            ExprKind::AnonymousObject { methods, .. } => {
+            ExprKind::AnonymousObject {
+                supertypes,
+                methods,
+            } => {
+                for (_, args) in supertypes {
+                    if let Some(args) = args {
+                        for arg in args {
+                            expression(arg, bound, free);
+                        }
+                    }
+                }
                 for method in methods {
                     let mut bound = bound.clone();
                     bound.insert("this".into());
@@ -408,7 +432,11 @@ pub(super) fn free_names(
                     body_names(&method.body, &mut bound, free);
                 }
             }
-            ExprKind::Name(name) => {
+            ExprKind::Name(name)
+            | ExprKind::CallableReference {
+                receiver: None,
+                name,
+            } => {
                 if !bound.contains(name) {
                     free.insert(name.clone());
                 }

@@ -2170,6 +2170,7 @@ impl Checker<'_> {
                     })
                     .map(|m| library::specialize_receiver(m, &receiver.ty, &class, self.classpath))
                     .collect::<Vec<_>>();
+                let methods = library::remove_overridden(methods, self.classpath);
                 if !methods.is_empty() {
                     match self.select_method(&methods, args, offset) {
                         Ok(method) => return self.member_call(method, receiver, args, offset),
@@ -2377,6 +2378,15 @@ impl Checker<'_> {
             ));
         }
         let element = match array.ty.base() {
+            Type::OutArray(_) => {
+                return Err(
+                    Diagnostic::new(offset, "Cannot write through an out-projected array")
+                        .with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "OUT_PROJECTED_ARRAY_WRITE",
+                        ),
+                );
+            }
             array if array.array_element().is_some() => array.array_element(),
             Type::List(_) => {
                 return Err(Diagnostic::new(

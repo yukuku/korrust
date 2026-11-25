@@ -7,76 +7,313 @@ fn unsupported(offset: usize, message: &str) -> Diagnostic {
     )
 }
 
-impl Checker<'_> {
-    pub(super) fn anonymous_object(
-        &mut self,
-        interface: &Type,
-        methods: &[syntax::Function],
-        offset: usize,
-    ) -> Result<Value> {
-        let interface = self.resolve(interface, offset)?;
-        let Type::Java(interface_owner) = &interface else {
-            return Err(unsupported(
+pub(super) fn check_exposed_types(source: &syntax::Module, classpath: &Classpath) -> Result<()> {
+    fn contains_anonymous(ty: &Type, classpath: &Classpath) -> bool {
+        if let Some(owner) = library::type_owner(ty) {
+            if classpath.is_source(owner)
+                && classpath
+                    .load(owner)
+                    .is_ok_and(|class| class.access & 0x1000 != 0 && !class.kotlin_class)
+            {
+                return true;
+            }
+        }
+        match ty {
+            Type::Nullable(inner)
+            | Type::Platform(inner)
+            | Type::List(inner)
+            | Type::MutableList(inner)
+            | Type::ThreadLocal(inner)
+            | Type::Array(inner) => contains_anonymous(inner, classpath),
+            Type::Parameterized { arguments, .. } => arguments
+                .iter()
+                .filter_map(|arg| arg.ty.as_ref())
+                .any(|ty| contains_anonymous(ty, classpath)),
+            Type::Function { params, result } => params
+                .iter()
+                .chain(std::iter::once(result.as_ref()))
+                .any(|ty| contains_anonymous(ty, classpath)),
+            Type::ReceiverFunction {
+                receiver,
+                params,
+                result,
+            } => params
+                .iter()
+                .chain([receiver.as_ref(), result.as_ref()])
+                .any(|ty| contains_anonymous(ty, classpath)),
+            _ => false,
+        }
+    }
+    let check = |ty: &Type, private: bool, offset: usize| {
+        if private || !contains_anonymous(ty, classpath) {
+            return Ok(());
+        }
+        if matches!(ty, Type::Java(_)) {
+            Err(Diagnostic::new(
                 offset,
-                "Anonymous objects require a nongeneric interface",
-            ));
-        };
-        let class = self
-            .classes
-            .get(interface_owner)
-            .cloned()
-            .map(Ok)
-            .unwrap_or_else(|| self.classpath.load(interface_owner))?;
-        if class.sealed_ {
-            return Err(Diagnostic::new(
-                offset,
-                "Anonymous objects cannot implement sealed interfaces",
+                "Public anonymous objects with multiple supertypes require an explicit result type",
             )
             .with_kind(
                 crate::DiagnosticKind::InvalidKotlin,
-                "SEALED_ANONYMOUS_SUBCLASS_INVALID",
-            ));
-        }
-        if class.access & 0x0200 == 0 || class.access & 0x2000 != 0 {
-            return Err(unsupported(
+                "ANONYMOUS_PUBLIC_RESULT_TYPE_REQUIRED",
+            ))
+        } else {
+            Err(unsupported(
                 offset,
-                "Anonymous class and annotation supertypes are unsupported",
-            ));
+                "Anonymous types nested in public inferred signatures require unsupported type approximation",
+            ))
         }
-        if class
-            .library
-            .as_ref()
-            .is_some_and(|library| !library.type_parameters.is_empty())
-        {
-            return Err(unsupported(
-                offset,
-                "Generic anonymous interface supertypes are unsupported",
-            ));
+    };
+    let function =
+        |function: &syntax::Function| check(&function.result, function.private, function.offset);
+    for function_source in &source.functions {
+        function(function_source)?;
+    }
+    for property in &source.properties {
+        check(&property.ty, property.private, property.offset)?;
+    }
+    if let Some(class) = &source.class_decl {
+        for method in &class.methods {
+            function(&method.function)?;
         }
-        let inherited = self
-            .classpath
-            .methods(interface_owner)?
-            .into_iter()
-            .filter(|method| method.access & 0x0009 == 0x0001 && method.name != "<init>")
-            .collect::<Vec<_>>();
-        if inherited.iter().any(|method| {
-            method.source_property.is_some()
-                || method
+        for property in &class.properties {
+            check(&property.ty, property.private, property.offset)?;
+        }
+        if let Some(companion) = &class.companion {
+            for method in &companion.methods {
+                function(&method.function)?;
+            }
+            for property in &companion.properties {
+                if let Some(ty) = &property.ty {
+                    check(ty, property.private, property.offset)?;
+                }
+            }
+        }
+    }
+    if let Some(object) = &source.object_decl {
+        for method in &object.methods {
+            function(&method.function)?;
+        }
+        for field in &object.fields {
+            if let Some(ty) = &field.ty {
+                check(ty, field.private, field.offset)?;
+            }
+        }
+    }
+    if let Some(interface) = &source.interface_decl {
+        for method in &interface.methods {
+            function(&method.function)?;
+        }
+        if let Some(companion) = &interface.companion {
+            for method in &companion.methods {
+                function(&method.function)?;
+            }
+            for field in &companion.fields {
+                if let Some(ty) = &field.ty {
+                    check(ty, field.private, field.offset)?;
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
+impl Checker<'_> {
+    pub(super) fn anonymous_object(
+        &mut self,
+        supertypes: &[(Type, Option<Vec<Expr>>)],
+        methods: &[syntax::Function],
+        offset: usize,
+    ) -> Result<Value> {
+        let owner = format!("{}$object${offset}", self.lambda_owner);
+        let mut parent = "java/lang/Object".to_string();
+        let mut interfaces = Vec::new();
+        let mut super_arguments = Vec::new();
+        let mut super_descriptor = "()V".to_string();
+        let mut inherited = Vec::new();
+        let mut conflicts = HashSet::new();
+        let mut has_parent = false;
+        let mut primary = None;
+        for (supertype, arguments) in supertypes {
+            let ty = self.resolve(supertype, offset)?;
+            let Type::Java(super_owner) = &ty else {
+                return Err(unsupported(
+                    offset,
+                    "Generic anonymous supertypes are unsupported",
+                ));
+            };
+            let class = self.classpath.load(super_owner)?;
+            if class.sealed_ {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Anonymous objects cannot inherit sealed classifiers",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "SEALED_ANONYMOUS_SUBCLASS_INVALID",
+                ));
+            }
+            if class.access & 0x2000 != 0
+                || class
                     .library
                     .as_ref()
                     .is_some_and(|library| !library.type_parameters.is_empty())
+            {
+                return Err(unsupported(
+                    offset,
+                    "Generic and annotation anonymous supertypes are unsupported",
+                ));
+            }
+            if !self
+                .classpath
+                .classifier_visible(&self.lambda_owner, super_owner)
+            {
+                return Err(
+                    Diagnostic::new(offset, "Anonymous supertype is inaccessible").with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "INACCESSIBLE_CLASSIFIER",
+                    ),
+                );
+            }
+            if class.access & 0x0200 != 0 {
+                if arguments.is_some() || interfaces.contains(super_owner) {
+                    return Err(
+                        Diagnostic::new(offset, "Invalid anonymous interface supertype").with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "ANONYMOUS_SUPERTYPE_INVALID",
+                        ),
+                    );
+                }
+                interfaces.push(super_owner.clone());
+            } else {
+                if has_parent || arguments.is_none() || class.access & 0x0010 != 0 {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Anonymous class requires one nonfinal superclass constructor",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "ANONYMOUS_SUPERTYPE_INVALID",
+                    ));
+                }
+                has_parent = true;
+                parent = super_owner.clone();
+                let constructors = class
+                    .methods
+                    .iter()
+                    .filter(|m| m.name == "<init>" && m.access & 5 != 0)
+                    .cloned()
+                    .collect::<Vec<_>>();
+                let arguments = arguments.as_ref().unwrap();
+                let method = self.select_method(&constructors, arguments, offset)?;
+                let (types, _) = class_method_types(&method)?;
+                let params = method
+                    .kotlin_params
+                    .as_ref()
+                    .map(|params| {
+                        params
+                            .iter()
+                            .map(|p| (p.0.clone(), p.1.clone()))
+                            .collect::<Vec<_>>()
+                    })
+                    .unwrap_or_else(|| {
+                        types
+                            .iter()
+                            .cloned()
+                            .enumerate()
+                            .map(|(i, t)| (format!("p{i}"), java_parameter(t)))
+                            .collect()
+                    });
+                if arguments.len() < params.len()
+                    && method
+                        .kotlin_params
+                        .as_ref()
+                        .is_some_and(|params| params.iter().any(|p| p.2))
+                {
+                    return Err(unsupported(
+                        offset,
+                        "Default anonymous superclass arguments are unsupported",
+                    ));
+                }
+                let (args, lets, mask) = self.arguments(
+                    &params,
+                    &vec![false; params.len()],
+                    arguments,
+                    method.kotlin_params.is_some(),
+                    offset,
+                )?;
+                if !lets.is_empty() || mask != 0 {
+                    return Err(unsupported(
+                        offset,
+                        "Reordered and default anonymous superclass arguments are unsupported",
+                    ));
+                }
+                super_arguments = args
+                    .into_iter()
+                    .zip(types)
+                    .map(|(value, ty)| self.coerce(value, java_parameter(ty), offset))
+                    .collect::<Result<Vec<_>>>()?;
+                super_descriptor = method.descriptor;
+            }
+            primary.get_or_insert(ty.clone());
+            for method in self
+                .classpath
+                .ordinary_methods(super_owner)?
+                .into_iter()
+                .filter(|method| {
+                    method.access & 0x0008 == 0 && method.access & 5 != 0 && method.name != "<init>"
+                })
+            {
+                if let Some(other) = inherited.iter().find(|other: &&JavaMethod| {
+                    other.name == method.name && other.descriptor == method.descriptor
+                }) {
+                    let concrete = |method: &JavaMethod| {
+                        method.access & 0x0400 == 0
+                            || method
+                                .library
+                                .as_ref()
+                                .is_some_and(|library| !library.abstract_)
+                    };
+                    if other.owner != method.owner && (concrete(other) || concrete(&method)) {
+                        conflicts.insert((method.name.clone(), method.descriptor.clone()));
+                    }
+                } else {
+                    inherited.push(method);
+                }
+            }
+        }
+        if inherited.iter().any(|method| {
+            method.access & 0x0400 != 0
+                && (method.source_property.is_some()
+                    || method
+                        .library
+                        .as_ref()
+                        .is_some_and(|library| !library.type_parameters.is_empty()))
         }) {
             return Err(unsupported(
                 offset,
-                "Anonymous interface properties and generic methods are unsupported",
+                "Anonymous inherited properties and generic methods are unsupported",
             ));
         }
-        if methods.is_empty() {
-            return Err(unsupported(
-                offset,
-                "Anonymous marker implementations are unsupported",
-            ));
-        }
+        self.classpath.register_source(crate::classpath::JavaClass {
+            name: owner.clone(),
+            access: 0x1031,
+            super_name: Some(parent.clone()),
+            interfaces: interfaces.clone(),
+            methods: Vec::new(),
+            fields: Vec::new(),
+            sealed_: false,
+            sealed_subclasses: Vec::new(),
+            annotation_definition: None,
+            kotlin_fun_interface: false,
+            library: None,
+            kotlin_class: false,
+            unsupported: false,
+            kotlin_interface: false,
+        });
+        self.classpath
+            .register_lexical_parent(&owner, &self.lambda_owner);
+        let interface = primary.unwrap();
         let mut selected = Vec::new();
         let mut seen = HashSet::new();
         for source in methods {
@@ -135,6 +372,14 @@ impl Checker<'_> {
                 ));
             }
             let method = candidates[0].clone();
+            if method.access & 0x0010 != 0 {
+                return Err(
+                    Diagnostic::new(source.offset, "Cannot override a final member").with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "FINAL_MEMBER_OVERRIDE",
+                    ),
+                );
+            }
             if !seen.insert((method.name.clone(), method.descriptor.clone())) {
                 return Err(
                     Diagnostic::new(source.offset, "Duplicate anonymous override").with_kind(
@@ -186,6 +431,12 @@ impl Checker<'_> {
             }
             selected.push((source, params, result, method));
         }
+        if conflicts.iter().any(|signature| !seen.contains(signature)) {
+            return Err(unsupported(
+                offset,
+                "Conflicting anonymous inherited defaults require an explicit override",
+            ));
+        }
         for required in &inherited {
             let abstract_ = required.access & 0x0400 != 0
                 && required
@@ -203,12 +454,6 @@ impl Checker<'_> {
                 ));
             }
         }
-        let owner = format!(
-            "{}$object${}${}",
-            self.lambda_owner,
-            offset,
-            self.lambdas.borrow().len()
-        );
         let mut names = HashSet::new();
         for source in methods {
             let parameters = source
@@ -219,9 +464,10 @@ impl Checker<'_> {
                 .collect::<Vec<_>>();
             names.extend(captures::free_names(&source.body, &parameters));
         }
-        if names
-            .iter()
-            .any(|name| name == "super" || name.starts_with("super@"))
+        if parent == "java/lang/Object"
+            && names
+                .iter()
+                .any(|name| name == "super" || name.starts_with("super@"))
         {
             return Err(unsupported(
                 offset,
@@ -234,8 +480,16 @@ impl Checker<'_> {
         });
         let mut names = names.into_iter().collect::<Vec<_>>();
         names.sort();
-        let mut fields = Vec::new();
-        let mut values = Vec::new();
+        let mut fields = super_arguments
+            .iter()
+            .enumerate()
+            .map(|(index, value)| (format!("$super${index}"), value.ty.clone()))
+            .collect::<Vec<_>>();
+        let super_types = super_arguments
+            .iter()
+            .map(|value| value.ty.clone())
+            .collect();
+        let mut values = super_arguments;
         let mut captured = HashMap::new();
         let mut captured_cells = HashMap::new();
         let mut readonly = Vec::new();
@@ -281,8 +535,14 @@ impl Checker<'_> {
             .cloned()
             .map(|local| (false, Some(local.clone()), Self::local_receiver(&local)))
             .collect::<Vec<_>>();
-        if let Ok(value) = self.dispatch_receiver_value(offset) {
-            receivers.push((true, self.dispatch_receiver.clone(), value));
+        if self.dispatch_receiver.is_some()
+            || self
+                .object_owner
+                .is_some_and(|owner| !self.classpath.is_source_facade(owner))
+        {
+            if let Ok(value) = self.dispatch_receiver_value(offset) {
+                receivers.push((true, self.dispatch_receiver.clone(), value));
+            }
         }
         let mut receiver_fields = Vec::new();
         for (index, (dispatch, local, value)) in receivers.into_iter().enumerate() {
@@ -294,7 +554,7 @@ impl Checker<'_> {
                 }
                 ordinal += 1;
             };
-            let labels = local
+            let mut labels = local
                 .as_ref()
                 .map(|local| {
                     self.receiver_labels
@@ -304,6 +564,13 @@ impl Checker<'_> {
                         .collect::<Vec<_>>()
                 })
                 .unwrap_or_default();
+            if dispatch {
+                if let Some(label) =
+                    library::type_owner(&value.ty).and_then(|owner| owner.rsplit(['/', '$']).next())
+                {
+                    labels.push(label.to_string());
+                }
+            }
             receiver_fields.push((dispatch, name.clone(), value.ty.clone(), labels));
             fields.push((name, value.ty.clone()));
             values.push(value);
@@ -319,7 +586,7 @@ impl Checker<'_> {
                 exhaustiveness_flow: false,
                 extension_receivers: vec![Local {
                     slot: 0,
-                    ty: interface.clone(),
+                    ty: Type::Java(owner.clone()),
                     mutable: false,
                 }],
                 receiver_labels: HashMap::new(),
@@ -328,7 +595,7 @@ impl Checker<'_> {
                 captured_cells: captured_cells.clone(),
                 cells: HashMap::new(),
                 cell_names: HashSet::new(),
-                lambda_owner: self.lambda_owner.clone(),
+                lambda_owner: owner.clone(),
                 inline_result: None,
                 nonlocal_result: None,
                 classpath: self.classpath,
@@ -344,7 +611,15 @@ impl Checker<'_> {
                 source_type_params: self.source_type_params,
                 source_infix: self.source_infix,
                 source_operator: self.source_operator,
-                dispatch_receiver: None,
+                dispatch_receiver: if parent != "java/lang/Object" {
+                    Some(Local {
+                        slot: 0,
+                        ty: Type::Java(owner.clone()),
+                        mutable: false,
+                    })
+                } else {
+                    None
+                },
                 fields: self.fields,
                 members: self.members,
                 companion_fields: self.companion_fields,
@@ -384,7 +659,7 @@ impl Checker<'_> {
                     ty: ty.clone(),
                     mutable: false,
                 };
-                if *dispatch {
+                if *dispatch && parent == "java/lang/Object" {
                     checker.dispatch_receiver = Some(local.clone());
                 } else {
                     checker.extension_receivers.push(local.clone());
@@ -485,14 +760,25 @@ impl Checker<'_> {
                 body: setup,
             });
         }
-        let mut first = implementations.remove(0);
-        let mut interface_method = inherited
-            .iter()
-            .find(|method| {
-                method.name == first.jvm_name() && method.descriptor == first.descriptor()
-            })
-            .unwrap()
-            .clone();
+        let first = implementations.first().cloned().unwrap_or(Function {
+            suspend_: false,
+            extension_receiver: false,
+            class_type_params: Vec::new(),
+            jvm_result: None,
+            jvm_signature: None,
+            jvm_name: None,
+            annotations: Vec::new(),
+            vararg: false,
+            type_params: Vec::new(),
+            defaults: Vec::new(),
+            name: "<anonymous>".into(),
+            private: false,
+            is_override: false,
+            params: Vec::new(),
+            result: Type::Unit,
+            locals: 1,
+            body: Vec::new(),
+        });
         let defaults = inherited
             .into_iter()
             .filter(|method| {
@@ -504,18 +790,26 @@ impl Checker<'_> {
                         .is_some_and(|library| !library.abstract_)
             })
             .collect();
-        interface_method.owner = interface_owner.clone();
-        first.is_override = true;
         self.lambdas.borrow_mut().push(LambdaDecl {
             anonymous_methods: Some(implementations),
+            anonymous_super: Some(AnonymousSuper {
+                owner: parent,
+                descriptor: super_descriptor,
+                params: super_types,
+                interfaces,
+            }),
             defaults,
             owner: owner.clone(),
             captures: fields,
             function: first,
-            interface: Some(interface_method),
+            interface: None,
         });
         Ok(Value {
-            ty: interface,
+            ty: if supertypes.len() == 1 {
+                interface
+            } else {
+                Type::Java(owner.clone())
+            },
             kind: ValueKind::Lambda {
                 owner,
                 captures: values,

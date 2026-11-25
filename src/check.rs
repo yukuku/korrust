@@ -107,7 +107,14 @@ pub struct DeclarationAnnotation {
     pub values: Vec<(String, DeclarationAnnotationValue)>,
 }
 
+pub struct AnonymousSuper {
+    pub owner: String,
+    pub descriptor: String,
+    pub params: Vec<Type>,
+    pub interfaces: Vec<String>,
+}
 pub struct LambdaDecl {
+    pub anonymous_super: Option<AnonymousSuper>,
     pub anonymous_methods: Option<Vec<Function>>,
     pub defaults: Vec<JavaMethod>,
     pub owner: String,
@@ -2389,6 +2396,7 @@ impl Checker<'_> {
                 }
             }
         } else {
+            let method = library::default_argument_method(self.classpath, &method)?;
             let descriptor = format!(
                 "(L{};{}{}Ljava/lang/Object;){}",
                 method.owner,
@@ -2757,6 +2765,21 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Value> {
+        self.java_call_types(receiver, name, args, &[], offset)
+    }
+    fn java_call_types(
+        &mut self,
+        receiver: Value,
+        name: &str,
+        args: &[Expr],
+        types: &[Type],
+        offset: usize,
+    ) -> Result<Value> {
+        if !types.is_empty()
+            && (receiver.ty.is_nullable() || library::type_owner(&receiver.ty).is_none())
+        {
+            return self.extension_call(receiver, name, args, types, offset);
+        }
         let owner = library::type_owner(&receiver.ty)
             .ok_or_else(|| Diagnostic::new(offset, "Unsupported member receiver"))?;
         let class = self
@@ -2807,6 +2830,9 @@ impl Checker<'_> {
             })
             .collect::<Vec<_>>();
         if methods.is_empty() {
+            if !types.is_empty() {
+                return self.extension_call(receiver, name, args, types, offset);
+            }
             return self.member_extension_fallback(
                 receiver,
                 name,
@@ -2848,7 +2874,7 @@ impl Checker<'_> {
                 "Cannot write through an out or star type projection",
             ));
         }
-        let method = match self.select_method(&methods, args, offset) {
+        let method = match self.select_method_types(&methods, args, types, offset) {
             Ok(method) => method,
             Err(_) if projected => {
                 return Err(Diagnostic::new(
@@ -2857,6 +2883,9 @@ impl Checker<'_> {
                 ));
             }
             Err(error) if error.message.contains("Ambiguous") => return Err(error),
+            Err(_) if !types.is_empty() => {
+                return self.extension_call(receiver, name, args, types, offset);
+            }
             Err(error) => return self.member_extension_fallback(receiver, name, args, error),
         };
         if !method.instance_dispatch() {
@@ -4304,8 +4333,11 @@ impl Checker<'_> {
                 }
                 (inner, ValueKind::RequireNotNull(Box::new(value)))
             }
-            ExprKind::AnonymousObject { interface, methods } => {
-                return self.anonymous_object(interface, methods, offset);
+            ExprKind::AnonymousObject {
+                supertypes,
+                methods,
+            } => {
+                return self.anonymous_object(supertypes, methods, offset);
             }
             ExprKind::Lambda(_)
             | ExprKind::LambdaWithParams { .. }
@@ -5284,6 +5316,7 @@ impl Checker<'_> {
                                 | Type::DoubleArray
                                 | Type::StringArray
                                 | Type::Array(_)
+                                | Type::OutArray(_)
                         )
                     {
                         return Ok(Value {
@@ -5409,7 +5442,7 @@ impl Checker<'_> {
                                 }
                             }
                             let value = self.value(receiver)?;
-                            return self.extension_call(value, name, args, types, offset);
+                            return self.java_call_types(value, name, args, types, offset);
                         }
                         _ => Vec::new(),
                     };
@@ -6137,6 +6170,7 @@ fn nested_type_imports(
             }
         }
         Type::Array(inner)
+        | Type::OutArray(inner)
         | Type::Nullable(inner)
         | Type::Platform(inner)
         | Type::List(inner)
@@ -6279,6 +6313,9 @@ fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> 
             upper_bound: Box::new(resolve_type(upper_bound, imports, offset)?),
         }),
         Type::Array(element) => Ok(Type::Array(Box::new(resolve_type(
+            element, imports, offset,
+        )?))),
+        Type::OutArray(element) => Ok(Type::OutArray(Box::new(resolve_type(
             element, imports, offset,
         )?))),
         Type::ReceiverFunction {
@@ -6450,7 +6487,17 @@ fn loses_member_type(_ty: &Type) -> bool {
 }
 fn call_names(expr: &Expr, names: &mut HashSet<String>) {
     match &expr.kind {
-        ExprKind::AnonymousObject { methods, .. } => {
+        ExprKind::AnonymousObject {
+            supertypes,
+            methods,
+        } => {
+            for (_, arguments) in supertypes {
+                if let Some(arguments) = arguments {
+                    for argument in arguments {
+                        call_names(argument, names);
+                    }
+                }
+            }
             for method in methods {
                 body_call_names(&method.body, names);
             }
@@ -6973,6 +7020,7 @@ pub fn check_with_owner(
             | Type::List(inner)
             | Type::MutableList(inner)
             | Type::Array(inner)
+            | Type::OutArray(inner)
             | Type::ThreadLocal(inner) => collect_type(inner, names),
             Type::Parameterized { name, arguments } => {
                 names.insert(name.clone());
@@ -7644,6 +7692,41 @@ pub(crate) fn source_delegated_members(
     target: &Type,
 ) -> Result<Vec<JavaMethod>> {
     class_delegation::headers(classpath, target)
+}
+
+pub(crate) fn inherit_bridge_defaults(
+    classpath: &Classpath,
+    bridge: &JavaMethod,
+    parent: &JavaMethod,
+    methods: &mut [JavaMethod],
+) -> Result<()> {
+    let declaring = classpath.load(&bridge.owner)?;
+    let receiver = declarations::classifier_type(
+        &declaring.name,
+        declaring
+            .library
+            .as_ref()
+            .map(|library| library.type_parameters.as_slice())
+            .unwrap_or(&[]),
+    );
+    let inherited = library::specialize_receiver(parent.clone(), &receiver, &declaring, classpath);
+    for method in methods.iter_mut().filter(|method| {
+        method.owner == bridge.owner
+            && method.name == bridge.name
+            && method.access & 0x40 == 0
+            && !method.unsupported
+    }) {
+        let (params, result) = class_method_types(method)?;
+        let type_params = method
+            .library
+            .as_ref()
+            .map(|library| library.type_parameters.as_slice())
+            .unwrap_or(&[]);
+        if declarations::override_generic_signature(&inherited, &params, &result, type_params)? {
+            method.inherit_defaults(parent);
+        }
+    }
+    Ok(())
 }
 
 pub(crate) fn source_jvm_result(

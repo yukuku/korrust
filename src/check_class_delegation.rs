@@ -45,6 +45,7 @@ pub(super) fn normalize_contract(
             Type::Parameter { .. }
             | Type::Parameterized { .. }
             | Type::Array(_)
+            | Type::OutArray(_)
             | Type::StringArray
             | Type::List(_)
             | Type::MutableList(_)
@@ -448,16 +449,7 @@ pub(super) fn forwarders(
         let (parameters, result) = class_method_types(declaration)?;
         if methods.iter().any(|method| {
             method.name == declaration.name
-                && declarations::override_signature(
-                    declaration,
-                    &method
-                        .params
-                        .iter()
-                        .map(|p| p.1.clone())
-                        .collect::<Vec<_>>(),
-                    &method.result,
-                )
-                .unwrap_or(false)
+                && declarations::override_function_signature(declaration, method).unwrap_or(false)
         }) {
             continue;
         }

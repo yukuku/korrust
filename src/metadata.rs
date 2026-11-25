@@ -502,7 +502,7 @@ fn descriptor(ty: &Type, imports: Imports<'_>) -> Result<String> {
     match ty {
         Type::Nullable(inner) if inner.is_reference() => descriptor(inner, imports),
         Type::Nullable(_) => Ok(ty.descriptor()),
-        Type::Array(inner) => {
+        Type::Array(inner) | Type::OutArray(inner) => {
             let component = if inner.is_reference() {
                 descriptor(inner, imports)?
             } else {
@@ -621,8 +621,11 @@ fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<
 
         Type::String => "kotlin/String",
         Type::Unit => "kotlin/Unit",
-        Type::Array(inner) => {
+        Type::Array(inner) | Type::OutArray(inner) => {
             let mut argument = Proto::default();
+            if matches!(ty, Type::OutArray(_)) {
+                argument.number(1, 1);
+            }
             argument.message(2, &type_proto(inner, imports, strings)?);
             proto.message(2, &argument);
             "kotlin/Array"
@@ -936,7 +939,16 @@ fn function_with_jvm_name(
         desc.push_str(&descriptor(receiver, imports)?);
     }
     for (index, (name, ty)) in function.params.iter().enumerate() {
-        let mut param = parameter(name, ty, imports, strings)?;
+        let parameter_type = if function.vararg && index + 1 == function.params.len() {
+            match ty {
+                Type::Array(element) => Type::OutArray(element.clone()),
+                Type::StringArray => Type::OutArray(Box::new(Type::String)),
+                _ => ty.clone(),
+            }
+        } else {
+            ty.clone()
+        };
+        let mut param = parameter(name, &parameter_type, imports, strings)?;
         if function.vararg && index + 1 == function.params.len() {
             let element = match ty {
                 array if array.array_element().is_some() => array.array_element().unwrap(),

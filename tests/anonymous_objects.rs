@@ -39,12 +39,9 @@ fn anonymous_objects_emit_lexical_classes_and_shared_cells() {
 #[test]
 fn unsupported_anonymous_shapes_reject_explicitly() {
     for source in [
-        include_str!("anonymous_objects/boundaries/ClassSupertype.kt"),
-        include_str!("anonymous_objects/boundaries/Multiple.kt"),
         include_str!("anonymous_objects/boundaries/Property.kt"),
         include_str!("anonymous_objects/boundaries/Generic.kt"),
         include_str!("anonymous_objects/boundaries/ExtraMember.kt"),
-        include_str!("anonymous_objects/boundaries/Marker.kt"),
     ] {
         let error = compile(source)
             .err()
@@ -153,4 +150,80 @@ fn anonymous_inline_returns_and_inferred_cells_execute_with_verification() {
         );
         assert_eq!(output, b"OK\n");
     }
+}
+
+#[test]
+fn anonymous_class_multiple_interfaces_and_marker_compile() {
+    for source in [
+        include_str!("anonymous_objects/boundaries/ClassSupertype.kt"),
+        include_str!("anonymous_objects/boundaries/Multiple.kt"),
+        include_str!("anonymous_objects/boundaries/Marker.kt"),
+    ] {
+        compile(source).unwrap();
+    }
+}
+
+#[test]
+fn anonymous_subclass_constructor_and_super_dispatch_compile() {
+    let source = format!(
+        "{}\n{}",
+        include_str!("anonymous_subclasses/Base.kt"),
+        include_str!("anonymous_subclasses/Source.kt")
+            .trim_start_matches("package anonymousclasses\n")
+    );
+    let outputs = compile(&source).unwrap();
+    assert!(
+        outputs
+            .iter()
+            .any(|output| output.output.relative_path.contains("$object$"))
+    );
+}
+
+#[test]
+fn invalid_anonymous_class_inheritance_rejects() {
+    for source in [
+        include_str!("anonymous_subclasses/boundaries/InvalidFinal.kt"),
+        include_str!("anonymous_subclasses/boundaries/InvalidFinalMethod.kt"),
+        include_str!("anonymous_subclasses/boundaries/InvalidMissing.kt"),
+        include_str!("anonymous_subclasses/boundaries/InvalidInterfaceCtor.kt"),
+    ] {
+        let error = compile(source)
+            .err()
+            .expect("Invalid anonymous inheritance must reject");
+        assert_eq!(
+            error.kind,
+            DiagnosticKind::InvalidKotlin,
+            "{}",
+            error.message
+        );
+    }
+}
+
+#[test]
+fn public_anonymous_intersection_inference_rejects() {
+    for source in [
+        include_str!("anonymous_subclasses/boundaries/InvalidPublicFunction.kt"),
+        include_str!("anonymous_subclasses/boundaries/InvalidPublicProperty.kt"),
+        include_str!("anonymous_subclasses/boundaries/InvalidPublicClassProperty.kt"),
+        include_str!("anonymous_subclasses/boundaries/InvalidPublicObjectProperty.kt"),
+        include_str!("anonymous_subclasses/boundaries/InvalidPublicCompanionProperty.kt"),
+        include_str!("anonymous_subclasses/boundaries/InvalidPublicHiddenFunction.kt"),
+        include_str!("anonymous_subclasses/boundaries/InvalidPublicFunctionMember.kt"),
+    ] {
+        let error = compile(source)
+            .err()
+            .expect("Anonymous public result needs an explicit type");
+        assert_eq!(
+            error.kind,
+            DiagnosticKind::InvalidKotlin,
+            "{}",
+            error.message
+        );
+        assert_eq!(error.code, "ANONYMOUS_PUBLIC_RESULT_TYPE_REQUIRED");
+    }
+}
+
+#[test]
+fn explicit_public_anonymous_results_and_private_inference_compile() {
+    compile(include_str!("anonymous_subclasses/Exposure.kt")).unwrap();
 }

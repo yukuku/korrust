@@ -325,7 +325,7 @@ impl Code<'_> {
     }
 
     fn inline_lambda(&mut self, lambda: &crate::check::LambdaDecl, base: u16) -> Result<()> {
-        if lambda.interface.is_some() {
+        if lambda.interface.is_some() || lambda.anonymous_methods.is_some() {
             return Err(failure(
                 "SAM literals cannot substitute Kotlin inline parameters",
             ));
