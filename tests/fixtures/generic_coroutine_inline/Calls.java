@@ -24,6 +24,8 @@ public final class Calls {
     }
 
     public static void main(String[] args) {
+        if (!"α".equals(ExtendedKt.anonymousEcho().echo("α")))
+            throw new AssertionError("inherited generic default");
         Base<String> source = ExtendedKt.source("一");
         Identity identity = new Identity();
         int[] finalized = {0};

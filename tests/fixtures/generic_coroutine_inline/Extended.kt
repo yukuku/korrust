@@ -41,3 +41,9 @@ suspend fun inlineAfterResume(source: Base<String>, identity: Transform,
     val text = pause(source.read())
     return protect<String>({ return identity.keep(text) }, after)
 }
+
+interface Echo<T> {
+    fun echo(value: T): T = value
+}
+
+fun anonymousEcho(): Echo<String> = object : Echo<String> {}
