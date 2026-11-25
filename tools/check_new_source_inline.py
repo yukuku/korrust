@@ -107,10 +107,15 @@ def main():
         for folder, expected in [('invalid', 'invalid_kotlin'), ('boundary', 'unsupported_language')]:
             for source in sorted((FIXTURES / folder).glob('*.kt')):
                 name = folder + '_' + source.stem
-                if folder == 'boundary' and source.stem in ('short_array', 'inline_receiver', 'exception_table'):
+                if folder == 'boundary' and source.stem in ('short_array', 'short_vararg', 'inline_receiver', 'exception_table'):
                     regression = 'regression_' + source.stem
                     for provider, command in [('official', reference / 'bin/kotlinc'), ('candidate', compiler)]:
                         run(regression + ' ' + provider, [command, source, '-cp', stdlib, '-d', output / (regression + '-' + provider)])
+                    if source.stem == 'short_vararg':
+                        caller = output / 'short-vararg-caller'
+                        run('Short vararg fixed Java caller', [jdk / 'javac', '-cp', output / (regression + '-official'), '-d', caller, FIXTURES / 'ShortVarargCheck.java'])
+                        for provider in ['official', 'candidate']:
+                            run('Short vararg JVM ' + provider, [jdk / 'java', '-Xverify:all', '-cp', os.pathsep.join(map(str, [caller, output / (regression + '-' + provider), stdlib])), 'ShortVarargCheck'])
                     case(regression, 'pass', source=str(source.relative_to(ROOT)), historical_fixture_path_retained=True)
                     continue
                 run(name + ' official', [reference / 'bin/kotlinc', source, '-cp', stdlib, '-d', output / (name + '-official')], success=False)
