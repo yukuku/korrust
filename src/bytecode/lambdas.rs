@@ -1,5 +1,8 @@
 use super::*;
 
+#[path = "anonymous_context.rs"]
+mod anonymous_context;
+
 pub fn emit_lambdas(
     module: &Module,
     facade: &str,
@@ -27,9 +30,10 @@ pub fn emit_lambdas(
                 .map(|field| (object.owner.clone(), field.name.clone())),
         );
     }
+    let contexts = anonymous_context::collect(module, facade);
     let mut files = Vec::new();
     for lambda in &module.lambdas {
-        files.push(emit(
+        files.push(emit_in(
             lambda,
             &module.functions,
             facade,
@@ -37,6 +41,7 @@ pub fn emit_lambdas(
             &module.lambdas,
             values,
             &exposed,
+            contexts.get(&lambda.owner),
         )?);
         if lambda.function.suspend_ {
             files.extend(suspend::emit_frames_in(
@@ -60,6 +65,40 @@ pub(super) fn emit(
     values: &crate::value_abi::Registry,
     exposed: &HashSet<(String, String)>,
 ) -> Result<crate::ClassFile> {
+    emit_in(
+        lambda, functions, facade, file, lambdas, values, exposed, None,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn emit_in(
+    lambda: &crate::check::LambdaDecl,
+    functions: &[crate::check::Function],
+    facade: &str,
+    file: &str,
+    lambdas: &[crate::check::LambdaDecl],
+    values: &crate::value_abi::Registry,
+    exposed: &HashSet<(String, String)>,
+    enclosing: Option<&anonymous_context::Enclosing>,
+) -> Result<crate::ClassFile> {
+    let enclosing = enclosing.filter(|_| lambda.anonymous_super.is_some());
+    if let Some(parent) = &lambda.anonymous_super {
+        let mut parameters = HashSet::new();
+        for ty in parent
+            .supertypes
+            .iter()
+            .chain(lambda.captures.iter().map(|(_, ty)| ty))
+        {
+            anonymous_context::parameters(ty, &mut parameters);
+        }
+        if !parameters.is_empty()
+            && enclosing.is_none_or(|context| {
+                !context.supported || !parameters.is_subset(&context.parameters)
+            })
+        {
+            return Err(Diagnostic::new(0, "Anonymous enclosing type parameters require an unambiguous emitted lexical declaration").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "ANONYMOUS_ENCLOSING_TYPE_PARAMETERS_UNSUPPORTED"));
+        }
+    }
     let function = &lambda.function;
     let arity = function.params.len() + usize::from(function.suspend_);
     if lambda.anonymous_methods.is_none() && arity > 22 {
@@ -105,7 +144,11 @@ pub(super) fn emit(
     }
     let mut fields = Vec::new();
     for (name, ty) in &lambda.captures {
-        fields.extend(class_field(&mut pool, name, ty, 0x1010)?);
+        fields.extend(if enclosing.is_some() {
+            class_field_scoped(&mut pool, name, ty, 0x1010)?
+        } else {
+            class_field(&mut pool, name, ty, 0x1010)?
+        });
     }
     let constructor_descriptor = format!(
         "({})V",
@@ -156,7 +199,9 @@ pub(super) fn emit(
         "<init>",
         &constructor_descriptor,
         constructor,
-        None,
+        enclosing
+            .and_then(|_| generic_method(&lambda.captures, &Type::Unit))
+            .as_deref(),
         false,
     )?;
     let mut methods = vec![constructor];
@@ -226,7 +271,13 @@ pub(super) fn emit(
         }
         let stack = code.max_stack as u16;
         let completed = code.into_simple(function.locals, stack)?;
-        let signature = generic_function(function).map(|mut signature| {
+        let mut scoped_function = function.clone();
+        if let Some(context) = enclosing {
+            scoped_function
+                .class_type_params
+                .extend(context.parameters.iter().cloned());
+        }
+        let signature = generic_function(&scoped_function).map(|mut signature| {
             if function.jvm_result.is_some() {
                 signature.truncate(signature.rfind(')').unwrap() + 1);
                 signature.push_str(&function.physical_result().descriptor());
@@ -356,7 +407,11 @@ pub(super) fn emit(
         classifier_signature(
             &[],
             &HashSet::new(),
-            &parent.supertypes,
+            &parent
+                .supertypes
+                .iter()
+                .map(anonymous_context::supertype)
+                .collect::<Vec<_>>(),
             &parent.owner,
             &parent.interfaces,
         )
@@ -365,6 +420,27 @@ pub(super) fn emit(
         .as_deref()
         .map(|signature| signature_attribute(&mut pool, signature))
         .transpose()?;
+    let mut enclosing_attributes = Vec::new();
+    if let Some(context) = enclosing {
+        u2(&mut enclosing_attributes, pool.utf8("EnclosingMethod")?);
+        u4(&mut enclosing_attributes, 4);
+        u2(&mut enclosing_attributes, pool.class(&context.owner)?);
+        let method = if let Some((name, descriptor)) = &context.method {
+            let name = pool.utf8(name)?;
+            let descriptor = pool.utf8(descriptor)?;
+            pool.add(Constant::NameType(name, descriptor))?
+        } else {
+            0
+        };
+        u2(&mut enclosing_attributes, method);
+        u2(&mut enclosing_attributes, pool.utf8("InnerClasses")?);
+        u4(&mut enclosing_attributes, 10);
+        u2(&mut enclosing_attributes, 1);
+        u2(&mut enclosing_attributes, this);
+        u2(&mut enclosing_attributes, 0);
+        u2(&mut enclosing_attributes, 0);
+        u2(&mut enclosing_attributes, 0x0019);
+    }
     let source_name = pool.utf8("SourceFile")?;
     let source_file = pool.utf8(file)?;
     let mut bytes = Vec::new();
@@ -385,7 +461,11 @@ pub(super) fn emit(
     for method in methods {
         bytes.extend(method);
     }
-    u2(&mut bytes, 1 + u16::from(signature.is_some()));
+    u2(
+        &mut bytes,
+        1 + u16::from(signature.is_some()) + 2 * u16::from(enclosing.is_some()),
+    );
+    bytes.extend(enclosing_attributes);
     if let Some(signature) = signature {
         bytes.extend(signature);
     }

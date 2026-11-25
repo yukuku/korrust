@@ -118,36 +118,6 @@ pub(super) fn check_exposed_types(source: &syntax::Module, classpath: &Classpath
     Ok(())
 }
 
-fn enclosing_parameter(ty: &Type) -> bool {
-    match ty {
-        Type::Parameter { .. } => true,
-        Type::Parameterized { arguments, .. } => arguments
-            .iter()
-            .filter_map(|argument| argument.ty.as_ref())
-            .any(enclosing_parameter),
-        Type::Nullable(inner)
-        | Type::Platform(inner)
-        | Type::Array(inner)
-        | Type::OutArray(inner)
-        | Type::List(inner)
-        | Type::MutableList(inner)
-        | Type::ThreadLocal(inner) => enclosing_parameter(inner),
-        Type::Function { params, result } | Type::SuspendFunction { params, result } => params
-            .iter()
-            .chain(std::iter::once(result.as_ref()))
-            .any(enclosing_parameter),
-        Type::ReceiverFunction {
-            receiver,
-            params,
-            result,
-        } => params
-            .iter()
-            .chain([receiver.as_ref(), result.as_ref()])
-            .any(enclosing_parameter),
-        _ => false,
-    }
-}
-
 fn override_type(actual: &Type, expected: &Type) -> bool {
     actual == expected
         || matches!(expected, Type::Platform(inner) if actual.base() == inner.base() || matches!(actual, Type::Nullable(nullable) if nullable.base() == inner.base()))
@@ -182,12 +152,6 @@ impl Checker<'_> {
                     "Anonymous supertype must be a class or interface",
                 ));
             };
-            if enclosing_parameter(&ty) {
-                return Err(unsupported(
-                    offset,
-                    "Anonymous supertype signatures referencing enclosing type parameters require unsupported enclosing-method metadata",
-                ));
-            }
             let class = self.classpath.load(super_owner)?;
             if class.sealed_ {
                 return Err(Diagnostic::new(
@@ -687,6 +651,8 @@ impl Checker<'_> {
         }
         let mut implementations = Vec::new();
         let mut bridges = Vec::new();
+        let anonymous_fields = HashMap::new();
+        let anonymous_members = HashMap::new();
         for (source, params, result, method, overrides) in selected {
             let mut checker = Checker {
                 inline_argument_modes: Vec::new(),
@@ -731,8 +697,16 @@ impl Checker<'_> {
                 } else {
                     None
                 },
-                fields: self.fields,
-                members: self.members,
+                fields: if parent == "java/lang/Object" {
+                    self.fields
+                } else {
+                    &anonymous_fields
+                },
+                members: if parent == "java/lang/Object" {
+                    self.members
+                } else {
+                    &anonymous_members
+                },
                 companion_fields: self.companion_fields,
                 functions: self.functions,
                 object_methods: self.object_methods,

@@ -263,19 +263,11 @@ fn invalid_generic_anonymous_arguments_and_overrides_reject() {
 }
 
 #[test]
-fn anonymous_supertype_enclosing_parameters_reject_explicitly() {
+fn anonymous_supertype_enclosing_parameters_compile() {
     for source in [
         include_str!("anonymous_generics/boundaries/EnclosingParameter.kt"),
         include_str!("anonymous_generics/boundaries/EnclosingNestedParameter.kt"),
     ] {
-        let error = compile(source)
-            .err()
-            .expect("Enclosing type parameters require metadata support");
-        assert_eq!(
-            error.kind,
-            DiagnosticKind::UnsupportedLanguage,
-            "{}",
-            error.message
-        );
+        compile(source).unwrap();
     }
 }
