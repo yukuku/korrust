@@ -1,0 +1,7 @@
+$ /workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc /workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidBound.kt -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -cp /workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/InvalidBound/official
+tests/anonymous_generics/boundaries/InvalidBound.kt:2:19: error: type argument is not within its bounds: must be subtype of 'CharSequence'.
+fun bad(): Mapper<Int> = object : Mapper<Int> { override fun map(value: Int): Int = value }
+                  ^^^
+tests/anonymous_generics/boundaries/InvalidBound.kt:2:42: error: type argument is not within its bounds: must be subtype of 'CharSequence'.
+fun bad(): Mapper<Int> = object : Mapper<Int> { override fun map(value: Int): Int = value }
+                                         ^^^

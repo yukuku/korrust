@@ -1,0 +1,4 @@
+$ /workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc /workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidConflict.kt -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -cp /workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/InvalidConflict/official
+tests/anonymous_generics/boundaries/InvalidConflict.kt:3:35: error: type parameter 'T' of 'interface Mapper<T> : Any' has inconsistent values: String, Int.
+fun bad(): Mapper<Int> = object : Base(), Mapper<Int> { override fun map(value: Int): Int = value }
+                                  ^^^^^^^^^^^^^^^^^^^

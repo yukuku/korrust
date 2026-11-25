@@ -1,0 +1,4 @@
+$ /workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc /workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidResult.kt -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -cp /workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/InvalidResult/official
+tests/anonymous_generics/boundaries/InvalidResult.kt:2:88: error: return type of 'fun map(value: String): Int' is not a subtype of the return type of the overridden member 'fun map(value: String): String' defined in '<anonymous>'.
+fun bad(): Mapper<String> = object : Mapper<String> { override fun map(value: String): Int = 3 }
+                                                                                       ^^^

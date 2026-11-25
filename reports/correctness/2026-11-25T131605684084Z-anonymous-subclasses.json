@@ -1,0 +1,1278 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-25T13:16:05.958579+00:00",
+  "status": "passed",
+  "compiler": {
+    "path": "/workspace/work/next-anonymous-typevars/target/debug/korrust",
+    "sha256": "94bdd7b2e65c7bbd6298372b7a2f367d260477966be838effe69233e82d08b8f"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8"
+    ]
+  },
+  "inputs": {
+    "sha256": {
+      "src/annotation_declarations.rs": "ac237d773c71a2fc26faeb2d79b837265c6d557ef7bb31aab748fa8b1c7572be",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/annotation_files.rs": "349e861501424f9c02a177074fd7fb847837d24772ae4773e598ca8c656638c4",
+      "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "src/bytecode/anonymous_context.rs": "e48d7aba57745c9e3ecb0a2317ea627f3b6d9b2d86805563bae680d79a301910",
+      "src/bytecode/class_companion.rs": "a0abcc09e62134cb4bf152b89e5cfb1bb9b0b1ad1800649507ebef05fcb4126f",
+      "src/bytecode/data.rs": "f72c9cc44b3ddd71b3e965cfc85003e69916c39c63e590315f602bc5c7c1856d",
+      "src/bytecode/defaults.rs": "488aa0bdb27d63f5ce50a70206e044a3d2b996733fb0155fcdfee3793f925886",
+      "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+      "src/bytecode/inline.rs": "ca8a4f4da8f11e405a3cdcbcf87c3bfde49635e331f9712fb7b2f4aca0f84d25",
+      "src/bytecode/interfaces.rs": "c619f97cd206f8809faeb6ccf15bffe85bf60eee9da210cb38fc7b8675f14d72",
+      "src/bytecode/lambdas.rs": "d9e6820d2a435480657c8cbb5efe62d2ad6224a752452c3ac127c761d76d3637",
+      "src/bytecode/objects.rs": "9d7823f24c5db7983819381558e15b8a02faa43f27d9edd58ed48abe82c1e381",
+      "src/bytecode/suspend.rs": "3d652198dfcba69ea1e298b99bd4328e29bd2016d9c1cb297ae667a2dd53f22d",
+      "src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+      "src/bytecode/value_classes.rs": "302e1a0c0570f01c41ed66acedb952fd40b676944e7c3113fe9facdd09fc1f01",
+      "src/bytecode.rs": "f6bfbc8be64af8fc1d70a44c072abc02025f27cdde4024e14fa7800fb6616b4a",
+      "src/check.rs": "d3f304a2e83f345b6a9fa5130a0e16a14e991a63b9e8d8186cbf8ee55345eca0",
+      "src/check_annotation_placements.rs": "51340570de824f5a5463c8a39570e8c669f4589b8a92890e932940065d49720a",
+      "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "src/check_anonymous.rs": "c100534b577e31bb01002d5886c640032bfbaab6198783931cb2f21ce4ef147f",
+      "src/check_captures.rs": "631da2f03869c02fdb5dba3e11cea6ff566855533adc0abb81cd3d4ffe2e4c5f",
+      "src/check_class_delegation.rs": "171fec70b3ce6632bbbd704ea92e040f1ef841fbebd02659388fe88ba97135f2",
+      "src/check_classes.rs": "eaa5547ca75d6f4bef4f21d200a050bb8a47362c9c7ea3e4f47b3a66e1cca4b3",
+      "src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+      "src/check_control.rs": "19e7fe2376f65209fd0d9b04be9254ec868fed288707d34631f30e841f3eaca7",
+      "src/check_declarations.rs": "f861524a7648411f7cf3a9279d96e1ebff1f3df7b0a10f6f5a0359ee3770d8da",
+      "src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+      "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "src/check_functions.rs": "209f4c7fd09fd44341e19b58e7791fa122e4a069e593822b463f2296684ff091",
+      "src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+      "src/check_interfaces.rs": "d7890ea35f4d50ecf5468c37d31c883e6f7f7732a09fa655dd5ae0010347f1f7",
+      "src/check_ir_walk.rs": "60f7382a7fbb56814f92c21996c0c60e358983a18638cc76ca65194dc472583d",
+      "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+      "src/check_jvm_fields.rs": "ce5eb721e88e725c21d5dc21a49332637e46de586878cdce9facd58ca87989d4",
+      "src/check_library.rs": "5d20ad0f264b84ca131028338a40e52ef451bcf64098369c9ca3f605e9f21e43",
+      "src/check_member_extensions.rs": "66a4cfa55e05e5699d510113566c91fd54fa79e1257f769df334338c0f7201e5",
+      "src/check_objects.rs": "f8d5db14e31e47e88b436175b913e7b656ac6a98459090f739158d452875f60e",
+      "src/check_operations.rs": "5a0b0b380559259c1d11e8a2ec109a3955e1ad85f62c1b655df8632ac5362c8f",
+      "src/check_overloads.rs": "cd57712984b4c3b52eee025ab50b2b10f7d41612c1540f52f40145af7e4909dd",
+      "src/check_references.rs": "61a780d0816443007725e52f992c717eeab828f7b971749ed3242318a8d80077",
+      "src/check_relations.rs": "5774b3f66fea8c12768633c096728361dae026af9f3534495dff344fc275ea14",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+      "src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+      "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "src/check_varargs.rs": "9928a6be54a33a83360cec67726e8beffba6ed00366a7f3d378f030f1055f90d",
+      "src/check_variant_signatures.rs": "5c12a2f136be19e88cfb96ac2dbeec17f13c187556d49cea559e69ee3ce06ebe",
+      "src/classpath/aliases.rs": "2ad31713a22f8eb0607ed96d838aa96fecedf7a6b261f07473aef66b8bdb8827",
+      "src/classpath/archive.rs": "875c9119ee5386c40848c8570a27b90964d1a7c5ce65f941217652ae59f1b16c",
+      "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+      "src/classpath/metadata.rs": "45c98d86e202e8679f420585e6315c15b65dd38ad80ef3dc6bed5cb7fdd6d1d1",
+      "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/signature.rs": "11e1e7c67cfe84b56892cddf6b6fa85daa19dfec4f34846a215a18605dfb3bec",
+      "src/classpath/source.rs": "894f00588fbdd2d13bc030d82cf7c69b0d15b3d41f8591595bbaf3fa1491515d",
+      "src/classpath/source_enums.rs": "3ae8bea81669d8feec40a16fae21a80f4a9d8006acd23c3f4f68d5d177f79be3",
+      "src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+      "src/classpath.rs": "f9ce2cfd39f09ced9b21f3918be5e0a6eb983836be147114c1bef88aa7606d87",
+      "src/compiled_inline.rs": "61c39be04ac2dc1ad8aca3efd0c87cb491df7af570e096ddb4645a9db88f29c1",
+      "src/const_eval.rs": "6714c1d6296d1c3f60fab09891a492f66a9850b3ff3ee2b5a7df42400dfdcdaa",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+      "src/lib.rs": "d48fefb21db0abb39de2a77c500ddb8829f0ac6a16ecf8eae864d45aa4f19a14",
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/metadata.rs": "a093d40336ffd6bbaa42b3c74fab1e59b6aa982ed66371209cb8123b35d89980",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/source_inline.rs": "50bee0804aaea9cd3e2b8c8e0f162784e0e0e0b16b9e0770dd8c27fca764add2",
+      "src/syntax.rs": "b08f83a7b9fa9f48d40a2da89b7b88157e5b2ec7a1d1f69dbcfe10fb0b311681",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525",
+      "tests/anonymous_subclasses/Base.kt": "ff22d40d13413c156c3a9c474d9f93654fa468da5de6168d0619199975b3233e",
+      "tests/anonymous_subclasses/Check.java": "abb469af2f525d71bfc4c8e46e3c546c502ae91783cde57ca4b8d82ad0466c13",
+      "tests/anonymous_subclasses/Exposure.kt": "7bd8d38055b29cfb402721685ca64aa9e2aff68020fa6753116ff5075ed4c5a9",
+      "tests/anonymous_subclasses/ExposureCheck.java": "cc6f6942f798dede4de256b310129bd3b87fd879153e0b91c9da521b94ba8dbc",
+      "tests/anonymous_subclasses/Java.kt": "39c8ef6a56838fb11a205ca85986c898b276f086088a30d52b007cd21e51ace4",
+      "tests/anonymous_subclasses/JavaBase.java": "07d5037cfec67120ed0f0b7582b406ec1a8a38f2859d98245ca5bfaf87172e16",
+      "tests/anonymous_subclasses/JavaCheck.java": "4d7efdc566353d592d114cdbcd0f7617000167961046afcac3216830ed71e380",
+      "tests/anonymous_subclasses/Source.kt": "00cca3e905c67337f5efcef5409b1edeba09da26a480674878ad5cf9a78e00be",
+      "tests/anonymous_subclasses/boundaries/Generic.kt": "983fe8e8be23921e0fe73df8cb6e8c79b6e85a1a6ec421c8af9aa173684bb060",
+      "tests/anonymous_subclasses/boundaries/InvalidFinal.kt": "7b0cc4ff118d8434190d83e30290840335b3b6cb5f31d3615c77cbd4af44b108",
+      "tests/anonymous_subclasses/boundaries/InvalidFinalMethod.kt": "07b24332f21d02d31a9abe3f777965cbf4a4c7dc1029bb7976fe586c3a28dfa5",
+      "tests/anonymous_subclasses/boundaries/InvalidInterfaceCtor.kt": "a94417b73f95d617f9b5ea477fc15ff5660e46302249de0e739fb5a95f6690a9",
+      "tests/anonymous_subclasses/boundaries/InvalidMissing.kt": "1e526883cffc21cce5edf620d0f3da41feee0eaf6fd6d08594a5c5492eab1e7a",
+      "tests/anonymous_subclasses/boundaries/InvalidPublicClassProperty.kt": "86ff0ed7e70cffb64d2208fbc40f48b14c47570cc65915b234c0634a4ee1457c",
+      "tests/anonymous_subclasses/boundaries/InvalidPublicCompanionProperty.kt": "b8cb0dc6cbe3af4229ce2a8c12448b6e5100d05d38e5b397169362d2bb5d0bd5",
+      "tests/anonymous_subclasses/boundaries/InvalidPublicFunction.kt": "a73ec4f4340803193db78606daa0393074d92771eacd25847d85d19879da6709",
+      "tests/anonymous_subclasses/boundaries/InvalidPublicFunctionMember.kt": "c13e9c9d00aeb6e5cfc7d2d40984664261afe99e8f71d163c0836178a1b9048e",
+      "tests/anonymous_subclasses/boundaries/InvalidPublicHiddenFunction.kt": "ef9ed7b8aa7c4607803311eb5cddbc6ae3e76426faa9853f7f5c1765f2bfdf2c",
+      "tests/anonymous_subclasses/boundaries/InvalidPublicObjectProperty.kt": "5f33450a4ee96b64e9876339235810c8536381794d8597b367e7246144861160",
+      "tests/anonymous_subclasses/boundaries/InvalidPublicProperty.kt": "cdb9f85455034a47895634e6a09e8bb781348252940c5138cce663557a9c66bd",
+      "tests/anonymous_subclasses/boundaries/Property.kt": "e9aea11a8e7b9d8a18a4003e88baa24542a46de5e82e9efd74628fd3df9384d7",
+      "tests/anonymous_generics/Base.kt": "4759cecc1dedbd288635322aeb824d047b6bbf165354eabb44f3186c2ddb5616",
+      "tests/anonymous_generics/Check.java": "03160911fcf5c249e749aee920f5418fafe38ee1038a1120de2c7c1cbb86aa4f",
+      "tests/anonymous_generics/Java.kt": "908bbcf4a8a43d6bc87f6f3e3a194024d4b3d08e2a35d67c50852bb44d4a9436",
+      "tests/anonymous_generics/JavaBase.java": "9cb8256b4901fcd6528189fca94c2e82fb8676bc4e638ea9e5e07d8da36f605c",
+      "tests/anonymous_generics/JavaCheck.java": "41fd17fd4a33322aa2e414a0d5ce9509bbb3fc04de214d429768dd5638c1364f",
+      "tests/anonymous_generics/Source.kt": "d4fcd5bc4c8adf4540fff2e39cfad65bfb2b024c76b133f381256092127a1d8a",
+      "tests/anonymous_generics/boundaries/EnclosingNestedParameter.kt": "59abd626300fe06ae23bd76a02a7983a27ba86a45829b8596ae0a382db17e292",
+      "tests/anonymous_generics/boundaries/EnclosingParameter.kt": "ea0336aa975c9498d83d9b0690bef6591286179415d14286cebd02d537c6343b",
+      "tests/anonymous_generics/boundaries/InvalidBound.kt": "2562118b2778f0fda8af2476704565e27cccbf4c513946ca87ed397adbacecb3",
+      "tests/anonymous_generics/boundaries/InvalidConflict.kt": "e30c58253ea72931d4efe3ac02ae9940c0b71a111dc081c5d1ecc36b0ea75bda",
+      "tests/anonymous_generics/boundaries/InvalidParameter.kt": "4e4471422905e54dea30c0abca6c0e4de396772bd7d2ec4e213c65eeabdb1725",
+      "tests/anonymous_generics/boundaries/InvalidProjection.kt": "3b60229aa596e04255df3534352b3e0ce5abdbf2cd14eae73259dfb9727e7568",
+      "tests/anonymous_generics/boundaries/InvalidResult.kt": "e08e7149033bf82839f4ac23de162d755795bc80f3cf64181b64837892ec4f5a",
+      "tests/anonymous_generics/boundaries/UnitResult.kt": "c6745bbdfecca089cef8b9eab99ecbebfbbe21736cf11ff022b7534390247a0e",
+      "tests/anonymous_typevars/Driver.java": "4924b08fab0b61dd28c66b509571ddaa260a661ed16e94e47253160a1e967ba5",
+      "tests/anonymous_typevars/Model.kt": "4ff6a9e6383d6d543b8daeb92100bfe3d3fac011447bf8f61c9d22064fd0d178",
+      "tests/anonymous_typevars/boundaries/InvalidEnclosingBound.kt": "1967f2acba85072c2c72c81b169c4873849da1f381547238a0866969be6c0e69",
+      "tests/anonymous_typevars/boundaries/Lambda.kt": "273be4c4dc9e3094a36655b9191b875e44e9232a9ef1bd507262bc7cc76b35b2",
+      "tests/anonymous_typevars/boundaries/Shadowed.kt": "20750d7f916844bdcbcd642b56c38a92dba9ab506ee8c71535077760c2f28e03",
+      "tests/anonymous_typevars/boundaries/Suspend.kt": "dccd27cc70698014f3d7c5db922b4c399ab430e4ff275daa85733079534f1693",
+      "tests/anonymous_typevars.rs": "7dd27acc0b05cb8c0601486ffe7a4abcb0c8d6916aac3a502e0417f9cb1df2bf",
+      "tools/check_anonymous_subclasses.py": "20e3173435800d1eca7d26176d5f621497eaa63fcb54d8d99e8b0e80333d1607",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "target/debug/korrust": "94bdd7b2e65c7bbd6298372b7a2f367d260477966be838effe69233e82d08b8f",
+      "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+    }
+  },
+  "source_archive": {
+    "path": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/inputs.zip",
+    "sha256": "0417374f7227ee52752d3f778973c03e4d463acfd18b68d4748187134c8e5a26"
+  },
+  "commands": [
+    {
+      "label": "generic-source/official",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/Base.kt",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/Source.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-source/official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/000.txt"
+    },
+    {
+      "label": "generic-source/candidate",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/target/debug/korrust",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/Base.kt",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/Source.kt",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-source/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/001.txt"
+    },
+    {
+      "label": "generic-source/javac-fixed",
+      "argv": [
+        "javac",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-source/official:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-source/caller",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/Check.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/002.txt"
+    },
+    {
+      "label": "generic-source/verify/official",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-source/caller:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-source/official:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/003.txt"
+    },
+    {
+      "label": "generic-source/abi/official",
+      "argv": [
+        "javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-source/official:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousgeneric.SourceKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/004.txt"
+    },
+    {
+      "label": "generic-source/verify/candidate",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-source/caller:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-source/candidate:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/005.txt"
+    },
+    {
+      "label": "generic-source/abi/candidate",
+      "argv": [
+        "javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-source/candidate:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousgeneric.SourceKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/006.txt"
+    },
+    {
+      "label": "generic-library/official",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/Base.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-library"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/007.txt"
+    },
+    {
+      "label": "generic-compiled/official",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/Source.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-library:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-compiled/official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/008.txt"
+    },
+    {
+      "label": "generic-compiled/candidate",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/target/debug/korrust",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/Source.kt",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-library:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-compiled/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/009.txt"
+    },
+    {
+      "label": "generic-compiled/javac-fixed",
+      "argv": [
+        "javac",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-compiled/official:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-library:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-compiled/caller",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/Check.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/010.txt"
+    },
+    {
+      "label": "generic-compiled/verify/official",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-compiled/caller:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-compiled/official:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-library:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/011.txt"
+    },
+    {
+      "label": "generic-compiled/abi/official",
+      "argv": [
+        "javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-compiled/official:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-library:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousgeneric.SourceKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/012.txt"
+    },
+    {
+      "label": "generic-compiled/verify/candidate",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-compiled/caller:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-compiled/candidate:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-library:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/013.txt"
+    },
+    {
+      "label": "generic-compiled/abi/candidate",
+      "argv": [
+        "javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-compiled/candidate:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-library:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousgeneric.SourceKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/014.txt"
+    },
+    {
+      "label": "generic-java/library",
+      "argv": [
+        "javac",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-java-library",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/JavaBase.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/015.txt"
+    },
+    {
+      "label": "generic-java/official",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/Java.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-library:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-java-library:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-java/official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/016.txt"
+    },
+    {
+      "label": "generic-java/candidate",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/target/debug/korrust",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/Java.kt",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-library:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-java-library:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-java/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/017.txt"
+    },
+    {
+      "label": "generic-java/javac-fixed",
+      "argv": [
+        "javac",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-java/official:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-library:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-java-library:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-java/caller",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/JavaCheck.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/018.txt"
+    },
+    {
+      "label": "generic-java/verify/official",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-java/caller:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-java/official:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-library:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-java-library:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "JavaCheck"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/019.txt"
+    },
+    {
+      "label": "generic-java/abi/official",
+      "argv": [
+        "javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-java/official:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-library:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-java-library:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousgeneric.JavaKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/020.txt"
+    },
+    {
+      "label": "generic-java/verify/candidate",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-java/caller:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-java/candidate:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-library:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-java-library:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "JavaCheck"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/021.txt"
+    },
+    {
+      "label": "generic-java/abi/candidate",
+      "argv": [
+        "javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-java/candidate:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-library:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-java-library:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousgeneric.JavaKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/022.txt"
+    },
+    {
+      "label": "generic-enclosing/official",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_typevars/Model.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-enclosing/official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/023.txt"
+    },
+    {
+      "label": "generic-enclosing/candidate",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/target/debug/korrust",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_typevars/Model.kt",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-enclosing/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/024.txt"
+    },
+    {
+      "label": "generic-enclosing/javac-fixed",
+      "argv": [
+        "javac",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-enclosing/official:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-enclosing/caller",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_typevars/Driver.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/025.txt"
+    },
+    {
+      "label": "generic-enclosing/verify/official",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-enclosing/caller:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-enclosing/official:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "typevars.Driver"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/026.txt"
+    },
+    {
+      "label": "generic-enclosing/abi/official",
+      "argv": [
+        "javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-enclosing/official:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "typevars.ModelKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/027.txt"
+    },
+    {
+      "label": "generic-enclosing/verify/candidate",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-enclosing/caller:/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-enclosing/candidate:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "typevars.Driver"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/028.txt"
+    },
+    {
+      "label": "generic-enclosing/abi/candidate",
+      "argv": [
+        "javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-enclosing/candidate:/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "typevars.ModelKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/029.txt"
+    },
+    {
+      "label": "boundary/EnclosingNestedParameter/official",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/EnclosingNestedParameter.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/EnclosingNestedParameter/official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/030.txt"
+    },
+    {
+      "label": "boundary/EnclosingNestedParameter/candidate",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/target/debug/korrust",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/EnclosingNestedParameter.kt",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/EnclosingNestedParameter/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/031.txt"
+    },
+    {
+      "label": "boundary/EnclosingParameter/official",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/EnclosingParameter.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/EnclosingParameter/official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/032.txt"
+    },
+    {
+      "label": "boundary/EnclosingParameter/candidate",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/target/debug/korrust",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/EnclosingParameter.kt",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/EnclosingParameter/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/033.txt"
+    },
+    {
+      "label": "boundary/InvalidBound/official",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidBound.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/InvalidBound/official"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/034.txt"
+    },
+    {
+      "label": "boundary/InvalidBound/candidate",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/target/debug/korrust",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidBound.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/InvalidBound/candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/035.txt"
+    },
+    {
+      "label": "boundary/InvalidConflict/official",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidConflict.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/InvalidConflict/official"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/036.txt"
+    },
+    {
+      "label": "boundary/InvalidConflict/candidate",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/target/debug/korrust",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidConflict.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/InvalidConflict/candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/037.txt"
+    },
+    {
+      "label": "boundary/InvalidParameter/official",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidParameter.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/InvalidParameter/official"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/038.txt"
+    },
+    {
+      "label": "boundary/InvalidParameter/candidate",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/target/debug/korrust",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidParameter.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/InvalidParameter/candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/039.txt"
+    },
+    {
+      "label": "boundary/InvalidProjection/official",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidProjection.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/InvalidProjection/official"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/040.txt"
+    },
+    {
+      "label": "boundary/InvalidProjection/candidate",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/target/debug/korrust",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidProjection.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/InvalidProjection/candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/041.txt"
+    },
+    {
+      "label": "boundary/InvalidResult/official",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidResult.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/InvalidResult/official"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/042.txt"
+    },
+    {
+      "label": "boundary/InvalidResult/candidate",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/target/debug/korrust",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidResult.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/InvalidResult/candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/043.txt"
+    },
+    {
+      "label": "boundary/UnitResult/official",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/UnitResult.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/UnitResult/official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/044.txt"
+    },
+    {
+      "label": "boundary/UnitResult/candidate",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/target/debug/korrust",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/UnitResult.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/UnitResult/candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/045.txt"
+    },
+    {
+      "label": "boundary/InvalidEnclosingBound/official",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_typevars/boundaries/InvalidEnclosingBound.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/InvalidEnclosingBound/official"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/046.txt"
+    },
+    {
+      "label": "boundary/InvalidEnclosingBound/candidate",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/target/debug/korrust",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_typevars/boundaries/InvalidEnclosingBound.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/InvalidEnclosingBound/candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/047.txt"
+    },
+    {
+      "label": "boundary/Lambda/official",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_typevars/boundaries/Lambda.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/Lambda/official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/048.txt"
+    },
+    {
+      "label": "boundary/Lambda/candidate",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/target/debug/korrust",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_typevars/boundaries/Lambda.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/Lambda/candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/049.txt"
+    },
+    {
+      "label": "boundary/Shadowed/official",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_typevars/boundaries/Shadowed.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/Shadowed/official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/050.txt"
+    },
+    {
+      "label": "boundary/Shadowed/candidate",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/target/debug/korrust",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_typevars/boundaries/Shadowed.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/Shadowed/candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/051.txt"
+    },
+    {
+      "label": "boundary/Suspend/official",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/bin/kotlinc",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_typevars/boundaries/Suspend.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/Suspend/official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/052.txt"
+    },
+    {
+      "label": "boundary/Suspend/candidate",
+      "argv": [
+        "/workspace/work/next-anonymous-typevars/target/debug/korrust",
+        "/workspace/work/next-anonymous-typevars/tests/anonymous_typevars/boundaries/Suspend.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/next-anonymous-typevars/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/Suspend/candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T131605684084Z-anonymous-subclasses/053.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "generic-source/verify/official",
+      "outcome": "pass",
+      "assertion": "Provider behavior, dispatch, fresh instances and unchanged Java caller verification"
+    },
+    {
+      "id": "generic-source/verify/candidate",
+      "outcome": "pass",
+      "assertion": "Provider behavior, dispatch, fresh instances and unchanged Java caller verification"
+    },
+    {
+      "id": "generic-source/public-abi-and-fixed-caller",
+      "outcome": "pass",
+      "signatures": [
+        "descriptor: ()Lanonymousgeneric/Mapper;",
+        "descriptor: ()Lanonymousgeneric/Mapper;",
+        "descriptor: ()Lanonymousgeneric/Mapper;",
+        "descriptor: ()Lanonymousgeneric/Mapper;",
+        "descriptor: (I)Lanonymousgeneric/Base;",
+        "descriptor: (Ljava/lang/String;)Lanonymousgeneric/Base;",
+        "public final class anonymousgeneric.SourceKt {",
+        "public static final anonymousgeneric.Base<java.lang.Integer> ints(int);",
+        "public static final anonymousgeneric.Base<java.lang.String> strings(java.lang.String);",
+        "public static final anonymousgeneric.Mapper<java.lang.Integer> boxedMapper();",
+        "public static final anonymousgeneric.Mapper<java.lang.Long> longMapper();",
+        "public static final anonymousgeneric.Mapper<java.lang.String> nullable();",
+        "public static final anonymousgeneric.Mapper<java.util.List<java.lang.String>> listMapper();"
+      ],
+      "caller_sha256": {
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-source/caller/Check.class": "2459f42e49785349949c56f3c0718297ad921bbb838f08eeb29e0e1475a60c5d"
+      }
+    },
+    {
+      "id": "generic-compiled/verify/official",
+      "outcome": "pass",
+      "assertion": "Provider behavior, dispatch, fresh instances and unchanged Java caller verification"
+    },
+    {
+      "id": "generic-compiled/verify/candidate",
+      "outcome": "pass",
+      "assertion": "Provider behavior, dispatch, fresh instances and unchanged Java caller verification"
+    },
+    {
+      "id": "generic-compiled/public-abi-and-fixed-caller",
+      "outcome": "pass",
+      "signatures": [
+        "descriptor: ()Lanonymousgeneric/Mapper;",
+        "descriptor: ()Lanonymousgeneric/Mapper;",
+        "descriptor: ()Lanonymousgeneric/Mapper;",
+        "descriptor: ()Lanonymousgeneric/Mapper;",
+        "descriptor: (I)Lanonymousgeneric/Base;",
+        "descriptor: (Ljava/lang/String;)Lanonymousgeneric/Base;",
+        "public final class anonymousgeneric.SourceKt {",
+        "public static final anonymousgeneric.Base<java.lang.Integer> ints(int);",
+        "public static final anonymousgeneric.Base<java.lang.String> strings(java.lang.String);",
+        "public static final anonymousgeneric.Mapper<java.lang.Integer> boxedMapper();",
+        "public static final anonymousgeneric.Mapper<java.lang.Long> longMapper();",
+        "public static final anonymousgeneric.Mapper<java.lang.String> nullable();",
+        "public static final anonymousgeneric.Mapper<java.util.List<java.lang.String>> listMapper();"
+      ],
+      "caller_sha256": {
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-compiled/caller/Check.class": "2459f42e49785349949c56f3c0718297ad921bbb838f08eeb29e0e1475a60c5d"
+      }
+    },
+    {
+      "id": "generic-java/verify/official",
+      "outcome": "pass",
+      "assertion": "Provider behavior, dispatch, fresh instances and unchanged Java caller verification"
+    },
+    {
+      "id": "generic-java/verify/candidate",
+      "outcome": "pass",
+      "assertion": "Provider behavior, dispatch, fresh instances and unchanged Java caller verification"
+    },
+    {
+      "id": "generic-java/public-abi-and-fixed-caller",
+      "outcome": "pass",
+      "signatures": [
+        "descriptor: (Ljava/lang/String;)Lanonymousgeneric/JavaBase;",
+        "descriptor: (Ljava/lang/String;)Lanonymousgeneric/JavaBase;",
+        "public final class anonymousgeneric.JavaKt {",
+        "public static final anonymousgeneric.JavaBase<java.lang.String> javaNullable(java.lang.String);",
+        "public static final anonymousgeneric.JavaBase<java.lang.String> javaStrings(java.lang.String);"
+      ],
+      "caller_sha256": {
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-java/caller/JavaCheck.class": "b5989dcd8de95c3f727eba19d082f8c1003d919438001b17f831aede6c206dda"
+      }
+    },
+    {
+      "id": "generic-enclosing/verify/official",
+      "outcome": "pass",
+      "assertion": "Provider behavior, dispatch, fresh instances and unchanged Java caller verification"
+    },
+    {
+      "id": "generic-enclosing/verify/candidate",
+      "outcome": "pass",
+      "assertion": "Provider behavior, dispatch, fresh instances and unchanged Java caller verification"
+    },
+    {
+      "id": "generic-enclosing/public-abi-and-fixed-caller",
+      "outcome": "pass",
+      "signatures": [
+        "descriptor: (Ljava/lang/Number;)Ltypevars/Base;",
+        "descriptor: (Ljava/lang/Object;)Ltypevars/Base;",
+        "descriptor: (Ljava/util/List;)Ltypevars/Mapper;",
+        "public final class typevars.ModelKt {",
+        "public static final <T extends java.lang.Number> typevars.Base<T> bounded(T);",
+        "public static final <T> typevars.Base<T> fromFunction(T);",
+        "public static final <T> typevars.Mapper<java.util.List<T>> fromNested(java.util.List<? extends T>);"
+      ],
+      "caller_sha256": {
+        "/workspace/work/next-anonymous-typevars/target/checks/2026-11-25T131605684084Z-anonymous-subclasses/generic-enclosing/caller/typevars/Driver.class": "16d8e9968c2b9ac5f947f4e49fb16796fb071817f68289597a63da396fdf9bab"
+      }
+    },
+    {
+      "id": "boundary/EnclosingNestedParameter",
+      "outcome": "pass"
+    },
+    {
+      "id": "boundary/EnclosingParameter",
+      "outcome": "pass"
+    },
+    {
+      "id": "boundary/InvalidBound",
+      "outcome": "invalid_rejected",
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidBound.kt",
+          "offset": 60,
+          "category": "invalid_kotlin",
+          "code": "TYPE_ARGUMENT_BOUND_VIOLATED",
+          "message": "Type argument violates upper bound of T",
+          "path": "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidBound.kt",
+          "line": 2,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "boundary/InvalidConflict",
+      "outcome": "invalid_rejected",
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidConflict.kt",
+          "offset": 155,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_GENERIC_SUPERTYPE_CONFLICT",
+          "message": "Anonymous inherited generic specializations conflict",
+          "path": "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidConflict.kt",
+          "line": 3,
+          "column": 26
+        }
+      ]
+    },
+    {
+      "id": "boundary/InvalidParameter",
+      "outcome": "invalid_rejected",
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidParameter.kt",
+          "offset": 108,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_OVERRIDE_MISMATCH",
+          "message": "Anonymous override requires an exact inherited method signature",
+          "path": "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidParameter.kt",
+          "line": 2,
+          "column": 64
+        }
+      ]
+    },
+    {
+      "id": "boundary/InvalidProjection",
+      "outcome": "invalid_rejected",
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidProjection.kt",
+          "offset": 77,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_SUPERTYPE_PROJECTION_INVALID",
+          "message": "Anonymous supertype arguments cannot be projected",
+          "path": "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidProjection.kt",
+          "line": 2,
+          "column": 33
+        }
+      ]
+    },
+    {
+      "id": "boundary/InvalidResult",
+      "outcome": "invalid_rejected",
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidResult.kt",
+          "offset": 108,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_OVERRIDE_RESULT_MISMATCH",
+          "message": "Anonymous override result differs from inherited method",
+          "path": "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/InvalidResult.kt",
+          "line": 2,
+          "column": 64
+        }
+      ]
+    },
+    {
+      "id": "boundary/UnitResult",
+      "outcome": "unsupported_language",
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/UnitResult.kt",
+          "offset": 91,
+          "category": "unsupported_language",
+          "code": "ANONYMOUS_OBJECT_SHAPE_UNSUPPORTED",
+          "message": "Anonymous generic Unit results require unsupported boxed Unit overrides",
+          "path": "/workspace/work/next-anonymous-typevars/tests/anonymous_generics/boundaries/UnitResult.kt",
+          "line": 2,
+          "column": 57
+        }
+      ]
+    },
+    {
+      "id": "boundary/InvalidEnclosingBound",
+      "outcome": "invalid_rejected",
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/next-anonymous-typevars/tests/anonymous_typevars/boundaries/InvalidEnclosingBound.kt",
+          "offset": 43,
+          "category": "invalid_kotlin",
+          "code": "TYPE_ARGUMENT_BOUND_VIOLATED",
+          "message": "Type argument violates upper bound of X",
+          "path": "/workspace/work/next-anonymous-typevars/tests/anonymous_typevars/boundaries/InvalidEnclosingBound.kt",
+          "line": 2,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "boundary/Lambda",
+      "outcome": "unsupported_language",
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/next-anonymous-typevars/tests/anonymous_typevars/boundaries/Lambda.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "ANONYMOUS_ENCLOSING_TYPE_PARAMETERS_UNSUPPORTED",
+          "message": "Anonymous enclosing type parameters require an unambiguous emitted lexical declaration",
+          "path": "/workspace/work/next-anonymous-typevars/tests/anonymous_typevars/boundaries/Lambda.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "boundary/Shadowed",
+      "outcome": "unsupported_language",
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/next-anonymous-typevars/tests/anonymous_typevars/boundaries/Shadowed.kt",
+          "offset": 73,
+          "category": "unsupported_language",
+          "code": "TYPE_PARAMETER_SHADOW_UNSUPPORTED",
+          "message": "Shadowing an enclosing type parameter is unsupported",
+          "path": "/workspace/work/next-anonymous-typevars/tests/anonymous_typevars/boundaries/Shadowed.kt",
+          "line": 3,
+          "column": 11
+        }
+      ]
+    },
+    {
+      "id": "boundary/Suspend",
+      "outcome": "unsupported_language",
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/next-anonymous-typevars/tests/anonymous_typevars/boundaries/Suspend.kt",
+          "offset": 32,
+          "category": "unsupported_language",
+          "code": "SUSPEND_DECLARATION_SHAPE_UNSUPPORTED",
+          "message": "Generic, extension, inline, vararg, and defaulted suspend declarations are unsupported",
+          "path": "/workspace/work/next-anonymous-typevars/tests/anonymous_typevars/boundaries/Suspend.kt",
+          "line": 2,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "evidence": [],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_anonymous_subclasses.py",
+      "--compiler",
+      "/workspace/work/next-anonymous-typevars/target/debug/korrust",
+      "--generic-only"
+    ]
+  ],
+  "limitations": [
+    "Concrete generic and nongeneric class and interface bases with constructor substitution, override specialization, erased bridges and JVM generic superclass/interface signatures. Own members must be override functions; anonymous properties, generic methods and covariant bridges remain diagnosed. Superclass default/reordered arguments and conflicting inherited defaults are outside this evidence.",
+    "Lexical type variables in anonymous supertypes are covered in generic functions, generic class methods, primary-constructor initializers and generic interface default methods, with EnclosingMethod/InnerClasses and reflective generic declarations, override signatures and captures. Anonymous Kotlin metadata and full anonymous identity in exported APIs remain outside this evidence. Shadowed method/class type-variable names, generic suspend contexts, ordinary-lambda enclosing contexts remain explicit unsupported boundaries.",
+    "Java callers compile once against official Kotlin output, then execute unchanged with verification against both providers."
+  ],
+  "counts": {
+    "pass": 14,
+    "invalid_rejected": 6,
+    "unsupported_language": 4
+  }
+}
