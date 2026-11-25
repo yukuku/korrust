@@ -4992,6 +4992,8 @@ fn emit_class_with(
     for function in &class.default_functions {
         let mut code = Code {
             coroutine: false,
+            suspension: None,
+            inline_markers: false,
             pool: &mut pool,
             functions: &[],
             owner,

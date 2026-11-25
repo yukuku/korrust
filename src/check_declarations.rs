@@ -4405,6 +4405,7 @@ pub(super) fn inherited_default_function(
         next += ty.slots() as u16;
     }
     Ok(Function {
+        inline: false,
         suspend_: false,
         extension_receiver: false,
         class_type_params: class_parameters.iter().map(|p| p.name.clone()).collect(),
