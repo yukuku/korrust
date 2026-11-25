@@ -53,7 +53,7 @@ def main():
                   cases=[], commands=[], reproduction_command=['python3', relative(__file__), '--candidate', relative(candidate), '--output', relative(directory)],
                   runtime_boxing_oracle=dict(source='references/kotlin/libraries/stdlib/jvm/src/kotlin/coroutines/jvm/internal/boxing.kt', source_sha256=sha(ROOT / 'references/kotlin/libraries/stdlib/jvm/src/kotlin/coroutines/jvm/internal/boxing.kt'), evidence='Java asserts coroutine Int input/result wrappers, boxed Any local, listOf element and nullable-call input are fresh, while a separate ordinary boxing function retains Integer.valueOf cache identity'),
                   scope='Bounded suspend functions with real delayed continuation resumption, saved state, ordinary source/compiled suspend calls, function types, public JVM ABI and logical Kotlin metadata',
-                  limitations=['Source suspend lambda literals and suspend constructor references are unsupported; extension, generic, defaulted, vararg and inline suspend declarations remain unsupported', 'Imported suspend inline and default-mask calls are unsupported; suspension inside call receivers and arguments remains unsupported', 'Nullable Unit and Unit-valued suspend callback parameters are unsupported; no source generic kotlin.Result/value-class support or frame DebugMetadata/debugger/stacktrace equivalence claim', 'Public logical function ABI and metadata are compared; generated frame names and spill layouts need not match', 'Authored dependency is an identical external library classpath for both providers; unchanged upstream CoroutineHelpers.kt must be compiled separately by the upstream adapter'])
+                  limitations=['Source suspend lambda literals and suspend constructor references are unsupported; extension, generic, defaulted, vararg and inline suspend declarations remain unsupported', 'Imported suspend inline and default-mask calls and nested suspension invocations in call arguments remain unsupported', 'Nullable Unit and Unit-valued suspend callback parameters are unsupported; no source generic kotlin.Result/value-class support or frame DebugMetadata/debugger/stacktrace equivalence claim', 'Public logical function ABI and metadata are compared; generated frame names and spill layouts need not match', 'Authored dependency is an identical external library classpath for both providers; unchanged upstream CoroutineHelpers.kt must be compiled separately by the upstream adapter'])
     options = ['-language-version', '2.3', '-api-version', '2.3', '-jvm-target', '1.8']
 
     def save():
@@ -166,15 +166,15 @@ def main():
         case('invalid_' + str(index), rejection)
 
     unsupported = [
-        'suspend fun bounded(step: suspend () -> String): String = step().substring(0)',
-        'suspend fun bounded(step: suspend () -> String): String { while (true) { val result = step().substring(0) }; return "x" }',
-        'suspend fun bounded(step: suspend () -> String): String = step().substring(step().length)',
+        'suspend fun bounded(step: suspend (Int) -> Int): Int = step(step(1))',
+        'suspend fun bounded(step: suspend (Int) -> Int): Int { while (true) { step(step(1)) }; return 0 }',
+        'suspend fun bounded(step: suspend (Int, Int) -> Int): Int = step(1, step(2, 3))',
         'suspend fun <T> bounded(value: T): T = value',
         'suspend fun bounded(value: Int = 1): Int = value',
         'class Member { private suspend fun bounded(): String = "x" }',
         'suspend fun bounded(step: suspend () -> String): String { val value: suspend () -> String = { "x" }; return step() }',
         'class C; fun bounded(): suspend () -> C = ::C',
-        'suspend fun bounded(step: suspend () -> String): String = step().substring(step().length)',
+        'suspend fun bounded(step: suspend (Int, Int) -> Int): Int = step(1, step(2, 3))',
         'suspend fun bounded(step: suspend (Unit) -> String): String = step(Unit)',
         'suspend fun bounded(): Unit? = null',
         '@JvmInline value class V(val raw: Int)\nsuspend fun bounded(value: V): V = value',

@@ -183,8 +183,8 @@ def main():
         'open class C { open suspend fun read(): String = "x" }',
         'class C { suspend fun <T> read(value: T): T = value }',
         'class C { suspend fun read(value: String = "x"): String = value }',
-        'class C { suspend fun read(step: suspend () -> String): String = step().substring(0) }',
-        'interface R { suspend fun read(step: suspend () -> String): String = step().substring(step().length) }',
+        'class C { suspend fun read(step: suspend (Int) -> Int): Int = step(step(1)) }',
+        'interface R { suspend fun read(step: suspend (Int, Int) -> Int): Int = step(1, step(2, 3)) }',
     ]
     for category, sources in [('invalid_kotlin', invalid), ('unsupported_language', unsupported)]:
         for index, source in enumerate(sources):
