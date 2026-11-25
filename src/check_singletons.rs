@@ -96,6 +96,44 @@ pub(super) fn check_with_owner(
             ));
         }
     }
+    if object.annotations.is_empty() {
+        let mut classes = HashMap::new();
+        let mut pending = Vec::new();
+        let mut has_members = false;
+        for name in &object.interfaces {
+            let resolved = resolve(name, &imports, &source.package);
+            has_members |= classpath
+                .methods(&resolved)?
+                .iter()
+                .any(|m| m.access & 8 == 0);
+            imports.insert(name.clone(), resolved.clone());
+            pending.push(resolved);
+        }
+        if has_members {
+            while let Some(name) = pending.pop() {
+                if classes.contains_key(&name) {
+                    continue;
+                }
+                if classes.len() > 256 {
+                    return Err(Diagnostic::new(
+                        object.offset,
+                        "Object interface hierarchy exceeds the supported limit",
+                    ));
+                }
+                let class = classpath.load(&name)?;
+                pending.extend(class.interfaces.clone());
+                classes.insert(name, class);
+            }
+            return objects::check(
+                object,
+                &source.package,
+                classpath,
+                &imports,
+                &classes,
+                Some(owner),
+            );
+        }
+    }
     if object.annotations.len() > 1 {
         return Err(Diagnostic::new(
             object.offset,
@@ -184,6 +222,7 @@ pub(super) fn check_with_owner(
         class_decl: None,
         interface_decl: None,
         object_decl: Some(DynamicObject {
+            default_functions: Vec::new(),
             bridges: Vec::new(),
             exposed_fields: HashMap::new(),
             constants: object.constants.clone(),

@@ -294,6 +294,9 @@ fn object(node: &mut DynamicObject, visitor: &mut impl Visitor) {
         }
     }
     statements(&mut node.initializers, &node.owner, visitor);
+    for method in &mut node.default_functions {
+        function(method, &node.owner, visitor);
+    }
     for method in &mut node.methods {
         function(&mut method.function, &node.owner, visitor);
     }
@@ -569,6 +572,7 @@ mod tests {
                 }),
             }),
             object_decl: Some(DynamicObject {
+                default_functions: Vec::new(),
                 bridges: Vec::new(),
                 exposed_fields: HashMap::new(),
                 constants: Vec::new(),

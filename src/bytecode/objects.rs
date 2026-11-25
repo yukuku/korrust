@@ -491,6 +491,14 @@ pub fn emit_dynamic_object(
             builder.methods.push(default);
         }
     }
+    for function in &object.default_functions {
+        builder.methods.push(interface_default_function(
+            &mut builder.pool,
+            owner,
+            function,
+            lambdas,
+        )?);
+    }
     for bridge in &object.bridges {
         builder
             .methods

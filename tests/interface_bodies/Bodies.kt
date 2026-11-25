@@ -39,6 +39,9 @@ interface Ordinary {
     fun <T> relay(value: T): T = identity(value)
 }
 class Plain: Ordinary
+object Named: Ordinary { fun own(): String = "named" }
+object Empty: Ordinary
+fun anonymous(): Ordinary = object: Ordinary {}
 interface Refined: Ordinary {
     override fun <R> identity(value: R): R = value
 }

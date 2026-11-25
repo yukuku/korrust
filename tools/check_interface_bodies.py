@@ -82,7 +82,7 @@ def main():
             result=run('verified fixed Java caller '+provider,[jdk/'java','-Xverify:all','-cp',cp(callers,output,stdlib),'Calls'])
             case('fixed-java/'+provider,result.stdout=='OK\n')
             signatures[provider]={}
-            for owner in ['Generic','Text','IntDefault','OverrideDefault','Ordinary','Plain','Refined','RefinedImpl','Generic$DefaultImpls','Ordinary$DefaultImpls','Refined$DefaultImpls','Child','ChildText','ChildNumber','StringChild','Specialized','Bounded','BoundedImpl','Property','PropertyText','Child$DefaultImpls','StringChild$DefaultImpls','Bounded$DefaultImpls','Property$DefaultImpls']:
+            for owner in ['Generic','Text','IntDefault','OverrideDefault','Ordinary','Plain','Refined','RefinedImpl','Generic$DefaultImpls','Ordinary$DefaultImpls','Refined$DefaultImpls','Child','ChildText','ChildNumber','StringChild','Specialized','Bounded','BoundedImpl','Property','PropertyText','Child$DefaultImpls','StringChild$DefaultImpls','Bounded$DefaultImpls','Property$DefaultImpls','Named','Empty']:
                 sig=run('JVM callable signatures '+provider+'/'+owner,[jdk/'javap','-p','-s','-v','-cp',output,'interfacebodies.'+owner])
                 signatures[provider][owner]=callable_signatures(sig.stdout)
             for consumer in ['official','candidate']:

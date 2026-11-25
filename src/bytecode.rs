@@ -3617,6 +3617,61 @@ fn generic_override_bridge(
     )
 }
 
+fn interface_default_function(
+    pool: &mut Pool,
+    owner: &str,
+    function: &crate::check::Function,
+    lambdas: &[crate::check::LambdaDecl],
+) -> Result<Vec<u8>> {
+    let mut code = Code {
+        coroutine: false,
+        suspension: None,
+        inline_markers: false,
+        pool,
+        functions: &[],
+        owner,
+        bytes: Vec::new(),
+        labels: Vec::new(),
+        branches: Vec::new(),
+        loops: Vec::new(),
+        loop_finally_depths: Vec::new(),
+        loop_names: Vec::new(),
+        pending_loop_name: None,
+        finalizers: Vec::new(),
+        exceptions: Vec::new(),
+        temporary_count: 0,
+        temporary_patches: Vec::new(),
+        lambdas,
+        inline_local_maps: Vec::new(),
+        inline_returns: Vec::new(),
+        in_lambda: false,
+        max_stack: 2,
+    };
+    code.block(&function.body)?;
+    let stack = code.max_stack as u16;
+    let code = code.into_simple(function.locals, stack)?;
+    let mut method = simple_method(
+        pool,
+        0x41 | if function.vararg { 0x80 } else { 0 },
+        function.jvm_name(),
+        &function.descriptor(),
+        code,
+        generic_function(function).as_deref(),
+        nonnull(function.physical_result()),
+    )?;
+    parameter_annotations(pool, &mut method, &function.params)?;
+    nullable_result(pool, &mut method, function.physical_result())?;
+    frames::attach(
+        pool,
+        &mut method,
+        owner,
+        &function.params,
+        function.locals,
+        false,
+    )?;
+    Ok(method)
+}
+
 fn interface_bridge(pool: &mut Pool, bridge: &crate::classpath::JavaMethod) -> Result<Vec<u8>> {
     let (params, result) = invocation_types(&bridge.descriptor)?;
     let count = 1 + params.iter().map(Type::slots).sum::<usize>();
@@ -4990,53 +5045,9 @@ fn emit_class_with(
         methods.push(interface_bridge(&mut pool, bridge)?);
     }
     for function in &class.default_functions {
-        let mut code = Code {
-            coroutine: false,
-            suspension: None,
-            inline_markers: false,
-            pool: &mut pool,
-            functions: &[],
-            owner,
-            bytes: Vec::new(),
-            labels: Vec::new(),
-            branches: Vec::new(),
-            loops: Vec::new(),
-            loop_finally_depths: Vec::new(),
-            loop_names: Vec::new(),
-            pending_loop_name: None,
-            finalizers: Vec::new(),
-            exceptions: Vec::new(),
-            temporary_count: 0,
-            temporary_patches: Vec::new(),
-            lambdas,
-            inline_local_maps: Vec::new(),
-            inline_returns: Vec::new(),
-            in_lambda: false,
-            max_stack: 2,
-        };
-        code.block(&function.body)?;
-        let stack = code.max_stack as u16;
-        let code = code.into_simple(function.locals, stack)?;
-        let mut method = simple_method(
-            &mut pool,
-            0x41 | if function.vararg { 0x80 } else { 0 },
-            function.jvm_name(),
-            &function.descriptor(),
-            code,
-            generic_function(function).as_deref(),
-            nonnull(function.physical_result()),
-        )?;
-        parameter_annotations(&mut pool, &mut method, &function.params)?;
-        nullable_result(&mut pool, &mut method, function.physical_result())?;
-        frames::attach(
-            &mut pool,
-            &mut method,
-            owner,
-            &function.params,
-            function.locals,
-            false,
-        )?;
-        methods.push(method);
+        methods.push(interface_default_function(
+            &mut pool, owner, function, lambdas,
+        )?);
     }
     for bridge in &class.generic_bridges {
         methods.push(generic_override_bridge(&mut pool, owner, bridge)?);

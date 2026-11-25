@@ -24,6 +24,14 @@ public class Calls {
         check(Ordinary.DefaultImpls.identity(ordinary, null) == null);
         check(new OverrideDefault().relay("override").equals("override"));
         check(new RefinedImpl().relay("refined").equals("refined"));
+        check(Named.INSTANCE.identity("named").equals("named"));
+        check(Named.INSTANCE.bounded(new Name("object-bound")).text().equals("object-bound"));
+        check(Empty.INSTANCE.identity("empty").equals("empty"));
+        check(Empty.INSTANCE.relay("empty-relay").equals("empty-relay"));
+        check(BodiesKt.anonymous().identity("anonymous").equals("anonymous"));
+        check(BodiesKt.anonymous().identity(null) == null);
+        check(BodiesKt.anonymous() != BodiesKt.anonymous());
+        check(BodiesKt.anonymous().bounded(new Name("anonymous-bound")).text().equals("anonymous-bound"));
         check(new ChildText().echo("child").equals("child"));
         check(new ChildNumber().echo(43) == 43);
         check(new Specialized().consume(1, "special").equals("special"));

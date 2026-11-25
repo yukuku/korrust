@@ -137,6 +137,7 @@ pub struct Module {
     pub object_decl: Option<DynamicObject>,
 }
 pub struct DynamicObject {
+    pub default_functions: Vec<Function>,
     pub bridges: Vec<JavaMethod>,
     pub exposed_fields: HashMap<String, u16>,
     pub constants: Vec<syntax::ConstDecl>,
@@ -5812,18 +5813,21 @@ impl Checker<'_> {
                                     if class.fields.iter().any(|f| {
                                         f.name == "INSTANCE" && f.descriptor == format!("L{owner};")
                                     }) {
-                                        let methods = self
-                                            .classpath
-                                            .methods(owner)?
-                                            .into_iter()
-                                            .filter(|m| {
-                                                m.source_name() == name
-                                                    && m.access & 1 != 0
-                                                    && m.library.as_ref().is_none_or(|library| {
-                                                        library.receiver.is_none()
-                                                    })
-                                            })
-                                            .collect::<Vec<_>>();
+                                        let methods = library::ordinary_member_methods(
+                                            self.classpath,
+                                            owner,
+                                            name,
+                                            args.len(),
+                                        )?
+                                        .into_iter()
+                                        .filter(|m| {
+                                            m.source_name() == name
+                                                && m.access & 1 != 0
+                                                && m.library.as_ref().is_none_or(|library| {
+                                                    library.receiver.is_none()
+                                                })
+                                        })
+                                        .collect::<Vec<_>>();
                                         let method = self.select_method(&methods, args, offset)?;
                                         return if !method.instance_dispatch() {
                                             self.library_static_call(method, args, offset)

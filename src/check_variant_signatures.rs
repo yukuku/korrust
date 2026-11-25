@@ -723,6 +723,9 @@ pub(crate) fn validate_module(
             }
         }
         bridge_types(&mut checked.bridges, cp);
+        for default in &mut checked.default_functions {
+            function(default, cp, true);
+        }
         for field in &checked.fields {
             if checked.exposed_fields.contains_key(&field.name) {
                 exposed_field(&field.ty, cp)?;
