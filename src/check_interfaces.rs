@@ -918,6 +918,30 @@ fn check_interface(
         .cloned()
         .collect();
     defaults.sort_by(|a, b| a.name.cmp(&b.name));
+    for method in &defaults {
+        if !classpath.is_source(&method.owner) && classpath.load(&method.owner).is_ok() {
+            let descriptor = format!("(L{};{}", method.owner, &method.descriptor[1..]);
+            if !classpath
+                .load(&format!("{}$DefaultImpls", method.owner))
+                .is_ok_and(|helper| {
+                    helper.methods.iter().any(|candidate| {
+                        candidate.name == method.name
+                            && candidate.descriptor == descriptor
+                            && candidate.access & 9 == 9
+                    })
+                })
+            {
+                return Err(Diagnostic::new(
+                    source.offset,
+                    "Inherited interface defaults require a compatible DefaultImpls helper",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "INHERITED_INTERFACE_HELPER_UNSUPPORTED",
+                ));
+            }
+        }
+    }
     let default_functions = defaults
         .iter()
         .filter(|m| !m.library.as_ref().is_some_and(|l| l.suspend_))

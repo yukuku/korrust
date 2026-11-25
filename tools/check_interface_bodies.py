@@ -93,6 +93,22 @@ def main():
                 result=run('verified Kotlin consumer '+provider+'/'+consumer,[jdk/'java','-Xverify:all','-cp',cp(runner,consumer_out,output,stdlib),'ConsumeCalls'])
                 case('kotlin-consumer/'+provider+'/'+consumer,result.stdout=='OK\n')
         case('JVM-public-callable-signatures',signatures['official']==signatures['candidate'])
+        no_compat = work/'no-compat-library'
+        run('compile official provider without compatibility helpers',[kotlin,FIXTURES/'NoCompat.kt','-jvm-target','1.8','-jvm-default=no-compatibility','-d',no_compat])
+        assert not (no_compat/'nocompat/Api$DefaultImpls.class').exists()
+        direct_outputs = {provider:work/('no-compat-'+provider) for provider in outputs}
+        for provider, output in direct_outputs.items():
+            compile(provider,FIXTURES/'NoCompatClass.kt',output,[no_compat])
+        direct_callers=work/'no-compat-java'
+        run('compile fixed direct default caller',[jdk/'javac','-cp',cp(direct_outputs['official'],no_compat,stdlib),'-d',direct_callers,FIXTURES/'NoCompatCalls.java'])
+        for provider, output in direct_outputs.items():
+            result=run('verified direct default without compatibility helpers '+provider,[jdk/'java','-Xverify:all','-cp',cp(direct_callers,output,no_compat,stdlib),'NoCompatCalls'])
+            case('no-compat/direct-default/'+provider,result.stdout=='OK\n')
+        compile('official',FIXTURES/'NoCompatInterface.kt',work/'no-compat-derived-official',[no_compat])
+        result=run('diagnose missing inherited interface compatibility helper',[candidate,FIXTURES/'NoCompatInterface.kt','--diagnostic-format','json','-cp',cp(no_compat,stdlib),'-d',work/'no-compat-derived-candidate'],(1,))
+        diagnostics=[json.loads(line) for line in result.stderr.splitlines() if line.startswith('{')]
+        assert any(d.get('code')=='INHERITED_INTERFACE_HELPER_UNSUPPORTED' for d in diagnostics)
+        report['cases'].append(dict(id='no-compat/inherited-interface-helper',outcome='unsupported_language',diagnostics=diagnostics))
         for item in json.loads((FIXTURES/'Rejections.json').read_text()):
             source=work/(item['id']+'.kt');source.write_text(item['source'])
             for provider in ['official','candidate']:
