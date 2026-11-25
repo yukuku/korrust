@@ -47,3 +47,7 @@ fun nestedLocalReference(step: suspend (String) -> String): () -> (suspend (Stri
     return factory
 }
 fun nestedBoundReference(worker: Worker): () -> (suspend (String) -> String) = { worker::read }
+fun zeroReference(step: suspend () -> String): suspend () -> String {
+    suspend fun local(): String = step()
+    return ::local
+}

@@ -23,7 +23,7 @@ fn suspend_references_keep_logical_parameter_and_result_types() {
             .filter(|class| class.internal_name.contains("$lambda$"))
             .filter(|class| !class.internal_name.contains("$suspend$"))
             .count(),
-        17
+        19
     );
 }
 

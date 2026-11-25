@@ -7,6 +7,7 @@ import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
 import kotlin.coroutines.EmptyCoroutineContext;
 import kotlin.coroutines.intrinsics.IntrinsicsKt;
+import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
 
 public final class Calls {
@@ -63,6 +64,16 @@ public final class Calls {
         check(nestedDone.count == 0 && nestedStep.inputs.equals(List.of("nested")));
         nestedStep.resume("nested-capture");
         check("nested-capture".equals(nestedDone.success()));
+        var pending = new ArrayList<Continuation<? super String>>();
+        Function1<Continuation<? super String>, Object> zeroStep = continuation -> {
+            pending.add(continuation);
+            return SUSPENDED;
+        };
+        Done zeroDone = new Done();
+        check(ModelsKt.zeroReference(zeroStep).invoke(zeroDone) == SUSPENDED);
+        check(zeroDone.count == 0 && pending.size() == 1);
+        pending.remove(0).resumeWith("zero");
+        check("zero".equals(zeroDone.success()));
     }
     static void members() {
         for (int kind = 0; kind < 6; kind++) {
