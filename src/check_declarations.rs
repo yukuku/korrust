@@ -4573,7 +4573,7 @@ fn variance_visibility_error(error: Diagnostic, private: bool) -> Diagnostic {
 
 pub(super) fn validate_member_generics(
     function: &syntax::Function,
-    is_override: bool,
+    _is_override: bool,
     classpath: &Classpath,
     imports: &HashMap<String, String>,
     classes: &HashMap<String, JavaClass>,
@@ -4581,13 +4581,15 @@ pub(super) fn validate_member_generics(
     if function.type_params.is_empty() {
         return Ok(());
     }
-    if is_override
-        || function.inline
-        || function.suspend_
-        || function.vararg
-        || function.defaults.iter().any(Option::is_some)
-    {
-        return Err(Diagnostic::new(function.offset, "Generic source member overrides, inline, suspend, varargs and defaults are unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "GENERIC_MEMBER_COMPLEXITY_UNSUPPORTED"));
+    if function.inline || function.suspend_ || function.vararg {
+        return Err(Diagnostic::new(
+            function.offset,
+            "Generic source inline, suspend and vararg members are unsupported",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "GENERIC_MEMBER_COMPLEXITY_UNSUPPORTED",
+        ));
     }
     validate_classifier_generics(
         &function.type_params,
