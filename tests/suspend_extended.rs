@@ -124,3 +124,103 @@ public class Calls {
 "#,
     );
 }
+
+#[test]
+fn local_suspend_functions_keep_captures_continuations_and_failures() {
+    compare(
+        r#"
+private suspend fun helper(step: suspend (Int) -> Int, value: Int): Int = step(value)
+suspend fun local(seed: Int, step: suspend (Int) -> Int): Int {
+    var saved = seed
+    suspend fun next(value: Int): Int {
+        val result = helper(step, value)
+        saved += result
+        return saved
+    }
+    val first = next(1)
+    val second = next(first)
+    return saved + second
+}
+suspend fun immediate(seed: Long, value: Long): Long {
+    suspend fun identity(argument: Long): Long = argument + seed
+    return identity(value)
+}
+class Host(val seed: Int) {
+    suspend fun member(step: suspend (Int) -> Int): Int {
+        suspend fun next(argument: Int): Int {
+            val value = step(argument)
+            return seed + value
+        }
+        return next(1)
+    }
+}
+"#,
+        r#"
+import kotlin.ResultKt;
+import kotlin.coroutines.*;
+import kotlin.coroutines.intrinsics.IntrinsicsKt;
+import kotlin.jvm.functions.Function2;
+public class Calls {
+    static final Object SUSPENDED = IntrinsicsKt.getCOROUTINE_SUSPENDED();
+    static void check(boolean value) { if (!value) throw new AssertionError(); }
+    static class Done implements Continuation<Integer> {
+        int count; Object result;
+        public CoroutineContext getContext() { return EmptyCoroutineContext.INSTANCE; }
+        public void resumeWith(Object value) { count++; result = value; }
+    }
+    static class Step implements Function2<Integer, Continuation<? super Integer>, Object> {
+        int count; Continuation<? super Integer> pending;
+        public Object invoke(Integer value, Continuation<? super Integer> completion) {
+            check(value == (count++ == 0 ? 1 : 13)); pending = completion; return SUSPENDED;
+        }
+    }
+    public static void main(String[] args) {
+        Step step = new Step(); Done done = new Done();
+        check(ExtendedKt.local(10, step, done) == SUSPENDED);
+        check(step.count == 1 && done.count == 0); step.pending.resumeWith(3);
+        check(step.count == 2 && done.count == 0); step.pending.resumeWith(7);
+        check(done.count == 1 && done.result.equals(40));
+        Step fail = new Step(); Done failed = new Done();
+        check(ExtendedKt.local(10, fail, failed) == SUSPENDED); fail.pending.resumeWith(3);
+        RuntimeException error = new RuntimeException("local");
+        fail.pending.resumeWith(ResultKt.createFailure(error));
+        check(failed.count == 1 && fail.count == 2);
+        try { ResultKt.throwOnFailure(failed.result); throw new AssertionError(); }
+        catch (RuntimeException caught) { check(caught == error); }
+        check(ExtendedKt.immediate(9L, 4L, null).equals(13L));
+        Step memberStep = new Step(); Done memberDone = new Done();
+        check(new Host(10).member(memberStep, memberDone) == SUSPENDED);
+        memberStep.pending.resumeWith(3);
+        check(memberDone.count == 1 && memberDone.result.equals(13));
+        System.out.println("OK");
+    }
+}
+"#,
+    );
+}
+
+#[test]
+fn local_suspend_boundaries_remain_explicit() {
+    let standard =
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("references/kotlinc/lib/kotlin-stdlib.jar");
+    for source in [
+        "fun broken(step: suspend () -> String): String { suspend fun inner(): String = step(); return inner() }",
+        "fun broken(): String { suspend fun inner(): String = \"x\"; return inner() }",
+    ] {
+        let error =
+            compile_all_with_classpath(source, "Broken.kt", std::slice::from_ref(&standard))
+                .err()
+                .expect(source);
+        assert_eq!(
+            error.kind,
+            korrust::DiagnosticKind::InvalidKotlin,
+            "{source}: {}",
+            error.message
+        );
+    }
+    let source = "suspend fun broken(step: suspend () -> String): String { suspend fun inner(): String = if (true) step() else \"x\"; return inner() }";
+    let error = compile_all_with_classpath(source, "Broken.kt", &[standard])
+        .err()
+        .unwrap();
+    assert_eq!(error.kind, korrust::DiagnosticKind::UnsupportedLanguage);
+}

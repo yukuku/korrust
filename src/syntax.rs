@@ -5522,16 +5522,6 @@ impl Parser {
                 ));
         } else if self.starts_declaration("fun") {
             let function = self.function()?;
-            if function.suspend_ {
-                return Err(Diagnostic::new(
-                    function.offset,
-                    "Local suspend function declarations are unsupported",
-                )
-                .with_kind(
-                    DiagnosticKind::UnsupportedLanguage,
-                    "SUSPEND_LOCAL_DECLARATION_UNSUPPORTED",
-                ));
-            }
             StatementKind::LocalFunction(Box::new(function))
         } else if self.at("val") || self.at("var") {
             let mutable = self.take("var");

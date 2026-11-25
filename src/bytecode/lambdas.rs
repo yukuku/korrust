@@ -27,21 +27,28 @@ pub fn emit_lambdas(
                 .map(|field| (object.owner.clone(), field.name.clone())),
         );
     }
-    module
-        .lambdas
-        .iter()
-        .map(|lambda| {
-            emit(
-                lambda,
+    let mut files = Vec::new();
+    for lambda in &module.lambdas {
+        files.push(emit(
+            lambda,
+            &module.functions,
+            facade,
+            file,
+            &module.lambdas,
+            values,
+            &exposed,
+        )?);
+        if lambda.function.suspend_ {
+            files.extend(suspend::emit_frames_in(
+                std::slice::from_ref(&lambda.function),
                 &module.functions,
-                facade,
+                &lambda.owner,
                 file,
-                &module.lambdas,
-                values,
-                &exposed,
-            )
-        })
-        .collect()
+                true,
+            )?);
+        }
+    }
+    Ok(files)
 }
 
 pub(super) fn emit(
@@ -54,7 +61,8 @@ pub(super) fn emit(
     exposed: &HashSet<(String, String)>,
 ) -> Result<crate::ClassFile> {
     let function = &lambda.function;
-    if lambda.anonymous_methods.is_none() && function.params.len() > 22 {
+    let arity = function.params.len() + usize::from(function.suspend_);
+    if lambda.anonymous_methods.is_none() && arity > 22 {
         return Err(failure("Lambda arities greater than 22 are unsupported"));
     }
     if function
@@ -76,10 +84,14 @@ pub(super) fn emit(
     let this = pool.class(owner)?;
     let parent = pool.class("java/lang/Object")?;
     let interface = lambda.interface.as_ref().map_or_else(
-        || format!("kotlin/jvm/functions/Function{}", function.params.len()),
+        || format!("kotlin/jvm/functions/Function{arity}"),
         |method| method.owner.clone(),
     );
     let interface_class = pool.class(&interface)?;
+    let suspend_marker = function
+        .suspend_
+        .then(|| pool.class("kotlin/coroutines/jvm/internal/SuspendFunction"))
+        .transpose()?;
     let mut fields = Vec::new();
     for (name, ty) in &lambda.captures {
         fields.extend(class_field(&mut pool, name, ty, 0x1010)?);
@@ -125,6 +137,19 @@ pub(super) fn emit(
     )?;
     let mut methods = vec![constructor];
     for function in std::iter::once(function).chain(lambda.anonymous_methods.iter().flatten()) {
+        if function.suspend_ {
+            methods.push(suspend::emit_method_in(
+                &mut pool,
+                functions,
+                lambdas,
+                owner,
+                facade,
+                function,
+                0,
+                Some(0x0011),
+            )?);
+            continue;
+        }
         let mut code = Code {
             coroutine: false,
             pool: &mut pool,
@@ -186,10 +211,7 @@ pub(super) fn emit(
         || {
             (
                 "invoke".to_string(),
-                format!(
-                    "({})Ljava/lang/Object;",
-                    "Ljava/lang/Object;".repeat(function.params.len())
-                ),
+                format!("({})Ljava/lang/Object;", "Ljava/lang/Object;".repeat(arity)),
             )
         },
         |method| (method.name.clone(), method.descriptor.clone()),
@@ -198,7 +220,14 @@ pub(super) fn emit(
         && (bridge_name != function.jvm_name() || bridge_descriptor != function.descriptor())
     {
         let (params, result) = invocation_types(&bridge_descriptor)?;
-        if params.len() != function.params.len() {
+        let mut actual_params = function.params.clone();
+        if function.suspend_ {
+            actual_params.push((
+                "$completion".into(),
+                Type::Java("kotlin/coroutines/Continuation".into()),
+            ));
+        }
+        if params.len() != actual_params.len() {
             return Err(failure("SAM bridge parameter count mismatch"));
         }
         let locals = 1 + params.iter().map(Type::slots).sum::<usize>();
@@ -229,13 +258,13 @@ pub(super) fn emit(
                 .sum::<usize>(),
         };
         let mut slot = 1;
-        for (erased, (_, actual)) in params.iter().zip(&function.params) {
+        for (erased, (_, actual)) in params.iter().zip(&actual_params) {
             code.bytes.extend([load_opcode(erased), slot as u8]);
             code.adapt_value(erased, actual)?;
             slot += erased.slots();
         }
         code.method_reference(0xb6, owner, function.jvm_name(), &function.descriptor())?;
-        code.adapt_value(&function.result, &result)?;
+        code.adapt_value(function.physical_result(), &result)?;
         code.bytes.push(return_opcode(&result));
         let stack = code.max_stack as u16;
         let completed = code.into_simple(locals as u16, stack)?;
@@ -289,8 +318,11 @@ pub(super) fn emit(
     u2(&mut bytes, 0x1031);
     u2(&mut bytes, this);
     u2(&mut bytes, parent);
-    u2(&mut bytes, 1);
+    u2(&mut bytes, 1 + u16::from(suspend_marker.is_some()));
     u2(&mut bytes, interface_class);
+    if let Some(marker) = suspend_marker {
+        u2(&mut bytes, marker);
+    }
     u2(&mut bytes, lambda.captures.len() as u16);
     bytes.extend(fields);
     u2(&mut bytes, methods.len() as u16);

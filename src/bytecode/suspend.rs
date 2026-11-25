@@ -521,7 +521,9 @@ pub(crate) fn validate(
         })?;
     }
     for lambda in &module.lambdas {
-        if contains_suspension(&lambda.function.body, &module.functions) {
+        if lambda.function.suspend_ {
+            validate_function(&lambda.function, &module.functions, forbidden_owners)?;
+        } else if contains_suspension(&lambda.function.body, &module.functions) {
             return Err(Diagnostic::new(
                 0,
                 "Suspension inside source lambda bodies is unsupported",
@@ -748,10 +750,34 @@ pub(super) fn emit_method(
     index: usize,
     member_flags: Option<u16>,
 ) -> Result<Vec<u8>> {
+    emit_method_in(
+        pool,
+        functions,
+        lambdas,
+        owner,
+        owner,
+        function,
+        index,
+        member_flags,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(super) fn emit_method_in(
+    pool: &mut Pool,
+    functions: &[crate::check::Function],
+    lambdas: &[crate::check::LambdaDecl],
+    owner: &str,
+    facade: &str,
+    function: &crate::check::Function,
+    index: usize,
+    member_flags: Option<u16>,
+) -> Result<Vec<u8>> {
     let planned = member_flags.map(|_| with_receiver(function, owner));
     let planned = planned.as_ref().unwrap_or(function);
     let plan = plan(planned, functions)?;
-    let mut code = code(pool, functions, lambdas, owner);
+    let mut code = code(pool, functions, lambdas, facade);
+    code.in_lambda = owner != facade;
     let mut locals = function.locals;
     if plan.points.is_empty() {
         code.block(&plan.segments[0])?;
@@ -968,6 +994,16 @@ pub(super) fn emit_frames(
     file: &str,
     member: bool,
 ) -> Result<Vec<crate::ClassFile>> {
+    emit_frames_in(functions, functions, owner, file, member)
+}
+
+pub(super) fn emit_frames_in(
+    functions: &[crate::check::Function],
+    context: &[crate::check::Function],
+    owner: &str,
+    file: &str,
+    member: bool,
+) -> Result<Vec<crate::ClassFile>> {
     let mut files = Vec::new();
     for (index, function) in functions
         .iter()
@@ -975,7 +1011,7 @@ pub(super) fn emit_frames(
         .filter(|(_, function)| function.suspend_)
     {
         let planned = member.then(|| with_receiver(function, owner));
-        let plan = plan(planned.as_ref().unwrap_or(function), functions)?;
+        let plan = plan(planned.as_ref().unwrap_or(function), context)?;
         if plan.points.is_empty() {
             continue;
         }
