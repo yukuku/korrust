@@ -1,0 +1,6 @@
+tests/fixtures/new_families/source_inline19/invalid/conflicting_modifiers.kt:1:16: error: modifier 'noinline' is incompatible with 'crossinline'.
+inline fun bad(noinline crossinline block: () -> Int): Int = block()
+               ^^^^^^^^
+tests/fixtures/new_families/source_inline19/invalid/conflicting_modifiers.kt:1:25: error: modifier 'crossinline' is incompatible with 'noinline'.
+inline fun bad(noinline crossinline block: () -> Int): Int = block()
+                        ^^^^^^^^^^^

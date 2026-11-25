@@ -1,0 +1,50 @@
+Compiled from "Utf8Decoder.kt"
+public final class yuku.alkitab.io.Utf8Decoder {
+  public static final yuku.alkitab.io.Utf8Decoder INSTANCE;
+    descriptor: Lyuku/alkitab/io/Utf8Decoder;
+  private static final java.lang.ThreadLocal<byte[]> byteBuffer;
+    descriptor: Ljava/lang/ThreadLocal;
+  private static final java.lang.ThreadLocal<char[]> charBuffer;
+    descriptor: Ljava/lang/ThreadLocal;
+  private yuku.alkitab.io.Utf8Decoder();
+    descriptor: ()V
+
+  public static final java.lang.String toString(byte[]);
+    descriptor: ([B)Ljava/lang/String;
+
+  public static final java.lang.String toString(byte[], int, int);
+    descriptor: ([BII)Ljava/lang/String;
+
+  public static final java.lang.String toStringLowerCase(byte[]);
+    descriptor: ([B)Ljava/lang/String;
+
+  public static final java.lang.String toStringLowerCase(byte[], int, int);
+    descriptor: ([BII)Ljava/lang/String;
+
+  private final java.lang.String decodeString(byte[], int, int, boolean);
+    descriptor: ([BIIZ)Ljava/lang/String;
+
+  private final int decode(byte[], int, int, char[], int, boolean);
+    descriptor: ([BII[CIZ)I
+
+  private final boolean isContinuation(byte);
+    descriptor: (B)Z
+
+  public static final java.lang.String toStringFromVersesWithPrependedLengths(yuku.bintex.BintexReader, int, boolean) throws java.io.IOException;
+    descriptor: (Lyuku/bintex/BintexReader;IZ)Ljava/lang/String;
+
+  private static final byte[] byteBuffer$lambda$0();
+    descriptor: ()[B
+
+  private static final char[] charBuffer$lambda$0();
+    descriptor: ()[C
+
+  public static final byte[] access$byteBuffer$lambda$0();
+    descriptor: ()[B
+
+  public static final char[] access$charBuffer$lambda$0();
+    descriptor: ()[C
+
+  static {};
+    descriptor: ()V
+}

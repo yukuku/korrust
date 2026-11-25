@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-11-25T13:54:51.237001+00:00",
+  "compiler": {
+    "path": "target/four-kotlin-83b83fd274/korrust",
+    "sha256": "b34b50492ccb5ddf122f5924bcf1bf472f39435df4de96d346f77a40176d16b2"
+  },
+  "source_revision": "83b83fd2743ca9abc9c639e32bae36da97193898",
+  "verification_revision": "63d27e5867f7eb99ba181511e5329ab89f2965a6",
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "kind": "features",
+  "status": "assessed",
+  "selection": "Generic anonymous supertypes, generic interface defaults, structured coroutine suspension and Kotlin inline expansion.",
+  "features": [
+    {
+      "name": "Generic anonymous supertypes",
+      "scope": "Substitute type arguments for Kotlin and Java bases, including constructors, inherited methods, super calls and additional interfaces. Resolve enclosing function and class type variables through JVM reflection, including generic interface defaults and primary-constructor initializers. Emit JVM generic signatures and the erased override bridges needed by fixed Java callers.",
+      "restrictions": [
+        "Anonymous object bodies accept the supported override methods. Generic anonymous methods, boxed Unit result overrides and covariant bridges retain boundaries. Enclosing type variables inside ordinary lambda bodies remain a diagnosed boundary."
+      ],
+      "status": "partial",
+      "evidence_cases": [
+        "rust/anonymous_class_multiple_interfaces_and_marker_compile",
+        "rust/anonymous_subclass_constructor_and_super_dispatch_compile",
+        "rust/anonymous_objects_emit_lexical_classes_and_shared_cells",
+        "rust/anonymous_supertype_enclosing_parameters_compile",
+        "rust/explicit_public_anonymous_results_and_private_inference_compile",
+        "rust/invalid_anonymous_class_inheritance_rejects",
+        "rust/invalid_anonymous_overrides_reject",
+        "rust/invalid_generic_anonymous_arguments_and_overrides_reject",
+        "rust/generic_anonymous_bases_substitute_and_emit_bridges",
+        "rust/unsupported_anonymous_shapes_reject_explicitly",
+        "rust/public_anonymous_intersection_inference_rejects",
+        "rust/anonymous_inline_returns_and_inferred_cells_execute_with_verification",
+        "rust/enclosing_type_parameters_still_obey_anonymous_supertype_bounds",
+        "rust/unresolved_anonymous_lexical_scopes_reject_before_emission",
+        "rust/anonymous_enclosing_type_variables_resolve_to_their_lexical_generic_declarations",
+        "rust/interfaces_emit_generic_nested_companion_and_anonymous_classes",
+        "rust/anonymous_companion_overrides_use_resolved_ancestor_headers",
+        "rust/anonymous_reader_uses_a_generic_capture_and_resumes_through_a_suspend_reference",
+        "rust/generic_dispatch_nonlocal_inline_return_and_nested_suspension_compose",
+        "generic-bases"
+      ]
+    },
+    {
+      "name": "Generic interface method bodies",
+      "scope": "Check classifier and method type parameters in concrete interface bodies. Emit default implementations, typed forwarders and erased bridges, including transitive inheritance, primitive specialization and named or anonymous objects.",
+      "restrictions": [
+        "Generic interface bodies with default arguments or generic varargs and dependent or multiple method bounds remain limited. A source interface that would require a missing compatibility helper from an imported parent is diagnosed. Classes can dispatch directly to the tested JVM interface default."
+      ],
+      "status": "partial",
+      "evidence_cases": [
+        "rust/generic_dispatch_nonlocal_inline_return_and_nested_suspension_compose",
+        "interface-bodies"
+      ]
+    },
+    {
+      "name": "Suspension in nested control flow",
+      "scope": "Preserve loop and branch state, arithmetic and comparison operands, and pending returns and exceptions across suspension. Run catch and finally blocks on both immediate and resumed paths.",
+      "restrictions": [
+        "Nested callback invocations such as step(step(1)), general source suspend lambda literals, and some member declaration shapes remain unsupported. Generated methods are subject to the current JVM branch and local limits."
+      ],
+      "status": "partial",
+      "evidence_cases": [
+        "rust/compiled_inline::tests::validates_root_virtual_references_without_exposing_protected_or_wrong_kind_members",
+        "rust/generic_dispatch_nonlocal_inline_return_and_nested_suspension_compose",
+        "rust/sixteen_suspensions_preserve_delayed_state_and_exception_identity",
+        "rust/suspension_outside_the_bounded_state_machine_rejects_explicitly",
+        "rust/protected_suspension_preserves_errors_returns_and_exactly_once_finalizers"
+      ]
+    },
+    {
+      "name": "Source and compiled Kotlin inline expansion",
+      "scope": "Expand supported inline extension receivers and compiled inline bodies that contain exception tables, switches, numeric bytecode and monitor operations. Preserve finally execution on non-local returns and emit markers that separately compiled Kotlin consumers use.",
+      "restrictions": [
+        "Source inline member declarations, varargs, default arguments and generated forwarding aliases remain limited. Generated inline-owner classes and some reified shapes remain unsupported. Remapped branches must fit the current emitter's branch range."
+      ],
+      "status": "partial",
+      "evidence_cases": [
+        "rust/check::function_values::tests::nonlocal_returns_require_inline_context",
+        "rust/bytecode::lambdas::tests::compiled_inline_methods_verify_in_classes_objects_and_interfaces",
+        "rust/compiled_inline::tests::accepts_kotlin_parameter_null_check_without_hiding_lambda_uses",
+        "rust/compiled_inline::tests::checks_category_two_local_bounds_and_constant_kinds",
+        "rust/compiled_inline::tests::decodes_backward_branches_and_compact_and_wide_locals",
+        "rust/compiled_inline::tests::decodes_external_construction_and_tracks_lambdas_across_constructor_arguments",
+        "rust/compiled_inline::tests::exception_handlers_seed_lambda_flow_and_require_instruction_boundaries",
+        "rust/compiled_inline::tests::identifies_erased_lambda_receiver_across_argument_evaluation",
+        "rust/compiled_inline::tests::preserves_lambda_identity_at_branch_merge_and_multiple_calls",
+        "rust/compiled_inline::tests::rejects_allocations_without_a_class_constant",
+        "rust/compiled_inline::tests::rejects_branches_into_operands_and_truncated_instructions",
+        "rust/compiled_inline::tests::rejects_inline_owner_nested_allocations_requiring_generated_classes",
+        "rust/compiled_inline::tests::rejects_invalid_exception_regions_and_unsupported_stack_operations",
+        "rust/compiled_inline::tests::rejects_lambda_aliasing_and_forwarding",
+        "rust/compiled_inline::tests::stack_instructions_accept_all_jvm_category_forms",
+        "rust/compiled_inline::tests::switch_decoding_checks_layout_keys_and_instruction_boundaries",
+        "rust/compiled_inline::tests::validates_root_virtual_references_without_exposing_protected_or_wrong_kind_members",
+        "rust/anonymous_inline_returns_and_inferred_cells_execute_with_verification",
+        "rust/independent_inline_numeric_and_switch_bodies_match_kotlin_with_verified_java_callers",
+        "rust/public_inline_property_writes_preserve_private_setter_visibility",
+        "rust/inferred_expression_bodies_accept_validated_public_inline_only_calls",
+        "rust/inference_does_not_expose_private_inline_declarations",
+        "rust/source_inline_extension_receivers_preserve_slots_evaluation_and_metadata",
+        "rust/compiled_inline_body_accepts_object_virtual_method_references",
+        "rust/generic_dispatch_nonlocal_inline_return_and_nested_suspension_compose",
+        "source-inline",
+        "compiled-inline"
+      ]
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-25T135451237001Z-generic-coroutines-inline.json"
+  ]
+}
