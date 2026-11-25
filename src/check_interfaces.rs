@@ -265,14 +265,14 @@ fn register_classes(
     }
     for method in &source.methods {
         let function = &method.function;
-        if function.vararg && !function.type_params.is_empty() {
+        if function.vararg && !function.type_params.is_empty() && method.has_body {
             return Err(Diagnostic::new(
                 function.offset,
-                "Generic source interface varargs are unsupported",
+                "Generic source interface vararg bodies are unsupported",
             )
             .with_kind(
                 crate::DiagnosticKind::UnsupportedLanguage,
-                "GENERIC_INTERFACE_VARARG_UNSUPPORTED",
+                "GENERIC_INTERFACE_VARARG_BODY_UNSUPPORTED",
             ));
         }
         declarations::validate_member_generics(
@@ -434,7 +434,8 @@ fn register_classes(
                         result.descriptor()
                     }
                 ),
-                access: if method.has_body { 1 } else { 0x0401 },
+                access: (if method.has_body { 1 } else { 0x0401 })
+                    | if function.vararg { 0x80 } else { 0 },
                 unsupported: false,
                 source_property: None,
             },
@@ -818,6 +819,7 @@ fn check_interface(
             classes,
         )?;
         function.suspend_ = source_function.suspend_;
+        function.vararg = source_function.vararg;
         if method.is_override && operator_checker.inherited_operator(signature, class) {
             operator_offsets.insert(source_function.offset);
         }

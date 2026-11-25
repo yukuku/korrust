@@ -56,5 +56,32 @@
     "id": "vararg-primitive-spread",
     "family": "varargs",
     "source": "class Box<C> { fun <T> first(vararg items:T):T=items[0] }\nfun bad(x:IntArray):Int=Box<String>().first(*x)"
+  },
+  {
+    "id": "interface-vararg-nullability",
+    "family": "interface-varargs",
+    "source": "interface Api<C> { fun <T> count(vararg items:T):Int }\nclass Impl<C>:Api<C> { override fun <R> count(vararg items:R?):Int=items.size }"
+  },
+  {
+    "id": "interface-vararg-bound",
+    "family": "interface-varargs",
+    "source": "interface Label\ninterface Api<C> { fun <T:Label> count(vararg items:T):Int }\nclass Impl<C>:Api<C> { override fun <R> count(vararg items:R):Int=items.size }"
+  },
+  {
+    "id": "interface-vararg-class-component",
+    "family": "interface-varargs",
+    "source": "interface Api<C> { fun <T> pick(ignored:T, vararg items:C):C }\nclass Impl:Api<String> { override fun <R> pick(ignored:R, vararg items:Int):String=\"bad\" }"
+  },
+  {
+    "id": "interface-vararg-call-bound",
+    "family": "interface-varargs",
+    "source": "interface Label\ninterface Api<C> { fun <T:Label> first(vararg items:T):T }\nfun bad(api:Api<String>):String=api.first(\"bad\")"
+  },
+  {
+    "id": "interface-vararg-body",
+    "family": "interface-varargs",
+    "official": "accept",
+    "code": "GENERIC_INTERFACE_VARARG_BODY_UNSUPPORTED",
+    "source": "interface Api { fun <T> count(vararg items:T):Int=items.size }"
   }
 ]
