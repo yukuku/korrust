@@ -2,6 +2,7 @@ package usage
 
 import extensions.measure
 import extensions.measureLong
+import extensions.transform
 import extensions.simple
 import extensions.forward
 import extensions.fallback
@@ -15,6 +16,7 @@ class Effects {
 
 fun use(effects: Effects): Int = effects.next().measure { it + 5 }
 fun wide(): Long = 10000000000L.measureLong { it + 7L }
+fun negate(value: Double): Double = value.transform { -it }
 fun scalar(): Int = "abc".simple()
 fun nested(): Int = "abcd".forward(2)
 fun nullable(value: String?): Int = value.fallback { 17 }

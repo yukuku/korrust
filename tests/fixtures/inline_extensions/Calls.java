@@ -6,6 +6,8 @@ public class Calls {
         Effects effects = new Effects();
         check(UseKt.use(effects) == 9 && effects.getCalls() == 1);
         check(UseKt.wide() == 10000000007L);
+        check(Double.doubleToRawLongBits(UseKt.negate(0.0)) == Long.MIN_VALUE);
+        check(UseKt.negate(-2.5) == 2.5 && Double.isNaN(UseKt.negate(Double.NaN)));
         check(UseKt.scalar() == 3 && UseKt.nested() == 6);
         check(UseKt.nullable(null) == 17 && UseKt.nullable("wide") == 4);
         check(UseKt.retained() == 15L && UseKt.escape() == 10 && UseKt.captures(5) == 8);
