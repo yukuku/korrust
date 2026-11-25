@@ -287,6 +287,7 @@ pub(super) fn check_class_with_constants(
             | Type::Float
             | Type::Double
             | Type::String
+            | Type::Function { .. }
             | Type::Java(_)
             | Type::Parameterized { .. } => true,
             Type::Nullable(inner) | Type::List(inner) | Type::MutableList(inner) => {
