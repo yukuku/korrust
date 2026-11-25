@@ -43,7 +43,13 @@ fn classpath(paths: &[&Path]) -> std::ffi::OsString {
     std::env::join_paths(paths).unwrap()
 }
 
-fn kotlin(source: &Path, output: &Path, standard: &Path, dependencies: &[&Path]) {
+fn kotlin_command(
+    source: &Path,
+    output: &Path,
+    standard: &Path,
+    dependencies: &[&Path],
+    target: &str,
+) -> Command {
     let compiler = Path::new(env!("CARGO_MANIFEST_DIR")).join("references/kotlinc");
     let mut libraries = fs::read_dir(compiler.join("lib"))
         .unwrap()
@@ -53,16 +59,37 @@ fn kotlin(source: &Path, output: &Path, standard: &Path, dependencies: &[&Path])
     libraries.sort();
     let mut dependencies = dependencies.to_vec();
     dependencies.push(standard);
-    run(Command::new("java")
+    let mut command = Command::new("java");
+    command
         .arg("-cp")
         .arg(std::env::join_paths(libraries).unwrap())
         .arg("org.jetbrains.kotlin.cli.jvm.K2JVMCompiler")
-        .args(["-no-stdlib", "-no-reflect", "-jvm-target", "1.8"])
+        .args([
+            "-no-stdlib",
+            "-no-reflect",
+            "-language-version",
+            "2.3",
+            "-api-version",
+            "2.3",
+            "-jvm-target",
+            target,
+        ])
         .arg("-classpath")
         .arg(classpath(&dependencies))
         .arg("-d")
         .arg(output)
-        .arg(source));
+        .arg(source);
+    command
+}
+
+fn kotlin(source: &Path, output: &Path, standard: &Path, dependencies: &[&Path]) {
+    run(&mut kotlin_command(
+        source,
+        output,
+        standard,
+        dependencies,
+        "1.8",
+    ));
 }
 
 fn files(directory: &Path, prefix: &Path, entries: &mut Vec<(String, Vec<u8>)>) {
@@ -236,51 +263,145 @@ fn duplicate_classes_preserve_first_classpath_entry_precedence() {
 }
 
 #[test]
-fn genuine_multi_release_overrides_reject_before_dependency_resolution() {
+fn multi_release_jars_use_the_pinned_kotlin_base_view() {
+    let standard =
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("references/kotlinc/lib/kotlin-stdlib.jar");
+    if !standard.is_file() {
+        return;
+    }
     let temp = Temp::new();
     let library = temp.0.join("library");
-    let outputs = compile_outputs_with_classpath(
-        "package dep\nclass Shared(val value: Int)",
-        "Shared.kt",
-        &[],
-    )
-    .unwrap();
-    write_outputs(&library, outputs);
-    let versioned = library.join("META-INF/versions/9/dep");
-    fs::create_dir_all(&versioned).unwrap();
-    let override_outputs = compile_outputs_with_classpath(
-        "package dep\nclass Shared(val value: String)",
-        "Shared.kt",
-        &[],
-    )
-    .unwrap();
-    let override_class = override_outputs
-        .into_iter()
-        .find(|output| output.relative_path == "dep/Shared.class")
-        .unwrap();
-    fs::write(versioned.join("Shared.class"), override_class.bytes).unwrap();
-    fs::write(
-        library.join("META-INF/MANIFEST.MF"),
-        "Manifest-Version: 1.0\nMulti-Release: true\n\n",
-    )
-    .unwrap();
-    let archive = temp.0.join("library.jar");
-    jar(&library, &archive, zip::CompressionMethod::Deflated);
-    for path in [&library, &archive] {
-        let error = compile_all_with_classpath(
-            "import dep.Shared\nfun probe(): Int = Shared(7).value",
-            "Consumer.kt",
-            std::slice::from_ref(path),
-        )
-        .err()
-        .unwrap();
-        assert!(
-            error
-                .message
-                .ends_with("multi-release JAR class overrides are unsupported"),
-            "{}",
-            error.message
-        );
+    for version in [7, 9, 21, 99] {
+        let source_dir = temp.0.join(format!("source-{version}"));
+        fs::create_dir_all(&source_dir).unwrap();
+        let source = source_dir.join("Shared.java");
+        fs::write(&source, format!("package dep; public class Shared {{ public static final int VALUE = {version}; public static int live() {{ return {version}; }} }}")).unwrap();
+        let destination = if version == 7 {
+            library.clone()
+        } else {
+            library.join(format!("META-INF/versions/{version}"))
+        };
+        run(Command::new("javac")
+            .args(["--release", "8", "-d"])
+            .arg(&destination)
+            .arg(&source));
+        if version == 9 {
+            let only = source_dir.join("Only.java");
+            fs::write(
+                &only,
+                "package dep; public class Only { public static final int VALUE = 4; }",
+            )
+            .unwrap();
+            run(Command::new("javac")
+                .args(["--release", "8", "-d"])
+                .arg(&destination)
+                .arg(only));
+        }
     }
-    assert!(versioned.join("Shared.class").is_file());
+    let consumer = "import dep.Shared\nfun probe(): Int = Shared.VALUE";
+    let source = temp.0.join("Consumer.kt");
+    fs::write(&source, consumer).unwrap();
+    let missing = "import dep.Only\nfun probe(): Int = Only.VALUE";
+    let missing_source = temp.0.join("Missing.kt");
+    fs::write(&missing_source, missing).unwrap();
+    let check = temp.0.join("Check.java");
+    fs::write(&check, "public class Check { public static void main(String[] args) { System.out.print(ConsumerKt.probe() + \":\" + dep.Shared.live()); } }").unwrap();
+    let reference = temp.0.join("reference");
+    kotlin(&source, &reference, &standard, &[&library]);
+    let runner = temp.0.join("runner");
+    run(Command::new("javac")
+        .arg("-cp")
+        .arg(classpath(&[&reference, &library]))
+        .arg("-d")
+        .arg(&runner)
+        .arg(&check));
+    let reference_signature = run(Command::new("javap")
+        .args(["-p", "-classpath"])
+        .arg(&reference)
+        .arg("ConsumerKt"));
+    assert!(reference_signature.contains("public static final int probe();"));
+    let manifest = library.join("META-INF/MANIFEST.MF");
+    for (case, contents) in [
+        ("absent", None),
+        (
+            "false",
+            Some("Manifest-Version: 1.0\nMulti-Release: false\n\n"),
+        ),
+        (
+            "true",
+            Some("Manifest-Version: 1.0\nMulti-Release: true\n\n"),
+        ),
+    ] {
+        if let Some(contents) = contents {
+            fs::write(&manifest, contents).unwrap();
+        }
+        let archive = temp.0.join(format!("{case}.jar"));
+        jar(&library, &archive, zip::CompressionMethod::Deflated);
+        for (kind, dependency) in [("directory", &library), ("jar", &archive)] {
+            let output = temp.0.join(format!("candidate-{case}-{kind}"));
+            write_outputs(
+                &output,
+                compile_outputs_with_classpath(
+                    consumer,
+                    "Consumer.kt",
+                    std::slice::from_ref(dependency),
+                )
+                .unwrap(),
+            );
+            let candidate_signature = run(Command::new("javap")
+                .args(["-p", "-classpath"])
+                .arg(&output)
+                .arg("ConsumerKt"));
+            assert!(candidate_signature.contains("public static final int probe();"));
+            let error =
+                compile_all_with_classpath(missing, "Missing.kt", std::slice::from_ref(dependency))
+                    .err()
+                    .unwrap();
+            assert!(error.message.contains("Only"), "{}", error.message);
+            let expected = if case == "true" && kind == "jar" {
+                "7:21"
+            } else {
+                "7:7"
+            };
+            assert_eq!(
+                run(Command::new("java")
+                    .args(["-Xverify:all", "-cp"])
+                    .arg(classpath(&[&runner, &output, dependency, &standard]))
+                    .arg("Check")),
+                expected
+            );
+            assert_eq!(
+                run(Command::new("java")
+                    .args(["-Xverify:all", "-cp"])
+                    .arg(classpath(&[&runner, &reference, dependency, &standard]))
+                    .arg("Check")),
+                expected
+            );
+        }
+        for target in ["1.8", "21"] {
+            let official = temp.0.join(format!("official-{case}-{target}"));
+            run(&mut kotlin_command(
+                &source,
+                &official,
+                &standard,
+                &[&archive],
+                target,
+            ));
+            assert_eq!(
+                run(Command::new("java")
+                    .args(["-Xverify:all", "-cp"])
+                    .arg(classpath(&[&runner, &official, &archive, &standard]))
+                    .arg("Check")),
+                if case == "true" { "7:21" } else { "7:7" }
+            );
+            let rejected =
+                kotlin_command(&missing_source, &official, &standard, &[&archive], target)
+                    .output()
+                    .unwrap();
+            assert!(!rejected.status.success());
+            assert!(
+                String::from_utf8_lossy(&rejected.stderr).contains("unresolved reference 'Only'")
+            );
+        }
+    }
 }

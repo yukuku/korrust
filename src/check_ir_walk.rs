@@ -358,6 +358,7 @@ mod tests {
 
     fn companion_with(owner: &str, number: i32) -> ClassCompanion {
         ClassCompanion {
+            constants: Vec::new(),
             exposed_fields: HashMap::new(),
             methods: vec![function_with(number + 2)],
             initializers: vec![Statement::Expression(int(number + 1))],

@@ -230,6 +230,7 @@ pub struct ClassCompanionProperty {
     pub value: Value,
 }
 pub struct ClassCompanion {
+    pub constants: Vec<syntax::ConstDecl>,
     pub exposed_fields: HashMap<String, u16>,
     pub methods: Vec<Function>,
     pub initializers: Vec<Statement>,
@@ -3340,6 +3341,60 @@ impl Checker<'_> {
                 .with_kind(crate::DiagnosticKind::InvalidKotlin, "INVISIBLE_REFERENCE"));
         }
         let mut receiver = receiver;
+        let constant_receiver = field.access & 0x18 == 0x18
+            && field.kotlin.as_ref().is_some_and(|field| field.constant);
+        if constant_receiver
+            && class.name != field.owner
+            && class.name != format!("{}$Companion", field.owner)
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Companion constants require their declaring classifier or companion qualifier",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "CONST_QUALIFIER_INVALID",
+            ));
+        }
+        if constant_receiver && receiver.is_some() {
+            let singleton = class.fields.iter().any(|field| {
+                field.name == "INSTANCE" && field.descriptor == format!("L{};", class.name)
+            });
+            let companion = class.name.strip_suffix("$Companion").is_some_and(|parent| {
+                self.classpath.load(parent).is_ok_and(|parent| {
+                    parent
+                        .library
+                        .as_ref()
+                        .and_then(|library| library.companion_name.as_deref())
+                        == Some("Companion")
+                })
+            });
+            if !singleton && !companion {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Companion constants cannot be accessed through an enclosing class instance",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "CONST_RECEIVER_INVALID",
+                ));
+            }
+        }
+        if constant_receiver
+            && receiver.as_ref().is_some_and(|value| match &value.kind {
+                ValueKind::ObjectInstance(_) => true,
+                ValueKind::StaticField { owner, name }
+                | ValueKind::JavaField {
+                    owner,
+                    name,
+                    receiver: None,
+                    ..
+                } => name == "Companion" && value.ty == Type::Java(format!("{owner}$Companion")),
+                _ => false,
+            })
+        {
+            receiver = None;
+        }
         let evaluation = if field.access & 8 != 0
             && field.kotlin.as_ref().is_some_and(|k| !k.constant)
             && receiver.is_some()
@@ -3359,7 +3414,7 @@ impl Checker<'_> {
         {
             return Err(Diagnostic::new(offset,"Effectful static Kotlin field receivers require unresolved oracle evaluation semantics").with_kind(crate::DiagnosticKind::UnsupportedLanguage,"JVM_FIELD_RECEIVER_EVALUATION_UNSUPPORTED"));
         }
-        if (field.access & 8 != 0) != receiver.is_none() {
+        if (field.access & 8 != 0) != receiver.is_none() && !constant_receiver {
             return Err(Diagnostic::new(
                 offset,
                 "Java field requires the appropriate instance or classifier receiver",
@@ -7475,6 +7530,7 @@ pub fn check_with_owner(
         owner,
         owner,
         &static_properties,
+        &source.constants,
         &[],
         &[],
         false,

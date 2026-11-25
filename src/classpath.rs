@@ -1259,7 +1259,143 @@ impl Classpath {
                 }
             }
         }
+        self.attach_companion_constants(&mut class, &attrs, &method_attrs, &field_attrs)?;
         Ok(class)
+    }
+
+    fn attach_companion_constants(
+        &self,
+        class: &mut JavaClass,
+        attrs: &Attributes,
+        method_attrs: &[Attributes],
+        field_attrs: &[Attributes],
+    ) -> Result<()> {
+        if !class.kotlin_class {
+            return Ok(());
+        }
+        let sibling = |name: &str| -> Result<Option<Vec<u8>>> {
+            for path in &self.paths {
+                if let Some(bytes) = archive::read(path, &format!("{name}.class"))? {
+                    return Ok(Some(bytes));
+                }
+            }
+            Ok(None)
+        };
+        let (
+            mut companion,
+            companion_attrs,
+            companion_methods,
+            mut companion_fields,
+            mut outer,
+            outer_fields,
+            is_companion,
+        ) = if let Some(parent) = class.name.strip_suffix("$Companion") {
+            if !attrs.annotations.iter().any(|annotation| {
+                annotation.name == "Lkotlin/Metadata;"
+                    && metadata::companion_has_constants(annotation).unwrap_or(false)
+            }) {
+                return Ok(());
+            }
+            let Some(bytes) = sibling(parent)? else {
+                return Ok(());
+            };
+            let (outer, _, _, outer_fields) = parse_details_with_fields(&bytes, parent)?;
+            (
+                class.clone(),
+                attrs.clone(),
+                method_attrs.to_vec(),
+                field_attrs.to_vec(),
+                outer,
+                outer_fields,
+                true,
+            )
+        } else if class
+            .library
+            .as_ref()
+            .and_then(|library| library.companion_name.as_deref())
+            == Some("Companion")
+            && class.fields.iter().any(|field| field.constant.is_some())
+        {
+            let name = format!("{}$Companion", class.name);
+            let Some(bytes) = sibling(&name)? else {
+                return Ok(());
+            };
+            let (companion, attrs, methods, fields) = parse_details_with_fields(&bytes, &name)?;
+            (
+                companion,
+                attrs,
+                methods,
+                fields,
+                class.clone(),
+                field_attrs.to_vec(),
+                false,
+            )
+        } else {
+            return Ok(());
+        };
+        if !outer.kotlin_class || !companion.kotlin_class {
+            return Ok(());
+        }
+        let declared_fields = companion.fields.len();
+        for (field, attributes) in outer.fields.iter().zip(&outer_fields) {
+            if field.constant.is_some()
+                && field.access & 0x18 == 0x18
+                && !companion.fields.iter().any(|existing| {
+                    existing.name == field.name && existing.descriptor == field.descriptor
+                })
+            {
+                companion.fields.push(field.clone());
+                companion_fields.push(attributes.clone());
+            }
+        }
+        let Some(annotation) = companion_attrs
+            .annotations
+            .iter()
+            .find(|annotation| annotation.name == "Lkotlin/Metadata;")
+        else {
+            return Ok(());
+        };
+        if metadata::attach(
+            annotation,
+            &mut companion,
+            &companion_methods,
+            &companion_fields,
+        )
+        .is_err()
+            || companion.unsupported
+        {
+            return Ok(());
+        }
+        let mut index = 0;
+        companion.fields.retain(|field| {
+            let keep = index < declared_fields
+                || field.kotlin.as_ref().is_some_and(|kotlin| kotlin.constant);
+            index += 1;
+            keep
+        });
+        for field in outer
+            .fields
+            .iter_mut()
+            .filter(|field| field.constant.is_some())
+        {
+            if let Some(constant) = companion.fields.iter().find(|candidate| {
+                candidate.name == field.name
+                    && candidate.descriptor == field.descriptor
+                    && candidate
+                        .kotlin
+                        .as_ref()
+                        .is_some_and(|kotlin| kotlin.constant)
+            }) {
+                field.kotlin = constant.kotlin.clone();
+                field.unsupported = constant.unsupported;
+            }
+        }
+        if is_companion {
+            *class = companion;
+        } else {
+            *class = outer;
+        }
+        Ok(())
     }
 
     fn passive_declaration_annotation(&self, annotation: &Annotation) -> Result<bool> {
@@ -1683,7 +1819,7 @@ fn modified_utf8(bytes: &[u8]) -> Result<String> {
     Ok(String::from_utf16_lossy(&modified_utf8_units(bytes)?))
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 enum AnnotationValue {
     Integer(u32),
     String(String),
@@ -1692,13 +1828,13 @@ enum AnnotationValue {
     Other,
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 struct Annotation {
     name: String,
     values: Vec<(String, AnnotationValue)>,
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 struct Attributes {
     exceptions: Vec<String>,
     unsupported: bool,

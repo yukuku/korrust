@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-25T16:53:17.498707+00:00",
+  "status": "complete",
+  "compiler": {
+    "revisions": {
+      "before": "0a637c51ea0b66a892eae7d095041ac421e8b055",
+      "multi_release": "501796930c23103b3ec5fee7266c1a5e06e04348",
+      "member_constants": "b085d704bdf723b965fa339b85900a9172b0c926"
+    },
+    "archive_binary_sha256": "f57759fd6cac7fcdbdd7394b2699973e7b19956d5f49f2338b25968b988b22e3",
+    "production_binary_sha256": "f514a43f4ec7fa9ff48d783b07c77ee3e414dde838d0bee52c0ccb6c3a88a08d"
+  },
+  "reference_compiler": "Kotlin 2.3.21",
+  "evidence": [
+    "reports/correctness/2026-11-25T165317Z-androidbible-archive-and-constants.json"
+  ],
+  "features": [
+    {
+      "name": "Multi-release compiler classpaths",
+      "status": "supported",
+      "scope": "The base class and Kotlin package metadata view of stored and deflated JARs and exploded directories, matching Kotlin 2.3.21 at JVM targets 1.8 and 21. A JVM loading the original archive at runtime selects its own versioned implementation."
+    },
+    {
+      "name": "Companion object constant properties",
+      "status": "partial",
+      "scope": "Unnamed class, enum and interface companions. Scalar constants include Int, Long, Float, Double, Boolean, Char and String, with checked expressions, metadata and JVM ConstantValue fields.",
+      "restrictions": [
+        "Named companions, unsigned constants, Byte and Short constants, and interface companion constant annotations remain outside this supported subset."
+      ]
+    }
+  ]
+}

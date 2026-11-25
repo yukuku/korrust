@@ -458,9 +458,13 @@ pub(crate) fn annotation_placements(
                 )?;
             }
             if companion
-                .properties
+                .constants
                 .iter()
-                .any(|property| !property.annotations.is_empty())
+                .any(|constant| !constant.annotations.is_empty())
+                || companion
+                    .properties
+                    .iter()
+                    .any(|property| !property.annotations.is_empty())
                 || companion
                     .fields
                     .iter()
@@ -546,7 +550,7 @@ pub(crate) fn annotation_placements(
             function_parameters(function, classpath, &imports, owner, &mut output)?;
         }
     }
-    for constant in &module.constants {
+    for constant in module.constants.iter().chain(module.companion_constants()) {
         let annotations = checked(
             owner,
             &constant.annotations,

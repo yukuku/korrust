@@ -581,6 +581,7 @@ fn declared_value(
 
 #[derive(Clone)]
 struct Entry {
+    companion: bool,
     module: usize,
     scope: String,
     declaration: ConstDecl,
@@ -689,6 +690,7 @@ fn collect_object(
     }
     for declaration in &object.constants {
         entries.push(Entry {
+            companion: false,
             module,
             scope: scope.clone(),
             declaration: declaration.clone(),
@@ -756,6 +758,14 @@ fn collect_class(
             BindingKind::Object,
         );
         let companion_scope = qualified(&scope, "Companion");
+        for declaration in &companion.constants {
+            entries.push(Entry {
+                companion: true,
+                module,
+                scope: scope.clone(),
+                declaration: declaration.clone(),
+            });
+        }
         for property in &companion.properties {
             bind(
                 bindings,
@@ -811,6 +821,14 @@ fn collect_interface(
     }
     if let Some(companion) = &interface.companion {
         let companion_scope = qualified(&scope, "Companion");
+        for declaration in &companion.constants {
+            entries.push(Entry {
+                companion: true,
+                module,
+                scope: scope.clone(),
+                declaration: declaration.clone(),
+            });
+        }
         for property in &companion.properties {
             bind(
                 bindings,
@@ -1112,7 +1130,11 @@ impl Resolver<'_> {
 
     fn library_reference(&self, name: &str, offset: usize) -> Result<Option<ConstValue>> {
         let (owner, field_name) = name.rsplit_once('.').unwrap_or(("", name));
-        if let Ok(class) = self.classpath.load(&owner.replace('.', "/")) {
+        if let Some(class) = self
+            .classpath
+            .kotlin_classifier(&owner.replace('.', "/"))
+            .or_else(|| self.classpath.load(&owner.replace('.', "/")).ok())
+        {
             if let Some(field) = class.fields.iter().find(|field| field.name == field_name) {
                 return self.library_field(field, offset).map(Some);
             }
@@ -1347,12 +1369,22 @@ fn update_object(object: &mut ObjectDecl, values: &HashMap<usize, ConstValue>) {
 }
 
 fn update_class(class: &mut ClassDecl, values: &HashMap<usize, ConstValue>) {
+    if let Some(companion) = &mut class.companion {
+        for constant in &mut companion.constants {
+            constant.value = values[&constant.offset].clone();
+        }
+    }
     for declaration in &mut class.nested {
         update_declaration(declaration, values);
     }
 }
 
 fn update_interface(interface: &mut InterfaceDecl, values: &HashMap<usize, ConstValue>) {
+    if let Some(companion) = &mut interface.companion {
+        for constant in &mut companion.constants {
+            constant.value = values[&constant.offset].clone();
+        }
+    }
     for interface in &mut interface.nested {
         update_interface(interface, values);
     }
@@ -1391,6 +1423,7 @@ pub(crate) fn resolve(
         }
         for declaration in &source.constants {
             entries.push(Entry {
+                companion: false,
                 module,
                 scope: source.package.clone(),
                 declaration: declaration.clone(),
@@ -1452,6 +1485,15 @@ pub(crate) fn resolve(
     }
     let mut names: HashMap<String, Vec<usize>> = HashMap::new();
     for (index, entry) in entries.iter().enumerate() {
+        if entry.companion {
+            names
+                .entry(qualified(
+                    &qualified(&entry.scope, "Companion"),
+                    &entry.declaration.name,
+                ))
+                .or_default()
+                .push(index);
+        }
         names
             .entry(qualified(&entry.scope, &entry.declaration.name))
             .or_default()
@@ -1742,6 +1784,9 @@ fn visit_class_annotations(
     }
     if let Some(companion) = &mut class.companion {
         let scope = qualified(&scope, "Companion");
+        for constant in &mut companion.constants {
+            visit_annotations(&mut constant.annotations, &scope, visit)?;
+        }
         for property in &mut companion.properties {
             visit_annotations(&mut property.annotations, &scope, visit)?;
         }
@@ -1795,6 +1840,9 @@ fn visit_interface_annotations(
     }
     if let Some(companion) = &mut interface.companion {
         let scope = qualified(&scope, "Companion");
+        for constant in &mut companion.constants {
+            visit_annotations(&mut constant.annotations, &scope, visit)?;
+        }
         for property in &mut companion.properties {
             visit_annotations(&mut property.annotations, &scope, visit)?;
             if let CompanionValue::Object(class) = &mut property.value {

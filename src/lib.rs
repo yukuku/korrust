@@ -434,8 +434,35 @@ pub fn compile_batch_with_options(
         .filter(|(_, unit)| unit.class_decl.as_ref().is_some_and(|d| d.private))
         .map(|(owner, _)| owner.clone())
         .collect::<Vec<_>>();
+    let companion_constant_imports = units
+        .iter()
+        .flat_map(|(owner, unit)| {
+            unit.companion_constants().iter().map(move |constant| {
+                (
+                    format!("{}/Companion/{}", owner.replace('$', "/"), constant.name),
+                    format!("{owner}$Companion/{}", constant.name),
+                )
+            })
+        })
+        .collect::<Vec<_>>();
     let normalize_imports = |module: &mut syntax::Module| {
         for (_, path, _) in &mut module.imports {
+            if let Some((_, normalized)) = companion_constant_imports
+                .iter()
+                .find(|(original, _)| original == path)
+            {
+                *path = normalized.clone();
+                continue;
+            }
+            if let Some((parent, member)) = path
+                .rsplit_once('/')
+                .filter(|(parent, _)| parent.ends_with("/Companion"))
+            {
+                if let Some(class) = classpath.kotlin_classifier(parent) {
+                    *path = format!("{}/{member}", class.name);
+                    continue;
+                }
+            }
             if let Some((_, owner)) = source_names.iter().find(|(_, owner)| {
                 lexical_parents.contains_key(owner) && owner.replace('$', "/") == *path
             }) {
