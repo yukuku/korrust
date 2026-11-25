@@ -1095,7 +1095,7 @@ fn rejects_unsupported_interface_and_companion_forms() {
         "interface E { fun String.extension(): Int = 1 }",
         "interface E { companion object Named {} }",
         "interface E { companion object {}; companion object {} }",
-        "interface E { companion object { const val x = 1 } }",
+        "interface E { companion object { const var x = 1 } }",
         "interface E { companion object { val x = arrayOf(\"x\") } }",
         "interface E { companion object { private val x = arrayOf(1) } }",
         "interface E { companion object { private val x = arrayOf() } }",

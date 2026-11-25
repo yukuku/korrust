@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-25T16:53:17.498707+00:00",
+  "status": "complete",
+  "compiler": {
+    "revisions": {
+      "before": "0a637c51ea0b66a892eae7d095041ac421e8b055",
+      "multi_release": "501796930c23103b3ec5fee7266c1a5e06e04348",
+      "member_constants": "b085d704bdf723b965fa339b85900a9172b0c926"
+    },
+    "archive_binary_sha256": "f57759fd6cac7fcdbdd7394b2699973e7b19956d5f49f2338b25968b988b22e3",
+    "production_binary_sha256": "f514a43f4ec7fa9ff48d783b07c77ee3e414dde838d0bee52c0ccb6c3a88a08d"
+  },
+  "source_manifest": "benchmarks/source-files.sha256.json",
+  "source_manifest_sha256": "48e5d343ebfb4b24c87485a754bdfb237164a1c574b7c40cce7cbc8fc0357a4c",
+  "dependency_manifest_sha256": "5edd0c421b881a5a7e5e8a960beee1cdf23362453f75ebc7b41a0f6d9559f20d",
+  "selection": "Files whose previous resolved-classpath first diagnostic identified versioned JAR classes or expected a class member at a const val declaration.",
+  "method": "One unchanged file per invocation on its resolved Gradle classpath. Retained sibling declarations and excluded all classes owned by the tested source and their package part entries. Accepted only source-owned output. Collected one first diagnostic per invocation.",
+  "evidence": [
+    "reports/correctness/2026-11-25T165317Z-androidbible-archive-and-constants/cases.csv",
+    "reports/correctness/2026-11-25T165317Z-androidbible-archive-and-constants/recheck.py",
+    "reports/correctness/2026-11-25T165317Z-androidbible-archive-and-constants/build.log",
+    "reports/correctness/2026-11-25T165317Z-androidbible-archive-and-constants/clippy-final.log",
+    "reports/correctness/2026-11-25T165317Z-androidbible-archive-and-constants/fmt.log",
+    "reports/correctness/2026-11-25T165317Z-androidbible-archive-and-constants/policy.log",
+    "reports/correctness/2026-11-25T165317Z-androidbible-archive-and-constants/rust.log",
+    "reports/correctness/2026-11-25T165317Z-androidbible-archive-and-constants/frontend-final.log",
+    "reports/correctness/2026-11-25T165317Z-androidbible-archive-and-constants/expansion.log",
+    "reports/correctness/2026-11-25T165317Z-androidbible-archive-and-constants/full-final.log"
+  ],
+  "summary": {
+    "tests": {
+      "rejected": 145,
+      "timeout": 1
+    },
+    "production": {
+      "rejected": 13
+    }
+  },
+  "reproduction_commands": [
+    "source /workspace/korrust-setup/env.sh",
+    "python reports/correctness/2026-11-25T165317Z-androidbible-archive-and-constants/recheck.py /workspace/work/mr-const/archive-build/target/release/korrust tests",
+    "python reports/correctness/2026-11-25T165317Z-androidbible-archive-and-constants/recheck.py /workspace/korrust/target/release/korrust production"
+  ],
+  "verification_commands": [
+    "cargo fmt -- --check",
+    "cargo clippy --all-targets --locked --offline -- -D warnings",
+    "python -m unittest discover -s tests -p 'test_classpath_policy.py'",
+    "cargo test --release --locked --offline --no-fail-fast",
+    "cargo test --release --locked --offline --test frontend"
+  ],
+  "fixture_hashes": {
+    "tests/member_constants.rs": "5a3682c07cd92e96f2d9ef3533a5b73e988e9fc7b6b762432c7324abddba431b",
+    "tests/archive_policy.rs": "0743adda9f8525e0037e8542c35eca76f119e54fd1910c939809e219100f728e",
+    "tests/test_classpath_policy.py": "8743e9cb4b793126f2669865f81d8ec293abf48940f53c2e3c243038503500a9",
+    "tests/member_constants/Calls.java": "48812eec4921ef54fb30f8cd4940a94c5fc2bd4c2763db8509db03054399d46d",
+    "tests/member_constants/CompiledCalls.java": "4b4ce14a408c9e6b5ed5c5480f9d2cafb54a180cb199dd95b8f4fecaf42ec4d3",
+    "tests/member_constants/CompiledRead.kt": "e74ff3dc534b5b52a7f9f9b12f07dda74d3338405aafbf09f852bfd7e515d7ca",
+    "tests/member_constants/Consumer.kt": "270091194b3558c8dd6ca7aa97325283fba51f2e4b2beb4905e9dd5eae6ee724",
+    "tests/member_constants/Models.kt": "04b23f37cabfa90e3d57b94d250bcf37b46c4e51b81de3fb7ae30e07d8127ddf",
+    "tests/member_constants/Read.kt": "86bbdb6510530fde36baf0c24a0721a9705d786ef8f69876fcd729475437cfbd",
+    "tests/frontend.rs": "5e328392670d59f6ffc9886f6cecf56f85938b244c9a1d8af35658b82206cac8"
+  },
+  "assessment_inputs": "Reuses the Gradle models, resolved dependencies, source-set output and prior per-file results under /workspace/work/all400-nov25 from the 400-file baseline. Run each cohort against the compiler commit listed for that cohort. Set JAVA_HOME to the JDK 21 used by the baseline.",
+  "first_diagnostics": {
+    "tests": {
+      "JUnit Test annotation definition": 70,
+      "MockK Kotlin imports": 19,
+      "ANONYMOUS_OBJECT_MEMBER_UNSUPPORTED": 10,
+      "Expected an identifier": 4,
+      "COMPILED_VALUE_CLASS_SHAPE_UNSUPPORTED": 4,
+      "STATIC_MEMBER_WILDCARD_UNSUPPORTED": 4,
+      "ANNOTATION_TYPE_USE_UNSUPPORTED": 3,
+      "CLASS_NOT_FOUND": 3,
+      "Expected a class member declaration": 3,
+      "DISCARD_CATCH_BINDING_UNSUPPORTED": 2,
+      "UNRESOLVED_VALUE": 2,
+      "ABSTRACT_CONSTRUCTION_INVALID": 2,
+      "Cannot infer a source declaration signature: cyclic or unsupported initializer or expression body; add an explicit type": 2,
+      "No applicable member overload": 2,
+      "LIBRARY_DECLARATION_UNSUPPORTED": 2,
+      "LOCAL_CLASS_UNSUPPORTED": 2,
+      "Expected :, found val": 1,
+      "LOCAL_DELEGATED_PROPERTY_UNSUPPORTED": 1,
+      "SOURCE_INLINE_CONTEXT_UNSUPPORTED": 1,
+      "Unsupported object visibility; use public or internal": 1,
+      "Imported class is inaccessible or unsupported: androidx/work/Configuration": 1,
+      "Unresolved member or imported extension: Logger": 1,
+      "Unresolved member or imported extension: ReadyTokens": 1,
+      "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/9156cdbb1f234c88470dd450386a6efb/transformed/work-runtime-2.10.4-api.jar!androidx/work/ExperimentalConfigurationApi: Malformed or unsupported Java class file": 1,
+      "ANNOTATION_DEFINITION_UNSUPPORTED": 1,
+      "Unresolved member or imported extension: map": 1,
+      "Java package metadata /workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.google.code.gson/gson/2.12.1/4e773a317740b83b43cfc3d652962856041697cb/gson-2.12.1.jar is unsupported because it may define nullability defaults": 1,
+      "timeout": 1
+    },
+    "production": {
+      "Java package metadata /workspace/work/deps33/gradle-home/caches/9.7.1/transforms/2b5dcd62c469c3fc7df70ca5d45e554e/transformed/media3-session-1.10.1-api.jar is unsupported because it may define nullability defaults": 2,
+      "JAVA_FIELD_UNSUPPORTED": 1,
+      "PRIVATE_NESTED_SHAPE_UNSUPPORTED": 1,
+      "ABSTRACT_CONSTRUCTION_INVALID": 1,
+      "LIBRARY_DECLARATION_UNSUPPORTED": 1,
+      "JAVA_PROPERTY_DECLARATION_UNSUPPORTED": 1,
+      "Safe calls returning Unit are not supported": 1,
+      "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.9.1/b17951747e38bf3986a24431b9ba0d039958aa5f/annotation-jvm-1.9.1.jar!androidx/annotation/AnimRes: Malformed or unsupported Java class file": 1,
+      "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/9156cdbb1f234c88470dd450386a6efb/transformed/work-runtime-2.10.4-api.jar!androidx/work/ExperimentalConfigurationApi: Malformed or unsupported Java class file": 1,
+      "Cannot reassign val or parameter: dragHover": 1,
+      "Unresolved member or imported extension: apply": 1,
+      "LOCAL_DELEGATED_PROPERTY_UNSUPPORTED": 1
+    }
+  },
+  "reference_compiler": "Kotlin 2.3.21 on JDK 21",
+  "test_environment": {
+    "RUST_MIN_STACK": "33554432",
+    "RUST_TEST_THREADS": "3",
+    "JAVA_OPTS": "-Xms32m -Xmx256m -XX:ActiveProcessorCount=2 -XX:TieredStopAtLevel=1"
+  },
+  "test_companion_followup": [
+    {
+      "source": "Alkitab/src/test/java/yuku/alkitab/base/storage/UpgradeFrom4111Test.kt",
+      "status": "rejected",
+      "first_diagnostic": "Unsupported annotation definition or required compiler plugin: org/junit/Test",
+      "line": 13,
+      "class_count": 0
+    },
+    {
+      "source": "Alkitab/src/test/java/yuku/alkitab/base/verses/VerseItemComposeDictionaryTest.kt",
+      "status": "rejected",
+      "first_diagnostic": "Compiled value class uses an unsupported carrier or generic declaration",
+      "line": 12,
+      "class_count": 0
+    },
+    {
+      "source": "Alkitab/src/test/java/yuku/alkitab/base/verses/VerseItemSideBySideSnapshotTest.kt",
+      "status": "rejected",
+      "first_diagnostic": "This expression is unsupported in constant initializers",
+      "line": 524,
+      "class_count": 0
+    }
+  ],
+  "regression_suite": "The all-target run found a legacy frontend test that required valid interface companion constants to fail. Changed that rejection case to const var and reran the entire frontend test binary. Both Kotlin compilers and independent consumers verify the positive const val case in member_constants. After the correction, the complete release test suite was run again on the frozen sources and fixtures.",
+  "retries": {
+    "SongFilterMatchTest.kt": {
+      "archive_result": "Exceeded the initial 300-second timeout. Stopped the raw archive retry after more than 22 minutes once the directory-classpath diagnostic was available.",
+      "directory_classpath_result": "rejected",
+      "diagnostic": "Unresolved member or imported extension: apply",
+      "line": 31,
+      "method": "Preserved the order and contents of all 207 classpath entries and friend paths. Compared all 71,516 files extracted from archives byte-for-byte to the original entries, including all versioned content. Used the same binary and unchanged source."
+    }
+  },
+  "verified_rust_tests": {
+    "passed": 605,
+    "failed": 0,
+    "ignored": 0
+  }
+}
