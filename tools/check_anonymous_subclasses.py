@@ -16,6 +16,7 @@ FIXTURES = ROOT / 'tests/anonymous_subclasses'
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--compiler', type=Path, required=True)
+    parser.add_argument('--exposure-only', action='store_true')
     args = parser.parse_args()
     compiler = args.compiler.resolve()
     stamp = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H%M%S%fZ') + '-anonymous-subclasses'
@@ -40,7 +41,7 @@ def main():
     with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as bundle:
         for path in inputs:
             bundle.writestr(relative(path), path.read_bytes())
-    report = dict(schema_version=1, kind='correctness', created_at=datetime.now(timezone.utc).isoformat(), status='running', compiler={'path': str(compiler), 'sha256': sha(compiler)}, reference_compiler={**json.loads((ROOT / 'references/compiler.json').read_text()), 'options': options}, inputs={'sha256': {relative(Path(path)): digest for path, digest in frozen.items()}}, source_archive={'path': relative(archive), 'sha256': sha(archive)}, commands=[], cases=[], evidence=[], reproduction_commands=[['python3', 'tools/check_anonymous_subclasses.py', '--compiler', str(compiler)]], limitations=['Nongeneric class and interface bases; own members must be override functions. Generic supertypes, anonymous properties and erased/covariant bridges remain diagnosed. Superclass default/reordered arguments and conflicting inherited defaults are outside this evidence.', 'Generated anonymous classes retain the existing lack of EnclosingMethod and anonymous Kotlin metadata. Reflection equivalence and generic anonymous identity in exported APIs are not claimed.', 'Java callers compile once against official Kotlin output, then execute unchanged with verification against both providers.'])
+    report = dict(schema_version=1, kind='correctness', created_at=datetime.now(timezone.utc).isoformat(), status='running', compiler={'path': str(compiler), 'sha256': sha(compiler)}, reference_compiler={**json.loads((ROOT / 'references/compiler.json').read_text()), 'options': options}, inputs={'sha256': {relative(Path(path)): digest for path, digest in frozen.items()}}, source_archive={'path': relative(archive), 'sha256': sha(archive)}, commands=[], cases=[], evidence=[], reproduction_commands=[['python3', 'tools/check_anonymous_subclasses.py', '--compiler', str(compiler), *(['--exposure-only'] if args.exposure_only else [])]], limitations=['Nongeneric class and interface bases; own members must be override functions. Generic supertypes, anonymous properties and erased/covariant bridges remain diagnosed. Superclass default/reordered arguments and conflicting inherited defaults are outside this evidence.', 'Generated anonymous classes retain the existing lack of EnclosingMethod and anonymous Kotlin metadata. Reflection equivalence and generic anonymous identity in exported APIs are not claimed.', 'Java callers compile once against official Kotlin output, then execute unchanged with verification against both providers.'])
 
     def save():
         report['counts'] = dict(Counter(case['outcome'] for case in report['cases']))
@@ -71,33 +72,38 @@ def main():
         for provider, output in providers.items():
             result = run(name + '/verify/' + provider, ['java', '-Xverify:all', '-cp', cp(caller, output, *dependencies, standard), main_class])
             assert result.stdout == 'OK\n', result.stdout
-            report['cases'].append({'id': name + '/verify/' + provider, 'outcome': 'pass', 'assertion': 'Superclass initialization, shared captures, super calls, inherited access, multiple interfaces and fresh allocations'})
+            report['cases'].append({'id': name + '/verify/' + provider, 'outcome': 'pass', 'assertion': 'Provider behavior, dispatch, fresh instances and unchanged Java caller verification'})
             text = run(name + '/abi/' + provider, ['javap', '-s', '-p', '-cp', cp(output, *dependencies, standard), facade]).stdout
             public = []
             active = False
             for line in text.splitlines():
                 line = line.strip()
-                if line.endswith((';', '{')):
+                if line.startswith('descriptor:'):
+                    if active:
+                        public.append(line)
+                elif line.endswith((';', '{')):
                     active = line.startswith('public ')
                     if active:
                         public.append(line)
-                elif line.startswith('descriptor:') and active:
-                    public.append(line)
-            signatures[provider] = public
+            signatures[provider] = sorted(public)
         assert signatures['official'] == signatures['candidate'], signatures
         assert fixed == {str(path): sha(path) for path in caller.rglob('*.class')}
         report['cases'].append({'id': name + '/public-abi-and-fixed-caller', 'outcome': 'pass', 'signatures': signatures['candidate'], 'caller_sha256': fixed})
         save()
 
     try:
-        exercise('source', [FIXTURES / 'Base.kt', FIXTURES / 'Source.kt'], [], FIXTURES / 'Check.java', 'Check', 'anonymousclasses.SourceKt')
-        library = work / 'compiled-base'
-        run('compiled-base/library', [kotlin, FIXTURES / 'Base.kt', *options, '-d', library])
-        exercise('compiled-base', [FIXTURES / 'Source.kt'], [library], FIXTURES / 'Check.java', 'Check', 'anonymousclasses.SourceKt')
-        java_library = work / 'java-base'
-        run('java-base/library', ['javac', '-d', java_library, FIXTURES / 'JavaBase.java'])
-        exercise('java-base', [FIXTURES / 'Java.kt'], [java_library], FIXTURES / 'JavaCheck.java', 'JavaCheck', 'anonymousjava.JavaKt')
+        if not args.exposure_only:
+            exercise('source', [FIXTURES / 'Base.kt', FIXTURES / 'Source.kt'], [], FIXTURES / 'Check.java', 'Check', 'anonymousclasses.SourceKt')
+            library = work / 'compiled-base'
+            run('compiled-base/library', [kotlin, FIXTURES / 'Base.kt', *options, '-d', library])
+            exercise('compiled-base', [FIXTURES / 'Source.kt'], [library], FIXTURES / 'Check.java', 'Check', 'anonymousclasses.SourceKt')
+            java_library = work / 'java-base'
+            run('java-base/library', ['javac', '-d', java_library, FIXTURES / 'JavaBase.java'])
+            exercise('java-base', [FIXTURES / 'Java.kt'], [java_library], FIXTURES / 'JavaCheck.java', 'JavaCheck', 'anonymousjava.JavaKt')
+        exercise('exposure', [FIXTURES / 'Exposure.kt'], [], FIXTURES / 'ExposureCheck.java', 'ExposureCheck', 'anonymousexposure.ExposureKt')
         for path in sorted((FIXTURES / 'boundaries').glob('*.kt')):
+            if args.exposure_only and not path.stem.startswith('InvalidPublic'):
+                continue
             official = run('boundary/' + path.stem + '/official', [kotlin, path, *options, '-cp', standard, '-d', work / path.stem / 'official'], (0, 1))
             candidate = run('boundary/' + path.stem + '/candidate', [compiler, path, '--diagnostic-format', 'json', '-cp', standard, '-d', work / path.stem / 'candidate'], (1,))
             diagnostics = [json.loads(line) for line in candidate.stderr.splitlines() if line.startswith('{')]

@@ -1,0 +1,4 @@
+$ /workspace/work/big-anon/references/kotlinc/bin/kotlinc /workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicFunctionMember.kt -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -cp /workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/InvalidPublicFunctionMember/official
+tests/anonymous_subclasses/boundaries/InvalidPublicFunctionMember.kt:3:20: error: right-hand side has an anonymous type. Specify the type explicitly.
+class Holder { fun exposed() = object : First, Second { override fun first(): Int = 1; override fun second(): Int = 2 } }
+                   ^^^^^^^

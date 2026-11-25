@@ -1,0 +1,629 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-25T10:07:29.112532+00:00",
+  "status": "passed",
+  "compiler": {
+    "path": "/workspace/build/big-anon/debug/korrust",
+    "sha256": "8202c9d8e4503a1eff5df58ca262a2ad528cc26b8bc085ac11a3ca1c457853c0"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8"
+    ]
+  },
+  "inputs": {
+    "sha256": {
+      "src/annotation_declarations.rs": "ac237d773c71a2fc26faeb2d79b837265c6d557ef7bb31aab748fa8b1c7572be",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/annotation_files.rs": "349e861501424f9c02a177074fd7fb847837d24772ae4773e598ca8c656638c4",
+      "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "src/bytecode/class_companion.rs": "dfe17d45fd23558a704314107c7da6dbc3cc4f318ffd06966c11774dfed0370d",
+      "src/bytecode/data.rs": "c99cb60546cbe8873ef99d1ab057aa7439f4239fce13927d324dfea078dbe98c",
+      "src/bytecode/defaults.rs": "ebdb1c988443c1b984081aa8555c5bb2f649685e3bbfef011cd138c0bf29aecd",
+      "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "src/bytecode/frames.rs": "99081b99b7a03d33ed9ea0c89dff32466491837f77eb01031a482b2833fc4e06",
+      "src/bytecode/inline.rs": "454a8d821b6d52e6a2a2c613d70dac5e36e7009caff365ac44c7d7b6a947d340",
+      "src/bytecode/interfaces.rs": "02e19cc9024bda962e06cedec8e15ebfc8b9f1ccd7f95ec11980ab46de917ae6",
+      "src/bytecode/lambdas.rs": "b214a9ee46d9eb64cf772ec6cfe6b11f45c33efbeb98618eb37061229d931e00",
+      "src/bytecode/objects.rs": "f4677da9f36464b6113710c6cb1ed11aa193930a23b6aca09312b7fc389681b6",
+      "src/bytecode/suspend.rs": "79e1064dd35da268956f91b167a779ce0957cefa8fef629789a2fb3afee987b7",
+      "src/bytecode/value_classes.rs": "ec7e8ef1e7335cf076d34dacafdb04d06139d9a2ad79b6ef447bd4b062a1fefd",
+      "src/bytecode.rs": "67a35715073ba817073f225f61775d3a4e1b92df0c9d5a5c4c5f37acbf6a5943",
+      "src/check.rs": "ff061f659b2313517ca99e53ce44e8d83fcc5f48c8a946e55bb9cdb8ba83d8cc",
+      "src/check_annotation_placements.rs": "51340570de824f5a5463c8a39570e8c669f4589b8a92890e932940065d49720a",
+      "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "src/check_anonymous.rs": "f4dae3aacc0f2f267bc3cb609fb8b9dc27bb9e450659dc3dcc3a08257d83f2e5",
+      "src/check_captures.rs": "c25067c17c7856fa710261e55842720d8dceebb963ea8f24615849a67611b136",
+      "src/check_class_delegation.rs": "25cd077ed2b3b51158a53efb2c8190296064fe607db399ab416a3d51a4df2be0",
+      "src/check_classes.rs": "669ec7c4c5ef4900ed53d4151cf07269c8fa195d98b4ce51a4f59dc15a072351",
+      "src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+      "src/check_control.rs": "19e7fe2376f65209fd0d9b04be9254ec868fed288707d34631f30e841f3eaca7",
+      "src/check_declarations.rs": "ac24c962d38164ff4c2353e67c582fbe31478b0aecc6749d3e84c7ff136bda8e",
+      "src/check_delegates.rs": "7fe3b9dcdb8bb1e86c2334e18daac91b90a780338f00cc1170eed1d2cca0e6c2",
+      "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "src/check_functions.rs": "93890f143d31b644a4922470ef6398857a44b9512da8efeebd442984d713437a",
+      "src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+      "src/check_interfaces.rs": "c733506c29aeb5738c3266d03579e420bf26719ec59bd09fc4fc4d542c149f15",
+      "src/check_ir_walk.rs": "bd4b73a6629825ac338c156e23b8dcc19e2a505c38dd6fe3270eeaf73bfe45b6",
+      "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+      "src/check_jvm_fields.rs": "ce5eb721e88e725c21d5dc21a49332637e46de586878cdce9facd58ca87989d4",
+      "src/check_library.rs": "1737bf4df2e599b838f326cc240574179a3c27bc95c89014a1fdb864114d5bca",
+      "src/check_member_extensions.rs": "66a4cfa55e05e5699d510113566c91fd54fa79e1257f769df334338c0f7201e5",
+      "src/check_objects.rs": "384c969ec94367656701a73ec0b6cc2cee18b6826ce2a18a390025909cfd59fe",
+      "src/check_operations.rs": "1013c1d7a9bf96c18128d59f766474427818da7e6b189494ae57c644ab2b3f7a",
+      "src/check_overloads.rs": "6612d428673b842cf07a72b2344e6eb790d1a6f1b689373428140d07ab182dbf",
+      "src/check_references.rs": "3a4fd327b7a13f48e69d5fbd059c76cbb8d2ce50ae2e140a762a06d9e1e6eab8",
+      "src/check_relations.rs": "e1d5fe22cde0634df0ae22cc03641fcfbde48b1837e62ac3b48adef156ce7462",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/check_singletons.rs": "2354ebca6f40fe8190cffb8401a5e26bd3e12c62f45375d3248b02abfe486b3b",
+      "src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+      "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "src/check_varargs.rs": "ed99f47e5745c75bd984ac9881a9e3c555ec97bbf13a8bd139b39dac26a651b5",
+      "src/check_variant_signatures.rs": "487fea7351445905782f472e297e15080a4244ce34a4a4aa9904b30c01263a86",
+      "src/classpath/aliases.rs": "745fa67edb3216b77ce5e65f63b75c51ac221f5b49d3e08a4327990bd9e6f4c5",
+      "src/classpath/archive.rs": "875c9119ee5386c40848c8570a27b90964d1a7c5ce65f941217652ae59f1b16c",
+      "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+      "src/classpath/metadata.rs": "45c98d86e202e8679f420585e6315c15b65dd38ad80ef3dc6bed5cb7fdd6d1d1",
+      "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/signature.rs": "11e1e7c67cfe84b56892cddf6b6fa85daa19dfec4f34846a215a18605dfb3bec",
+      "src/classpath/source.rs": "293bc18d79a1dc60b73be427f9c8b5edbe2b9a3ab0637a3400d882b3c54235cd",
+      "src/classpath/source_enums.rs": "3ae8bea81669d8feec40a16fae21a80f4a9d8006acd23c3f4f68d5d177f79be3",
+      "src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+      "src/classpath.rs": "65c7fc34157879c0b641f3811edb7c35324904fb32807e98b6c5cf30b4118003",
+      "src/compiled_inline.rs": "7acd0769184152ea2659a9217886608cff7219eea5a47d25cf573e0f0318d7fa",
+      "src/const_eval.rs": "6714c1d6296d1c3f60fab09891a492f66a9850b3ff3ee2b5a7df42400dfdcdaa",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+      "src/lib.rs": "fa65d18a3567992124b03314127594cefa2abd36dd70af78e8ded63b8801f6a2",
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/metadata.rs": "aca250ad41dbd64e776c3116aa81cc764177123c0a2b81ceabad4185cfa4d4c3",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/source_inline.rs": "b2d434df08d54ce8db178820f9e6b99d67466dc624b04ee76b6d644ead716494",
+      "src/syntax.rs": "8b822ad558f51aea7008c6c1de052f0dc6d3138fbaed5cd02fd123364b0fd7c5",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/visibility.rs": "2be70217a6c7322b7a272a647833cf83ed526586f535c0be15dff46e9ef82ee7",
+      "tests/anonymous_subclasses/Base.kt": "ff22d40d13413c156c3a9c474d9f93654fa468da5de6168d0619199975b3233e",
+      "tests/anonymous_subclasses/Check.java": "abb469af2f525d71bfc4c8e46e3c546c502ae91783cde57ca4b8d82ad0466c13",
+      "tests/anonymous_subclasses/Exposure.kt": "7bd8d38055b29cfb402721685ca64aa9e2aff68020fa6753116ff5075ed4c5a9",
+      "tests/anonymous_subclasses/ExposureCheck.java": "cc6f6942f798dede4de256b310129bd3b87fd879153e0b91c9da521b94ba8dbc",
+      "tests/anonymous_subclasses/Java.kt": "39c8ef6a56838fb11a205ca85986c898b276f086088a30d52b007cd21e51ace4",
+      "tests/anonymous_subclasses/JavaBase.java": "07d5037cfec67120ed0f0b7582b406ec1a8a38f2859d98245ca5bfaf87172e16",
+      "tests/anonymous_subclasses/JavaCheck.java": "4d7efdc566353d592d114cdbcd0f7617000167961046afcac3216830ed71e380",
+      "tests/anonymous_subclasses/Source.kt": "00cca3e905c67337f5efcef5409b1edeba09da26a480674878ad5cf9a78e00be",
+      "tests/anonymous_subclasses/boundaries/Generic.kt": "983fe8e8be23921e0fe73df8cb6e8c79b6e85a1a6ec421c8af9aa173684bb060",
+      "tests/anonymous_subclasses/boundaries/InvalidFinal.kt": "7b0cc4ff118d8434190d83e30290840335b3b6cb5f31d3615c77cbd4af44b108",
+      "tests/anonymous_subclasses/boundaries/InvalidFinalMethod.kt": "07b24332f21d02d31a9abe3f777965cbf4a4c7dc1029bb7976fe586c3a28dfa5",
+      "tests/anonymous_subclasses/boundaries/InvalidInterfaceCtor.kt": "a94417b73f95d617f9b5ea477fc15ff5660e46302249de0e739fb5a95f6690a9",
+      "tests/anonymous_subclasses/boundaries/InvalidMissing.kt": "1e526883cffc21cce5edf620d0f3da41feee0eaf6fd6d08594a5c5492eab1e7a",
+      "tests/anonymous_subclasses/boundaries/InvalidPublicClassProperty.kt": "86ff0ed7e70cffb64d2208fbc40f48b14c47570cc65915b234c0634a4ee1457c",
+      "tests/anonymous_subclasses/boundaries/InvalidPublicCompanionProperty.kt": "b8cb0dc6cbe3af4229ce2a8c12448b6e5100d05d38e5b397169362d2bb5d0bd5",
+      "tests/anonymous_subclasses/boundaries/InvalidPublicFunction.kt": "a73ec4f4340803193db78606daa0393074d92771eacd25847d85d19879da6709",
+      "tests/anonymous_subclasses/boundaries/InvalidPublicFunctionMember.kt": "c13e9c9d00aeb6e5cfc7d2d40984664261afe99e8f71d163c0836178a1b9048e",
+      "tests/anonymous_subclasses/boundaries/InvalidPublicHiddenFunction.kt": "ef9ed7b8aa7c4607803311eb5cddbc6ae3e76426faa9853f7f5c1765f2bfdf2c",
+      "tests/anonymous_subclasses/boundaries/InvalidPublicObjectProperty.kt": "5f33450a4ee96b64e9876339235810c8536381794d8597b367e7246144861160",
+      "tests/anonymous_subclasses/boundaries/InvalidPublicProperty.kt": "cdb9f85455034a47895634e6a09e8bb781348252940c5138cce663557a9c66bd",
+      "tests/anonymous_subclasses/boundaries/Property.kt": "e9aea11a8e7b9d8a18a4003e88baa24542a46de5e82e9efd74628fd3df9384d7",
+      "tools/check_anonymous_subclasses.py": "d349b42c21af34a64c12cc1d1424c986346cd10b23df405d223efa55de92d906",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "/workspace/build/big-anon/debug/korrust": "8202c9d8e4503a1eff5df58ca262a2ad528cc26b8bc085ac11a3ca1c457853c0",
+      "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+    }
+  },
+  "source_archive": {
+    "path": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/inputs.zip",
+    "sha256": "4d3ff599473218ea91469d3ac8c9ff62ebfc4e344d87286db5436cca3d2decdc"
+  },
+  "commands": [
+    {
+      "label": "exposure/official",
+      "argv": [
+        "/workspace/work/big-anon/references/kotlinc/bin/kotlinc",
+        "/workspace/work/big-anon/tests/anonymous_subclasses/Exposure.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/exposure/official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/000.txt"
+    },
+    {
+      "label": "exposure/candidate",
+      "argv": [
+        "/workspace/build/big-anon/debug/korrust",
+        "/workspace/work/big-anon/tests/anonymous_subclasses/Exposure.kt",
+        "-cp",
+        "/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/exposure/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/001.txt"
+    },
+    {
+      "label": "exposure/javac-fixed",
+      "argv": [
+        "javac",
+        "-cp",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/exposure/official:/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/exposure/caller",
+        "/workspace/work/big-anon/tests/anonymous_subclasses/ExposureCheck.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/002.txt"
+    },
+    {
+      "label": "exposure/verify/official",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/exposure/caller:/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/exposure/official:/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ExposureCheck"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/003.txt"
+    },
+    {
+      "label": "exposure/abi/official",
+      "argv": [
+        "javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/exposure/official:/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousexposure.ExposureKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/004.txt"
+    },
+    {
+      "label": "exposure/verify/candidate",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/exposure/caller:/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/exposure/candidate:/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ExposureCheck"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/005.txt"
+    },
+    {
+      "label": "exposure/abi/candidate",
+      "argv": [
+        "javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/exposure/candidate:/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousexposure.ExposureKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/006.txt"
+    },
+    {
+      "label": "boundary/InvalidPublicClassProperty/official",
+      "argv": [
+        "/workspace/work/big-anon/references/kotlinc/bin/kotlinc",
+        "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicClassProperty.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/InvalidPublicClassProperty/official"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/007.txt"
+    },
+    {
+      "label": "boundary/InvalidPublicClassProperty/candidate",
+      "argv": [
+        "/workspace/build/big-anon/debug/korrust",
+        "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicClassProperty.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/InvalidPublicClassProperty/candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/008.txt"
+    },
+    {
+      "label": "boundary/InvalidPublicCompanionProperty/official",
+      "argv": [
+        "/workspace/work/big-anon/references/kotlinc/bin/kotlinc",
+        "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicCompanionProperty.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/InvalidPublicCompanionProperty/official"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/009.txt"
+    },
+    {
+      "label": "boundary/InvalidPublicCompanionProperty/candidate",
+      "argv": [
+        "/workspace/build/big-anon/debug/korrust",
+        "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicCompanionProperty.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/InvalidPublicCompanionProperty/candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/010.txt"
+    },
+    {
+      "label": "boundary/InvalidPublicFunction/official",
+      "argv": [
+        "/workspace/work/big-anon/references/kotlinc/bin/kotlinc",
+        "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicFunction.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/InvalidPublicFunction/official"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/011.txt"
+    },
+    {
+      "label": "boundary/InvalidPublicFunction/candidate",
+      "argv": [
+        "/workspace/build/big-anon/debug/korrust",
+        "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicFunction.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/InvalidPublicFunction/candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/012.txt"
+    },
+    {
+      "label": "boundary/InvalidPublicFunctionMember/official",
+      "argv": [
+        "/workspace/work/big-anon/references/kotlinc/bin/kotlinc",
+        "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicFunctionMember.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/InvalidPublicFunctionMember/official"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/013.txt"
+    },
+    {
+      "label": "boundary/InvalidPublicFunctionMember/candidate",
+      "argv": [
+        "/workspace/build/big-anon/debug/korrust",
+        "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicFunctionMember.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/InvalidPublicFunctionMember/candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/014.txt"
+    },
+    {
+      "label": "boundary/InvalidPublicHiddenFunction/official",
+      "argv": [
+        "/workspace/work/big-anon/references/kotlinc/bin/kotlinc",
+        "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicHiddenFunction.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/InvalidPublicHiddenFunction/official"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/015.txt"
+    },
+    {
+      "label": "boundary/InvalidPublicHiddenFunction/candidate",
+      "argv": [
+        "/workspace/build/big-anon/debug/korrust",
+        "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicHiddenFunction.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/InvalidPublicHiddenFunction/candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/016.txt"
+    },
+    {
+      "label": "boundary/InvalidPublicObjectProperty/official",
+      "argv": [
+        "/workspace/work/big-anon/references/kotlinc/bin/kotlinc",
+        "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicObjectProperty.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/InvalidPublicObjectProperty/official"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/017.txt"
+    },
+    {
+      "label": "boundary/InvalidPublicObjectProperty/candidate",
+      "argv": [
+        "/workspace/build/big-anon/debug/korrust",
+        "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicObjectProperty.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/InvalidPublicObjectProperty/candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/018.txt"
+    },
+    {
+      "label": "boundary/InvalidPublicProperty/official",
+      "argv": [
+        "/workspace/work/big-anon/references/kotlinc/bin/kotlinc",
+        "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicProperty.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/InvalidPublicProperty/official"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/019.txt"
+    },
+    {
+      "label": "boundary/InvalidPublicProperty/candidate",
+      "argv": [
+        "/workspace/build/big-anon/debug/korrust",
+        "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicProperty.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/InvalidPublicProperty/candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-25T100728904149Z-anonymous-subclasses/020.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "exposure/verify/official",
+      "outcome": "pass",
+      "assertion": "Provider behavior, dispatch, fresh instances and unchanged Java caller verification"
+    },
+    {
+      "id": "exposure/verify/candidate",
+      "outcome": "pass",
+      "assertion": "Provider behavior, dispatch, fresh instances and unchanged Java caller verification"
+    },
+    {
+      "id": "exposure/public-abi-and-fixed-caller",
+      "outcome": "pass",
+      "signatures": [
+        "descriptor: ()I",
+        "descriptor: ()Lanonymousexposure/First;",
+        "descriptor: ()Lanonymousexposure/First;",
+        "public final class anonymousexposure.ExposureKt {",
+        "public static final anonymousexposure.First explicit();",
+        "public static final anonymousexposure.First getExplicitValue();",
+        "public static final int readPrivate();"
+      ],
+      "caller_sha256": {
+        "/workspace/work/big-anon/target/checks/2026-11-25T100728904149Z-anonymous-subclasses/exposure/caller/ExposureCheck.class": "10c91bdde81ed8ce802d033c3ccf11e6559dd32fa609e9bdfb8b01180170fc08"
+      }
+    },
+    {
+      "id": "boundary/InvalidPublicClassProperty",
+      "outcome": "invalid_rejected",
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicClassProperty.kt",
+          "offset": 91,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_PUBLIC_RESULT_TYPE_REQUIRED",
+          "message": "Public anonymous objects with multiple supertypes require an explicit result type",
+          "path": "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicClassProperty.kt",
+          "line": 3,
+          "column": 16
+        }
+      ]
+    },
+    {
+      "id": "boundary/InvalidPublicCompanionProperty",
+      "outcome": "invalid_rejected",
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicCompanionProperty.kt",
+          "offset": 110,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_PUBLIC_RESULT_TYPE_REQUIRED",
+          "message": "Public anonymous objects with multiple supertypes require an explicit result type",
+          "path": "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicCompanionProperty.kt",
+          "line": 3,
+          "column": 35
+        }
+      ]
+    },
+    {
+      "id": "boundary/InvalidPublicFunction",
+      "outcome": "invalid_rejected",
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicFunction.kt",
+          "offset": 76,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_PUBLIC_RESULT_TYPE_REQUIRED",
+          "message": "Public anonymous objects with multiple supertypes require an explicit result type",
+          "path": "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicFunction.kt",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "boundary/InvalidPublicFunctionMember",
+      "outcome": "invalid_rejected",
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicFunctionMember.kt",
+          "offset": 91,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_PUBLIC_RESULT_TYPE_REQUIRED",
+          "message": "Public anonymous objects with multiple supertypes require an explicit result type",
+          "path": "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicFunctionMember.kt",
+          "line": 3,
+          "column": 16
+        }
+      ]
+    },
+    {
+      "id": "boundary/InvalidPublicHiddenFunction",
+      "outcome": "invalid_rejected",
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicHiddenFunction.kt",
+          "offset": 188,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_PUBLIC_RESULT_TYPE_REQUIRED",
+          "message": "Public anonymous objects with multiple supertypes require an explicit result type",
+          "path": "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicHiddenFunction.kt",
+          "line": 4,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "boundary/InvalidPublicObjectProperty",
+      "outcome": "invalid_rejected",
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicObjectProperty.kt",
+          "offset": 92,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_PUBLIC_RESULT_TYPE_REQUIRED",
+          "message": "Public anonymous objects with multiple supertypes require an explicit result type",
+          "path": "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicObjectProperty.kt",
+          "line": 3,
+          "column": 17
+        }
+      ]
+    },
+    {
+      "id": "boundary/InvalidPublicProperty",
+      "outcome": "invalid_rejected",
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicProperty.kt",
+          "offset": 76,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_PUBLIC_RESULT_TYPE_REQUIRED",
+          "message": "Public anonymous objects with multiple supertypes require an explicit result type",
+          "path": "/workspace/work/big-anon/tests/anonymous_subclasses/boundaries/InvalidPublicProperty.kt",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "evidence": [],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_anonymous_subclasses.py",
+      "--compiler",
+      "/workspace/build/big-anon/debug/korrust",
+      "--exposure-only"
+    ]
+  ],
+  "limitations": [
+    "Nongeneric class and interface bases; own members must be override functions. Generic supertypes, anonymous properties and erased/covariant bridges remain diagnosed. Superclass default/reordered arguments and conflicting inherited defaults are outside this evidence.",
+    "Generated anonymous classes retain the existing lack of EnclosingMethod and anonymous Kotlin metadata. Reflection equivalence and generic anonymous identity in exported APIs are not claimed.",
+    "Java callers compile once against official Kotlin output, then execute unchanged with verification against both providers."
+  ],
+  "counts": {
+    "pass": 3,
+    "invalid_rejected": 7
+  }
+}

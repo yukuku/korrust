@@ -3026,6 +3026,7 @@ fn infer_source_results_impl(
             progress += 1;
         }
     }
+    anonymous::check_exposed_types(source, classpath)?;
     Ok(progress)
 }
 fn infer_function_record(

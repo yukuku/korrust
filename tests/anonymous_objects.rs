@@ -198,3 +198,32 @@ fn invalid_anonymous_class_inheritance_rejects() {
         );
     }
 }
+
+#[test]
+fn public_anonymous_intersection_inference_rejects() {
+    for source in [
+        include_str!("anonymous_subclasses/boundaries/InvalidPublicFunction.kt"),
+        include_str!("anonymous_subclasses/boundaries/InvalidPublicProperty.kt"),
+        include_str!("anonymous_subclasses/boundaries/InvalidPublicClassProperty.kt"),
+        include_str!("anonymous_subclasses/boundaries/InvalidPublicObjectProperty.kt"),
+        include_str!("anonymous_subclasses/boundaries/InvalidPublicCompanionProperty.kt"),
+        include_str!("anonymous_subclasses/boundaries/InvalidPublicHiddenFunction.kt"),
+        include_str!("anonymous_subclasses/boundaries/InvalidPublicFunctionMember.kt"),
+    ] {
+        let error = compile(source)
+            .err()
+            .expect("Anonymous public result needs an explicit type");
+        assert_eq!(
+            error.kind,
+            DiagnosticKind::InvalidKotlin,
+            "{}",
+            error.message
+        );
+        assert_eq!(error.code, "ANONYMOUS_PUBLIC_RESULT_TYPE_REQUIRED");
+    }
+}
+
+#[test]
+fn explicit_public_anonymous_results_and_private_inference_compile() {
+    compile(include_str!("anonymous_subclasses/Exposure.kt")).unwrap();
+}

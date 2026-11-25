@@ -632,6 +632,13 @@ impl Classpath {
             .insert(owner.into(), (identity.into(), facade));
     }
 
+    pub(crate) fn is_source_facade(&self, owner: &str) -> bool {
+        self.source_files
+            .borrow()
+            .get(owner)
+            .is_some_and(|(_, facade)| *facade)
+    }
+
     pub(crate) fn same_source_file(&self, first: &str, second: &str) -> bool {
         let files = self.source_files.borrow();
         files

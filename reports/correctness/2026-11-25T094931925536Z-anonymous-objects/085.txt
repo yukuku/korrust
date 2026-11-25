@@ -1,0 +1,4 @@
+$ /workspace/work/big-anon/references/kotlinc/bin/kotlinc /workspace/work/big-anon/tests/anonymous_objects/boundaries/Sealed.kt -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -module-name anonymous_objects -cp /workspace/work/big-anon/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/big-anon/target/checks/2026-11-25T094931925536Z-anonymous-objects/boundaries/Sealed/official
+tests/anonymous_objects/boundaries/Sealed.kt:1:62: error: anonymous object cannot extend a sealed interface.
+sealed interface A { fun n(): Int }; fun bad(): A = object : A { override fun n(): Int = 1 }
+                                                             ^

@@ -7,6 +7,117 @@ fn unsupported(offset: usize, message: &str) -> Diagnostic {
     )
 }
 
+pub(super) fn check_exposed_types(source: &syntax::Module, classpath: &Classpath) -> Result<()> {
+    fn contains_anonymous(ty: &Type, classpath: &Classpath) -> bool {
+        if let Some(owner) = library::type_owner(ty) {
+            if classpath.is_source(owner)
+                && classpath
+                    .load(owner)
+                    .is_ok_and(|class| class.access & 0x1000 != 0 && !class.kotlin_class)
+            {
+                return true;
+            }
+        }
+        match ty {
+            Type::Nullable(inner)
+            | Type::Platform(inner)
+            | Type::List(inner)
+            | Type::MutableList(inner)
+            | Type::ThreadLocal(inner)
+            | Type::Array(inner) => contains_anonymous(inner, classpath),
+            Type::Parameterized { arguments, .. } => arguments
+                .iter()
+                .filter_map(|arg| arg.ty.as_ref())
+                .any(|ty| contains_anonymous(ty, classpath)),
+            Type::Function { params, result } => params
+                .iter()
+                .chain(std::iter::once(result.as_ref()))
+                .any(|ty| contains_anonymous(ty, classpath)),
+            Type::ReceiverFunction {
+                receiver,
+                params,
+                result,
+            } => params
+                .iter()
+                .chain([receiver.as_ref(), result.as_ref()])
+                .any(|ty| contains_anonymous(ty, classpath)),
+            _ => false,
+        }
+    }
+    let check = |ty: &Type, private: bool, offset: usize| {
+        if private || !contains_anonymous(ty, classpath) {
+            return Ok(());
+        }
+        if matches!(ty, Type::Java(_)) {
+            Err(Diagnostic::new(
+                offset,
+                "Public anonymous objects with multiple supertypes require an explicit result type",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "ANONYMOUS_PUBLIC_RESULT_TYPE_REQUIRED",
+            ))
+        } else {
+            Err(unsupported(
+                offset,
+                "Anonymous types nested in public inferred signatures require unsupported type approximation",
+            ))
+        }
+    };
+    let function =
+        |function: &syntax::Function| check(&function.result, function.private, function.offset);
+    for function_source in &source.functions {
+        function(function_source)?;
+    }
+    for property in &source.properties {
+        check(&property.ty, property.private, property.offset)?;
+    }
+    if let Some(class) = &source.class_decl {
+        for method in &class.methods {
+            function(&method.function)?;
+        }
+        for property in &class.properties {
+            check(&property.ty, property.private, property.offset)?;
+        }
+        if let Some(companion) = &class.companion {
+            for method in &companion.methods {
+                function(&method.function)?;
+            }
+            for property in &companion.properties {
+                if let Some(ty) = &property.ty {
+                    check(ty, property.private, property.offset)?;
+                }
+            }
+        }
+    }
+    if let Some(object) = &source.object_decl {
+        for method in &object.methods {
+            function(&method.function)?;
+        }
+        for field in &object.fields {
+            if let Some(ty) = &field.ty {
+                check(ty, field.private, field.offset)?;
+            }
+        }
+    }
+    if let Some(interface) = &source.interface_decl {
+        for method in &interface.methods {
+            function(&method.function)?;
+        }
+        if let Some(companion) = &interface.companion {
+            for method in &companion.methods {
+                function(&method.function)?;
+            }
+            for field in &companion.fields {
+                if let Some(ty) = &field.ty {
+                    check(ty, field.private, field.offset)?;
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
 impl Checker<'_> {
     pub(super) fn anonymous_object(
         &mut self,
@@ -14,12 +125,7 @@ impl Checker<'_> {
         methods: &[syntax::Function],
         offset: usize,
     ) -> Result<Value> {
-        let owner = format!(
-            "{}$object${}${}",
-            self.lambda_owner,
-            offset,
-            self.lambdas.borrow().len()
-        );
+        let owner = format!("{}$object${offset}", self.lambda_owner);
         let mut parent = "java/lang/Object".to_string();
         let mut interfaces = Vec::new();
         let mut super_arguments = Vec::new();
@@ -191,7 +297,7 @@ impl Checker<'_> {
         }
         self.classpath.register_source(crate::classpath::JavaClass {
             name: owner.clone(),
-            access: 0x0031,
+            access: 0x1031,
             super_name: Some(parent.clone()),
             interfaces: interfaces.clone(),
             methods: Vec::new(),
@@ -429,8 +535,14 @@ impl Checker<'_> {
             .cloned()
             .map(|local| (false, Some(local.clone()), Self::local_receiver(&local)))
             .collect::<Vec<_>>();
-        if let Ok(value) = self.dispatch_receiver_value(offset) {
-            receivers.push((true, self.dispatch_receiver.clone(), value));
+        if self.dispatch_receiver.is_some()
+            || self
+                .object_owner
+                .is_some_and(|owner| !self.classpath.is_source_facade(owner))
+        {
+            if let Ok(value) = self.dispatch_receiver_value(offset) {
+                receivers.push((true, self.dispatch_receiver.clone(), value));
+            }
         }
         let mut receiver_fields = Vec::new();
         for (index, (dispatch, local, value)) in receivers.into_iter().enumerate() {
