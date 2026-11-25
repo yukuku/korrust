@@ -35,3 +35,5 @@ suspend fun textLength(value: String): Int = value.length
 fun scalarReference(): suspend (String) -> Int = ::textLength
 suspend fun consume(value: String): Unit { }
 fun unitReference(): suspend (String) -> Unit = ::consume
+private suspend fun hidden(value: String): String = value + "!"
+fun privateReference(): suspend (String) -> String = ::hidden

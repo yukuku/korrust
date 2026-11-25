@@ -50,6 +50,7 @@ public final class Calls {
         check(ModelsKt.ordinaryReference().invoke(5, new Done()).equals(12));
         check(ModelsKt.scalarReference().invoke("abc", new Done()).equals(3));
         check(ModelsKt.unitReference().invoke("unit", new Done()) == kotlin.Unit.INSTANCE);
+        check("private!".equals(ModelsKt.privateReference().invoke("private", new Done())));
     }
     static void members() {
         for (int kind = 0; kind < 5; kind++) {

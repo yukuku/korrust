@@ -114,7 +114,18 @@ def main():
         listings = []
         for provider, output in providers:
             listing = run(provider + ' factory signatures', [java_home / 'bin/javap', '-p', '-s', '-classpath', output, 'suspendrefs.ModelsKt']).stdout
-            listings.append([line.strip() for line in listing.splitlines() if line.strip().startswith(('public static', 'descriptor:'))])
+            signatures = []
+            selected = False
+            for line in listing.splitlines():
+                line = line.strip()
+                if line.startswith(('public ', 'private ', 'protected ')):
+                    selected = line.startswith('public static') and ' access$' not in line
+                    if selected:
+                        signatures.append(line)
+                elif selected and line.startswith('descriptor:'):
+                    signatures.append(line)
+                    selected = False
+            listings.append(signatures)
         assert listings[0] == listings[1], listings
         return 'Public factory generic declarations and erased JVM descriptors match official Kotlin'
     case('factory_signatures', signatures)
