@@ -1,0 +1,79 @@
+use korrust::compile_all_with_classpath;
+use std::path::Path;
+use std::process::Command;
+
+fn success(command: &mut Command) -> Vec<u8> {
+    let output = command.output().unwrap();
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    output.stdout
+}
+
+#[test]
+fn nested_branches_and_loops_preserve_delayed_state_and_untaken_paths() {
+    let project = Path::new(env!("CARGO_MANIFEST_DIR"));
+    let reference = project.join("references/kotlinc");
+    let standard = reference.join("lib/kotlin-stdlib.jar");
+    let source = include_str!("fixtures/suspend_control_flow/Flow.kt");
+    let root = std::env::temp_dir().join(format!(
+        "korrust-suspend-control_flow-{}-{}",
+        std::process::id(),
+        std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos()
+    ));
+    std::fs::create_dir_all(&root).unwrap();
+    let official = root.join("official");
+    let candidate = root.join("candidate");
+    let driver = root.join("driver");
+    let input = root.join("Flow.kt");
+    std::fs::write(&input, source).unwrap();
+    success(
+        Command::new(reference.join("bin/kotlinc"))
+            .arg(&input)
+            .args(["-jvm-target", "1.8"])
+            .arg("-d")
+            .arg(&official),
+    );
+    let classpath = standard.clone();
+    let classes = std::thread::Builder::new()
+        .stack_size(32 * 1024 * 1024)
+        .spawn(move || compile_all_with_classpath(source, "Flow.kt", &[classpath]).unwrap())
+        .unwrap()
+        .join()
+        .unwrap();
+    for class in classes {
+        let path = candidate.join(format!("{}.class", class.internal_name));
+        std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+        std::fs::write(path, class.bytes).unwrap();
+    }
+    let input = root.join("Calls.java");
+    std::fs::write(
+        &input,
+        include_str!("fixtures/suspend_control_flow/Calls.java"),
+    )
+    .unwrap();
+    success(
+        Command::new("javac")
+            .arg("-cp")
+            .arg(std::env::join_paths([&official, &standard]).unwrap())
+            .arg("-d")
+            .arg(&driver)
+            .arg(input),
+    );
+    for provider in [&official, &candidate] {
+        let output = success(
+            Command::new("java")
+                .arg("-Xverify:all")
+                .arg("-cp")
+                .arg(std::env::join_paths([provider, &driver, &standard]).unwrap())
+                .arg("Calls"),
+        );
+        assert_eq!(output, b"OK\n");
+    }
+    std::fs::remove_dir_all(root).unwrap();
+}

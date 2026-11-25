@@ -21,6 +21,7 @@ pub(super) fn function(
     let locals = function.locals.max((slots + 2) as u16);
     let mut body = Code {
         coroutine: false,
+        suspension: None,
         pool,
         functions,
         owner,
@@ -148,6 +149,7 @@ pub(super) fn constructors_with_offset(
     let locals = class.constructor_locals.max((slots + 2) as u16);
     let mut body = Code {
         coroutine: false,
+        suspension: None,
         pool,
         functions: &class.methods,
         owner,

@@ -50,6 +50,7 @@ fn method(
     }
     let mut code = Code {
         coroutine: false,
+        suspension: None,
         pool,
         functions: &[],
         owner,
@@ -186,6 +187,7 @@ fn factory(
     };
     let mut code = Code {
         coroutine: false,
+        suspension: None,
         pool,
         functions: &[],
         owner,
@@ -583,6 +585,7 @@ pub fn emit_dynamic_object(
     }
     let mut code = Code {
         coroutine: false,
+        suspension: None,
         pool: &mut builder.pool,
         functions: &[],
         owner,

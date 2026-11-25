@@ -180,6 +180,7 @@ pub(super) fn emit(
         }
         let mut code = Code {
             coroutine: false,
+            suspension: None,
             pool: &mut pool,
             functions,
             owner: facade,
@@ -268,6 +269,7 @@ pub(super) fn emit(
         let locals = 1 + params.iter().map(Type::slots).sum::<usize>();
         let mut code = Code {
             coroutine: false,
+            suspension: None,
             pool: &mut pool,
             functions,
             owner: facade,

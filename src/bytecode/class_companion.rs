@@ -179,6 +179,7 @@ pub(super) fn outer(
     }
     let mut code = Code {
         coroutine: false,
+        suspension: None,
         pool,
         functions: &[],
         owner,
@@ -357,6 +358,7 @@ pub(super) fn emit(
         }
         let mut code = Code {
             coroutine: false,
+            suspension: None,
             pool: &mut pool,
             functions: &companion.methods,
             owner: &companion.owner,

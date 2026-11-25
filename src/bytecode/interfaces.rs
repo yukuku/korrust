@@ -459,6 +459,7 @@ fn helper_body(
     parameter_checks(&mut builder.pool, &mut prefix, &function.params)?;
     let mut code = Code {
         coroutine: false,
+        suspension: None,
         pool: &mut builder.pool,
         functions: &[],
         owner: &interface.owner,
@@ -921,6 +922,7 @@ fn companion_classes(
     }
     let mut code = Code {
         coroutine: false,
+        suspension: None,
         pool: &mut builder.pool,
         functions: &[],
         owner: &companion.owner,

@@ -166,9 +166,9 @@ def main():
         case('invalid_' + str(index), rejection)
 
     unsupported = [
-        'suspend fun bounded(step: suspend () -> String): String = if (true) step() else "x"',
-        'suspend fun bounded(step: suspend () -> String): String { while (true) { step() }; return "x" }',
-        'suspend fun bounded(step: suspend () -> String): String = try { step() } finally { }',
+        'suspend fun bounded(step: suspend () -> String): String = step() + "x"',
+        'suspend fun bounded(step: suspend () -> String): String { while (true) { val result = step() + "nested" }; return "x" }',
+        'suspend fun bounded(step: suspend () -> String): String = step() + step()',
         'suspend fun <T> bounded(value: T): T = value',
         'suspend fun bounded(value: Int = 1): Int = value',
         'class Member { private suspend fun bounded(): String = "x" }',

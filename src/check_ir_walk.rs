@@ -1,6 +1,8 @@
 use super::*;
 
 pub(crate) trait Visitor {
+    fn enter_value(&mut self, _node: &Value) {}
+
     fn value(&mut self, node: &mut Value, owner: &str);
 
     fn statement(&mut self, _node: &mut Statement, _owner: &str) {}
@@ -13,6 +15,7 @@ impl<F: FnMut(&mut Value, &str)> Visitor for F {
 }
 
 pub(crate) fn value(node: &mut Value, owner: &str, visitor: &mut impl Visitor) {
+    visitor.enter_value(node);
     match &mut node.kind {
         ValueKind::SuperCall { args, .. }
         | ValueKind::CompiledInline { args, .. }

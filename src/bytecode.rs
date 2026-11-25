@@ -1,4 +1,5 @@
 mod suspend;
+mod suspend_regions;
 pub(crate) use suspend::{frames as emit_suspend_frames, validate as validate_suspend};
 pub(crate) mod annotation_classes;
 pub(crate) mod annotation_files;
@@ -809,6 +810,7 @@ impl Pool {
 }
 struct Code<'a> {
     coroutine: bool,
+    suspension: Option<suspend::State>,
     pool: &'a mut Pool,
     functions: &'a [crate::check::Function],
     owner: &'a str,
@@ -950,6 +952,9 @@ impl Code<'_> {
     }
     fn preserve_across_finalizers(&mut self, ty: &Type, depth: usize) -> Result<()> {
         if self.finalizers.len() == depth {
+            return Ok(());
+        }
+        if suspend_regions::preserve(self, ty, depth)? {
             return Ok(());
         }
         let temporary = self.temporary_count;
@@ -1610,6 +1615,9 @@ impl Code<'_> {
         Ok(true)
     }
     fn value(&mut self, value: &Value) -> Result<()> {
+        if self.suspension.is_some() && suspend::suspension(value, self.functions) {
+            return suspend::emit_value(self, value);
+        }
         if !self.coroutine && suspend::suspension(value, self.functions) {
             return Err(
                 Diagnostic::new(0, "Suspend calls require a suspend function context").with_kind(
@@ -3003,6 +3011,7 @@ pub(crate) fn emit_with_bridges(
         )?);
         let mut code = Code {
             coroutine: false,
+            suspension: None,
             pool: &mut pool,
             functions: &module.functions,
             owner,
@@ -3113,6 +3122,7 @@ pub(crate) fn emit_with_bridges(
     if !module.properties.is_empty() || !module.initializers.is_empty() {
         let mut code = Code {
             coroutine: false,
+            suspension: None,
             pool: &mut pool,
             functions: &module.functions,
             owner,
@@ -3291,6 +3301,7 @@ fn checked_method(
     let is_static = flags & 8 != 0;
     let mut code = Code {
         coroutine: false,
+        suspension: None,
         pool,
         functions,
         owner,
@@ -4417,6 +4428,7 @@ fn emit_class_with(
             .max((constructor_slots + usize::from(class.value_)) as u16);
         let mut code = Code {
             coroutine: false,
+            suspension: None,
             pool: &mut pool,
             functions: &class.methods,
             owner,
@@ -4641,6 +4653,7 @@ fn emit_class_with(
     for secondary in &class.secondary_constructors {
         let mut code = Code {
             coroutine: false,
+            suspension: None,
             pool: &mut pool,
             functions: &class.methods,
             owner,
@@ -4831,6 +4844,7 @@ fn emit_class_with(
         }
         let mut code = Code {
             coroutine: false,
+            suspension: None,
             pool: &mut pool,
             functions: &class.methods,
             owner,
@@ -4975,6 +4989,7 @@ fn emit_class_with(
     } else if !class.delegated_properties.is_empty() || enum_data.is_some() {
         let mut code = Code {
             coroutine: false,
+            suspension: None,
             pool: &mut pool,
             functions: &class.methods,
             owner,

@@ -3,6 +3,7 @@ use super::*;
 fn emitter<'a>(pool: &'a mut Pool, owner: &'a str) -> Code<'a> {
     Code {
         coroutine: false,
+        suspension: None,
         pool,
         functions: &[],
         owner,

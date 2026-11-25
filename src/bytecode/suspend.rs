@@ -3,20 +3,24 @@ use std::collections::BTreeMap;
 
 struct Point {
     value: Value,
-    destination: Destination,
     spills: Vec<(u8, Type)>,
 }
 
-enum Destination {
-    Store(u8),
-    Discard,
-    Return,
-}
-
 struct Plan {
-    segments: Vec<Vec<Statement>>,
+    body: Vec<Statement>,
     points: Vec<Point>,
     fields: BTreeMap<u8, Type>,
+}
+
+pub(super) struct State {
+    pub(super) frame: u8,
+    pub(super) pending_depth: usize,
+    result: u8,
+    marker: u8,
+    temporary: u8,
+    pub(super) frame_owner: String,
+    fields: BTreeMap<u8, Type>,
+    states: Vec<usize>,
 }
 
 fn unsupported(message: &str) -> Diagnostic {
@@ -42,7 +46,10 @@ pub(super) fn suspension(value: &Value, functions: &[crate::check::Function]) ->
     }
 }
 
-fn contains_suspension(body: &[Statement], functions: &[crate::check::Function]) -> bool {
+pub(super) fn contains_suspension(
+    body: &[Statement],
+    functions: &[crate::check::Function],
+) -> bool {
     let mut found = false;
     crate::check::ir_walk::statements(&mut body.to_vec(), "", &mut |value: &mut Value, _: &str| {
         found |= suspension(value, functions);
@@ -54,10 +61,16 @@ fn boxed_return(value: &Value) -> Value {
     if value.ty == Type::Unit {
         Value {
             ty: Type::Java("kotlin/Unit".into()),
-            kind: ValueKind::StaticField {
-                owner: "kotlin/Unit".into(),
-                name: "INSTANCE".into(),
-            },
+            kind: ValueKind::Block(
+                vec![Statement::Expression(value.clone())],
+                Box::new(Value {
+                    ty: Type::Java("kotlin/Unit".into()),
+                    kind: ValueKind::StaticField {
+                        owner: "kotlin/Unit".into(),
+                        name: "INSTANCE".into(),
+                    },
+                }),
+            ),
         }
     } else {
         Value {
@@ -68,131 +81,162 @@ fn boxed_return(value: &Value) -> Value {
 }
 
 fn plan(function: &crate::check::Function, functions: &[crate::check::Function]) -> Result<Plan> {
-    let mut fields = parameter_slots(&function.params, 0)
+    if !function.suspend_ && contains_suspension(&function.body, functions) {
+        return Err(
+            Diagnostic::new(0, "Suspend calls require a suspend function context").with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "SUSPEND_CALL_CONTEXT_INVALID",
+            ),
+        );
+    }
+    struct Planner<'a> {
+        functions: &'a [crate::check::Function],
+        fields: BTreeMap<u8, Type>,
+        points: Vec<Point>,
+        error: Option<Diagnostic>,
+        suspend_: bool,
+        counts: Vec<usize>,
+    }
+    impl crate::check::ir_walk::Visitor for Planner<'_> {
+        fn enter_value(&mut self, _: &Value) {
+            self.counts.push(0);
+        }
+        fn value(&mut self, value: &mut Value, _: &str) {
+            let direct = suspension(value, self.functions);
+            let count = self.counts.pop().unwrap() + usize::from(direct);
+            if let Some(parent) = self.counts.last_mut() {
+                *parent += count;
+            }
+            if direct {
+                if count != 1 {
+                    self.error = Some(unsupported(
+                        "Nested suspension arguments and expressions are unsupported",
+                    ));
+                }
+                if matches!(&value.kind, ValueKind::JavaCall { method, .. } if method.name.ends_with("$default"))
+                {
+                    self.error = Some(unsupported(
+                        "Imported suspend default argument calls are unsupported",
+                    ));
+                }
+            } else if count != 0
+                && !matches!(&value.kind, ValueKind::Binary(operator, _, _) if operator == "&&" || operator == "||")
+                && !matches!(
+                    &value.kind,
+                    ValueKind::If(..)
+                        | ValueKind::Block(..)
+                        | ValueKind::Let { .. }
+                        | ValueKind::Try { .. }
+                        | ValueKind::Box(_)
+                        | ValueKind::Unbox(_)
+                        | ValueKind::Convert(..)
+                        | ValueKind::Not(_)
+                        | ValueKind::Negate(_)
+                        | ValueKind::RequireNotNull(_)
+                        | ValueKind::NotNull(..)
+                        | ValueKind::Abrupt(_)
+                )
+            {
+                self.error = Some(unsupported(
+                    "Suspension inside expression operands is unsupported",
+                ));
+            }
+            if let ValueKind::Let { slot, value, .. } = &value.kind {
+                self.fields.insert(*slot, value.ty.clone());
+            }
+            super::suspend_regions::gather(value, &mut self.fields);
+            if suspension(value, self.functions) {
+                self.points.push(Point {
+                    value: value.clone(),
+                    spills: Vec::new(),
+                });
+            }
+        }
+        fn statement(&mut self, statement: &mut Statement, _: &str) {
+            match statement {
+                Statement::Store(slot, value) => {
+                    if value.ty == Type::Unit {
+                        self.error = Some(unsupported(
+                            "Saved Unit locals in suspend functions are unsupported",
+                        ));
+                    }
+                    self.fields.insert(*slot, value.ty.clone());
+                }
+                Statement::ForUntil { slot, end_slot, .. } => {
+                    self.fields.insert(*slot, Type::Int);
+                    self.fields.insert(*end_slot, Type::Int);
+                }
+                Statement::ForIterator {
+                    slot,
+                    iterator_slot,
+                    element,
+                    ..
+                } => {
+                    self.fields.insert(*slot, element.clone());
+                    self.fields
+                        .insert(*iterator_slot, Type::Java("java/util/Iterator".into()));
+                }
+                Statement::ForEach {
+                    slot,
+                    iterable,
+                    iterable_slot,
+                    index_slot,
+                    ..
+                } => {
+                    let element = match iterable.ty.base() {
+                        Type::String => Type::Char,
+                        Type::List(element) | Type::MutableList(element) => *element.clone(),
+                        array => array.array_element().unwrap(),
+                    };
+                    self.fields.insert(*slot, element);
+                    self.fields.insert(
+                        *iterable_slot,
+                        if matches!(iterable.ty.base(), Type::List(_) | Type::MutableList(_)) {
+                            Type::Java("java/util/Iterator".into())
+                        } else {
+                            iterable.ty.clone()
+                        },
+                    );
+                    self.fields.insert(*index_slot, Type::Int);
+                }
+                Statement::Return(value) if self.suspend_ => {
+                    *value = boxed_return(value);
+                }
+                Statement::FieldStore { .. }
+                | Statement::JavaFieldStore { .. }
+                | Statement::IndexStore(..)
+                    if contains_suspension(std::slice::from_ref(statement), self.functions) =>
+                {
+                    self.error = Some(unsupported(
+                        "Suspension in assignment operands is unsupported",
+                    ));
+                }
+                _ => {}
+            }
+        }
+    }
+    let fields = parameter_slots(&function.params, 0)
         .into_iter()
         .zip(&function.params)
         .map(|(slot, (_, ty))| (slot as u8, ty.clone()))
-        .collect::<BTreeMap<_, _>>();
-    let mut active = fields.clone();
-    let mut segments = Vec::new();
-    let mut segment = Vec::new();
-    let mut points = Vec::new();
-    for statement in &function.body {
-        let point = match statement {
-            Statement::Store(slot, value) if suspension(value, functions) => {
-                Some((value, Destination::Store(*slot)))
-            }
-            Statement::Expression(value) if suspension(value, functions) => {
-                Some((value, Destination::Discard))
-            }
-            Statement::Return(value) if suspension(value, functions) => {
-                Some((value, Destination::Return))
-            }
-            _ => None,
-        };
-        if let Some((value, destination)) = point {
-            let mut count = 0;
-            crate::check::ir_walk::value(
-                &mut value.clone(),
-                "",
-                &mut |value: &mut Value, _: &str| {
-                    count += usize::from(suspension(value, functions));
-                },
-            );
-            if count != 1 {
-                return Err(unsupported(
-                    "Nested suspension arguments and expressions are unsupported",
-                ));
-            }
-            if !function.suspend_ {
-                return Err(
-                    Diagnostic::new(0, "Suspend calls require a suspend function context")
-                        .with_kind(
-                            crate::DiagnosticKind::InvalidKotlin,
-                            "SUSPEND_CALL_CONTEXT_INVALID",
-                        ),
-                );
-            }
-            if matches!(&value.kind, ValueKind::JavaCall { method, .. } if method.name.ends_with("$default"))
-            {
-                return Err(unsupported(
-                    "Imported suspend default argument calls are unsupported",
-                ));
-            }
-            if let Destination::Store(slot) = destination {
-                if value.ty == Type::Unit {
-                    return Err(unsupported(
-                        "Saved Unit locals in suspend functions are unsupported",
-                    ));
-                }
-                fields.insert(slot, value.ty.clone());
-            }
-            segments.push(std::mem::take(&mut segment));
-            points.push(Point {
-                value: value.clone(),
-                destination,
-                spills: active
-                    .iter()
-                    .map(|(slot, ty)| (*slot, ty.clone()))
-                    .collect(),
-            });
-            if let Some(Point {
-                destination: Destination::Store(slot),
-                ..
-            }) = points.last()
-            {
-                active.insert(*slot, value.ty.clone());
-            }
-            continue;
-        }
-        if contains_suspension(std::slice::from_ref(statement), functions) {
-            if !function.suspend_ {
-                return Err(
-                    Diagnostic::new(0, "Suspend calls require a suspend function context")
-                        .with_kind(
-                            crate::DiagnosticKind::InvalidKotlin,
-                            "SUSPEND_CALL_CONTEXT_INVALID",
-                        ),
-                );
-            }
-            return Err(unsupported(
-                "Suspension in nested control flow, lambdas, or expression trees is unsupported",
-            ));
-        }
-        match statement {
-            Statement::Store(slot, value) => {
-                if value.ty == Type::Unit {
-                    return Err(unsupported(
-                        "Saved Unit locals in suspend functions are unsupported",
-                    ));
-                }
-                active.insert(*slot, value.ty.clone());
-                fields.insert(*slot, value.ty.clone());
-                segment.push(statement.clone());
-            }
-            Statement::Return(value) if function.suspend_ => {
-                segment.push(Statement::Return(boxed_return(value)))
-            }
-            Statement::Expression(_)
-            | Statement::FieldStore { .. }
-            | Statement::JavaFieldStore { .. }
-            | Statement::IndexStore(..)
-            | Statement::ThrowValue(_)
-            | Statement::ThrowException { .. }
-            | Statement::Return(_) => segment.push(statement.clone()),
-            _ if function.suspend_ => {
-                return Err(unsupported(
-                    "Suspend function bodies currently require straight-line statements",
-                ));
-            }
-            _ => segment.push(statement.clone()),
-        }
-    }
-    segments.push(segment);
-    Ok(Plan {
-        segments,
-        points,
+        .collect();
+    let mut planner = Planner {
+        functions,
         fields,
+        points: Vec::new(),
+        error: None,
+        suspend_: function.suspend_,
+        counts: Vec::new(),
+    };
+    let mut body = function.body.clone();
+    crate::check::ir_walk::statements(&mut body, "", &mut planner);
+    if let Some(error) = planner.error {
+        return Err(error);
+    }
+    Ok(Plan {
+        body,
+        points: planner.points,
+        fields: planner.fields,
     })
 }
 
@@ -549,6 +593,7 @@ fn code<'a>(
 ) -> Code<'a> {
     Code {
         coroutine: true,
+        suspension: None,
         pool,
         functions,
         owner,
@@ -716,6 +761,46 @@ fn call(
     Ok(())
 }
 
+pub(super) fn emit_value(code: &mut Code<'_>, value: &Value) -> Result<()> {
+    let state = code.suspension.as_ref().unwrap();
+    let (frame, result, marker, temporary) =
+        (state.frame, state.result, state.marker, state.temporary);
+    let owner = state.frame_owner.clone();
+    let point = Point {
+        value: value.clone(),
+        spills: state
+            .fields
+            .iter()
+            .map(|(slot, ty)| (*slot, ty.clone()))
+            .collect(),
+    };
+    let next_state = state.states.len();
+    let resume = code.label();
+    let after = code.label();
+    let immediate = code.label();
+    code.suspension.as_mut().unwrap().states.push(resume);
+    call(code, &point, frame, &owner, next_state, temporary)?;
+    code.bytes
+        .extend([0x3a, result, 0x19, result, 0x19, marker]);
+    code.branch(0xa6, immediate);
+    code.bytes.extend([0x19, marker, 0xb0]);
+    code.mark(immediate);
+    code.branch(0xa7, after);
+    code.mark(resume);
+    for (slot, ty) in &point.spills {
+        code.bytes.extend([0x19, frame]);
+        code.field_reference(0xb4, &owner, &spill_name(*slot), &ty.descriptor())?;
+        code.bytes.extend([store_opcode(ty), *slot]);
+    }
+    throw_on_failure(code, result)?;
+    code.mark(after);
+    if value.ty != Type::Unit {
+        code.bytes.extend([0x19, result]);
+        code.adapt_value(&Type::Java("java/lang/Object".into()), &value.ty)?;
+    }
+    Ok(())
+}
+
 pub(super) fn method(
     pool: &mut Pool,
     module: &Module,
@@ -780,7 +865,7 @@ pub(super) fn emit_method_in(
     code.in_lambda = owner != facade;
     let mut locals = function.locals;
     if plan.points.is_empty() {
-        code.block(&plan.segments[0])?;
+        code.block(&plan.body)?;
     } else {
         let incoming = planned
             .params
@@ -818,9 +903,30 @@ pub(super) fn emit_method_in(
         let temporary = frame + 3;
         locals = function.locals + 3 + temporaries as u16;
         let frame_owner = frame_owner(owner, index);
+        let parameters = planned
+            .params
+            .iter()
+            .map(|(_, ty)| ty.slots())
+            .sum::<usize>();
+        for (slot, ty) in &plan.fields {
+            if (*slot as usize) < parameters {
+                continue;
+            }
+            code.bytes.push(if ty.is_reference() {
+                0x01
+            } else if ty == &Type::Long {
+                0x09
+            } else if ty == &Type::Double {
+                0x0e
+            } else if ty == &Type::Float {
+                0x0b
+            } else {
+                0x03
+            });
+            code.bytes.extend([store_opcode(ty), *slot]);
+        }
         let create = code.label();
         let ready = code.label();
-        let suspended = code.label();
         code.bytes.extend([0x19, incoming]);
         code.class_reference(0xc1, &frame_owner)?;
         code.branch(0x99, create);
@@ -860,12 +966,24 @@ pub(super) fn emit_method_in(
             "()Ljava/lang/Object;",
         )?;
         code.bytes.extend([0x3a, marker]);
-        let states = (0..=plan.points.len())
-            .map(|_| code.label())
-            .collect::<Vec<_>>();
-        let after = (0..plan.points.len())
-            .map(|_| code.label())
-            .collect::<Vec<_>>();
+        let dispatch = code.label();
+        let entry = code.label();
+        code.branch(0xa7, dispatch);
+        code.mark(entry);
+        throw_on_failure(&mut code, result)?;
+        code.suspension = Some(State {
+            pending_depth: 0,
+            frame,
+            result,
+            marker,
+            temporary,
+            frame_owner: frame_owner.clone(),
+            fields: plan.fields.clone(),
+            states: vec![entry],
+        });
+        code.block(&plan.body)?;
+        code.mark(dispatch);
+        let states = code.suspension.as_ref().unwrap().states.clone();
         for (index, state) in states.iter().enumerate() {
             code.bytes.extend([0x19, frame]);
             code.field_reference(0xb4, &frame_owner, "label", "I")?;
@@ -889,43 +1007,6 @@ pub(super) fn emit_method_in(
             "(Ljava/lang/String;)V",
         )?;
         code.bytes.push(0xbf);
-        code.mark(states[0]);
-        throw_on_failure(&mut code, result)?;
-        code.block(&plan.segments[0])?;
-        for (index, point) in plan.points.iter().enumerate() {
-            call(&mut code, point, frame, &frame_owner, index + 1, temporary)?;
-            code.bytes
-                .extend([0x3a, result, 0x19, result, 0x19, marker]);
-            code.branch(0xa5, suspended);
-            code.branch(0xa7, after[index]);
-            code.mark(states[index + 1]);
-            for (slot, ty) in &point.spills {
-                code.bytes.extend([0x19, frame]);
-                code.field_reference(0xb4, &frame_owner, &spill_name(*slot), &ty.descriptor())?;
-                code.bytes.extend([store_opcode(ty), *slot]);
-            }
-            throw_on_failure(&mut code, result)?;
-            code.mark(after[index]);
-            match point.destination {
-                Destination::Store(slot) => {
-                    code.bytes.extend([0x19, result]);
-                    code.adapt_value(&Type::Java("java/lang/Object".into()), &point.value.ty)?;
-                    code.bytes.extend([store_opcode(&point.value.ty), slot]);
-                }
-                Destination::Discard => {}
-                Destination::Return => {
-                    if function.result == Type::Unit {
-                        code.field_reference(0xb2, "kotlin/Unit", "INSTANCE", "Lkotlin/Unit;")?;
-                    } else {
-                        code.bytes.extend([0x19, result]);
-                    }
-                    code.bytes.push(0xb0);
-                }
-            }
-            code.block(&plan.segments[index + 1])?;
-        }
-        code.mark(suspended);
-        code.bytes.extend([0x19, marker, 0xb0]);
     }
     let stack = code.max_stack as u16;
     let code = code.into_simple(locals, stack)?;
@@ -1022,6 +1103,14 @@ pub(super) fn emit_frames_in(
         let mut fields = Vec::new();
         for (slot, ty) in &plan.fields {
             fields.extend(class_field_scoped(&mut pool, &spill_name(*slot), ty, 0)?);
+        }
+        for depth in 1..=super::suspend_regions::field_count(&function.body) {
+            fields.extend(class_field(
+                &mut pool,
+                &format!("pending${depth}"),
+                &Type::Java("java/lang/Object".into()),
+                0,
+            )?);
         }
         fields.extend(class_field(
             &mut pool,
@@ -1130,7 +1219,10 @@ pub(super) fn emit_frames_in(
         u2(&mut bytes, this);
         u2(&mut bytes, parent);
         u2(&mut bytes, 0);
-        u2(&mut bytes, (plan.fields.len() + 2) as u16);
+        u2(
+            &mut bytes,
+            (plan.fields.len() + 2 + super::suspend_regions::field_count(&function.body)) as u16,
+        );
         bytes.extend(fields);
         u2(&mut bytes, 2);
         bytes.extend(constructor);
