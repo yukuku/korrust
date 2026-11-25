@@ -2757,6 +2757,21 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Value> {
+        self.java_call_types(receiver, name, args, &[], offset)
+    }
+    fn java_call_types(
+        &mut self,
+        receiver: Value,
+        name: &str,
+        args: &[Expr],
+        types: &[Type],
+        offset: usize,
+    ) -> Result<Value> {
+        if !types.is_empty()
+            && (receiver.ty.is_nullable() || library::type_owner(&receiver.ty).is_none())
+        {
+            return self.extension_call(receiver, name, args, types, offset);
+        }
         let owner = library::type_owner(&receiver.ty)
             .ok_or_else(|| Diagnostic::new(offset, "Unsupported member receiver"))?;
         let class = self
@@ -2807,6 +2822,9 @@ impl Checker<'_> {
             })
             .collect::<Vec<_>>();
         if methods.is_empty() {
+            if !types.is_empty() {
+                return self.extension_call(receiver, name, args, types, offset);
+            }
             return self.member_extension_fallback(
                 receiver,
                 name,
@@ -2848,7 +2866,7 @@ impl Checker<'_> {
                 "Cannot write through an out or star type projection",
             ));
         }
-        let method = match self.select_method(&methods, args, offset) {
+        let method = match self.select_method_types(&methods, args, types, offset) {
             Ok(method) => method,
             Err(_) if projected => {
                 return Err(Diagnostic::new(
@@ -2857,6 +2875,9 @@ impl Checker<'_> {
                 ));
             }
             Err(error) if error.message.contains("Ambiguous") => return Err(error),
+            Err(_) if !types.is_empty() => {
+                return self.extension_call(receiver, name, args, types, offset);
+            }
             Err(error) => return self.member_extension_fallback(receiver, name, args, error),
         };
         if !method.instance_dispatch() {
@@ -5409,7 +5430,7 @@ impl Checker<'_> {
                                 }
                             }
                             let value = self.value(receiver)?;
-                            return self.extension_call(value, name, args, types, offset);
+                            return self.java_call_types(value, name, args, types, offset);
                         }
                         _ => Vec::new(),
                     };

@@ -1,6 +1,30 @@
 [
-  {"id":"wrong-default","source":"class Box<C> { fun <T> f(x:T=\"bad\"):T=x }"},
-  {"id":"nonnull-default","source":"class Box<C> { fun <T:Any> f(x:T=null):T=x }"},
-  {"id":"class-default","source":"class Box<C> { fun <T> f(x:T, y:C=x):C=y }"},
-  {"id":"later-default","source":"class Box<C> { fun <T> f(x:T=y, y:T):T=x }"}
+  {
+    "id": "wrong-default",
+    "source": "class Box<C> { fun <T> f(x:T=\"bad\"):T=x }"
+  },
+  {
+    "id": "nonnull-default",
+    "source": "class Box<C> { fun <T:Any> f(x:T=null):T=x }"
+  },
+  {
+    "id": "class-default",
+    "source": "class Box<C> { fun <T> f(x:T, y:C=x):C=y }"
+  },
+  {
+    "id": "later-default",
+    "source": "class Box<C> { fun <T> f(x:T=y, y:T):T=x }"
+  },
+  {
+    "id": "explicit-member-bound",
+    "source": "interface Label\nclass Box<C> { fun <T:Label> fallback(value:T?=null):T?=value }\nfun bad():String?=Box<String>().fallback<String>()"
+  },
+  {
+    "id": "explicit-member-arity",
+    "source": "class Box<C> { fun <T> fallback(value:T?=null):T?=value }\nfun bad():String?=Box<String>().fallback<String,Int>()"
+  },
+  {
+    "id": "nullable-explicit-member",
+    "source": "class Box<C> { fun <T> fallback(value:T?=null):T?=value }\nfun bad(box:Box<String>?):String?=box.fallback<String>()"
+  }
 ]

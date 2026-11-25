@@ -2,6 +2,7 @@ import genericargs.Defaults;
 public class DefaultCalls {
     public static void main(String[] args) {
         Defaults<String> box = new Defaults<>("OK");
+        if (box.<String>fallback(null) != null) throw new AssertionError("fallback");
         if (!box.repeat("wrong", "OK").equals("OK")) throw new AssertionError("repeat");
         if (!box.classifier(1, "OK").equals("OK")) throw new AssertionError("classifier");
         if (box.<String>nullable("wrong", null) != null) throw new AssertionError("nullable");
