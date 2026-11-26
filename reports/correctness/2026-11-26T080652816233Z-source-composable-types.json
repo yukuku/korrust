@@ -1,0 +1,1942 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T08:06:52.816233+00:00",
+  "status": "pass",
+  "selection": "Source zero-argument Unit composable function types retain logical metadata and physical Function2 ABI. Typed forwarding, identity, capture, invocation with actual Composer and changed0, canonical/alias annotations and four provider/frontend combinations execute with verification.",
+  "compiler": {
+    "binary_sha256": "83474e412252d091eb7b1a8dc8da29df5db633852d118dcbd6f78c1b0f31d294",
+    "source_revision": "113510066"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "inputs": {
+    "files_sha256": {
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/annotation_declarations.rs": "7f119a3bf7143ab38c9e9dfe7118824bbdb2fb54e0ecd2f34161ec75d0107600",
+      "src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525",
+      "src/check_interfaces.rs": "a04f31fbe876c148ea664b204a2af9c3d24148f6196fe6b05b1073c6c1044811",
+      "src/check_java_properties.rs": "f3da739960dcbcee99a9b205e29afd330defef89e1089e9a152d5d0efd0c51fd",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/bytecode.rs": "71d66f469aeef323104feed9892864ad865c65e163692b0bb9d0f2eb0df3e7f3",
+      "src/check_local_annotations.rs": "ad5d937aae27ec3bed4528322c068a39eca915a49c449b68b2c4453f87f1a770",
+      "src/check_inner_classes.rs": "b799a4df016e056d127610e359ec06951e05e22e4778a7ffa31934e892cd6e05",
+      "src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+      "src/check_classes.rs": "a2c5cdd6f739971b0d96b04cd98080b5a1507a427f2cd10221ff65824fd03450",
+      "src/jvm_descriptor.rs": "3946ec2e66e89185c9d3e284f9d114e29e5e88d0a3eba52ec39fba2200d07ad2",
+      "src/check_compose_memo.rs": "93378cc0f54ae2d69e7b12ff8ef1f5de0d062814742485b20f84119919036af4",
+      "src/check_unsigned.rs": "7c60ab78a2f2162d0beffbc79d41976a06bc6fb446c1cc9f91de10fc6072e606",
+      "src/check_class_delegation.rs": "1089bac71516daad07ec7245aa8594956feca30ecf926e19ff82c895caba7364",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/metadata.rs": "af2e4b8f11696105d2677e699f33d743a4568521325644f22ca73ae2a7130d72",
+      "src/check_member_extensions.rs": "4382ee7e5dccf7abb9105484ea769827fac64c149585714a94e7001e7792f4d6",
+      "src/check_varargs.rs": "6120b95639903fed551d9b1aecfd76258e236141327cbc8c750159754452c302",
+      "src/classpath.rs": "6c718a5900c8e1fc48e2181652558847870879979e0566b5ef55211139fa8b2e",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/check_references.rs": "a4df941b6ea706d209bc878a01cedea71c22e4a34b6ef3243d9ca8aa16c4aa86",
+      "src/check_functions.rs": "2c218f0763da20df11cfdc29c7c9c0e30104977401080adee4be2089b87c93d4",
+      "src/check_companion_properties.rs": "c974d1059e7cb92644cd1a186492200828341f64b7e95d0ae4c052356537edba",
+      "src/check.rs": "3fdd0f3fd5a2dd8e14a25e09840a561f5475057d29ce5d708d4b2be59a8c4f9f",
+      "src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+      "src/lib.rs": "b32ce1eb31da5bfc99f9a60f5cdf12534db2c86f112f09304b66ab4b582c5fad",
+      "src/check_java_nullability.rs": "40e1e816200bc92d6d7e5ab5fa57b4e3e351967072da160996e5a888b3acb923",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/check_operations.rs": "a15bdb306a10ac311beebe21b2186fd388ef0f7010a9e7e5ce98424b73248b22",
+      "src/check_library.rs": "158bb446a247cb4e6547863f108b24de968ad660ac0e3d4222e1a60140543464",
+      "src/check_relations.rs": "23394a060919428e05073a70a0ea6aeec883c4b3e9053f66f362504ee7331ea0",
+      "src/check_declarations.rs": "3872835bac8a3245225cc8137b694f504ec443d96d53b4a53acccfb3970c1b8b",
+      "src/check_overloads.rs": "a1a5066cd8bf1dd196ce49975678360f043fc2d48f1c1dcf7ce607f57e00bb43",
+      "src/check_compose.rs": "668b2531a6d69e6fee9b847daec842778f218152cc5b2ad7c798b38e8c9733f3",
+      "src/check_captures.rs": "fb33dcee574506b574ca15013bbe102990e6c15dba3744128c72761d361b90ba",
+      "src/check_stable_properties.rs": "4b7b32b83094336d920362641e85e917979f09878cef431f51b023f1b6348873",
+      "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+      "src/check_ir_walk.rs": "262c923e6aea04830f95f2f1f1eca8124b328401fdc5ce1890f027fda2d58e71",
+      "src/check_variant_signatures.rs": "72f821eb8c88daf402fbc6338a23d18940afb79009f46e1661e60b6211a1d216",
+      "src/check_annotation_placements.rs": "027e77c6a6db60f98262fbaf0f44be170c53b58b03d64ae6e8cc43cdb2dc1579",
+      "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "src/check_assignment_flow.rs": "be4520c694043891aa0f72f26e3f8cf73cd902c314660b9f1381c1e48f049a5e",
+      "src/check_control.rs": "6333d7c8a5465154b5e2e519a7598f576c38f7b6a9f6dd2b5b2f5ed60811f532",
+      "src/check_constructor_inference.rs": "dd3d94a733c0acaea93af34f1e130c4338fc11127cbb7cba08f452d7c94d0d1e",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/const_eval.rs": "24319c4a5076f678ed53cbeeff7c52c4bdcf081c9f78485514326e92078e10fd",
+      "src/check_binary_defaults.rs": "c01af9b25cad391997da8de4c7798c48709ac8081c3db6df31ef52082a3d7654",
+      "src/compiled_inline.rs": "97019b68e2b7f1f8c01efbb992d217633e3e7c516962b739251e1cd26f7b9bf1",
+      "src/check_constructor_aliases.rs": "a64e341da62e7b292607926f34f5ad2a570f103f3a2141c40be6ff9bf1a94527",
+      "src/check_initialization.rs": "9c56c8abd1eb964ad4e51ac03cdf7a40d73414a4c9984ae6e6525a37f6b5bdee",
+      "src/check_objects.rs": "d45265fab0f33a9a095b80a6605ef7b0eb1af4f0a7fce21f3225b2d7dd12bc2d",
+      "src/check_contracts.rs": "06434fc5c0999ff69dfb902c50e7bc3b3d4802ae5d3592fbcf0496e9c3bb491d",
+      "src/source_inline.rs": "d59ecaba2b32264cc4190594c19e5ec7e99e6cbb5db28b33c1eaca7c7aa404e5",
+      "src/check_constructor_bridges.rs": "193f110cee019766603fe7d9798178e2f253d468c262f35994c939cd87377a29",
+      "src/check_anonymous.rs": "3500f8dfc43a113c80ea57a2197b0589e723538e13d382119f821c829dee60d0",
+      "src/syntax.rs": "deaddf60adb360c04a414d64dd24bb58c74a21b25b3a98d8dc2ef8be953d37bb",
+      "src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+      "src/classpath/value_names.rs": "b231f34a49e980875429e79cdf63e3fe131ebf853d2104c798ac32a13c88440f",
+      "src/classpath/jdk_modules.rs": "cd1a350e7f8e03cda618a1d919d4e6ee49aba7e9a26728178ebad5f73c4bd8f8",
+      "src/classpath/signature.rs": "17f7cc47481089baf3293d8512713de12278a2dcfb2a17f2e75d29dcb8f153cf",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/nullability_defaults.rs": "8edf9187cd6214380a936c0484c280c7b3f3a973212d3f830c5316feedd4724b",
+      "src/classpath/metadata.rs": "0ea4df900c144c46d9bb6b26b29975d5ecacd9166500017960f42c1dc338d909",
+      "src/classpath/source_enums.rs": "397f5372a015d13ed1028bf3a42641914d5f0023c5ff384296121976519f476a",
+      "src/classpath/singletons.rs": "836fe172f37cc9282e259ba446688b3d2d6bf34fde25ddc3973c1800f29c71a5",
+      "src/classpath/nested.rs": "764dd9eaf0188f91ba018707557e72df76b9c44b0120c8d69574044c8f5e78e9",
+      "src/classpath/package_info.rs": "f3bd436a8c64d48216bae3a55a2a3e82a903d354a42b629928fe1af95197061a",
+      "src/classpath/inherited_classifiers.rs": "47ceea06db1785341706ba9e3d209cdd5c4ff3b4c73794319ba0db5322e383ae",
+      "src/classpath/inline_defaults.rs": "ad6ff8bb40c0b01eee78e30a70f15f2a912ab73307a3836840ce882bc597e8cb",
+      "src/classpath/aliases.rs": "60c8bf9aa2b36008312588e8c723457377a5101b95f8e091274fba2c70078388",
+      "src/classpath/archive.rs": "835e4a79bbbc5c7328ce6a540ed1a2ca975fc526278fe7c31fd9433e08cc56d5",
+      "src/classpath/compose_abi.rs": "d1e90dd0a0363cceb24bc2e246855e01a1ec2033166d817ed75c0fe2583accc1",
+      "src/classpath/source.rs": "ccc26fe9e10953fe96b52075499d4037d6a0e3292b4c0bea02891aa357fb7307",
+      "src/classpath/jvm_builtins.rs": "b8c6e4789a998c1b3737da4879a15d74eb453170c4b03542d4c8ae13f6e40e86",
+      "src/classpath/import_classes.rs": "2835a7c9b72fd326d5881d0fbe41655b57f6d1b26b2e8b1bde6f71eaada580c1",
+      "src/bytecode/frames.rs": "b2e346435d7cb21fbcbf0ec248c8c54fa77273198f1321fb58d84c741e77caff",
+      "src/bytecode/annotation_files.rs": "0fe8ebba7bbd2c80fcdd6fda797b448ca8cd63945b100781361bf1e3ace02eaa",
+      "src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+      "src/bytecode/lambdas.rs": "a0addfd701db5b01d5e05acf16c21daec58c4f778a1d0b6bb228a73eee905e86",
+      "src/bytecode/inline.rs": "d1dbc06ea0c65d833333adb752ce2cdf05c5cc1678a99a6478440041d437aaea",
+      "src/bytecode/anonymous_context.rs": "0864951c7a7e94772ee8e410c49175fed879358204aff745a1f7a315fc1b0283",
+      "src/bytecode/class_companion.rs": "b5c6f75d8c24b3edbe1ae2583693c31b511e4d456734b160d2904b7c6072a62c",
+      "src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+      "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+      "src/bytecode/compose_lambdas.rs": "6355b1593355bb5aeacfbc0dcdfdcb0bc157d1ce995f9129dad742466f328f0d",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/suspend.rs": "2f0f2488e5ec1c9ba4acdda9fc82cf88241dded475b50f94e2f997f94ddcfe22",
+      "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "src/bytecode/interfaces.rs": "e283e506529e64a83d7408f6dbd52d44336cc3a5d1e768428df46670cafd4c2b",
+      "src/bytecode/defaults.rs": "8a1776d35697d05a53ffe6eef7556770ab03f027bcd4275b1b8f372605de6f32",
+      "src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/compiled_inline/defaults.rs": "a6f89d16324008cb96c777009a26eed4bbb233f1ddf91ca91fc387d803c0b2eb",
+      "tests/source_composable_types/InvalidPlainResult.kt": "bd67da3b6c0f2d0e98d192fb9e1289a9ba26f62166b05c0ee6b81aa0b0854add",
+      "tests/source_composable_types/UnsupportedComposite.kt": "02509af08b73fba03973f689396e35f92c814ff01d1c1b2583f98ac285ff39f6",
+      "tests/source_composable_types/UnsupportedNested.kt": "45b850100500494101e57ab50e83bfd1990f9a454e048e1bc09f593478c76d54",
+      "tests/source_composable_types/InvalidArity.kt": "cc74e427d8640faf4b3c9da55490a65a81a76aa503ec7a7dfd6a20b5c776f89f",
+      "tests/source_composable_types/InvalidAnnotationArguments.kt": "4e9dae383b2a378bc53b3b00f73c5c8d05cac726b025307c47724fd56341a9c0",
+      "tests/source_composable_types/UnsupportedStar.kt": "01debc9fa0b8477b5619ba4282e706ad251aaa8f0baa4e96cebf0341173a2356",
+      "tests/source_composable_types/Dependency.kt": "a85f9e86602d5447f82cb0aae062404b5fa0e522e19dcfafd9810d80e5bc3609",
+      "tests/source_composable_types/UnsupportedDeclaration.kt": "054585c74e7cd3d88914027af34634e2098ca807962646ad8cc84966729966fa",
+      "tests/source_composable_types/UnsupportedNullable.kt": "f47188fa4ce00c5ef0473d7dfbe5a4daa3a259738cbd4d1d9dbffcfb6202aa92",
+      "tests/source_composable_types/UnsupportedArguments.kt": "6cd8957b2abc6ea96b0176c1549094943046c3e75adb955ca57af6ebac288b9d",
+      "tests/source_composable_types/UnsupportedConditional.kt": "2b9a4c42a43d70fd14ac78a1d404b9957f73c8c09de10b65adf09eab13eef49f",
+      "tests/source_composable_types/UnsupportedResult.kt": "bd479927145eca34ad49551fe3a327a5ae95b3500bb0de8900f5ace346b0082c",
+      "tests/source_composable_types/UnsupportedReceiver.kt": "3833f56b4e7d998834ccbce02d7840b22c80031b10f29c796b7135ac3097c005",
+      "tests/source_composable_types/Use.kt": "1a88c4d0b1c36139db0a99e4c73fdcddce2d00b7ac0a6d4fb97df82481b118d3",
+      "tests/source_composable_types/UnsupportedClass.kt": "09776b60c231dad33a6f2b00a350e69fb0e9bc762ee4575a6a1877906501beea",
+      "tests/source_composable_types/UnsupportedLookalike.kt": "9db1a0c61b7a667e72104c373df55820579a80758e3e8b2c1f70046ef02dda83",
+      "tests/source_composable_types/InvalidOutside.kt": "616da86a935693573177bf206a7bcc50d1de78f5bec1d339cd01c30d963fc6e1",
+      "tests/source_composable_types/InvalidSuspend.kt": "04bfb436c95f8f584f380986897b3621ac918b71a6a8a9396cfd14ebaf74ee55",
+      "tests/source_composable_types/Calls.java": "8bc45d8a11feb344da6cc8f11d6ffc7e5e43f58fd3a1e7fdfe4159782404fea5",
+      "tests/source_composable_types/Callbacks.kt": "9ce0307bb2f69c590517e43b95e9c6daa8d6bbe02de3ea0902a83964d38571c6",
+      "tests/source_composable_types/InvalidPlainArgument.kt": "d33ebf647aaaf9b05e87bddc4f44016ac0dff233a50a64afffe58dc02406b2cf",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "tests/source_composable_types.rs": "298d6e720e739e52ba9f4bb660ca6706ef1c07456317c134d1ce01804cac9fd8",
+      "tools/check_source_composable_types.py": "f0e19e8249ab5075d2a25bcf48ea25f5a6f98f71b2db1401edd31147b3342cdb"
+    },
+    "evidence_sha256": {
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/000-stderr.txt": "1c337493a432099135e2a03b24ffbe157017fbc763898f03ee9bc1f822e77833",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/000-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/001-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/001-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/002-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/002-stdout.txt": "2f96cd64ad29ffe16cbc2bc66be076e518b3a4b910078b84dd8beae2dda85d5f",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/003-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/003-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/004-stderr.txt": "312e9bd919c699a2f8409f70240177012720c94095f0f4374d44152defc50f7e",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/004-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/005-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/005-stdout.txt": "19aa5a41c0fe43a39dd69bc4bb7e2dba6fbe7ba715a1b2bd4b6f56793ded0caf",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/006-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/006-stdout.txt": "c01b16aa6fd98fac6c86c7d41ac3d5af2edaf9d5f24c4259a07c66ad03fd0503",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/007-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/007-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/008-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/008-stdout.txt": "19aa5a41c0fe43a39dd69bc4bb7e2dba6fbe7ba715a1b2bd4b6f56793ded0caf",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/009-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/009-stdout.txt": "e351f9eac99a37bbe722f4255972fcf01430d54988ebf0835e25bcb336725278",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/010-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/010-stdout.txt": "19aa5a41c0fe43a39dd69bc4bb7e2dba6fbe7ba715a1b2bd4b6f56793ded0caf",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/011-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/011-stdout.txt": "19aa5a41c0fe43a39dd69bc4bb7e2dba6fbe7ba715a1b2bd4b6f56793ded0caf",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/012-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/012-stdout.txt": "75d2be7d6ca9fcf20232344f0c9f850c5d97a440a52569c749cda498513410f4",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/013-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/013-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/014-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/014-stdout.txt": "19aa5a41c0fe43a39dd69bc4bb7e2dba6fbe7ba715a1b2bd4b6f56793ded0caf",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/015-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/015-stdout.txt": "17fb8390e36849fc43af8f3c5a348661e92794b2d0b81ff21f9ec3bc53de6bd7",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/016-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/016-stdout.txt": "19aa5a41c0fe43a39dd69bc4bb7e2dba6fbe7ba715a1b2bd4b6f56793ded0caf",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/017-stderr.txt": "27315a4bda3060322b787d87788c7f63191c8a1a8854ed0e14e601c160f57f1c",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/017-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/018-stderr.txt": "cdbfcf18b509bb2e1ed962c98d5bb49583219a029fdae4a4443816cbf10c592e",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/018-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/019-stderr.txt": "44b0862a4dc4addf059b1361ad931b69f0293478e555c2154ccc72a88b3ea973",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/019-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/020-stderr.txt": "e204b3daddf26d6b8240b21683655f49461ab4b92e09a70f6570bbe750adaf7b",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/020-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/021-stderr.txt": "4e9cc3bc380739e24f1b4f443dd96668acf109de489e02d3378ea15db67f856e",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/021-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/022-stderr.txt": "478a8be7ce900aeccbcdaf1ade55422cb89ba6b269c819222e1963addf90d758",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/022-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/023-stderr.txt": "679518e4ecc44b81838a0ddec5cf755fba9c28fcc9a1fbc2395458dd429d2788",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/023-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/024-stderr.txt": "1f5a30c2f8e25f6c116248498311783d739dd0b571bd2702f68d62112db95052",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/024-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/025-stderr.txt": "187be3ade2f3175563036ff4e120bef4d8c6f731985bf8e23b9eb3aa9ccaf09d",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/025-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/026-stderr.txt": "84f28e15d14b721d13445602276b55c5d7457ace9aa8eac8a45ce4d02dc46397",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/026-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/027-stderr.txt": "f14b725ba15e9ac7a4072e0b78a517dcd09b99fcdd7f9a53d9c6870b165b4c3f",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/027-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/028-stderr.txt": "72ee6a76c0ccbd21477ff3a00183f672f248194c7d4b8df282f9e2a832d9c160",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/028-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/029-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/029-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/030-stderr.txt": "64565964c980aed925389b6ce8d0465535f0d7aa9b7e83704919d56d39045754",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/030-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/031-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/031-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/032-stderr.txt": "fc14f9c2cad8a133cc9c3acf6da6bb5aaab626e4b7eecc33a85d8833851c4246",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/032-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/033-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/033-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/034-stderr.txt": "b264f185bcf5a71c8fe3b619fd0da1b1b2c8aed5dfe932181cb5895840d6fcd6",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/034-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/035-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/035-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/036-stderr.txt": "1c933fd652d56055a078f6289c66dbde2eaa59e73f07bb13a9a1474c6891403d",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/036-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/037-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/037-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/038-stderr.txt": "6f303c635ec90f2963d090deb39f04460c0e854d7e39a0e0b6f28a9696362083",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/038-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/039-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/039-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/040-stderr.txt": "f14383b6c304e6e42d730aa97218aa8c4f02ad1746c04e5c2aeeb23b2cc16b50",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/040-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/041-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/041-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/042-stderr.txt": "8b21d40afa4ab4ea3aedfd567586d67a532f64bbf79889e71634e8f3c10095ce",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/042-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/043-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/043-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/044-stderr.txt": "dfe24b05ca86b0368783589977ec465a66480019a26ac2bb4f77f37b0e4da954",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/044-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/045-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/045-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/046-stderr.txt": "e346f0ebb1249dbc805a74d377212d5330a882a379c37ccca7868ff24d6ca95d",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/046-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/047-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/047-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/048-stderr.txt": "2047fb0931a0a61bac2c6affdb18da377813ec167c9164ccd7f7df6b4f55dba0",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/048-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/049-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/049-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/050-stderr.txt": "a4616e24d995f88b4a66c1838f173ed03b6bf4769ea71162d12c3a37f6a102a0",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/050-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/application-reproducer.py": "ad03bd68fbd2000cd76e3994593df4bbc5572a28b58a95ef8ca6b3864b9077de",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/application284.json": "9d63049b50e4ef9e21f3dc5665a3d68d8525fd67ab9a7cdf881a38fbac03f8ef",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/application348.json": "3e78d492853f4424568b28173f02e34efa9a3fa7d39d6ab7445a166fe0a44947",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/application349.json": "e78b44ffdf2da65b5efb3fabd87765ae7511ebadcabf378575014b21ab95ede0",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/source-composable-types-final-build.log": "5378c485294c3c9c97c4913a6bb002b6b55f05ef031e3bb463cf956869c39e43",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/source-composable-types-final-clippy.log": "879505b68e821664d27f8667d0a4f6ad3b2fac487cd4ffdb08694d8818215dfd",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/source-composable-types-final-fmt.log": "7aaf037d2ff2a39bbc4aed264b0c639340fba1ad2db69d3c04e72fd97fdfbda5",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/source-composable-types-final-test.log": "eb353837ac4c7f1c112afa36acd266c2e47b0db0024d0adf8b77234cb5962067",
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types/source-composable-types-reports-test.log": "f26cd59353be4db10df75a927f973853d2b09ddd69fa51c22ab877dc86d308f0"
+    }
+  },
+  "dependencies": {
+    "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar": "03aa2514a35fcf343e64c64841311860334262efee6bb0df5b6a963ba262e938",
+    "/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar": "5a704878278443e66d383a0523e146aacf1562d70646f3ac50ec2451a92ad8c6",
+    "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar": "e8b44d65a4ba5fb14f3e51d10fb605d7da2a0c35a9ee275c94ffd74cb3f2b11e"
+  },
+  "commands": [
+    {
+      "id": "official/dependencies",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/Dependency.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/000-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/Callbacks.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/001-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/Callbacks.kt",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "source_composable_types",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/002-stderr.txt"
+    },
+    {
+      "id": "official/fixed-official-use",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/Use.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/official:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/fixed-official-use"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/003-stderr.txt"
+    },
+    {
+      "id": "fixed-java-caller",
+      "argv": [
+        "javac",
+        "--release",
+        "8",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/fixed-official-use:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/official:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/caller",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/Calls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/004-stderr.txt"
+    },
+    {
+      "id": "official/runtime",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/caller:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/fixed-official-use:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/official:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "composetypeprobe.Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/005-stderr.txt"
+    },
+    {
+      "id": "official/signatures",
+      "argv": [
+        "javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/official",
+        "composetypeprobe.CallbacksKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/006-stderr.txt"
+    },
+    {
+      "id": "official/official-consumer",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/Use.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/official:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/official-consumer"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/007-stderr.txt"
+    },
+    {
+      "id": "official/kotlin-consumer-runtime",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/caller:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/official-consumer:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/official:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "composetypeprobe.Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/008-stderr.txt"
+    },
+    {
+      "id": "candidate/official-consumer-candidate",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/Use.kt",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/official:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "source_composable_types",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/official-consumer-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/009-stderr.txt"
+    },
+    {
+      "id": "official/candidate-consumer-runtime",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/caller:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/official-consumer-candidate:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/official:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "composetypeprobe.Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/010-stderr.txt"
+    },
+    {
+      "id": "candidate/runtime",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/caller:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/fixed-official-use:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/candidate:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "composetypeprobe.Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/011-stderr.txt"
+    },
+    {
+      "id": "candidate/signatures",
+      "argv": [
+        "javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/candidate",
+        "composetypeprobe.CallbacksKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/012-stderr.txt"
+    },
+    {
+      "id": "official/candidate-consumer",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/Use.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/candidate:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/candidate-consumer"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/013-stderr.txt"
+    },
+    {
+      "id": "candidate/kotlin-consumer-runtime",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/caller:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/candidate-consumer:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/candidate:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "composetypeprobe.Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/014-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate-consumer-candidate",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/Use.kt",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/candidate:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "source_composable_types",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/candidate-consumer-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/015-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate-consumer-runtime",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/caller:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/candidate-consumer-candidate:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/candidate:/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "composetypeprobe.Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/016-stderr.txt"
+    },
+    {
+      "id": "official/InvalidAnnotationArguments-official",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidAnnotationArguments.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/InvalidAnnotationArguments-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/017-stderr.txt"
+    },
+    {
+      "id": "candidate/InvalidAnnotationArguments-candidate",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidAnnotationArguments.kt",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "source_composable_types",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/InvalidAnnotationArguments-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/018-stderr.txt"
+    },
+    {
+      "id": "official/InvalidArity-official",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidArity.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/InvalidArity-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/019-stderr.txt"
+    },
+    {
+      "id": "candidate/InvalidArity-candidate",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidArity.kt",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "source_composable_types",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/InvalidArity-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/020-stderr.txt"
+    },
+    {
+      "id": "official/InvalidOutside-official",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidOutside.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/InvalidOutside-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/021-stderr.txt"
+    },
+    {
+      "id": "candidate/InvalidOutside-candidate",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidOutside.kt",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "source_composable_types",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/InvalidOutside-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/022-stderr.txt"
+    },
+    {
+      "id": "official/InvalidPlainArgument-official",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidPlainArgument.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/InvalidPlainArgument-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/023-stderr.txt"
+    },
+    {
+      "id": "candidate/InvalidPlainArgument-candidate",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidPlainArgument.kt",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "source_composable_types",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/InvalidPlainArgument-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/024-stderr.txt"
+    },
+    {
+      "id": "official/InvalidPlainResult-official",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidPlainResult.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/InvalidPlainResult-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/025-stderr.txt"
+    },
+    {
+      "id": "candidate/InvalidPlainResult-candidate",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidPlainResult.kt",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "source_composable_types",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/InvalidPlainResult-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/026-stderr.txt"
+    },
+    {
+      "id": "official/InvalidSuspend-official",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidSuspend.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/InvalidSuspend-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/027-stderr.txt"
+    },
+    {
+      "id": "candidate/InvalidSuspend-candidate",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidSuspend.kt",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "source_composable_types",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/InvalidSuspend-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/028-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/028-stderr.txt"
+    },
+    {
+      "id": "official/UnsupportedArguments-official",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedArguments.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedArguments-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/029-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/029-stderr.txt"
+    },
+    {
+      "id": "candidate/UnsupportedArguments-candidate",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedArguments.kt",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "source_composable_types",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedArguments-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/030-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/030-stderr.txt"
+    },
+    {
+      "id": "official/UnsupportedClass-official",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedClass.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedClass-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/031-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/031-stderr.txt"
+    },
+    {
+      "id": "candidate/UnsupportedClass-candidate",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedClass.kt",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "source_composable_types",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedClass-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/032-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/032-stderr.txt"
+    },
+    {
+      "id": "official/UnsupportedComposite-official",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedComposite.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedComposite-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/033-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/033-stderr.txt"
+    },
+    {
+      "id": "candidate/UnsupportedComposite-candidate",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedComposite.kt",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "source_composable_types",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedComposite-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/034-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/034-stderr.txt"
+    },
+    {
+      "id": "official/UnsupportedConditional-official",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedConditional.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedConditional-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/035-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/035-stderr.txt"
+    },
+    {
+      "id": "candidate/UnsupportedConditional-candidate",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedConditional.kt",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "source_composable_types",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedConditional-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/036-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/036-stderr.txt"
+    },
+    {
+      "id": "official/UnsupportedDeclaration-official",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedDeclaration.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedDeclaration-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/037-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/037-stderr.txt"
+    },
+    {
+      "id": "candidate/UnsupportedDeclaration-candidate",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedDeclaration.kt",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "source_composable_types",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedDeclaration-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/038-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/038-stderr.txt"
+    },
+    {
+      "id": "official/UnsupportedLookalike-official",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedLookalike.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedLookalike-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/039-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/039-stderr.txt"
+    },
+    {
+      "id": "candidate/UnsupportedLookalike-candidate",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedLookalike.kt",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "source_composable_types",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedLookalike-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/040-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/040-stderr.txt"
+    },
+    {
+      "id": "official/UnsupportedNested-official",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedNested.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedNested-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/041-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/041-stderr.txt"
+    },
+    {
+      "id": "candidate/UnsupportedNested-candidate",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedNested.kt",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "source_composable_types",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedNested-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/042-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/042-stderr.txt"
+    },
+    {
+      "id": "official/UnsupportedNullable-official",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedNullable.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedNullable-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/043-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/043-stderr.txt"
+    },
+    {
+      "id": "candidate/UnsupportedNullable-candidate",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedNullable.kt",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "source_composable_types",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedNullable-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/044-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/044-stderr.txt"
+    },
+    {
+      "id": "official/UnsupportedReceiver-official",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedReceiver.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedReceiver-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/045-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/045-stderr.txt"
+    },
+    {
+      "id": "candidate/UnsupportedReceiver-candidate",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedReceiver.kt",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "source_composable_types",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedReceiver-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/046-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/046-stderr.txt"
+    },
+    {
+      "id": "official/UnsupportedResult-official",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedResult.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedResult-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/047-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/047-stderr.txt"
+    },
+    {
+      "id": "candidate/UnsupportedResult-candidate",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedResult.kt",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "source_composable_types",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedResult-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/048-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/048-stderr.txt"
+    },
+    {
+      "id": "official/UnsupportedStar-official",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedStar.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedStar-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/049-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/049-stderr.txt"
+    },
+    {
+      "id": "candidate/UnsupportedStar-candidate",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedStar.kt",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/dependencies:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "source_composable_types",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/UnsupportedStar-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/050-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/050-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "dependency/compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "fixed-consumer/compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "caller/compile-official",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/runtime",
+      "outcome": "pass",
+      "observed": "source-composable-types-ok"
+    },
+    {
+      "id": "official/signatures-read",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/kotlin-consumer-compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/kotlin-consumer-runtime",
+      "outcome": "pass",
+      "observed": "source-composable-types-ok"
+    },
+    {
+      "id": "official/candidate-consumer-compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/candidate-consumer-runtime",
+      "outcome": "pass",
+      "observed": "source-composable-types-ok"
+    },
+    {
+      "id": "candidate/runtime",
+      "outcome": "pass",
+      "observed": "source-composable-types-ok"
+    },
+    {
+      "id": "candidate/signatures-read",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/kotlin-consumer-compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/kotlin-consumer-runtime",
+      "outcome": "pass",
+      "observed": "source-composable-types-ok"
+    },
+    {
+      "id": "candidate/candidate-consumer-compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/candidate-consumer-runtime",
+      "outcome": "pass",
+      "observed": "source-composable-types-ok"
+    },
+    {
+      "id": "InvalidAnnotationArguments",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidAnnotationArguments.kt",
+          "offset": 90,
+          "category": "invalid_kotlin",
+          "code": "COMPOSE_TYPE_ANNOTATION_INVALID",
+          "message": "Composable function type annotations have no use-site target or arguments",
+          "path": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidAnnotationArguments.kt",
+          "line": 3,
+          "column": 23
+        }
+      ]
+    },
+    {
+      "id": "InvalidArity",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidArity.kt",
+          "offset": 142,
+          "category": "invalid_kotlin",
+          "code": "COMPOSE_CALLBACK_ARITY_INVALID",
+          "message": "Composable callback requires zero logical arguments",
+          "path": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidArity.kt",
+          "line": 3,
+          "column": 75
+        }
+      ]
+    },
+    {
+      "id": "InvalidOutside",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidOutside.kt",
+          "offset": 116,
+          "category": "invalid_kotlin",
+          "code": "COMPOSE_CALLBACK_OUTSIDE_CONTEXT",
+          "message": "Composable callbacks can only be invoked from a composable context",
+          "path": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidOutside.kt",
+          "line": 3,
+          "column": 49
+        }
+      ]
+    },
+    {
+      "id": "InvalidPlainArgument",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidPlainArgument.kt",
+          "offset": 153,
+          "category": "invalid_kotlin",
+          "code": "TYPE_MISMATCH",
+          "message": "Type mismatch: expected ComposableUnitFunction, found Function { params: [], result: Unit }",
+          "path": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidPlainArgument.kt",
+          "line": 3,
+          "column": 86
+        }
+      ]
+    },
+    {
+      "id": "InvalidPlainResult",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidPlainResult.kt",
+          "offset": 128,
+          "category": "invalid_kotlin",
+          "code": "TYPE_MISMATCH",
+          "message": "Type mismatch: expected ComposableUnitFunction, found Function { params: [], result: Unit }",
+          "path": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidPlainResult.kt",
+          "line": 3,
+          "column": 61
+        }
+      ]
+    },
+    {
+      "id": "InvalidSuspend",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidSuspend.kt",
+          "offset": 94,
+          "category": "invalid_kotlin",
+          "code": "COMPOSE_SUSPEND_TYPE_INVALID",
+          "message": "Composable and suspend function type kinds cannot be combined",
+          "path": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/InvalidSuspend.kt",
+          "line": 3,
+          "column": 27
+        }
+      ]
+    },
+    {
+      "id": "UnsupportedArguments",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedArguments.kt",
+          "offset": 94,
+          "category": "unsupported_language",
+          "code": "COMPOSE_CALLBACK_SHAPE_UNSUPPORTED",
+          "message": "Only nonreceiver nonsuspend zero-argument Unit Compose callback types are supported",
+          "path": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedArguments.kt",
+          "line": 3,
+          "column": 27
+        }
+      ]
+    },
+    {
+      "id": "UnsupportedClass",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedClass.kt",
+          "offset": 68,
+          "category": "unsupported_language",
+          "code": "COMPOSE_SOURCE_CLASS_STABILITY_UNSUPPORTED",
+          "message": "Source classes exporting Compose callback types require unsupported stability ABI export",
+          "path": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedClass.kt",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "UnsupportedComposite",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedComposite.kt",
+          "offset": 68,
+          "category": "unsupported_language",
+          "code": "COMPOSE_CALLBACK_SHAPE_UNSUPPORTED",
+          "message": "Composite Compose callback types are unsupported",
+          "path": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedComposite.kt",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "UnsupportedConditional",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedConditional.kt",
+          "offset": 159,
+          "category": "unsupported_language",
+          "code": "COMPOSE_CONTROL_FLOW_UNSUPPORTED",
+          "message": "Composable control flow requires unsupported group lowering",
+          "path": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedConditional.kt",
+          "line": 3,
+          "column": 92
+        }
+      ]
+    },
+    {
+      "id": "UnsupportedDeclaration",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedDeclaration.kt",
+          "offset": 68,
+          "category": "unsupported_language",
+          "code": "COMPILER_PLUGIN_UNSUPPORTED",
+          "message": "Annotation Composable requires unsupported compiler plugin transformations",
+          "path": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedDeclaration.kt",
+          "line": 3,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "UnsupportedLookalike",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedLookalike.kt",
+          "offset": 105,
+          "category": "unsupported_language",
+          "code": "ANNOTATION_TYPE_USE_UNSUPPORTED",
+          "message": "Only explicitly imported or qualified Compose function type annotations are supported",
+          "path": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedLookalike.kt",
+          "line": 3,
+          "column": 27
+        }
+      ]
+    },
+    {
+      "id": "UnsupportedNested",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedNested.kt",
+          "offset": 151,
+          "category": "unsupported_language",
+          "code": "COMPOSE_NESTED_CALLBACK_UNSUPPORTED",
+          "message": "Compose callbacks in nested or inline contexts are unsupported",
+          "path": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedNested.kt",
+          "line": 3,
+          "column": 84
+        }
+      ]
+    },
+    {
+      "id": "UnsupportedNullable",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedNullable.kt",
+          "offset": 119,
+          "category": "unsupported_language",
+          "code": "COMPOSE_CALLBACK_SHAPE_UNSUPPORTED",
+          "message": "Nullable Compose callback types are unsupported",
+          "path": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedNullable.kt",
+          "line": 3,
+          "column": 52
+        }
+      ]
+    },
+    {
+      "id": "UnsupportedReceiver",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedReceiver.kt",
+          "offset": 94,
+          "category": "unsupported_language",
+          "code": "COMPOSE_CALLBACK_SHAPE_UNSUPPORTED",
+          "message": "Only nonreceiver nonsuspend zero-argument Unit Compose callback types are supported",
+          "path": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedReceiver.kt",
+          "line": 3,
+          "column": 27
+        }
+      ]
+    },
+    {
+      "id": "UnsupportedResult",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedResult.kt",
+          "offset": 94,
+          "category": "unsupported_language",
+          "code": "COMPOSE_CALLBACK_SHAPE_UNSUPPORTED",
+          "message": "Only nonreceiver nonsuspend zero-argument Unit Compose callback types are supported",
+          "path": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedResult.kt",
+          "line": 3,
+          "column": 27
+        }
+      ]
+    },
+    {
+      "id": "UnsupportedStar",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedStar.kt",
+          "offset": 85,
+          "category": "unsupported_language",
+          "code": "ANNOTATION_TYPE_USE_UNSUPPORTED",
+          "message": "Only explicitly imported or qualified Compose function type annotations are supported",
+          "path": "/workspace/work/targets159/source-composable-types-freeze2/tests/source_composable_types/UnsupportedStar.kt",
+          "line": 3,
+          "column": 27
+        }
+      ]
+    },
+    {
+      "id": "declared-api/match",
+      "outcome": "pass"
+    },
+    {
+      "id": "inputs/unchanged",
+      "outcome": "pass"
+    }
+  ],
+  "fixed_java_caller_sha256": {
+    "composetypeprobe/Calls.class": "602827221fc7497eb9ce23884f098df6639d7211bfea9af87cda46d14b14bde8",
+    "composetypeprobe/Calls$State.class": "d935c757f08838c4b4ed4d9795b4bb9571146b663553e9351ba239c7ce04dbef"
+  },
+  "official_signatures": "Classfile /workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/official/composetypeprobe/CallbacksKt.class\n  Last modified Nov 26, 2026; size 3012 bytes\n  SHA-256 checksum 1f8a562753a67d32cf6d52cef72584d93dd217ee8440383ce34aabc0ca77c87b\n  Compiled from \"Callbacks.kt\"\npublic final class composetypeprobe.CallbacksKt\n  minor version: 0\n  major version: 52\n  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER\n  this_class: #2                          // composetypeprobe/CallbacksKt\n  super_class: #4                         // java/lang/Object\n  interfaces: 0, fields: 0, methods: 7, attributes: 3\nConstant pool:\n   #1 = Utf8               composetypeprobe/CallbacksKt\n   #2 = Class              #1             // composetypeprobe/CallbacksKt\n   #3 = Utf8               java/lang/Object\n   #4 = Class              #3             // java/lang/Object\n   #5 = Utf8               identity\n   #6 = Utf8               (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;\n   #7 = Utf8               (Lkotlin/jvm/functions/Function2<-Landroidx/compose/runtime/Composer;-Ljava/lang/Integer;Lkotlin/Unit;>;)Lkotlin/jvm/functions/Function2<Landroidx/compose/runtime/Composer;Ljava/lang/Integer;Lkotlin/Unit;>;\n   #8 = Utf8               Lorg/jetbrains/annotations/NotNull;\n   #9 = Utf8               callback\n  #10 = String             #9             // callback\n  #11 = Utf8               kotlin/jvm/internal/Intrinsics\n  #12 = Class              #11            // kotlin/jvm/internal/Intrinsics\n  #13 = Utf8               checkNotNullParameter\n  #14 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V\n  #15 = NameAndType        #13:#14        // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n  #16 = Methodref          #12.#15        // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n  #17 = Utf8               Lkotlin/jvm/functions/Function2;\n  #18 = Utf8               qualified\n  #19 = Utf8               parentheses\n  #20 = Utf8               wrapped\n  #21 = Integer            -51857408\n  #22 = Utf8               composetypeprobe/CallbacksKt$wrapped$1\n  #23 = Class              #22            // composetypeprobe/CallbacksKt$wrapped$1\n  #24 = Utf8               <init>\n  #25 = Utf8               (Lkotlin/jvm/functions/Function2;)V\n  #26 = NameAndType        #24:#25        // \"<init>\":(Lkotlin/jvm/functions/Function2;)V\n  #27 = Methodref          #23.#26        // composetypeprobe/CallbacksKt$wrapped$1.\"<init>\":(Lkotlin/jvm/functions/Function2;)V\n  #28 = Utf8               androidx/compose/runtime/internal/ComposableLambdaKt\n  #29 = Class              #28            // androidx/compose/runtime/internal/ComposableLambdaKt\n  #30 = Utf8               composableLambdaInstance\n  #31 = Utf8               (IZLjava/lang/Object;)Landroidx/compose/runtime/internal/ComposableLambda;\n  #32 = NameAndType        #30:#31        // composableLambdaInstance:(IZLjava/lang/Object;)Landroidx/compose/runtime/internal/ComposableLambda;\n  #33 = Methodref          #29.#32        // androidx/compose/runtime/internal/ComposableLambdaKt.composableLambdaInstance:(IZLjava/lang/Object;)Landroidx/compose/runtime/internal/ComposableLambda;\n  #34 = Utf8               kotlin/jvm/functions/Function2\n  #35 = Class              #34            // kotlin/jvm/functions/Function2\n  #36 = Utf8               explicitInvoke\n  #37 = Integer            -538041821\n  #38 = Utf8               composetypeprobe/CallbacksKt$explicitInvoke$1\n  #39 = Class              #38            // composetypeprobe/CallbacksKt$explicitInvoke$1\n  #40 = Methodref          #39.#26        // composetypeprobe/CallbacksKt$explicitInvoke$1.\"<init>\":(Lkotlin/jvm/functions/Function2;)V\n  #41 = Utf8               saved\n  #42 = Integer            -753006466\n  #43 = Utf8               composetypeprobe/CallbacksKt$saved$1\n  #44 = Class              #43            // composetypeprobe/CallbacksKt$saved$1\n  #45 = Methodref          #44.#26        // composetypeprobe/CallbacksKt$saved$1.\"<init>\":(Lkotlin/jvm/functions/Function2;)V\n  #46 = Utf8               local\n  #47 = Utf8               forward\n  #48 = Utf8               (Lcomposeprobe/Registry;Lkotlin/jvm/functions/Function2;)V\n  #49 = Utf8               (Lcomposeprobe/Registry;Lkotlin/jvm/functions/Function2<-Landroidx/compose/runtime/Composer;-Ljava/lang/Integer;Lkotlin/Unit;>;)V\n  #50 = Utf8               Landroidx/compose/runtime/ComposableInferredTarget;\n  #51 = Utf8               scheme\n  #52 = Utf8               [0[0]]\n  #53 = Utf8               registry\n  #54 = String             #53            // registry\n  #55 = Utf8               composeprobe/Registry\n  #56 = Class              #55            // composeprobe/Registry\n  #57 = Utf8               accept\n  #58 = NameAndType        #57:#25        // accept:(Lkotlin/jvm/functions/Function2;)V\n  #59 = Methodref          #56.#58        // composeprobe/Registry.accept:(Lkotlin/jvm/functions/Function2;)V\n  #60 = Utf8               Lcomposeprobe/Registry;\n  #61 = Utf8               Lkotlin/Metadata;\n  #62 = Utf8               mv\n  #63 = Integer            2\n  #64 = Integer            3\n  #65 = Integer            0\n  #66 = Utf8               k\n  #67 = Utf8               xi\n  #68 = Integer            48\n  #69 = Utf8               d1\n  #70 = Utf8               \\u0000\\u0018\\n\\u0000\\n\\u0002\\u0018\\u0002\\n\\u0002\\u0010\\u0002\\n\\u0002\\u0018\\u0002\\n\\u0002\\b\\t\\n\\u0002\\u0018\\u0002\\n\\u0000\\u001a)\\u0010\\u0000\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0002\\u0010\\u0005\\u001a)\\u0010\\u0006\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0002\\u0010\\u0005\\u001a)\\u0010\\u0007\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0002\\u0010\\u0005\\u001a)\\u0010\\b\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0002\\u0010\\u0005\\u001a)\\u0010\\t\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0002\\u0010\\u0005\\u001a)\\u0010\\n\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0002\\u0010\\u0005\\u001a(\\u0010\\u000b\\u001a\\u00020\\u00022\\u0006\\u0010\\f\\u001a\\u00020\\r2\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u0003H\\u0007\u00a2\\u0006\\u0002\\u0010\\u000e\n  #71 = Utf8               d2\n  #72 = Utf8               Lkotlin/Function0;\n  #73 = Utf8\n  #74 = Utf8               Landroidx/compose/runtime/Composable;\n  #75 = Utf8               Callbacks.kt\n  #76 = Utf8               Code\n  #77 = Utf8               LineNumberTable\n  #78 = Utf8               LocalVariableTable\n  #79 = Utf8               Signature\n  #80 = Utf8               RuntimeInvisibleAnnotations\n  #81 = Utf8               RuntimeInvisibleParameterAnnotations\n  #82 = Utf8               InnerClasses\n  #83 = Utf8               SourceFile\n  #84 = Utf8               RuntimeVisibleAnnotations\n{\n  public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> identity(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);\n    descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=2, locals=1, args_size=1\n         0: aload_0\n         1: ldc           #10                 // String callback\n         3: invokestatic  #16                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n         6: aload_0\n         7: areturn\n      LineNumberTable:\n        line 4: 6\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0       8     0 callback   Lkotlin/jvm/functions/Function2;\n    Signature: #7                           // (Lkotlin/jvm/functions/Function2<-Landroidx/compose/runtime/Composer;-Ljava/lang/Integer;Lkotlin/Unit;>;)Lkotlin/jvm/functions/Function2<Landroidx/compose/runtime/Composer;Ljava/lang/Integer;Lkotlin/Unit;>;\n    RuntimeInvisibleAnnotations:\n      0: #8()\n        org.jetbrains.annotations.NotNull\n    RuntimeInvisibleParameterAnnotations:\n      parameter 0:\n        0: #8()\n          org.jetbrains.annotations.NotNull\n\n  public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> qualified(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);\n    descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=2, locals=1, args_size=1\n         0: aload_0\n         1: ldc           #10                 // String callback\n         3: invokestatic  #16                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n         6: aload_0\n         7: areturn\n      LineNumberTable:\n        line 5: 6\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0       8     0 callback   Lkotlin/jvm/functions/Function2;\n    Signature: #7                           // (Lkotlin/jvm/functions/Function2<-Landroidx/compose/runtime/Composer;-Ljava/lang/Integer;Lkotlin/Unit;>;)Lkotlin/jvm/functions/Function2<Landroidx/compose/runtime/Composer;Ljava/lang/Integer;Lkotlin/Unit;>;\n    RuntimeInvisibleAnnotations:\n      0: #8()\n        org.jetbrains.annotations.NotNull\n    RuntimeInvisibleParameterAnnotations:\n      parameter 0:\n        0: #8()\n          org.jetbrains.annotations.NotNull\n\n  public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> parentheses(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);\n    descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=2, locals=1, args_size=1\n         0: aload_0\n         1: ldc           #10                 // String callback\n         3: invokestatic  #16                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n         6: aload_0\n         7: areturn\n      LineNumberTable:\n        line 6: 6\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0       8     0 callback   Lkotlin/jvm/functions/Function2;\n    Signature: #7                           // (Lkotlin/jvm/functions/Function2<-Landroidx/compose/runtime/Composer;-Ljava/lang/Integer;Lkotlin/Unit;>;)Lkotlin/jvm/functions/Function2<Landroidx/compose/runtime/Composer;Ljava/lang/Integer;Lkotlin/Unit;>;\n    RuntimeInvisibleAnnotations:\n      0: #8()\n        org.jetbrains.annotations.NotNull\n    RuntimeInvisibleParameterAnnotations:\n      parameter 0:\n        0: #8()\n          org.jetbrains.annotations.NotNull\n\n  public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> wrapped(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);\n    descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=5, locals=1, args_size=1\n         0: aload_0\n         1: ldc           #10                 // String callback\n         3: invokestatic  #16                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n         6: ldc           #21                 // int -51857408\n         8: iconst_1\n         9: new           #23                 // class composetypeprobe/CallbacksKt$wrapped$1\n        12: dup\n        13: aload_0\n        14: invokespecial #27                 // Method composetypeprobe/CallbacksKt$wrapped$1.\"<init>\":(Lkotlin/jvm/functions/Function2;)V\n        17: invokestatic  #33                 // Method androidx/compose/runtime/internal/ComposableLambdaKt.composableLambdaInstance:(IZLjava/lang/Object;)Landroidx/compose/runtime/internal/ComposableLambda;\n        20: checkcast     #35                 // class kotlin/jvm/functions/Function2\n        23: areturn\n      LineNumberTable:\n        line 7: 6\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0      24     0 callback   Lkotlin/jvm/functions/Function2;\n    Signature: #7                           // (Lkotlin/jvm/functions/Function2<-Landroidx/compose/runtime/Composer;-Ljava/lang/Integer;Lkotlin/Unit;>;)Lkotlin/jvm/functions/Function2<Landroidx/compose/runtime/Composer;Ljava/lang/Integer;Lkotlin/Unit;>;\n    RuntimeInvisibleAnnotations:\n      0: #8()\n        org.jetbrains.annotations.NotNull\n    RuntimeInvisibleParameterAnnotations:\n      parameter 0:\n        0: #8()\n          org.jetbrains.annotations.NotNull\n\n  public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> explicitInvoke(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);\n    descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=5, locals=1, args_size=1\n         0: aload_0\n         1: ldc           #10                 // String callback\n         3: invokestatic  #16                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n         6: ldc           #37                 // int -538041821\n         8: iconst_1\n         9: new           #39                 // class composetypeprobe/CallbacksKt$explicitInvoke$1\n        12: dup\n        13: aload_0\n        14: invokespecial #40                 // Method composetypeprobe/CallbacksKt$explicitInvoke$1.\"<init>\":(Lkotlin/jvm/functions/Function2;)V\n        17: invokestatic  #33                 // Method androidx/compose/runtime/internal/ComposableLambdaKt.composableLambdaInstance:(IZLjava/lang/Object;)Landroidx/compose/runtime/internal/ComposableLambda;\n        20: checkcast     #35                 // class kotlin/jvm/functions/Function2\n        23: areturn\n      LineNumberTable:\n        line 8: 6\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0      24     0 callback   Lkotlin/jvm/functions/Function2;\n    Signature: #7                           // (Lkotlin/jvm/functions/Function2<-Landroidx/compose/runtime/Composer;-Ljava/lang/Integer;Lkotlin/Unit;>;)Lkotlin/jvm/functions/Function2<Landroidx/compose/runtime/Composer;Ljava/lang/Integer;Lkotlin/Unit;>;\n    RuntimeInvisibleAnnotations:\n      0: #8()\n        org.jetbrains.annotations.NotNull\n    RuntimeInvisibleParameterAnnotations:\n      parameter 0:\n        0: #8()\n          org.jetbrains.annotations.NotNull\n\n  public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> saved(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);\n    descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=5, locals=2, args_size=1\n         0: aload_0\n         1: ldc           #10                 // String callback\n         3: invokestatic  #16                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n         6: aload_0\n         7: astore_1\n         8: ldc           #42                 // int -753006466\n        10: iconst_1\n        11: new           #44                 // class composetypeprobe/CallbacksKt$saved$1\n        14: dup\n        15: aload_1\n        16: invokespecial #45                 // Method composetypeprobe/CallbacksKt$saved$1.\"<init>\":(Lkotlin/jvm/functions/Function2;)V\n        19: invokestatic  #33                 // Method androidx/compose/runtime/internal/ComposableLambdaKt.composableLambdaInstance:(IZLjava/lang/Object;)Landroidx/compose/runtime/internal/ComposableLambda;\n        22: checkcast     #35                 // class kotlin/jvm/functions/Function2\n        25: areturn\n      LineNumberTable:\n        line 10: 6\n        line 11: 8\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            8      18     1 local   Lkotlin/jvm/functions/Function2;\n            0      26     0 callback   Lkotlin/jvm/functions/Function2;\n    Signature: #7                           // (Lkotlin/jvm/functions/Function2<-Landroidx/compose/runtime/Composer;-Ljava/lang/Integer;Lkotlin/Unit;>;)Lkotlin/jvm/functions/Function2<Landroidx/compose/runtime/Composer;Ljava/lang/Integer;Lkotlin/Unit;>;\n    RuntimeInvisibleAnnotations:\n      0: #8()\n        org.jetbrains.annotations.NotNull\n    RuntimeInvisibleParameterAnnotations:\n      parameter 0:\n        0: #8()\n          org.jetbrains.annotations.NotNull\n\n  public static final void forward(composeprobe.Registry, kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);\n    descriptor: (Lcomposeprobe/Registry;Lkotlin/jvm/functions/Function2;)V\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=2, locals=2, args_size=2\n         0: aload_0\n         1: ldc           #54                 // String registry\n         3: invokestatic  #16                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n         6: aload_1\n         7: ldc           #10                 // String callback\n         9: invokestatic  #16                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n        12: aload_0\n        13: aload_1\n        14: invokevirtual #59                 // Method composeprobe/Registry.accept:(Lkotlin/jvm/functions/Function2;)V\n        17: return\n      LineNumberTable:\n        line 13: 12\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0      18     0 registry   Lcomposeprobe/Registry;\n            0      18     1 callback   Lkotlin/jvm/functions/Function2;\n    Signature: #49                          // (Lcomposeprobe/Registry;Lkotlin/jvm/functions/Function2<-Landroidx/compose/runtime/Composer;-Ljava/lang/Integer;Lkotlin/Unit;>;)V\n    RuntimeInvisibleAnnotations:\n      0: #50(#51=s#52)\n        androidx.compose.runtime.ComposableInferredTarget(\n          scheme=\"[0[0]]\"\n        )\n    RuntimeInvisibleParameterAnnotations:\n      parameter 0:\n        0: #8()\n          org.jetbrains.annotations.NotNull\n      parameter 1:\n        0: #8()\n          org.jetbrains.annotations.NotNull\n}\nSourceFile: \"Callbacks.kt\"\nRuntimeVisibleAnnotations:\n  0: #61(#62=[I#63,I#64,I#65],#66=I#63,#67=I#68,#69=[s#70],#71=[s#5,s#72,s#73,s#74,s#9,s#6,s#18,s#19,s#20,s#36,s#41,s#47,s#53,s#60,s#48])\n    kotlin.Metadata(\n      mv=[2,3,0]\n      k=2\n      xi=48\n      d1=[\"\\u0000\\u0018\\n\\u0000\\n\\u0002\\u0018\\u0002\\n\\u0002\\u0010\\u0002\\n\\u0002\\u0018\\u0002\\n\\u0002\\b\\t\\n\\u0002\\u0018\\u0002\\n\\u0000\\u001a)\\u0010\\u0000\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0002\\u0010\\u0005\\u001a)\\u0010\\u0006\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0002\\u0010\\u0005\\u001a)\\u0010\\u0007\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0002\\u0010\\u0005\\u001a)\\u0010\\b\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0002\\u0010\\u0005\\u001a)\\u0010\\t\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0002\\u0010\\u0005\\u001a)\\u0010\\n\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0002\\u0010\\u0005\\u001a(\\u0010\\u000b\\u001a\\u00020\\u00022\\u0006\\u0010\\f\\u001a\\u00020\\r2\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00020\\u0001\u00a2\\u0006\\u0002\\b\\u0003H\\u0007\u00a2\\u0006\\u0002\\u0010\\u000e\"]\n      d2=[\"identity\",\"Lkotlin/Function0;\",\"\",\"Landroidx/compose/runtime/Composable;\",\"callback\",\"(Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;\",\"qualified\",\"parentheses\",\"wrapped\",\"explicitInvoke\",\"saved\",\"forward\",\"registry\",\"Lcomposeprobe/Registry;\",\"(Lcomposeprobe/Registry;Lkotlin/jvm/functions/Function2;)V\"]\n    )\n",
+  "candidate_signatures": "Classfile /workspace/work/targets159/source-composable-types-freeze2/target/checks/2026-11-26T080652816233Z-source-composable-types/candidate/composetypeprobe/CallbacksKt.class\n  Last modified Nov 26, 2026; size 2889 bytes\n  SHA-256 checksum e962b9f2567ac524a5f0b1b8815c003c76f668a986157e6075c52f10d2610332\n  Compiled from \"Callbacks.kt\"\npublic final class composetypeprobe.CallbacksKt\n  minor version: 0\n  major version: 49\n  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER\n  this_class: #2                          // composetypeprobe/CallbacksKt\n  super_class: #4                         // java/lang/Object\n  interfaces: 0, fields: 0, methods: 7, attributes: 2\nConstant pool:\n   #1 = Utf8               composetypeprobe/CallbacksKt\n   #2 = Class              #1             // composetypeprobe/CallbacksKt\n   #3 = Utf8               java/lang/Object\n   #4 = Class              #3             // java/lang/Object\n   #5 = Utf8               SourceFile\n   #6 = Utf8               Callbacks.kt\n   #7 = Utf8               callback\n   #8 = String             #7             // callback\n   #9 = Utf8               kotlin/jvm/internal/Intrinsics\n  #10 = Class              #9             // kotlin/jvm/internal/Intrinsics\n  #11 = Utf8               checkNotNullParameter\n  #12 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V\n  #13 = NameAndType        #11:#12        // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n  #14 = Methodref          #10.#13        // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n  #15 = Utf8               identity\n  #16 = Utf8               (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;\n  #17 = Utf8               Code\n  #18 = Utf8               Signature\n  #19 = Utf8               (Lkotlin/jvm/functions/Function2<-Landroidx/compose/runtime/Composer;-Ljava/lang/Integer;Lkotlin/Unit;>;)Lkotlin/jvm/functions/Function2<Landroidx/compose/runtime/Composer;Ljava/lang/Integer;Lkotlin/Unit;>;\n  #20 = Utf8               RuntimeInvisibleAnnotations\n  #21 = Utf8               Lorg/jetbrains/annotations/NotNull;\n  #22 = Utf8               RuntimeInvisibleParameterAnnotations\n  #23 = Utf8               qualified\n  #24 = Utf8               parentheses\n  #25 = Integer            38992022\n  #26 = Utf8               composetypeprobe/CallbacksKt$lambda$450$0$composable\n  #27 = Class              #26            // composetypeprobe/CallbacksKt$lambda$450$0$composable\n  #28 = Utf8               composetypeprobe/CallbacksKt$lambda$450$0\n  #29 = Class              #28            // composetypeprobe/CallbacksKt$lambda$450$0\n  #30 = Utf8               <init>\n  #31 = Utf8               (Lkotlin/jvm/functions/Function2;)V\n  #32 = NameAndType        #30:#31        // \"<init>\":(Lkotlin/jvm/functions/Function2;)V\n  #33 = Methodref          #29.#32        // composetypeprobe/CallbacksKt$lambda$450$0.\"<init>\":(Lkotlin/jvm/functions/Function2;)V\n  #34 = Utf8               (Lkotlin/jvm/functions/Function1;)V\n  #35 = NameAndType        #30:#34        // \"<init>\":(Lkotlin/jvm/functions/Function1;)V\n  #36 = Methodref          #27.#35        // composetypeprobe/CallbacksKt$lambda$450$0$composable.\"<init>\":(Lkotlin/jvm/functions/Function1;)V\n  #37 = Utf8               androidx/compose/runtime/internal/ComposableLambdaKt\n  #38 = Class              #37            // androidx/compose/runtime/internal/ComposableLambdaKt\n  #39 = Utf8               composableLambdaInstance\n  #40 = Utf8               (IZLjava/lang/Object;)Landroidx/compose/runtime/internal/ComposableLambda;\n  #41 = NameAndType        #39:#40        // composableLambdaInstance:(IZLjava/lang/Object;)Landroidx/compose/runtime/internal/ComposableLambda;\n  #42 = Methodref          #38.#41        // androidx/compose/runtime/internal/ComposableLambdaKt.composableLambdaInstance:(IZLjava/lang/Object;)Landroidx/compose/runtime/internal/ComposableLambda;\n  #43 = Utf8               kotlin/jvm/functions/Function2\n  #44 = Class              #43            // kotlin/jvm/functions/Function2\n  #45 = Utf8               wrapped\n  #46 = Integer            39859806\n  #47 = Utf8               composetypeprobe/CallbacksKt$lambda$534$1$composable\n  #48 = Class              #47            // composetypeprobe/CallbacksKt$lambda$534$1$composable\n  #49 = Utf8               composetypeprobe/CallbacksKt$lambda$534$1\n  #50 = Class              #49            // composetypeprobe/CallbacksKt$lambda$534$1\n  #51 = Methodref          #50.#32        // composetypeprobe/CallbacksKt$lambda$534$1.\"<init>\":(Lkotlin/jvm/functions/Function2;)V\n  #52 = Methodref          #48.#35        // composetypeprobe/CallbacksKt$lambda$534$1$composable.\"<init>\":(Lkotlin/jvm/functions/Function1;)V\n  #53 = Utf8               explicitInvoke\n  #54 = Integer            40899609\n  #55 = Utf8               composetypeprobe/CallbacksKt$lambda$671$2$composable\n  #56 = Class              #55            // composetypeprobe/CallbacksKt$lambda$671$2$composable\n  #57 = Utf8               composetypeprobe/CallbacksKt$lambda$671$2\n  #58 = Class              #57            // composetypeprobe/CallbacksKt$lambda$671$2\n  #59 = Methodref          #58.#32        // composetypeprobe/CallbacksKt$lambda$671$2.\"<init>\":(Lkotlin/jvm/functions/Function2;)V\n  #60 = Methodref          #56.#35        // composetypeprobe/CallbacksKt$lambda$671$2$composable.\"<init>\":(Lkotlin/jvm/functions/Function1;)V\n  #61 = Utf8               saved\n  #62 = Utf8               registry\n  #63 = String             #62            // registry\n  #64 = Utf8               composeprobe/Registry\n  #65 = Class              #64            // composeprobe/Registry\n  #66 = Utf8               accept\n  #67 = NameAndType        #66:#31        // accept:(Lkotlin/jvm/functions/Function2;)V\n  #68 = Methodref          #65.#67        // composeprobe/Registry.accept:(Lkotlin/jvm/functions/Function2;)V\n  #69 = Utf8               forward\n  #70 = Utf8               (Lcomposeprobe/Registry;Lkotlin/jvm/functions/Function2;)V\n  #71 = Utf8               (Lcomposeprobe/Registry;Lkotlin/jvm/functions/Function2<-Landroidx/compose/runtime/Composer;-Ljava/lang/Integer;Lkotlin/Unit;>;)V\n  #72 = Utf8               Lkotlin/Metadata;\n  #73 = Utf8               mv\n  #74 = Integer            2\n  #75 = Integer            3\n  #76 = Integer            0\n  #77 = Utf8               k\n  #78 = Utf8               xi\n  #79 = Integer            48\n  #80 = Utf8               d1\n  #81 = Utf8               \\u0000\\b\\n\\u0002\\b\\u000f\\n\\u0002\\b\\u0001\\u001a-H\\u0006\\u0010\\u0000\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0004\\b\\u0000\\u0010\\u0005\\u001a-H\\u0006\\u0010\\u0006\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0004\\b\\u0006\\u0010\\u0005\\u001a-H\\u0006\\u0010\\u0007\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0004\\b\\u0007\\u0010\\u0005\\u001a-H\\u0006\\u0010\\b\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0004\\b\\b\\u0010\\u0005\\u001a-H\\u0006\\u0010\\t\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0004\\b\\t\\u0010\\u0005\\u001a-H\\u0006\\u0010\\n\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0004\\b\\n\\u0010\\u0005\\u001a*H\\u0006\\u0010\\u000b\\u001a\\u00020\\u00012\\u0006\\u0010\\f\\u001a\\u00020\\r2\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0004\\b\\u000b\\u0010\\u000e\u00a8\\u0006\\u000f\n  #82 = Utf8               d2\n  #83 = Utf8               kotlin/Unit\n  #84 = Utf8               kotlin/Function0\n  #85 = Utf8               androidx/compose/runtime/Composable\n  #86 = Utf8               source_composable_types\n  #87 = Utf8               RuntimeVisibleAnnotations\n{\n  public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> identity(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);\n    descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=2, locals=1, args_size=1\n         0: aload         0\n         2: ldc_w         #8                  // String callback\n         5: invokestatic  #14                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n         8: aload         0\n        10: areturn\n        11: aconst_null\n        12: athrow\n    Signature: #19                          // (Lkotlin/jvm/functions/Function2<-Landroidx/compose/runtime/Composer;-Ljava/lang/Integer;Lkotlin/Unit;>;)Lkotlin/jvm/functions/Function2<Landroidx/compose/runtime/Composer;Ljava/lang/Integer;Lkotlin/Unit;>;\n    RuntimeInvisibleAnnotations:\n      0: #21()\n        org.jetbrains.annotations.NotNull\n    RuntimeInvisibleParameterAnnotations:\n      parameter 0:\n        0: #21()\n          org.jetbrains.annotations.NotNull\n\n  public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> qualified(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);\n    descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=2, locals=1, args_size=1\n         0: aload         0\n         2: ldc_w         #8                  // String callback\n         5: invokestatic  #14                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n         8: aload         0\n        10: areturn\n        11: aconst_null\n        12: athrow\n    Signature: #19                          // (Lkotlin/jvm/functions/Function2<-Landroidx/compose/runtime/Composer;-Ljava/lang/Integer;Lkotlin/Unit;>;)Lkotlin/jvm/functions/Function2<Landroidx/compose/runtime/Composer;Ljava/lang/Integer;Lkotlin/Unit;>;\n    RuntimeInvisibleAnnotations:\n      0: #21()\n        org.jetbrains.annotations.NotNull\n    RuntimeInvisibleParameterAnnotations:\n      parameter 0:\n        0: #21()\n          org.jetbrains.annotations.NotNull\n\n  public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> parentheses(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);\n    descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=2, locals=1, args_size=1\n         0: aload         0\n         2: ldc_w         #8                  // String callback\n         5: invokestatic  #14                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n         8: aload         0\n        10: areturn\n        11: aconst_null\n        12: athrow\n    Signature: #19                          // (Lkotlin/jvm/functions/Function2<-Landroidx/compose/runtime/Composer;-Ljava/lang/Integer;Lkotlin/Unit;>;)Lkotlin/jvm/functions/Function2<Landroidx/compose/runtime/Composer;Ljava/lang/Integer;Lkotlin/Unit;>;\n    RuntimeInvisibleAnnotations:\n      0: #21()\n        org.jetbrains.annotations.NotNull\n    RuntimeInvisibleParameterAnnotations:\n      parameter 0:\n        0: #21()\n          org.jetbrains.annotations.NotNull\n\n  public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> wrapped(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);\n    descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=7, locals=1, args_size=1\n         0: aload         0\n         2: ldc_w         #8                  // String callback\n         5: invokestatic  #14                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n         8: ldc_w         #25                 // int 38992022\n        11: iconst_1\n        12: new           #27                 // class composetypeprobe/CallbacksKt$lambda$450$0$composable\n        15: dup\n        16: new           #29                 // class composetypeprobe/CallbacksKt$lambda$450$0\n        19: dup\n        20: aload         0\n        22: invokespecial #33                 // Method composetypeprobe/CallbacksKt$lambda$450$0.\"<init>\":(Lkotlin/jvm/functions/Function2;)V\n        25: invokespecial #36                 // Method composetypeprobe/CallbacksKt$lambda$450$0$composable.\"<init>\":(Lkotlin/jvm/functions/Function1;)V\n        28: invokestatic  #42                 // Method androidx/compose/runtime/internal/ComposableLambdaKt.composableLambdaInstance:(IZLjava/lang/Object;)Landroidx/compose/runtime/internal/ComposableLambda;\n        31: checkcast     #44                 // class kotlin/jvm/functions/Function2\n        34: areturn\n        35: aconst_null\n        36: athrow\n    Signature: #19                          // (Lkotlin/jvm/functions/Function2<-Landroidx/compose/runtime/Composer;-Ljava/lang/Integer;Lkotlin/Unit;>;)Lkotlin/jvm/functions/Function2<Landroidx/compose/runtime/Composer;Ljava/lang/Integer;Lkotlin/Unit;>;\n    RuntimeInvisibleAnnotations:\n      0: #21()\n        org.jetbrains.annotations.NotNull\n    RuntimeInvisibleParameterAnnotations:\n      parameter 0:\n        0: #21()\n          org.jetbrains.annotations.NotNull\n\n  public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> explicitInvoke(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);\n    descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=7, locals=1, args_size=1\n         0: aload         0\n         2: ldc_w         #8                  // String callback\n         5: invokestatic  #14                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n         8: ldc_w         #46                 // int 39859806\n        11: iconst_1\n        12: new           #48                 // class composetypeprobe/CallbacksKt$lambda$534$1$composable\n        15: dup\n        16: new           #50                 // class composetypeprobe/CallbacksKt$lambda$534$1\n        19: dup\n        20: aload         0\n        22: invokespecial #51                 // Method composetypeprobe/CallbacksKt$lambda$534$1.\"<init>\":(Lkotlin/jvm/functions/Function2;)V\n        25: invokespecial #52                 // Method composetypeprobe/CallbacksKt$lambda$534$1$composable.\"<init>\":(Lkotlin/jvm/functions/Function1;)V\n        28: invokestatic  #42                 // Method androidx/compose/runtime/internal/ComposableLambdaKt.composableLambdaInstance:(IZLjava/lang/Object;)Landroidx/compose/runtime/internal/ComposableLambda;\n        31: checkcast     #44                 // class kotlin/jvm/functions/Function2\n        34: areturn\n        35: aconst_null\n        36: athrow\n    Signature: #19                          // (Lkotlin/jvm/functions/Function2<-Landroidx/compose/runtime/Composer;-Ljava/lang/Integer;Lkotlin/Unit;>;)Lkotlin/jvm/functions/Function2<Landroidx/compose/runtime/Composer;Ljava/lang/Integer;Lkotlin/Unit;>;\n    RuntimeInvisibleAnnotations:\n      0: #21()\n        org.jetbrains.annotations.NotNull\n    RuntimeInvisibleParameterAnnotations:\n      parameter 0:\n        0: #21()\n          org.jetbrains.annotations.NotNull\n\n  public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> saved(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);\n    descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=7, locals=2, args_size=1\n         0: aload         0\n         2: ldc_w         #8                  // String callback\n         5: invokestatic  #14                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n         8: aload         0\n        10: checkcast     #44                 // class kotlin/jvm/functions/Function2\n        13: astore        1\n        15: ldc_w         #54                 // int 40899609\n        18: iconst_1\n        19: new           #56                 // class composetypeprobe/CallbacksKt$lambda$671$2$composable\n        22: dup\n        23: new           #58                 // class composetypeprobe/CallbacksKt$lambda$671$2\n        26: dup\n        27: aload         1\n        29: invokespecial #59                 // Method composetypeprobe/CallbacksKt$lambda$671$2.\"<init>\":(Lkotlin/jvm/functions/Function2;)V\n        32: invokespecial #60                 // Method composetypeprobe/CallbacksKt$lambda$671$2$composable.\"<init>\":(Lkotlin/jvm/functions/Function1;)V\n        35: invokestatic  #42                 // Method androidx/compose/runtime/internal/ComposableLambdaKt.composableLambdaInstance:(IZLjava/lang/Object;)Landroidx/compose/runtime/internal/ComposableLambda;\n        38: checkcast     #44                 // class kotlin/jvm/functions/Function2\n        41: areturn\n        42: aconst_null\n        43: athrow\n    Signature: #19                          // (Lkotlin/jvm/functions/Function2<-Landroidx/compose/runtime/Composer;-Ljava/lang/Integer;Lkotlin/Unit;>;)Lkotlin/jvm/functions/Function2<Landroidx/compose/runtime/Composer;Ljava/lang/Integer;Lkotlin/Unit;>;\n    RuntimeInvisibleAnnotations:\n      0: #21()\n        org.jetbrains.annotations.NotNull\n    RuntimeInvisibleParameterAnnotations:\n      parameter 0:\n        0: #21()\n          org.jetbrains.annotations.NotNull\n\n  public static final void forward(composeprobe.Registry, kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);\n    descriptor: (Lcomposeprobe/Registry;Lkotlin/jvm/functions/Function2;)V\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=4, locals=2, args_size=2\n         0: aload         0\n         2: ldc_w         #63                 // String registry\n         5: invokestatic  #14                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n         8: aload         1\n        10: ldc_w         #8                  // String callback\n        13: invokestatic  #14                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n        16: aload         0\n        18: checkcast     #65                 // class composeprobe/Registry\n        21: aload         1\n        23: invokevirtual #68                 // Method composeprobe/Registry.accept:(Lkotlin/jvm/functions/Function2;)V\n        26: return\n        27: aconst_null\n        28: athrow\n    Signature: #71                          // (Lcomposeprobe/Registry;Lkotlin/jvm/functions/Function2<-Landroidx/compose/runtime/Composer;-Ljava/lang/Integer;Lkotlin/Unit;>;)V\n    RuntimeInvisibleParameterAnnotations:\n      parameter 0:\n        0: #21()\n          org.jetbrains.annotations.NotNull\n      parameter 1:\n        0: #21()\n          org.jetbrains.annotations.NotNull\n}\nSourceFile: \"Callbacks.kt\"\nRuntimeVisibleAnnotations:\n  0: #72(#73=[I#74,I#75,I#76],#77=I#74,#78=I#79,#80=[s#81],#82=[s#15,s#83,s#84,s#85,s#7,s#16,s#23,s#24,s#45,s#53,s#61,s#69,s#62,s#64,s#70,s#86])\n    kotlin.Metadata(\n      mv=[2,3,0]\n      k=2\n      xi=48\n      d1=[\"\\u0000\\b\\n\\u0002\\b\\u000f\\n\\u0002\\b\\u0001\\u001a-H\\u0006\\u0010\\u0000\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0004\\b\\u0000\\u0010\\u0005\\u001a-H\\u0006\\u0010\\u0006\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0004\\b\\u0006\\u0010\\u0005\\u001a-H\\u0006\\u0010\\u0007\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0004\\b\\u0007\\u0010\\u0005\\u001a-H\\u0006\\u0010\\b\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0004\\b\\b\\u0010\\u0005\\u001a-H\\u0006\\u0010\\t\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0004\\b\\t\\u0010\\u0005\\u001a-H\\u0006\\u0010\\n\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u00032\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0004\\b\\n\\u0010\\u0005\\u001a*H\\u0006\\u0010\\u000b\\u001a\\u00020\\u00012\\u0006\\u0010\\f\\u001a\\u00020\\r2\\u0011\\u0010\\u0004\\u001a\\r\\u0012\\u0004\\u0012\\u00020\\u00010\\u0002\u00a2\\u0006\\u0002\\b\\u0003\u00a2\\u0006\\u0004\\b\\u000b\\u0010\\u000e\u00a8\\u0006\\u000f\"]\n      d2=[\"identity\",\"kotlin/Unit\",\"kotlin/Function0\",\"androidx/compose/runtime/Composable\",\"callback\",\"(Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;\",\"qualified\",\"parentheses\",\"wrapped\",\"explicitInvoke\",\"saved\",\"forward\",\"registry\",\"composeprobe/Registry\",\"(Lcomposeprobe/Registry;Lkotlin/jvm/functions/Function2;)V\",\"source_composable_types\"]\n    )\n",
+  "declared_api": {
+    "official": {
+      "public final class composetypeprobe.CallbacksKt": [
+        [
+          "public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> explicitInvoke(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);",
+          "descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;"
+        ],
+        [
+          "public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> identity(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);",
+          "descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;"
+        ],
+        [
+          "public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> parentheses(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);",
+          "descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;"
+        ],
+        [
+          "public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> qualified(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);",
+          "descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;"
+        ],
+        [
+          "public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> saved(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);",
+          "descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;"
+        ],
+        [
+          "public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> wrapped(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);",
+          "descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;"
+        ],
+        [
+          "public static final void forward(composeprobe.Registry, kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);",
+          "descriptor: (Lcomposeprobe/Registry;Lkotlin/jvm/functions/Function2;)V"
+        ]
+      ]
+    },
+    "candidate": {
+      "public final class composetypeprobe.CallbacksKt": [
+        [
+          "public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> explicitInvoke(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);",
+          "descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;"
+        ],
+        [
+          "public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> identity(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);",
+          "descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;"
+        ],
+        [
+          "public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> parentheses(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);",
+          "descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;"
+        ],
+        [
+          "public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> qualified(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);",
+          "descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;"
+        ],
+        [
+          "public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> saved(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);",
+          "descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;"
+        ],
+        [
+          "public static final kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> wrapped(kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);",
+          "descriptor: (Lkotlin/jvm/functions/Function2;)Lkotlin/jvm/functions/Function2;"
+        ],
+        [
+          "public static final void forward(composeprobe.Registry, kotlin.jvm.functions.Function2<? super androidx.compose.runtime.Composer, ? super java.lang.Integer, kotlin.Unit>);",
+          "descriptor: (Lcomposeprobe/Registry;Lkotlin/jvm/functions/Function2;)V"
+        ]
+      ]
+    }
+  },
+  "synthetic_members": {
+    "official": {
+      "public final class composetypeprobe.CallbacksKt": []
+    },
+    "candidate": {
+      "public final class composetypeprobe.CallbacksKt": []
+    }
+  },
+  "jvm_contract_interpretation": "Declared public/protected API is compared. ACC_SYNTHETIC members are recorded separately: class-based lambdas may require extra private-field access bridges compared with invokedynamic lambdas. Fixed Java and Kotlin consumers check the external contracts.",
+  "counts": {
+    "pass": 19,
+    "invalid_rejected": 6,
+    "unsupported_language": 11
+  },
+  "limitations": [
+    "Only direct nonnullable nonreceiver nonsuspend zero-argument Unit callbacks are supported. Canonical qualified annotation names and explicit imports/aliases are recognized; wildcard-only type annotation imports and other type annotations remain unsupported. Source composable declarations, nested literal creation, conditional invocation, composite callback shapes and source class stability exports remain explicit unsupported boundaries."
+  ],
+  "input_integrity": {
+    "status": "unchanged"
+  },
+  "evidence": [
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/000-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/000-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/001-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/001-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/002-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/002-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/003-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/003-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/004-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/004-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/005-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/005-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/006-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/006-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/007-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/007-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/008-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/008-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/009-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/009-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/010-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/010-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/011-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/011-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/012-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/012-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/013-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/013-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/014-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/014-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/015-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/015-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/016-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/016-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/017-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/017-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/018-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/018-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/019-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/019-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/020-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/020-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/021-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/021-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/022-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/022-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/023-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/023-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/024-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/024-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/025-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/025-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/026-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/026-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/027-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/027-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/028-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/028-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/029-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/029-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/030-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/030-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/031-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/031-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/032-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/032-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/033-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/033-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/034-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/034-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/035-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/035-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/036-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/036-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/037-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/037-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/038-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/038-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/039-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/039-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/040-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/040-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/041-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/041-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/042-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/042-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/043-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/043-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/044-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/044-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/045-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/045-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/046-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/046-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/047-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/047-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/048-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/048-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/049-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/049-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/050-stderr.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/050-stdout.txt",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/application-reproducer.py",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/application284.json",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/application348.json",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/application349.json",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/source-composable-types-final-build.log",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/source-composable-types-final-clippy.log",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/source-composable-types-final-fmt.log",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/source-composable-types-final-test.log",
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types/source-composable-types-reports-test.log"
+  ],
+  "supplementary_checks": {
+    "build": {
+      "status": "pass",
+      "evidence": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/source-composable-types-final-build.log"
+    },
+    "full_library_and_integration": {
+      "status": "pass",
+      "evidence": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/source-composable-types-final-test.log",
+      "observed": "295 library tests plus source_composable_types integration pass."
+    },
+    "clippy": {
+      "status": "pass",
+      "evidence": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/source-composable-types-final-clippy.log"
+    },
+    "format": {
+      "status": "format_differences",
+      "evidence": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/source-composable-types-final-fmt.log",
+      "observed": "Frozen format check includes unrelated predecessor differences and two annotation-prefix statements. The owned whitespace-only difference was corrected separately ind40583589 without changing behavior; frozen113510066 source remains unchanged."
+    },
+    "report_generator_tests": {
+      "status": "pass",
+      "evidence": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/source-composable-types-reports-test.log"
+    },
+    "existing_compose_regression": {
+      "status": "pass",
+      "counts": {
+        "pass": 61
+      },
+      "evidence": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks.json"
+    }
+  },
+  "harness_revision": "113510066",
+  "source_snapshot": "/workspace/work/targets159/source-composable-types-freeze2",
+  "testing_environment": {
+    "RUST_MIN_STACK": "33554432",
+    "RUST_TEST_THREADS": "2",
+    "CARGO_BUILD_JOBS": "1",
+    "CARGO_INCREMENTAL": "0",
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_TEST_DEBUG": "0"
+  },
+  "reference_interpretation": {
+    "plugin": "Pinned Kotlin2.3.21 Compose plugin with sourceInformation=false, JVM1.8, class lambdas, AndroidX Compose Runtime1.11.0.",
+    "contract": "Logical metadata retains Function0<Unit> annotated Composable. JVM descriptors and generic signatures use Function2<Composer,Integer,Unit>, contravariant input positions and invariant outputs. Direct calls require actual current Composer context and pass changed0. Controlled Composer/ScopeUpdateScope proxies and actual pinned composableLambdaInstance wrappers execute; this is not a real Composition or Android runtime claim."
+  },
+  "application_observations": [
+    {
+      "id": "284",
+      "source": "Alkitab/src/test/java/yuku/alkitab/base/compose/ComposeThemeSnapshotTest.kt",
+      "source_sha256": "8ef2b49d1d3288b5b689b150bb0c9e7bb750caee795bc99b55fcd8702e9b3a18",
+      "outcome": "rejected_at_later_boundary",
+      "observed_attempt": {
+        "configuration": "resolved",
+        "exit_code": 1,
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/compose/ComposeThemeSnapshotTest.kt\",\"offset\":880,\"category\":\"unsupported_language\",\"code\":\"ANNOTATION_DEFINITION_UNSUPPORTED\",\"message\":\"Unsupported annotation definition or required compiler plugin: androidx/compose/material3/ExperimentalMaterial3Api\",\"path\":\"/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/compose/ComposeThemeSnapshotTest.kt\",\"line\":23,\"column\":8}",
+        "outcome": "rejected"
+      },
+      "evidence": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/application284.json",
+      "scope": "Type-use parsing accepts the genuine callback type; the complete source file still fails at the recorded independent boundary."
+    },
+    {
+      "id": "348",
+      "source": "Alkitab/src/test/java/yuku/alkitab/base/verses/ReadingGuidePreviewsTest.kt",
+      "source_sha256": "5cdb675eee540eea4638e680dd445ed3f48b3a78156cb7cafd5ca1db487ad5f0",
+      "outcome": "rejected_at_later_boundary",
+      "observed_attempt": {
+        "configuration": "resolved",
+        "exit_code": 1,
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/ReadingGuidePreviewsTest.kt\",\"offset\":1684,\"category\":\"unsupported_language\",\"code\":\"LIBRARY_DECLARATION_UNSUPPORTED\",\"message\":\"Unsupported library declaration\",\"path\":\"/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/ReadingGuidePreviewsTest.kt\",\"line\":50,\"column\":13}",
+        "outcome": "rejected"
+      },
+      "evidence": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/application348.json",
+      "scope": "Type-use parsing accepts the genuine callback type; the complete source file still fails at the recorded independent boundary."
+    },
+    {
+      "id": "349",
+      "source": "Alkitab/src/test/java/yuku/alkitab/base/verses/ReadingGuideRowTest.kt",
+      "source_sha256": "06510229151f4eaad2aadd876ffcea3d4dd5aa324d1f4f2f26754dfdf1ac681d",
+      "outcome": "rejected_at_later_boundary",
+      "observed_attempt": {
+        "configuration": "resolved",
+        "exit_code": 1,
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/ReadingGuideRowTest.kt\",\"offset\":2125,\"category\":\"unclassified\",\"code\":\"UNCLASSIFIED\",\"message\":\"Unresolved or unsupported applicable extension: plus\",\"path\":\"/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/ReadingGuideRowTest.kt\",\"line\":49,\"column\":22}",
+        "outcome": "rejected"
+      },
+      "evidence": "reports/correctness/2026-11-26T080652816233Z-source-composable-types/application349.json",
+      "scope": "Type-use parsing accepts the genuine callback type; the complete source file still fails at the recorded independent boundary."
+    }
+  ],
+  "application_reproduction": {
+    "argv": [
+      "python",
+      "/workspace/work/targets159/recheck-resume.py",
+      "/tmp/targets159-source-composable-types/debug/korrust",
+      "tests"
+    ],
+    "environment": {
+      "RECHECK_ROOT": "/workspace/work/targets159/source-composable-types-application",
+      "RECHECK_IDS": "284,348,349"
+    }
+  },
+  "evidence_text_normalization": "Copied text evidence omits trailing whitespace and trailing empty lines."
+}
