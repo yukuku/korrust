@@ -1,0 +1,3 @@
+target/checks/2026-11-26T055736026459Z-assignment-smartcasts/invoked-changing-capture.kt:1:122: error: smart cast to 'String' is impossible, because 'value' is a local variable that is mutated in a capturing closure.
+fun invalid(): Int { var value: String? = null; value = "a"; val change: () -> Unit = { value = null }; change(); return value.length }
+                                                                                                                         ^^^^^

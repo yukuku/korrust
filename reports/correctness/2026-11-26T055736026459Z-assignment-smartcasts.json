@@ -1,0 +1,794 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T05:57:36.026459+00:00",
+  "status": "passed",
+  "compiler": {
+    "binary": "/tmp/targets159-variance/debug/korrust",
+    "binary_sha256": "684ef4565eb59053b538b279385dcba5d4363fe380d46d52bba19045dffee213",
+    "source_revision": "85b7a259299e079048d3dff4a46d1a93e14a041b"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "inputs": {
+    "files_sha256": {
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "references/kotlin/compiler/fir/resolve/src/org/jetbrains/kotlin/fir/resolve/dfa/FirLocalVariableAssignmentAnalyzer.kt": "0097bcab5c1a808d153847601b7f11c6144fbc1a12c412c24448e279b417f2dd",
+      "references/kotlin/core/compiler.common.jvm/src/org/jetbrains/kotlin/load/java/JavaNullabilityAnnotationSettings.kt": "94061106794761ae07ff733efff1766fffa9682ab3337508a689f0f5cccd90b2",
+      "tests/assignment_smartcasts/Calls.java": "3e05af26fb53392155a06b18ae54602056b2e7dc977919c7a8a204ad936ad1c5",
+      "tests/assignment_smartcasts/ConsumeCalls.java": "961b8a9ca6579141eb8bcba75f2a2e833253f14eef553ec442f460cdca1fc416",
+      "tests/assignment_smartcasts/Consumer.kt": "7aeaf9dc103fca6723ba96429201694449778a0449221d2cea15ce666bb9eb74",
+      "tests/assignment_smartcasts/ConsumerRejections.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "tests/assignment_smartcasts/Effects.kt": "8264c71bd568c4ac4a0d12408229ae9b07a502853c42b76c4a3700dedc697555",
+      "tests/assignment_smartcasts/Rejections.json": "73d6e282a5285afdab881cbab678656f30aa13a54b2919b3ca97957d2a3177a4",
+      "tests/assignment_smartcasts/java/assign/Leaf.java": "db5667c9f7105a145498b34dfacfe1f3c72456e8d5e327e1a4523dd2cce434c4",
+      "tests/assignment_smartcasts/java/assign/Lookup.java": "b2a0e2eb40b40bc13059e1aa00c6e1341f2350792c573a73f5d39ba80363d5bc",
+      "tests/assignment_smartcasts/java/assign/Node.java": "77037aa39154fee6f3a260716caf4d9db9220ce2e90a3e2b6fb6e18e9173a4d0",
+      "tests/assignment_smartcasts.rs": "cd46893dafc93c9c5333b840456d67dd01a95928051b4aa335cded52d15bc2e0",
+      "tools/check_assignment_smartcasts.py": "79d05d2831d3850e60a2cf6f013226859980cb4525a98010d4caf24899613f7d",
+      "tools/check_nov21_generics.py": "70fed499f3652d9181c2aabc3baf4e9a7327c436eec67c83d6fe4e4f539e4f86",
+      "/workspace/work/assign003-flow/Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "/workspace/work/assign003-flow/Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "/workspace/work/assign003-flow/src/annotation_declarations.rs": "baaecfc70c577f5bfd2da8556ccac3716f888b409883cd80829b8c798918c782",
+      "/workspace/work/assign003-flow/src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "/workspace/work/assign003-flow/src/bytecode/annotation_files.rs": "0fe8ebba7bbd2c80fcdd6fda797b448ca8cd63945b100781361bf1e3ace02eaa",
+      "/workspace/work/assign003-flow/src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "/workspace/work/assign003-flow/src/bytecode/anonymous_context.rs": "38286f62b08a6d1e48d41a515bf00a192bb0761d2c30d7b14b7f517b4dad5e63",
+      "/workspace/work/assign003-flow/src/bytecode/class_companion.rs": "2a2b93f25889e7e3c8022dc795dfdcc8548a82c4813fce273b0de5cf8b0e8e55",
+      "/workspace/work/assign003-flow/src/bytecode/compose_lambdas.rs": "9c74c11d3e2deaaf5846bbe294614c440c0c1d0ad9881ae662caaf48ea1574ef",
+      "/workspace/work/assign003-flow/src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+      "/workspace/work/assign003-flow/src/bytecode/defaults.rs": "d092d8a420cfb719f92dbb9a3bcc58f7c644d67bf9b3c611c72949122c22e827",
+      "/workspace/work/assign003-flow/src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "/workspace/work/assign003-flow/src/bytecode/frames.rs": "1659d0401bfa59f751e3b6db250a2395a827ccad13c156f19f62c76773983b48",
+      "/workspace/work/assign003-flow/src/bytecode/inline.rs": "d1dbc06ea0c65d833333adb752ce2cdf05c5cc1678a99a6478440041d437aaea",
+      "/workspace/work/assign003-flow/src/bytecode/interfaces.rs": "5456ea3de3402ee3ead9920bb2cb0e7c0baab4f6eb7b211e481a16bf9ad3207b",
+      "/workspace/work/assign003-flow/src/bytecode/lambdas.rs": "1cacc1ea9acb473c0079dd302e50933e919826e8791370d1f4c19e4abdf48d6c",
+      "/workspace/work/assign003-flow/src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+      "/workspace/work/assign003-flow/src/bytecode/suspend.rs": "f3cae5d5e83cf1605b13146fec74bc4141d9c880f81340d60adb2e1714f85e5f",
+      "/workspace/work/assign003-flow/src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+      "/workspace/work/assign003-flow/src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+      "/workspace/work/assign003-flow/src/bytecode.rs": "e7b473207718b61e3cd69d143758c65feac0cfd1c5a7a4c326954f231301ee67",
+      "/workspace/work/assign003-flow/src/check.rs": "6d8176dbeada5094bb8322e8fb8d7656561d4c68711e1a33afad29ecccf87ac1",
+      "/workspace/work/assign003-flow/src/check_annotation_placements.rs": "027e77c6a6db60f98262fbaf0f44be170c53b58b03d64ae6e8cc43cdb2dc1579",
+      "/workspace/work/assign003-flow/src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "/workspace/work/assign003-flow/src/check_anonymous.rs": "62d493d4713c0dba1e7f25b1daf838769a3565da37a04ccb3563c169bbd9f726",
+      "/workspace/work/assign003-flow/src/check_assignment_flow.rs": "be4520c694043891aa0f72f26e3f8cf73cd902c314660b9f1381c1e48f049a5e",
+      "/workspace/work/assign003-flow/src/check_captures.rs": "fb33dcee574506b574ca15013bbe102990e6c15dba3744128c72761d361b90ba",
+      "/workspace/work/assign003-flow/src/check_class_delegation.rs": "c5295cce1ad653ec469256f57b60a40a538552e564855d8a2568087dd90f035c",
+      "/workspace/work/assign003-flow/src/check_classes.rs": "8a31d9a6fd4ade2c0a289c41f3f3058eee3e46e3d6dcec2ff350e2a1b2622ac9",
+      "/workspace/work/assign003-flow/src/check_companion_properties.rs": "c974d1059e7cb92644cd1a186492200828341f64b7e95d0ae4c052356537edba",
+      "/workspace/work/assign003-flow/src/check_constructor_aliases.rs": "a64e341da62e7b292607926f34f5ad2a570f103f3a2141c40be6ff9bf1a94527",
+      "/workspace/work/assign003-flow/src/check_constructor_inference.rs": "dd3d94a733c0acaea93af34f1e130c4338fc11127cbb7cba08f452d7c94d0d1e",
+      "/workspace/work/assign003-flow/src/check_contracts.rs": "06434fc5c0999ff69dfb902c50e7bc3b3d4802ae5d3592fbcf0496e9c3bb491d",
+      "/workspace/work/assign003-flow/src/check_control.rs": "2b29e40794e4c4ca848b254667c9aa9c361a750ef348bbe1e25b544dcfd43c51",
+      "/workspace/work/assign003-flow/src/check_declarations.rs": "6aae0ac43776a3a9bf3844657478902e42d8e51f26915944c37181fa41a543ea",
+      "/workspace/work/assign003-flow/src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+      "/workspace/work/assign003-flow/src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "/workspace/work/assign003-flow/src/check_functions.rs": "a166dc326cb021d20b8282b6eea4bbc2ad76c31dddd039fba06917f54f3bafcb",
+      "/workspace/work/assign003-flow/src/check_inner_classes.rs": "b799a4df016e056d127610e359ec06951e05e22e4778a7ffa31934e892cd6e05",
+      "/workspace/work/assign003-flow/src/check_interfaces.rs": "4f8ae05a3c3e32fc20a545ace1220d3edb5eca8fa6df561b78fb11bf2a1c23d3",
+      "/workspace/work/assign003-flow/src/check_ir_walk.rs": "6a7c435002dee1142b592d2c42551b845d9dbe3a6416ba9cd3f04c2d70c1c38a",
+      "/workspace/work/assign003-flow/src/check_java_nullability.rs": "40e1e816200bc92d6d7e5ab5fa57b4e3e351967072da160996e5a888b3acb923",
+      "/workspace/work/assign003-flow/src/check_java_properties.rs": "f3da739960dcbcee99a9b205e29afd330defef89e1089e9a152d5d0efd0c51fd",
+      "/workspace/work/assign003-flow/src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+      "/workspace/work/assign003-flow/src/check_library.rs": "01ce25ba8b4927e7ba7ac65c57d22e582ef6d9efe45390a33e621a20d659edbf",
+      "/workspace/work/assign003-flow/src/check_local_annotations.rs": "ad5d937aae27ec3bed4528322c068a39eca915a49c449b68b2c4453f87f1a770",
+      "/workspace/work/assign003-flow/src/check_member_extensions.rs": "943af7b1c7b65c2a495dd628e42b105f44f41f6f19b736fa8e57a0cfd255a81f",
+      "/workspace/work/assign003-flow/src/check_objects.rs": "ff3f5f28ea5e928367abb548fdb9ec1ae97ddfdb1c0ee7c4f0bf66c926bf9743",
+      "/workspace/work/assign003-flow/src/check_operations.rs": "c952f062596a4dd3b403364a60ffa96f7e2acc90a9fe6a3d63569ff7c88155c6",
+      "/workspace/work/assign003-flow/src/check_overloads.rs": "4b6a84fdc783bd52f6535e8bf8321813c3151b467c6bee7f7d31e523c8324d6e",
+      "/workspace/work/assign003-flow/src/check_references.rs": "61a780d0816443007725e52f992c717eeab828f7b971749ed3242318a8d80077",
+      "/workspace/work/assign003-flow/src/check_relations.rs": "bc420f89b02e2e85d19b74854bb8c80fa788ef3542960c0a37958783b8b6132e",
+      "/workspace/work/assign003-flow/src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "/workspace/work/assign003-flow/src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+      "/workspace/work/assign003-flow/src/check_stable_properties.rs": "ab5802177db74c4652aa8643124bd93b5acb7fff925e6c0ad6c990c877dc80fe",
+      "/workspace/work/assign003-flow/src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "/workspace/work/assign003-flow/src/check_varargs.rs": "461fe197ed8507a21ab7aa60cede390d70fd1fce9867015561b1d43738d7d14b",
+      "/workspace/work/assign003-flow/src/check_variant_signatures.rs": "a2610d403ef1d76ef1c256b074a27920c1c3ac53e13a7bc8d1c25d446763cff0",
+      "/workspace/work/assign003-flow/src/classpath/aliases.rs": "8bc215822538a91a5d04ff0dd38903b8b499cbf758dd6ed4e2f80683229eabd0",
+      "/workspace/work/assign003-flow/src/classpath/archive.rs": "835e4a79bbbc5c7328ce6a540ed1a2ca975fc526278fe7c31fd9433e08cc56d5",
+      "/workspace/work/assign003-flow/src/classpath/compose_abi.rs": "34d7fbbbcbd8750900edd390f19d6f156915864bb1acc1af42725458ee8801df",
+      "/workspace/work/assign003-flow/src/classpath/import_classes.rs": "65a1563c6df2772ac3d71602a54e7fd1b64bab1ab51d6053e74bdb65b2bf5f4e",
+      "/workspace/work/assign003-flow/src/classpath/inline_defaults.rs": "dadace0ef70c2e788fa6c7ffb49bb53119a74be6221435c6c124c1abc8391c5b",
+      "/workspace/work/assign003-flow/src/classpath/jdk_modules.rs": "cd1a350e7f8e03cda618a1d919d4e6ee49aba7e9a26728178ebad5f73c4bd8f8",
+      "/workspace/work/assign003-flow/src/classpath/jvm_builtins.rs": "b8c6e4789a998c1b3737da4879a15d74eb453170c4b03542d4c8ae13f6e40e86",
+      "/workspace/work/assign003-flow/src/classpath/metadata.rs": "8181cdec3fa8eb698cee9aa98f0b788a312a5e8ec868d42a75a49095a3968685",
+      "/workspace/work/assign003-flow/src/classpath/nested.rs": "764dd9eaf0188f91ba018707557e72df76b9c44b0120c8d69574044c8f5e78e9",
+      "/workspace/work/assign003-flow/src/classpath/nullability_defaults.rs": "8edf9187cd6214380a936c0484c280c7b3f3a973212d3f830c5316feedd4724b",
+      "/workspace/work/assign003-flow/src/classpath/package_info.rs": "f3bd436a8c64d48216bae3a55a2a3e82a903d354a42b629928fe1af95197061a",
+      "/workspace/work/assign003-flow/src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "/workspace/work/assign003-flow/src/classpath/signature.rs": "acac544bc6e8b57d298f203413f302e209792a3e57cfe455c0965deb53a438d8",
+      "/workspace/work/assign003-flow/src/classpath/singletons.rs": "836fe172f37cc9282e259ba446688b3d2d6bf34fde25ddc3973c1800f29c71a5",
+      "/workspace/work/assign003-flow/src/classpath/source.rs": "aea4544ef34e664c4505df794d108d7e36ec931d8b849592fd6f2726419ef95b",
+      "/workspace/work/assign003-flow/src/classpath/source_enums.rs": "1b6719565931913df35f26994fb0077985f1f5c89614fb1b5d4009e63957933d",
+      "/workspace/work/assign003-flow/src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+      "/workspace/work/assign003-flow/src/classpath/value_names.rs": "3987b5b3c7bda875d213bda719a1a7a5b44797b3f1f3b49170108200bb4348ce",
+      "/workspace/work/assign003-flow/src/classpath.rs": "7645649f526979de3e336dc614c34bae4b4294ee94e3482f804d0e9c6d13f790",
+      "/workspace/work/assign003-flow/src/compiled_inline/defaults.rs": "89d95d8b98e4af043bc3c592ba7588bffb7924bc86bdae57d457c0b420cbde37",
+      "/workspace/work/assign003-flow/src/compiled_inline.rs": "8ea572f28116c44057b1341b02a9869a2690c0d3cd6b38a086ce063675791ed1",
+      "/workspace/work/assign003-flow/src/const_eval.rs": "24319c4a5076f678ed53cbeeff7c52c4bdcf081c9f78485514326e92078e10fd",
+      "/workspace/work/assign003-flow/src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "/workspace/work/assign003-flow/src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "/workspace/work/assign003-flow/src/jvm_descriptor.rs": "3946ec2e66e89185c9d3e284f9d114e29e5e88d0a3eba52ec39fba2200d07ad2",
+      "/workspace/work/assign003-flow/src/lib.rs": "db0338e838d0b0ee095d2fec4f37fc73f96955fd868231743f9b3dfb3182d712",
+      "/workspace/work/assign003-flow/src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "/workspace/work/assign003-flow/src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "/workspace/work/assign003-flow/src/metadata.rs": "c1a560626ef5dfebddc1679fcd42ad41a092fcfdd95ec470f3894412b95880d8",
+      "/workspace/work/assign003-flow/src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "/workspace/work/assign003-flow/src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "/workspace/work/assign003-flow/src/source_inline.rs": "d59ecaba2b32264cc4190594c19e5ec7e99e6cbb5db28b33c1eaca7c7aa404e5",
+      "/workspace/work/assign003-flow/src/syntax.rs": "79224fa82a713b1b048e2ae8a8f98db46af83565a5eb9a5bbee0508582141470",
+      "/workspace/work/assign003-flow/src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "/workspace/work/assign003-flow/src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525"
+    },
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "commands": [
+    {
+      "label": "compile annotated Java provider",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies",
+        "/workspace/korrust/tests/assignment_smartcasts/java/assign/Leaf.java",
+        "/workspace/korrust/tests/assignment_smartcasts/java/assign/Lookup.java",
+        "/workspace/korrust/tests/assignment_smartcasts/java/assign/Node.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/000-stderr.txt"
+    },
+    {
+      "label": "compile official Effects.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/assignment_smartcasts/Effects.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "assignment_smartcasts",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/001-stderr.txt"
+    },
+    {
+      "label": "compile candidate Effects.kt",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/tests/assignment_smartcasts/Effects.kt",
+        "--module-name",
+        "assignment_smartcasts",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/002-stderr.txt"
+    },
+    {
+      "label": "compile fixed Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/official:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/java",
+        "/workspace/korrust/tests/assignment_smartcasts/Calls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/003-stderr.txt"
+    },
+    {
+      "label": "verified fixed Java caller official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/java:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/official:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/004-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/official",
+        "EffectsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/005-stderr.txt"
+    },
+    {
+      "label": "compile official Consumer.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/assignment_smartcasts/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "assignment_smartcasts",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/official:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/official-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/006-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/official:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/official-official:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/official-official-runner",
+        "/workspace/korrust/tests/assignment_smartcasts/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/007-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer official/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/official-official-runner:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/official-official:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/official:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/008-stderr.txt"
+    },
+    {
+      "label": "compile candidate Consumer.kt",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/tests/assignment_smartcasts/Consumer.kt",
+        "--module-name",
+        "assignment_smartcasts",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/official:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/official-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/009-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/official:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/official-candidate:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/official-candidate-runner",
+        "/workspace/korrust/tests/assignment_smartcasts/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/010-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer official/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/official-candidate-runner:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/official-candidate:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/official:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/011-stderr.txt"
+    },
+    {
+      "label": "verified fixed Java caller candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/java:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/candidate:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/012-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/candidate",
+        "EffectsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/013-stderr.txt"
+    },
+    {
+      "label": "compile official Consumer.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/assignment_smartcasts/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "assignment_smartcasts",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/candidate:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/candidate-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/014-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/candidate:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/candidate-official:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/candidate-official-runner",
+        "/workspace/korrust/tests/assignment_smartcasts/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/015-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer candidate/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/candidate-official-runner:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/candidate-official:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/candidate:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/016-stderr.txt"
+    },
+    {
+      "label": "compile candidate Consumer.kt",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/tests/assignment_smartcasts/Consumer.kt",
+        "--module-name",
+        "assignment_smartcasts",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/candidate:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/candidate-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/017-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/candidate:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/candidate-candidate:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/candidate-candidate-runner",
+        "/workspace/korrust/tests/assignment_smartcasts/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/018-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer candidate/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/candidate-candidate-runner:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/candidate-candidate:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/candidate:/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/019-stderr.txt"
+    },
+    {
+      "label": "negative official/null-reassignment",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/null-reassignment.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/020-stderr.txt"
+    },
+    {
+      "label": "negative candidate/null-reassignment",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/null-reassignment.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/021-stderr.txt"
+    },
+    {
+      "label": "negative official/nullable-reassignment",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/nullable-reassignment.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/022-stderr.txt"
+    },
+    {
+      "label": "negative candidate/nullable-reassignment",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/nullable-reassignment.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/023-stderr.txt"
+    },
+    {
+      "label": "negative official/branch-mutation",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/branch-mutation.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/024-stderr.txt"
+    },
+    {
+      "label": "negative candidate/branch-mutation",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/branch-mutation.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/025-stderr.txt"
+    },
+    {
+      "label": "negative official/loop-backedge",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/loop-backedge.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/026-stderr.txt"
+    },
+    {
+      "label": "negative candidate/loop-backedge",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/loop-backedge.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/027-stderr.txt"
+    },
+    {
+      "label": "negative official/changing-capture",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/changing-capture.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/028-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/028-stderr.txt"
+    },
+    {
+      "label": "negative candidate/changing-capture",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/changing-capture.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/029-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/029-stderr.txt"
+    },
+    {
+      "label": "negative official/reassigned-changing-capture",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/reassigned-changing-capture.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/030-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/030-stderr.txt"
+    },
+    {
+      "label": "negative candidate/reassigned-changing-capture",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/reassigned-changing-capture.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/031-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/031-stderr.txt"
+    },
+    {
+      "label": "negative official/invoked-changing-capture",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/invoked-changing-capture.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/032-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/032-stderr.txt"
+    },
+    {
+      "label": "negative candidate/invoked-changing-capture",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/invoked-changing-capture.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/033-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/033-stderr.txt"
+    },
+    {
+      "label": "negative official/null-branch",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/null-branch.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/034-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/034-stderr.txt"
+    },
+    {
+      "label": "negative candidate/null-branch",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/null-branch.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/035-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T055736026459Z-assignment-smartcasts/035-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "fixed-java/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/official/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/official/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "fixed-java/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/candidate/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/candidate/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "JVM-public-callable-signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/null-reassignment",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/null-reassignment",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/nullable-reassignment",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/nullable-reassignment",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/branch-mutation",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/branch-mutation",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/loop-backedge",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/loop-backedge",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/changing-capture",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/changing-capture",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/reassigned-changing-capture",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/reassigned-changing-capture",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/invoked-changing-capture",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/invoked-changing-capture",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/null-branch",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/null-branch",
+      "outcome": "pass"
+    },
+    {
+      "id": "frozen-inputs",
+      "outcome": "pass"
+    }
+  ],
+  "evidence": [],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_assignment_smartcasts.py",
+      "--candidate",
+      "/tmp/targets159-variance/debug/korrust",
+      "--reference-root",
+      "/workspace/korrust",
+      "--source-root",
+      "/workspace/work/assign003-flow"
+    ]
+  ],
+  "limitations": [
+    "Nullable reference local assignment keeps the inherent RHS type while storing through the declared type. Stable boxed/read-only captures use the same facts; changing captures and control-flow writes invalidate them. Compound expression effects and writes to boxed locals in loops conservatively lose facts. Primitive narrowing, nullable callable literals and broader intersection/LUB flow remain bounded. No Android runtime or full-app claim."
+  ],
+  "counts": {
+    "pass": 24
+  }
+}

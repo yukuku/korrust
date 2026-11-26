@@ -1,0 +1,639 @@
+Classfile /workspace/korrust/target/checks/2026-11-26T055736026459Z-assignment-smartcasts/candidate/EffectsKt.class
+  Last modified Nov 26, 2026; size 3491 bytes
+  SHA-256 checksum 1c81f8b8fda684d6da955c5bf7e6eb8cce894cebf9efc706da2e112ce6993df1
+  Compiled from "Effects.kt"
+public final class EffectsKt
+  minor version: 0
+  major version: 49
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // EffectsKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 14, attributes: 2
+Constant pool:
+    #1 = Utf8               EffectsKt
+    #2 = Class              #1            // EffectsKt
+    #3 = Utf8               java/lang/Object
+    #4 = Class              #3            // java/lang/Object
+    #5 = Utf8               SourceFile
+    #6 = Utf8               Effects.kt
+    #7 = Utf8               java/lang/String
+    #8 = Class              #7            // java/lang/String
+    #9 = Utf8               abc
+   #10 = String             #9            // abc
+   #11 = Utf8               java/lang/CharSequence
+   #12 = Class              #11           // java/lang/CharSequence
+   #13 = Utf8               length
+   #14 = Utf8               ()I
+   #15 = NameAndType        #13:#14       // length:()I
+   #16 = InterfaceMethodref #12.#15       // java/lang/CharSequence.length:()I
+   #17 = Utf8               literal
+   #18 = Utf8               Code
+   #19 = Utf8               a
+   #20 = String             #19           // a
+   #21 = Utf8               abcd
+   #22 = String             #21           // abcd
+   #23 = Utf8               replace
+   #24 = Utf8               assign/Node
+   #25 = Class              #24           // assign/Node
+   #26 = Utf8               assign/Leaf
+   #27 = Class              #26           // assign/Leaf
+   #28 = Utf8               <init>
+   #29 = Utf8               (I)V
+   #30 = NameAndType        #28:#29       // "<init>":(I)V
+   #31 = Methodref          #27.#30       // assign/Leaf."<init>":(I)V
+   #32 = Utf8               null cannot be cast to non-null type assign.Leaf
+   #33 = String             #32           // null cannot be cast to non-null type assign.Leaf
+   #34 = Utf8               kotlin/jvm/internal/Intrinsics
+   #35 = Class              #34           // kotlin/jvm/internal/Intrinsics
+   #36 = Utf8               checkNotNull
+   #37 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+   #38 = NameAndType        #36:#37       // checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V
+   #39 = Methodref          #35.#38       // kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V
+   #40 = Utf8               inputType
+   #41 = Utf8               I
+   #42 = NameAndType        #40:#41       // inputType:I
+   #43 = Fieldref           #27.#42       // assign/Leaf.inputType:I
+   #44 = Utf8               subtype
+   #45 = Utf8               lookup
+   #46 = String             #45           // lookup
+   #47 = Utf8               checkNotNullParameter
+   #48 = NameAndType        #47:#37       // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+   #49 = Methodref          #35.#48       // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+   #50 = Utf8               assign/Lookup
+   #51 = Class              #50           // assign/Lookup
+   #52 = Utf8               leaf
+   #53 = Utf8               (I)Lassign/Leaf;
+   #54 = NameAndType        #52:#53       // leaf:(I)Lassign/Leaf;
+   #55 = Methodref          #51.#54       // assign/Lookup.leaf:(I)Lassign/Leaf;
+   #56 = Utf8               platform
+   #57 = Utf8               (Lassign/Lookup;I)I
+   #58 = Utf8               Lorg/jetbrains/annotations/NotNull;
+   #59 = Utf8               RuntimeInvisibleParameterAnnotations
+   #60 = Utf8               find
+   #61 = Utf8               (I)Lassign/Node;
+   #62 = NameAndType        #60:#61       // find:(I)Lassign/Node;
+   #63 = Methodref          #51.#62       // assign/Lookup.find:(I)Lassign/Node;
+   #64 = Utf8               generic
+   #65 = Utf8               platformRead
+   #66 = Utf8               (Lassign/Lookup;I)Lassign/Leaf;
+   #67 = Utf8               Lorg/jetbrains/annotations/Nullable;
+   #68 = Utf8               RuntimeVisibleAnnotations
+   #69 = Utf8               RuntimeInvisibleAnnotations
+   #70 = Utf8               kotlin/jvm/internal/Ref$ObjectRef
+   #71 = Class              #70           // kotlin/jvm/internal/Ref$ObjectRef
+   #72 = Utf8               ()V
+   #73 = NameAndType        #28:#72       // "<init>":()V
+   #74 = Methodref          #71.#73       // kotlin/jvm/internal/Ref$ObjectRef."<init>":()V
+   #75 = Utf8               element
+   #76 = Utf8               Ljava/lang/Object;
+   #77 = NameAndType        #75:#76       // element:Ljava/lang/Object;
+   #78 = Fieldref           #71.#77       // kotlin/jvm/internal/Ref$ObjectRef.element:Ljava/lang/Object;
+   #79 = Utf8               EffectsKt$lambda$1018$0
+   #80 = Class              #79           // EffectsKt$lambda$1018$0
+   #81 = Utf8               (Lkotlin/jvm/internal/Ref$ObjectRef;)V
+   #82 = NameAndType        #28:#81       // "<init>":(Lkotlin/jvm/internal/Ref$ObjectRef;)V
+   #83 = Methodref          #80.#82       // EffectsKt$lambda$1018$0."<init>":(Lkotlin/jvm/internal/Ref$ObjectRef;)V
+   #84 = Utf8               kotlin/jvm/functions/Function0
+   #85 = Class              #84           // kotlin/jvm/functions/Function0
+   #86 = Utf8               invoke
+   #87 = Utf8               ()Ljava/lang/Object;
+   #88 = NameAndType        #86:#87       // invoke:()Ljava/lang/Object;
+   #89 = InterfaceMethodref #85.#88       // kotlin/jvm/functions/Function0.invoke:()Ljava/lang/Object;
+   #90 = Utf8               (Ljava/lang/Object;)V
+   #91 = NameAndType        #36:#90       // checkNotNull:(Ljava/lang/Object;)V
+   #92 = Methodref          #35.#91       // kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;)V
+   #93 = Utf8               readonlyCapture
+   #94 = Utf8               EffectsKt$lambda$1224$1
+   #95 = Class              #94           // EffectsKt$lambda$1224$1
+   #96 = Methodref          #95.#82       // EffectsKt$lambda$1224$1."<init>":(Lkotlin/jvm/internal/Ref$ObjectRef;)V
+   #97 = Utf8               beforeChangingCapture
+   #98 = Utf8               EffectsKt$lambda$1351$2
+   #99 = Class              #98           // EffectsKt$lambda$1351$2
+  #100 = Methodref          #99.#82       // EffectsKt$lambda$1351$2."<init>":(Lkotlin/jvm/internal/Ref$ObjectRef;)V
+  #101 = Utf8               readonlyThenAssign
+  #102 = Utf8               EffectsKt$lambda$1524$3
+  #103 = Class              #102          // EffectsKt$lambda$1524$3
+  #104 = Methodref          #103.#73      // EffectsKt$lambda$1524$3."<init>":()V
+  #105 = Utf8               shadowing
+  #106 = Utf8               branches
+  #107 = Utf8               (Z)I
+  #108 = Utf8               areEqual
+  #109 = Utf8               (Ljava/lang/Object;Ljava/lang/Object;)Z
+  #110 = NameAndType        #108:#109     // areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z
+  #111 = Methodref          #35.#110      // kotlin/jvm/internal/Intrinsics.areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z
+  #112 = Utf8               checked
+  #113 = Utf8               (Ljava/lang/String;)I
+  #114 = Utf8               loop
+  #115 = Utf8               (I)I
+  #116 = Utf8               EffectsKt$lambda$2228$4
+  #117 = Class              #116          // EffectsKt$lambda$2228$4
+  #118 = Methodref          #117.#82      // EffectsKt$lambda$2228$4."<init>":(Lkotlin/jvm/internal/Ref$ObjectRef;)V
+  #119 = Utf8               readonlyLoop
+  #120 = Utf8               Lkotlin/Metadata;
+  #121 = Utf8               mv
+  #122 = Integer            2
+  #123 = Integer            3
+  #124 = Integer            0
+  #125 = Utf8               k
+  #126 = Utf8               xi
+  #127 = Integer            48
+  #128 = Utf8               d1
+  #129 = Utf8               \u0000\b\n\u0002\b\u001e\n\u0002\b\u0001\u001a\u000fH\u0006\u0010\u0000\u001a\u00020\u0001¢\u0006\u0004\b\u0000\u0010\u0002\u001a\u000fH\u0006\u0010\u0003\u001a\u00020\u0001¢\u0006\u0004\b\u0003\u0010\u0002\u001a\u000fH\u0006\u0010\u0004\u001a\u00020\u0001¢\u0006\u0004\b\u0004\u0010\u0002\u001a\u001fH\u0006\u0010\u0005\u001a\u00020\u00012\u0006\u0010\u0006\u001a\u00020\u00072\u0006\u0010\b\u001a\u00020\u0001¢\u0006\u0004\b\u0005\u0010\t\u001a\u001fH\u0006\u0010\n\u001a\u00020\u00012\u0006\u0010\u0006\u001a\u00020\u00072\u0006\u0010\b\u001a\u00020\u0001¢\u0006\u0004\b\n\u0010\t\u001a!H\u0006\u0010\u000b\u001a\u00040\f\u0018\u00012\u0006\u0010\u0006\u001a\u00020\u00072\u0006\u0010\b\u001a\u00020\u0001¢\u0006\u0004\b\u000b\u0010\r\u001a\u001fH\u0006\u0010\u000e\u001a\u00020\u00012\u0006\u0010\u0006\u001a\u00020\u00072\u0006\u0010\b\u001a\u00020\u0001¢\u0006\u0004\b\u000e\u0010\t\u001a\u000fH\u0006\u0010\u000f\u001a\u00020\u0001¢\u0006\u0004\b\u000f\u0010\u0002\u001a\u000fH\u0006\u0010\u0010\u001a\u00020\u0001¢\u0006\u0004\b\u0010\u0010\u0002\u001a\u000fH\u0006\u0010\u0011\u001a\u00020\u0001¢\u0006\u0004\b\u0011\u0010\u0002\u001a\u0017H\u0006\u0010\u0012\u001a\u00020\u00012\u0006\u0010\u0013\u001a\u00020\u0014¢\u0006\u0004\b\u0012\u0010\u0015\u001a\u0019H\u0006\u0010\u0016\u001a\u00020\u00012\b\u0010\u0017\u001a\u00040\u0018\u0018\u0001¢\u0006\u0004\b\u0016\u0010\u0019\u001a\u0017H\u0006\u0010\u001a\u001a\u00020\u00012\u0006\u0010\u001b\u001a\u00020\u0001¢\u0006\u0004\b\u001a\u0010\u001c\u001a\u0017H\u0006\u0010\u001d\u001a\u00020\u00012\u0006\u0010\u001b\u001a\u00020\u0001¢\u0006\u0004\b\u001d\u0010\u001c¨\u0006\u001e
+  #130 = Utf8               d2
+  #131 = Utf8               kotlin/Int
+  #132 = Utf8               kind
+  #133 = Utf8               flag
+  #134 = Utf8               kotlin/Boolean
+  #135 = Utf8               input
+  #136 = Utf8               kotlin/String
+  #137 = Utf8               count
+  #138 = Utf8               assignment_smartcasts
+{
+  public static final int literal();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=0
+         0: aconst_null
+         1: checkcast     #8                  // class java/lang/String
+         4: astore        0
+         6: ldc_w         #10                 // String abc
+         9: checkcast     #8                  // class java/lang/String
+        12: astore        0
+        14: aload         0
+        16: checkcast     #8                  // class java/lang/String
+        19: invokeinterface #16,  1           // InterfaceMethod java/lang/CharSequence.length:()I
+        24: ireturn
+        25: aconst_null
+        26: athrow
+
+  public static final int replace();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=4, locals=2, args_size=0
+         0: aconst_null
+         1: checkcast     #8                  // class java/lang/String
+         4: astore        0
+         6: ldc_w         #20                 // String a
+         9: checkcast     #8                  // class java/lang/String
+        12: astore        0
+        14: aload         0
+        16: checkcast     #8                  // class java/lang/String
+        19: invokeinterface #16,  1           // InterfaceMethod java/lang/CharSequence.length:()I
+        24: istore        1
+        26: ldc_w         #22                 // String abcd
+        29: checkcast     #8                  // class java/lang/String
+        32: astore        0
+        34: iload         1
+        36: aload         0
+        38: checkcast     #8                  // class java/lang/String
+        41: invokeinterface #16,  1           // InterfaceMethod java/lang/CharSequence.length:()I
+        46: iadd
+        47: ireturn
+        48: aconst_null
+        49: athrow
+
+  public static final int subtype();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=5, locals=1, args_size=0
+         0: aconst_null
+         1: checkcast     #25                 // class assign/Node
+         4: astore        0
+         6: new           #27                 // class assign/Leaf
+         9: dup
+        10: bipush        7
+        12: invokespecial #31                 // Method assign/Leaf."<init>":(I)V
+        15: checkcast     #25                 // class assign/Node
+        18: astore        0
+        20: aload         0
+        22: dup
+        23: ldc_w         #33                 // String null cannot be cast to non-null type assign.Leaf
+        26: invokestatic  #39                 // Method kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V
+        29: checkcast     #27                 // class assign/Leaf
+        32: getfield      #43                 // Field assign/Leaf.inputType:I
+        35: ireturn
+        36: aconst_null
+        37: athrow
+
+  public static final int platform(assign.Lookup, int);
+    descriptor: (Lassign/Lookup;I)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=4, locals=3, args_size=2
+         0: aload         0
+         2: ldc_w         #46                 // String lookup
+         5: invokestatic  #49                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aconst_null
+         9: checkcast     #27                 // class assign/Leaf
+        12: astore        2
+        14: aload         0
+        16: checkcast     #51                 // class assign/Lookup
+        19: iload         1
+        21: invokevirtual #55                 // Method assign/Lookup.leaf:(I)Lassign/Leaf;
+        24: checkcast     #27                 // class assign/Leaf
+        27: astore        2
+        29: aload         2
+        31: iconst_3
+        32: putfield      #43                 // Field assign/Leaf.inputType:I
+        35: aload         2
+        37: getfield      #43                 // Field assign/Leaf.inputType:I
+        40: ireturn
+        41: aconst_null
+        42: athrow
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #58()
+          org.jetbrains.annotations.NotNull
+      parameter 1:
+
+  public static final int generic(assign.Lookup, int);
+    descriptor: (Lassign/Lookup;I)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=4, locals=3, args_size=2
+         0: aload         0
+         2: ldc_w         #46                 // String lookup
+         5: invokestatic  #49                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aconst_null
+         9: checkcast     #27                 // class assign/Leaf
+        12: astore        2
+        14: aload         0
+        16: checkcast     #51                 // class assign/Lookup
+        19: iload         1
+        21: invokevirtual #63                 // Method assign/Lookup.find:(I)Lassign/Node;
+        24: checkcast     #27                 // class assign/Leaf
+        27: checkcast     #27                 // class assign/Leaf
+        30: astore        2
+        32: aload         2
+        34: iconst_4
+        35: putfield      #43                 // Field assign/Leaf.inputType:I
+        38: aload         2
+        40: getfield      #43                 // Field assign/Leaf.inputType:I
+        43: ireturn
+        44: aconst_null
+        45: athrow
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #58()
+          org.jetbrains.annotations.NotNull
+      parameter 1:
+
+  public static final assign.Leaf platformRead(assign.Lookup, int);
+    descriptor: (Lassign/Lookup;I)Lassign/Leaf;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=4, locals=4, args_size=2
+         0: aload         0
+         2: ldc_w         #46                 // String lookup
+         5: invokestatic  #49                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aconst_null
+         9: checkcast     #25                 // class assign/Node
+        12: astore        2
+        14: aload         0
+        16: checkcast     #51                 // class assign/Lookup
+        19: iload         1
+        21: invokevirtual #55                 // Method assign/Lookup.leaf:(I)Lassign/Leaf;
+        24: checkcast     #25                 // class assign/Node
+        27: astore        2
+        29: aload         2
+        31: checkcast     #27                 // class assign/Leaf
+        34: checkcast     #27                 // class assign/Leaf
+        37: astore        3
+        39: aload         3
+        41: areturn
+        42: aconst_null
+        43: athrow
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #58()
+          org.jetbrains.annotations.NotNull
+      parameter 1:
+    RuntimeInvisibleAnnotations:
+      0: #67()
+        org.jetbrains.annotations.Nullable
+
+  public static final int readonlyCapture(assign.Lookup, int);
+    descriptor: (Lassign/Lookup;I)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=5, locals=4, args_size=2
+         0: aload         0
+         2: ldc_w         #46                 // String lookup
+         5: invokestatic  #49                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: new           #71                 // class kotlin/jvm/internal/Ref$ObjectRef
+        11: dup
+        12: invokespecial #74                 // Method kotlin/jvm/internal/Ref$ObjectRef."<init>":()V
+        15: checkcast     #71                 // class kotlin/jvm/internal/Ref$ObjectRef
+        18: astore        2
+        20: aload         2
+        22: aconst_null
+        23: putfield      #78                 // Field kotlin/jvm/internal/Ref$ObjectRef.element:Ljava/lang/Object;
+        26: aload         2
+        28: aload         0
+        30: checkcast     #51                 // class assign/Lookup
+        33: iload         1
+        35: invokevirtual #63                 // Method assign/Lookup.find:(I)Lassign/Node;
+        38: checkcast     #27                 // class assign/Leaf
+        41: putfield      #78                 // Field kotlin/jvm/internal/Ref$ObjectRef.element:Ljava/lang/Object;
+        44: new           #80                 // class EffectsKt$lambda$1018$0
+        47: dup
+        48: aload         2
+        50: invokespecial #83                 // Method EffectsKt$lambda$1018$0."<init>":(Lkotlin/jvm/internal/Ref$ObjectRef;)V
+        53: checkcast     #85                 // class kotlin/jvm/functions/Function0
+        56: astore        3
+        58: aload         2
+        60: getfield      #78                 // Field kotlin/jvm/internal/Ref$ObjectRef.element:Ljava/lang/Object;
+        63: checkcast     #27                 // class assign/Leaf
+        66: iconst_5
+        67: putfield      #43                 // Field assign/Leaf.inputType:I
+        70: aload         3
+        72: invokeinterface #89,  1           // InterfaceMethod kotlin/jvm/functions/Function0.invoke:()Ljava/lang/Object;
+        77: checkcast     #27                 // class assign/Leaf
+        80: dup
+        81: invokestatic  #92                 // Method kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;)V
+        84: checkcast     #27                 // class assign/Leaf
+        87: getfield      #43                 // Field assign/Leaf.inputType:I
+        90: ireturn
+        91: aconst_null
+        92: athrow
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #58()
+          org.jetbrains.annotations.NotNull
+      parameter 1:
+
+  public static final int beforeChangingCapture();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=5, locals=3, args_size=0
+         0: new           #71                 // class kotlin/jvm/internal/Ref$ObjectRef
+         3: dup
+         4: invokespecial #74                 // Method kotlin/jvm/internal/Ref$ObjectRef."<init>":()V
+         7: checkcast     #71                 // class kotlin/jvm/internal/Ref$ObjectRef
+        10: astore        0
+        12: aload         0
+        14: aconst_null
+        15: putfield      #78                 // Field kotlin/jvm/internal/Ref$ObjectRef.element:Ljava/lang/Object;
+        18: aload         0
+        20: ldc_w         #10                 // String abc
+        23: putfield      #78                 // Field kotlin/jvm/internal/Ref$ObjectRef.element:Ljava/lang/Object;
+        26: aload         0
+        28: getfield      #78                 // Field kotlin/jvm/internal/Ref$ObjectRef.element:Ljava/lang/Object;
+        31: checkcast     #8                  // class java/lang/String
+        34: checkcast     #8                  // class java/lang/String
+        37: invokeinterface #16,  1           // InterfaceMethod java/lang/CharSequence.length:()I
+        42: istore        1
+        44: new           #95                 // class EffectsKt$lambda$1224$1
+        47: dup
+        48: aload         0
+        50: invokespecial #96                 // Method EffectsKt$lambda$1224$1."<init>":(Lkotlin/jvm/internal/Ref$ObjectRef;)V
+        53: checkcast     #85                 // class kotlin/jvm/functions/Function0
+        56: astore        2
+        58: iload         1
+        60: ireturn
+        61: aconst_null
+        62: athrow
+
+  public static final int readonlyThenAssign();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=6, locals=2, args_size=0
+         0: new           #71                 // class kotlin/jvm/internal/Ref$ObjectRef
+         3: dup
+         4: invokespecial #74                 // Method kotlin/jvm/internal/Ref$ObjectRef."<init>":()V
+         7: checkcast     #71                 // class kotlin/jvm/internal/Ref$ObjectRef
+        10: astore        0
+        12: aload         0
+        14: aconst_null
+        15: putfield      #78                 // Field kotlin/jvm/internal/Ref$ObjectRef.element:Ljava/lang/Object;
+        18: new           #99                 // class EffectsKt$lambda$1351$2
+        21: dup
+        22: aload         0
+        24: invokespecial #100                // Method EffectsKt$lambda$1351$2."<init>":(Lkotlin/jvm/internal/Ref$ObjectRef;)V
+        27: checkcast     #85                 // class kotlin/jvm/functions/Function0
+        30: astore        1
+        32: aload         0
+        34: ldc_w         #10                 // String abc
+        37: putfield      #78                 // Field kotlin/jvm/internal/Ref$ObjectRef.element:Ljava/lang/Object;
+        40: aload         0
+        42: getfield      #78                 // Field kotlin/jvm/internal/Ref$ObjectRef.element:Ljava/lang/Object;
+        45: checkcast     #8                  // class java/lang/String
+        48: checkcast     #8                  // class java/lang/String
+        51: invokeinterface #16,  1           // InterfaceMethod java/lang/CharSequence.length:()I
+        56: aload         1
+        58: invokeinterface #89,  1           // InterfaceMethod kotlin/jvm/functions/Function0.invoke:()Ljava/lang/Object;
+        63: checkcast     #8                  // class java/lang/String
+        66: dup
+        67: invokestatic  #92                 // Method kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;)V
+        70: checkcast     #8                  // class java/lang/String
+        73: checkcast     #8                  // class java/lang/String
+        76: invokeinterface #16,  1           // InterfaceMethod java/lang/CharSequence.length:()I
+        81: iadd
+        82: ireturn
+        83: aconst_null
+        84: athrow
+
+  public static final int shadowing();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=6, locals=2, args_size=0
+         0: new           #71                 // class kotlin/jvm/internal/Ref$ObjectRef
+         3: dup
+         4: invokespecial #74                 // Method kotlin/jvm/internal/Ref$ObjectRef."<init>":()V
+         7: checkcast     #71                 // class kotlin/jvm/internal/Ref$ObjectRef
+        10: astore        0
+        12: aload         0
+        14: aconst_null
+        15: putfield      #78                 // Field kotlin/jvm/internal/Ref$ObjectRef.element:Ljava/lang/Object;
+        18: aload         0
+        20: ldc_w         #10                 // String abc
+        23: putfield      #78                 // Field kotlin/jvm/internal/Ref$ObjectRef.element:Ljava/lang/Object;
+        26: new           #103                // class EffectsKt$lambda$1524$3
+        29: dup
+        30: invokespecial #104                // Method EffectsKt$lambda$1524$3."<init>":()V
+        33: checkcast     #85                 // class kotlin/jvm/functions/Function0
+        36: astore        1
+        38: aload         0
+        40: getfield      #78                 // Field kotlin/jvm/internal/Ref$ObjectRef.element:Ljava/lang/Object;
+        43: checkcast     #8                  // class java/lang/String
+        46: checkcast     #8                  // class java/lang/String
+        49: invokeinterface #16,  1           // InterfaceMethod java/lang/CharSequence.length:()I
+        54: aload         1
+        56: invokeinterface #89,  1           // InterfaceMethod kotlin/jvm/functions/Function0.invoke:()Ljava/lang/Object;
+        61: checkcast     #8                  // class java/lang/String
+        64: dup
+        65: invokestatic  #92                 // Method kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;)V
+        68: checkcast     #8                  // class java/lang/String
+        71: checkcast     #8                  // class java/lang/String
+        74: invokeinterface #16,  1           // InterfaceMethod java/lang/CharSequence.length:()I
+        79: iadd
+        80: ireturn
+        81: aconst_null
+        82: athrow
+
+  public static final int branches(boolean);
+    descriptor: (Z)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=2, args_size=1
+         0: aconst_null
+         1: checkcast     #8                  // class java/lang/String
+         4: astore        1
+         6: iload         0
+         8: ifeq          22
+        11: ldc_w         #20                 // String a
+        14: checkcast     #8                  // class java/lang/String
+        17: astore        1
+        19: goto          30
+        22: ldc_w         #22                 // String abcd
+        25: checkcast     #8                  // class java/lang/String
+        28: astore        1
+        30: aload         1
+        32: checkcast     #8                  // class java/lang/String
+        35: invokeinterface #16,  1           // InterfaceMethod java/lang/CharSequence.length:()I
+        40: ireturn
+        41: aconst_null
+        42: athrow
+
+  public static final int checked(java.lang.String);
+    descriptor: (Ljava/lang/String;)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=5, locals=2, args_size=1
+         0: aconst_null
+         1: checkcast     #8                  // class java/lang/String
+         4: astore        1
+         6: aload         0
+         8: checkcast     #8                  // class java/lang/String
+        11: astore        1
+        13: aload         1
+        15: aconst_null
+        16: invokestatic  #111                // Method kotlin/jvm/internal/Intrinsics.areEqual:(Ljava/lang/Object;Ljava/lang/Object;)Z
+        19: iconst_1
+        20: ixor
+        21: ifeq          35
+        24: aload         1
+        26: checkcast     #8                  // class java/lang/String
+        29: invokeinterface #16,  1           // InterfaceMethod java/lang/CharSequence.length:()I
+        34: ireturn
+        35: iconst_m1
+        36: ireturn
+        37: aconst_null
+        38: athrow
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #67()
+          org.jetbrains.annotations.Nullable
+
+  public static final int loop(int);
+    descriptor: (I)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=257, locals=7, args_size=1
+         0: aconst_null
+         1: checkcast     #8                  // class java/lang/String
+         4: astore        1
+         6: iconst_0
+         7: istore        2
+         9: iconst_0
+        10: istore        3
+        12: iload         0
+        14: istore        4
+        16: iload         3
+        18: iload         4
+        20: if_icmpge     60
+        23: ldc_w         #20                 // String a
+        26: checkcast     #8                  // class java/lang/String
+        29: astore        1
+        31: iload         2
+        33: istore        5
+        35: iload         5
+        37: aload         1
+        39: checkcast     #8                  // class java/lang/String
+        42: invokeinterface #16,  1           // InterfaceMethod java/lang/CharSequence.length:()I
+        47: iadd
+        48: istore        6
+        50: iload         6
+        52: istore        2
+        54: iinc          3, 1
+        57: goto          16
+        60: iload         2
+        62: ireturn
+        63: aconst_null
+        64: athrow
+
+  public static final int readonlyLoop(int);
+    descriptor: (I)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=258, locals=8, args_size=1
+         0: new           #71                 // class kotlin/jvm/internal/Ref$ObjectRef
+         3: dup
+         4: invokespecial #74                 // Method kotlin/jvm/internal/Ref$ObjectRef."<init>":()V
+         7: checkcast     #71                 // class kotlin/jvm/internal/Ref$ObjectRef
+        10: astore        1
+        12: aload         1
+        14: aconst_null
+        15: putfield      #78                 // Field kotlin/jvm/internal/Ref$ObjectRef.element:Ljava/lang/Object;
+        18: aload         1
+        20: ldc_w         #10                 // String abc
+        23: putfield      #78                 // Field kotlin/jvm/internal/Ref$ObjectRef.element:Ljava/lang/Object;
+        26: new           #117                // class EffectsKt$lambda$2228$4
+        29: dup
+        30: aload         1
+        32: invokespecial #118                // Method EffectsKt$lambda$2228$4."<init>":(Lkotlin/jvm/internal/Ref$ObjectRef;)V
+        35: checkcast     #85                 // class kotlin/jvm/functions/Function0
+        38: astore        2
+        40: iconst_0
+        41: istore        3
+        43: iconst_0
+        44: istore        4
+        46: iload         0
+        48: istore        5
+        50: iload         4
+        52: iload         5
+        54: if_icmpge     92
+        57: iload         3
+        59: istore        6
+        61: iload         6
+        63: aload         1
+        65: getfield      #78                 // Field kotlin/jvm/internal/Ref$ObjectRef.element:Ljava/lang/Object;
+        68: checkcast     #8                  // class java/lang/String
+        71: checkcast     #8                  // class java/lang/String
+        74: invokeinterface #16,  1           // InterfaceMethod java/lang/CharSequence.length:()I
+        79: iadd
+        80: istore        7
+        82: iload         7
+        84: istore        3
+        86: iinc          4, 1
+        89: goto          50
+        92: iload         3
+        94: aload         2
+        96: invokeinterface #89,  1           // InterfaceMethod kotlin/jvm/functions/Function0.invoke:()Ljava/lang/Object;
+       101: checkcast     #8                  // class java/lang/String
+       104: dup
+       105: invokestatic  #92                 // Method kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;)V
+       108: checkcast     #8                  // class java/lang/String
+       111: checkcast     #8                  // class java/lang/String
+       114: invokeinterface #16,  1           // InterfaceMethod java/lang/CharSequence.length:()I
+       119: iadd
+       120: ireturn
+       121: aconst_null
+       122: athrow
+}
+SourceFile: "Effects.kt"
+RuntimeVisibleAnnotations:
+  0: #120(#121=[I#122,I#123,I#124],#125=I#122,#126=I#127,#128=[s#129],#130=[s#17,s#131,s#14,s#23,s#44,s#56,s#45,s#50,s#132,s#57,s#64,s#65,s#26,s#66,s#93,s#97,s#101,s#105,s#106,s#133,s#134,s#107,s#112,s#135,s#136,s#113,s#114,s#137,s#115,s#119,s#138])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u001e\n\u0002\b\u0001\u001a\u000fH\u0006\u0010\u0000\u001a\u00020\u0001¢\u0006\u0004\b\u0000\u0010\u0002\u001a\u000fH\u0006\u0010\u0003\u001a\u00020\u0001¢\u0006\u0004\b\u0003\u0010\u0002\u001a\u000fH\u0006\u0010\u0004\u001a\u00020\u0001¢\u0006\u0004\b\u0004\u0010\u0002\u001a\u001fH\u0006\u0010\u0005\u001a\u00020\u00012\u0006\u0010\u0006\u001a\u00020\u00072\u0006\u0010\b\u001a\u00020\u0001¢\u0006\u0004\b\u0005\u0010\t\u001a\u001fH\u0006\u0010\n\u001a\u00020\u00012\u0006\u0010\u0006\u001a\u00020\u00072\u0006\u0010\b\u001a\u00020\u0001¢\u0006\u0004\b\n\u0010\t\u001a!H\u0006\u0010\u000b\u001a\u00040\f\u0018\u00012\u0006\u0010\u0006\u001a\u00020\u00072\u0006\u0010\b\u001a\u00020\u0001¢\u0006\u0004\b\u000b\u0010\r\u001a\u001fH\u0006\u0010\u000e\u001a\u00020\u00012\u0006\u0010\u0006\u001a\u00020\u00072\u0006\u0010\b\u001a\u00020\u0001¢\u0006\u0004\b\u000e\u0010\t\u001a\u000fH\u0006\u0010\u000f\u001a\u00020\u0001¢\u0006\u0004\b\u000f\u0010\u0002\u001a\u000fH\u0006\u0010\u0010\u001a\u00020\u0001¢\u0006\u0004\b\u0010\u0010\u0002\u001a\u000fH\u0006\u0010\u0011\u001a\u00020\u0001¢\u0006\u0004\b\u0011\u0010\u0002\u001a\u0017H\u0006\u0010\u0012\u001a\u00020\u00012\u0006\u0010\u0013\u001a\u00020\u0014¢\u0006\u0004\b\u0012\u0010\u0015\u001a\u0019H\u0006\u0010\u0016\u001a\u00020\u00012\b\u0010\u0017\u001a\u00040\u0018\u0018\u0001¢\u0006\u0004\b\u0016\u0010\u0019\u001a\u0017H\u0006\u0010\u001a\u001a\u00020\u00012\u0006\u0010\u001b\u001a\u00020\u0001¢\u0006\u0004\b\u001a\u0010\u001c\u001a\u0017H\u0006\u0010\u001d\u001a\u00020\u00012\u0006\u0010\u001b\u001a\u00020\u0001¢\u0006\u0004\b\u001d\u0010\u001c¨\u0006\u001e"]
+      d2=["literal","kotlin/Int","()I","replace","subtype","platform","lookup","assign/Lookup","kind","(Lassign/Lookup;I)I","generic","platformRead","assign/Leaf","(Lassign/Lookup;I)Lassign/Leaf;","readonlyCapture","beforeChangingCapture","readonlyThenAssign","shadowing","branches","flag","kotlin/Boolean","(Z)I","checked","input","kotlin/String","(Ljava/lang/String;)I","loop","count","(I)I","readonlyLoop","assignment_smartcasts"]
+    )
