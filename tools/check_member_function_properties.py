@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Frozen differential and fixed-caller evidence for source reference varargs."""
+"""Frozen differential and fixed-caller evidence for function-valued instance properties."""
 import argparse
 from collections import Counter
 from datetime import datetime, timezone

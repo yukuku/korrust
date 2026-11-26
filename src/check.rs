@@ -5435,7 +5435,9 @@ impl Checker<'_> {
                             });
                         }
                     }
-                    if let Some(value) = self.member_property_value(receiver.clone(), name, offset)? {
+                    if let Some(value) =
+                        self.member_property_value(receiver.clone(), name, offset)?
+                    {
                         return Ok(value);
                     }
                     if let Some(value) = enums::property(self, &receiver, name, offset)? {
