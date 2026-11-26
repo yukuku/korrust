@@ -9,3 +9,4 @@ fun last(values: List<String>, key: String): Int = values.lastIndexOf(key)
 fun element(values: List<String>): String = values.subList(0, 1)[0]
 fun alternate(values: List<String>): String = values.subList("[", "]")
 fun render(values: List<String>): String = values.toString()
+fun named(values: List<String>): List<String> = values.subList(toIndex = 2, fromIndex = 1)

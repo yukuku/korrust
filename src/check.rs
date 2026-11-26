@@ -850,6 +850,9 @@ impl Checker<'_> {
                 }
                 method.owner.clone_from(&class.name);
                 method.access = physical.access;
+                if let Some(library) = &mut method.library {
+                    library.kotlin_declared = true;
+                }
                 candidates.push(library::specialize_receiver(
                     method,
                     &receiver.ty,
