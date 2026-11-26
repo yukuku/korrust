@@ -1,6 +1,7 @@
 package companionstatecheck;
 import companionstate.Store;
 import companionstate.Shadow;
+import companionstate.LabelUser;
 public class Calls {
     public static void main(String[] args) {
         Store store = new Store(3);
@@ -10,6 +11,7 @@ public class Calls {
         if (store.local(7) != 8 || Store.Companion.getCustom() != 10) throw new AssertionError("local shadow");
         Shadow shadow = new Shadow();
         if (!shadow.change("changed").equals("changed") || !shadow.getCount().equals("changed") || Shadow.Companion.getCount() != 70) throw new AssertionError("instance shadow");
+        if (!new LabelUser().first().equals("interface-label")) throw new AssertionError("interface companion binding");
         System.out.println("companion-properties-ok");
     }
 }

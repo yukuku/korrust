@@ -22,6 +22,7 @@ impl Checker<'_> {
         let mut owner = self.lambda_owner.clone();
         loop {
             if let Ok(class) = self.classpath.load(&owner)
+                && class.access & 0x200 == 0
                 && let Some(companion) = class
                     .library
                     .as_ref()

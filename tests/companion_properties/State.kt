@@ -41,3 +41,9 @@ class Shadow {
     }
     companion object { var count: Int = 70 }
 }
+
+interface Labels {
+    fun first(): String = WORDS[0]
+    companion object { private val WORDS = arrayOf("interface-label") }
+}
+class LabelUser : Labels
