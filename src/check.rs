@@ -2368,6 +2368,13 @@ impl Checker<'_> {
                         Type::Array(Box::new(Type::Java("java/lang/Class".into()))),
                     ))
                 }
+                ("()[Ljava/lang/Class;", Type::OutArray(inner)) if matches!(inner.base(), Type::Parameterized { name, .. } if name == "kotlin/reflect/KClass") => {
+                    Some((
+                        "getOrCreateKotlinClasses",
+                        "([Ljava/lang/Class;)[Lkotlin/reflect/KClass;",
+                        Type::OutArray(Box::new(Type::Java("java/lang/Class".into()))),
+                    ))
+                }
                 _ => None,
             }
         } else {
@@ -2520,10 +2527,12 @@ impl Checker<'_> {
                 && !matches!(expected, Type::Platform(_)))
         {
             if value.ty.is_reference() {
-                return Ok(Value {
-                    ty: expected,
-                    kind: value.kind,
-                });
+                let kind = if value.ty.descriptor() == expected.descriptor() {
+                    value.kind
+                } else {
+                    ValueKind::Box(Box::new(value))
+                };
+                return Ok(Value { ty: expected, kind });
             }
             if expected.is_reference() {
                 return Ok(Value {
@@ -3223,17 +3232,17 @@ impl Checker<'_> {
                 ),
             );
         }
-        if field
-            .java_type
-            .as_deref()
-            .is_some_and(|ty| !Self::plain_java_field_type(ty))
-        {
-            return Err(
-                Diagnostic::new(offset, "Generic Java field writes are unsupported").with_kind(
-                    crate::DiagnosticKind::UnsupportedLanguage,
-                    "GENERIC_JAVA_FIELD_WRITE_UNSUPPORTED",
-                ),
-            );
+        if field.java_type.as_deref().is_some_and(|ty| {
+            !Self::concrete_java_field_type(ty) || ty.descriptor() != field.descriptor
+        }) {
+            return Err(Diagnostic::new(
+                offset,
+                "Java field writes requiring generic substitution or projections are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "GENERIC_JAVA_FIELD_WRITE_UNSUPPORTED",
+            ));
         }
         let mut cursor = 0;
         let ty = if let Some(kotlin) = &field.kotlin {
@@ -3270,6 +3279,37 @@ impl Checker<'_> {
             store
         })
     }
+    fn concrete_java_field_type(ty: &Type) -> bool {
+        match ty.base() {
+            Type::Parameter { .. } | Type::OutArray(_) => false,
+            Type::Parameterized { arguments, .. } => arguments.iter().all(|argument| {
+                argument.variance == syntax::Variance::Invariant
+                    && argument
+                        .ty
+                        .as_ref()
+                        .is_some_and(Self::concrete_java_field_type)
+            }),
+            Type::Nullable(element)
+            | Type::Array(element)
+            | Type::List(element)
+            | Type::MutableList(element) => Self::concrete_java_field_type(element),
+            Type::Function { params, result } | Type::SuspendFunction { params, result } => {
+                params.iter().all(Self::concrete_java_field_type)
+                    && Self::concrete_java_field_type(result)
+            }
+            Type::ReceiverFunction {
+                receiver,
+                params,
+                result,
+            } => {
+                Self::concrete_java_field_type(receiver)
+                    && params.iter().all(Self::concrete_java_field_type)
+                    && Self::concrete_java_field_type(result)
+            }
+            _ => true,
+        }
+    }
+
     fn plain_java_field_type(ty: &Type) -> bool {
         match ty.base() {
             Type::Parameter { .. }
@@ -5018,10 +5058,8 @@ impl Checker<'_> {
                         },
                     });
                 }
-                if op.chars().all(|c| c.is_alphanumeric() || c == '_')
-                    && !matches!(op.as_str(), "and" | "or" | "xor" | "shl" | "shr" | "ushr")
-                {
-                    return self.check_infix_call(a, op, b, offset);
+                if operations::is_infix_name(op) {
+                    return self.check_infix_call(a, op, b, offset, None);
                 }
                 let source_left = a;
                 let a = self.value(a)?;
@@ -5991,6 +6029,11 @@ impl Checker<'_> {
                         && self.object_methods.contains_key(name)
                     {
                         return self.object_call(name, args, Some(receiver), offset);
+                    }
+                    if let Some(value) =
+                        self.array_member_call(receiver.clone(), name, args, offset)?
+                    {
+                        return Ok(value);
                     }
                     if matches!(receiver.ty.base(), Type::List(_) | Type::MutableList(_)) {
                         return self.list_call(receiver, name, args, offset);

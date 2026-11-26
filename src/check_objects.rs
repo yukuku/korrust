@@ -122,6 +122,7 @@ fn legacy_check(
         }
         overloads.push(JavaMethod {
             library: function.infix.then(|| crate::classpath::LibraryMethod {
+                default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),
                 value_dispatch: false,
@@ -656,6 +657,7 @@ pub(super) fn check(
             kotlin_result: Some(result),
             kotlin_internal: function.internal,
             library: Some(crate::classpath::LibraryMethod {
+                default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),
                 value_dispatch: false,

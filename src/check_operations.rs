@@ -1,5 +1,10 @@
 use super::*;
 
+pub(super) fn is_infix_name(token: &str) -> bool {
+    token.chars().all(|c| c.is_alphanumeric() || c == '_')
+        && !matches!(token, "in" | "and" | "or" | "xor" | "shl" | "shr" | "ushr")
+}
+
 pub(super) enum ExtensionKind {
     Ordinary,
     Operator,
@@ -1491,7 +1496,8 @@ impl Checker<'_> {
                 return Err(error);
             }
         };
-        if matches!(receiver.ty.base(), Type::ThreadLocal(_))
+        if receiver.ty.array_element().is_some() && matches!(name, "get" | "set")
+            || matches!(receiver.ty.base(), Type::ThreadLocal(_))
             || library::type_owner(&receiver.ty).is_some_and(|owner| {
                 library::ordinary_member_methods(self.classpath, owner, name, args.len()).is_ok_and(
                     |methods| {
@@ -1943,6 +1949,7 @@ impl Checker<'_> {
         name: &str,
         argument: &Expr,
         offset: usize,
+        expected: Option<&Type>,
     ) -> Result<Value> {
         let receiver = self.value(source)?;
         let mut methods = self
@@ -2065,13 +2072,14 @@ impl Checker<'_> {
                 }
             }
         }
-        self.resolved_extension_call(
+        self.resolved_extension_call_expected(
             receiver,
             name,
             std::slice::from_ref(argument),
             &[],
             ExtensionKind::Infix,
             offset,
+            expected,
         )
     }
 }
@@ -2350,6 +2358,56 @@ impl Checker<'_> {
             result,
             vec![(receiver_slot, receiver), (slot, value)],
         ))
+    }
+
+    pub(super) fn array_member_call(
+        &mut self,
+        receiver: Value,
+        name: &str,
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<Option<Value>> {
+        let Some(element) = receiver.ty.array_element() else {
+            return Ok(None);
+        };
+        if !matches!(name, "get" | "set") {
+            return Ok(None);
+        }
+        let expected = if name == "get" { 1 } else { 2 };
+        if args.len() != expected {
+            return Err(
+                Diagnostic::new(offset, "Array member argument count mismatch").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "ARRAY_MEMBER_ARGUMENT_COUNT",
+                ),
+            );
+        }
+        if name == "set" && matches!(receiver.ty.base(), Type::OutArray(_)) {
+            return Err(
+                Diagnostic::new(offset, "Cannot write through an out-projected array").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "OUT_PROJECTED_ARRAY_WRITE",
+                ),
+            );
+        }
+        let index = self.expected_value(&args[0], &Type::Int)?;
+        if name == "get" {
+            return Ok(Some(Value {
+                ty: element,
+                kind: ValueKind::Index(Box::new(receiver), Box::new(index)),
+            }));
+        }
+        let value = self.expected_value(&args[1], &element)?;
+        Ok(Some(Value {
+            ty: Type::Unit,
+            kind: ValueKind::Block(
+                vec![Statement::IndexStore(receiver, index, value)],
+                Box::new(Value {
+                    ty: Type::Unit,
+                    kind: ValueKind::Unit,
+                }),
+            ),
+        }))
     }
 
     pub(super) fn check_indices(

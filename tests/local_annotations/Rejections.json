@@ -1,11 +1,41 @@
 [
-  {"id":"wrong-type", "source":"fun bad(): Int { @Suppress(1) val value = 1; return value }"},
-  {"id":"repeated", "source":"fun bad(): Int { @Suppress(\"UNCHECKED_CAST\") @Suppress(\"RestrictedApi\") val value = 1; return value }"},
-  {"id":"use-site", "source":"fun bad(): Int { @get:Suppress(\"UNCHECKED_CAST\") val value = 1; return value }"},
-  {"id":"custom-target", "source":"import localannotationlib.FunctionOnly\nfun bad(): Int { @FunctionOnly val value = 1; return value }"},
-  {"id":"custom-argument", "source":"import localannotationlib.Suppress\nfun bad(): Int { @Suppress(\"UNCHECKED_CAST\") val value = 1; return value }"},
-  {"id":"ordinary-type-error", "source":"fun bad(): Int { @Suppress(\"UNCHECKED_CAST\") val value: Int = \"wrong\"; return value }"},
-  {"id":"error-affecting", "source":"class Secret { private fun read(): Int = 3 }; fun limited(): Int { @Suppress(\"INVISIBLE_MEMBER\") val value = Secret().read(); return value }", "unsupported":true},
-  {"id":"constant-context", "source":"const val KEY = \"UNCHECKED_CAST\"; fun limited(): Int { @Suppress(KEY) val value = 1; return value }", "unsupported":true},
-  {"id":"retention", "source":"import localannotationlib.Stored\nfun limited(): Int { @Stored(\"x\") val value = 1; return value }", "unsupported":true}
+  {
+    "id": "wrong-type",
+    "source": "fun bad(): Int { @Suppress(1) val value = 1; return value }"
+  },
+  {
+    "id": "repeated",
+    "source": "fun bad(): Int { @Suppress(\"UNCHECKED_CAST\") @Suppress(\"RestrictedApi\") val value = 1; return value }"
+  },
+  {
+    "id": "use-site",
+    "source": "fun bad(): Int { @get:Suppress(\"UNCHECKED_CAST\") val value = 1; return value }"
+  },
+  {
+    "id": "custom-target",
+    "source": "import localannotationlib.FunctionOnly\nfun bad(): Int { @FunctionOnly val value = 1; return value }"
+  },
+  {
+    "id": "custom-argument",
+    "source": "import localannotationlib.Suppress\nfun bad(): Int { @Suppress(\"UNCHECKED_CAST\") val value = 1; return value }"
+  },
+  {
+    "id": "ordinary-type-error",
+    "source": "fun bad(): Int { @Suppress(\"UNCHECKED_CAST\") val value: Int = \"wrong\"; return value }"
+  },
+  {
+    "id": "error-affecting",
+    "source": "fun limited(): Int { @Suppress(\"INVISIBLE_REFERENCE\") val value = 3; return value }",
+    "unsupported": true
+  },
+  {
+    "id": "constant-context",
+    "source": "const val KEY = \"UNCHECKED_CAST\"; fun limited(): Int { @Suppress(KEY) val value = 1; return value }",
+    "unsupported": true
+  },
+  {
+    "id": "retention",
+    "source": "import localannotationlib.Stored\nfun limited(): Int { @Stored(\"x\") val value = 1; return value }",
+    "unsupported": true
+  }
 ]

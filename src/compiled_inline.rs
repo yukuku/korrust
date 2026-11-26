@@ -1,3 +1,6 @@
+mod defaults;
+pub(crate) use defaults::with_defaults;
+
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 
 use crate::classpath::{InlineConstant, JavaCode, JavaExceptionHandler, JavaMethod};
@@ -1056,6 +1059,7 @@ mod tests {
     fn inline_method(code: JavaCode) -> JavaMethod {
         JavaMethod {
             library: Some(crate::classpath::LibraryMethod {
+                default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),
                 value_dispatch: false,

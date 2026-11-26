@@ -4,6 +4,7 @@ use std::path::PathBuf;
 mod aliases;
 mod archive;
 mod import_classes;
+mod inline_defaults;
 mod jdk_modules;
 pub(crate) mod jvm_builtins;
 mod metadata;
@@ -69,6 +70,7 @@ type ClassMissKey = (String, Option<std::ffi::OsString>);
 pub(crate) struct Classpath {
     paths: Vec<PathBuf>,
     archives: std::rc::Rc<std::cell::RefCell<archive::Index>>,
+    inline_default_classes: std::cell::RefCell<std::collections::BTreeMap<String, Vec<u8>>>,
     cache_class_misses: bool,
     missing_classes: std::cell::RefCell<std::collections::HashMap<ClassMissKey, Diagnostic>>,
     module_name: String,
@@ -215,8 +217,9 @@ pub(crate) struct LibraryTypeAlias {
     pub expanded: Type,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Default)]
 pub(crate) struct LibraryMethod {
+    pub default_code: Option<JavaCode>,
     pub vararg_index: Option<usize>,
     pub contracts: Vec<ContractEffect>,
     pub value_dispatch: bool,
@@ -1015,6 +1018,7 @@ impl Classpath {
         Ok(Self {
             paths: paths.to_vec(),
             archives: std::rc::Rc::new(std::cell::RefCell::new(archives)),
+            inline_default_classes: Default::default(),
             cache_class_misses: paths.iter().all(|path| !path.is_dir()),
             missing_classes: Default::default(),
             module_name: options.module_name.clone(),

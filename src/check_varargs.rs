@@ -128,7 +128,11 @@ impl Checker<'_> {
                 ExprKind::Unary(operator, expr) if operator == "*" => (true, expr.as_ref()),
                 _ => (false, expr),
             };
-            let value = self.value(expr)?;
+            let value = if inferred || spread {
+                self.value(expr)?
+            } else {
+                self.argument_value(expr, &element)?
+            };
             let actual = if spread {
                 element_type(&value.ty).ok_or_else(|| {
                     Diagnostic::new(expr.offset, "Spread argument requires a non-null array")

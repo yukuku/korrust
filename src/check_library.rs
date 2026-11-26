@@ -959,7 +959,6 @@ impl Checker<'_> {
                 .file_private_visible(&self.lambda_owner, &method)
             && method.owner != self.lambda_owner
             && (!inline_declaration
-                || mask != 0
                 || !method
                     .library
                     .as_ref()
@@ -987,6 +986,42 @@ impl Checker<'_> {
         {
             mask >>= 1;
         }
+        let method = if inline && mask != 0 {
+            let parameters = params.len()
+                - usize::from(
+                    method
+                        .library
+                        .as_ref()
+                        .is_some_and(|library| library.receiver.is_some()),
+                );
+            let method = crate::compiled_inline::with_defaults(
+                method,
+                mask,
+                parameters,
+                self.classpath,
+                &self.lambda_owner,
+                offset,
+            )
+            .map_err(|mut error| {
+                error.offset = offset;
+                error
+            })?;
+            for word in 0..parameters.div_ceil(32) {
+                values.push(Value {
+                    ty: Type::Int,
+                    kind: ValueKind::Int((mask >> (word * 32)) as i32),
+                });
+            }
+            values.push(Value {
+                ty: Type::Java("java/lang/Object".into()),
+                kind: ValueKind::Null,
+            });
+            crate::compiled_inline::validate_access(&method, self.classpath, &self.lambda_owner)?;
+            mask = 0;
+            method
+        } else {
+            method
+        };
         let kind = if inline && mask == 0 {
             let code = method
                 .library
@@ -1287,6 +1322,7 @@ pub(super) fn default_type_imports(
                 }
             }
             Type::Array(inner)
+            | Type::OutArray(inner)
             | Type::Nullable(inner)
             | Type::Platform(inner)
             | Type::List(inner)

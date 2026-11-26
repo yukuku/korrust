@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-26T03:02:27.010326+00:00",
+  "status": "complete",
+  "compiler": {
+    "implementation_revision": "f3ee566c4",
+    "integration_revision": "6b764cfeb",
+    "source_base_revision": "0e2556d6d15c99568ba64d4c1e10f77838319d87",
+    "source_archive_sha256": "938905fca8aebb1a92ceef40181bc2cd2259f0e23ed973b8071e2c184d73dfaf",
+    "binary_sha256": "4706e47551c35a95b2c44673d3f59cb95b246c40c3c869a187a0d1d4a9abaaf1"
+  },
+  "reference_compiler": "Kotlin 2.3.21",
+  "reference_source": {
+    "path": "references/kotlin/compiler/frontend.common.jvm/src/org/jetbrains/kotlin/load/java/structure/impl/classFiles/Annotations.kt",
+    "sha256": "6cf186a9a9ce8af1678a94f2bfd5baced885672959bdbf85addb19cb1694a4da",
+    "scope": "BinaryJavaAnnotation.translatePath currently skips INNER_TYPE steps. This implementation supports checked leaf paths and leaves outer-component paths unsupported."
+  },
+  "evidence": [
+    "reports/correctness/2026-11-26T025222509523Z-inner-type-nullability.json",
+    "reports/features/2026-11-26T030225052424Z-nested-java-type-nullability/VerseItem-case167.json",
+    "reports/features/2026-11-26T030225052424Z-nested-java-type-nullability/VerseItem-typed-diagnostic.json",
+    "reports/features/2026-11-26T030225052424Z-nested-java-type-nullability/build.log",
+    "reports/features/2026-11-26T030225052424Z-nested-java-type-nullability/compiler-source.tar.gz",
+    "reports/features/2026-11-26T030225052424Z-nested-java-type-nullability/rust-tests.log"
+  ],
+  "features": [
+    {
+      "name": "Leaf nullability on nested Java classifiers",
+      "status": "supported",
+      "scope": "Pure JVM INNER_TYPE paths on method returns/parameters and reference fields are mapped to exact leaf types using unique InnerClasses nesting metadata. Single and multiple nesting, static fields, mutable fields, strict nullable boundaries, Java runtime callers and Kotlin consumers are tested.",
+      "restrictions": [
+        "Kotlin-metadata type paths, outer qualifiers, arrays, generic arguments and wildcard-bound paths remain outside the added subset."
+      ],
+      "evidence": [
+        "reports/correctness/2026-11-26T025222509523Z-inner-type-nullability.json"
+      ]
+    }
+  ],
+  "androidbible": {
+    "case167_outcome": "unsupported_language",
+    "remaining_boundary": "Java-origin synthetic getter on source Kotlin receiver class; typed diagnostic identifies resources on View subclass."
+  },
+  "limitations": [
+    "No Android runtime or full-app claim. The exact tested source archive records the committed base plus this bounded implementation."
+  ]
+}

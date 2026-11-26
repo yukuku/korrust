@@ -131,6 +131,7 @@ fn internal_type(ty: &Type, classpath: &Classpath) -> bool {
                     .any(|t| internal_type(t, classpath))
         }
         Type::Array(inner)
+        | Type::OutArray(inner)
         | Type::Nullable(inner)
         | Type::Platform(inner)
         | Type::List(inner)
@@ -166,6 +167,7 @@ fn nested_type(ty: &Type) -> bool {
                     .any(nested_type)
         }
         Type::Array(inner)
+        | Type::OutArray(inner)
         | Type::Nullable(inner)
         | Type::Platform(inner)
         | Type::List(inner)

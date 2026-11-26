@@ -1112,6 +1112,7 @@ pub(super) fn check_class_with_constants(
                     .iter()
                     .find(|m| m.function.offset == *offset && m.function.name == *name)
                     .map(|m| -> Result<_> { Ok(crate::classpath::LibraryMethod {
+            default_code: None,
             vararg_index: None,
             contracts: Vec::new(),
             value_dispatch: false,
@@ -2671,9 +2672,11 @@ fn infer_source_results_impl(
             Type::Java(n) => {
                 out.insert(n.clone());
             }
-            Type::Nullable(t) | Type::List(t) | Type::MutableList(t) | Type::Array(t) => {
-                type_names(t, out)
-            }
+            Type::Nullable(t)
+            | Type::List(t)
+            | Type::MutableList(t)
+            | Type::Array(t)
+            | Type::OutArray(t) => type_names(t, out),
             Type::Parameterized { name, arguments } => {
                 out.insert(name.clone());
                 for a in arguments {
@@ -3731,20 +3734,18 @@ pub(super) fn validate_operator(function: &syntax::Function, member: bool) -> Re
         ));
     }
     if function.vararg
-        && (!member || function.type_params.is_empty())
-        && !(function.operator && function.name == "compareTo")
         && function
             .params
             .last()
-            .is_some_and(|(_, ty)| matches!(ty, Type::Array(_) | Type::StringArray))
+            .is_some_and(|(_, ty)| matches!(ty, Type::OutArray(element) if !element.is_reference()))
     {
         return Err(Diagnostic::new(
             function.offset,
-            "Source reference vararg declarations require unsupported Array<out T> projections",
+            "Source Unit varargs and primitive-alias varargs require unsupported carrier lowering",
         )
         .with_kind(
             crate::DiagnosticKind::UnsupportedLanguage,
-            "SOURCE_REFERENCE_VARARG_UNSUPPORTED",
+            "SOURCE_VARARG_CARRIER_UNSUPPORTED",
         ));
     }
 
@@ -4672,6 +4673,7 @@ pub(super) fn validate_classifier_generics(
                     Type::Nullable(t)
                     | Type::Platform(t)
                     | Type::Array(t)
+                    | Type::OutArray(t)
                     | Type::List(t)
                     | Type::MutableList(t)
                     | Type::ThreadLocal(t) => dependent(t),
@@ -4781,7 +4783,7 @@ pub(super) fn validate_variance(
                 return Err(Diagnostic::new(offset, "Type parameter occurs in a position conflicting with its declaration-site variance").with_kind(crate::DiagnosticKind::InvalidKotlin, "TYPE_VARIANCE_CONFLICT"));
             }
         }
-        Type::Nullable(t) | Type::Platform(t) | Type::List(t) => {
+        Type::Nullable(t) | Type::Platform(t) | Type::List(t) | Type::OutArray(t) => {
             validate_variance(parameters, t, polarity, classpath, imports, offset)?
         }
         Type::Array(t) | Type::MutableList(t) | Type::ThreadLocal(t) => {

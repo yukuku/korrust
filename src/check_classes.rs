@@ -510,8 +510,19 @@ impl Checker<'_> {
                     }
                 }
                 if !class.kotlin_class && owner.contains('$') {
-                    return Err(literal_error(offset, "Java nested classifier literals require unsupported InnerClasses visibility provenance", false)
-                        .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "CLASS_LITERAL_VISIBILITY_UNSUPPORTED"));
+                    let Some(access) = self.classpath.java_nested_access(owner) else {
+                        return Err(literal_error(offset, "Java nested classifier literals require InnerClasses visibility provenance", false)
+                            .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "CLASS_LITERAL_VISIBILITY_UNSUPPORTED"));
+                    };
+                    if access & 1 == 0 && access & 2 == 0 {
+                        return Err(literal_error(offset, "Nonpublic Java nested classifier literals require unsupported lexical access semantics", false)
+                            .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "CLASS_LITERAL_VISIBILITY_UNSUPPORTED"));
+                    }
+                    self.classpath.check_java_import_visibility(
+                        &self.lambda_owner,
+                        owner,
+                        offset,
+                    )?;
                 }
                 if class.access & 1 == 0 {
                     if owner.rsplit_once('/').map(|(package, _)| package)

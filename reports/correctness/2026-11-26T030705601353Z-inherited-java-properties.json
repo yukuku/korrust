@@ -1,0 +1,635 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T03:07:05.601353+00:00",
+  "status": "passed",
+  "compiler": {
+    "binary": "/tmp/targets159-beans/debug/korrust",
+    "binary_sha256": "633c1a722aeec1a7dfd494ac04664085c499c1a774322696698441c8076c570e",
+    "source_revision": "d9e115e73c4f4f04e7015ac28f7ac9c933145c54"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "inputs": {
+    "files_sha256": {
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "references/kotlin/compiler/frontend.java/src/org/jetbrains/kotlin/synthetic/JavaSyntheticPropertiesScope.kt": "bb312f0a1b4394882e42bfc069c97c3516d7888ef563d00f01bbd23dfcc0fc2e",
+      "references/kotlin/core/compiler.common.jvm/src/org/jetbrains/kotlin/load/java/JavaNullabilityAnnotationSettings.kt": "94061106794761ae07ff733efff1766fffa9682ab3337508a689f0f5cccd90b2",
+      "tests/inherited_java_properties/Calls.java": "009f327d0bce5556453fdce053c4526a1dded34e10005359e426fa86b8d953f5",
+      "tests/inherited_java_properties/ConsumeCalls.java": "961b8a9ca6579141eb8bcba75f2a2e833253f14eef553ec442f460cdca1fc416",
+      "tests/inherited_java_properties/Consumer.kt": "5f3ab69b5a656ad53f7a8bebfca2f7b702bfc1fb5954d322a3346d99f643a1cd",
+      "tests/inherited_java_properties/Effects.kt": "271f0d12414738f2f3832a5e47e9f6424110f17a9214d230a863fa618ff75663",
+      "tests/inherited_java_properties/Rejections.json": "7dd2b58666ed80ea3f94d6f7612917613ef7409cc1eec37e04cef02d36df3267",
+      "tests/inherited_java_properties/java/beans/Base.java": "ac4d326da19e09b07a2eeb02543c0074bb4acf8834d576314234f6763f17e4f8",
+      "tests/inherited_java_properties/java/beans/GenericBase.java": "109925d0074160b2a1a65cbcd2c1a24fe41834f3340137aebe47690152c010ea",
+      "tests/inherited_java_properties/java/beans/Title.java": "747db3bf33cbd5c73e48f078b92d4ce9bcd4212a1ccc71f8d498334ef3538865",
+      "tests/inherited_java_properties/java/org/jspecify/annotations/NonNull.java": "6363e97b21c593a3aa253477e7bdf730e46e651da97ef8573dbac702d7aeff83",
+      "tests/inherited_java_properties/java/org/jspecify/annotations/Nullable.java": "a556f34d6d633775d69ad9d3fd0e7d2ba677c59b576fa2bfd1be99674457e115",
+      "tests/inherited_java_properties.rs": "7cdd08ecd3f2c5f2e4823862d302003aaf24e76586c600db49739cae27d30f3e",
+      "tools/check_inherited_java_properties.py": "185ebeec647e2088af9821ff5d44e4cf05904cf65766d8330eec2b085267a15c",
+      "tools/check_nov21_generics.py": "70fed499f3652d9181c2aabc3baf4e9a7327c436eec67c83d6fe4e4f539e4f86",
+      "/workspace/work/beans159-freeze/Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "/workspace/work/beans159-freeze/Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "/workspace/work/beans159-freeze/src/annotation_declarations.rs": "1dbea7954f183ec549558e4bf72686b48b438a152c4b1207d8bb988943ada49f",
+      "/workspace/work/beans159-freeze/src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "/workspace/work/beans159-freeze/src/bytecode/annotation_files.rs": "0fe8ebba7bbd2c80fcdd6fda797b448ca8cd63945b100781361bf1e3ace02eaa",
+      "/workspace/work/beans159-freeze/src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "/workspace/work/beans159-freeze/src/bytecode/anonymous_context.rs": "e48d7aba57745c9e3ecb0a2317ea627f3b6d9b2d86805563bae680d79a301910",
+      "/workspace/work/beans159-freeze/src/bytecode/class_companion.rs": "7463d1e739919160b82ed1137a195ebc3a36037ed8b5419a26c1f38889b533a7",
+      "/workspace/work/beans159-freeze/src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+      "/workspace/work/beans159-freeze/src/bytecode/defaults.rs": "d092d8a420cfb719f92dbb9a3bcc58f7c644d67bf9b3c611c72949122c22e827",
+      "/workspace/work/beans159-freeze/src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "/workspace/work/beans159-freeze/src/bytecode/frames.rs": "1659d0401bfa59f751e3b6db250a2395a827ccad13c156f19f62c76773983b48",
+      "/workspace/work/beans159-freeze/src/bytecode/inline.rs": "ca8a4f4da8f11e405a3cdcbcf87c3bfde49635e331f9712fb7b2f4aca0f84d25",
+      "/workspace/work/beans159-freeze/src/bytecode/interfaces.rs": "5456ea3de3402ee3ead9920bb2cb0e7c0baab4f6eb7b211e481a16bf9ad3207b",
+      "/workspace/work/beans159-freeze/src/bytecode/lambdas.rs": "80d29fe68d378de0b0458e601dec4cc6daaa539a64ce137a7d9f3c10e19f2d98",
+      "/workspace/work/beans159-freeze/src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+      "/workspace/work/beans159-freeze/src/bytecode/suspend.rs": "dfac0ad895edaf45c25655df1fad6c1828fe3fc767fd936dabe6e45357dd96d7",
+      "/workspace/work/beans159-freeze/src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+      "/workspace/work/beans159-freeze/src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+      "/workspace/work/beans159-freeze/src/bytecode.rs": "4a64af005a11fd9a87467750b5acf485aa9e6e1057a4249fa52258e41b76d712",
+      "/workspace/work/beans159-freeze/src/check.rs": "79931f85d0347454bebcefa0d050d3320186f565f1552e20ca8c060e289e43fc",
+      "/workspace/work/beans159-freeze/src/check_annotation_placements.rs": "027e77c6a6db60f98262fbaf0f44be170c53b58b03d64ae6e8cc43cdb2dc1579",
+      "/workspace/work/beans159-freeze/src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "/workspace/work/beans159-freeze/src/check_anonymous.rs": "8261dfdd18f10b4862fbe14aaf16ad45ca202d9e3664a06d0f46b3e3e87f86da",
+      "/workspace/work/beans159-freeze/src/check_captures.rs": "f752d88bb81c26576caad658160a332fa21946e7275e6faf331bfd73f6a84479",
+      "/workspace/work/beans159-freeze/src/check_class_delegation.rs": "171fec70b3ce6632bbbd704ea92e040f1ef841fbebd02659388fe88ba97135f2",
+      "/workspace/work/beans159-freeze/src/check_classes.rs": "eaa5547ca75d6f4bef4f21d200a050bb8a47362c9c7ea3e4f47b3a66e1cca4b3",
+      "/workspace/work/beans159-freeze/src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+      "/workspace/work/beans159-freeze/src/check_control.rs": "23bcd78c9f4a12b2665110ed5565c4cfe63c0c00f148463ef28c608336fa38b9",
+      "/workspace/work/beans159-freeze/src/check_declarations.rs": "5189a4b87abd245806c761122ad71cd36e0e1da78b84f0c6c33ab709426607d1",
+      "/workspace/work/beans159-freeze/src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+      "/workspace/work/beans159-freeze/src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "/workspace/work/beans159-freeze/src/check_functions.rs": "51b39b6ce05e787e51db8766aa401bc408624439246b33a29be48fe47ef14d8e",
+      "/workspace/work/beans159-freeze/src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+      "/workspace/work/beans159-freeze/src/check_interfaces.rs": "866fcc764651619c0c9ed431a81fc8343d7db846adba4f34e9c6ff17db95659a",
+      "/workspace/work/beans159-freeze/src/check_ir_walk.rs": "caaeeea794075c7e23b17fc9e2d06ace5a02d366c9abffbdc9393d3c8a1a2e96",
+      "/workspace/work/beans159-freeze/src/check_java_properties.rs": "2400dd59efe5856609c7927875a4da2aa2b7d5e90945ae4f412a1b9e4cc97b7c",
+      "/workspace/work/beans159-freeze/src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+      "/workspace/work/beans159-freeze/src/check_library.rs": "82c6007f9489cd1824924f92688dbf1de644796b14cfebd7871dd6662901f221",
+      "/workspace/work/beans159-freeze/src/check_local_annotations.rs": "fb09702bd1697d0d16561e69d37150105b22f656ec26ca7a0f631a2705e6631a",
+      "/workspace/work/beans159-freeze/src/check_member_extensions.rs": "cfca4c6c2b51effce735dd6ef1132d6490e6cf2cf358e43a3ab471e72a92d71e",
+      "/workspace/work/beans159-freeze/src/check_objects.rs": "14866723da0c865f81c12f7837bf042a696c6723f1a191671179cc0568a599e0",
+      "/workspace/work/beans159-freeze/src/check_operations.rs": "c7c48d4f7a93a69ca02f8e397ae099889c88673ec31e78864fe9d3e8ee7e1f7a",
+      "/workspace/work/beans159-freeze/src/check_overloads.rs": "03618a927df2d30db9bc245df9a57e99001e9a525a49c089968cd22cb1f0671e",
+      "/workspace/work/beans159-freeze/src/check_references.rs": "61a780d0816443007725e52f992c717eeab828f7b971749ed3242318a8d80077",
+      "/workspace/work/beans159-freeze/src/check_relations.rs": "2bee3d4e0327e19a0eb3aa60a491584fb075a603ea871201a589c172f80c8869",
+      "/workspace/work/beans159-freeze/src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "/workspace/work/beans159-freeze/src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+      "/workspace/work/beans159-freeze/src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+      "/workspace/work/beans159-freeze/src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "/workspace/work/beans159-freeze/src/check_varargs.rs": "a7dd5e1acfc35df5ed0de0632b2232bee62766cc8dd7abd7ae73030d4e4a0836",
+      "/workspace/work/beans159-freeze/src/check_variant_signatures.rs": "ea8be16effafa3af58d46e0e732d196feeca4ef1468d4b373c2e1c29ee984ed3",
+      "/workspace/work/beans159-freeze/src/classpath/aliases.rs": "2ad31713a22f8eb0607ed96d838aa96fecedf7a6b261f07473aef66b8bdb8827",
+      "/workspace/work/beans159-freeze/src/classpath/archive.rs": "835e4a79bbbc5c7328ce6a540ed1a2ca975fc526278fe7c31fd9433e08cc56d5",
+      "/workspace/work/beans159-freeze/src/classpath/import_classes.rs": "65a1563c6df2772ac3d71602a54e7fd1b64bab1ab51d6053e74bdb65b2bf5f4e",
+      "/workspace/work/beans159-freeze/src/classpath/jdk_modules.rs": "cd1a350e7f8e03cda618a1d919d4e6ee49aba7e9a26728178ebad5f73c4bd8f8",
+      "/workspace/work/beans159-freeze/src/classpath/jvm_builtins.rs": "b8c6e4789a998c1b3737da4879a15d74eb453170c4b03542d4c8ae13f6e40e86",
+      "/workspace/work/beans159-freeze/src/classpath/metadata.rs": "1d0754a14b85b763c0db8730c290e6a27d60e040a0a8984cd8f131be8924398f",
+      "/workspace/work/beans159-freeze/src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+      "/workspace/work/beans159-freeze/src/classpath/package_info.rs": "f3bd436a8c64d48216bae3a55a2a3e82a903d354a42b629928fe1af95197061a",
+      "/workspace/work/beans159-freeze/src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "/workspace/work/beans159-freeze/src/classpath/signature.rs": "3b65f573a66178bde8af3f6d1cd3665a29971248b77e48fc4f30fd86af6ae930",
+      "/workspace/work/beans159-freeze/src/classpath/singletons.rs": "836fe172f37cc9282e259ba446688b3d2d6bf34fde25ddc3973c1800f29c71a5",
+      "/workspace/work/beans159-freeze/src/classpath/source.rs": "e8f91db20e32497c7eff5de705b414f051f3849094cfc0bc6197e8efe8187df2",
+      "/workspace/work/beans159-freeze/src/classpath/source_enums.rs": "3eb834a1e2c63cf5fd233437c02bd797a47f3465a426cf5274ecfe7f7434c55d",
+      "/workspace/work/beans159-freeze/src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+      "/workspace/work/beans159-freeze/src/classpath/value_names.rs": "92bce0a6418edd333df08b6f388636648a2967560f8757c4bb00b1479236cae2",
+      "/workspace/work/beans159-freeze/src/classpath.rs": "ebd694a6bfe0a9f7da026a16f4769f7d041d7490ed0d036fc739739c963781e4",
+      "/workspace/work/beans159-freeze/src/compiled_inline.rs": "4ac6c9c5b98cd806c6f7e36ea990e6fd2f05ae04aceb6b643df7e4ea3ecfa20a",
+      "/workspace/work/beans159-freeze/src/const_eval.rs": "bc6a053823a41c822bcc5af603023019a6ace1895c9fae75bf0372f02381dacf",
+      "/workspace/work/beans159-freeze/src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "/workspace/work/beans159-freeze/src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "/workspace/work/beans159-freeze/src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+      "/workspace/work/beans159-freeze/src/lib.rs": "395893bc2b4eecb218995e8a558f6041cc02190d3fbcc4985549cdec6aea9ec9",
+      "/workspace/work/beans159-freeze/src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "/workspace/work/beans159-freeze/src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "/workspace/work/beans159-freeze/src/metadata.rs": "b3579828d0fcecc950ffa5a01bb3c34e710f52127185036c46055e18caafce34",
+      "/workspace/work/beans159-freeze/src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "/workspace/work/beans159-freeze/src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "/workspace/work/beans159-freeze/src/source_inline.rs": "50bee0804aaea9cd3e2b8c8e0f162784e0e0e0b16b9e0770dd8c27fca764add2",
+      "/workspace/work/beans159-freeze/src/syntax.rs": "74166c3abc3aaee195fe6568456534a287c609746eef28b558f31b2f49057dfb",
+      "/workspace/work/beans159-freeze/src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "/workspace/work/beans159-freeze/src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525"
+    },
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "commands": [
+    {
+      "label": "compile annotated Java provider",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies",
+        "/workspace/korrust/tests/inherited_java_properties/java/beans/Base.java",
+        "/workspace/korrust/tests/inherited_java_properties/java/beans/GenericBase.java",
+        "/workspace/korrust/tests/inherited_java_properties/java/beans/Title.java",
+        "/workspace/korrust/tests/inherited_java_properties/java/org/jspecify/annotations/NonNull.java",
+        "/workspace/korrust/tests/inherited_java_properties/java/org/jspecify/annotations/Nullable.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/000-stderr.txt"
+    },
+    {
+      "label": "compile official Effects.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/inherited_java_properties/Effects.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "inherited_java_properties",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/001-stderr.txt"
+    },
+    {
+      "label": "compile candidate Effects.kt",
+      "argv": [
+        "/tmp/targets159-beans/debug/korrust",
+        "/workspace/korrust/tests/inherited_java_properties/Effects.kt",
+        "--module-name",
+        "inherited_java_properties",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/002-stderr.txt"
+    },
+    {
+      "label": "compile fixed Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/java",
+        "/workspace/korrust/tests/inherited_java_properties/Calls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/003-stderr.txt"
+    },
+    {
+      "label": "verified fixed Java caller official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/java:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/004-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official",
+        "EffectsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/005-stderr.txt"
+    },
+    {
+      "label": "compile official Consumer.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/inherited_java_properties/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "inherited_java_properties",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/006-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official-official:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official-official-runner",
+        "/workspace/korrust/tests/inherited_java_properties/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/007-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer official/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official-official-runner:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official-official:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/008-stderr.txt"
+    },
+    {
+      "label": "compile candidate Consumer.kt",
+      "argv": [
+        "/tmp/targets159-beans/debug/korrust",
+        "/workspace/korrust/tests/inherited_java_properties/Consumer.kt",
+        "--module-name",
+        "inherited_java_properties",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/009-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official-candidate:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official-candidate-runner",
+        "/workspace/korrust/tests/inherited_java_properties/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/010-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer official/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official-candidate-runner:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official-candidate:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/011-stderr.txt"
+    },
+    {
+      "label": "verified fixed Java caller candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/java:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/candidate:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/012-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/candidate",
+        "EffectsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/013-stderr.txt"
+    },
+    {
+      "label": "compile official Consumer.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/inherited_java_properties/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "inherited_java_properties",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/candidate:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/candidate-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/014-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/candidate:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/candidate-official:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/candidate-official-runner",
+        "/workspace/korrust/tests/inherited_java_properties/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/015-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer candidate/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/candidate-official-runner:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/candidate-official:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/candidate:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/016-stderr.txt"
+    },
+    {
+      "label": "compile candidate Consumer.kt",
+      "argv": [
+        "/tmp/targets159-beans/debug/korrust",
+        "/workspace/korrust/tests/inherited_java_properties/Consumer.kt",
+        "--module-name",
+        "inherited_java_properties",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/candidate:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/candidate-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/017-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/candidate:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/candidate-candidate:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/candidate-candidate-runner",
+        "/workspace/korrust/tests/inherited_java_properties/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/018-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer candidate/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/candidate-candidate-runner:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/candidate-candidate:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/candidate:/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/019-stderr.txt"
+    },
+    {
+      "label": "negative official/pure_kotlin_getter",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/pure_kotlin_getter.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/020-stderr.txt"
+    },
+    {
+      "label": "negative candidate/pure_kotlin_getter",
+      "argv": [
+        "/tmp/targets159-beans/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/pure_kotlin_getter.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/021-stderr.txt"
+    },
+    {
+      "label": "negative official/nonnull_property_assignment",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/nonnull_property_assignment.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/022-stderr.txt"
+    },
+    {
+      "label": "negative candidate/nonnull_property_assignment",
+      "argv": [
+        "/tmp/targets159-beans/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/nonnull_property_assignment.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/023-stderr.txt"
+    },
+    {
+      "label": "negative official/nullable_property_result",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/nullable_property_result.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/024-stderr.txt"
+    },
+    {
+      "label": "negative candidate/nullable_property_result",
+      "argv": [
+        "/tmp/targets159-beans/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/nullable_property_result.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/025-stderr.txt"
+    },
+    {
+      "label": "negative official/readonly_property",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/readonly_property.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/026-stderr.txt"
+    },
+    {
+      "label": "negative candidate/readonly_property",
+      "argv": [
+        "/tmp/targets159-beans/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/readonly_property.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties/027-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "fixed-java/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/official/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/official/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "fixed-java/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/candidate/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/candidate/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "JVM-public-callable-signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/pure_kotlin_getter",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/pure_kotlin_getter",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/nonnull_property_assignment",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/nonnull_property_assignment",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/nullable_property_result",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/nullable_property_result",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/readonly_property",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/readonly_property",
+      "outcome": "pass"
+    },
+    {
+      "id": "frozen-inputs",
+      "outcome": "pass"
+    }
+  ],
+  "evidence": [],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_inherited_java_properties.py",
+      "--candidate",
+      "/tmp/targets159-beans/debug/korrust",
+      "--reference-root",
+      "/workspace/korrust",
+      "--source-root",
+      "/workspace/work/beans159-freeze"
+    ]
+  ],
+  "limitations": [
+    "Ordinary Kotlin subclasses preserve Java-origin inherited getter/setter properties, overridden getter dispatch, strict/nullable contracts, acronym and Boolean names, and bounded generic parent substitution. Pure Kotlin getter-shaped methods remain ordinary methods. Mapped, interface and enum receiver boundaries are preserved. Implicit class-body assignments without an explicit this receiver are outside the added write scope. No Android runtime or full-app claim."
+  ],
+  "counts": {
+    "pass": 16
+  }
+}

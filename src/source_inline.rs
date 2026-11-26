@@ -254,9 +254,9 @@ fn validate_parameter_uses(
     let mut generic_array = false;
     fn parameterized_array(ty: &syntax::Type) -> bool {
         match ty {
-            syntax::Type::Array(inner) | syntax::Type::Nullable(inner) => {
-                parameterized_array(inner)
-            }
+            syntax::Type::Array(inner)
+            | syntax::Type::OutArray(inner)
+            | syntax::Type::Nullable(inner) => parameterized_array(inner),
             syntax::Type::Parameter { .. } => true,
             _ => false,
         }

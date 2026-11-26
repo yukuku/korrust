@@ -102,6 +102,13 @@ impl Checker<'_> {
                 ),
             });
         }
+        if let ExprKind::Binary(name, receiver, argument) = &expr.kind
+            && operations::is_infix_name(name)
+        {
+            let value =
+                self.check_infix_call(receiver, name, argument, expr.offset, Some(expected))?;
+            return self.coerce(value, expected.clone(), expr.offset);
+        }
         if let ExprKind::Call(target, args) = &expr.kind {
             let (target, explicit) = match &target.kind {
                 ExprKind::Generic(target, types) => (target.as_ref(), types.as_slice()),
@@ -993,6 +1000,7 @@ mod shadowing_tests {
                 kotlin_interface: false,
                 methods: vec![JavaMethod {
                     library: Some(crate::classpath::LibraryMethod {
+                        default_code: None,
                         vararg_index: None,
                         contracts: Vec::new(),
                         value_dispatch: false,
@@ -1103,6 +1111,16 @@ impl Checker<'_> {
         &mut self,
         function: &syntax::Function,
     ) -> Result<(Vec<Statement>, bool)> {
+        if function.vararg {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Local vararg function call adaptation is unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "LOCAL_VARARG_UNSUPPORTED",
+            ));
+        }
         if function.suspend_
             && (!function.type_params.is_empty()
                 || function.receiver.is_some()

@@ -45,17 +45,19 @@ fn warning_only_android_nullability_preserves_platform_calls_and_strict_markers(
     ] {
         assert!(compile_outputs_with_classpath(source, "Invalid.kt", &classpath).is_err());
     }
-    for source in [
-        "fun invalid(value: Migration, items: List<String>) { value.genericField = items }",
+    compile_outputs_with_classpath(
+        "fun accepted(value: Migration, items: List<String>) { value.genericField = items }",
+        "Generic.kt",
+        &classpath,
+    )
+    .unwrap();
+    let error = compile_outputs_with_classpath(
         "fun invalid(): List<String>? = Migration.genericStaticField",
-    ] {
-        let error = compile_outputs_with_classpath(source, "Generic.kt", &classpath)
-            .err()
-            .unwrap();
-        assert!(matches!(
-            error.code,
-            "GENERIC_JAVA_FIELD_WRITE_UNSUPPORTED" | "GENERIC_JAVA_STATIC_FIELD_UNSUPPORTED"
-        ));
-    }
+        "Generic.kt",
+        &classpath,
+    )
+    .err()
+    .unwrap();
+    assert_eq!(error.code, "GENERIC_JAVA_STATIC_FIELD_UNSUPPORTED");
     fs::remove_dir_all(output).unwrap();
 }

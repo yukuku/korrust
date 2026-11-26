@@ -1,0 +1,6 @@
+[
+  {"id":"pure_kotlin_getter","source":"class Pure { fun getOnly(): String = \"pure\" }\nfun invalid(value: Pure): String = value.only"},
+  {"id":"nonnull_property_assignment","source":"class Child : beans.Base()\nfun invalid(value: Child) { value.name = null }"},
+  {"id":"nullable_property_result","source":"class Child : beans.Base()\nfun invalid(value: Child): String = value.optional"},
+  {"id":"readonly_property","source":"class Child : beans.Base()\nfun invalid(value: Child) { value.readOnly = \"new\" }"}
+]

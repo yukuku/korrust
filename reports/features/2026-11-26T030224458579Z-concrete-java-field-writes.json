@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-26T03:02:24.458579+00:00",
+  "status": "complete",
+  "compiler": {
+    "source_archives": {
+      "before": {
+        "path": "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/before-source.zip",
+        "sha256": "f490d06285a83b6828f83d74880c321d82623d6e044a5472f7ecb48f1844ddd9",
+        "manifest": "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/before-inputs.json"
+      },
+      "after": {
+        "path": "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/after-source.zip",
+        "sha256": "7e48591414fd43f939f59831ae819f78c452d6e52342b1f22dcf5aa3cade5e6b",
+        "manifest": "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/after-inputs.json"
+      }
+    },
+    "changed_compiler_sources": [
+      "src/check.rs"
+    ],
+    "binary_sha256": {
+      "before": "d0213f6a914e496f2825f121ba05aeb3f3ab14820cc816d3a96824db17cab6ad",
+      "after": "afa34fc784d2def9414c84462f32421c723d9718ecfaad18ecf896b09d9abb40"
+    }
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "features": [
+    {
+      "name": "Concrete generic Java field writes",
+      "status": "supported",
+      "scope": "Ordinary invariant concrete generic Java field signatures with matching logical and JVM field descriptors, including nullable platform lists, nested lists, maps and static writes. Assignment uses the existing type checker; ordinary compiled apply/aliased and arbitrary receiver functions keep their actual bytecode semantics.",
+      "restrictions": [
+        "Fields containing classifier type parameters, use-site projections or star projections remain explicit unsupported boundaries.",
+        "Generic Java static field reads retain their previous unsupported boundary.",
+        "No new receiver-scope-function lowering or function-name implementation is introduced."
+      ]
+    }
+  ],
+  "validation": {
+    "typed_field_and_receiver_runtime": "Java caller compiled against pinned official output runs unchanged with -Xverify:all against official and candidate outputs. Covers reference identity, nested types, null stores, static stores, receiver/value order, exceptions, captures and non-local returns.",
+    "negative_cases": "Candidate compilation rejects wrong generic element/nested/map types and final writes. T/List<T>, projected and star field writes retain explicit unsupported diagnostics.",
+    "rust_tests_log": "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/fields-tests.log",
+    "clippy_log": "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/fields-clippy.log"
+  },
+  "androidbible": {
+    "before": [
+      {
+        "case": 222,
+        "source": "Alkitab/src/main/java/yuku/alkitab/songs/SongComposeFragment.kt",
+        "source_sha256": "470685a4493b04fb262eff32cdee85aad29fd956ba183c2fb325d2eec65a9c96",
+        "outcome": "rejected",
+        "receipt": "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/baseline-222.json"
+      },
+      {
+        "case": 321,
+        "source": "Alkitab/src/test/java/yuku/alkitab/base/sync/Sync_MabelTest.kt",
+        "source_sha256": "5508878918c3737356039e46a11ef6f40b9a7197a193f4cb41c2a3998376ce5f",
+        "outcome": "compiled",
+        "receipt": "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/baseline-321.json"
+      },
+      {
+        "case": 382,
+        "source": "Alkitab/src/test/java/yuku/alkitab/songs/SongFilterMatchTest.kt",
+        "source_sha256": "caf33582af8ea94300dd5431f7bf13ec514b6c7284ed12fbe8221fb3db5f8425",
+        "outcome": "rejected",
+        "receipt": "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/baseline-382.json"
+      }
+    ],
+    "after": [
+      {
+        "case": 222,
+        "source": "Alkitab/src/main/java/yuku/alkitab/songs/SongComposeFragment.kt",
+        "source_sha256": "470685a4493b04fb262eff32cdee85aad29fd956ba183c2fb325d2eec65a9c96",
+        "outcome": "rejected",
+        "receipt": "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/fields-222.json"
+      },
+      {
+        "case": 321,
+        "source": "Alkitab/src/test/java/yuku/alkitab/base/sync/Sync_MabelTest.kt",
+        "source_sha256": "5508878918c3737356039e46a11ef6f40b9a7197a193f4cb41c2a3998376ce5f",
+        "outcome": "compiled",
+        "receipt": "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/fields-321.json"
+      },
+      {
+        "case": 382,
+        "source": "Alkitab/src/test/java/yuku/alkitab/songs/SongFilterMatchTest.kt",
+        "source_sha256": "caf33582af8ea94300dd5431f7bf13ec514b6c7284ed12fbe8221fb3db5f8425",
+        "outcome": "rejected",
+        "receipt": "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/fields-382.json"
+      }
+    ],
+    "counts": {
+      "baseline": {
+        "rejected": 2,
+        "compiled": 1
+      },
+      "fields": {
+        "rejected": 2,
+        "compiled": 1
+      }
+    },
+    "interpretation": "SongFilterMatchTest advances from hidden apply/lambda failure to the reference-vararg declaration boundary. Sync_MabelTest compiles on both snapshots and is not a gain attributed to this change. SongComposeFragment keeps its apply diagnostic. These are compile/ownership receipts, not JUnit correctness passes."
+  },
+  "evidence": [
+    "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/FieldProbe.kt",
+    "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/after-inputs.json",
+    "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/after-source.zip",
+    "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/baseline-222.json",
+    "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/baseline-321.json",
+    "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/baseline-382.json",
+    "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/baseline-build.log",
+    "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/before-inputs.json",
+    "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/before-source.zip",
+    "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/classpath-inputs.json",
+    "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/field-comparison.json",
+    "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/fields-222.json",
+    "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/fields-321.json",
+    "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/fields-382.json",
+    "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/fields-build.log",
+    "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/fields-clippy.log",
+    "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/fields-tests.log",
+    "reports/features/2026-11-26T030224458579Z-concrete-java-field-writes/recheck.py"
+  ],
+  "reproduction_commands": [
+    [
+      "cargo",
+      "test",
+      "--locked",
+      "--offline",
+      "--test",
+      "compiled_receiver_scopes",
+      "--test",
+      "migration_nullability"
+    ],
+    [
+      "cargo",
+      "clippy",
+      "--locked",
+      "--offline",
+      "--lib",
+      "--",
+      "-D",
+      "warnings"
+    ]
+  ],
+  "limitations": [
+    "Frozen before/after compiler trees differ only in src/check.rs. Source archives contain identical test fixtures for reproduction.",
+    "Application dependency jars are identified by hash and retain their external captured Gradle classpaths; they are not copied into the report.",
+    "No full application compatibility or compilation-performance claim."
+  ]
+}
