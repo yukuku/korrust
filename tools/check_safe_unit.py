@@ -22,10 +22,14 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--skip-html', action='store_true')
     parser.add_argument('--candidate', type=Path, default=ROOT / 'target/debug/korrust')
+    parser.add_argument('--source-root', type=Path, default=ROOT)
     parser.add_argument('--reference-root', type=Path, default=ROOT)
     args = parser.parse_args()
     candidate = args.candidate.resolve()
+    source_root = args.source_root.resolve()
     reference_root = args.reference_root.resolve()
+    revision_file = source_root / 'source-revision.txt'
+    source_revision = revision_file.read_text().strip() if revision_file.exists() else subprocess.check_output(['git','rev-parse','HEAD'],cwd=source_root,text=True).strip()
     pin = json.loads((reference_root / 'references/compiler.json').read_text())
     reference = reference_root / pin['path']
     kotlin = reference / 'bin/kotlinc'
@@ -39,9 +43,9 @@ def main():
     logs.mkdir(parents=True)
     def rel(p):
         return str(p.relative_to(ROOT)) if p.is_relative_to(ROOT) else str(p)
-    inputs = [*ROOT.glob('src/**/*.rs'), *FIXTURES.glob('*'), ROOT / 'tests/safe_unit.rs', Path(__file__), ROOT / 'tools/check_nov21_generics.py', ROOT / 'Cargo.toml', ROOT / 'Cargo.lock', reference_root / 'references/compiler.json']
+    inputs = [*source_root.glob('src/**/*.rs'), *FIXTURES.glob('*'), ROOT / 'tests/safe_unit.rs', Path(__file__), ROOT / 'tools/check_nov21_generics.py', source_root / 'Cargo.toml', source_root / 'Cargo.lock', reference_root / 'references/compiler.json']
     frozen = {rel(p):sha(p) for p in sorted(inputs) if p.is_file()}
-    report = dict(schema_version=1, kind='correctness', created_at=now.isoformat(), status='running', compiler=dict(binary=rel(candidate), binary_sha256=sha(candidate), source_revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()), reference_compiler=dict(version=pin['version'],archive_sha256=pin['archive_sha256'],compiler_jar_sha256=sha(reference / 'lib/kotlin-compiler.jar')), inputs=dict(files_sha256=frozen,stdlib_sha256=sha(stdlib)), commands=[],cases=[], evidence=[], reproduction_commands=[['python3','tools/check_safe_unit.py','--candidate',str(candidate),'--reference-root',str(reference_root)]], limitations=['Tests cover nullable Unit safe calls, effects, Java void results, checked assertion/Elvis paths, generic calls and Kotlin consumers. No Android runtime or full-app claim.'])
+    report = dict(schema_version=1, kind='correctness', created_at=now.isoformat(), status='running', compiler=dict(binary=rel(candidate), binary_sha256=sha(candidate), source_revision=source_revision), reference_compiler=dict(version=pin['version'],archive_sha256=pin['archive_sha256'],compiler_jar_sha256=sha(reference / 'lib/kotlin-compiler.jar')), inputs=dict(files_sha256=frozen,stdlib_sha256=sha(stdlib)), commands=[],cases=[], evidence=[], reproduction_commands=[['python3','tools/check_safe_unit.py','--candidate',str(candidate),'--reference-root',str(reference_root),'--source-root',str(source_root)]], limitations=['Tests cover nullable Unit safe calls, effects, Java void results, checked assertion/Elvis paths, generic calls and Kotlin consumers. No Android runtime or full-app claim.'])
     def run(label, command, accepted=(0,)):
         result = subprocess.run(list(map(str,command)),cwd=ROOT,text=True,capture_output=True,timeout=180)
         item = dict(label=label,argv=list(map(str,command)),exit_code=result.returncode)

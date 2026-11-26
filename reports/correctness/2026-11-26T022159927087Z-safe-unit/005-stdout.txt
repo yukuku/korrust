@@ -1,0 +1,618 @@
+Classfile /workspace/korrust/target/checks/2026-11-26T022159927087Z-safe-unit/official/EffectsKt.class
+  Last modified Nov 26, 2026; size 4183 bytes
+  SHA-256 checksum 7263be4b96cb6f218a576d0a60b823eed01444df7e44286858999bc1f69feed0
+  Compiled from "Effects.kt"
+public final class EffectsKt
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // EffectsKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 2, methods: 20, attributes: 3
+Constant pool:
+    #1 = Utf8               EffectsKt
+    #2 = Class              #1            // EffectsKt
+    #3 = Utf8               java/lang/Object
+    #4 = Class              #3            // java/lang/Object
+    #5 = Utf8               getReceivers
+    #6 = Utf8               ()I
+    #7 = Utf8               receivers
+    #8 = Utf8               I
+    #9 = NameAndType        #7:#8         // receivers:I
+   #10 = Fieldref           #2.#9         // EffectsKt.receivers:I
+   #11 = Utf8               setReceivers
+   #12 = Utf8               (I)V
+   #13 = Utf8               <set-?>
+   #14 = Utf8               getArguments
+   #15 = Utf8               arguments
+   #16 = NameAndType        #15:#8        // arguments:I
+   #17 = Fieldref           #2.#16        // EffectsKt.arguments:I
+   #18 = Utf8               setArguments
+   #19 = Utf8               receiver
+   #20 = Utf8               (LEffects;)LEffects;
+   #21 = Utf8               Lorg/jetbrains/annotations/Nullable;
+   #22 = Utf8               value
+   #23 = Utf8               LEffects;
+   #24 = Utf8               argument
+   #25 = Utf8               reset
+   #26 = Utf8               ()V
+   #27 = Utf8               safe
+   #28 = Utf8               (LEffects;)Lkotlin/Unit;
+   #29 = NameAndType        #19:#20       // receiver:(LEffects;)LEffects;
+   #30 = Methodref          #2.#29        // EffectsKt.receiver:(LEffects;)LEffects;
+   #31 = NameAndType        #24:#6        // argument:()I
+   #32 = Methodref          #2.#31        // EffectsKt.argument:()I
+   #33 = Utf8               Effects
+   #34 = Class              #33           // Effects
+   #35 = Utf8               mark
+   #36 = NameAndType        #35:#12       // mark:(I)V
+   #37 = Methodref          #34.#36       // Effects.mark:(I)V
+   #38 = Utf8               kotlin/Unit
+   #39 = Class              #38           // kotlin/Unit
+   #40 = Utf8               INSTANCE
+   #41 = Utf8               Lkotlin/Unit;
+   #42 = NameAndType        #40:#41       // INSTANCE:Lkotlin/Unit;
+   #43 = Fieldref           #39.#42       // kotlin/Unit.INSTANCE:Lkotlin/Unit;
+   #44 = Utf8               statement
+   #45 = Utf8               (LEffects;)V
+   #46 = Utf8               nullableIdentity
+   #47 = Utf8               (Lkotlin/Unit;)Lkotlin/Unit;
+   #48 = Utf8               widened
+   #49 = Utf8               (LEffects;)Ljava/lang/Object;
+   #50 = Utf8               elvis
+   #51 = Utf8               (LEffects;LEffects;)V
+   #52 = Utf8               Lorg/jetbrains/annotations/NotNull;
+   #53 = Utf8               other
+   #54 = String             #53           // other
+   #55 = Utf8               kotlin/jvm/internal/Intrinsics
+   #56 = Class              #55           // kotlin/jvm/internal/Intrinsics
+   #57 = Utf8               checkNotNullParameter
+   #58 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+   #59 = NameAndType        #57:#58       // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+   #60 = Methodref          #56.#59       // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+   #61 = Utf8               asserted
+   #62 = Utf8               checkNotNull
+   #63 = Utf8               (Ljava/lang/Object;)V
+   #64 = NameAndType        #62:#63       // checkNotNull:(Ljava/lang/Object;)V
+   #65 = Methodref          #56.#64       // kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;)V
+   #66 = Utf8               callback
+   #67 = Utf8               (LEffects;)Lkotlin/jvm/functions/Function0;
+   #68 = Utf8               (LEffects;)Lkotlin/jvm/functions/Function0<Lkotlin/Unit;>;
+   #69 = Utf8               ()Ljava/lang/Object;
+   #70 = MethodType         #69           //  ()Ljava/lang/Object;
+   #71 = Utf8               callback$lambda$0
+   #72 = NameAndType        #71:#28       // callback$lambda$0:(LEffects;)Lkotlin/Unit;
+   #73 = Methodref          #2.#72        // EffectsKt.callback$lambda$0:(LEffects;)Lkotlin/Unit;
+   #74 = MethodHandle       6:#73         // REF_invokeStatic EffectsKt.callback$lambda$0:(LEffects;)Lkotlin/Unit;
+   #75 = Utf8               ()Lkotlin/Unit;
+   #76 = MethodType         #75           //  ()Lkotlin/Unit;
+   #77 = Utf8               java/lang/invoke/LambdaMetafactory
+   #78 = Class              #77           // java/lang/invoke/LambdaMetafactory
+   #79 = Utf8               metafactory
+   #80 = Utf8               (Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+   #81 = NameAndType        #79:#80       // metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+   #82 = Methodref          #78.#81       // java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+   #83 = MethodHandle       6:#82         // REF_invokeStatic java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+   #84 = Utf8               invoke
+   #85 = NameAndType        #84:#67       // invoke:(LEffects;)Lkotlin/jvm/functions/Function0;
+   #86 = InvokeDynamic      #0:#85        // #0:invoke:(LEffects;)Lkotlin/jvm/functions/Function0;
+   #87 = Utf8               identity
+   #88 = Utf8               (Ljava/lang/Object;)Ljava/lang/Object;
+   #89 = Utf8               <T:Ljava/lang/Object;>(TT;)TT;
+   #90 = Utf8               Ljava/lang/Object;
+   #91 = Utf8               generic
+   #92 = NameAndType        #87:#88       // identity:(Ljava/lang/Object;)Ljava/lang/Object;
+   #93 = Methodref          #2.#92        // EffectsKt.identity:(Ljava/lang/Object;)Ljava/lang/Object;
+   #94 = Utf8               force
+   #95 = Utf8               (Lkotlin/Unit;)V
+   #96 = Utf8               external
+   #97 = Utf8               (LExternal;)Lkotlin/Unit;
+   #98 = Utf8               External
+   #99 = Class              #98           // External
+  #100 = Utf8               touch
+  #101 = NameAndType        #100:#12      // touch:(I)V
+  #102 = Methodref          #99.#101      // External.touch:(I)V
+  #103 = Utf8               LExternal;
+  #104 = Utf8               $value
+  #105 = Utf8               <clinit>
+  #106 = Utf8               Lkotlin/Metadata;
+  #107 = Utf8               mv
+  #108 = Integer            2
+  #109 = Integer            3
+  #110 = Integer            0
+  #111 = Utf8               k
+  #112 = Utf8               xi
+  #113 = Integer            48
+  #114 = Utf8               d1
+  #115 = Utf8               \u00002\n\u0000\n\u0002\u0010\b\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\u0002\n\u0002\b\u0006\n\u0002\u0010\u0000\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u0002\u001a\u0012\u0010\t\u001a\u0004\u0018\u00010\n2\b\u0010\u000b\u001a\u0004\u0018\u00010\n\u001a\u0006\u0010\f\u001a\u00020\u0001\u001a\u0006\u0010\r\u001a\u00020\u000e\u001a\u0017\u0010\u000f\u001a\u0004\u0018\u00010\u000e2\b\u0010\u000b\u001a\u0004\u0018\u00010\n¢\u0006\u0002\u0010\u0010\u001a\u0010\u0010\u0011\u001a\u00020\u000e2\b\u0010\u000b\u001a\u0004\u0018\u00010\n\u001a\u0017\u0010\u0012\u001a\u0004\u0018\u00010\u000e2\b\u0010\u000b\u001a\u0004\u0018\u00010\u000e¢\u0006\u0002\u0010\u0013\u001a\u0012\u0010\u0014\u001a\u0004\u0018\u00010\u00152\b\u0010\u000b\u001a\u0004\u0018\u00010\n\u001a\u0018\u0010\u0016\u001a\u00020\u000e2\b\u0010\u000b\u001a\u0004\u0018\u00010\n2\u0006\u0010\u0017\u001a\u00020\n\u001a\u0010\u0010\u0018\u001a\u00020\u000e2\b\u0010\u000b\u001a\u0004\u0018\u00010\n\u001a\u0018\u0010\u0019\u001a\n\u0012\u0006\u0012\u0004\u0018\u00010\u000e0\u001a2\b\u0010\u000b\u001a\u0004\u0018\u00010\n\u001a\u0019\u0010\u001b\u001a\u0002H\u001c\"\u0004\b\u0000\u0010\u001c2\u0006\u0010\u000b\u001a\u0002H\u001c¢\u0006\u0002\u0010\u001d\u001a\u0017\u0010\u001e\u001a\u0004\u0018\u00010\u000e2\b\u0010\u000b\u001a\u0004\u0018\u00010\n¢\u0006\u0002\u0010\u0010\u001a\u0015\u0010\u001f\u001a\u00020\u000e2\b\u0010\u000b\u001a\u0004\u0018\u00010\u000e¢\u0006\u0002\u0010 \u001a\u0017\u0010!\u001a\u0004\u0018\u00010\u000e2\b\u0010\u000b\u001a\u0004\u0018\u00010\"¢\u0006\u0002\u0010#\"\u001a\u0010\u0000\u001a\u00020\u0001X\u0086\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0002\u0010\u0003\"\u0004\b\u0004\u0010\u0005\"\u001a\u0010\u0006\u001a\u00020\u0001X\u0086\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0007\u0010\u0003\"\u0004\b\b\u0010\u0005¨\u0006$
+  #116 = Utf8               d2
+  #117 = Utf8
+  #118 = Utf8               Lkotlin/Function0;
+  #119 = Utf8               T
+  #120 = Utf8               safe_unit
+  #121 = Utf8               Effects.kt
+  #122 = Utf8               Code
+  #123 = Utf8               LineNumberTable
+  #124 = Utf8               LocalVariableTable
+  #125 = Utf8               RuntimeInvisibleAnnotations
+  #126 = Utf8               RuntimeInvisibleParameterAnnotations
+  #127 = Utf8               StackMapTable
+  #128 = Utf8               Signature
+  #129 = Utf8               SourceFile
+  #130 = Utf8               RuntimeVisibleAnnotations
+  #131 = Utf8               BootstrapMethods
+{
+  private static int receivers;
+    descriptor: I
+    flags: (0x000a) ACC_PRIVATE, ACC_STATIC
+
+  private static int arguments;
+    descriptor: I
+    flags: (0x000a) ACC_PRIVATE, ACC_STATIC
+
+  public static final int getReceivers();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: getstatic     #10                 // Field receivers:I
+         3: ireturn
+      LineNumberTable:
+        line 5: 0
+
+  public static final void setReceivers(int);
+    descriptor: (I)V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: iload_0
+         1: putstatic     #10                 // Field receivers:I
+         4: return
+      LineNumberTable:
+        line 5: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0 <set-?>   I
+
+  public static final int getArguments();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: getstatic     #17                 // Field arguments:I
+         3: ireturn
+      LineNumberTable:
+        line 6: 0
+
+  public static final void setArguments(int);
+    descriptor: (I)V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: iload_0
+         1: putstatic     #17                 // Field arguments:I
+         4: return
+      LineNumberTable:
+        line 6: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0 <set-?>   I
+
+  public static final Effects receiver(Effects);
+    descriptor: (LEffects;)LEffects;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=1
+         0: getstatic     #10                 // Field receivers:I
+         3: istore_1
+         4: iload_1
+         5: iconst_1
+         6: iadd
+         7: putstatic     #10                 // Field receivers:I
+        10: aload_0
+        11: areturn
+      LineNumberTable:
+        line 7: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      12     0 value   LEffects;
+    RuntimeInvisibleAnnotations:
+      0: #21()
+        org.jetbrains.annotations.Nullable
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #21()
+          org.jetbrains.annotations.Nullable
+
+  public static final int argument();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=0
+         0: getstatic     #17                 // Field arguments:I
+         3: istore_0
+         4: iload_0
+         5: iconst_1
+         6: iadd
+         7: putstatic     #17                 // Field arguments:I
+        10: bipush        7
+        12: ireturn
+      LineNumberTable:
+        line 8: 0
+
+  public static final void reset();
+    descriptor: ()V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: iconst_0
+         1: putstatic     #10                 // Field receivers:I
+         4: iconst_0
+         5: putstatic     #17                 // Field arguments:I
+         8: return
+      LineNumberTable:
+        line 9: 0
+
+  public static final kotlin.Unit safe(Effects);
+    descriptor: (LEffects;)Lkotlin/Unit;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: invokestatic  #30                 // Method receiver:(LEffects;)LEffects;
+         4: dup
+         5: ifnull        20
+         8: invokestatic  #32                 // Method argument:()I
+        11: invokevirtual #37                 // Method Effects.mark:(I)V
+        14: getstatic     #43                 // Field kotlin/Unit.INSTANCE:Lkotlin/Unit;
+        17: goto          22
+        20: pop
+        21: aconst_null
+        22: areturn
+      StackMapTable: number_of_entries = 2
+        frame_type = 84 /* same_locals_1_stack_item */
+          stack = [ class Effects ]
+        frame_type = 65 /* same_locals_1_stack_item */
+          stack = [ class kotlin/Unit ]
+      LineNumberTable:
+        line 10: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      23     0 value   LEffects;
+    RuntimeInvisibleAnnotations:
+      0: #21()
+        org.jetbrains.annotations.Nullable
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #21()
+          org.jetbrains.annotations.Nullable
+
+  public static final void statement(Effects);
+    descriptor: (LEffects;)V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: invokestatic  #30                 // Method receiver:(LEffects;)LEffects;
+         4: dup
+         5: ifnull        17
+         8: invokestatic  #32                 // Method argument:()I
+        11: invokevirtual #37                 // Method Effects.mark:(I)V
+        14: goto          18
+        17: pop
+        18: return
+      StackMapTable: number_of_entries = 2
+        frame_type = 81 /* same_locals_1_stack_item */
+          stack = [ class Effects ]
+        frame_type = 0 /* same */
+      LineNumberTable:
+        line 11: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      19     0 value   LEffects;
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #21()
+          org.jetbrains.annotations.Nullable
+
+  public static final kotlin.Unit nullableIdentity(kotlin.Unit);
+    descriptor: (Lkotlin/Unit;)Lkotlin/Unit;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: areturn
+      LineNumberTable:
+        line 12: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       2     0 value   Lkotlin/Unit;
+    RuntimeInvisibleAnnotations:
+      0: #21()
+        org.jetbrains.annotations.Nullable
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #21()
+          org.jetbrains.annotations.Nullable
+
+  public static final java.lang.Object widened(Effects);
+    descriptor: (LEffects;)Ljava/lang/Object;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: invokestatic  #30                 // Method receiver:(LEffects;)LEffects;
+         4: dup
+         5: ifnull        20
+         8: invokestatic  #32                 // Method argument:()I
+        11: invokevirtual #37                 // Method Effects.mark:(I)V
+        14: getstatic     #43                 // Field kotlin/Unit.INSTANCE:Lkotlin/Unit;
+        17: goto          22
+        20: pop
+        21: aconst_null
+        22: areturn
+      StackMapTable: number_of_entries = 2
+        frame_type = 84 /* same_locals_1_stack_item */
+          stack = [ class Effects ]
+        frame_type = 65 /* same_locals_1_stack_item */
+          stack = [ class kotlin/Unit ]
+      LineNumberTable:
+        line 13: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      23     0 value   LEffects;
+    RuntimeInvisibleAnnotations:
+      0: #21()
+        org.jetbrains.annotations.Nullable
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #21()
+          org.jetbrains.annotations.Nullable
+
+  public static final void elvis(Effects, Effects);
+    descriptor: (LEffects;LEffects;)V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload_1
+         1: ldc           #54                 // String other
+         3: invokestatic  #60                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokestatic  #30                 // Method receiver:(LEffects;)LEffects;
+        10: dup
+        11: ifnull        23
+        14: invokestatic  #32                 // Method argument:()I
+        17: invokevirtual #37                 // Method Effects.mark:(I)V
+        20: goto          29
+        23: pop
+        24: aload_1
+        25: iconst_3
+        26: invokevirtual #37                 // Method Effects.mark:(I)V
+        29: return
+      StackMapTable: number_of_entries = 2
+        frame_type = 87 /* same_locals_1_stack_item */
+          stack = [ class Effects ]
+        frame_type = 5 /* same */
+      LineNumberTable:
+        line 14: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      30     0 value   LEffects;
+            0      30     1 other   LEffects;
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #21()
+          org.jetbrains.annotations.Nullable
+      parameter 1:
+        0: #52()
+          org.jetbrains.annotations.NotNull
+
+  public static final void asserted(Effects);
+    descriptor: (LEffects;)V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: invokestatic  #30                 // Method receiver:(LEffects;)LEffects;
+         4: dup
+         5: ifnull        20
+         8: invokestatic  #32                 // Method argument:()I
+        11: invokevirtual #37                 // Method Effects.mark:(I)V
+        14: getstatic     #43                 // Field kotlin/Unit.INSTANCE:Lkotlin/Unit;
+        17: goto          22
+        20: pop
+        21: aconst_null
+        22: dup
+        23: invokestatic  #65                 // Method kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;)V
+        26: pop
+        27: return
+      StackMapTable: number_of_entries = 2
+        frame_type = 84 /* same_locals_1_stack_item */
+          stack = [ class Effects ]
+        frame_type = 65 /* same_locals_1_stack_item */
+          stack = [ class kotlin/Unit ]
+      LineNumberTable:
+        line 15: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      28     0 value   LEffects;
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #21()
+          org.jetbrains.annotations.Nullable
+
+  public static final kotlin.jvm.functions.Function0<kotlin.Unit> callback(Effects);
+    descriptor: (LEffects;)Lkotlin/jvm/functions/Function0;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokedynamic #86,  0             // InvokeDynamic #0:invoke:(LEffects;)Lkotlin/jvm/functions/Function0;
+         6: areturn
+      LineNumberTable:
+        line 16: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       7     0 value   LEffects;
+    Signature: #68                          // (LEffects;)Lkotlin/jvm/functions/Function0<Lkotlin/Unit;>;
+    RuntimeInvisibleAnnotations:
+      0: #52()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #21()
+          org.jetbrains.annotations.Nullable
+
+  public static final <T extends java.lang.Object> T identity(T);
+    descriptor: (Ljava/lang/Object;)Ljava/lang/Object;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: areturn
+      LineNumberTable:
+        line 17: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       2     0 value   Ljava/lang/Object;
+    Signature: #89                          // <T:Ljava/lang/Object;>(TT;)TT;
+
+  public static final kotlin.Unit generic(Effects);
+    descriptor: (LEffects;)Lkotlin/Unit;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: invokestatic  #30                 // Method receiver:(LEffects;)LEffects;
+         4: dup
+         5: ifnull        20
+         8: invokestatic  #32                 // Method argument:()I
+        11: invokevirtual #37                 // Method Effects.mark:(I)V
+        14: getstatic     #43                 // Field kotlin/Unit.INSTANCE:Lkotlin/Unit;
+        17: goto          22
+        20: pop
+        21: aconst_null
+        22: invokestatic  #93                 // Method identity:(Ljava/lang/Object;)Ljava/lang/Object;
+        25: checkcast     #39                 // class kotlin/Unit
+        28: areturn
+      StackMapTable: number_of_entries = 2
+        frame_type = 84 /* same_locals_1_stack_item */
+          stack = [ class Effects ]
+        frame_type = 65 /* same_locals_1_stack_item */
+          stack = [ class kotlin/Unit ]
+      LineNumberTable:
+        line 18: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      29     0 value   LEffects;
+    RuntimeInvisibleAnnotations:
+      0: #21()
+        org.jetbrains.annotations.Nullable
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #21()
+          org.jetbrains.annotations.Nullable
+
+  public static final void force(kotlin.Unit);
+    descriptor: (Lkotlin/Unit;)V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: dup
+         2: invokestatic  #65                 // Method kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;)V
+         5: pop
+         6: return
+      LineNumberTable:
+        line 19: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       7     0 value   Lkotlin/Unit;
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #21()
+          org.jetbrains.annotations.Nullable
+
+  public static final kotlin.Unit external(External);
+    descriptor: (LExternal;)Lkotlin/Unit;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: dup
+         2: ifnull        17
+         5: invokestatic  #32                 // Method argument:()I
+         8: invokevirtual #102                // Method External.touch:(I)V
+        11: getstatic     #43                 // Field kotlin/Unit.INSTANCE:Lkotlin/Unit;
+        14: goto          19
+        17: pop
+        18: aconst_null
+        19: areturn
+      StackMapTable: number_of_entries = 2
+        frame_type = 81 /* same_locals_1_stack_item */
+          stack = [ class External ]
+        frame_type = 65 /* same_locals_1_stack_item */
+          stack = [ class kotlin/Unit ]
+      LineNumberTable:
+        line 21: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      20     0 value   LExternal;
+    RuntimeInvisibleAnnotations:
+      0: #21()
+        org.jetbrains.annotations.Nullable
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #21()
+          org.jetbrains.annotations.Nullable
+
+  private static final kotlin.Unit callback$lambda$0(Effects);
+    descriptor: (LEffects;)Lkotlin/Unit;
+    flags: (0x001a) ACC_PRIVATE, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: invokestatic  #30                 // Method receiver:(LEffects;)LEffects;
+         4: dup
+         5: ifnull        20
+         8: invokestatic  #32                 // Method argument:()I
+        11: invokevirtual #37                 // Method Effects.mark:(I)V
+        14: getstatic     #43                 // Field kotlin/Unit.INSTANCE:Lkotlin/Unit;
+        17: goto          22
+        20: pop
+        21: aconst_null
+        22: areturn
+      StackMapTable: number_of_entries = 2
+        frame_type = 84 /* same_locals_1_stack_item */
+          stack = [ class Effects ]
+        frame_type = 65 /* same_locals_1_stack_item */
+          stack = [ class kotlin/Unit ]
+      LineNumberTable:
+        line 16: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      23     0 $value   LEffects;
+
+  static {};
+    descriptor: ()V
+    flags: (0x0008) ACC_STATIC
+    Code:
+      stack=0, locals=0, args_size=0
+         0: return
+}
+SourceFile: "Effects.kt"
+RuntimeVisibleAnnotations:
+  0: #106(#107=[I#108,I#109,I#110],#111=I#108,#112=I#113,#114=[s#115],#116=[s#7,s#117,s#5,s#6,s#11,s#12,s#15,s#14,s#18,s#19,s#23,s#22,s#24,s#25,s#117,s#27,s#28,s#44,s#46,s#47,s#48,s#117,s#50,s#53,s#61,s#66,s#118,s#87,s#119,s#88,s#91,s#94,s#95,s#96,s#103,s#97,s#120])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u00002\n\u0000\n\u0002\u0010\b\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\u0002\n\u0002\b\u0006\n\u0002\u0010\u0000\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u0002\u001a\u0012\u0010\t\u001a\u0004\u0018\u00010\n2\b\u0010\u000b\u001a\u0004\u0018\u00010\n\u001a\u0006\u0010\f\u001a\u00020\u0001\u001a\u0006\u0010\r\u001a\u00020\u000e\u001a\u0017\u0010\u000f\u001a\u0004\u0018\u00010\u000e2\b\u0010\u000b\u001a\u0004\u0018\u00010\n¢\u0006\u0002\u0010\u0010\u001a\u0010\u0010\u0011\u001a\u00020\u000e2\b\u0010\u000b\u001a\u0004\u0018\u00010\n\u001a\u0017\u0010\u0012\u001a\u0004\u0018\u00010\u000e2\b\u0010\u000b\u001a\u0004\u0018\u00010\u000e¢\u0006\u0002\u0010\u0013\u001a\u0012\u0010\u0014\u001a\u0004\u0018\u00010\u00152\b\u0010\u000b\u001a\u0004\u0018\u00010\n\u001a\u0018\u0010\u0016\u001a\u00020\u000e2\b\u0010\u000b\u001a\u0004\u0018\u00010\n2\u0006\u0010\u0017\u001a\u00020\n\u001a\u0010\u0010\u0018\u001a\u00020\u000e2\b\u0010\u000b\u001a\u0004\u0018\u00010\n\u001a\u0018\u0010\u0019\u001a\n\u0012\u0006\u0012\u0004\u0018\u00010\u000e0\u001a2\b\u0010\u000b\u001a\u0004\u0018\u00010\n\u001a\u0019\u0010\u001b\u001a\u0002H\u001c\"\u0004\b\u0000\u0010\u001c2\u0006\u0010\u000b\u001a\u0002H\u001c¢\u0006\u0002\u0010\u001d\u001a\u0017\u0010\u001e\u001a\u0004\u0018\u00010\u000e2\b\u0010\u000b\u001a\u0004\u0018\u00010\n¢\u0006\u0002\u0010\u0010\u001a\u0015\u0010\u001f\u001a\u00020\u000e2\b\u0010\u000b\u001a\u0004\u0018\u00010\u000e¢\u0006\u0002\u0010 \u001a\u0017\u0010!\u001a\u0004\u0018\u00010\u000e2\b\u0010\u000b\u001a\u0004\u0018\u00010\"¢\u0006\u0002\u0010#\"\u001a\u0010\u0000\u001a\u00020\u0001X\u0086\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0002\u0010\u0003\"\u0004\b\u0004\u0010\u0005\"\u001a\u0010\u0006\u001a\u00020\u0001X\u0086\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0007\u0010\u0003\"\u0004\b\b\u0010\u0005¨\u0006$"]
+      d2=["receivers","","getReceivers","()I","setReceivers","(I)V","arguments","getArguments","setArguments","receiver","LEffects;","value","argument","reset","","safe","(LEffects;)Lkotlin/Unit;","statement","nullableIdentity","(Lkotlin/Unit;)Lkotlin/Unit;","widened","","elvis","other","asserted","callback","Lkotlin/Function0;","identity","T","(Ljava/lang/Object;)Ljava/lang/Object;","generic","force","(Lkotlin/Unit;)V","external","LExternal;","(LExternal;)Lkotlin/Unit;","safe_unit"]
+    )
+BootstrapMethods:
+  0: #83 REF_invokeStatic java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+    Method arguments:
+      #70 ()Ljava/lang/Object;
+      #74 REF_invokeStatic EffectsKt.callback$lambda$0:(LEffects;)Lkotlin/Unit;
+      #76 ()Lkotlin/Unit;
