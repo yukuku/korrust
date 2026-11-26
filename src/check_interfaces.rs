@@ -1405,7 +1405,7 @@ interface Catalog {
         );
         rejects(
             r#"interface Root { val IllegalArgumentException: Int; fun fail(): String { throw IllegalArgumentException("bad") } }"#,
-            "No applicable",
+            "Property is not callable",
         );
     }
     #[test]
