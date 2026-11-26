@@ -2113,6 +2113,8 @@ impl Checker<'_> {
         }
         let ty = if right.ty == inner || abrupt {
             inner.clone()
+        } else if matches!(&right.ty, Type::Platform(base) if base.as_ref() == &inner) {
+            right.ty.clone()
         } else if right.ty == Type::Null || right.ty == Type::Nullable(Box::new(inner.clone())) {
             Type::Nullable(Box::new(inner.clone()))
         } else {
