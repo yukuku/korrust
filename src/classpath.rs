@@ -1903,6 +1903,7 @@ struct Attributes {
     parameter_type_annotations: Vec<(usize, Annotation)>,
     only_input_type_parameters: Vec<usize>,
     type_annotation_targets: Vec<u8>,
+    inner_type_paths: Vec<(u8, Option<usize>, u8)>,
     type_annotation_parameter_indices: Vec<usize>,
     signature: Option<String>,
     constant: Option<u16>,
@@ -2106,12 +2107,14 @@ fn attributes(
                             .push(parameter.ok_or_else(invalid)?);
                     }
                     let path_length = data.u1()?;
+                    let mut inner_path = true;
                     for _ in 0..path_length {
                         let kind = data.u1()?;
                         let index = data.u1()?;
                         if kind > 3 || kind != 3 && index != 0 {
                             return Err(invalid());
                         }
+                        inner_path &= kind == 1;
                     }
                     let value = annotation(&mut data, pool, 0)?;
                     if target == 0x01
@@ -2122,14 +2125,23 @@ fn attributes(
                         result
                             .only_input_type_parameters
                             .push(parameter.ok_or_else(invalid)?);
-                    } else if path_length != 0 || !matches!(target, 0x13 | 0x14 | 0x16) {
+                    } else if path_length != 0 && !inner_path
+                        || !matches!(target, 0x13 | 0x14 | 0x16)
+                    {
                         result.unsupported = true;
-                    } else if matches!(target, 0x13 | 0x14) {
-                        result.return_type_annotations.push(value);
                     } else {
-                        result
-                            .parameter_type_annotations
-                            .push((parameter.ok_or_else(invalid)?, value));
+                        if path_length != 0 {
+                            result
+                                .inner_type_paths
+                                .push((target, parameter, path_length));
+                        }
+                        if matches!(target, 0x13 | 0x14) {
+                            result.return_type_annotations.push(value);
+                        } else {
+                            result
+                                .parameter_type_annotations
+                                .push((parameter.ok_or_else(invalid)?, value));
+                        }
                     }
                 }
             }
@@ -3732,6 +3744,17 @@ fn parse_details_impl(
         fields,
         kotlin_class: false,
     };
+    if attrs
+        .annotations
+        .iter()
+        .any(|annotation| annotation.name == "Lkotlin/Metadata;")
+    {
+        for attributes in method_attributes.iter_mut().chain(&mut field_attributes) {
+            if !attributes.inner_type_paths.is_empty() {
+                attributes.unsupported = true;
+            }
+        }
+    }
     if !attrs.unsupported
         && attrs.signature.is_none()
         && attrs.annotations.len() == 1
@@ -3926,6 +3949,9 @@ mod tests {
         assert_eq!(valid.parameter_type_annotations[0].0, 1);
         assert!(validate_type_annotation_parameters("(J[D)V", &valid).is_ok());
         assert!(validate_type_annotation_parameters("([D)V", &valid).is_err());
+        let inner = decode(&[0, 1, 0x16, 0, 1, 1, 0, 0, 2, 0, 0]).unwrap();
+        assert!(!inner.unsupported);
+        assert_eq!(inner.inner_type_paths, [(0x16, Some(0), 1)]);
         let wrong_index = decode(&[0, 1, 0x16, 255, 0, 0, 2, 0, 0]).unwrap();
         assert!(validate_type_annotation_parameters("(J[D)V", &wrong_index).is_err());
         let nested_wrong_index = decode(&[0, 1, 0x16, 255, 1, 0, 0, 0, 2, 0, 0]).unwrap();

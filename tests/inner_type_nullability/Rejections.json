@@ -1,0 +1,18 @@
+[
+  {
+    "id": "nullable_result",
+    "source": "import nestedapi.Outer\nimport nestedapi.Provider\nfun invalid(): Outer.Leaf = Provider.nullable(true)"
+  },
+  {
+    "id": "nonnull_parameter",
+    "source": "import nestedapi.Outer\nimport nestedapi.Provider\nfun invalid(): Int = Provider.strict(null)"
+  },
+  {
+    "id": "nullable_field",
+    "source": "import nestedapi.Outer\nimport nestedapi.Provider\nfun invalid(value: Provider): Outer.Leaf = value.field"
+  },
+  {
+    "id": "nested_nullable_result",
+    "source": "import nestedapi.Outer\nimport nestedapi.Provider\nfun invalid(): Outer.Middle.Leaf = Provider.nested(true)"
+  }
+]

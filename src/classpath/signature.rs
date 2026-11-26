@@ -274,20 +274,60 @@ pub(super) fn attach_fields(class: &mut JavaClass, attrs: &Attributes, field_att
         let Ok(ty) = self::field(signature, &parameters) else {
             continue;
         };
-        if ty.descriptor() != field.descriptor {
+        if ty.descriptor() != field.descriptor
+            || attributes
+                .inner_type_paths
+                .iter()
+                .any(|(target, _, depth)| {
+                    *target != 0x13 || !inner_annotation_at_leaf(&ty, *depth, &attrs.inner_classes)
+                })
+        {
             continue;
+        }
+        let mut declarations = Vec::new();
+        for annotation in &attributes.annotations {
+            if !passive(annotation)? {
+                declarations.push(annotation);
+            }
         }
         if let Ok(ty) = nullability(
             ty,
-            attributes
-                .annotations
+            declarations
                 .iter()
+                .copied()
                 .chain(&attributes.return_type_annotations),
         ) {
             field.java_type = Some(Box::new(ty));
             field.unsupported = false;
         }
     }
+    Ok(())
+}
+
+fn inner_annotation_at_leaf(
+    ty: &Type,
+    depth: u8,
+    inner_classes: &[(String, String, String, u16)],
+) -> bool {
+    let mut owner = match ty.base() {
+        Type::Java(name) | Type::Parameterized { name, .. } => name.as_str(),
+        _ => return false,
+    };
+    let mut count = 0usize;
+    loop {
+        let mut entries = inner_classes
+            .iter()
+            .filter(|(inner, _, _, _)| inner == owner);
+        let Some((_, outer, _, _)) = entries.next() else {
+            break;
+        };
+        count += 1;
+        if entries.next().is_some() || count > usize::from(depth) {
+            return false;
+        }
+        owner = outer;
+    }
+    count == usize::from(depth)
 }
 
 pub(super) fn class(value: &str) -> Result<(Vec<TypeParameter>, Vec<Type>)> {
@@ -454,7 +494,21 @@ pub(super) fn attach_with_declarations(
                 params.iter().map(Type::descriptor).collect::<String>(),
                 result.descriptor()
             );
-            if erased != method.descriptor {
+            if erased != method.descriptor
+                || attributes
+                    .inner_type_paths
+                    .iter()
+                    .any(|(target, index, depth)| {
+                        let ty = match *target {
+                            0x14 => Some(&result),
+                            0x16 => index.and_then(|index| params.get(index)),
+                            _ => None,
+                        };
+                        ty.is_none_or(|ty| {
+                            !inner_annotation_at_leaf(ty, *depth, &attrs.inner_classes)
+                        })
+                    })
+            {
                 continue;
             }
             if attributes
@@ -649,6 +703,32 @@ mod tests {
             nullability(Type::String, &[]).unwrap(),
             Type::Platform(Box::new(Type::String))
         );
+    }
+
+    #[test]
+    fn inner_type_annotations_require_the_leaf_and_consistent_nesting() {
+        let nesting = vec![
+            ("Outer$Middle".into(), "Outer".into(), "Middle".into(), 9),
+            (
+                "Outer$Middle$Leaf".into(),
+                "Outer$Middle".into(),
+                "Leaf".into(),
+                9,
+            ),
+        ];
+        let leaf = Type::Java("Outer$Middle$Leaf".into());
+        assert!(inner_annotation_at_leaf(&leaf, 2, &nesting));
+        assert!(!inner_annotation_at_leaf(&leaf, 1, &nesting));
+        assert!(!inner_annotation_at_leaf(&Type::String, 1, &nesting));
+        assert!(!inner_annotation_at_leaf(
+            &Type::Array(Box::new(leaf.clone())),
+            2,
+            &nesting
+        ));
+        assert!(!inner_annotation_at_leaf(&leaf, 2, &[]));
+        let mut conflicting = nesting.clone();
+        conflicting.push(nesting[1].clone());
+        assert!(!inner_annotation_at_leaf(&leaf, 2, &conflicting));
     }
 
     #[test]
