@@ -318,14 +318,6 @@ impl Checker<'_> {
             value.ty = expected.clone();
             return Ok(value);
         }
-        if matches!(expected.base(), Type::SuspendFunction { .. }) && !local_return {
-            return Err(
-                Diagnostic::new(expr.offset, "Source suspend lambdas are unsupported").with_kind(
-                    crate::DiagnosticKind::UnsupportedLanguage,
-                    "SUSPEND_LAMBDA_UNSUPPORTED",
-                ),
-            );
-        }
         let (params, result, receiver_type) = match expected.base() {
             Type::Function { params, result } | Type::SuspendFunction { params, result } => {
                 (params, result, None)
@@ -597,15 +589,6 @@ impl Checker<'_> {
                     checker.receiver_labels.insert(label.into(), receiver);
                 }
             }
-        }
-        if composable {
-            function_params.insert(
-                0,
-                (
-                    "<composer>".into(),
-                    Type::Java(crate::classpath::compose_abi::COMPOSER.into()),
-                ),
-            );
         }
         let suspend_ = matches!(
             expected.base(),

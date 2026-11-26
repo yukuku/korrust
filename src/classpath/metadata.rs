@@ -361,8 +361,14 @@ impl<'a> Context<'a> {
             }
         };
         if suspend_function {
-            let Type::Function { mut params, result } = ty else {
-                return Err(invalid());
+            let (mut params, result, receiver) = match ty {
+                Type::Function { params, result } => (params, result, None),
+                Type::ReceiverFunction {
+                    receiver,
+                    params,
+                    result,
+                } => (params, result, Some(receiver)),
+                _ => return Err(invalid()),
             };
             if *result != Type::Nullable(Box::new(Type::Java("java/lang/Object".into()))) {
                 return Err(invalid());
