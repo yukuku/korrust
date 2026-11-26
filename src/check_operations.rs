@@ -1000,6 +1000,7 @@ impl Checker<'_> {
         fn supported(ty: &Type, operator: &str) -> bool {
             match ty.base() {
                 Type::Nullable(inner) => supported(inner, operator),
+                Type::List(_) => matches!(operator, "as" | "as?"),
                 Type::Parameterized { name, arguments }
                     if crate::classpath::kotlin_mapped_classifier(name).is_none()
                         && !name.starts_with("kotlin/jvm/functions/") =>
