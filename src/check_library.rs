@@ -1851,7 +1851,6 @@ impl Checker<'_> {
         args: &[Expr],
         expected: Option<&Type>,
         offset: usize,
-        resolved_class: Option<&JavaClass>,
     ) -> Result<Option<Value>> {
         if self.value_name_is_bound(name)
             || self.functions.contains_key(name)
@@ -1917,6 +1916,7 @@ impl Checker<'_> {
         args: &[Expr],
         expected: Option<&Type>,
         offset: usize,
+        resolved_class: Option<&JavaClass>,
     ) -> Result<Option<Value>> {
         if self
             .imports
