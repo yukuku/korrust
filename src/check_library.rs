@@ -932,12 +932,20 @@ impl Checker<'_> {
         let Some((owner, source_name)) = binding.rsplit_once("::") else {
             let (package, source_name) = binding.rsplit_once('/').unwrap_or(("", binding.as_str()));
             if self.classes.get(binding).is_some_and(|class| {
-                !class.kotlin_class
+                let prefer_constructor = !class.kotlin_class
                     || class.access & (0x200 | 0x400) == 0
                         && class
                             .library
                             .as_ref()
-                            .is_some_and(|library| !library.type_parameters.is_empty())
+                            .is_some_and(|library| !library.type_parameters.is_empty());
+                prefer_constructor
+                    && class.access & (0x200 | 0x400) == 0
+                    && class.methods.iter().any(|method| {
+                        method.name == "<init>"
+                            && self
+                                .classpath
+                                .constructor_visible(&self.lambda_owner, method)
+                    })
             }) {
                 return Vec::new();
             }
