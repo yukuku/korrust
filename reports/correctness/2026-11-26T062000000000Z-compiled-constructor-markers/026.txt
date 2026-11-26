@@ -1,0 +1,4 @@
+$ /workspace/work/interop159-marker-constructors/references/kotlinc/bin/kotlinc /workspace/work/interop159-marker-constructors/tests/constructor_markers/PublicInline.kt -cp /workspace/work/interop159-marker-final-run/dependency:/workspace/work/interop159-marker-constructors/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/interop159-marker-final-run/officialPublicInlineTrue -Xfriend-paths=/workspace/work/interop159-marker-final-run/dependency -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/constructor_markers/PublicInline.kt:3:37: error: public-API inline function cannot access non-public-API constructor.
+inline fun exposed(): InternalBox = InternalBox()
+                                    ^^^^^^^^^^^

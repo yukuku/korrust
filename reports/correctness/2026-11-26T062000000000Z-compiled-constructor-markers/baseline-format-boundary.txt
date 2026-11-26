@@ -1,0 +1,12 @@
+Diff in /workspace/work/interop159-marker-constructors/src/check_library.rs:530:
+             let mut seen_scopes = HashSet::new();
+             while let Some(owner) = scope {
+                 if !seen_scopes.insert(owner.clone()) {
+-                    return Err(Diagnostic::new(offset, "Cyclic lexical classifier hierarchy"));
++                    return Err(Diagnostic::new(
++                        offset,
++                        "Cyclic lexical classifier hierarchy",
++                    ));
+                 }
+                 scope = self.classpath.lexical_parent(&owner);
+                 let Ok(class) = self.classpath.load(&owner) else {

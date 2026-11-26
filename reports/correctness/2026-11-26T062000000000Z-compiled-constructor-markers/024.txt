@@ -1,0 +1,7 @@
+$ /workspace/work/interop159-marker-constructors/references/kotlinc/bin/kotlinc /workspace/work/interop159-marker-constructors/tests/constructor_markers/Internal.kt -cp /workspace/work/interop159-marker-final-run/dependency:/workspace/work/interop159-marker-constructors/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/interop159-marker-final-run/officialInternalFalse -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/constructor_markers/Internal.kt:3:38: error: cannot access 'constructor(key: Key = ...): InternalBox': it is internal in 'markers.library.InternalBox'.
+internal fun friend(): InternalBox = InternalBox()
+                                     ^^^^^^^^^^^
+tests/constructor_markers/Internal.kt:4:36: error: cannot access 'constructor(key: Key = ...): InternalBox': it is internal in 'markers.library.InternalBox'.
+internal fun friendValue(): Long = InternalBox().key.raw
+                                   ^^^^^^^^^^^
