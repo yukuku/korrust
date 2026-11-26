@@ -2050,8 +2050,15 @@ impl Parser {
             let offset = self.token().offset;
             self.expect("@")?;
             let first = self.declaration_name()?;
-            let (use_site, mut name) = if self.take(":") { (Some(first), self.declaration_name()?) } else { (None, first) };
-            while self.take(".") { name.push('/'); name.push_str(&self.declaration_name()?); }
+            let (use_site, mut name) = if self.take(":") {
+                (Some(first), self.declaration_name()?)
+            } else {
+                (None, first)
+            };
+            while self.take(".") {
+                name.push('/');
+                name.push_str(&self.declaration_name()?);
+            }
             self.lines();
             let mut arguments = Vec::new();
             if self.at("(") {
