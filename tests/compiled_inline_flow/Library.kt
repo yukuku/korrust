@@ -33,3 +33,5 @@ inline fun materialized(value: Double, block: (DoubleArray) -> Double): Double {
     return block(values)
 }
 inline fun ranked(value: Double, block: (Int) -> Int): Int = block(if (value > 1.0) 2 else if (value < 0.0) -2 else 0)
+
+inline fun applyDefault(value: Int, block: (Int) -> Int = { it }): Int = block(value)
