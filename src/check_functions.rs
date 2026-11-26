@@ -1156,6 +1156,16 @@ impl Checker<'_> {
                 "SAM conversion requires one abstract method",
             ));
         }
+        if class.kotlin_class && methods[0].unsupported {
+            return Err(Diagnostic::new(
+                offset,
+                "Kotlin functional interface method metadata is unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "KOTLIN_SAM_SIGNATURE_UNSUPPORTED",
+            ));
+        }
         if methods[0].source_property.is_some() {
             return Err(Diagnostic::new(
                 offset,
