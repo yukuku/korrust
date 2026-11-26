@@ -15,7 +15,7 @@ fn literal_error(offset: usize, message: &str, invalid: bool) -> Diagnostic {
     )
 }
 
-fn source_path(expression: &Expr) -> Option<Vec<String>> {
+pub(super) fn source_path(expression: &Expr) -> Option<Vec<String>> {
     match &expression.kind {
         ExprKind::Name(name) => Some(vec![name.clone()]),
         ExprKind::Property(receiver, name) => {

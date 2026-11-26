@@ -2131,6 +2131,54 @@ impl Checker<'_> {
 }
 
 impl Checker<'_> {
+    pub(super) fn qualified_package_call(
+        &mut self,
+        receiver: &Expr,
+        name: &str,
+        args: &[Expr],
+        types: &[Type],
+        expected: Option<&Type>,
+        offset: usize,
+    ) -> Result<Option<Value>> {
+        let Some(path) = classes::source_path(receiver) else {
+            return Ok(None);
+        };
+        let root = &path[0];
+        if !self.unshadowed(root)
+            || self.value_name_is_bound(root)
+            || self
+                .classpath
+                .value_symbol(&self.lambda_owner, root, offset)?
+                .is_some()
+        {
+            return Ok(None);
+        }
+        let methods = self
+            .classpath
+            .package_methods(&path.join("/"), name)?
+            .into_iter()
+            .filter(|method| {
+                method.access & 8 != 0
+                    && method.library.as_ref().is_some_and(|info| {
+                        info.receiver.is_none()
+                            && info.source_name == name
+                            && (method.access & 1 != 0
+                                || info.inline && info.kotlin_public
+                                || self
+                                    .classpath
+                                    .file_private_visible(&self.lambda_owner, method))
+                    })
+                    && (!method.kotlin_internal || self.classpath.internal_visible(&method.owner))
+                    && method.source_property.is_none()
+            })
+            .collect::<Vec<_>>();
+        if methods.is_empty() {
+            return Ok(None);
+        }
+        let method = self.select_method_expected(&methods, args, types, expected, offset)?;
+        self.library_static_call(method, args, offset).map(Some)
+    }
+
     pub(super) fn qualified_java_classifier(
         &self,
         expression: &Expr,

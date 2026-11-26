@@ -5999,6 +5999,16 @@ impl Checker<'_> {
                     let methods = match &target.kind {
                         ExprKind::Name(name) => self.library_call_candidates(name),
                         ExprKind::Property(receiver, name) => {
+                            if let Some(call) = self.qualified_package_call(
+                                receiver,
+                                name,
+                                args,
+                                types,
+                                expected_result,
+                                offset,
+                            )? {
+                                return Ok(call);
+                            }
                             if let ExprKind::Name(alias) = &receiver.kind {
                                 if let Some(owner) = self.imports.get(alias) {
                                     if self.classes.contains_key(owner) {
@@ -6331,6 +6341,16 @@ impl Checker<'_> {
                     return self.source_call(name, args, &[], offset);
                 }
                 ExprKind::Property(receiver, name) => {
+                    if let Some(call) = self.qualified_package_call(
+                        receiver,
+                        name,
+                        args,
+                        &[],
+                        expected_result,
+                        offset,
+                    )? {
+                        return Ok(call);
+                    }
                     if self.qualified_java_class(receiver)?.is_none() {
                         let saved_contract_registration = self.contract_registration;
                         let saved_contract_facts = self.contract_facts.clone();
