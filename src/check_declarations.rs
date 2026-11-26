@@ -2819,6 +2819,14 @@ fn infer_source_results_impl(
             classes.insert(path, class);
         }
     }
+    load_expression_classifiers(
+        source,
+        classpath,
+        owner,
+        &renamed_class_imports(source),
+        &mut imports,
+        &mut classes,
+    )?;
     let lambdas = Rc::new(RefCell::new(Vec::new()));
     let mut context = DeclarationContext::new(owner, classpath, &imports, &classes, &lambdas);
     for constant in source

@@ -7608,6 +7608,114 @@ pub fn check(source: &syntax::Module, classpath: &Classpath) -> Result<Module> {
     }
     check_with_owner(source, classpath, &owner)
 }
+fn renamed_class_imports(source: &syntax::Module) -> HashSet<String> {
+    source
+        .imports
+        .iter()
+        .filter_map(|(alias, path, _)| {
+            let original = path.rsplit('/').next()?;
+            (alias != "*"
+                && alias != original
+                && alias != original.rsplit('$').next().unwrap_or(original)
+                && alias != &original.replace('$', "/")
+                && !source.imports.iter().any(|(other_alias, other_path, _)| {
+                    other_path == path && other_alias == original
+                }))
+            .then(|| path.clone())
+        })
+        .collect()
+}
+
+fn load_expression_classifiers(
+    source: &syntax::Module,
+    classpath: &Classpath,
+    lexical_owner: &str,
+    renamed_imports: &HashSet<String>,
+    imports: &mut HashMap<String, String>,
+    classes: &mut HashMap<String, JavaClass>,
+) -> Result<()> {
+    let mut called = HashSet::new();
+    for property in &source.properties {
+        if let Some(expr) = property.inference_expression() {
+            call_names(expr, &mut called);
+        }
+    }
+    for function in &source.functions {
+        body_call_names(&function.body, &mut called);
+        for expr in function.defaults.iter().flatten() {
+            call_names(expr, &mut called);
+        }
+    }
+    if let Some(class) = &source.class_decl {
+        for method in &class.methods {
+            body_call_names(&method.function.body, &mut called);
+            for expr in method.function.defaults.iter().flatten() {
+                call_names(expr, &mut called);
+            }
+        }
+        for property in &class.properties {
+            body_call_names(&property.body, &mut called);
+            if let Some(e) = &property.initializer {
+                call_names(e, &mut called);
+            }
+        }
+        for expr in class.defaults.iter().flatten() {
+            call_names(expr, &mut called);
+        }
+        if let Some(companion) = &class.companion {
+            for property in &companion.properties {
+                if let Some(expr) = &property.initializer {
+                    call_names(expr, &mut called);
+                }
+            }
+        }
+    }
+    for alias in called {
+        if imports.contains_key(&alias)
+            || source.functions.iter().any(|f| f.name == alias)
+            || matches!(
+                alias.as_str(),
+                "String"
+                    | "IntArray"
+                    | "ByteArray"
+                    | "CharArray"
+                    | "Character"
+                    | "emptyList"
+                    | "listOf"
+                    | "mutableListOf"
+                    | "IllegalArgumentException"
+                    | "IllegalStateException"
+                    | "IndexOutOfBoundsException"
+                    | "UnsupportedOperationException"
+            )
+        {
+            continue;
+        }
+        let owner = if source.package.is_empty() {
+            alias.clone()
+        } else {
+            format!("{}/{}", source.package.replace('.', "/"), alias)
+        };
+        if renamed_imports.contains(&owner) {
+            continue;
+        }
+        if let Ok(class) = classpath.load(&owner) {
+            if !classpath.classifier_visible(lexical_owner, &class.name) {
+                continue;
+            }
+            if class.access & 1 == 0 || class.unsupported {
+                return Err(Diagnostic::new(
+                    0,
+                    format!("Same-package class is inaccessible or unsupported: {owner}"),
+                ));
+            }
+            imports.insert(alias, owner.clone());
+            classes.insert(owner, class);
+        }
+    }
+    Ok(())
+}
+
 pub fn check_with_owner(
     source: &syntax::Module,
     classpath: &Classpath,
@@ -7626,21 +7734,7 @@ pub fn check_with_owner(
     }) {
         return singletons::check_with_owner(source, classpath, owner);
     }
-    let renamed_imports = source
-        .imports
-        .iter()
-        .filter_map(|(alias, path, _)| {
-            let original = path.rsplit('/').next()?;
-            (alias != "*"
-                && alias != original
-                && alias != original.rsplit('$').next().unwrap_or(original)
-                && alias != &original.replace('$', "/")
-                && !source.imports.iter().any(|(other_alias, other_path, _)| {
-                    other_path == path && other_alias == original
-                }))
-            .then(|| path.clone())
-        })
-        .collect::<HashSet<_>>();
+    let renamed_imports = renamed_class_imports(source);
     let mut imports = HashMap::new();
     let mut classes = HashMap::new();
     for (alias, name, offset) in &source.imports {
@@ -8074,80 +8168,14 @@ pub fn check_with_owner(
             classes.insert(owner, class);
         }
     }
-    let mut called = HashSet::new();
-    for function in &source.functions {
-        body_call_names(&function.body, &mut called);
-        for expr in function.defaults.iter().flatten() {
-            call_names(expr, &mut called);
-        }
-    }
-    if let Some(class) = &source.class_decl {
-        for method in &class.methods {
-            body_call_names(&method.function.body, &mut called);
-            for expr in method.function.defaults.iter().flatten() {
-                call_names(expr, &mut called);
-            }
-        }
-        for property in &class.properties {
-            body_call_names(&property.body, &mut called);
-            if let Some(e) = &property.initializer {
-                call_names(e, &mut called);
-            }
-        }
-        for expr in class.defaults.iter().flatten() {
-            call_names(expr, &mut called);
-        }
-        if let Some(companion) = &class.companion {
-            for property in &companion.properties {
-                if let Some(expr) = &property.initializer {
-                    call_names(expr, &mut called);
-                }
-            }
-        }
-    }
-    for alias in called {
-        if imports.contains_key(&alias)
-            || source.functions.iter().any(|f| f.name == alias)
-            || matches!(
-                alias.as_str(),
-                "String"
-                    | "IntArray"
-                    | "ByteArray"
-                    | "CharArray"
-                    | "Character"
-                    | "emptyList"
-                    | "listOf"
-                    | "mutableListOf"
-                    | "IllegalArgumentException"
-                    | "IllegalStateException"
-                    | "IndexOutOfBoundsException"
-                    | "UnsupportedOperationException"
-            )
-        {
-            continue;
-        }
-        let owner = if source.package.is_empty() {
-            alias.clone()
-        } else {
-            format!("{}/{}", source.package.replace('.', "/"), alias)
-        };
-        if renamed_imports.contains(&owner) {
-            continue;
-        }
-        if let Ok(class) = classpath.load(&owner) {
-            if !classpath.classifier_visible(lexical_owner, &class.name) {
-                continue;
-            }
-            if class.access & 1 == 0 || class.unsupported {
-                return Err(Diagnostic::new(
-                    0,
-                    format!("Same-package class is inaccessible or unsupported: {owner}"),
-                ));
-            }
-            imports.insert(alias, owner.clone());
-            classes.insert(owner, class);
-        }
-    }
+    load_expression_classifiers(
+        source,
+        classpath,
+        lexical_owner,
+        &renamed_imports,
+        &mut imports,
+        &mut classes,
+    )?;
     let mut constants = HashMap::new();
     for constant in &source.constants {
         let (ty, kind) = constant_expr(&constant.value)?;
