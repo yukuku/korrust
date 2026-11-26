@@ -48,6 +48,7 @@ fn inaccessible_private_classifiers_reject_constructor_and_type_uses() {
         "class Outer { private class Hidden(val x: Int) }\nfun bad(): Int = Outer.Hidden(1).x",
         "class Outer { private class Hidden }\nfun bad(value: Outer.Hidden): Int = 1",
         "class Outer { private inner class Hidden }\nfun bad(value: Outer.Hidden): Int = 1",
+        "class Outer { private inner class Hidden { fun read(): Int = 1 } }\nfun bad(o: Outer): Int = o.Hidden().read()",
         "class Outer { private class Hidden { class Public(val x: Int) } }\nfun bad(): Int = Outer.Hidden.Public(1).x",
         "class Outer { class First { private class Hidden }; class Second { fun bad(): Int = First.Hidden().hashCode() } }",
     ] {

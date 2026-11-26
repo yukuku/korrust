@@ -69,6 +69,8 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Value> {
+        self.classpath
+            .check_classifier_visibility(&self.lambda_owner, &class.name, offset)?;
         let outer = class
             .enclosing_instance()
             .ok_or_else(|| Diagnostic::new(offset, "Constructor has no enclosing instance"))?;
