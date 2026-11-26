@@ -22,6 +22,7 @@ fn legacy_check(
     let mut object_methods: HashMap<String, Vec<JavaMethod>> = HashMap::new();
     for method in &source.methods {
         let function = &method.function;
+        declarations::validate_vararg_type(function, classpath, imports, classes)?;
         declarations::validate_member_generics(
             function,
             method.is_override,

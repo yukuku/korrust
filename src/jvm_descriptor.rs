@@ -1,62 +1,72 @@
 use crate::{Diagnostic, Result, syntax::Type};
 
-pub(crate) fn method_types(descriptor: &str) -> Result<(Vec<Type>, Type)> {
-    fn ty(bytes: &[u8], cursor: &mut usize, dimensions: usize) -> Result<Type> {
-        let start = *cursor;
-        let tag = *bytes.get(start).ok_or_else(invalid)?;
-        *cursor += 1;
-        Ok(match tag {
-            b'I' => Type::Int,
-            b'J' => Type::Long,
-            b'F' => Type::Float,
-            b'D' => Type::Double,
-            b'B' => Type::Byte,
-            b'C' => Type::Char,
-            b'Z' => Type::Boolean,
-            b'V' => Type::Unit,
-            b'L' => {
-                let end = bytes[*cursor..]
-                    .iter()
-                    .position(|byte| *byte == b';')
-                    .ok_or_else(invalid)?
-                    + *cursor;
-                let name = std::str::from_utf8(&bytes[*cursor..end]).map_err(|_| invalid())?;
-                if name.split('/').any(|part| {
-                    part.is_empty() || part.bytes().any(|byte| matches!(byte, b'.' | b'['))
-                }) {
-                    return Err(invalid());
-                }
-                *cursor = end + 1;
-                if name == "java/lang/String" {
-                    Type::String
-                } else {
-                    Type::Java(name.into())
-                }
+fn ty(bytes: &[u8], cursor: &mut usize, dimensions: usize) -> Result<Type> {
+    let start = *cursor;
+    let tag = *bytes.get(start).ok_or_else(invalid)?;
+    *cursor += 1;
+    Ok(match tag {
+        b'I' => Type::Int,
+        b'J' => Type::Long,
+        b'F' => Type::Float,
+        b'D' => Type::Double,
+        b'B' => Type::Byte,
+        b'C' => Type::Char,
+        b'Z' => Type::Boolean,
+        b'V' => Type::Unit,
+        b'L' => {
+            let end = bytes[*cursor..]
+                .iter()
+                .position(|byte| *byte == b';')
+                .ok_or_else(invalid)?
+                + *cursor;
+            let name = std::str::from_utf8(&bytes[*cursor..end]).map_err(|_| invalid())?;
+            if name
+                .split('/')
+                .any(|part| part.is_empty() || part.bytes().any(|byte| matches!(byte, b'.' | b'[')))
+            {
+                return Err(invalid());
             }
-            b'[' => {
-                if dimensions == 255 {
-                    return Err(invalid());
-                }
-                let element = ty(bytes, cursor, dimensions + 1)?;
-                match &bytes[start..*cursor] {
-                    b"[I" => Type::IntArray,
-                    b"[B" => Type::ByteArray,
-                    b"[S" => Type::ShortArray,
-                    b"[C" => Type::CharArray,
-                    b"[J" => Type::LongArray,
-                    b"[Z" => Type::BooleanArray,
-                    b"[F" => Type::FloatArray,
-                    b"[D" => Type::DoubleArray,
-                    b"[Ljava/lang/String;" => Type::StringArray,
-                    _ if element.is_reference() => Type::Array(Box::new(element)),
-                    _ => return Err(invalid()),
-                }
+            *cursor = end + 1;
+            if name == "java/lang/String" {
+                Type::String
+            } else {
+                Type::Java(name.into())
             }
-            b'S' => Type::Short,
-            _ => return Err(invalid()),
-        })
-    }
+        }
+        b'[' => {
+            if dimensions == 255 {
+                return Err(invalid());
+            }
+            let element = ty(bytes, cursor, dimensions + 1)?;
+            match &bytes[start..*cursor] {
+                b"[I" => Type::IntArray,
+                b"[B" => Type::ByteArray,
+                b"[S" => Type::ShortArray,
+                b"[C" => Type::CharArray,
+                b"[J" => Type::LongArray,
+                b"[Z" => Type::BooleanArray,
+                b"[F" => Type::FloatArray,
+                b"[D" => Type::DoubleArray,
+                b"[Ljava/lang/String;" => Type::StringArray,
+                _ if element.is_reference() => Type::Array(Box::new(element)),
+                _ => return Err(invalid()),
+            }
+        }
+        b'S' => Type::Short,
+        _ => return Err(invalid()),
+    })
+}
 
+pub(crate) fn field_type(descriptor: &str) -> Result<Type> {
+    let mut cursor = 0;
+    let result = ty(descriptor.as_bytes(), &mut cursor, 0)?;
+    if result == Type::Unit || cursor != descriptor.len() {
+        return Err(invalid());
+    }
+    Ok(result)
+}
+
+pub(crate) fn method_types(descriptor: &str) -> Result<(Vec<Type>, Type)> {
     let bytes = descriptor.as_bytes();
     if bytes.first() != Some(&b'(') {
         return Err(invalid());

@@ -460,6 +460,7 @@ impl Checker<'_> {
             (&a.owner, &a.name, &a.descriptor).cmp(&(&b.owner, &b.name, &b.descriptor))
         });
         let mut applicable = Vec::new();
+        let mut failures = Vec::new();
         for method in methods {
             let normalized = self.vararg_arguments(&method, args, offset)?;
             let (params, defaults) = Self::method_parameters(&method)?;
@@ -475,7 +476,13 @@ impl Checker<'_> {
                 }
                 return Err(error);
             }
-            match self.select_method_types(std::slice::from_ref(&method), args, explicit, offset) {
+            match self.select_method_expected(
+                std::slice::from_ref(&method),
+                args,
+                explicit,
+                expected,
+                offset,
+            ) {
                 Ok(_) => applicable.push(method),
                 Err(error)
                     if error.code == "TYPE_MISMATCH"
@@ -489,32 +496,19 @@ impl Checker<'_> {
                             };
                             error.offset == argument.offset
                         }) => {}
-                Err(error) => return Err(error),
+                Err(error) if error.kind == crate::DiagnosticKind::UnsupportedLanguage => {
+                    return Err(error);
+                }
+                Err(error) => failures.push(error),
             }
         }
         if applicable.is_empty() {
+            if let Some(error) = failures.into_iter().next() {
+                return Err(error);
+            }
             return Ok(None);
         }
-        let method = self.select_method_types(&applicable, args, explicit, offset)?;
-        let method = if expected.is_some() {
-            let original = applicable
-                .iter()
-                .find(|original| {
-                    original.owner == method.owner
-                        && original.name == method.name
-                        && original.descriptor == method.descriptor
-                })
-                .unwrap();
-            self.select_method_expected(
-                std::slice::from_ref(original),
-                args,
-                explicit,
-                expected,
-                offset,
-            )?
-        } else {
-            method
-        };
+        let method = self.select_method_expected(&applicable, args, explicit, expected, offset)?;
         let value = if !method.instance_dispatch() {
             self.library_static_call(method, args, offset)?
         } else {
@@ -950,8 +944,14 @@ impl Checker<'_> {
                     "Unsupported builtin array declaration shape",
                 ));
             }
-            let value = values.remove(0);
-            return Ok(Self::wrap_lets(self.coerce(value, result, offset)?, lets));
+            let mut value = values.remove(0);
+            if matches!((value.ty.base(), result.base()), (Type::OutArray(actual), Type::Array(expected)) if actual == expected)
+            {
+                value.ty = result;
+            } else {
+                value = self.coerce(value, result, offset)?;
+            }
+            return Ok(Self::wrap_lets(value, lets));
         }
         if method.access & 1 == 0
             && !self

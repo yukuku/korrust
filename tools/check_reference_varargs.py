@@ -61,6 +61,8 @@ def main():
     def rel(p):
         return str(p.relative_to(ROOT)) if p.is_relative_to(ROOT) else str(p)
     inputs = [*source_root.glob('src/**/*.rs'), *FIXTURES.glob('*'), ROOT / 'tests/reference_varargs.rs', Path(__file__), ROOT / 'tools/check_nov21_generics.py', source_root / 'Cargo.toml', source_root / 'Cargo.lock', reference_root / 'references/compiler.json']
+    upstream=ROOT/'references/kotlin/compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt'
+    inputs.append(upstream)
     frozen = {rel(p):sha(p) for p in sorted(inputs) if p.is_file()}
     bundle=logs/'frozen-inputs.zip'
     with zipfile.ZipFile(bundle,'w',zipfile.ZIP_DEFLATED) as archive:
@@ -88,7 +90,7 @@ def main():
         return run('compile '+provider+' '+source.name,[*command,'-cp',cp(*deps,stdlib),'-d',output])
     try:
         dependency=work/'dependencies'
-        run('compile Java functional interfaces',[jdk/'javac','-d',dependency,FIXTURES/'External.java'])
+        run('compile Java array mutation provider',[jdk/'javac','-d',dependency,FIXTURES/'External.java'])
         outputs={p:work/p for p in ['official','candidate']}
         for provider, output in outputs.items():
             compile(provider,FIXTURES/'Values.kt',output,[dependency])
@@ -103,6 +105,32 @@ def main():
                 sig=run('JVM callable signatures '+provider+'/'+class_name,[jdk/'javap','-p','-s','-v','-cp',cp(output,dependency),class_name])
                 signatures[provider][class_name]=public_signatures(sig.stdout)
         case('JVM-public-nonsynthetic-callable-signatures',signatures['official']==signatures['candidate'])
+        launcher=None
+        for provider,output in outputs.items():
+            for frontend in ['official','candidate']:
+                target=work/(provider+'-'+frontend+'-consumer')
+                compile(frontend,FIXTURES/'Consumer.kt',target,[output,dependency])
+                if launcher is None:
+                    launcher=work/'consumer-java'
+                    run('compile fixed consumer runner against official',[jdk/'javac','-cp',cp(target,output,dependency,stdlib),'-d',launcher,FIXTURES/'ConsumerCheck.java'])
+                result=run('verified Kotlin consumer '+provider+'/'+frontend,[jdk/'java','-Xverify:all','-cp',cp(launcher,target,output,dependency,stdlib),'ConsumerCheck'])
+                case('kotlin-consumer/'+provider+'/'+frontend,result.stdout=='OK\n')
+                negative=logs/'ConsumerWrite.kt'
+                negative.write_text('import referencevarargs.expose\nfun bad() { val values=expose("x"); values[0]="wrong" }\n')
+                command=[kotlin,negative] if frontend=='official' else [candidate,negative,'--diagnostic-format','json']
+                rejected=run('consumer write '+provider+'/'+frontend,[*command,'-cp',cp(output,dependency,stdlib),'-d',work/('negative-consumer-'+provider+'-'+frontend)],(1,))
+                report['cases'].append(dict(id='consumer-write/'+provider+'/'+frontend,outcome='invalid_rejected',rejection_check='pass'))
+        upstream_outputs={provider:work/('upstream-'+provider) for provider in ['official','candidate']}
+        for provider,output in upstream_outputs.items():
+            compile(provider,upstream,output)
+        driver=logs/'UpstreamCheck.java'
+        driver.write_text('public final class UpstreamCheck { public static void main(String[] args) { if (!RawStringsWithManyQuotesKt.box().equals("OK")) throw new AssertionError(); System.out.println("OK"); } }\n')
+        caller=work/'upstream-java'
+        run('upstream fixed Java caller against official',[jdk/'javac','-cp',cp(upstream_outputs['official'],stdlib),'-d',caller,driver])
+        for provider,output in upstream_outputs.items():
+            result=run('unchanged upstream runtime '+provider,[jdk/'java','-Xverify:all','-cp',cp(caller,output,stdlib),'UpstreamCheck'])
+            case('upstream/rawStringsWithManyQuotes/'+provider,result.stdout=='OK\n')
+        report['evidence']=[rel(logs/'ConsumerWrite.kt'),rel(driver)]
         for item in json.loads((FIXTURES/'Rejections.json').read_text()):
             source=work/(item['id']+'.kt');source.write_text(item['source'])
             oracle=run('boundary official/'+item['id'],[kotlin,source,'-cp',cp(dependency,stdlib),'-d',work/('boundary-official-'+item['id'])],(0,1))

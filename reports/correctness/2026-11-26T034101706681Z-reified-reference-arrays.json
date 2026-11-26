@@ -1,0 +1,552 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T03:41:01.706681+00:00",
+  "status": "pass",
+  "selection": "Erased parameterized reference classifiers for allocation-only reified uses and metadata-validated builtin array factories; Class<T>, Class<*>, Box<String>, List<String> and nested nonreified Class<U>; runtime component types and array stores; generic is/mixed-operation boundaries. Fixed official Java caller executed against both outputs with JVM verification.",
+  "compiler": {
+    "binary_sha256": "c9affef12cb4a20cc05c68deb9b08125cddac3db19bbcdf456b403ac38381217",
+    "source_revision": "dfcf9a63b",
+    "source_snapshot": "/workspace/work/targets159/reified-arrays-freeze",
+    "source_state": "Exact committed compiler/fixture source; report harness includes hashed reference-policy interpretation notes."
+  },
+  "reference_compiler": {
+    "pin": {
+      "schema_version": 1,
+      "installed_at": "2026-10-23T02:43:55.924832+00:00",
+      "version": "2.3.21",
+      "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+      "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+      "path": "references/kotlinc",
+      "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+    }
+  },
+  "inputs": {
+    "files_sha256": {
+      "src/annotation_declarations.rs": "68824921ba8a6cac0425cfd3c574eb87bc78c478575ade5f0fc5d7d31bb8fecc",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/annotation_files.rs": "0fe8ebba7bbd2c80fcdd6fda797b448ca8cd63945b100781361bf1e3ace02eaa",
+      "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "src/bytecode/anonymous_context.rs": "e48d7aba57745c9e3ecb0a2317ea627f3b6d9b2d86805563bae680d79a301910",
+      "src/bytecode/class_companion.rs": "7463d1e739919160b82ed1137a195ebc3a36037ed8b5419a26c1f38889b533a7",
+      "src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+      "src/bytecode/defaults.rs": "d092d8a420cfb719f92dbb9a3bcc58f7c644d67bf9b3c611c72949122c22e827",
+      "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "src/bytecode/frames.rs": "1659d0401bfa59f751e3b6db250a2395a827ccad13c156f19f62c76773983b48",
+      "src/bytecode/inline.rs": "ca8a4f4da8f11e405a3cdcbcf87c3bfde49635e331f9712fb7b2f4aca0f84d25",
+      "src/bytecode/interfaces.rs": "5456ea3de3402ee3ead9920bb2cb0e7c0baab4f6eb7b211e481a16bf9ad3207b",
+      "src/bytecode/lambdas.rs": "80d29fe68d378de0b0458e601dec4cc6daaa539a64ce137a7d9f3c10e19f2d98",
+      "src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+      "src/bytecode/suspend.rs": "dfac0ad895edaf45c25655df1fad6c1828fe3fc767fd936dabe6e45357dd96d7",
+      "src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+      "src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+      "src/bytecode.rs": "4a64af005a11fd9a87467750b5acf485aa9e6e1057a4249fa52258e41b76d712",
+      "src/check.rs": "69f437e68bf50b2104dad2f9db1032b796f01a4dd1620ed65926775f4f8dac4e",
+      "src/check_annotation_placements.rs": "027e77c6a6db60f98262fbaf0f44be170c53b58b03d64ae6e8cc43cdb2dc1579",
+      "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "src/check_anonymous.rs": "94803c35b645b49721903c0f4556e01cfdbb454289cb302f0d1fd58b288e7597",
+      "src/check_captures.rs": "f752d88bb81c26576caad658160a332fa21946e7275e6faf331bfd73f6a84479",
+      "src/check_class_delegation.rs": "972c573827d747f7d12aa92254c71a9206a4679516047d305b83a89cddf5ba9c",
+      "src/check_classes.rs": "6f8ef44983d86b3e918cfad4bab9f6ac2aabd953563cefd59eb4d9ab5fb8e347",
+      "src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+      "src/check_control.rs": "23bcd78c9f4a12b2665110ed5565c4cfe63c0c00f148463ef28c608336fa38b9",
+      "src/check_declarations.rs": "80baeb356938cf1982947ba70dda9789b9cf9840345973d3d0876752aade7244",
+      "src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+      "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "src/check_functions.rs": "535be0ce49f013004314beaf4184fcd8a2a01a308da2a376fa544919c83d008a",
+      "src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+      "src/check_interfaces.rs": "952fcff0409a30bd5b505706e466c5b3e003011d778b0b26a9a1f52f94bec5f8",
+      "src/check_ir_walk.rs": "caaeeea794075c7e23b17fc9e2d06ace5a02d366c9abffbdc9393d3c8a1a2e96",
+      "src/check_java_properties.rs": "2400dd59efe5856609c7927875a4da2aa2b7d5e90945ae4f412a1b9e4cc97b7c",
+      "src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+      "src/check_library.rs": "a01af275ef8fbea11ff01ee976af2ef60b1f9ff7d68f78eb4ff7443bd66da2b2",
+      "src/check_local_annotations.rs": "ad5d937aae27ec3bed4528322c068a39eca915a49c449b68b2c4453f87f1a770",
+      "src/check_member_extensions.rs": "cfca4c6c2b51effce735dd6ef1132d6490e6cf2cf358e43a3ab471e72a92d71e",
+      "src/check_objects.rs": "9af6682c6ebbdd918b3376521bbb67047526b1c1cc97053bd67b9d25907dc766",
+      "src/check_operations.rs": "e5c90b039d78ca0c1ddd50aced8e76a404a36fde7ad54847aea96a70c2286de3",
+      "src/check_overloads.rs": "03618a927df2d30db9bc245df9a57e99001e9a525a49c089968cd22cb1f0671e",
+      "src/check_references.rs": "61a780d0816443007725e52f992c717eeab828f7b971749ed3242318a8d80077",
+      "src/check_relations.rs": "41dfb9500f3c8884e4c1c744c76352fc3ef090e91fbe08b26ce792e87aa7b1f7",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+      "src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+      "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "src/check_varargs.rs": "95454e94092f305c17264fe157b4827ec9247d8f9c90b24db871f87ce961d583",
+      "src/check_variant_signatures.rs": "11de1f1c614227ef47a5e7e11ddbf0606cc50fadffe3eb4a3057175b475c53df",
+      "src/classpath/aliases.rs": "2ad31713a22f8eb0607ed96d838aa96fecedf7a6b261f07473aef66b8bdb8827",
+      "src/classpath/archive.rs": "835e4a79bbbc5c7328ce6a540ed1a2ca975fc526278fe7c31fd9433e08cc56d5",
+      "src/classpath/import_classes.rs": "65a1563c6df2772ac3d71602a54e7fd1b64bab1ab51d6053e74bdb65b2bf5f4e",
+      "src/classpath/inline_defaults.rs": "7f3801938414c155a47fb7e82e2a2a7dda1d2cf1d0e9f92e9cdb686ab7324f2f",
+      "src/classpath/jdk_modules.rs": "cd1a350e7f8e03cda618a1d919d4e6ee49aba7e9a26728178ebad5f73c4bd8f8",
+      "src/classpath/jvm_builtins.rs": "b8c6e4789a998c1b3737da4879a15d74eb453170c4b03542d4c8ae13f6e40e86",
+      "src/classpath/metadata.rs": "fc965878a9bf13a3fe350d424228a9faa8b8899ea1286a2bcac0bcbde825c867",
+      "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+      "src/classpath/package_info.rs": "f3bd436a8c64d48216bae3a55a2a3e82a903d354a42b629928fe1af95197061a",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/signature.rs": "5dd5097b24b9bce36682ac24d649a4d39703175cf8d9680cb5cbea995c2e03cc",
+      "src/classpath/singletons.rs": "836fe172f37cc9282e259ba446688b3d2d6bf34fde25ddc3973c1800f29c71a5",
+      "src/classpath/source.rs": "0676a38dfdac93069155d0c0390d40c3ce7ce9a1e9b21de75d607c32ca286c08",
+      "src/classpath/source_enums.rs": "1b6719565931913df35f26994fb0077985f1f5c89614fb1b5d4009e63957933d",
+      "src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+      "src/classpath/value_names.rs": "92bce0a6418edd333df08b6f388636648a2967560f8757c4bb00b1479236cae2",
+      "src/classpath.rs": "b08e95bf0e7de790e8e9e8ec86acd7da31dd16b388f64b39e171d76e0fc50dcf",
+      "src/compiled_inline/defaults.rs": "89d95d8b98e4af043bc3c592ba7588bffb7924bc86bdae57d457c0b420cbde37",
+      "src/compiled_inline.rs": "44b3beeb7d4ce4d6f70ff9d6b6ba14e525d442826d607c0a495610aac0181058",
+      "src/const_eval.rs": "bc6a053823a41c822bcc5af603023019a6ace1895c9fae75bf0372f02381dacf",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+      "src/lib.rs": "3c19e2b8c95ebce9fda8d5282c9caf48bcf98f2a93dc80370d314e73432f27e1",
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/metadata.rs": "617cfa270463ce40d80c9fddbc6f0de87c243d231ed0fa522bc3c4a8739f658d",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/source_inline.rs": "d59ecaba2b32264cc4190594c19e5ec7e99e6cbb5db28b33c1eaca7c7aa404e5",
+      "src/syntax.rs": "85923887d620855810ed67413be89b74255292911b5db67e7f45c9e6fa92d247",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525",
+      "tests/reified_reference_arrays/Calls.java": "a6b7b23c148f8e3449c15b7e4f1d5dc0e60e372e9fe87ba679a257599df241f5",
+      "tests/reified_reference_arrays/InvalidErased.kt": "d04a7a1d83c107a680b0ce2e4f143a4b5ea4c10a22c7ad2981243520d98ef0c7",
+      "tests/reified_reference_arrays/Library.kt": "78e538276b8fb0d46a6d2a47e697f39e7c6d520d122b79e0dc644d540920873d",
+      "tests/reified_reference_arrays/UnsupportedMixed.kt": "9aa52bb1a0940861ecd14619eef6d1e070d166972c54048c95084081f356dc84",
+      "tests/reified_reference_arrays/UnsupportedTest.kt": "496736d282590c00b2d016552332a91c33324061219f0397dcf72becc69c8c17",
+      "tests/reified_reference_arrays/Uses.kt": "14e5c47a7834f0341825e9f4ec3f67419439c283d5bf8cfa3d760ca2758e3a66",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "tests/reified_reference_arrays.rs": "963b54ad39235420a5e9385ae65a6c930bdd28c0fc09dd048ef4874af4856cb6",
+      "tools/check_reified_reference_arrays.py": "ae45747af619dd6b32e43c29b637fb0bb1cd43fdfb7a399ac0d44a8f7a700bf1",
+      "references/kotlin/compiler/backend/src/org/jetbrains/kotlin/codegen/inline/ReifiedTypeInliner.kt": "4eece2722382e2257013eca43e8a1d56b1f05bf3479d2a671983fb58dd5e0d2f",
+      "references/kotlin-spec/docs/src/md/kotlin.core/rtti.md": "5a4398757a43579eb8aca84290ad4928608582e767de75f6253d99769ea1793a"
+    }
+  },
+  "dependencies": {
+    "/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/annotations-13.0.jar": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+  },
+  "commands": [
+    {
+      "id": "official/dependency",
+      "argv": [
+        "/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/reified-arrays-freeze/tests/reified_reference_arrays/Library.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/dependency"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/000-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/reified-arrays-freeze/tests/reified_reference_arrays/Uses.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/dependency:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/001-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/korrust-frozen",
+        "/workspace/work/targets159/reified-arrays-freeze/tests/reified_reference_arrays/Uses.kt",
+        "-cp",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/dependency:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/annotations-13.0.jar",
+        "--module-name",
+        "reifiedarrays",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/002-stderr.txt"
+    },
+    {
+      "id": "fixed-java-caller",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "--release",
+        "8",
+        "-cp",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/official:/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/dependency:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/caller",
+        "/workspace/work/targets159/reified-arrays-freeze/tests/reified_reference_arrays/Calls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/003-stderr.txt"
+    },
+    {
+      "id": "official/runtime",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/caller:/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/official:/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/dependency:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/annotations-13.0.jar",
+        "erasedcheck.Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/004-stderr.txt"
+    },
+    {
+      "id": "official/signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/official:/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/dependency",
+        "erasedconsumer.UsesKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/005-stderr.txt"
+    },
+    {
+      "id": "candidate/runtime",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/caller:/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/candidate:/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/dependency:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/annotations-13.0.jar",
+        "erasedcheck.Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/006-stderr.txt"
+    },
+    {
+      "id": "candidate/signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/candidate:/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/dependency",
+        "erasedconsumer.UsesKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/007-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/reified-arrays-freeze/tests/reified_reference_arrays/InvalidErased.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/dependency:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/InvalidErased/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/008-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/korrust-frozen",
+        "/workspace/work/targets159/reified-arrays-freeze/tests/reified_reference_arrays/InvalidErased.kt",
+        "-cp",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/dependency:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/annotations-13.0.jar",
+        "--module-name",
+        "reifiedarrays",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/InvalidErased/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/009-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/reified-arrays-freeze/tests/reified_reference_arrays/UnsupportedMixed.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/dependency:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/UnsupportedMixed/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/010-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/korrust-frozen",
+        "/workspace/work/targets159/reified-arrays-freeze/tests/reified_reference_arrays/UnsupportedMixed.kt",
+        "-cp",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/dependency:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/annotations-13.0.jar",
+        "--module-name",
+        "reifiedarrays",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/UnsupportedMixed/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/011-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/reified-arrays-freeze/tests/reified_reference_arrays/UnsupportedTest.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/dependency:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/annotations-13.0.jar",
+        "-d",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/UnsupportedTest/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/012-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/korrust-frozen",
+        "/workspace/work/targets159/reified-arrays-freeze/tests/reified_reference_arrays/UnsupportedTest.kt",
+        "-cp",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/dependency:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/work/targets159/reified-arrays-freeze/references/kotlinc/lib/annotations-13.0.jar",
+        "--module-name",
+        "reifiedarrays",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/reified-arrays-freeze/target/checks/2026-11-26T034101706681Z-reified-reference-arrays/UnsupportedTest/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/013-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "kotlin-dependency",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "caller/compile-official",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/runtime",
+      "outcome": "pass",
+      "observed": "reified-reference-arrays-ok"
+    },
+    {
+      "id": "official/signatures-read",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/runtime",
+      "outcome": "pass",
+      "observed": "reified-reference-arrays-ok"
+    },
+    {
+      "id": "candidate/signatures-read",
+      "outcome": "pass"
+    },
+    {
+      "id": "signatures/match",
+      "outcome": "pass"
+    },
+    {
+      "id": "InvalidErased",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/reified-arrays-freeze/tests/reified_reference_arrays/InvalidErased.kt",
+          "offset": 80,
+          "category": "invalid_kotlin",
+          "code": "ERASED_REIFIED_ARGUMENT",
+          "message": "Cannot use an erased type parameter as a reified argument",
+          "path": "/workspace/work/targets159/reified-arrays-freeze/tests/reified_reference_arrays/InvalidErased.kt",
+          "line": 2,
+          "column": 38
+        }
+      ]
+    },
+    {
+      "id": "UnsupportedMixed",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/reified-arrays-freeze/tests/reified_reference_arrays/UnsupportedMixed.kt",
+          "offset": 80,
+          "category": "unsupported_language",
+          "code": "REIFIED_ARGUMENT_CLASSIFIER_UNSUPPORTED",
+          "message": "This reified argument classifier is unsupported",
+          "path": "/workspace/work/targets159/reified-arrays-freeze/tests/reified_reference_arrays/UnsupportedMixed.kt",
+          "line": 2,
+          "column": 42
+        }
+      ]
+    },
+    {
+      "id": "UnsupportedTest",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/reified-arrays-freeze/tests/reified_reference_arrays/UnsupportedTest.kt",
+          "offset": 70,
+          "category": "unsupported_language",
+          "code": "REIFIED_ARGUMENT_CLASSIFIER_UNSUPPORTED",
+          "message": "This reified argument classifier is unsupported",
+          "path": "/workspace/work/targets159/reified-arrays-freeze/tests/reified_reference_arrays/UnsupportedTest.kt",
+          "line": 2,
+          "column": 33
+        }
+      ]
+    }
+  ],
+  "reference_interpretation": {
+    "specification": "The RTTI section describes raw generic classifiers as runtime available and notes that classifier generics are partially runtime available.",
+    "pinned_jvm_evidence": "ReifiedTypeInliner.processNewArray substitutes the ASM classifier name; the pinned compiler accepts the parameterized allocation substitutions exercised here.",
+    "scope": "Allocation uses classifier erasure while source generic arguments remain checked. No generic-argument RTTI is introduced; generic is/mixed-operation cases remain explicitly unsupported."
+  },
+  "fixed_java_caller_hashes": {
+    "erasedcheck/Calls.class": "73ddf06bea2d5ecf928196fda74648e0eea6e95ec429546dda5e81b7aeaa33e7"
+  },
+  "official_signatures": "Compiled from \"Uses.kt\"\npublic final class erasedconsumer.UsesKt {\n  public static final java.lang.Class<?>[] classes();\n    descriptor: ()[Ljava/lang/Class;\n\n  public static final java.lang.Class<?>[] emptyClasses();\n    descriptor: ()[Ljava/lang/Class;\n\n  public static final java.lang.Class<java.lang.String>[] nullableClasses();\n    descriptor: ()[Ljava/lang/Class;\n\n  public static final erasedallocation.Box<java.lang.String>[] boxes();\n    descriptor: ()[Lerasedallocation/Box;\n\n  public static final java.util.List<java.lang.String>[] lists();\n    descriptor: ()[Ljava/util/List;\n\n  public static final <U> java.lang.Class<U>[] genericClasses(int);\n    descriptor: (I)[Ljava/lang/Class;\n}\n",
+  "candidate_signatures": "Compiled from \"Uses.kt\"\npublic final class erasedconsumer.UsesKt {\n  public static final java.lang.Class<?>[] classes();\n    descriptor: ()[Ljava/lang/Class;\n\n  public static final java.lang.Class<?>[] emptyClasses();\n    descriptor: ()[Ljava/lang/Class;\n\n  public static final java.lang.Class<java.lang.String>[] nullableClasses();\n    descriptor: ()[Ljava/lang/Class;\n\n  public static final erasedallocation.Box<java.lang.String>[] boxes();\n    descriptor: ()[Lerasedallocation/Box;\n\n  public static final java.util.List<java.lang.String>[] lists();\n    descriptor: ()[Ljava/util/List;\n\n  public static final <U> java.lang.Class<U>[] genericClasses(int);\n    descriptor: (I)[Ljava/lang/Class;\n}\n",
+  "signature_contracts": {
+    "official": {
+      "public final class erasedconsumer.UsesKt {": [
+        [
+          "public static final <U> java.lang.Class<U>[] genericClasses(int);",
+          "descriptor: (I)[Ljava/lang/Class;"
+        ],
+        [
+          "public static final erasedallocation.Box<java.lang.String>[] boxes();",
+          "descriptor: ()[Lerasedallocation/Box;"
+        ],
+        [
+          "public static final java.lang.Class<?>[] classes();",
+          "descriptor: ()[Ljava/lang/Class;"
+        ],
+        [
+          "public static final java.lang.Class<?>[] emptyClasses();",
+          "descriptor: ()[Ljava/lang/Class;"
+        ],
+        [
+          "public static final java.lang.Class<java.lang.String>[] nullableClasses();",
+          "descriptor: ()[Ljava/lang/Class;"
+        ],
+        [
+          "public static final java.util.List<java.lang.String>[] lists();",
+          "descriptor: ()[Ljava/util/List;"
+        ]
+      ]
+    },
+    "candidate": {
+      "public final class erasedconsumer.UsesKt {": [
+        [
+          "public static final <U> java.lang.Class<U>[] genericClasses(int);",
+          "descriptor: (I)[Ljava/lang/Class;"
+        ],
+        [
+          "public static final erasedallocation.Box<java.lang.String>[] boxes();",
+          "descriptor: ()[Lerasedallocation/Box;"
+        ],
+        [
+          "public static final java.lang.Class<?>[] classes();",
+          "descriptor: ()[Ljava/lang/Class;"
+        ],
+        [
+          "public static final java.lang.Class<?>[] emptyClasses();",
+          "descriptor: ()[Ljava/lang/Class;"
+        ],
+        [
+          "public static final java.lang.Class<java.lang.String>[] nullableClasses();",
+          "descriptor: ()[Ljava/lang/Class;"
+        ],
+        [
+          "public static final java.util.List<java.lang.String>[] lists();",
+          "descriptor: ()[Ljava/util/List;"
+        ]
+      ]
+    }
+  },
+  "input_integrity": {
+    "status": "unchanged"
+  },
+  "counts": {
+    "pass": 9,
+    "invalid_rejected": 1,
+    "unsupported_language": 2
+  },
+  "supplementary_validation": {
+    "rust_test": {
+      "outcome": "pass",
+      "log": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/reified-reference-arrays-test2.log",
+      "source_scope": "working_tree_feature_integration"
+    },
+    "clippy": {
+      "outcome": "pass",
+      "log": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/reified-arrays-clippy.log",
+      "source_scope": "committed_snapshot"
+    },
+    "format": {
+      "outcome": "pass",
+      "log": "reports/correctness/2026-11-26T034101706681Z-reified-reference-arrays/reified-arrays-fmt.log",
+      "source_scope": "committed_snapshot"
+    }
+  }
+}

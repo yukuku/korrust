@@ -201,7 +201,7 @@ impl Checker<'_> {
                 }
             }
         }
-        let mut value = self.value(expr)?;
+        let mut value = self.value_expected(expr, Some(expected))?;
         if matches!(expected.base(), Type::SuspendFunction { .. })
             && matches!(
                 value.ty.base(),

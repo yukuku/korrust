@@ -1,0 +1,3 @@
+target/checks/2026-11-26T025850014277Z-local-annotations/error-affecting.kt:1:119: error: cannot access 'fun read(): Int': it is private in 'Secret'.
+class Secret { private fun read(): Int = 3 }; fun limited(): Int { @Suppress("INVISIBLE_MEMBER") val value = Secret().read(); return value }
+                                                                                                                      ^^^^

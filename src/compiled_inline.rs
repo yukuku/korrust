@@ -63,6 +63,59 @@ fn unsupported(message: impl AsRef<str>) -> Diagnostic {
     )
 }
 
+pub(crate) fn reifies_only_array_allocation(method: &JavaMethod, parameter: &str) -> bool {
+    let Some(code) = method
+        .library
+        .as_ref()
+        .and_then(|library| library.code.as_ref())
+    else {
+        return false;
+    };
+    let Ok(body) = decode(code) else {
+        return false;
+    };
+    let mut found = false;
+    for (index, instruction) in body.instructions.iter().enumerate() {
+        if !matches!(&instruction.kind, InlineOp::Reference { constant: InlineConstant::Method { owner, name, descriptor, .. }, .. } if owner == "kotlin/jvm/internal/Intrinsics" && name == "reifiedOperationMarker" && descriptor == "(ILjava/lang/String;)V")
+        {
+            continue;
+        }
+        if index < 2 || index + 1 >= body.instructions.len() {
+            return false;
+        }
+        let InlineOp::Constant(InlineConstant::String(name)) = &body.instructions[index - 1].kind
+        else {
+            return false;
+        };
+        let Ok(name) = String::from_utf16(name) else {
+            return false;
+        };
+        if name.strip_suffix('?').unwrap_or(&name) != parameter {
+            continue;
+        }
+        if !matches!(&body.instructions[index - 2].kind, InlineOp::Raw { opcode: 0x03, operands } if operands.is_empty())
+            && !matches!(
+                &body.instructions[index - 2].kind,
+                InlineOp::Constant(InlineConstant::Integer(0))
+            )
+        {
+            return false;
+        }
+        if !matches!(
+            &body.instructions[index + 1].kind,
+            InlineOp::Reference {
+                opcode: 0xbd,
+                constant: InlineConstant::Class(_),
+                ..
+            }
+        ) {
+            return false;
+        }
+        found = true;
+    }
+    found
+}
+
 pub(crate) fn validate(method: &JavaMethod) -> Result<()> {
     if method.access & 8 == 0 {
         return Err(unsupported("only static inline functions are supported"));

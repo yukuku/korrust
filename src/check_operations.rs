@@ -5,6 +5,22 @@ pub(super) fn is_infix_name(token: &str) -> bool {
         && !matches!(token, "in" | "and" | "or" | "xor" | "shl" | "shr" | "ushr")
 }
 
+pub(super) fn char_arithmetic(op: &str, left: Value, right: Value) -> Value {
+    let difference = op == "-" && right.ty == Type::Char;
+    let value = Value {
+        ty: Type::Int,
+        kind: ValueKind::Binary(op.into(), Box::new(left), Box::new(right)),
+    };
+    if difference {
+        value
+    } else {
+        Value {
+            ty: Type::Char,
+            kind: ValueKind::Convert(Type::Char, Box::new(value)),
+        }
+    }
+}
+
 pub(super) enum ExtensionKind {
     Ordinary,
     Operator,
@@ -2737,10 +2753,11 @@ impl Checker<'_> {
         result
     }
 
-    pub(super) fn implicit_receiver_call(
+    pub(super) fn implicit_receiver_call_expected(
         &mut self,
         name: &str,
         args: &[Expr],
+        expected: Option<&Type>,
         offset: usize,
     ) -> Result<Value> {
         let receiver = match self.default_receiver_value(offset) {
@@ -2751,14 +2768,14 @@ impl Checker<'_> {
         let initialized = self.initialized.clone();
         let refinements = self.refinements.clone();
         let count = self.lambdas.borrow().len();
-        let result = self.java_call(receiver, name, args, offset);
+        let result = self.java_call_types_expected(receiver, name, args, &[], expected, offset);
         if result.is_err() {
             self.next = next;
             self.initialized = initialized;
             self.refinements = refinements;
             self.lambdas.borrow_mut().truncate(count);
             if let Some(outer) = self.enclosing_receiver(offset)? {
-                return self.java_call(outer, name, args, offset);
+                return self.java_call_types_expected(outer, name, args, &[], expected, offset);
             }
         }
         result

@@ -207,6 +207,7 @@ pub(super) fn check_class_with_constants(
     validate_constructor_assignments(source)?;
     for method in &source.methods {
         validate_operator(&method.function, true)?;
+        validate_vararg_type(&method.function, classpath, imports, classes)?;
         validate_overriding_defaults(&method.function, method.is_override)?;
     }
     if source.data
@@ -2345,6 +2346,7 @@ impl<'a> DeclarationContext<'a> {
         is_override: bool,
     ) -> Result<Function> {
         validate_operator(source, true)?;
+        validate_vararg_type(source, self.classpath, self.imports, self.classes)?;
         validate_member_generics(
             source,
             is_override,
@@ -3718,6 +3720,75 @@ pub(super) fn function_method(
     }
 }
 
+pub(super) fn validate_vararg_type(
+    function: &syntax::Function,
+    classpath: &Classpath,
+    imports: &HashMap<String, String>,
+    classes: &HashMap<String, JavaClass>,
+) -> Result<()> {
+    if !function.vararg {
+        return Ok(());
+    }
+    let Some((_, array)) = function.params.last() else {
+        return Ok(());
+    };
+    let array = resolve_type_checked(array, imports, function.offset, classpath, classes)?;
+    let Type::OutArray(element) = array else {
+        return Ok(());
+    };
+    if !element.is_reference() {
+        return Err(Diagnostic::new(
+            function.offset,
+            "Source Unit varargs and primitive-alias varargs require unsupported carrier lowering",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "SOURCE_VARARG_CARRIER_UNSUPPORTED",
+        ));
+    }
+    let mut nominal = element.as_ref();
+    while let Type::Nullable(inner) | Type::Platform(inner) = nominal {
+        nominal = inner;
+    }
+    if nominal == &Type::Unit || matches!(nominal, Type::Java(owner) if owner == "kotlin/Unit") {
+        return Err(Diagnostic::new(
+            function.offset,
+            "Unit varargs require unsupported boxed Unit carriers",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "SOURCE_VARARG_CARRIER_UNSUPPORTED",
+        ));
+    }
+    if unsigned::owner(nominal).is_some() {
+        return Err(Diagnostic::new(
+            function.offset,
+            "Unsigned varargs require unsupported unsigned-array carriers",
+        )
+        .with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "UNSIGNED_VARARG_UNSUPPORTED",
+        ));
+    }
+    if let Type::Java(owner) | Type::Parameterized { name: owner, .. } = nominal
+        && classpath
+            .load(owner)?
+            .library
+            .as_ref()
+            .is_some_and(|library| library.value_class.is_some())
+    {
+        return Err(Diagnostic::new(
+            function.offset,
+            "Value classes cannot be direct vararg element types",
+        )
+        .with_kind(
+            crate::DiagnosticKind::InvalidKotlin,
+            "VALUE_CLASS_VARARG_INVALID",
+        ));
+    }
+    Ok(())
+}
+
 pub(super) fn validate_operator(function: &syntax::Function, member: bool) -> Result<()> {
     if function
         .receiver
@@ -3731,21 +3802,6 @@ pub(super) fn validate_operator(function: &syntax::Function, member: bool) -> Re
         .with_kind(
             crate::DiagnosticKind::UnsupportedLanguage,
             "UNIT_EXTENSION_RECEIVER_UNSUPPORTED",
-        ));
-    }
-    if function.vararg
-        && function
-            .params
-            .last()
-            .is_some_and(|(_, ty)| matches!(ty, Type::OutArray(element) if !element.is_reference()))
-    {
-        return Err(Diagnostic::new(
-            function.offset,
-            "Source Unit varargs and primitive-alias varargs require unsupported carrier lowering",
-        )
-        .with_kind(
-            crate::DiagnosticKind::UnsupportedLanguage,
-            "SOURCE_VARARG_CARRIER_UNSUPPORTED",
         ));
     }
 

@@ -1,0 +1,34 @@
+    Checking korrust v0.1.0 (/tmp/korrust159-wave7-0e35110705dd6a5f1181c5e9e625071a6eb7e1ad)
+error: for loop over a single element
+  --> tests/upstream_boundaries.rs:5:5
+   |
+ 5 | /     for (source, name, code) in [(
+ 6 | |         include_str!(
+ 7 | |             "../references/kotlin/compiler/testData/codegen/box/delegation/genericProperty.kt"
+ 8 | |         ),
+...  |
+14 | |         assert_eq!(error.code, code);
+15 | |     }
+   | |_____^
+   |
+   = help: for further information visit https://rust-lang.github.io/rust-clippy/master/index.html#single_element_loop
+   = note: `-D clippy::single-element-loop` implied by `-D warnings`
+   = help: to override `-D warnings` add `#[allow(clippy::single_element_loop)]`
+help: try
+   |
+ 5 ~     {
+ 6 +         let (source, name, code) = (
+ 7 +         include_str!(
+ 8 +             "../references/kotlin/compiler/testData/codegen/box/delegation/genericProperty.kt"
+ 9 +         ),
+10 +         "genericProperty.kt",
+11 +         "INTERFACE_EXTENSION_UNSUPPORTED",
+12 +     );
+13 +         let error = compile(source, name).err().unwrap();
+14 +         assert_eq!(error.kind, DiagnosticKind::UnsupportedLanguage);
+15 +         assert_eq!(error.code, code);
+16 +     }
+   |
+
+error: could not compile `korrust` (test "upstream_boundaries") due to 1 previous error
+warning: build failed, waiting for other jobs to finish...

@@ -1558,14 +1558,26 @@ impl Checker<'_> {
                 if !mentions(pattern, &parameter.name) {
                     continue;
                 }
-                if !matches!(pattern, Type::Parameter { name, .. } if name == &parameter.name) {
+                let input = match pattern {
+                    Type::Parameter { name, .. } if name == &parameter.name => {
+                        Some(value.ty.clone())
+                    }
+                    Type::Array(inner) | Type::OutArray(inner)
+                        if matches!(inner.as_ref(), Type::Parameter { name, .. } if name == &parameter.name)
+                            && value.ty.base().primitive_array_element().is_none() =>
+                    {
+                        value.ty.base().array_element().map(|ty| ty.base().clone())
+                    }
+                    _ => None,
+                };
+                let Some(input) = input else {
                     return Err(Diagnostic::new(offset, "OnlyInputTypes inference through nested or captured parameter types is unsupported")
                         .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "ONLY_INPUT_TYPES_SHAPE_UNSUPPORTED"));
-                }
+                };
                 input_types
                     .entry(parameter.name.clone())
                     .or_default()
-                    .push(value.ty.clone());
+                    .push(input);
             }
             if !self.infer_constraints(&params[*index].1, &value.ty, &mut substitutions, &fixed, 0)
             {
@@ -1738,7 +1750,7 @@ impl Checker<'_> {
                     )
                 })
                 .collect();
-            for (_, ty) in &metadata.reified_arguments {
+            for (parameter, ty) in &metadata.reified_arguments {
                 fn nested_parameter(ty: &Type, nested: bool) -> Option<&str> {
                     match ty.base() {
                         Type::Parameter { name, .. } if nested => Some(name),
@@ -1786,7 +1798,26 @@ impl Checker<'_> {
                         _ => false,
                     }
                 }
-                if unsupported_classifier(ty) {
+                fn erased_reference_classifier(ty: &Type) -> bool {
+                    match ty.base() {
+                        Type::Nullable(inner) | Type::Array(inner) | Type::OutArray(inner) => {
+                            erased_reference_classifier(inner)
+                        }
+                        Type::Parameterized { .. }
+                        | Type::List(_)
+                        | Type::MutableList(_)
+                        | Type::Java(_)
+                        | Type::String => true,
+                        _ => false,
+                    }
+                }
+                if unsupported_classifier(ty)
+                    && !(erased_reference_classifier(ty)
+                        && (library.builtin_array
+                            || crate::compiled_inline::reifies_only_array_allocation(
+                                method, parameter,
+                            )))
+                {
                     return Err(Diagnostic::new(
                         offset,
                         "This reified argument classifier is unsupported",

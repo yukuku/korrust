@@ -806,6 +806,76 @@ impl Checker<'_> {
         self.extension_receivers.insert(0, receiver);
         Ok((name, ty))
     }
+    fn declared_list_call(
+        &mut self,
+        receiver: &Value,
+        name: &str,
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<Option<Value>> {
+        let mut candidates = Vec::new();
+        for (classifier, owner) in [
+            ("kotlin/collections/MutableList", "java/util/List"),
+            ("kotlin/collections/List", "java/util/List"),
+            ("kotlin/Any", "java/lang/Object"),
+        ] {
+            if classifier == "kotlin/collections/MutableList"
+                && !matches!(receiver.ty.base(), Type::MutableList(_))
+            {
+                continue;
+            }
+            let declarations = match self.classpath.builtin_member_declarations(classifier, name) {
+                Ok(methods) => methods,
+                Err(error) if error.code == "BUILTIN_DECLARATIONS_NOT_FOUND" => continue,
+                Err(error) => return Err(error),
+            };
+            if declarations.is_empty() {
+                continue;
+            }
+            let class = self.classpath.load(owner)?;
+            for mut method in declarations {
+                let Some(physical) = class.methods.iter().find(|m| {
+                    m.name == method.name
+                        && m.descriptor == method.descriptor
+                        && m.access & 9 == 1
+                        && !m.unsupported
+                }) else {
+                    continue;
+                };
+                if candidates
+                    .iter()
+                    .any(|existing: &JavaMethod| existing.descriptor == method.descriptor)
+                {
+                    continue;
+                }
+                method.owner.clone_from(&class.name);
+                method.access = physical.access;
+                if let Some(library) = &mut method.library {
+                    library.kotlin_declared = true;
+                }
+                candidates.push(library::specialize_receiver(
+                    method,
+                    &receiver.ty,
+                    &class,
+                    self.classpath,
+                ));
+            }
+        }
+        if candidates.is_empty() {
+            return Ok(None);
+        }
+        let method = match self.select_method(&candidates, args, offset) {
+            Ok(method) => method,
+            Err(error) if error.message.contains("Ambiguous") => return Err(error),
+            Err(error) => {
+                return self
+                    .member_extension_fallback(receiver.clone(), name, args, error)
+                    .map(Some);
+            }
+        };
+        self.member_call(method, receiver.clone(), args, offset)
+            .map(Some)
+    }
     fn list_call(
         &mut self,
         receiver: Value,
@@ -862,6 +932,11 @@ impl Checker<'_> {
                     }),
                 ),
             });
+        }
+        if !matches!(name, "set" | "add")
+            && let Some(value) = self.declared_list_call(&receiver, name, args, offset)?
+        {
+            return Ok(value);
         }
         if !mutable {
             return self.extension_call(receiver, name, args, &[], offset);
@@ -1395,6 +1470,20 @@ impl Checker<'_> {
                     .is_some_and(|l| !l.type_parameters.is_empty())
             })
             .collect::<Vec<_>>();
+        if applicable
+            .iter()
+            .any(|(_, method)| method.vararg_index() != applicable[0].1.vararg_index())
+        {
+            let (parameters, omitted): (Vec<_>, Vec<_>) = applicable
+                .iter()
+                .map(|(_, method)| self.vararg_overload_parameters(method, args, offset))
+                .collect::<Result<Vec<_>>>()?
+                .into_iter()
+                .unzip();
+            let selected =
+                self.rank_mapped_arguments(&parameters, &omitted, args, &generic, offset)?;
+            return Ok(applicable.swap_remove(selected).0);
+        }
         let normalized_arguments = self.vararg_arguments(&applicable[0].0, args, offset)?;
         let selected = self.most_specific(
             &parameters,
@@ -2709,78 +2798,31 @@ impl Checker<'_> {
         )
         .with_kind(crate::DiagnosticKind::InvalidKotlin, "TYPE_MISMATCH"))
     }
-    fn java_type(&self, descriptor: &str, cursor: &mut usize, offset: usize) -> Result<Type> {
-        let bytes = descriptor.as_bytes();
-        let start = *cursor;
-        *cursor += 1;
-        let ty = match bytes.get(start) {
-            Some(b'I') => Type::Int,
-            Some(b'J') => Type::Long,
-            Some(b'F') => Type::Float,
-            Some(b'D') => Type::Double,
-            Some(b'B') => Type::Byte,
-            Some(b'S') => Type::Short,
-            Some(b'C') => Type::Char,
-            Some(b'Z') => Type::Boolean,
-            Some(b'V') => Type::Unit,
-            Some(b'[') if bytes.get(*cursor) == Some(&b'B') => {
-                *cursor += 1;
-                Type::ByteArray
-            }
-            Some(b'[') if bytes.get(*cursor) == Some(&b'S') => {
-                *cursor += 1;
-                Type::ShortArray
-            }
-            Some(b'[') if bytes.get(*cursor) == Some(&b'C') => {
-                *cursor += 1;
-                Type::CharArray
-            }
-            Some(b'[') if bytes.get(*cursor) == Some(&b'I') => {
-                *cursor += 1;
-                Type::IntArray
-            }
-            Some(b'[') if bytes.get(*cursor) == Some(&b'J') => {
-                *cursor += 1;
-                Type::LongArray
-            }
-            Some(b'[') if bytes.get(*cursor) == Some(&b'Z') => {
-                *cursor += 1;
-                Type::BooleanArray
-            }
-            Some(b'[') if bytes.get(*cursor) == Some(&b'F') => {
-                *cursor += 1;
-                Type::FloatArray
-            }
-            Some(b'[') if bytes.get(*cursor) == Some(&b'D') => {
-                *cursor += 1;
-                Type::DoubleArray
-            }
-            Some(b'L') => {
-                let end = descriptor[*cursor..]
-                    .find(';')
-                    .map(|n| n + *cursor)
-                    .ok_or_else(|| Diagnostic::new(offset, "Invalid Java descriptor"))?;
-                let name = &descriptor[*cursor..end];
-                *cursor = end + 1;
-                if name == "java/lang/String" {
-                    Type::String
-                } else if self.classes.contains_key(name)
-                    || self
-                        .classpath
-                        .load(name)
-                        .is_ok_and(|class| !class.unsupported)
+    fn java_field_descriptor_type(&self, descriptor: &str, offset: usize) -> Result<Type> {
+        fn component(checker: &Checker<'_>, ty: Type, offset: usize) -> Result<Type> {
+            Ok(match ty {
+                Type::StringArray => Type::Array(Box::new(java_parameter(Type::String))),
+                Type::Array(element) => Type::Array(Box::new(java_parameter(component(
+                    checker, *element, offset,
+                )?))),
+                Type::Java(ref name)
+                    if !checker.classes.contains_key(name)
+                        && !checker
+                            .classpath
+                            .load(name)
+                            .is_ok_and(|class| !class.unsupported) =>
                 {
-                    Type::Java(name.into())
-                } else {
                     return Err(Diagnostic::new(
                         offset,
                         "Java reference types require explicit imports",
                     ));
                 }
-            }
-            _ => return Err(Diagnostic::new(offset, "Unsupported Java descriptor type")),
-        };
-        Ok(ty)
+                other => other,
+            })
+        }
+        let ty = crate::jvm_descriptor::field_type(descriptor)
+            .map_err(|_| Diagnostic::new(offset, "Invalid Java field descriptor"))?;
+        component(self, ty, offset)
     }
     fn java_call(
         &mut self,
@@ -2797,6 +2839,17 @@ impl Checker<'_> {
         name: &str,
         args: &[Expr],
         types: &[Type],
+        offset: usize,
+    ) -> Result<Value> {
+        self.java_call_types_expected(receiver, name, args, types, None, offset)
+    }
+    fn java_call_types_expected(
+        &mut self,
+        receiver: Value,
+        name: &str,
+        args: &[Expr],
+        types: &[Type],
+        expected: Option<&Type>,
         offset: usize,
     ) -> Result<Value> {
         if !types.is_empty()
@@ -2898,7 +2951,7 @@ impl Checker<'_> {
                 "Cannot write through an out or star type projection",
             ));
         }
-        let method = match self.select_method_types(&methods, args, types, offset) {
+        let method = match self.select_method_expected(&methods, args, types, expected, offset) {
             Ok(method) => method,
             Err(_) if projected => {
                 return Err(Diagnostic::new(
@@ -3244,13 +3297,12 @@ impl Checker<'_> {
                 "GENERIC_JAVA_FIELD_WRITE_UNSUPPORTED",
             ));
         }
-        let mut cursor = 0;
         let ty = if let Some(kotlin) = &field.kotlin {
             kotlin.ty.clone()
         } else if let Some(logical) = &field.java_type {
             logical.as_ref().clone()
         } else {
-            java_parameter(self.java_type(&field.descriptor, &mut cursor, offset)?)
+            java_parameter(self.java_field_descriptor_type(&field.descriptor, offset)?)
         };
         let value = self.expected_value(expr, &ty)?;
         let store = Statement::JavaFieldStore {
@@ -3500,7 +3552,6 @@ impl Checker<'_> {
                     ),
             );
         }
-        let mut cursor = 0;
         let ty = if let Some(logical) = &field.java_type {
             if Self::plain_java_field_type(logical) {
                 logical.as_ref().clone()
@@ -3516,7 +3567,7 @@ impl Checker<'_> {
         } else if let Some(kotlin) = &field.kotlin {
             kotlin.ty.clone()
         } else {
-            self.java_type(&field.descriptor, &mut cursor, offset)?
+            self.java_field_descriptor_type(&field.descriptor, offset)?
         };
         if let Some(constant) = field.constant.as_ref().filter(|_| {
             field.access & 0x18 == 0x18 && field.kotlin.as_ref().is_none_or(|field| field.constant)
@@ -4319,15 +4370,18 @@ impl Checker<'_> {
         Ok((body, returns))
     }
     fn value(&mut self, expr: &Expr) -> Result<Value> {
+        self.value_expected(expr, None)
+    }
+    fn value_expected(&mut self, expr: &Expr, expected: Option<&Type>) -> Result<Value> {
         if let Some(labeled) = member_extensions::labeled_call(expr) {
-            return self.value(&labeled);
+            return self.value_expected(&labeled, expected);
         }
         if !matches!(expr.kind, ExprKind::Call(..)) {
-            let value = self.value_untracked(expr)?;
+            let value = self.value_untracked(expr, expected)?;
             return self.refined_property_value(expr, value);
         }
         let previous = self.contract_registration.take();
-        let result = self.value_untracked(expr);
+        let result = self.value_untracked(expr, expected);
         if result.is_err() || self.contract_registration != Some(expr.offset) {
             self.contract_facts.remove(&expr.offset);
         }
@@ -4335,7 +4389,7 @@ impl Checker<'_> {
         result
     }
 
-    fn value_untracked(&mut self, expr: &Expr) -> Result<Value> {
+    fn value_untracked(&mut self, expr: &Expr, expected_result: Option<&Type>) -> Result<Value> {
         let offset = expr.offset;
         if let ExprKind::Call(target, args) = &expr.kind {
             if let Some(value) = self.qualified_constructor(target, args, offset)? {
@@ -5063,7 +5117,14 @@ impl Checker<'_> {
                 }
                 let source_left = a;
                 let a = self.value(a)?;
-                if matches!(a.ty.base(), Type::Java(_) | Type::Parameterized { .. })
+                if (a.ty.array_element().is_some()
+                    || matches!(
+                        a.ty.base(),
+                        Type::Java(_)
+                            | Type::Parameterized { .. }
+                            | Type::List(_)
+                            | Type::MutableList(_)
+                    ))
                     && !matches!(op.as_str(), "==" | "!=" | "===" | "!==" | "&&" | "||")
                 {
                     return self.nominal_binary(op, a, b, offset);
@@ -5127,6 +5188,12 @@ impl Checker<'_> {
                         offset,
                         "Nullable operands support only equality with null and Elvis",
                     ));
+                }
+                if a.ty == Type::Char
+                    && ((op == "-" && b.ty == Type::Char)
+                        || (matches!(op.as_str(), "+" | "-") && b.ty == Type::Int))
+                {
+                    return Ok(operations::char_arithmetic(op, a, b));
                 }
                 let (a, b) = self.promote_integral_operands(op, a, b);
                 if matches!(a.ty, Type::Unit | Type::Float)
@@ -5528,7 +5595,9 @@ impl Checker<'_> {
             ExprKind::Call(target, args) => match &target.kind {
                 ExprKind::Generic(target, types) => {
                     if let ExprKind::Name(name) = &target.kind {
-                        if let Some(value) = self.lexical_call(name, args, types, None, offset)? {
+                        if let Some(value) =
+                            self.lexical_call(name, args, types, expected_result, offset)?
+                        {
                             return Ok(value);
                         }
                     }
@@ -5573,18 +5642,36 @@ impl Checker<'_> {
                                                 m.source_name() == name && m.access & 9 == 9
                                             })
                                             .collect::<Vec<_>>();
-                                        let method = self
-                                            .select_method_types(&methods, args, types, offset)?;
+                                        let method = self.select_method_expected(
+                                            &methods,
+                                            args,
+                                            types,
+                                            expected_result,
+                                            offset,
+                                        )?;
                                         return self.library_static_call(method, args, offset);
                                     }
                                 }
                             }
                             let value = self.value(receiver)?;
-                            return self.java_call_types(value, name, args, types, offset);
+                            return self.java_call_types_expected(
+                                value,
+                                name,
+                                args,
+                                types,
+                                expected_result,
+                                offset,
+                            );
                         }
                         _ => Vec::new(),
                     };
-                    let method = self.select_method_types(&methods, args, types, offset)?;
+                    let method = self.select_method_expected(
+                        &methods,
+                        args,
+                        types,
+                        expected_result,
+                        offset,
+                    )?;
                     return self.library_static_call(method, args, offset);
                 }
                 ExprKind::SafeProperty(receiver, name) => {
@@ -5610,7 +5697,9 @@ impl Checker<'_> {
                         }
                         return self.function_invoke(function, args, offset);
                     }
-                    if let Some(value) = self.lexical_call(name, args, &[], None, offset)? {
+                    if let Some(value) =
+                        self.lexical_call(name, args, &[], expected_result, offset)?
+                    {
                         return Ok(value);
                     }
                     let imported = self
@@ -5634,7 +5723,13 @@ impl Checker<'_> {
                                 return Ok(value);
                             }
                         }
-                        let method = self.select_method(&imported, args, offset)?;
+                        let method = self.select_method_expected(
+                            &imported,
+                            args,
+                            &[],
+                            expected_result,
+                            offset,
+                        )?;
                         return self.library_static_call(method, args, offset);
                     }
                     if let Some((owner, params, defaults)) = self.constructor {
@@ -5769,7 +5864,13 @@ impl Checker<'_> {
                             .filter(|m| m.source_name() == name)
                             .cloned()
                             .collect::<Vec<_>>();
-                        let method = self.select_method(&candidates, args, offset)?;
+                        let method = self.select_method_expected(
+                            &candidates,
+                            args,
+                            &[],
+                            expected_result,
+                            offset,
+                        )?;
                         if method.source_property.is_some() {
                             return Err(Diagnostic::new(
                                 offset,
@@ -5783,7 +5884,12 @@ impl Checker<'_> {
                         || self.enclosing_receiver(offset)?.is_some())
                         && !self.functions.contains_key(name)
                     {
-                        if let Ok(call) = self.implicit_receiver_call(name, args, offset) {
+                        if let Ok(call) = self.implicit_receiver_call_expected(
+                            name,
+                            args,
+                            expected_result,
+                            offset,
+                        ) {
                             return Ok(call);
                         }
                     }
@@ -5828,7 +5934,12 @@ impl Checker<'_> {
                         || self.enclosing_receiver(offset)?.is_some())
                         && !self.functions.contains_key(name)
                     {
-                        if let Ok(call) = self.implicit_receiver_call(name, args, offset) {
+                        if let Ok(call) = self.implicit_receiver_call_expected(
+                            name,
+                            args,
+                            expected_result,
+                            offset,
+                        ) {
                             return Ok(call);
                         }
                     }
@@ -6153,7 +6264,13 @@ impl Checker<'_> {
                             })
                             .cloned()
                             .collect::<Vec<_>>();
-                        let selected = self.select_method(&candidates, args, offset);
+                        let selected = self.select_method_expected(
+                            &candidates,
+                            args,
+                            &[],
+                            expected_result,
+                            offset,
+                        );
                         if let Err(error) = &selected {
                             if error.message.contains("Ambiguous") {
                                 return Err(error.clone());
@@ -6183,7 +6300,14 @@ impl Checker<'_> {
                     if library::type_owner(&receiver.ty).is_some()
                         && receiver.ty.base() != &Type::String
                     {
-                        return self.java_call(receiver, name, args, offset);
+                        return self.java_call_types_expected(
+                            receiver,
+                            name,
+                            args,
+                            &[],
+                            expected_result,
+                            offset,
+                        );
                     }
                     if self
                         .function_names
@@ -6210,7 +6334,14 @@ impl Checker<'_> {
                     if library::type_owner(&receiver.ty).is_some()
                         && receiver.ty.base() != &Type::String
                     {
-                        return self.java_call(receiver, name, args, offset);
+                        return self.java_call_types_expected(
+                            receiver,
+                            name,
+                            args,
+                            &[],
+                            expected_result,
+                            offset,
+                        );
                     }
                     if receiver.ty.base() == &Type::IntArray && name == "copyInto" {
                         if args.len() != 4 {
@@ -6287,7 +6418,16 @@ impl Checker<'_> {
                             ),
                             "substring" => (StringMethod::Substring, &[Type::Int], Type::String),
                             "compareTo" => (StringMethod::CompareTo, &[Type::String], Type::Int),
-                            _ => return self.java_call(receiver, name, args, offset),
+                            _ => {
+                                return self.java_call_types_expected(
+                                    receiver,
+                                    name,
+                                    args,
+                                    &[],
+                                    expected_result,
+                                    offset,
+                                );
+                            }
                         };
                         if args.len() != expected.len() {
                             return Err(Diagnostic::new(
@@ -7499,6 +7639,7 @@ pub fn check_with_owner(
     let mut extensions = HashSet::new();
     for (i, function) in source.functions.iter().enumerate() {
         declarations::validate_operator(function, false)?;
+        declarations::validate_vararg_type(function, classpath, &imports, &classes)?;
         for parameter in &function.type_params {
             for bound in &parameter.bounds {
                 resolve_type_checked(bound, &imports, function.offset, classpath, &classes)?;

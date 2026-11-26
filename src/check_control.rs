@@ -7,44 +7,12 @@ impl Checker<'_> {
         _offset: usize,
         expected: Option<&Type>,
     ) -> Result<(Vec<Statement>, Value)> {
-        let tail = statements.last().and_then(|statement| {
-            let block = |body: &[syntax::Statement]| Expr {
-                offset: statement.offset,
-                kind: ExprKind::Block(body.to_vec()),
-            };
-            let kind = match &statement.kind {
-                StatementKind::Expression(expr) => return Some(expr.clone()),
-                StatementKind::When(subject, branches, otherwise) => ExprKind::When(
-                    Box::new(subject.clone()),
-                    branches
-                        .iter()
-                        .map(|(conditions, body)| (conditions.clone(), block(body)))
-                        .collect(),
-                    Box::new(otherwise.as_ref().map(|body| block(body)).unwrap_or(Expr {
-                        offset: statement.offset,
-                        kind: ExprKind::MissingWhenElse,
-                    })),
-                ),
-                StatementKind::WhenBinding(name, subject, branches, otherwise) => {
-                    ExprKind::WhenBinding(
-                        name.clone(),
-                        Box::new(subject.clone()),
-                        branches
-                            .iter()
-                            .map(|(conditions, body)| (conditions.clone(), block(body)))
-                            .collect(),
-                        Box::new(otherwise.as_ref().map(|body| block(body)).unwrap_or(Expr {
-                            offset: statement.offset,
-                            kind: ExprKind::MissingWhenElse,
-                        })),
-                    )
-                }
-                _ => return None,
-            };
-            Some(Expr {
-                offset: statement.offset,
-                kind,
-            })
+        let tail = statements.last().cloned().and_then(|mut statement| {
+            syntax::normalize_result_tail(std::slice::from_mut(&mut statement));
+            match statement.kind {
+                StatementKind::Expression(expr) => Some(expr),
+                _ => None,
+            }
         });
         let prefix = if tail.is_some() {
             &statements[..statements.len() - 1]

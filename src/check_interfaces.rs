@@ -789,6 +789,7 @@ fn check_interface(
     for method in &source.methods {
         let source_function = &method.function;
         declarations::validate_operator(source_function, true)?;
+        declarations::validate_vararg_type(source_function, classpath, &imports, classes)?;
         let signature = &members[&source_function.name];
         operator_checker.validate_update_declaration(source_function, &Type::Java(owner.into()))?;
         check_override(
