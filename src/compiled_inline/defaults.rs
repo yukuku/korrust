@@ -25,6 +25,7 @@ pub(crate) fn with_defaults(
     mut method: JavaMethod,
     mask: u64,
     parameters: usize,
+    default_descriptor: Option<String>,
     classpath: &Classpath,
     caller: &str,
     offset: usize,
@@ -34,11 +35,30 @@ pub(crate) fn with_defaults(
         .as_ref()
         .and_then(|library| library.default_code.clone())
         .ok_or_else(|| unsupported("default dispatcher bytecode is unavailable"))?;
-    let (widths, _) = descriptor_widths(&method.descriptor)?;
     let instance = method.access & 8 == 0;
-    let first_mask =
-        u16::from(instance) + widths.iter().map(|width| u16::from(*width)).sum::<u16>();
     let words = parameters.div_ceil(32);
+    let closing = method
+        .descriptor
+        .find(')')
+        .ok_or_else(|| unsupported("default dispatcher descriptor is malformed"))?;
+    let dispatch = if instance {
+        format!("L{};", method.owner)
+    } else {
+        String::new()
+    };
+    let descriptor = default_descriptor.unwrap_or_else(|| {
+        format!(
+            "({dispatch}{}{}Ljava/lang/Object;){}",
+            &method.descriptor[1..closing],
+            "I".repeat(words),
+            &method.descriptor[closing + 1..]
+        )
+    });
+    let (widths, _) = descriptor_widths(&descriptor)?;
+    let first_mask = widths[..widths.len() - words - 1]
+        .iter()
+        .map(|width| u16::from(*width))
+        .sum::<u16>();
     let masks = (0..words)
         .map(|word| (first_mask + word as u16, (mask >> (word * 32)) as u32))
         .collect::<BTreeMap<_, _>>();
@@ -179,21 +199,7 @@ pub(crate) fn with_defaults(
             code.bytes[instruction.offset..next.offset].fill(0);
         }
     }
-    let closing = method
-        .descriptor
-        .find(')')
-        .ok_or_else(|| unsupported("default dispatcher descriptor is malformed"))?;
-    let dispatch = if instance {
-        format!("L{};", method.owner)
-    } else {
-        String::new()
-    };
-    method.descriptor = format!(
-        "({dispatch}{}{}Ljava/lang/Object;){}",
-        &method.descriptor[1..closing],
-        "I".repeat(words),
-        &method.descriptor[closing + 1..]
-    );
+    method.descriptor = descriptor;
     method.name.push_str("$default");
     let library = method.library.as_mut().unwrap();
     if instance {

@@ -1292,6 +1292,9 @@ impl Checker<'_> {
                 ),
                 &method.descriptor[split + 1..]
             );
+            let descriptor = self
+                .binary_default_descriptor(&method, offset)?
+                .unwrap_or(descriptor);
             for index in 0..(params.len()
                 - usize::from(
                     method
@@ -1330,10 +1333,12 @@ impl Checker<'_> {
         values: &mut Vec<Value>,
         offset: usize,
     ) -> Result<JavaMethod> {
+        let default_descriptor = self.binary_default_descriptor(&method, offset)?;
         let method = crate::compiled_inline::with_defaults(
             method,
             mask,
             parameters,
+            default_descriptor,
             self.classpath,
             &self.lambda_owner,
             offset,

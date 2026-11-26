@@ -62,6 +62,32 @@ impl Checker<'_> {
             false,
             offset,
         )?;
+        let storage = if mask == 0 {
+            storage
+        } else {
+            let original = class
+                .methods
+                .iter()
+                .find(|candidate| {
+                    candidate.name == method.name && candidate.descriptor == method.descriptor
+                })
+                .unwrap_or(method);
+            crate::value_abi::default_storage(
+                original.kotlin_params.as_ref().ok_or_else(|| {
+                    Diagnostic::new(
+                        offset,
+                        "Kotlin constructor default declaration is unavailable",
+                    )
+                })?,
+                &storage,
+                0,
+                &self.classpath.value_classes(),
+            )
+            .ok_or_else(|| {
+                Diagnostic::new(offset, "Kotlin constructor default storage is invalid")
+            })?
+        };
+        let default_parameters = storage.iter().map(Type::descriptor).collect::<String>();
         let mut values = values
             .into_iter()
             .zip(storage)
@@ -78,7 +104,7 @@ impl Checker<'_> {
             method.descriptor.clone()
         } else {
             let words = params.len().div_ceil(32);
-            let descriptor = format!("{prefix}{}{MARKER}", "I".repeat(words));
+            let descriptor = format!("({default_parameters}{}{MARKER}", "I".repeat(words));
             let bridge = class
                 .methods
                 .iter()

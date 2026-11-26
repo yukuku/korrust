@@ -2780,6 +2780,9 @@ impl Checker<'_> {
                 "I".repeat(value_parameters.div_ceil(32)),
                 &method.descriptor[method.descriptor.find(')').unwrap() + 1..]
             );
+            let descriptor = self
+                .binary_default_descriptor(&method, offset)?
+                .unwrap_or(descriptor);
             for index in 0..value_parameters.div_ceil(32) {
                 values.push(Value {
                     ty: Type::Int,
@@ -2905,7 +2908,9 @@ impl Checker<'_> {
                 && !matches!(expected, Type::Platform(_)))
         {
             if value.ty.is_reference() {
-                let kind = if value.ty.descriptor() == expected.descriptor() {
+                let preserve_producer =
+                    crate::value_abi::value_parameter(&value.ty, &self.classpath.value_classes());
+                let kind = if value.ty.descriptor() == expected.descriptor() && !preserve_producer {
                     value.kind
                 } else {
                     ValueKind::Box(Box::new(value))

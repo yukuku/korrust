@@ -1647,7 +1647,11 @@ fn attach_member(
             jvm_descriptor
         };
         let closing = default_descriptor.find(')').ok_or_else(invalid)?;
-        let parameters = &default_descriptor[1..closing];
+        let (storage, _) = crate::jvm_descriptor::method_types(default_descriptor)?;
+        let storage =
+            crate::value_abi::default_storage(&params, &storage, usize::from(suspend_), &registry)
+                .ok_or_else(invalid)?;
+        let parameters = storage.iter().map(Type::descriptor).collect::<String>();
         let (bridge_name, bridge_descriptor) = if name == "<init>" {
             (
                 "<init>".into(),
