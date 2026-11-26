@@ -1,0 +1,25 @@
+{
+  "base_revision": "cc77b19c5e946b9f709dd14c96bf0c0879280b39",
+  "patch_sha256": "1be8bb4ab439b016298fcd00fb27e999de57c6696e38342408dc758a5110d9fc",
+  "replayed_files": 95,
+  "replayed_files_match": true,
+  "validation": [
+    {
+      "command": "cargo test --test compiled_inline_defaults",
+      "result": "1 passed"
+    },
+    {
+      "command": "cargo clippy --all-targets -- -D warnings",
+      "result": "pass"
+    },
+    {
+      "command": "python3 -m unittest discover -s tests -p test_reports.py",
+      "result": "8 passed"
+    }
+  ],
+  "environment": {
+    "CARGO_INCREMENTAL": "0",
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_TEST_DEBUG": "0"
+  }
+}
