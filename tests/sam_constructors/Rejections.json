@@ -1,0 +1,7 @@
+[
+  {"id":"arity", "source":"import java.lang.Runnable\nfun bad() = Runnable()"},
+  {"id":"wrong-result", "source":"import samconstructors.Action\nfun bad() = Action { value -> \"wrong\" }"},
+  {"id":"ordinary-interface", "source":"interface Ordinary { fun run(): Int }\nfun bad() = Ordinary { 1 }"},
+  {"id":"multiple-java-methods", "source":"import samconstructors.External\nfun bad() = External.Pair { 1 }"},
+  {"id":"function-value", "source":"import samconstructors.Action\nfun bad(block: (Int) -> Int): Action = Action(block)", "unsupported":true}
+]

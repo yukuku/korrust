@@ -663,6 +663,61 @@ impl Checker<'_> {
         })
     }
 
+    pub(super) fn sam_constructor(
+        &mut self,
+        class: &crate::classpath::JavaClass,
+        ty: Type,
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<Option<Value>> {
+        if class.access & 0x0200 == 0 || class.kotlin_class && !class.kotlin_fun_interface {
+            return Ok(None);
+        }
+        if args.len() != 1 {
+            return Err(Diagnostic::new(
+                offset,
+                "Functional interface construction requires one function argument",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "SAM_CONSTRUCTOR_ARITY_INVALID",
+            ));
+        }
+        if matches!(ty, Type::Java(_))
+            && class
+                .library
+                .as_ref()
+                .is_some_and(|library| !library.type_parameters.is_empty())
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Generic SAM construction requires explicit type arguments",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "GENERIC_SAM_INFERENCE_UNSUPPORTED",
+            ));
+        }
+        let mut argument = &args[0];
+        while let ExprKind::TrailingLambda(inner) | ExprKind::Labeled(_, inner) = &argument.kind {
+            argument = inner;
+        }
+        if !matches!(
+            argument.kind,
+            ExprKind::Lambda(_) | ExprKind::LambdaWithParams { .. }
+        ) {
+            return Err(Diagnostic::new(
+                offset,
+                "SAM construction currently requires a literal lambda",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "SAM_CONSTRUCTOR_ARGUMENT_UNSUPPORTED",
+            ));
+        }
+        self.expected_value(&args[0], &ty).map(Some)
+    }
+
     pub(super) fn sam_function(
         &self,
         expected: &Type,

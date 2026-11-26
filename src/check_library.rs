@@ -1346,6 +1346,11 @@ impl Checker<'_> {
                 ),
             );
         }
+        if let Some(value) =
+            self.sam_constructor(&class, Type::Java(class.name.clone()), args, offset)?
+        {
+            return Ok(Some(value));
+        }
         if class.access & (0x200 | 0x400) != 0 {
             return Err(Diagnostic::new(
                 offset,
@@ -1546,6 +1551,9 @@ impl Checker<'_> {
                 crate::DiagnosticKind::UnsupportedLanguage,
                 "ANNOTATION_INSTANCE_CONSTRUCTION_UNSUPPORTED",
             ));
+        }
+        if let Some(value) = self.sam_constructor(&class, ty.clone(), args, offset)? {
+            return Ok(Some(value));
         }
         if class.access & (0x200 | 0x400) != 0 {
             return Err(Diagnostic::new(
@@ -1964,6 +1972,11 @@ impl Checker<'_> {
                 crate::DiagnosticKind::UnsupportedLanguage,
                 "ANNOTATION_INSTANCE_CONSTRUCTION_UNSUPPORTED",
             ));
+        }
+        if let Some(value) =
+            self.sam_constructor(&class, Type::Java(class.name.clone()), args, offset)?
+        {
+            return Ok(Some(value));
         }
         if class.access & (0x200 | 0x400) != 0 {
             return Err(Diagnostic::new(

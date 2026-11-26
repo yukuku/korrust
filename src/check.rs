@@ -5623,7 +5623,7 @@ impl Checker<'_> {
                         }
                     }
                     if let Some(owner) = self.imports.get(name) {
-                        if let Some(class) = self.classes.get(owner) {
+                        if let Some(class) = self.classes.get(owner).cloned() {
                             if class.access & 0x2000 != 0 {
                                 return Err(Diagnostic::new(
                                     offset,
@@ -5634,7 +5634,15 @@ impl Checker<'_> {
                                     "ANNOTATION_INSTANCE_CONSTRUCTION_UNSUPPORTED",
                                 ));
                             }
-                            if class.access & (0x200 | 0x400) != 0 && !class.kotlin_fun_interface {
+                            if let Some(value) = self.sam_constructor(
+                                &class,
+                                Type::Java(owner.clone()),
+                                args,
+                                offset,
+                            )? {
+                                return Ok(value);
+                            }
+                            if class.access & (0x200 | 0x400) != 0 {
                                 return Err(Diagnostic::new(
                                     offset,
                                     "Abstract classes and interfaces cannot be constructed",
@@ -5649,15 +5657,6 @@ impl Checker<'_> {
                                     offset,
                                     "Enum constructors can only be called by enum entry initialization",
                                 ));
-                            }
-                            if class.kotlin_fun_interface {
-                                if args.len() != 1 {
-                                    return Err(Diagnostic::new(
-                                        offset,
-                                        "Functional interface construction requires one function argument",
-                                    ));
-                                }
-                                return self.expected_value(&args[0], &Type::Java(owner.clone()));
                             }
                             if class
                                 .library
