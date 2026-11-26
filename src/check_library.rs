@@ -91,6 +91,23 @@ pub(super) fn ordinary_member_methods(
             method.descriptor.clone(),
         ))
     });
+    let getter = getter_name(name);
+    for method in methods.iter_mut().filter(|method| {
+        method.name == getter
+            && method.access & 9 == 1
+            && !method.unsupported
+            && method.source_property.is_none()
+            && method.descriptor.starts_with("()")
+    }) {
+        if let Some(classifier) = crate::classpath::kotlin_mapped_classifier(&method.owner)
+            && let Ok(result) = classpath.builtin_property_type(classifier, name)
+            && method.descriptor == format!("(){}", result.descriptor())
+        {
+            method.source_property = Some(name.into());
+            method.kotlin_params = Some(Vec::new());
+            method.kotlin_result = Some(result);
+        }
+    }
     for mapping in crate::classpath::jvm_builtins::PROPERTY_MAPPINGS
         .iter()
         .filter(|mapping| mapping.source_name == name || mapping.jvm_name == name)
