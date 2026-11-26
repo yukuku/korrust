@@ -1,4 +1,5 @@
 package memberfunctions
+import memberfunctionlibrary.Callbacks
 
 interface Request {
     fun execute(): Int
@@ -7,6 +8,9 @@ interface Request {
 class Captured(initial: Int) {
     private var action: (Int) -> Int = { it + initial }
     fun replace(delta: Int) { action = { it * delta } }
+    fun factory(): (Int) -> Request = { key ->
+        object : Request { override fun execute(): Int = action(key) }
+    }
     fun request(key: Int): Request = object : Request {
         override fun execute(): Int = action(key)
     }
@@ -48,3 +52,6 @@ class Generic<T>(val action: (T) -> T)
 fun generic(value: Generic<String>): String = value.action("value")
 class ExtensionHolder(val action: String.(Int) -> Int)
 fun extension(value: ExtensionHolder): Int = value.action("abc", 2)
+
+fun callbackReceiver(): Callbacks { Callbacks.reads += 10; return Callbacks }
+fun singleton(): Int = Callbacks.action(5) + Callbacks.amount + callbackReceiver().action(1)

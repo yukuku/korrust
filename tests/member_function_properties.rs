@@ -15,16 +15,27 @@ fn success(command: &mut Command) -> Vec<u8> {
 #[test]
 fn function_properties_match_member_precedence_capture_and_evaluation_order() {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-    let temp =
-        std::env::temp_dir().join(format!("korrust-member-function-properties-{}", std::process::id()));
+    let temp = std::env::temp_dir().join(format!(
+        "korrust-member-function-properties-{}",
+        std::process::id()
+    ));
     let official = temp.join("official");
     let candidate = temp.join("candidate");
     let caller = temp.join("caller");
     let standard = root.join("references/kotlinc/lib/kotlin-stdlib.jar");
     let source = root.join("tests/member_function_properties/Values.kt");
+    let library = temp.join("library");
+    success(
+        Command::new(root.join("references/kotlinc/bin/kotlinc"))
+            .arg(root.join("tests/member_function_properties/Library.kt"))
+            .arg("-d")
+            .arg(&library),
+    );
     success(
         Command::new(root.join("references/kotlinc/bin/kotlinc"))
             .arg(&source)
+            .arg("-cp")
+            .arg(std::env::join_paths([&library, &standard]).unwrap())
             .args([
                 "-language-version",
                 "2.3",
@@ -36,7 +47,7 @@ fn function_properties_match_member_precedence_capture_and_evaluation_order() {
             .arg("-d")
             .arg(&official),
     );
-    let compile_standard = standard.clone();
+    let compile_classpath = vec![standard.clone(), library.clone()];
     let outputs = std::thread::Builder::new()
         .stack_size(16 * 1024 * 1024)
         .spawn(move || {
@@ -46,7 +57,7 @@ fn function_properties_match_member_precedence_capture_and_evaluation_order() {
                     file_name: "Values.kt".into(),
                     source: std::fs::read_to_string(&source).unwrap(),
                 }],
-                std::slice::from_ref(&compile_standard),
+                &compile_classpath,
                 "member_function_properties",
             )
         })
@@ -62,7 +73,7 @@ fn function_properties_match_member_precedence_capture_and_evaluation_order() {
     success(
         Command::new("javac")
             .arg("-cp")
-            .arg(std::env::join_paths([&official, &standard]).unwrap())
+            .arg(std::env::join_paths([&official, &library, &standard]).unwrap())
             .arg("-d")
             .arg(&caller)
             .arg(root.join("tests/member_function_properties/Check.java")),
@@ -73,7 +84,7 @@ fn function_properties_match_member_precedence_capture_and_evaluation_order() {
                 Command::new("java")
                     .arg("-Xverify:all")
                     .arg("-cp")
-                    .arg(std::env::join_paths([provider, &caller, &standard]).unwrap())
+                    .arg(std::env::join_paths([provider, &caller, &library, &standard]).unwrap())
                     .arg("Check")
             ),
             b"OK\n"

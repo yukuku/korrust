@@ -66,7 +66,7 @@ def main():
     with zipfile.ZipFile(bundle,'w',zipfile.ZIP_DEFLATED) as archive:
         for path in inputs:
             if path.is_file(): archive.writestr(rel(path),path.read_bytes())
-    report = dict(schema_version=1, kind='correctness', created_at=now.isoformat(), status='running', compiler=dict(binary=rel(candidate), binary_sha256=sha(candidate), source_revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip() if source_root==ROOT else None,source_root=rel(source_root)), reference_compiler=dict(version=pin['version'],archive_sha256=pin['archive_sha256'],compiler_jar_sha256=sha(reference / 'lib/kotlin-compiler.jar')), inputs=dict(files_sha256=frozen,stdlib_sha256=sha(stdlib)),source_archive=dict(path=rel(bundle),sha256=sha(bundle)), commands=[],cases=[], evidence=[], reproduction_commands=[['python3','tools/check_member_function_properties.py','--candidate',str(candidate),'--reference-root',str(reference_root),'--source-root',str(source_root)]], limitations=['Ordinary function-typed instance properties are read once before argument evaluation, using ordinary getter, generic receiver specialization and accessibility rules. Applicable methods precede property invocation. Private enclosing receiver capture and mutable callback replacement are verified. Four Kotlin provider/frontend combinations and public nonsynthetic JVM signatures are compared. No Android runtime or full-application claim.'])
+    report = dict(schema_version=1, kind='correctness', created_at=now.isoformat(), status='running', compiler=dict(binary=rel(candidate), binary_sha256=sha(candidate), source_revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip() if source_root==ROOT else None,source_root=rel(source_root)), reference_compiler=dict(version=pin['version'],archive_sha256=pin['archive_sha256'],compiler_jar_sha256=sha(reference / 'lib/kotlin-compiler.jar')), inputs=dict(files_sha256=frozen,stdlib_sha256=sha(stdlib)),source_archive=dict(path=rel(bundle),sha256=sha(bundle)), commands=[],cases=[], evidence=[], reproduction_commands=[['python3','tools/check_member_function_properties.py','--candidate',str(candidate),'--reference-root',str(reference_root),'--source-root',str(source_root)]], limitations=['Function-typed member properties, including compiled static singleton accessors, are read once before argument evaluation, using ordinary getter, generic receiver specialization and accessibility rules. Applicable methods precede property invocation. Private enclosing receiver capture and mutable callback replacement are verified. Four Kotlin provider/frontend combinations and public nonsynthetic JVM signatures are compared. No Android runtime or full-application claim.'])
     def run(label, command, accepted=(0,)):
         result = subprocess.run(list(map(str,command)),cwd=ROOT,text=True,capture_output=True,timeout=180)
         item = dict(label=label,argv=list(map(str,command)),exit_code=result.returncode)
@@ -88,7 +88,7 @@ def main():
         return run('compile '+provider+' '+source.name,[*command,'-cp',cp(*deps,stdlib),'-d',output])
     try:
         dependency=work/'dependencies'
-        dependency.mkdir()
+        compile("official", FIXTURES/"Library.kt", dependency)
         outputs={p:work/p for p in ['official','candidate']}
         for provider, output in outputs.items():
             compile(provider,FIXTURES/'Values.kt',output,[dependency])

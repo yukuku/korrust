@@ -2382,6 +2382,18 @@ impl Checker<'_> {
         if method.unsupported {
             return Err(Diagnostic::new(offset, "Unsupported library member"));
         }
+        if !method.instance_dispatch() {
+            let call = self.library_static_call(method, args, offset)?;
+            let slot = self.allocate_typed_slot(&receiver.ty, offset)?;
+            return Ok(Value {
+                ty: call.ty.clone(),
+                kind: ValueKind::Let {
+                    slot,
+                    value: Box::new(receiver),
+                    body: Box::new(call),
+                },
+            });
+        }
         let method = self.classpath.source_value_method(method, true);
         let (types, mut result) = class_method_types(&method)?;
         if method.kotlin_result.is_none() && result.is_reference() {
@@ -6028,35 +6040,17 @@ impl Checker<'_> {
                                     if class.fields.iter().any(|f| {
                                         f.name == "INSTANCE" && f.descriptor == format!("L{owner};")
                                     }) {
-                                        let methods = library::ordinary_member_methods(
-                                            self.classpath,
-                                            owner,
+                                        return self.java_call_types_expected(
+                                            Value {
+                                                ty: Type::Java(owner.clone()),
+                                                kind: ValueKind::ObjectInstance(owner.clone()),
+                                            },
                                             name,
-                                            args.len(),
-                                        )?
-                                        .into_iter()
-                                        .filter(|m| {
-                                            m.source_name() == name
-                                                && m.access & 1 != 0
-                                                && m.library.as_ref().is_none_or(|library| {
-                                                    library.receiver.is_none()
-                                                })
-                                        })
-                                        .collect::<Vec<_>>();
-                                        let method = self.select_method(&methods, args, offset)?;
-                                        return if !method.instance_dispatch() {
-                                            self.library_static_call(method, args, offset)
-                                        } else {
-                                            self.member_call(
-                                                method,
-                                                Value {
-                                                    ty: Type::Java(owner.clone()),
-                                                    kind: ValueKind::ObjectInstance(owner.clone()),
-                                                },
-                                                args,
-                                                offset,
-                                            )
-                                        };
+                                            args,
+                                            &[],
+                                            expected_result,
+                                            offset,
+                                        );
                                     }
                                     if let Some(field) = class.fields.iter().find(|f| {
                                         class
