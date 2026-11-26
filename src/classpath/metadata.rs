@@ -626,6 +626,7 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
             kotlin_result: Some(array),
             kotlin_internal: false,
             library: Some(LibraryMethod {
+                vararg_index: None,
                 contracts: Vec::new(),
                 value_dispatch: false,
                 suspend_: false,
@@ -822,6 +823,7 @@ fn builtin_declarations(
             kotlin_result: Some(returned),
             kotlin_internal: false,
             library: requested_name.map(|_| LibraryMethod {
+                vararg_index: None,
                 contracts: Vec::new(),
                 value_dispatch: false,
                 suspend_: false,
@@ -1149,6 +1151,7 @@ fn contracts(
 
 struct MemberTypes<'a> {
     value_classes: &'a crate::value_abi::Registry,
+    vararg_index: Option<usize>,
     parameter_modes: Vec<crate::syntax::InlineParameterMode>,
     contracts: Vec<ContractEffect>,
     params: Vec<(String, Type, bool)>,
@@ -1196,6 +1199,7 @@ fn attach_member(
 ) -> Result<()> {
     let MemberTypes {
         value_classes: values,
+        vararg_index,
         mut parameter_modes,
         contracts,
         params,
@@ -1415,6 +1419,7 @@ fn attach_member(
         parameter_modes.insert(0, crate::syntax::InlineParameterMode::Ordinary);
     }
     method.library = Some(LibraryMethod {
+        vararg_index,
         contracts,
         value_dispatch,
         suspend_,
@@ -1464,6 +1469,7 @@ fn remember_callable(
             && method.library.is_none()
         {
             method.library = Some(LibraryMethod {
+                vararg_index: None,
                 contracts: Vec::new(),
                 value_dispatch: false,
                 suspend_: false,
@@ -1800,6 +1806,25 @@ pub(super) fn attach_with_values(
                     .into_iter()
                     .map(|p| context.parameter(p))
                     .collect::<Result<Vec<_>>>()?;
+                let mut vararg_index = None;
+                for (index, bytes) in member
+                    .messages(if constructor { 2 } else { 6 })?
+                    .into_iter()
+                    .enumerate()
+                {
+                    let parameter = Proto::parse(bytes)?;
+                    if parameter.bytes(4)?.is_some() || parameter.integer(6)?.is_some() {
+                        if vararg_index.replace(index).is_some() {
+                            return Err(invalid());
+                        }
+                        let element = context.field(&parameter, 4, 6)?;
+                        if params[index].2
+                            || params[index].1.array_element().as_ref() != Some(&element)
+                        {
+                            return Err(invalid());
+                        }
+                    }
+                }
                 let result = if constructor {
                     Type::Unit
                 } else {
@@ -1818,6 +1843,7 @@ pub(super) fn attach_with_values(
                     name,
                     MemberTypes {
                         value_classes: values,
+                        vararg_index,
                         contracts: if constructor {
                             Vec::new()
                         } else {
@@ -1937,6 +1963,7 @@ pub(super) fn attach_with_values(
                     &crate::check::getter_name(name),
                     MemberTypes {
                         value_classes: values,
+                        vararg_index: None,
                         parameter_modes: Vec::new(),
                         contracts: Vec::new(),
                         params: Vec::new(),
@@ -1957,6 +1984,7 @@ pub(super) fn attach_with_values(
                     &crate::check::setter_name(name),
                     MemberTypes {
                         value_classes: values,
+                        vararg_index: None,
                         parameter_modes: Vec::new(),
                         contracts: Vec::new(),
                         params: vec![("value".into(), ty, false)],

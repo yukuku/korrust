@@ -959,6 +959,7 @@ mod shadowing_tests {
                 kotlin_interface: false,
                 methods: vec![JavaMethod {
                     library: Some(crate::classpath::LibraryMethod {
+                        vararg_index: None,
                         contracts: Vec::new(),
                         value_dispatch: false,
                         suspend_: false,

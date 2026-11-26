@@ -1112,6 +1112,7 @@ pub(super) fn check_class_with_constants(
                     .iter()
                     .find(|m| m.function.offset == *offset && m.function.name == *name)
                     .map(|m| -> Result<_> { Ok(crate::classpath::LibraryMethod {
+            vararg_index: None,
             contracts: Vec::new(),
             value_dispatch: false,
                 suspend_: m.function.suspend_,

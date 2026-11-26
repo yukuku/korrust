@@ -1280,6 +1280,7 @@ impl Checker<'_> {
             ),
             kotlin_result: Some(result.clone()),
             library: Some(crate::classpath::LibraryMethod {
+                vararg_index: None,
                 contracts: Vec::new(),
                 value_dispatch: false,
                 suspend_: false,

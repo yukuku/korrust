@@ -512,6 +512,7 @@ impl Checker<'_> {
                     Diagnostic::new(offset, "Member extension metadata has no value parameters")
                 })?;
                 params.insert(0, ("<this>".into(), extension, false));
+                library.vararg_index = library.vararg_index.map(|index| index + 1);
             }
             let dispatch_slot = self.allocate_typed_slot(&dispatch.ty, offset)?;
             let dispatch_value = Self::local_receiver(&Local {

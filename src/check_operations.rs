@@ -1622,6 +1622,8 @@ impl Checker<'_> {
                         let receiver = method.library.as_ref().unwrap().receiver.clone().unwrap();
                         if let Some(params) = &mut method.kotlin_params {
                             params.insert(0, ("<receiver>".into(), receiver, false));
+                            let library = method.library.as_mut().unwrap();
+                            library.vararg_index = library.vararg_index.map(|index| index + 1);
                         }
                         method
                     })

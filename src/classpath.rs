@@ -213,6 +213,7 @@ pub(crate) struct LibraryTypeAlias {
 
 #[derive(Clone, Debug)]
 pub(crate) struct LibraryMethod {
+    pub vararg_index: Option<usize>,
     pub contracts: Vec<ContractEffect>,
     pub value_dispatch: bool,
     pub suspend_: bool,
@@ -283,6 +284,25 @@ pub(crate) enum InlineConstant {
 }
 
 impl JavaMethod {
+    pub(crate) fn vararg_index(&self) -> Option<usize> {
+        self.library
+            .as_ref()
+            .and_then(|library| library.vararg_index)
+            .or_else(|| {
+                (self.access & 0x80 != 0).then(|| {
+                    self.kotlin_params
+                        .as_ref()
+                        .map_or_else(
+                            || {
+                                signature::method(&self.descriptor, &[])
+                                    .map_or(0, |(_, params, _)| params.len())
+                            },
+                            Vec::len,
+                        )
+                        .saturating_sub(1)
+                })
+            })
+    }
     pub(crate) fn inherit_defaults(&mut self, parent: &JavaMethod) {
         if !self.instance_dispatch()
             || !parent.instance_dispatch()

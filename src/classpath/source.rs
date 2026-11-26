@@ -143,6 +143,7 @@ fn method(
     );
     JavaMethod {
         library: Some(LibraryMethod {
+            vararg_index: None,
             contracts: Vec::new(),
             value_dispatch: false,
             suspend_: function.suspend_,
@@ -658,6 +659,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                 let name = format!("component{}", index + 1);
                 class.methods.push(JavaMethod {
                     library: Some(LibraryMethod {
+                        vararg_index: None,
                         contracts: Vec::new(),
                         value_dispatch: false,
                         suspend_: false,
@@ -780,6 +782,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
             if !p.annotations.is_empty() {
                 for method in &mut methods {
                     method.library = Some(LibraryMethod {
+                        vararg_index: None,
                         contracts: Vec::new(),
                         value_dispatch: false,
                         suspend_: false,
@@ -1067,6 +1070,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                     library.code = None;
                 } else {
                     method.library = Some(LibraryMethod {
+                        vararg_index: None,
                         contracts: Vec::new(),
                         value_dispatch: false,
                         suspend_: false,

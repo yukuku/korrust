@@ -1355,9 +1355,9 @@ impl Checker<'_> {
         }
         if applicable
             .iter()
-            .any(|(_, original)| original.access & 0x80 == 0)
+            .any(|(_, original)| original.vararg_index().is_none())
         {
-            applicable.retain(|(_, original)| original.access & 0x80 == 0);
+            applicable.retain(|(_, original)| original.vararg_index().is_none());
         }
         if applicable.len() > 1
             && applicable.iter().any(|(_, m)| {
