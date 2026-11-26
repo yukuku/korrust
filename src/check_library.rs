@@ -556,7 +556,44 @@ impl Checker<'_> {
     }
 
     pub(super) fn library_call_candidates(&self, name: &str) -> Vec<JavaMethod> {
-        self.library_candidates_with_members(name, false)
+        let mut methods = self.library_candidates_with_members(name, false);
+        if methods.is_empty() {
+            return methods;
+        }
+        if let Some(class) = self
+            .imports
+            .get(name)
+            .filter(|binding| !binding.contains("::"))
+            .and_then(|owner| self.classes.get(owner))
+            .filter(|class| {
+                class.kotlin_class
+                    && class.access & (0x200 | 0x400 | 0x2000) == 0
+                    && class
+                        .library
+                        .as_ref()
+                        .is_none_or(|library| library.type_parameters.is_empty())
+            })
+        {
+            methods.extend(
+                class
+                    .methods
+                    .iter()
+                    .filter(|method| {
+                        method.name == "<init>"
+                            && !method.unsupported
+                            && method.kotlin_params.is_some()
+                            && self
+                                .classpath
+                                .constructor_visible(&self.lambda_owner, method)
+                    })
+                    .cloned()
+                    .map(|mut method| {
+                        method.kotlin_result = Some(Type::Java(class.name.clone()));
+                        method
+                    }),
+            );
+        }
+        methods
     }
 
     fn library_candidates_with_members(&self, name: &str, shadow_members: bool) -> Vec<JavaMethod> {
@@ -738,7 +775,34 @@ impl Checker<'_> {
             return methods;
         };
         let Some((owner, source_name)) = binding.rsplit_once("::") else {
-            return Vec::new();
+            let (package, source_name) = binding.rsplit_once('/').unwrap_or(("", binding.as_str()));
+            if self.classes.get(binding).is_some_and(|class| {
+                !class.kotlin_class
+                    || class.access & (0x200 | 0x400) == 0
+                        && class
+                            .library
+                            .as_ref()
+                            .is_some_and(|library| !library.type_parameters.is_empty())
+            }) {
+                return Vec::new();
+            }
+            return self
+                .classpath
+                .package_methods(package, source_name)
+                .unwrap_or_default()
+                .into_iter()
+                .filter(|method| {
+                    method.access & 8 != 0
+                        && (method.access & 1 != 0
+                            || self
+                                .classpath
+                                .file_private_visible(&self.lambda_owner, method))
+                        && (!method.kotlin_internal
+                            || self.classpath.internal_visible(&method.owner))
+                        && (method.source_name() == source_name
+                            || method.source_property.as_deref() == Some(source_name))
+                })
+                .collect();
         };
         let package = self
             .classes
@@ -773,6 +837,18 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Value> {
+        if method.name == "<init>" {
+            let normalized = self.vararg_arguments(&method, args, offset)?;
+            let (params, defaults) = Self::method_parameters(&method)?;
+            return self.constructor_call(
+                &method.owner,
+                &params,
+                &defaults,
+                &normalized,
+                self.method_named(&method),
+                offset,
+            );
+        }
         if method
             .library
             .as_ref()
@@ -1509,6 +1585,9 @@ impl Checker<'_> {
                     "INACCESSIBLE_CONSTRUCTOR",
                 ),
             );
+        }
+        if !self.library_call_candidates(name).is_empty() {
+            return Ok(None);
         }
         let ty = if alias {
             self.resolve(&expanded, offset)?
