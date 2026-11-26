@@ -1,0 +1,349 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T08:27:30.334280+00:00",
+  "status": "passed",
+  "compiler": {
+    "binary": "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+    "binary_sha256": "5ba7a59c756be78a3e5a3b3e17a2f09457ce5fe3816b7d0104889064a47be23e",
+    "source_revision": "56502730cf406e7faf949833dc5b66e371ff4e27",
+    "source_root": "/workspace/work/anonymous-suspend159-proof",
+    "frozen_source_evidence": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods.json"
+  },
+  "reference_compiler": {
+    "pin": {
+      "schema_version": 1,
+      "installed_at": "2026-10-23T02:43:55.924832+00:00",
+      "version": "2.3.21",
+      "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+      "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+      "path": "references/kotlinc",
+      "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+    },
+    "mode": "Original official Gradle outputs captured by resolved classpath model"
+  },
+  "method": "Compile the pinned unchanged source with original owned classes and Kotlin package parts removed from sibling providers; verify owned class hashes; run the same16 original JUnit tests against official and replacement providers with Java21 -Xverify:all. Real coroutine dependency is retained.",
+  "application_attribution": "Randy Sugianto (Yuku), GitHub yukuku",
+  "inputs": {
+    "source_sha256": {
+      "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt": "9f8a23439588eb4e6c3b83c8c9d7b513696fa05b4f0473b34f17fc392f80b193"
+    },
+    "reference_owned_classes_sha256": {
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$Companion.class": "ea049a1212db11191ea767c2fa237ad8e3e3a44d2dd7f06c0f56a4dbc653e5ed",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$FakeHttp.class": "6daa6855725a1a974150a469380e207896f3b109a62aed54100c2cf6aee6acca",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$buildChapterUrl expands the set's template with the one bookId to book_1 conversion$1.class": "4db49b467fece3e163c9f0d9acc66f6444ca3ce7f2ca4cff15a0d26e746e1275",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$buildChapterUrl picks the requested recording, not the default$1.class": "6799e92ca2198edac5d46cce365a242834feeaa81c711aa5aede13dbc5eafb73",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$buildChapterUrl resolves the internal version via its flavor preset$1.class": "826f51e13faf972ac712d99fe30399b3d92cede4b4225947695311a548f9eff5",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$buildChapterUrl returns null for a template that is not a resolvable URL reference$1$2.class": "3b9c5892d4360842be296297a918f14bdc35bf39e0dcf443a99997b055f5948a",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$buildChapterUrl returns null for a template that is not a resolvable URL reference$1.class": "3ebdd4d0f94b33bdd05181ee82b266526e177a10174b1dc62ffae07924622cfe",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$buildChapterUrl returns null for a version without audio$1.class": "41f45f4723195adc47b1af7b09299295c93dc17185a92dad4e75b1f5c9237b00",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$buildChapterUrl returns null for an unknown audioId$1.class": "29dd6ab4a5e17cf68da2c8d5eb7b1dc63817841bfb5f58880d9473b64e206b0f",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$buildChapterUrl uses an absolute template as it stands instead of pasting it onto SERVER_HOST$1$2.class": "dcf2508190c8c77fe389d3e6dc0830a2eea7b529a7f6326e204d24c2b147a012",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$buildChapterUrl uses an absolute template as it stands instead of pasting it onto SERVER_HOST$1.class": "17efe87ffbed1e956e133e125fb3f12e3a3bf32a263c15fa6d9614812d7397b5",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$fetchTiming parses the documented timing response$1.class": "182cd604691877657df4043df133715443e930c220a14ccb24b6fa38aa141f3e",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$fetchTiming parses the empty-verses payload (audio exists, timing does not)$1.class": "6e62d1092b38c8e8260795f79aa3aa994ec307127b40491f96436af4b9ed404b",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$fetchTiming refetches past the HTTP cache when the first body is corrupt$1$1.class": "bbce67926ea1c0be92fcac85dc1c986ae3eb61fa69cf2a42eac456b7a94b8f51",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$fetchTiming refetches past the HTTP cache when the first body is corrupt$1.class": "5233046fb7a5f18f4d32f5958a1c8d9608cbdcda419d37b917fb3551bcbc3bea",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$fetchTiming returns null for an unknown audioId$1.class": "f7ca65d9659a558a8428fa72251b67ff4e536aceb8bd42b3b7fa54c4b18e2bba",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$fetchTiming returns null on a transport failure$1.class": "d3b53fff29a23e4f9138bb5ff8a99ac92450675f7df17a8e65359225f4fa0a68",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$fetchTiming returns null on an unparseable body$1.class": "236692a5c9b632d2cc479cbacd86f5e305fc1652da2144f3b9b157179ebef9db",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$fetchTiming returns null when a required timing field is missing$1.class": "0bd6b6f67c694497c8ecca34a8203b90f8dcaaf6b03466d0118ab0dd4437c496",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$fetchTiming skips the request entirely for a recording without timing$1.class": "3f8586a4c316e01255e7c85e15e9e25953bcd84612ca1ab6cf164b1beb0453bc",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$fetchTiming uses an absolute timing template as it stands$1$2.class": "cb1cfa30128984882ded744903a3edbb69e86146ee47a2993eb9f90314b6b055",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$fetchTiming uses an absolute timing template as it stands$1.class": "8dbd6e591230a45ed8fccd45f60a940fd4bfb4e61b023cdc640d472fc4c9d4f2",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest$setUp$2.class": "5aed209daa12a100a7148cf28d96adfb19aa296a30ab236726d1dd6afcb27ab0",
+      "yuku/alkitab/base/audio/BibleAudioRepositoryTest.class": "e7f56f4f5c1713ecc5fbcc78476e6ca676a8df09752fb0c57b1cb1c9017f8f27"
+    },
+    "receipt_sha256": {
+      "/workspace/korrust/benchmarks/source-files.sha256.json": "48e5d343ebfb4b24c87485a754bdfb237164a1c574b7c40cce7cbc8fc0357a4c",
+      "/workspace/korrust/references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "/workspace/work/all400-nov25/dependencies-sha256.json": "5edd0c421b881a5a7e5e8a960beee1cdf23362453f75ebc7b41a0f6d9559f20d",
+      "/workspace/work/deps33/test-runtime-receipt.json": "77f2969c7ff246e74c932905680d3c11ff125f7613529a41da2e37f05ec8eebf"
+    },
+    "evidence_sha256": {
+      "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/compilation.json": "4707d2e0691487849d8d179d5fdf7c314e9d9eb8a14967cc59147c6b43bb4b5b",
+      "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/junit.json": "18251bb380baf1ab898a4a25bea6df3695da34a203b2fa99c444a6b47f34bae6",
+      "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/273-kotlin.log": "cb34f8eab759268b52c80b58cb9ee1b78671c8df62d0281d6e7023b2b92fd384",
+      "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/273-korrust.log": "21ebdffacc232285f7e806008a2e7296e1644aa16a8432a4cf0755b4f75aa4a4",
+      "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/compile-original.py": "7275e23b7bfd2e3f86d520bc988383da0b3ef51d9e250469ef8aa075b5d2b4b7",
+      "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/verify-junit.py": "7c65752a7cd2386699f36b7e468ca08b17fae91737ade29bcc8712dcdb05c1c6",
+      "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/captured-models/AlkitabIo.json": "65882cf422b74e0b60150fea655d8575ccbdf7009bdbe92030e8af5ff7778e9f",
+      "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/captured-models/AlkitabYes2.json": "b951e491852b8b62c5f9d44138190270448c40d2af233cb5733779201073b345",
+      "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/captured-models/AlkitabModel.json": "a1469aa837e68a079d43973c51da225218e0c14198bcb269f28bbbee68082218",
+      "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/captured-models/Alkitab.json": "dcf546e0f16c08942ffa74e7b545d552893129e79278841c31be196fe22a23f6"
+    }
+  },
+  "cases": [
+    {
+      "id": "unchanged-273-owned-source",
+      "outcome": "pass",
+      "path": "Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+      "source_sha256": "9f8a23439588eb4e6c3b83c8c9d7b513696fa05b4f0473b34f17fc392f80b193",
+      "class_count": 52,
+      "owned_outputs": {
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$Companion$lambda$10174$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "3434ef38bf3e18afc5f57421f8d91f913644dd7672d4ef55561aa89d7f367e96"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$Companion.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "fbb0ff2e7dd542964737b2c400f8a076bf314460532bfda46a2049cc09d4c94c"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$FakeHttp.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "d4876216577cafff725a49b774a02b682a5d78b7e0a460fe9d4fa13f69a79af5"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$1252$1.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "db13c9377624422fdd9ae8d835af3c60651d2e92fae55ad7058155a566ded098"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$1450$2.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "78d15d405b9e0f7fa419b7cb502aaa5a1b0c487d549946b25a7c03b2837e32e5"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$1923$3$suspend$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "0e60cd58bc0a1015000e17e29e3519480d321f5accdf517052aa4f743dbd5b16"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$1923$3.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "ae162c0b64713774bdbc97ca39dd7ed6f87df6ccbe7a258ebcb48fb4f7c69eaa"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$2568$4$suspend$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "309d7fe5e36867541f9acf40ea4fb5c0c897d4512cb4e34f8b1e501f8398f2e2"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$2568$4.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "07063a81978eba4e7ce6a16571972ea9bb0409ab24ada6528152702b1c76677f"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$2909$5$suspend$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "980836e109cfba14b847db041331a5d62a9103514d27d928eb776a2148675db8"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$2909$5.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "058c9cd7f9989e7a1d7d9056499594acc81f53ebe6db9eb409a22d16fb95b796"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$3126$6$suspend$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "5d6fa179b6e0fdaaf5de7f6e68687dee3d835fd31f05361158041c03d7198b6c"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$3126$6.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "ed8debe3a0ca016213af33de4382d4d93ac3d2c1fac7799b690acf07bd8cb335"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$3361$7$suspend$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "d2f6b5b59a79f3559a2a0a1316a9a6fdb9731ae830ebb2a5f2e569098965ec80"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$3361$7.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "b5f81dce32aa2850296a0623f3595e954c3c34cdd4384ac3652fc63c2c6f84d0"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$3716$8$suspend$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "a6d92486723dbb2fe578dba62e6b63c6fcd76393d83efc24947ac1be1b5f6d38"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$3716$8.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "e6b49b7a69d2a9a75b5b5bd4b10ee54f3adc861956af36f5fc128e31a10fac5d"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$3849$8.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "ee81ed2884a76c0692ffb58ec9e756da62381f568f1c8cc65fca3a6fdb3b1641"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$3906$9.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "de32ce4f7608389682ebe980a88eeaa02a1f2d67c5d0a7f33e0d8733ad81b9de"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$4252$11$suspend$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "c32e2393c852d1f1a77eb8eb9c11ab9a61623b8e306deff27fdb2d45589b9c92"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$4252$11.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "b8a88c8582e5d5cadea8fe165acb518a0751d6a0cbe37bd33e076b7af473d871"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$4385$11.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "02d26dae0f825de4bb8336f0d79ffbebaa8673c0c0207ae5c79c6a18e9f0a5bb"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$4442$12.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "15762a3bea158e839e68f3cd8d86abe609339be240d7f2475d3191f36d2f1bca"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$4827$14$suspend$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "3c3c889ed93fffb925bcfbcd88d199303ce490d574ae0f40f6ac258339810f8f"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$4827$14.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "3b841d5125407a609bc21fa9b870eace4dcc392ad5e31211f9a6d25032d2280b"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$4960$14.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "ae005d1afb56d86fa9c1e68a72716f4ee8fe6c9c1b0ecf257f9cdca26abd47ff"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$5017$15.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "a6563f41236e8a085077d592d171fdd80d995b051a71f80b91c8afc93ea61746"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$5077$16.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "57d28f7af297a978394e6f397283f2ba7e32a13873351203f31d58e720f0ae1e"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$5552$18$suspend$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "6e328ee9f3c87a866f8da53ac0d71d86ce2fce8cdb7637a4cb388b089df0f262"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$5552$18.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "93f4c7a6ceda8bb2e8721e4e215e6c56b828622d70de187380d45ae9075b2c2d"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$5582$18.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "88edb4fcf455e569d3110e94a71dced33037c26af162c67d53bc2346d9963cf9"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$7067$20$suspend$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "7d47b00e8a5b44c44f3f82dc98badfb70584221ba1f69d409d8d5f6c2a8104a4"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$7067$20.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "2502e61ee9e9079d0d6babf964e84b1df554cf9d9eb53b0d2d978452712f45cf"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$7114$20.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "715766165e0ed3b2adb2d803cd01b1a79a673b2e3d3e2e3941226f3e770ff34a"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$7553$22$suspend$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "efbd9db486bb40a253d0e6090c099e479f2a409e0143867c3ebc391e9569b980"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$7553$22.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "1243b5ed2e232851ac28b56dc4404fbb02c1b58630001e916dc0e23a28423b55"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$7583$22.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "975de651190ddfc9ef6b768d755e0df7a2014b43e65d960df938825d0a5c532a"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$7990$24$suspend$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "cede32ddce107cd7cd50450ba27207a87fd5810712e42fbbb2c69dbbf46fdf25"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$7990$24.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "729f050653e336b5a6729c1082a44f83195a7047e9ae70020015042c73b02607"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$8194$25$suspend$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "d377bb60ef0ec46f05f0551b5a4f62cb57f514d643949079370b3f9461107a28"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$8194$25.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "b23d55d299684bf8fafbae93bf4af0e0213a9a63c432ad15088fc9c895b6e8be"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$8241$25.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "f9d93114b05576ad4871b0d7f9a8edf7b66eec0f0d9363f40fb21695b551ae2f"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$8453$27$suspend$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "2b3ccaea0794e3405d8796f1c28ec3491ae8cfeedaea3f821d9179a7318295f6"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$8453$27.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "d334716d9e349a323ea13bd015e5e20a47e71ba451c5c35d7e85c78130114d88"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$8500$27.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "042edededc1f3be3f477d9722777445f8304719b04c7ddc2a199454d270cf31d"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$8745$29$suspend$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "f9e8e8cfd005616d4d5ca52a7f3e7504277eedc9d1033054b6236f8cb7d6b1c6"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$8745$29.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "7758b12e8606e29ac474d64617721efdd572f61ace0d185bdf36f456fa7e5e1e"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$9652$31$suspend$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "93442344f741c1b8e594fa2bbcc8d164532f5c505c11be2c40117fc663682c62"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$9652$31.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "cd4e56573521358c1fe836b408f0e3b886eff44f49956f22ebe5b4f6542a84b7"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$lambda$9771$31.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "2e7c95aa1063245f75c36e60a42cb02117f001de95ec13bf17d2ea2b101c6d37"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest$object$8926.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "bd7cf57256b467524506169216767c3103df8ba6969c7a7e9dbb3c2d7d83dcbc"
+        },
+        "yuku/alkitab/base/audio/BibleAudioRepositoryTest.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/audio/BibleAudioRepositoryTest.kt",
+          "sha256": "ed6fbc0c6f0d49a82a8f231c2a9d4b029a706bed2ce2d7197f9734579656f069"
+        }
+      }
+    },
+    {
+      "id": "original-junit/kotlin",
+      "outcome": "pass",
+      "passed_tests": 16,
+      "exit_code": 0
+    },
+    {
+      "id": "original-junit/korrust",
+      "outcome": "pass",
+      "passed_tests": 16,
+      "exit_code": 0
+    }
+  ],
+  "counts": {
+    "pass": 3
+  },
+  "evidence": [
+    "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/compilation.json",
+    "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/junit.json",
+    "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/273-kotlin.log",
+    "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/273-korrust.log",
+    "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/compile-original.py",
+    "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/verify-junit.py",
+    "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/captured-models/AlkitabIo.json",
+    "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/captured-models/AlkitabYes2.json",
+    "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/captured-models/AlkitabModel.json",
+    "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/captured-models/Alkitab.json"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "python3",
+        "/workspace/korrust/reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/compile-original.py",
+        "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+        "tests"
+      ],
+      "environment": {
+        "RECHECK_IDS": "273",
+        "RECHECK_ROOT": "/workspace/work/targets159/anonymous-suspend-proof-app",
+        "RECHECK_TIMEOUT": "900"
+      }
+    },
+    {
+      "argv": [
+        "python3",
+        "/workspace/korrust/reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/verify-junit.py",
+        "/workspace/work/targets159/anonymous-suspend-proof-app",
+        "/workspace/korrust/reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application/captured-models",
+        "/workspace/work/targets159/anonymous-suspend-proof-app/junit"
+      ]
+    }
+  ],
+  "limitations": [
+    "Bounded replacement-provider JVM result using captured original Gradle dependencies and class files. No whole-application or performance result."
+  ]
+}

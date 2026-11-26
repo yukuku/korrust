@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-26T08:27:30.462583+00:00",
+  "status": "passed",
+  "compiler": {
+    "binary": "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+    "binary_sha256": "5ba7a59c756be78a3e5a3b3e17a2f09457ce5fe3816b7d0104889064a47be23e",
+    "source_root": ".",
+    "source_revision": "56502730cf406e7faf949833dc5b66e371ff4e27"
+  },
+  "reference_compiler": "Kotlin2.3.21",
+  "coroutine_dependency": {
+    "schema_version": 1,
+    "coordinate": "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.9.0",
+    "version": "1.9.0",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlinx/kotlinx-coroutines-core-jvm/1.9.0/kotlinx-coroutines-core-jvm-1.9.0.jar",
+    "sha256": "ad89c2892235e670f222d819cb3d81188143cb19a05b59df9889ae4269f5c70a",
+    "license": "Apache-2.0",
+    "path": "target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar"
+  },
+  "features": [
+    {
+      "name": "Anonymous suspend overrides and suspend SAM callbacks",
+      "status": "supported",
+      "scope": "Anonymous overrides preserve continuation ABI, generic erased bridges and independently resumable frames for every implementation method. Fixed Java callers check primitive, reference, Unit and null results, mutable captures, receiver identity, wide argument slots, direct continuation resume and two suspension points. Suspend SAM values preserve interface identity and do not add the SuspendFunction marker. Same-JVM-carrier override covariance retains the inferred local result type.",
+      "restrictions": [
+        "Capturing enclosing type parameters, Unit-valued suspend SAM parameters and existing unsupported frame shapes remain explicitly diagnosed. Covariance requiring a distinct JVM return carrier remains outside this feature."
+      ],
+      "evidence_report": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods.json"
+    },
+    {
+      "name": "Unchanged BibleAudioRepositoryTest",
+      "status": "supported",
+      "scope": "Pinned unchanged source emits52 owned classes; all16 original JUnit tests pass on official and replacement providers with verification enabled.",
+      "restrictions": [
+        "Bounded replacement-provider result; no whole-application or performance claim."
+      ],
+      "evidence_report": "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application.json"
+    }
+  ],
+  "validation": {
+    "final_counts": {
+      "pass": 8,
+      "invalid_rejected": 8,
+      "unsupported_language": 7
+    },
+    "original_junit_tests_per_provider": 16,
+    "committed_archive_build": "passed",
+    "committed_archive_clippy": "passed"
+  },
+  "delivery_corrections": [
+    {
+      "commit": "56502730c",
+      "reason": "The first full final oracle identified one Unit-SAM metadata boundary falling through to a raw JVM signature diagnostic. Unsupported selected Kotlin SAM metadata now stays explicitly unsupported; fresh frozen proof passes all23 cases. The failed historical report remains available."
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods.json",
+    "reports/correctness/2026-11-26T072356118813Z-anonymous-suspend-methods.json",
+    "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application.json",
+    "reports/features/2026-11-26T082730462583Z-anonymous-suspend-methods/committed-archive-build.log",
+    "reports/features/2026-11-26T082730462583Z-anonymous-suspend-methods/committed-archive-clippy.log"
+  ],
+  "inputs": {
+    "evidence_sha256": {
+      "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods.json": "13cde087288578c211a0b5bd62da09ff2bda4e32ceb40cbbb410a4d5804e70ab",
+      "reports/correctness/2026-11-26T072356118813Z-anonymous-suspend-methods.json": "6bbecdad909aef8990dc095b009926c797e97240abd28cf2f354845597d9e785",
+      "reports/correctness/2026-11-26T082730334280Z-anonymous-suspend-application.json": "267ea6b9b7500921755299e93707dd7410d343594c111652e31acd80a148ee4e",
+      "reports/features/2026-11-26T082730462583Z-anonymous-suspend-methods/committed-archive-build.log": "7e1e6e5a49e8714d22e23e8ae1dc947a9a7eebdf19d4dc7e2bd6d491772c6e91",
+      "reports/features/2026-11-26T082730462583Z-anonymous-suspend-methods/committed-archive-clippy.log": "968694eb2dcf057f0b793892b3309e93c43d784f6c9588d49e7b6eeeaad76702"
+    }
+  }
+}
