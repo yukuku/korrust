@@ -1,0 +1,667 @@
+Classfile /workspace/korrust/target/checks/2026-11-26T061931926969Z-nullable-sam/official/EffectsKt.class
+  Last modified Nov 26, 2026; size 5106 bytes
+  SHA-256 checksum 225e8fba4072a9b0504de9b8432bc16a18445fdd8a4fd9828597341fcde60f5f
+  Compiled from "Effects.kt"
+public final class EffectsKt
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // EffectsKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 20, attributes: 4
+Constant pool:
+    #1 = Utf8               EffectsKt
+    #2 = Class              #1            // EffectsKt
+    #3 = Utf8               java/lang/Object
+    #4 = Class              #3            // java/lang/Object
+    #5 = Utf8               direct
+    #6 = Utf8               ()I
+    #7 = Utf8               (I)I
+    #8 = MethodType         #7            //  (I)I
+    #9 = Utf8               direct$lambda$0
+   #10 = NameAndType        #9:#7         // direct$lambda$0:(I)I
+   #11 = Methodref          #2.#10        // EffectsKt.direct$lambda$0:(I)I
+   #12 = MethodHandle       6:#11         // REF_invokeStatic EffectsKt.direct$lambda$0:(I)I
+   #13 = Utf8               java/lang/invoke/LambdaMetafactory
+   #14 = Class              #13           // java/lang/invoke/LambdaMetafactory
+   #15 = Utf8               metafactory
+   #16 = Utf8               (Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+   #17 = NameAndType        #15:#16       // metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+   #18 = Methodref          #14.#17       // java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+   #19 = MethodHandle       6:#18         // REF_invokeStatic java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+   #20 = Utf8               apply
+   #21 = Utf8               ()Lnullable/Callbacks$Listener;
+   #22 = NameAndType        #20:#21       // apply:()Lnullable/Callbacks$Listener;
+   #23 = InvokeDynamic      #0:#22        // #0:apply:()Lnullable/Callbacks$Listener;
+   #24 = Utf8               nullable/Callbacks
+   #25 = Class              #24           // nullable/Callbacks
+   #26 = Utf8               call
+   #27 = Utf8               (Lnullable/Callbacks$Listener;I)I
+   #28 = NameAndType        #26:#27       // call:(Lnullable/Callbacks$Listener;I)I
+   #29 = Methodref          #25.#28       // nullable/Callbacks.call:(Lnullable/Callbacks$Listener;I)I
+   #30 = Utf8               labeled
+   #31 = Utf8               labeled$lambda$0
+   #32 = NameAndType        #31:#7        // labeled$lambda$0:(I)I
+   #33 = Methodref          #2.#32        // EffectsKt.labeled$lambda$0:(I)I
+   #34 = MethodHandle       6:#33         // REF_invokeStatic EffectsKt.labeled$lambda$0:(I)I
+   #35 = InvokeDynamic      #1:#22        // #1:apply:()Lnullable/Callbacks$Listener;
+   #36 = Utf8               capture
+   #37 = Utf8               kotlin/jvm/internal/Ref$IntRef
+   #38 = Class              #37           // kotlin/jvm/internal/Ref$IntRef
+   #39 = Utf8               <init>
+   #40 = Utf8               ()V
+   #41 = NameAndType        #39:#40       // "<init>":()V
+   #42 = Methodref          #38.#41       // kotlin/jvm/internal/Ref$IntRef."<init>":()V
+   #43 = Utf8               element
+   #44 = Utf8               I
+   #45 = NameAndType        #43:#44       // element:I
+   #46 = Fieldref           #38.#45       // kotlin/jvm/internal/Ref$IntRef.element:I
+   #47 = Utf8               capture$lambda$0
+   #48 = Utf8               (Lkotlin/jvm/internal/Ref$IntRef;I)I
+   #49 = NameAndType        #47:#48       // capture$lambda$0:(Lkotlin/jvm/internal/Ref$IntRef;I)I
+   #50 = Methodref          #2.#49        // EffectsKt.capture$lambda$0:(Lkotlin/jvm/internal/Ref$IntRef;I)I
+   #51 = MethodHandle       6:#50         // REF_invokeStatic EffectsKt.capture$lambda$0:(Lkotlin/jvm/internal/Ref$IntRef;I)I
+   #52 = Utf8               (Lkotlin/jvm/internal/Ref$IntRef;)Lnullable/Callbacks$Listener;
+   #53 = NameAndType        #20:#52       // apply:(Lkotlin/jvm/internal/Ref$IntRef;)Lnullable/Callbacks$Listener;
+   #54 = InvokeDynamic      #2:#53        // #2:apply:(Lkotlin/jvm/internal/Ref$IntRef;)Lnullable/Callbacks$Listener;
+   #55 = Utf8               total
+   #56 = Utf8               Lkotlin/jvm/internal/Ref$IntRef;
+   #57 = Utf8               result
+   #58 = Utf8               absent
+   #59 = Utf8               constructor
+   #60 = Utf8               constructor$lambda$0
+   #61 = NameAndType        #60:#7        // constructor$lambda$0:(I)I
+   #62 = Methodref          #2.#61        // EffectsKt.constructor$lambda$0:(I)I
+   #63 = MethodHandle       6:#62         // REF_invokeStatic EffectsKt.constructor$lambda$0:(I)I
+   #64 = InvokeDynamic      #3:#22        // #3:apply:()Lnullable/Callbacks$Listener;
+   #65 = Utf8               (Lnullable/Callbacks$Listener;)V
+   #66 = NameAndType        #39:#65       // "<init>":(Lnullable/Callbacks$Listener;)V
+   #67 = Methodref          #25.#66       // nullable/Callbacks."<init>":(Lnullable/Callbacks$Listener;)V
+   #68 = Utf8               invoke
+   #69 = NameAndType        #68:#7        // invoke:(I)I
+   #70 = Methodref          #25.#69       // nullable/Callbacks.invoke:(I)I
+   #71 = Utf8               generic
+   #72 = Utf8               ()Ljava/lang/String;
+   #73 = Utf8               Lorg/jetbrains/annotations/NotNull;
+   #74 = Utf8               (Ljava/lang/Object;)Ljava/lang/Object;
+   #75 = MethodType         #74           //  (Ljava/lang/Object;)Ljava/lang/Object;
+   #76 = Utf8               generic$lambda$0
+   #77 = Utf8               (Ljava/lang/String;)Ljava/lang/String;
+   #78 = NameAndType        #76:#77       // generic$lambda$0:(Ljava/lang/String;)Ljava/lang/String;
+   #79 = Methodref          #2.#78        // EffectsKt.generic$lambda$0:(Ljava/lang/String;)Ljava/lang/String;
+   #80 = MethodHandle       6:#79         // REF_invokeStatic EffectsKt.generic$lambda$0:(Ljava/lang/String;)Ljava/lang/String;
+   #81 = MethodType         #77           //  (Ljava/lang/String;)Ljava/lang/String;
+   #82 = Utf8               map
+   #83 = Utf8               ()Lnullable/Callbacks$Mapper;
+   #84 = NameAndType        #82:#83       // map:()Lnullable/Callbacks$Mapper;
+   #85 = InvokeDynamic      #4:#84        // #4:map:()Lnullable/Callbacks$Mapper;
+   #86 = Utf8               ok
+   #87 = String             #86           // ok
+   #88 = Utf8               (Lnullable/Callbacks$Mapper;Ljava/lang/String;)Ljava/lang/String;
+   #89 = NameAndType        #82:#88       // map:(Lnullable/Callbacks$Mapper;Ljava/lang/String;)Ljava/lang/String;
+   #90 = Methodref          #25.#89       // nullable/Callbacks.map:(Lnullable/Callbacks$Mapper;Ljava/lang/String;)Ljava/lang/String;
+   #91 = Utf8               map(...)
+   #92 = String             #91           // map(...)
+   #93 = Utf8               kotlin/jvm/internal/Intrinsics
+   #94 = Class              #93           // kotlin/jvm/internal/Intrinsics
+   #95 = Utf8               checkNotNullExpressionValue
+   #96 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+   #97 = NameAndType        #95:#96       // checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+   #98 = Methodref          #94.#97       // kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+   #99 = Utf8               nullableArgument
+  #100 = Utf8               (Ljava/lang/String;)I
+  #101 = Utf8               Lorg/jetbrains/annotations/Nullable;
+  #102 = Utf8               (Ljava/lang/String;)V
+  #103 = MethodType         #102          //  (Ljava/lang/String;)V
+  #104 = Utf8               nullableArgument$lambda$0
+  #105 = Utf8               (Lkotlin/jvm/internal/Ref$IntRef;Ljava/lang/String;)V
+  #106 = NameAndType        #104:#105     // nullableArgument$lambda$0:(Lkotlin/jvm/internal/Ref$IntRef;Ljava/lang/String;)V
+  #107 = Methodref          #2.#106       // EffectsKt.nullableArgument$lambda$0:(Lkotlin/jvm/internal/Ref$IntRef;Ljava/lang/String;)V
+  #108 = MethodHandle       6:#107        // REF_invokeStatic EffectsKt.nullableArgument$lambda$0:(Lkotlin/jvm/internal/Ref$IntRef;Ljava/lang/String;)V
+  #109 = Utf8               run
+  #110 = Utf8               (Lkotlin/jvm/internal/Ref$IntRef;)Lnullable/Callbacks$Event;
+  #111 = NameAndType        #109:#110     // run:(Lkotlin/jvm/internal/Ref$IntRef;)Lnullable/Callbacks$Event;
+  #112 = InvokeDynamic      #5:#111       // #5:run:(Lkotlin/jvm/internal/Ref$IntRef;)Lnullable/Callbacks$Event;
+  #113 = Utf8               event
+  #114 = Utf8               (Lnullable/Callbacks$Event;Ljava/lang/String;)V
+  #115 = NameAndType        #113:#114     // event:(Lnullable/Callbacks$Event;Ljava/lang/String;)V
+  #116 = Methodref          #25.#115      // nullable/Callbacks.event:(Lnullable/Callbacks$Event;Ljava/lang/String;)V
+  #117 = Utf8               value
+  #118 = Utf8               Ljava/lang/String;
+  #119 = Utf8               ordinaryNullableFunction
+  #120 = Utf8               (Lkotlin/jvm/functions/Function1;)I
+  #121 = Utf8               (Lkotlin/jvm/functions/Function1<-Ljava/lang/Integer;Ljava/lang/Integer;>;)I
+  #122 = Utf8               java/lang/Integer
+  #123 = Class              #122          // java/lang/Integer
+  #124 = Utf8               valueOf
+  #125 = Utf8               (I)Ljava/lang/Integer;
+  #126 = NameAndType        #124:#125     // valueOf:(I)Ljava/lang/Integer;
+  #127 = Methodref          #123.#126     // java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+  #128 = Utf8               kotlin/jvm/functions/Function1
+  #129 = Class              #128          // kotlin/jvm/functions/Function1
+  #130 = NameAndType        #68:#74       // invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+  #131 = InterfaceMethodref #129.#130     // kotlin/jvm/functions/Function1.invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+  #132 = Utf8               java/lang/Number
+  #133 = Class              #132          // java/lang/Number
+  #134 = Utf8               intValue
+  #135 = NameAndType        #134:#6       // intValue:()I
+  #136 = Methodref          #133.#135     // java/lang/Number.intValue:()I
+  #137 = Utf8               callback
+  #138 = Utf8               Lkotlin/jvm/functions/Function1;
+  #139 = Utf8               ordinaryLiteral
+  #140 = Utf8               ordinaryLiteral$lambda$0
+  #141 = NameAndType        #140:#7       // ordinaryLiteral$lambda$0:(I)I
+  #142 = Methodref          #2.#141       // EffectsKt.ordinaryLiteral$lambda$0:(I)I
+  #143 = MethodHandle       6:#142        // REF_invokeStatic EffectsKt.ordinaryLiteral$lambda$0:(I)I
+  #144 = Utf8               (Ljava/lang/Integer;)Ljava/lang/Integer;
+  #145 = MethodType         #144          //  (Ljava/lang/Integer;)Ljava/lang/Integer;
+  #146 = Utf8               ()Lkotlin/jvm/functions/Function1;
+  #147 = NameAndType        #68:#146      // invoke:()Lkotlin/jvm/functions/Function1;
+  #148 = InvokeDynamic      #6:#147       // #6:invoke:()Lkotlin/jvm/functions/Function1;
+  #149 = NameAndType        #119:#120     // ordinaryNullableFunction:(Lkotlin/jvm/functions/Function1;)I
+  #150 = Methodref          #2.#149       // EffectsKt.ordinaryNullableFunction:(Lkotlin/jvm/functions/Function1;)I
+  #151 = Utf8               kotlinCallback
+  #152 = Utf8               kotlinCallback$lambda$0
+  #153 = NameAndType        #152:#7       // kotlinCallback$lambda$0:(I)I
+  #154 = Methodref          #2.#153       // EffectsKt.kotlinCallback$lambda$0:(I)I
+  #155 = MethodHandle       6:#154        // REF_invokeStatic EffectsKt.kotlinCallback$lambda$0:(I)I
+  #156 = Utf8               transform
+  #157 = Utf8               ()Lnullable/IntCallback;
+  #158 = NameAndType        #156:#157     // transform:()Lnullable/IntCallback;
+  #159 = InvokeDynamic      #7:#158       // #7:transform:()Lnullable/IntCallback;
+  #160 = Utf8               nullable/LibraryKt
+  #161 = Class              #160          // nullable/LibraryKt
+  #162 = Utf8               kotlinCall
+  #163 = Utf8               (Lnullable/IntCallback;I)I
+  #164 = NameAndType        #162:#163     // kotlinCall:(Lnullable/IntCallback;I)I
+  #165 = Methodref          #161.#164     // nullable/LibraryKt.kotlinCall:(Lnullable/IntCallback;I)I
+  #166 = Utf8               callbackThrows
+  #167 = Utf8               callbackThrows$lambda$0
+  #168 = NameAndType        #167:#7       // callbackThrows$lambda$0:(I)I
+  #169 = Methodref          #2.#168       // EffectsKt.callbackThrows$lambda$0:(I)I
+  #170 = MethodHandle       6:#169        // REF_invokeStatic EffectsKt.callbackThrows$lambda$0:(I)I
+  #171 = InvokeDynamic      #8:#22        // #8:apply:()Lnullable/Callbacks$Listener;
+  #172 = Utf8               $total
+  #173 = Utf8               java/lang/StringBuilder
+  #174 = Class              #173          // java/lang/StringBuilder
+  #175 = Methodref          #174.#41      // java/lang/StringBuilder."<init>":()V
+  #176 = Utf8               append
+  #177 = Utf8               (Ljava/lang/String;)Ljava/lang/StringBuilder;
+  #178 = NameAndType        #176:#177     // append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  #179 = Methodref          #174.#178     // java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+  #180 = Utf8               (C)Ljava/lang/StringBuilder;
+  #181 = NameAndType        #176:#180     // append:(C)Ljava/lang/StringBuilder;
+  #182 = Methodref          #174.#181     // java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+  #183 = Utf8               toString
+  #184 = NameAndType        #183:#72      // toString:()Ljava/lang/String;
+  #185 = Methodref          #174.#184     // java/lang/StringBuilder.toString:()Ljava/lang/String;
+  #186 = Utf8               java/lang/String
+  #187 = Class              #186          // java/lang/String
+  #188 = Utf8               length
+  #189 = NameAndType        #188:#6       // length:()I
+  #190 = Methodref          #187.#189     // java/lang/String.length:()I
+  #191 = Utf8               text
+  #192 = Utf8               java/lang/IllegalStateException
+  #193 = Class              #192          // java/lang/IllegalStateException
+  #194 = String             #137          // callback
+  #195 = NameAndType        #39:#102      // "<init>":(Ljava/lang/String;)V
+  #196 = Methodref          #193.#195     // java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+  #197 = Utf8               Lkotlin/Metadata;
+  #198 = Utf8               mv
+  #199 = Integer            2
+  #200 = Integer            3
+  #201 = Integer            0
+  #202 = Utf8               k
+  #203 = Utf8               xi
+  #204 = Integer            48
+  #205 = Utf8               d1
+  #206 = Utf8               \u0000\u001a\n\u0000\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0010\u000e\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0004\u001a\u0006\u0010\u0000\u001a\u00020\u0001\u001a\u0006\u0010\u0002\u001a\u00020\u0001\u001a\u0006\u0010\u0003\u001a\u00020\u0001\u001a\u0006\u0010\u0004\u001a\u00020\u0001\u001a\u0006\u0010\u0005\u001a\u00020\u0001\u001a\u0006\u0010\u0006\u001a\u00020\u0007\u001a\u0010\u0010\b\u001a\u00020\u00012\b\u0010\t\u001a\u0004\u0018\u00010\u0007\u001a\u001c\u0010\n\u001a\u00020\u00012\u0014\u0010\u000b\u001a\u0010\u0012\u0004\u0012\u00020\u0001\u0012\u0004\u0012\u00020\u0001\u0018\u00010\f\u001a\u0006\u0010\r\u001a\u00020\u0001\u001a\u0006\u0010\u000e\u001a\u00020\u0001\u001a\u0006\u0010\u000f\u001a\u00020\u0001¨\u0006\u0010
+  #207 = Utf8               d2
+  #208 = Utf8
+  #209 = Utf8               Lkotlin/Function1;
+  #210 = Utf8               nullable_sam
+  #211 = Utf8               kotlin/jvm/internal/Ref
+  #212 = Class              #211          // kotlin/jvm/internal/Ref
+  #213 = Utf8               IntRef
+  #214 = Utf8               nullable/Callbacks$Event
+  #215 = Class              #214          // nullable/Callbacks$Event
+  #216 = Utf8               Event
+  #217 = Utf8               nullable/Callbacks$Listener
+  #218 = Class              #217          // nullable/Callbacks$Listener
+  #219 = Utf8               Listener
+  #220 = Utf8               nullable/Callbacks$Mapper
+  #221 = Class              #220          // nullable/Callbacks$Mapper
+  #222 = Utf8               Mapper
+  #223 = Utf8               Effects.kt
+  #224 = Utf8               Code
+  #225 = Utf8               LineNumberTable
+  #226 = Utf8               LocalVariableTable
+  #227 = Utf8               RuntimeInvisibleAnnotations
+  #228 = Utf8               RuntimeInvisibleParameterAnnotations
+  #229 = Utf8               StackMapTable
+  #230 = Utf8               Signature
+  #231 = Utf8               InnerClasses
+  #232 = Utf8               SourceFile
+  #233 = Utf8               RuntimeVisibleAnnotations
+  #234 = Utf8               BootstrapMethods
+{
+  public static final int direct();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: invokedynamic #23,  0             // InvokeDynamic #0:apply:()Lnullable/Callbacks$Listener;
+         5: iconst_4
+         6: invokestatic  #29                 // Method nullable/Callbacks.call:(Lnullable/Callbacks$Listener;I)I
+         9: ireturn
+      LineNumberTable:
+        line 3: 0
+
+  public static final int labeled();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: invokedynamic #35,  0             // InvokeDynamic #1:apply:()Lnullable/Callbacks$Listener;
+         5: iconst_4
+         6: invokestatic  #29                 // Method nullable/Callbacks.call:(Lnullable/Callbacks$Listener;I)I
+         9: ireturn
+      LineNumberTable:
+        line 4: 0
+
+  public static final int capture();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=0
+         0: new           #38                 // class kotlin/jvm/internal/Ref$IntRef
+         3: dup
+         4: invokespecial #42                 // Method kotlin/jvm/internal/Ref$IntRef."<init>":()V
+         7: astore_0
+         8: aload_0
+         9: iconst_3
+        10: putfield      #46                 // Field kotlin/jvm/internal/Ref$IntRef.element:I
+        13: aload_0
+        14: invokedynamic #54,  0             // InvokeDynamic #2:apply:(Lkotlin/jvm/internal/Ref$IntRef;)Lnullable/Callbacks$Listener;
+        19: iconst_4
+        20: invokestatic  #29                 // Method nullable/Callbacks.call:(Lnullable/Callbacks$Listener;I)I
+        23: istore_1
+        24: iload_1
+        25: aload_0
+        26: getfield      #46                 // Field kotlin/jvm/internal/Ref$IntRef.element:I
+        29: iadd
+        30: ireturn
+      LineNumberTable:
+        line 5: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            8      23     0 total   Lkotlin/jvm/internal/Ref$IntRef;
+           24       7     1 result   I
+
+  public static final int absent();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: aconst_null
+         1: iconst_4
+         2: invokestatic  #29                 // Method nullable/Callbacks.call:(Lnullable/Callbacks$Listener;I)I
+         5: ireturn
+      LineNumberTable:
+        line 6: 0
+
+  public static final int constructor();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: new           #25                 // class nullable/Callbacks
+         3: dup
+         4: invokedynamic #64,  0             // InvokeDynamic #3:apply:()Lnullable/Callbacks$Listener;
+         9: invokespecial #67                 // Method nullable/Callbacks."<init>":(Lnullable/Callbacks$Listener;)V
+        12: iconst_4
+        13: invokevirtual #70                 // Method nullable/Callbacks.invoke:(I)I
+        16: ireturn
+      LineNumberTable:
+        line 7: 0
+
+  public static final java.lang.String generic();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: invokedynamic #85,  0             // InvokeDynamic #4:map:()Lnullable/Callbacks$Mapper;
+         5: ldc           #87                 // String ok
+         7: invokestatic  #90                 // Method nullable/Callbacks.map:(Lnullable/Callbacks$Mapper;Ljava/lang/String;)Ljava/lang/String;
+        10: dup
+        11: ldc           #92                 // String map(...)
+        13: invokestatic  #98                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+        16: areturn
+      LineNumberTable:
+        line 8: 0
+    RuntimeInvisibleAnnotations:
+      0: #73()
+        org.jetbrains.annotations.NotNull
+
+  public static final int nullableArgument(java.lang.String);
+    descriptor: (Ljava/lang/String;)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=1
+         0: new           #38                 // class kotlin/jvm/internal/Ref$IntRef
+         3: dup
+         4: invokespecial #42                 // Method kotlin/jvm/internal/Ref$IntRef."<init>":()V
+         7: astore_1
+         8: aload_1
+         9: iconst_1
+        10: putfield      #46                 // Field kotlin/jvm/internal/Ref$IntRef.element:I
+        13: aload_1
+        14: invokedynamic #112,  0            // InvokeDynamic #5:run:(Lkotlin/jvm/internal/Ref$IntRef;)Lnullable/Callbacks$Event;
+        19: aload_0
+        20: invokestatic  #116                // Method nullable/Callbacks.event:(Lnullable/Callbacks$Event;Ljava/lang/String;)V
+        23: aload_1
+        24: getfield      #46                 // Field kotlin/jvm/internal/Ref$IntRef.element:I
+        27: ireturn
+      LineNumberTable:
+        line 9: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            8      20     1 total   Lkotlin/jvm/internal/Ref$IntRef;
+            0      28     0 value   Ljava/lang/String;
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #101()
+          org.jetbrains.annotations.Nullable
+
+  public static final int ordinaryNullableFunction(kotlin.jvm.functions.Function1<? super java.lang.Integer, java.lang.Integer>);
+    descriptor: (Lkotlin/jvm/functions/Function1;)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: dup
+         2: ifnonnull     10
+         5: pop
+         6: iconst_m1
+         7: goto          25
+        10: iconst_4
+        11: invokestatic  #127                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        14: invokeinterface #131,  2          // InterfaceMethod kotlin/jvm/functions/Function1.invoke:(Ljava/lang/Object;)Ljava/lang/Object;
+        19: checkcast     #133                // class java/lang/Number
+        22: invokevirtual #136                // Method java/lang/Number.intValue:()I
+        25: ireturn
+      StackMapTable: number_of_entries = 2
+        frame_type = 74 /* same_locals_1_stack_item */
+          stack = [ class kotlin/jvm/functions/Function1 ]
+        frame_type = 78 /* same_locals_1_stack_item */
+          stack = [ int ]
+      LineNumberTable:
+        line 10: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      26     0 callback   Lkotlin/jvm/functions/Function1;
+    Signature: #121                         // (Lkotlin/jvm/functions/Function1<-Ljava/lang/Integer;Ljava/lang/Integer;>;)I
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #101()
+          org.jetbrains.annotations.Nullable
+
+  public static final int ordinaryLiteral();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: invokedynamic #148,  0            // InvokeDynamic #6:invoke:()Lkotlin/jvm/functions/Function1;
+         5: invokestatic  #150                // Method ordinaryNullableFunction:(Lkotlin/jvm/functions/Function1;)I
+         8: ireturn
+      LineNumberTable:
+        line 11: 5
+
+  public static final int kotlinCallback();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: invokedynamic #159,  0            // InvokeDynamic #7:transform:()Lnullable/IntCallback;
+         5: iconst_5
+         6: invokestatic  #165                // Method nullable/LibraryKt.kotlinCall:(Lnullable/IntCallback;I)I
+         9: ireturn
+      LineNumberTable:
+        line 12: 0
+
+  public static final int callbackThrows();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: invokedynamic #171,  0            // InvokeDynamic #8:apply:()Lnullable/Callbacks$Listener;
+         5: iconst_4
+         6: invokestatic  #29                 // Method nullable/Callbacks.call:(Lnullable/Callbacks$Listener;I)I
+         9: ireturn
+      LineNumberTable:
+        line 13: 0
+
+  private static final int direct$lambda$0(int);
+    descriptor: (I)I
+    flags: (0x001a) ACC_PRIVATE, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: iload_0
+         1: iconst_3
+         2: iadd
+         3: ireturn
+      LineNumberTable:
+        line 3: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       4     0 value   I
+
+  private static final int labeled$lambda$0(int);
+    descriptor: (I)I
+    flags: (0x001a) ACC_PRIVATE, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: iload_0
+         1: iconst_4
+         2: if_icmpne     8
+         5: bipush        12
+         7: ireturn
+         8: iconst_0
+         9: ireturn
+      StackMapTable: number_of_entries = 1
+        frame_type = 8 /* same */
+      LineNumberTable:
+        line 4: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      10     0 value   I
+
+  private static final int capture$lambda$0(kotlin.jvm.internal.Ref$IntRef, int);
+    descriptor: (Lkotlin/jvm/internal/Ref$IntRef;I)I
+    flags: (0x001a) ACC_PRIVATE, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=2, args_size=2
+         0: aload_0
+         1: aload_0
+         2: getfield      #46                 // Field kotlin/jvm/internal/Ref$IntRef.element:I
+         5: iload_1
+         6: iadd
+         7: putfield      #46                 // Field kotlin/jvm/internal/Ref$IntRef.element:I
+        10: aload_0
+        11: getfield      #46                 // Field kotlin/jvm/internal/Ref$IntRef.element:I
+        14: ireturn
+      LineNumberTable:
+        line 5: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      15     0 $total   Lkotlin/jvm/internal/Ref$IntRef;
+            0      15     1 value   I
+
+  private static final int constructor$lambda$0(int);
+    descriptor: (I)I
+    flags: (0x001a) ACC_PRIVATE, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: iload_0
+         1: bipush        9
+         3: iadd
+         4: ireturn
+      LineNumberTable:
+        line 7: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0 value   I
+
+  private static final java.lang.String generic$lambda$0(java.lang.String);
+    descriptor: (Ljava/lang/String;)Ljava/lang/String;
+    flags: (0x001a) ACC_PRIVATE, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: new           #174                // class java/lang/StringBuilder
+         3: dup
+         4: invokespecial #175                // Method java/lang/StringBuilder."<init>":()V
+         7: aload_0
+         8: invokevirtual #179                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+        11: bipush        33
+        13: invokevirtual #182                // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+        16: invokevirtual #185                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+        19: areturn
+      LineNumberTable:
+        line 8: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      20     0 value   Ljava/lang/String;
+
+  private static final void nullableArgument$lambda$0(kotlin.jvm.internal.Ref$IntRef, java.lang.String);
+    descriptor: (Lkotlin/jvm/internal/Ref$IntRef;Ljava/lang/String;)V
+    flags: (0x001a) ACC_PRIVATE, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload_1
+         1: dup
+         2: ifnonnull     15
+         5: pop
+         6: aload_0
+         7: bipush        8
+         9: putfield      #46                 // Field kotlin/jvm/internal/Ref$IntRef.element:I
+        12: goto          23
+        15: aload_0
+        16: swap
+        17: invokevirtual #190                // Method java/lang/String.length:()I
+        20: putfield      #46                 // Field kotlin/jvm/internal/Ref$IntRef.element:I
+        23: return
+      StackMapTable: number_of_entries = 2
+        frame_type = 79 /* same_locals_1_stack_item */
+          stack = [ class java/lang/String ]
+        frame_type = 7 /* same */
+      LineNumberTable:
+        line 9: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      24     0 $total   Lkotlin/jvm/internal/Ref$IntRef;
+            0      24     1  text   Ljava/lang/String;
+
+  private static final int ordinaryLiteral$lambda$0(int);
+    descriptor: (I)I
+    flags: (0x001a) ACC_PRIVATE, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: iload_0
+         1: iconst_2
+         2: iadd
+         3: ireturn
+      LineNumberTable:
+        line 11: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       4     0 value   I
+
+  private static final int kotlinCallback$lambda$0(int);
+    descriptor: (I)I
+    flags: (0x001a) ACC_PRIVATE, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: iload_0
+         1: iconst_4
+         2: iadd
+         3: ireturn
+      LineNumberTable:
+        line 12: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       4     0 value   I
+
+  private static final int callbackThrows$lambda$0(int);
+    descriptor: (I)I
+    flags: (0x001a) ACC_PRIVATE, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: new           #193                // class java/lang/IllegalStateException
+         3: dup
+         4: ldc           #194                // String callback
+         6: invokespecial #196                // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+         9: athrow
+      LineNumberTable:
+        line 13: 0
+}
+InnerClasses:
+  public static final #213= #38 of #212;  // IntRef=class kotlin/jvm/internal/Ref$IntRef of class kotlin/jvm/internal/Ref
+  public static #216= #215 of #25;        // Event=class nullable/Callbacks$Event of class nullable/Callbacks
+  public static #219= #218 of #25;        // Listener=class nullable/Callbacks$Listener of class nullable/Callbacks
+  public static #222= #221 of #25;        // Mapper=class nullable/Callbacks$Mapper of class nullable/Callbacks
+SourceFile: "Effects.kt"
+RuntimeVisibleAnnotations:
+  0: #197(#198=[I#199,I#200,I#201],#202=I#199,#203=I#204,#205=[s#206],#207=[s#5,s#208,s#30,s#36,s#58,s#59,s#71,s#208,s#99,s#117,s#119,s#137,s#209,s#139,s#151,s#166,s#210])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000\u001a\n\u0000\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0010\u000e\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0004\u001a\u0006\u0010\u0000\u001a\u00020\u0001\u001a\u0006\u0010\u0002\u001a\u00020\u0001\u001a\u0006\u0010\u0003\u001a\u00020\u0001\u001a\u0006\u0010\u0004\u001a\u00020\u0001\u001a\u0006\u0010\u0005\u001a\u00020\u0001\u001a\u0006\u0010\u0006\u001a\u00020\u0007\u001a\u0010\u0010\b\u001a\u00020\u00012\b\u0010\t\u001a\u0004\u0018\u00010\u0007\u001a\u001c\u0010\n\u001a\u00020\u00012\u0014\u0010\u000b\u001a\u0010\u0012\u0004\u0012\u00020\u0001\u0012\u0004\u0012\u00020\u0001\u0018\u00010\f\u001a\u0006\u0010\r\u001a\u00020\u0001\u001a\u0006\u0010\u000e\u001a\u00020\u0001\u001a\u0006\u0010\u000f\u001a\u00020\u0001¨\u0006\u0010"]
+      d2=["direct","","labeled","capture","absent","constructor","generic","","nullableArgument","value","ordinaryNullableFunction","callback","Lkotlin/Function1;","ordinaryLiteral","kotlinCallback","callbackThrows","nullable_sam"]
+    )
+BootstrapMethods:
+  0: #19 REF_invokeStatic java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+    Method arguments:
+      #8 (I)I
+      #12 REF_invokeStatic EffectsKt.direct$lambda$0:(I)I
+      #8 (I)I
+  1: #19 REF_invokeStatic java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+    Method arguments:
+      #8 (I)I
+      #34 REF_invokeStatic EffectsKt.labeled$lambda$0:(I)I
+      #8 (I)I
+  2: #19 REF_invokeStatic java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+    Method arguments:
+      #8 (I)I
+      #51 REF_invokeStatic EffectsKt.capture$lambda$0:(Lkotlin/jvm/internal/Ref$IntRef;I)I
+      #8 (I)I
+  3: #19 REF_invokeStatic java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+    Method arguments:
+      #8 (I)I
+      #63 REF_invokeStatic EffectsKt.constructor$lambda$0:(I)I
+      #8 (I)I
+  4: #19 REF_invokeStatic java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+    Method arguments:
+      #75 (Ljava/lang/Object;)Ljava/lang/Object;
+      #80 REF_invokeStatic EffectsKt.generic$lambda$0:(Ljava/lang/String;)Ljava/lang/String;
+      #81 (Ljava/lang/String;)Ljava/lang/String;
+  5: #19 REF_invokeStatic java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+    Method arguments:
+      #103 (Ljava/lang/String;)V
+      #108 REF_invokeStatic EffectsKt.nullableArgument$lambda$0:(Lkotlin/jvm/internal/Ref$IntRef;Ljava/lang/String;)V
+      #103 (Ljava/lang/String;)V
+  6: #19 REF_invokeStatic java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+    Method arguments:
+      #75 (Ljava/lang/Object;)Ljava/lang/Object;
+      #143 REF_invokeStatic EffectsKt.ordinaryLiteral$lambda$0:(I)I
+      #145 (Ljava/lang/Integer;)Ljava/lang/Integer;
+  7: #19 REF_invokeStatic java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+    Method arguments:
+      #8 (I)I
+      #155 REF_invokeStatic EffectsKt.kotlinCallback$lambda$0:(I)I
+      #8 (I)I
+  8: #19 REF_invokeStatic java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;
+    Method arguments:
+      #8 (I)I
+      #170 REF_invokeStatic EffectsKt.callbackThrows$lambda$0:(I)I
+      #8 (I)I
