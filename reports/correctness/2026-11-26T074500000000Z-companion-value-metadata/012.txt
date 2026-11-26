@@ -1,0 +1,61 @@
+$ /workspace/korrust-setup/jdk-21/bin/javap -c -p -classpath /workspace/work/interop159-companion-final-run2/jar/official companionvalues.consumer.ConsumerKt
+Compiled from "Consumer.kt"
+public final class companionvalues.consumer.ConsumerKt {
+  public static final long primary();
+    Code:
+       0: getstatic     #12                 // Field companionvalues/library/Palette.Companion:Lcompanionvalues/library/Palette$Companion;
+       3: invokevirtual #17                 // Method companionvalues/library/Palette$Companion."getPrimary-yWAnSJE":()J
+       6: getstatic     #22                 // Field companionvalues/library/Key.Companion:Lcompanionvalues/library/Key$Companion;
+       9: invokevirtual #27                 // Method companionvalues/library/Key$Companion."getZero-yWAnSJE":()J
+      12: ladd
+      13: lreturn
+
+  public static final java.lang.String name();
+    Code:
+       0: new           #32                 // class java/lang/StringBuilder
+       3: dup
+       4: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+       7: getstatic     #12                 // Field companionvalues/library/Palette.Companion:Lcompanionvalues/library/Palette$Companion;
+      10: invokevirtual #39                 // Method companionvalues/library/Palette$Companion."getName-PDEtYOU":()Ljava/lang/String;
+      13: invokevirtual #43                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      16: bipush        58
+      18: invokevirtual #46                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      21: getstatic     #50                 // Field companionvalues/library/Palette.javaName:Ljava/lang/String;
+      24: invokevirtual #43                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      27: invokevirtual #53                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      30: areturn
+
+  public static final long mutate();
+    Code:
+       0: getstatic     #12                 // Field companionvalues/library/Palette.Companion:Lcompanionvalues/library/Palette$Companion;
+       3: ldc2_w        #55                 // long 67l
+       6: invokestatic  #60                 // Method companionvalues/library/Key."constructor-impl":(J)J
+       9: invokevirtual #64                 // Method companionvalues/library/Palette$Companion."setAccent-Fx76qYc":(J)V
+      12: getstatic     #12                 // Field companionvalues/library/Palette.Companion:Lcompanionvalues/library/Palette$Companion;
+      15: invokevirtual #67                 // Method companionvalues/library/Palette$Companion."getAccent-yWAnSJE":()J
+      18: lreturn
+
+  public static final boolean nullable();
+    Code:
+       0: getstatic     #12                 // Field companionvalues/library/Palette.Companion:Lcompanionvalues/library/Palette$Companion;
+       3: invokevirtual #73                 // Method companionvalues/library/Palette$Companion."getMaybe-2p7HqrQ":()Lcompanionvalues/library/Key;
+       6: ifnonnull     13
+       9: iconst_1
+      10: goto          14
+      13: iconst_0
+      14: ireturn
+
+  public static final int version();
+    Code:
+       0: iconst_3
+       1: ireturn
+
+  public static final long defaultMethod();
+    Code:
+       0: getstatic     #12                 // Field companionvalues/library/Palette.Companion:Lcompanionvalues/library/Palette$Companion;
+       3: lconst_0
+       4: iconst_1
+       5: aconst_null
+       6: invokestatic  #80                 // Method companionvalues/library/Palette$Companion."choose-HjgL9f4$default":(Lcompanionvalues/library/Palette$Companion;JILjava/lang/Object;)J
+       9: lreturn
+}
