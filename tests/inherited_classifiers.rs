@@ -128,7 +128,9 @@ fn verify() {
                     "inherited.consumer.Closest",
                     "inherited.consumer.Own",
                     "inherited.consumer.TypeParameter",
+                    "inherited.consumer.FunctionParameter",
                     "inherited.explicit.Derived",
+                    "inherited.explicit.GenericDerived",
                     "inherited.same.Derived",
                 ]))
             .stdout,

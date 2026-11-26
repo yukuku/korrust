@@ -101,9 +101,6 @@ impl Classpath {
         name: &str,
         offset: usize,
     ) -> Result<Option<ValueSymbol>> {
-        if self.type_parameter_in_scope(caller, name) {
-            return Ok(None);
-        }
         let scopes = self.value_scopes.borrow();
         let mut owner = caller;
         let scope = loop {

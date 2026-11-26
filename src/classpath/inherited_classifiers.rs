@@ -50,28 +50,6 @@ impl Classpath {
         false
     }
 
-    pub(crate) fn type_parameter_in_scope(&self, caller: &str, name: &str) -> bool {
-        let mut scope = Some(caller.to_owned());
-        for _ in 0..64 {
-            let Some(owner) = scope else { return false };
-            if let Ok(class) = self.load(&owner) {
-                if class.library.as_ref().is_some_and(|library| {
-                    library
-                        .type_parameters
-                        .iter()
-                        .any(|parameter| parameter.name == name)
-                }) {
-                    return true;
-                }
-                if class.enclosing_instance().is_none() {
-                    return false;
-                }
-            }
-            scope = self.scope_parent(&owner);
-        }
-        false
-    }
-
     pub(crate) fn member_classifier_visible(
         &self,
         caller: &str,
@@ -105,14 +83,7 @@ impl Classpath {
         let Ok(class) = self.load(scope) else {
             return Ok(None);
         };
-        if class.name.rsplit(['/', '$']).next() == Some(name)
-            || class.library.as_ref().is_some_and(|library| {
-                library
-                    .type_parameters
-                    .iter()
-                    .any(|parameter| parameter.name == name)
-            })
-        {
+        if class.name.rsplit(['/', '$']).next() == Some(name) {
             return Ok(None);
         }
         let mut current = self.inheritance_parent(&class)?;
@@ -151,9 +122,6 @@ impl Classpath {
         caller: &str,
         name: &str,
     ) -> Result<Option<JavaClass>> {
-        if self.type_parameter_in_scope(caller, name) {
-            return Ok(None);
-        }
         let mut scope = Some(caller.to_owned());
         for _ in 0..64 {
             let Some(owner) = scope else { return Ok(None) };

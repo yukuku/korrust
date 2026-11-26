@@ -1629,8 +1629,7 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Option<Value>> {
-        if self.type_parameter_name_is_bound(name)
-            || self.functions.contains_key(name)
+        if self.functions.contains_key(name)
             || self.local(name).is_some()
             || self.captured.contains_key(name)
             || self.object_methods.contains_key(name)
@@ -1905,11 +1904,10 @@ impl Checker<'_> {
         expected: Option<&Type>,
         offset: usize,
     ) -> Result<Option<Value>> {
-        if self.type_parameter_name_is_bound(name)
-            || self
-                .imports
-                .get(name)
-                .is_some_and(|binding| binding.contains("::"))
+        if self
+            .imports
+            .get(name)
+            .is_some_and(|binding| binding.contains("::"))
         {
             return Ok(None);
         }
@@ -2677,18 +2675,8 @@ impl Checker<'_> {
 }
 
 impl Checker<'_> {
-    pub(super) fn type_parameter_name_is_bound(&self, name: &str) -> bool {
-        self.reified_parameters
-            .iter()
-            .any(|parameter| parameter.name == name)
-            || self
-                .classpath
-                .type_parameter_in_scope(&self.lambda_owner, name)
-    }
-
     fn value_name_is_bound(&self, name: &str) -> bool {
         name == "this"
-            || self.type_parameter_name_is_bound(name)
             || self.local(name).is_some()
             || self.captured.contains_key(name)
             || self.constants.contains_key(name)

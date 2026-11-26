@@ -1347,12 +1347,7 @@ pub(super) fn check_class_with_constants(
                     && !method.function.internal
             }),
             constructor_bridge_context: false,
-            reified_parameters: source
-                .methods
-                .iter()
-                .find(|method| method.function.name == name && method.function.offset == offset)
-                .map(|method| method.function.type_params.clone())
-                .unwrap_or_default(),
+            reified_parameters: Vec::new(),
             exhaustiveness_flow: false,
             extension_receivers: Vec::new(),
             receiver_labels: HashMap::new(),
@@ -2417,7 +2412,6 @@ impl<'a> DeclarationContext<'a> {
             self.classes,
         )?;
         let mut checker = self.checker(receiver, u16::from(receiver), result.clone());
-        checker.reified_parameters = source.type_params.clone();
         checker.validate_update_declaration(source, &Type::Java(self.owner.clone()))?;
         let mut params = Vec::new();
         if let Some(receiver) = &source.receiver {

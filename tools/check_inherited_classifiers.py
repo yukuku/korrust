@@ -75,7 +75,7 @@ def main():
         for provider, output in outputs.items():
             result = run('verified fixed Java caller ' + provider, [jdk / 'java', '-Xverify:all', '-cp', cp(callers, output, dependencies), 'inherited.consumer.Calls'])
             case('fixed-java/' + provider, result.stdout == 'inherited-classifiers-ok\n')
-            result = run('JVM signatures ' + provider, [jdk / 'javap', '-public', '-s', '-cp', output, 'inherited.consumer.DeclarationsKt', 'inherited.consumer.Direct', 'inherited.consumer.SourceEnd', 'inherited.consumer.CompiledEnd', 'inherited.consumer.SuspendEnd', 'inherited.consumer.Closest', 'inherited.consumer.Own', 'inherited.consumer.TypeParameter', 'inherited.explicit.Derived', 'inherited.same.Derived'])
+            result = run('JVM signatures ' + provider, [jdk / 'javap', '-public', '-s', '-cp', output, 'inherited.consumer.DeclarationsKt', 'inherited.consumer.Direct', 'inherited.consumer.SourceEnd', 'inherited.consumer.CompiledEnd', 'inherited.consumer.SuspendEnd', 'inherited.consumer.Closest', 'inherited.consumer.Own', 'inherited.consumer.TypeParameter', 'inherited.consumer.FunctionParameter', 'inherited.explicit.Derived', 'inherited.explicit.GenericDerived', 'inherited.same.Derived'])
             signatures.append(result.stdout)
             consumers[provider] = work / (provider + '-consumer')
             run('official Kotlin metadata consumer ' + provider, [kotlin, FIXTURES / 'Consumer.kt', *options, '-cp', cp(output, dependencies), '-d', consumers[provider]])

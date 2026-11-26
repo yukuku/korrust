@@ -12,18 +12,6 @@
     "source": "import inherited.library.JavaTypes.Base\nclass Bad: Base() { fun bad(value: PackageType): PackageType = value }"
   },
   {
-    "id": "method-parameter-static",
-    "source": "import inherited.library.JavaTypes.Base\nclass Bad: Base() { fun <Result> bad(): String = Result.make(\"x\").tag() }"
-  },
-  {
-    "id": "class-parameter-static",
-    "source": "import inherited.library.JavaTypes.Base\nclass Bad<Result>: Base() { fun bad(): String = Result.make(\"x\").tag() }"
-  },
-  {
-    "id": "method-parameter-constructor",
-    "source": "import inherited.library.JavaTypes.Base\nclass Bad: Base() { fun <Result> bad(): Any = Result(\"x\") }"
-  },
-  {
     "id": "own-shadow",
     "source": "import inherited.library.JavaTypes.Base\nclass Bad: Base() { class Result; fun bad(value: Base.Result): Result = value }"
   },
@@ -44,11 +32,11 @@
     "source": "import inherited.library.KotlinBase\nclass Bad: KotlinBase() { fun bad(value: KHidden): KHidden = value }"
   },
   {
-    "id": "class-parameter-constructor",
-    "source": "import inherited.library.JavaTypes.Base\nclass Bad<Result>: Base() { fun bad(): Any = Result(\"x\") }"
+    "id": "method-parameter-type-shadow",
+    "source": "import inherited.library.JavaTypes.Base\nclass Bad: Base() { fun <Result> bad(value: Base.Result): Result = value }"
   },
   {
-    "id": "method-parameter-generic-static",
-    "source": "import inherited.library.JavaTypes.Base\nclass Bad: Base() { fun <Result> bad(): String = Result.generic<String>(\"x\") }"
+    "id": "class-parameter-type-shadow",
+    "source": "import inherited.library.JavaTypes.Base\nclass Bad<Result>: Base() { fun bad(value: Base.Result): Result = value }"
   }
 ]

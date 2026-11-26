@@ -11,9 +11,14 @@ public class Calls {
         if (!new Own().make().getValue().equals("own") || !new OwnOpaque().make().getValue().equals("shadow-opaque")) throw new AssertionError();
         if (!new TypeParameter<String>().identity("generic").equals("generic") || !new FunctionParameter().identity("function").equals("function")) throw new AssertionError();
         if (!new BuiltinShadow().name().equals("member-list") || !DeclarationsKt.ordinaryList().get(0).equals("ordinary")) throw new AssertionError();
+        if (!new TypeParameter<String>().staticName().equals("class-param") || !((JavaTypes.Base.Result) new TypeParameter<String>().constructed()).tag().equals("class-ctor")) throw new AssertionError();
+        if (!new FunctionParameter().staticName().equals("method-param") || !((JavaTypes.Base.Result) new FunctionParameter().constructed()).tag().equals("method-ctor") || !new FunctionParameter().genericName().equals("generic:generic")) throw new AssertionError();
+        if (!new FunctionParameter().valueShadow(new JavaTypes.Base.Result("value")).equals("value")) throw new AssertionError();
         JavaTypes.Base.Result value = new JavaTypes.Base.Result("identity");
         if (!new FunctionParameter().valueShadow(value).equals("identity")) throw new AssertionError();
         if (new inherited.explicit.Derived().identity(value) != value || new inherited.same.Derived().identity(value) != value) throw new AssertionError();
+        inherited.explicit.GenericDerived<String> genericImport = new inherited.explicit.GenericDerived<>();
+        if (!((JavaTypes.Base.Result) genericImport.constructed()).tag().equals("generic-import") || !genericImport.staticName().equals("generic-static") || !genericImport.identity("type-shadow").equals("type-shadow")) throw new AssertionError();
         if (!new inherited.library.PackageEnd().name().equals("package")) throw new AssertionError();
         Object suspended = new SuspendEnd().execute(new kotlin.coroutines.Continuation<JavaTypes.Base.Result>() {
             public kotlin.coroutines.CoroutineContext getContext() { return kotlin.coroutines.EmptyCoroutineContext.INSTANCE; }

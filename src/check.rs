@@ -6024,24 +6024,25 @@ impl Checker<'_> {
                                 return Ok(call);
                             }
                             if let ExprKind::Name(alias) = &receiver.kind {
-                                if !self.type_parameter_name_is_bound(alias)
-                                    && let Some(owner) = self.imports.get(alias)
-                                    && self.classes.contains_key(owner)
-                                {
-                                    let methods = self
-                                        .classpath
-                                        .methods(owner)?
-                                        .into_iter()
-                                        .filter(|m| m.source_name() == name && m.access & 9 == 9)
-                                        .collect::<Vec<_>>();
-                                    let method = self.select_method_expected(
-                                        &methods,
-                                        args,
-                                        types,
-                                        expected_result,
-                                        offset,
-                                    )?;
-                                    return self.library_static_call(method, args, offset);
+                                if let Some(owner) = self.imports.get(alias) {
+                                    if self.classes.contains_key(owner) {
+                                        let methods = self
+                                            .classpath
+                                            .methods(owner)?
+                                            .into_iter()
+                                            .filter(|m| {
+                                                m.source_name() == name && m.access & 9 == 9
+                                            })
+                                            .collect::<Vec<_>>();
+                                        let method = self.select_method_expected(
+                                            &methods,
+                                            args,
+                                            types,
+                                            expected_result,
+                                            offset,
+                                        )?;
+                                        return self.library_static_call(method, args, offset);
+                                    }
                                 }
                             }
                             let value = self.value(receiver)?;
@@ -6141,9 +6142,7 @@ impl Checker<'_> {
                             );
                         }
                     }
-                    if !self.type_parameter_name_is_bound(name)
-                        && let Some(owner) = self.imports.get(name)
-                    {
+                    if let Some(owner) = self.imports.get(name) {
                         if let Some(class) = self.classes.get(owner).cloned() {
                             if class.access & 0x2000 != 0 {
                                 return Err(Diagnostic::new(
@@ -6494,8 +6493,7 @@ impl Checker<'_> {
                         }
                     }
                     if let ExprKind::Name(alias) = &receiver.kind {
-                        if !self.type_parameter_name_is_bound(alias)
-                            && self.local(alias).is_none()
+                        if self.local(alias).is_none()
                             && !self.fields.contains_key(alias)
                             && !self.object_fields.contains_key(alias)
                             && !self.constants.contains_key(alias)
@@ -7776,7 +7774,7 @@ pub fn check_with_owner(
             {
                 return Err(Diagnostic::new(
                     *offset,
-                    format!("Compiled value class uses an unsupported carrier or generic declaration: {owner}"),
+                    "Compiled value class uses an unsupported carrier or generic declaration",
                 )
                 .with_kind(
                     crate::DiagnosticKind::UnsupportedLanguage,

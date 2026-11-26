@@ -6,3 +6,7 @@ fun consumer(): String {
 }
 
 suspend fun consumerSuspend(): inherited.library.JavaTypes.Base.Result = inherited.consumer.SuspendEnd().execute()
+
+fun parameterExpressions(): String = inherited.consumer.FunctionParameter().staticName<String>() + inherited.consumer.FunctionParameter().genericName<String>() + inherited.consumer.TypeParameter<String>().staticName()
+
+fun genericImportExpression(): String = inherited.explicit.GenericDerived<String>().identity("type-shadow") + inherited.explicit.GenericDerived<String>().staticName()
