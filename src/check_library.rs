@@ -310,6 +310,7 @@ pub(super) fn default_argument_method(
 
 pub(super) fn static_import_owner(
     classpath: &Classpath,
+    caller: &str,
     owner: &str,
     member: &str,
     offset: usize,
@@ -322,7 +323,9 @@ pub(super) fn static_import_owner(
     }
     let methods = classpath.methods(owner)?;
     let matching_method = methods.iter().any(|method| {
-        method.access & 9 == 9
+        method.access & 8 != 0
+            && (method.access & 1 != 0
+                || classpath.java_package_member_visible(caller, &method.owner, method.access))
             && (method.source_name() == member || method.source_property.as_deref() == Some(member))
             && (method.owner == owner
                 || classpath
@@ -399,6 +402,11 @@ impl Checker<'_> {
     pub(super) fn lexical_method_visible(&self, method: &JavaMethod) -> bool {
         (!method.kotlin_internal || self.classpath.internal_visible(&method.owner))
             && (method.access & 1 != 0
+                || self.classpath.java_package_member_visible(
+                    &self.lambda_owner,
+                    &method.owner,
+                    method.access,
+                )
                 || method.access & 2 != 0
                     && (self.lambda_owner == method.owner
                         || self.lambda_owner.starts_with(&format!("{}$", method.owner)))
@@ -551,7 +559,13 @@ impl Checker<'_> {
                     }
                     for mut method in declaration.methods {
                         if method.name == name
-                            && method.access & 9 == 9
+                            && method.access & 8 != 0
+                            && (method.access & 1 != 0
+                                || self.classpath.java_package_member_visible(
+                                    &self.lambda_owner,
+                                    &method.owner,
+                                    method.access,
+                                ))
                             && signatures.insert(method.descriptor.clone())
                         {
                             if declaration.access & 1 == 0 {
@@ -886,6 +900,11 @@ impl Checker<'_> {
             .filter(|m| {
                 m.access & 8 != 0
                     && (m.access & 1 != 0
+                        || self.classpath.java_package_member_visible(
+                            &self.lambda_owner,
+                            &m.owner,
+                            m.access,
+                        )
                         || self.classpath.file_private_visible(&self.lambda_owner, m)
                         || m.library
                             .as_ref()
@@ -1042,6 +1061,11 @@ impl Checker<'_> {
             return Ok(Self::wrap_lets(value, lets));
         }
         if method.access & 1 == 0
+            && !self.classpath.java_package_member_visible(
+                &self.lambda_owner,
+                &method.owner,
+                method.access,
+            )
             && !self
                 .classpath
                 .file_private_visible(&self.lambda_owner, &method)

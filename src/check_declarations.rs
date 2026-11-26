@@ -2648,7 +2648,7 @@ fn infer_source_results_impl(
             classes.insert(path.clone(), class);
         } else if let Some((package, member)) = path.rsplit_once('/') {
             if let Some(class) =
-                library::static_import_owner(classpath, package, member, *import_offset)?
+                library::static_import_owner(classpath, owner, package, member, *import_offset)?
             {
                 imports.insert(alias.clone(), format!("{package}::{member}"));
                 classes.insert(package.into(), class);

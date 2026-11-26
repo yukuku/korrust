@@ -2453,7 +2453,15 @@ impl Checker<'_> {
                     self.subtype(&current.ty, &Type::Java(method.owner.clone()))
                         && self.subtype(&receiver.ty, &current.ty)
                 });
-            if !private_allowed && !protected_allowed && !method.inline_value_dispatch() {
+            if !private_allowed
+                && !protected_allowed
+                && !self.classpath.java_package_member_visible(
+                    &self.lambda_owner,
+                    &method.owner,
+                    method.access,
+                )
+                && !method.inline_value_dispatch()
+            {
                 return Err(Diagnostic::new(
                     offset,
                     "Member is inaccessible from this receiver",
@@ -3077,6 +3085,11 @@ impl Checker<'_> {
                     && m.source_name() == name
                     && (m.instance_dispatch() || singleton)
                     && (m.access & 1 != 0
+                        || self.classpath.java_package_member_visible(
+                            &self.lambda_owner,
+                            &m.owner,
+                            m.access,
+                        )
                         || m.inline_value_dispatch()
                         || m.access & 4 != 0
                             && self.dispatch_receiver.as_ref().is_some_and(|current| {
@@ -3207,7 +3220,13 @@ impl Checker<'_> {
             .into_iter()
             .filter(|m| {
                 m.source_name() == name
-                    && m.access & 9 == 9
+                    && m.access & 8 != 0
+                    && (m.access & 1 != 0
+                        || self.classpath.java_package_member_visible(
+                            &self.lambda_owner,
+                            &m.owner,
+                            m.access,
+                        ))
                     && (m.owner == owner
                         || self
                             .classpath
@@ -7387,7 +7406,7 @@ pub fn check_with_owner(
             }
             if let Some((parent, member)) = name.rsplit_once('/') {
                 if let Some(class) =
-                    library::static_import_owner(classpath, parent, member, *offset)?
+                    library::static_import_owner(classpath, owner, parent, member, *offset)?
                 {
                     imports.insert(alias.clone(), format!("{parent}::{member}"));
                     classes.insert(parent.into(), class);
