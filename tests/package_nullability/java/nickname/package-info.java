@@ -1,0 +1,2 @@
+@qualifiers.AliasDefault
+package nickname;

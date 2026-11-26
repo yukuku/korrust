@@ -1,0 +1,2 @@
+@qualifiers.GlobalWarning
+package globalwarning;

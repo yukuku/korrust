@@ -59,6 +59,8 @@ mod function_values;
 mod inner_classes;
 #[path = "check_ir_walk.rs"]
 pub(crate) mod ir_walk;
+#[path = "check_java_nullability.rs"]
+mod java_nullability;
 #[path = "check_java_properties.rs"]
 mod java_properties;
 #[path = "check_library.rs"]
@@ -2453,7 +2455,15 @@ impl Checker<'_> {
                     self.subtype(&current.ty, &Type::Java(method.owner.clone()))
                         && self.subtype(&receiver.ty, &current.ty)
                 });
-            if !private_allowed && !protected_allowed && !method.inline_value_dispatch() {
+            if !private_allowed
+                && !protected_allowed
+                && !self.classpath.java_package_member_visible(
+                    &self.lambda_owner,
+                    &method.owner,
+                    method.access,
+                )
+                && !method.inline_value_dispatch()
+            {
                 return Err(Diagnostic::new(
                     offset,
                     "Member is inaccessible from this receiver",
@@ -2764,6 +2774,15 @@ impl Checker<'_> {
     }
     #[allow(clippy::only_used_in_recursion)]
     fn coerce(&self, value: Value, expected: Type, offset: usize) -> Result<Value> {
+        let value = if expected.is_reference()
+            && !expected.is_nullable()
+            && !matches!(expected, Type::Platform(_))
+            && !matches!(&expected, Type::Parameter { upper_bound, .. } if upper_bound.is_nullable())
+        {
+            self.enhanced_java_nonnull(value)
+        } else {
+            value
+        };
         if matches!(value.kind, ValueKind::Abrupt(_)) {
             return Ok(Value {
                 ty: expected,
@@ -3077,6 +3096,11 @@ impl Checker<'_> {
                     && m.source_name() == name
                     && (m.instance_dispatch() || singleton)
                     && (m.access & 1 != 0
+                        || self.classpath.java_package_member_visible(
+                            &self.lambda_owner,
+                            &m.owner,
+                            m.access,
+                        )
                         || m.inline_value_dispatch()
                         || m.access & 4 != 0
                             && self.dispatch_receiver.as_ref().is_some_and(|current| {
@@ -3207,7 +3231,13 @@ impl Checker<'_> {
             .into_iter()
             .filter(|m| {
                 m.source_name() == name
-                    && m.access & 9 == 9
+                    && m.access & 8 != 0
+                    && (m.access & 1 != 0
+                        || self.classpath.java_package_member_visible(
+                            &self.lambda_owner,
+                            &m.owner,
+                            m.access,
+                        ))
                     && (m.owner == owner
                         || self
                             .classpath
@@ -4082,7 +4112,8 @@ impl Checker<'_> {
                     let mut value = if let Some(ty) = annotation {
                         self.expected_value(expr, &self.resolve(ty, offset)?)?
                     } else {
-                        self.value(expr)?
+                        let value = self.value(expr)?;
+                        self.enhanced_java_nonnull(value)
                     };
                     if let Some(ty) = annotation {
                         if matches!(ty, Type::ThreadLocal(_)) {
@@ -7387,7 +7418,7 @@ pub fn check_with_owner(
             }
             if let Some((parent, member)) = name.rsplit_once('/') {
                 if let Some(class) =
-                    library::static_import_owner(classpath, parent, member, *offset)?
+                    library::static_import_owner(classpath, owner, parent, member, *offset)?
                 {
                     imports.insert(alias.clone(), format!("{parent}::{member}"));
                     classes.insert(parent.into(), class);

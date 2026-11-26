@@ -56,13 +56,18 @@ impl Classpath {
     }
 
     pub(crate) fn package_field_visible(&self, caller: &str, field: &JavaField) -> bool {
-        field.access & 7 == 0
-            && field.kotlin.is_none()
-            && caller.rsplit_once('/').map(|(pkg, _)| pkg)
-                == field.owner.rsplit_once('/').map(|(pkg, _)| pkg)
-            && self
-                .load(&field.owner)
-                .is_ok_and(|class| !class.kotlin_class)
+        field.kotlin.is_none()
+            && self.java_package_member_visible(caller, &field.owner, field.access)
+    }
+    pub(crate) fn java_package_member_visible(
+        &self,
+        caller: &str,
+        owner: &str,
+        access: u16,
+    ) -> bool {
+        access & 7 == 0
+            && caller.rsplit_once('/').map(|(p, _)| p) == owner.rsplit_once('/').map(|(p, _)| p)
+            && self.load(owner).is_ok_and(|class| !class.kotlin_class)
     }
 
     pub(crate) fn kotlin_field_visible(&self, caller: &str, field: &JavaField) -> bool {

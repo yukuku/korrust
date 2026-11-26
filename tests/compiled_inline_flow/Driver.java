@@ -25,6 +25,7 @@ public class Driver {
         check(UseKt.compared(2.0) == 3 && UseKt.compared(-2.0) == -1);
         check(UseKt.compared(Double.NaN) == 1 && UseKt.compared(0.5) == 1);
         check(UseKt.nonlocal(1) == 90 && UseKt.nonlocal(0) == -1);
+        check(UseKt.capturedDefault(7) == 12);
         System.out.println("OK");
     }
 }

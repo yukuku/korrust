@@ -26,7 +26,9 @@ fn kotlin_default_bridge(
         if declaring.kotlin_interface {
             for candidate in declaring.methods.iter().filter(|candidate| {
                 candidate.name == method.name
-                    && candidate.access & 0x409 == 1
+                    && candidate.access & 9 == 1
+                    && (candidate.access & 0x400 == 0
+                        || candidate.library.as_ref().is_some_and(|l| !l.abstract_))
                     && !candidate.unsupported
             }) {
                 let specialized =
@@ -56,14 +58,19 @@ pub(super) fn ordinary_member_methods(
         .ordinary_methods(owner)?
         .into_iter()
         .map(|method| {
-            if method.access & 0x40 != 0 && method.access & 9 == 1 {
-                if method.unsupported
-                    && classpath.load(owner)?.kotlin_class
-                    && let Some(declaration) =
-                        kotlin_default_bridge(classpath, owner, &method, &mut HashSet::new())?
-                {
-                    return Ok(declaration);
-                }
+            // Kotlin in legacy JVM-default mode emits ordinary class methods forwarding
+            // to DefaultImpls. Their source signatures live on the interface.
+            let bridge = method.access & 0x40 != 0;
+            if method.unsupported
+                && method.access & 9 == 1
+                && (bridge || (method.library.is_none() && method.access & 0x1400 == 0))
+                && classpath.load(&method.owner)?.kotlin_class
+                && let Some(declaration) =
+                    kotlin_default_bridge(classpath, &method.owner, &method, &mut HashSet::new())?
+            {
+                return Ok(declaration);
+            }
+            if bridge && method.access & 9 == 1 {
                 if let Some(declaration) = java_properties::accessibility_bridge(
                     classpath,
                     owner,
@@ -310,6 +317,7 @@ pub(super) fn default_argument_method(
 
 pub(super) fn static_import_owner(
     classpath: &Classpath,
+    caller: &str,
     owner: &str,
     member: &str,
     offset: usize,
@@ -322,7 +330,9 @@ pub(super) fn static_import_owner(
     }
     let methods = classpath.methods(owner)?;
     let matching_method = methods.iter().any(|method| {
-        method.access & 9 == 9
+        method.access & 8 != 0
+            && (method.access & 1 != 0
+                || classpath.java_package_member_visible(caller, &method.owner, method.access))
             && (method.source_name() == member || method.source_property.as_deref() == Some(member))
             && (method.owner == owner
                 || classpath
@@ -399,6 +409,11 @@ impl Checker<'_> {
     pub(super) fn lexical_method_visible(&self, method: &JavaMethod) -> bool {
         (!method.kotlin_internal || self.classpath.internal_visible(&method.owner))
             && (method.access & 1 != 0
+                || self.classpath.java_package_member_visible(
+                    &self.lambda_owner,
+                    &method.owner,
+                    method.access,
+                )
                 || method.access & 2 != 0
                     && (self.lambda_owner == method.owner
                         || self.lambda_owner.starts_with(&format!("{}$", method.owner)))
@@ -536,6 +551,49 @@ impl Checker<'_> {
                 let Ok(class) = self.classpath.load(&owner) else {
                     continue;
                 };
+                if let Some(companion_name) = class
+                    .library
+                    .as_ref()
+                    .and_then(|l| l.companion_name.as_ref())
+                {
+                    let companion_owner = format!("{owner}${companion_name}");
+                    let methods = ordinary_member_methods(
+                        self.classpath,
+                        &companion_owner,
+                        name,
+                        args.len(),
+                    )?
+                    .into_iter()
+                    .filter(|m| {
+                        m.source_name() == name
+                            && m.instance_dispatch()
+                            && m.source_property.is_none()
+                            && m.library.as_ref().is_none_or(|l| l.receiver.is_none())
+                            && self.lexical_method_visible(m)
+                    })
+                    .collect::<Vec<_>>();
+                    if !methods.is_empty() {
+                        match self
+                            .select_method_expected(&methods, args, explicit, expected, offset)
+                        {
+                            Ok(method) => {
+                                if let Some(receiver) = self.companion_receiver(&owner, offset)? {
+                                    return self
+                                        .member_call(method, receiver, args, offset)
+                                        .map(Some);
+                                }
+                            }
+                            Err(error)
+                                if matches!(
+                                    error.code,
+                                    "NO_APPLICABLE_OVERLOAD"
+                                        | "ARGUMENT_MAPPING_MISMATCH"
+                                        | "TYPE_MISMATCH"
+                                ) => {}
+                            Err(error) => return Err(error),
+                        }
+                    }
+                }
                 let mut parent = class.super_name;
                 let mut overloads = Vec::new();
                 let mut signatures = HashSet::new();
@@ -551,7 +609,13 @@ impl Checker<'_> {
                     }
                     for mut method in declaration.methods {
                         if method.name == name
-                            && method.access & 9 == 9
+                            && method.access & 8 != 0
+                            && (method.access & 1 != 0
+                                || self.classpath.java_package_member_visible(
+                                    &self.lambda_owner,
+                                    &method.owner,
+                                    method.access,
+                                ))
                             && signatures.insert(method.descriptor.clone())
                         {
                             if declaration.access & 1 == 0 {
@@ -886,6 +950,11 @@ impl Checker<'_> {
             .filter(|m| {
                 m.access & 8 != 0
                     && (m.access & 1 != 0
+                        || self.classpath.java_package_member_visible(
+                            &self.lambda_owner,
+                            &m.owner,
+                            m.access,
+                        )
                         || self.classpath.file_private_visible(&self.lambda_owner, m)
                         || m.library
                             .as_ref()
@@ -1042,6 +1111,11 @@ impl Checker<'_> {
             return Ok(Self::wrap_lets(value, lets));
         }
         if method.access & 1 == 0
+            && !self.classpath.java_package_member_visible(
+                &self.lambda_owner,
+                &method.owner,
+                method.access,
+            )
             && !self
                 .classpath
                 .file_private_visible(&self.lambda_owner, &method)

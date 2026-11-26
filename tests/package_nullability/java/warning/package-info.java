@@ -1,0 +1,2 @@
+@qualifiers.Warning
+package warning;

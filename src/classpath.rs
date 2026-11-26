@@ -10,6 +10,7 @@ mod jdk_modules;
 pub(crate) mod jvm_builtins;
 mod metadata;
 pub(crate) mod nested;
+mod nullability_defaults;
 mod package_info;
 mod signature;
 mod singletons;
@@ -80,6 +81,7 @@ pub(crate) struct Classpath {
     lexical_parents: std::cell::RefCell<std::collections::HashMap<String, String>>,
     nested_access: std::cell::RefCell<std::collections::HashMap<String, u16>>,
     source_files: std::cell::RefCell<std::collections::HashMap<String, (String, bool)>>,
+    source_stable_getters: std::cell::RefCell<std::collections::HashSet<(String, String)>>,
     source_default_accessors:
         std::cell::RefCell<std::collections::HashMap<(String, String), SourceBackingField>>,
     origins: std::cell::RefCell<std::collections::HashMap<String, PathBuf>>,
@@ -1029,6 +1031,26 @@ impl Classpath {
         source::resolve(ty, module, self)
     }
 
+    pub(crate) fn stable_kotlin_getter(&self, method: &JavaMethod, name: &str) -> bool {
+        if !self.internal_visible(&method.owner) {
+            return false;
+        }
+        let Ok(class) = self.load(&method.owner) else {
+            return false;
+        };
+        (method.access & 0x10 != 0 || class.access & 0x10 != 0)
+            && (self
+                .source_stable_getters
+                .borrow()
+                .contains(&(method.owner.clone(), method.name.clone()))
+                || class.fields.iter().any(|field| {
+                    field
+                        .kotlin
+                        .as_ref()
+                        .is_some_and(|property| property.name == name && property.stable)
+                }))
+    }
+
     pub(crate) fn default_source_accessor(
         &self,
         method: &JavaMethod,
@@ -1083,6 +1105,7 @@ impl Classpath {
             lexical_parents: Default::default(),
             nested_access: Default::default(),
             source_files: Default::default(),
+            source_stable_getters: Default::default(),
             source_default_accessors: Default::default(),
             origins: Default::default(),
             cache: Default::default(),
@@ -1229,23 +1252,6 @@ impl Classpath {
     fn load_uncached(&self, internal_name: &str) -> Result<JavaClass> {
         if !valid_name(internal_name) {
             return Err(Diagnostic::new(0, "Invalid Java class internal name"));
-        }
-        let package_info = internal_name
-            .rsplit_once('/')
-            .map(|(p, _)| format!("{p}/package-info.class"))
-            .unwrap_or_else(|| "package-info.class".into());
-        for path in &self.paths {
-            if let Some(bytes) = self.read_resource(path, &package_info)?
-                && !self.passive_package_info(&bytes, &package_info)?
-            {
-                return Err(Diagnostic::new(
-                    0,
-                    format!(
-                        "Java package metadata {} is unsupported because it may define nullability defaults",
-                        path.display()
-                    ),
-                ));
-            }
         }
         for path in &self.paths {
             if let Some(bytes) = self.read_resource(path, &format!("{internal_name}.class"))? {
@@ -1402,6 +1408,14 @@ impl Classpath {
             }
         }
         self.attach_companion_fields(&mut class, &attrs, &method_attrs, &field_attrs)?;
+        if !attrs
+            .annotations
+            .iter()
+            .any(|annotation| annotation.name == "Lkotlin/Metadata;")
+            && class.access & 0x2000 == 0
+        {
+            self.apply_java_package_defaults(&mut class, &attrs, &method_attrs, &field_attrs)?;
+        }
         Ok(class)
     }
 

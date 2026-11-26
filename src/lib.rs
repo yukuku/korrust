@@ -714,7 +714,7 @@ pub fn compile_batch_with_options(
                 })
             })
         });
-        validate_source_imports(&external, &classpath)
+        validate_source_imports(&external, &classpath, &facades[index])
             .map_err(|error| error.for_source(&sources[index].identity))?;
     }
     for (owner, unit) in &mut units {
@@ -764,7 +764,7 @@ pub fn compile_batch_with_options(
                 })
             })
         });
-        validate_source_imports(&validated, &classpath)
+        validate_source_imports(&validated, &classpath, &facades[index])
             .map_err(|error| error.for_source(&sources[index].identity))?;
     }
     validate_batch_declarations(&units, &owner_sources, &sources)?;
@@ -2119,7 +2119,13 @@ fn synchronize_nested_units(units: &mut [(String, syntax::Module)]) {
 fn validate_source_imports(
     module: &syntax::Module,
     classpath: &classpath::Classpath,
+    facade: &str,
 ) -> Result<()> {
+    let caller = if module.package.is_empty() {
+        facade.to_owned()
+    } else {
+        format!("{}/{facade}", module.package.replace('.', "/"))
+    };
     for (alias, path, offset) in &module.imports {
         classpath.check_companion_import_visibility(path, *offset)?;
         if let Some((owner, _)) = path.rsplit_once('/') {
@@ -2243,11 +2249,25 @@ fn validate_source_imports(
                             .field_candidates(package, member)
                             .is_ok_and(|fields| fields.iter().any(|field| field.access & 9 == 9))
                             || class.methods.iter().any(|method| {
-                                method.source_name() == member && method.access & 9 == 9
+                                method.source_name() == member
+                                    && method.access & 8 != 0
+                                    && (method.access & 1 != 0
+                                        || classpath.java_package_member_visible(
+                                            &caller,
+                                            &method.owner,
+                                            method.access,
+                                        ))
                             })
                             || classpath.methods(package).is_ok_and(|methods| {
                                 methods.iter().any(|method| {
-                                    method.source_name() == member && method.access & 9 == 9
+                                    method.source_name() == member
+                                        && method.access & 8 != 0
+                                        && (method.access & 1 != 0
+                                            || classpath.java_package_member_visible(
+                                                &caller,
+                                                &method.owner,
+                                                method.access,
+                                            ))
                                 })
                             })
                             || classpath

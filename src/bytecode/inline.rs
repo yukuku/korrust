@@ -649,6 +649,10 @@ impl Code<'_> {
             self.adapt_value(&Type::Java("java/lang/Object".into()), ty)?;
             self.bytes.extend([store_opcode(ty), map[*slot] as u8]);
         }
+        if !lambda.captures.is_empty() {
+            // The inline function may have stored its callback in an erased FunctionN local.
+            self.class_reference(0xc0, &lambda.owner)?;
+        }
         self.bytes.extend([
             0x3a,
             *map.first()

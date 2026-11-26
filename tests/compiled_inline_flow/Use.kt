@@ -1,5 +1,6 @@
 package flowuse
 import flow.changed
+import flow.applyDefault
 import flow.changedLong
 import flow.doubleSum
 import flow.numeric
@@ -22,3 +23,5 @@ fun nonlocal(a: Int): Int {
     dense(a) { if (it == 20) return 90; it }
     return -1
 }
+
+fun capturedDefault(base: Int): Int = applyDefault(5) { it + base }
