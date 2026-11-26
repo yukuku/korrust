@@ -825,6 +825,14 @@ pub(crate) fn arguments_value(
     let mut supplied = HashSet::new();
     let mut values = Vec::new();
     let order = definition.kotlin_parameters.as_ref();
+    let java_array = definition.parameters.iter().find(|(name, descriptor, _)| {
+        order.is_none() && name == "value" && descriptor.starts_with('[')
+    });
+    let vararg = definition
+        .vararg
+        .as_deref()
+        .or_else(|| java_array.map(|field| field.0.as_str()));
+    let mut named_seen = false;
     let mut variadic = Vec::new();
     let mut positional_vararg = false;
     if definition.vararg.as_ref().is_some_and(|name| {
@@ -847,7 +855,11 @@ pub(crate) fn arguments_value(
                 .or_else(|| definition.vararg.clone().filter(|_| order.is_some()))
                 .unwrap_or_else(|| "value".into())
         });
-        if order.is_none() && position != 0 && arguments[position].0.is_none() {
+        if order.is_none()
+            && arguments[position].0.is_none()
+            && position != 0
+            && (java_array.is_none() || named_seen)
+        {
             return Err(invalid(
                 expression.offset,
                 "Java annotation arguments after value must be named",
@@ -858,7 +870,8 @@ pub(crate) fn arguments_value(
             .iter()
             .find(|(name, _, _)| name == &key)
             .ok_or_else(|| invalid(expression.offset, "Unknown annotation argument"))?;
-        if definition.vararg.as_deref() == Some(&key) && arguments[position].0.is_none() {
+        named_seen |= arguments[position].0.is_some();
+        if vararg == Some(key.as_str()) && arguments[position].0.is_none() {
             positional_vararg = true;
             if let ExprKind::Unary(operator, expression) = &expression.kind
                 && operator == "*"
@@ -884,28 +897,7 @@ pub(crate) fn arguments_value(
         if !supplied.insert(key.clone()) {
             return Err(invalid(expression.offset, "Duplicate annotation argument"));
         }
-        let checked = if order.is_none()
-            && key == "value"
-            && descriptor.starts_with('[')
-            && arguments[position].0.is_none()
-        {
-            if let ExprKind::Unary(operator, expression) = &expression.kind
-                && operator == "*"
-            {
-                value(expression, descriptor, imports, cp, depth + 1, scope)?
-            } else {
-                Value::Array(vec![value(
-                    expression,
-                    &descriptor[1..],
-                    imports,
-                    cp,
-                    depth + 1,
-                    scope,
-                )?])
-            }
-        } else {
-            value(expression, descriptor, imports, cp, depth + 1, scope)?
-        };
+        let checked = value(expression, descriptor, imports, cp, depth + 1, scope)?;
         if let Some((_, expected)) = definition
             .java_class_types
             .iter()
@@ -915,13 +907,23 @@ pub(crate) fn arguments_value(
         }
         values.push((key, checked));
     }
-    if let Some(name) = &definition.vararg {
+    if let Some(name) = vararg {
         if positional_vararg && supplied.contains(name) {
             return Err(invalid(offset, "Duplicate annotation vararg argument"));
         }
-        if !supplied.contains(name) {
-            supplied.insert(name.clone());
-            values.push((name.clone(), Value::Array(variadic)));
+        if !supplied.contains(name)
+            && (positional_vararg || !java_array.is_some_and(|field| field.2))
+        {
+            let checked = Value::Array(variadic);
+            if let Some((_, expected)) = definition
+                .java_class_types
+                .iter()
+                .find(|(key, _)| key == name)
+            {
+                validate_class_bound(&checked, expected, cp, offset)?;
+            }
+            supplied.insert(name.to_owned());
+            values.push((name.to_owned(), checked));
         }
     }
     if definition
