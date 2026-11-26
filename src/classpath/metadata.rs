@@ -612,12 +612,15 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
             array if array.array_element().is_some() => array.array_element().unwrap(),
             _ => continue,
         };
-        if component != element || returned != array {
+        if component != element
+            || returned.array_element().as_ref() != Some(&element)
+            || returned.descriptor() != array.descriptor()
+        {
             continue;
         }
         let name = metadata_name(&strings, function.integer(2)?)?.to_owned();
         let parameter_name = metadata_name(&strings, parameter.integer(2)?)?.to_owned();
-        let descriptor = format!("({}){}", array.descriptor(), array.descriptor());
+        let descriptor = format!("({}){}", array.descriptor(), returned.descriptor());
         result.push(JavaMethod {
             owner: "kotlin/<builtins>".into(),
             name: name.clone(),
@@ -626,7 +629,7 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
             unsupported: false,
             source_property: None,
             kotlin_params: Some(vec![(parameter_name, array.clone(), false)]),
-            kotlin_result: Some(array),
+            kotlin_result: Some(returned),
             kotlin_internal: false,
             library: Some(LibraryMethod {
                 default_code: None,
@@ -2401,14 +2404,18 @@ mod tests {
             assert_eq!(method.access, 0x89);
             assert!(method.library.as_ref().unwrap().builtin_array);
             assert_eq!(method.kotlin_params.as_ref().unwrap()[0].0, "elements");
-            assert_eq!(
-                method.kotlin_params.as_ref().unwrap()[0].1,
-                *method.kotlin_result.as_ref().unwrap()
-            );
+            let parameter = &method.kotlin_params.as_ref().unwrap()[0].1;
+            let result = method.kotlin_result.as_ref().unwrap();
+            assert_eq!(parameter.array_element(), result.array_element());
+            assert_eq!(parameter.descriptor(), result.descriptor());
         }
         assert_eq!(
             methods[0].library.as_ref().unwrap().type_parameters[0].name,
             "T"
+        );
+        assert!(
+            matches!(&methods[0].kotlin_params.as_ref().unwrap()[0].1, Type::OutArray(element)
+            if matches!(element.as_ref(), Type::Parameter { name, .. } if name == "T"))
         );
         assert!(
             matches!(methods[0].kotlin_result.as_ref().unwrap(), Type::Array(element)

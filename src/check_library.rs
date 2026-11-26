@@ -950,8 +950,14 @@ impl Checker<'_> {
                     "Unsupported builtin array declaration shape",
                 ));
             }
-            let value = values.remove(0);
-            return Ok(Self::wrap_lets(self.coerce(value, result, offset)?, lets));
+            let mut value = values.remove(0);
+            if matches!((value.ty.base(), result.base()), (Type::OutArray(actual), Type::Array(expected)) if actual == expected)
+            {
+                value.ty = result;
+            } else {
+                value = self.coerce(value, result, offset)?;
+            }
+            return Ok(Self::wrap_lets(value, lets));
         }
         if method.access & 1 == 0
             && !self
