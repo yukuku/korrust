@@ -53,8 +53,6 @@ mod constructor_inference;
 mod contracts;
 #[path = "check_control.rs"]
 mod control;
-#[path = "check_compose.rs"]
-mod compose;
 #[path = "check_functions.rs"]
 mod function_values;
 #[path = "check_inner_classes.rs"]
