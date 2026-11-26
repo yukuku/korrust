@@ -319,7 +319,9 @@ fn emit_in(
                 )?;
             }
         }
-        if lambda.anonymous_methods.is_none() && inline::contains_nonlocal(function, lambdas) {
+        if lambda.anonymous_methods.is_none()
+            && inline::contains_nonlocal(function, lambdas, &lambda.owner)
+        {
             code.bytes.extend([0x01, 0xbf]);
         } else {
             code.block(&function.body)?;

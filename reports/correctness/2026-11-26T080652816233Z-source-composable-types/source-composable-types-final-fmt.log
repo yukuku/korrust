@@ -1,0 +1,145 @@
+Diff in /workspace/work/targets159/source-composable-types-freeze2/src/classpath.rs:757:
+         self.lexical_parents.borrow().get(owner).cloned()
+     }
+
+-    pub(crate) fn private_companion_method_visible(&self, caller: &str, method: &JavaMethod) -> bool {
+-        method.access & 2 != 0 && self.is_source(&method.owner)
++    pub(crate) fn private_companion_method_visible(
++        &self,
++        caller: &str,
++        method: &JavaMethod,
++    ) -> bool {
++        method.access & 2 != 0
++            && self.is_source(&method.owner)
+             && method.owner.rsplit_once('$').is_some_and(|(outer, name)| {
+-                self.lexically_within(caller, outer) && self.load(outer).is_ok_and(|class| {
+-                    class.library.as_ref().and_then(|l| l.companion_name.as_deref()) == Some(name)
+-                })
++                self.lexically_within(caller, outer)
++                    && self.load(outer).is_ok_and(|class| {
++                        class
++                            .library
++                            .as_ref()
++                            .and_then(|l| l.companion_name.as_deref())
++                            == Some(name)
++                    })
+             })
+     }
+
+Diff in /workspace/work/targets159/source-composable-types-freeze2/src/classpath.rs:3644:
+                     Type::Parameterized { name, arguments } => {
+                         name == "java/lang/Class"
+                             && arguments.len() == 1
+-                            && arguments[0].ty.as_ref().is_none_or(|ty| {
+-                                matches!(ty.base(), Type::Java(_) | Type::String)
+-                            })
++                            && arguments[0]
++                                .ty
++                                .as_ref()
++                                .is_none_or(|ty| matches!(ty.base(), Type::Java(_) | Type::String))
+                     }
+                     Type::Array(inner) => supported_annotation_signature(inner),
+                     _ => true,
+Diff in /workspace/work/targets159/source-composable-types-freeze2/src/syntax.rs:685:
+ }
+ impl PropertyDecl {
+     pub(crate) fn inference_expression(&self) -> Option<&Expr> {
+-        self.initializer
+-            .as_ref()
+-            .or(match self.body.as_slice() {
+-                [
+-                    Statement {
+-                        kind: StatementKind::Return(Some(expr)),
+-                        ..
+-                    },
+-                ] => Some(expr),
+-                _ => None,
+-            })
++        self.initializer.as_ref().or(match self.body.as_slice() {
++            [
++                Statement {
++                    kind: StatementKind::Return(Some(expr)),
++                    ..
++                },
++            ] => Some(expr),
++            _ => None,
++        })
+     }
+
+     pub fn visibility(&self) -> PropertyVisibility {
+Diff in /workspace/work/targets159/source-composable-types-freeze2/src/syntax.rs:2050:
+             let offset = self.token().offset;
+             self.expect("@")?;
+             let first = self.declaration_name()?;
+-            let (use_site, mut name) = if self.take(":") { (Some(first), self.declaration_name()?) } else { (None, first) };
+-            while self.take(".") { name.push('/'); name.push_str(&self.declaration_name()?); }
++            let (use_site, mut name) = if self.take(":") {
++                (Some(first), self.declaration_name()?)
++            } else {
++                (None, first)
++            };
++            while self.take(".") {
++                name.push('/');
++                name.push_str(&self.declaration_name()?);
++            }
+             self.lines();
+             let mut arguments = Vec::new();
+             if self.at("(") {
+Diff in /workspace/work/targets159/source-composable-types-freeze2/src/syntax.rs:3879:
+                     "CLASS_VISIBILITY_UNSUPPORTED",
+                 ));
+         }
+-        if visibility.as_deref() == Some("private")
+-            && (value_ || sealed_ || open || abstract_)
+-        {
+-            return Err(self.error("Private nested value, sealed, open and abstract classes are unsupported").with_kind(DiagnosticKind::UnsupportedLanguage, "PRIVATE_NESTED_SHAPE_UNSUPPORTED"));
++        if visibility.as_deref() == Some("private") && (value_ || sealed_ || open || abstract_) {
++            return Err(self
++                .error("Private nested value, sealed, open and abstract classes are unsupported")
++                .with_kind(
++                    DiagnosticKind::UnsupportedLanguage,
++                    "PRIVATE_NESTED_SHAPE_UNSUPPORTED",
++                ));
+         }
+         if !self.take("class") {
+             return Err(self.error("Only ordinary final classes are supported"));
+Diff in /workspace/work/targets159/source-composable-types-freeze2/tests/assignment_smartcasts.rs:38:
+     )
+     .unwrap();
+     for source in [
+-  "fun invalid(): Int { var value: String? = null; value = \"a\"; value = null; return value.length }",
+-  "fun invalid(input: String?): Int { var value: String? = null; value = \"a\"; value = input; return value.length }",
+-  "fun invalid(flag: Boolean): Int { var value: String? = null; value = \"a\"; if (flag) value = null; return value.length }",
+-  "fun invalid(flag: Boolean): Int { var value: String? = null; value = \"a\"; while (flag) { value.length; value = null }; return 0 }",
+-  "fun invalid(): Int { var value: String? = null; value = \"a\"; val change: () -> Unit = { value = null }; return value.length }",
+-  "fun invalid(): Int { var value: String? = null; val change: () -> Unit = { value = null }; value = \"a\"; return value.length }",
+-  "fun invalid(): Int { var value: String? = null; value = \"a\"; val change: () -> Unit = { value = null }; change(); return value.length }",
+-  "import assign.Lookup\nimport assign.Leaf\nfun invalid(lookup: Lookup): Int { var value: Leaf? = null; value = lookup.leaf(1); if (value == null) return value.inputType; return 0 }",
+- ] { assert!(compile_outputs_with_classpath(source,"Invalid.kt",&classpath).is_err(),"{source}"); }
++        "fun invalid(): Int { var value: String? = null; value = \"a\"; value = null; return value.length }",
++        "fun invalid(input: String?): Int { var value: String? = null; value = \"a\"; value = input; return value.length }",
++        "fun invalid(flag: Boolean): Int { var value: String? = null; value = \"a\"; if (flag) value = null; return value.length }",
++        "fun invalid(flag: Boolean): Int { var value: String? = null; value = \"a\"; while (flag) { value.length; value = null }; return 0 }",
++        "fun invalid(): Int { var value: String? = null; value = \"a\"; val change: () -> Unit = { value = null }; return value.length }",
++        "fun invalid(): Int { var value: String? = null; val change: () -> Unit = { value = null }; value = \"a\"; return value.length }",
++        "fun invalid(): Int { var value: String? = null; value = \"a\"; val change: () -> Unit = { value = null }; change(); return value.length }",
++        "import assign.Lookup\nimport assign.Leaf\nfun invalid(lookup: Lookup): Int { var value: Leaf? = null; value = lookup.leaf(1); if (value == null) return value.inputType; return 0 }",
++    ] {
++        assert!(
++            compile_outputs_with_classpath(source, "Invalid.kt", &classpath).is_err(),
++            "{source}"
++        );
++    }
+     fs::remove_dir_all(output).unwrap();
+ }
+
+Diff in /workspace/work/targets159/source-composable-types-freeze2/tests/local_function_literal_defaults.rs:2:
+ mod kotlin_java;
+ #[test]
+ fn local_default_arguments_survive_capture_and_shadowing() {
+-    kotlin_java::compare("local_function_literal_defaults", &["Bad.kt", "BadArgument.kt"]);
++    kotlin_java::compare(
++        "local_function_literal_defaults",
++        &["Bad.kt", "BadArgument.kt"],
++    );
+ }

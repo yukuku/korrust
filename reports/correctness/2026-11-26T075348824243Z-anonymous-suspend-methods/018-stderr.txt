@@ -1,0 +1,3 @@
+reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/ordinary-overrides-suspend.kt:3:52: error: non-suspend function 'run' cannot override suspend function 'suspend fun run(value: Int): Int' defined in 'anonymouslibrary.Single'.
+fun use(): Single = object : Single { override fun run(value: Int): Int = value }
+                                                   ^^^

@@ -1,0 +1,270 @@
+JUnit version 4.13.2
+.E.E.E.E.E.E.E.E.E.E.E
+Time: 54.369
+There were 11 failures:
+1) composing a chapter with verses and a pericope header lays out items and reports verse 1 at the top(yuku.alkitab.base.verses.VersesComposeListCompositionTest)
+java.lang.ExceptionInInitializerError
+	at yuku.alkitab.base.verses.VersesComposeListCompositionTest.setUp(VersesComposeListCompositionTest.kt)
+	... 14 trimmed
+Caused by: java.lang.RuntimeException: java.lang.reflect.InvocationTargetException
+	at org.robolectric.internal.bytecode.ShadowWrangler.classInitializing(ShadowWrangler.java:164)
+	at org.robolectric.internal.bytecode.RobolectricInternals.classInitializing(RobolectricInternals.java:21)
+	at android.graphics.Typeface.<clinit>(Typeface.java)
+	... 16 more
+Caused by: java.lang.reflect.InvocationTargetException
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:118)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.robolectric.internal.bytecode.ShadowWrangler.classInitializing(ShadowWrangler.java:159)
+	... 18 more
+Caused by: java.lang.RuntimeException: failed to initialize class android.graphics.Typeface
+	at org.robolectric.internal.bytecode.ShadowImpl.directInitialize(ShadowImpl.java:109)
+	at org.robolectric.shadow.api.Shadow.directInitialize(Shadow.java:95)
+	at org.robolectric.shadows.ShadowNativeTypeface.__staticInitializer__(ShadowNativeTypeface.java:56)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	... 20 more
+Caused by: java.lang.reflect.InvocationTargetException
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:118)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.robolectric.internal.bytecode.RobolectricInternals.performStaticInitialization(RobolectricInternals.java:53)
+	at org.robolectric.internal.bytecode.ShadowImpl.directInitialize(ShadowImpl.java:107)
+	... 23 more
+Caused by: java.lang.AssertionError: Unable to load Robolectric native runtime library
+	at org.robolectric.nativeruntime.DefaultNativeRuntimeLoader.ensureLoaded(DefaultNativeRuntimeLoader.java:86)
+	at org.robolectric.nativeruntime.DefaultNativeRuntimeLoader.injectAndLoad(DefaultNativeRuntimeLoader.java:54)
+	at org.robolectric.shadows.ShadowNativeTypeface.nativeGetReleaseFunc(ShadowNativeTypeface.java:193)
+	at android.graphics.Typeface.nativeGetReleaseFunc(Typeface.java)
+	at android.graphics.Typeface.__staticInitializer__(Typeface.java:96)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at org.robolectric.internal.bytecode.RobolectricInternals.performStaticInitialization(RobolectricInternals.java:53)
+	at org.robolectric.internal.bytecode.ShadowImpl.directInitialize(ShadowImpl.java:107)
+	at org.robolectric.shadow.api.Shadow.directInitialize(Shadow.java:95)
+	at org.robolectric.shadows.ShadowNativeTypeface.__staticInitializer__(ShadowNativeTypeface.java:56)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at org.robolectric.internal.bytecode.ShadowWrangler.classInitializing(ShadowWrangler.java:159)
+	at org.robolectric.internal.bytecode.RobolectricInternals.classInitializing(RobolectricInternals.java:21)
+	at android.graphics.Typeface.<clinit>(Typeface.java)
+	at yuku.alkitab.base.verses.VersesComposeListCompositionTest.setUp(VersesComposeListCompositionTest.kt)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	... 13 more
+Caused by: java.io.IOException: No space left on device
+	at java.base/java.io.FileOutputStream.writeBytes(Native Method)
+	at java.base/java.io.FileOutputStream.write(FileOutputStream.java:367)
+	at com.google.common.io.ByteStreams.copy(ByteStreams.java:122)
+	at com.google.common.io.ByteSource.copyTo(ByteSource.java:280)
+	at org.robolectric.nativeruntime.DefaultNativeRuntimeLoader.maybeCopyFonts(DefaultNativeRuntimeLoader.java:136)
+	at org.robolectric.nativeruntime.DefaultNativeRuntimeLoader.lambda$ensureLoaded$0(DefaultNativeRuntimeLoader.java:80)
+	at org.robolectric.util.PerfStatsCollector.measure(PerfStatsCollector.java:82)
+	at org.robolectric.nativeruntime.DefaultNativeRuntimeLoader.ensureLoaded(DefaultNativeRuntimeLoader.java:74)
+	at org.robolectric.nativeruntime.DefaultNativeRuntimeLoader.injectAndLoad(DefaultNativeRuntimeLoader.java:54)
+	at org.robolectric.shadows.ShadowNativeTypeface.nativeGetReleaseFunc(ShadowNativeTypeface.java:193)
+	at android.graphics.Typeface.nativeGetReleaseFunc(Typeface.java)
+	at android.graphics.Typeface.__staticInitializer__(Typeface.java:96)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.robolectric.internal.bytecode.RobolectricInternals.performStaticInitialization(RobolectricInternals.java:53)
+	at org.robolectric.internal.bytecode.ShadowImpl.directInitialize(ShadowImpl.java:107)
+	at org.robolectric.shadow.api.Shadow.directInitialize(Shadow.java:95)
+	at org.robolectric.shadows.ShadowNativeTypeface.__staticInitializer__(ShadowNativeTypeface.java:56)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.robolectric.internal.bytecode.ShadowWrangler.classInitializing(ShadowWrangler.java:159)
+	at org.robolectric.internal.bytecode.RobolectricInternals.classInitializing(RobolectricInternals.java:21)
+	at android.graphics.Typeface.<clinit>(Typeface.java)
+	at yuku.alkitab.base.verses.VersesComposeListCompositionTest.setUp(VersesComposeListCompositionTest.kt)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	... 13 more
+2) padding changes and audio highlight on a composed list do not disturb the top-of-list anchor(yuku.alkitab.base.verses.VersesComposeListCompositionTest)
+java.lang.NoClassDefFoundError: Could not initialize class android.graphics.Typeface
+	at yuku.alkitab.base.verses.VersesComposeListCompositionTest.setUp(VersesComposeListCompositionTest.kt)
+	... 14 trimmed
+Caused by: java.lang.ExceptionInInitializerError: Exception java.lang.RuntimeException: java.lang.reflect.InvocationTargetException [in thread "SDK 34 Main Thread"]
+	at org.robolectric.internal.bytecode.ShadowWrangler.classInitializing(ShadowWrangler.java:164)
+	at org.robolectric.internal.bytecode.RobolectricInternals.classInitializing(RobolectricInternals.java:21)
+	at android.graphics.Typeface.<clinit>(Typeface.java)
+	... 16 more
+3) scrollToVerse on a verse with a pericope header above scrolls to the header keeping the verse next(yuku.alkitab.base.verses.VersesComposeListCompositionTest)
+java.lang.NoClassDefFoundError: Could not initialize class android.graphics.Typeface
+	at yuku.alkitab.base.verses.VersesComposeListCompositionTest.setUp(VersesComposeListCompositionTest.kt)
+	... 14 trimmed
+Caused by: java.lang.ExceptionInInitializerError: Exception java.lang.RuntimeException: java.lang.reflect.InvocationTargetException [in thread "SDK 34 Main Thread"]
+	at org.robolectric.internal.bytecode.ShadowWrangler.classInitializing(ShadowWrangler.java:164)
+	at org.robolectric.internal.bytecode.RobolectricInternals.classInitializing(RobolectricInternals.java:21)
+	at android.graphics.Typeface.<clinit>(Typeface.java)
+	... 16 more
+4) checked verses survive a data reload via checkVerses round trip(yuku.alkitab.base.verses.VersesComposeListCompositionTest)
+java.lang.NoClassDefFoundError: Could not initialize class android.graphics.Typeface
+	at yuku.alkitab.base.verses.VersesComposeListCompositionTest.setUp(VersesComposeListCompositionTest.kt)
+	... 14 trimmed
+Caused by: java.lang.ExceptionInInitializerError: Exception java.lang.RuntimeException: java.lang.reflect.InvocationTargetException [in thread "SDK 34 Main Thread"]
+	at org.robolectric.internal.bytecode.ShadowWrangler.classInitializing(ShadowWrangler.java:164)
+	at org.robolectric.internal.bytecode.RobolectricInternals.classInitializing(RobolectricInternals.java:21)
+	at android.graphics.Typeface.<clinit>(Typeface.java)
+	... 16 more
+5) a scroll requested together with a data change applies to the new chapter's positions(yuku.alkitab.base.verses.VersesComposeListCompositionTest)
+java.lang.ExceptionInInitializerError
+	at yuku.alkitab.base.verses.VersesComposeListCompositionTest.setUp(VersesComposeListCompositionTest.kt)
+	... 14 trimmed
+Caused by: java.lang.RuntimeException: java.lang.reflect.InvocationTargetException
+	at org.robolectric.internal.bytecode.ShadowWrangler.classInitializing(ShadowWrangler.java:164)
+	at org.robolectric.internal.bytecode.RobolectricInternals.classInitializing(RobolectricInternals.java:21)
+	at android.graphics.Typeface.<clinit>(Typeface.java)
+	... 16 more
+Caused by: java.lang.reflect.InvocationTargetException
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:118)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.robolectric.internal.bytecode.ShadowWrangler.classInitializing(ShadowWrangler.java:159)
+	... 18 more
+Caused by: java.lang.RuntimeException: failed to initialize class android.graphics.Typeface
+	at org.robolectric.internal.bytecode.ShadowImpl.directInitialize(ShadowImpl.java:109)
+	at org.robolectric.shadow.api.Shadow.directInitialize(Shadow.java:95)
+	at org.robolectric.shadows.ShadowNativeTypeface.__staticInitializer__(ShadowNativeTypeface.java:56)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	... 20 more
+Caused by: java.lang.reflect.InvocationTargetException
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:118)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.robolectric.internal.bytecode.RobolectricInternals.performStaticInitialization(RobolectricInternals.java:53)
+	at org.robolectric.internal.bytecode.ShadowImpl.directInitialize(ShadowImpl.java:107)
+	... 23 more
+Caused by: java.nio.file.FileSystemAlreadyExistsException
+	at jdk.zipfs/jdk.nio.zipfs.ZipFileSystemProvider.newFileSystem(ZipFileSystemProvider.java:104)
+	at java.base/java.nio.file.FileSystems.newFileSystem(FileSystems.java:339)
+	at java.base/java.nio.file.FileSystems.newFileSystem(FileSystems.java:288)
+	at org.robolectric.nativeruntime.DefaultNativeRuntimeLoader.maybeCopyFonts(DefaultNativeRuntimeLoader.java:119)
+	at org.robolectric.nativeruntime.DefaultNativeRuntimeLoader.lambda$ensureLoaded$0(DefaultNativeRuntimeLoader.java:80)
+	at org.robolectric.util.PerfStatsCollector.measure(PerfStatsCollector.java:82)
+	at org.robolectric.nativeruntime.DefaultNativeRuntimeLoader.ensureLoaded(DefaultNativeRuntimeLoader.java:74)
+	at org.robolectric.nativeruntime.DefaultNativeRuntimeLoader.injectAndLoad(DefaultNativeRuntimeLoader.java:54)
+	at org.robolectric.shadows.ShadowNativeTypeface.nativeGetReleaseFunc(ShadowNativeTypeface.java:193)
+	at android.graphics.Typeface.nativeGetReleaseFunc(Typeface.java)
+	at android.graphics.Typeface.__staticInitializer__(Typeface.java:94)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at org.robolectric.internal.bytecode.RobolectricInternals.performStaticInitialization(RobolectricInternals.java:53)
+	at org.robolectric.internal.bytecode.ShadowImpl.directInitialize(ShadowImpl.java:107)
+	at org.robolectric.shadow.api.Shadow.directInitialize(Shadow.java:95)
+	at org.robolectric.shadows.ShadowNativeTypeface.__staticInitializer__(ShadowNativeTypeface.java:56)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at org.robolectric.internal.bytecode.ShadowWrangler.classInitializing(ShadowWrangler.java:159)
+	at org.robolectric.internal.bytecode.RobolectricInternals.classInitializing(RobolectricInternals.java:21)
+	at android.graphics.Typeface.<clinit>(Typeface.java)
+	at yuku.alkitab.base.verses.VersesComposeListCompositionTest.setUp(VersesComposeListCompositionTest.kt)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	... 13 more
+6) chapter changes animate verse height in both directions(yuku.alkitab.base.verses.VersesComposeListCompositionTest)
+java.lang.NoClassDefFoundError: Could not initialize class android.graphics.Typeface
+	at yuku.alkitab.base.verses.VersesComposeListCompositionTest.setUp(VersesComposeListCompositionTest.kt)
+	... 14 trimmed
+Caused by: java.lang.ExceptionInInitializerError: Exception java.lang.RuntimeException: java.lang.reflect.InvocationTargetException [in thread "SDK 34 Main Thread"]
+	at org.robolectric.internal.bytecode.ShadowWrangler.classInitializing(ShadowWrangler.java:164)
+	at org.robolectric.internal.bytecode.RobolectricInternals.classInitializing(RobolectricInternals.java:21)
+	at android.graphics.Typeface.<clinit>(Typeface.java)
+	... 16 more
+7) audio highlight on an offscreen verse smooth-scrolls it into view(yuku.alkitab.base.verses.VersesComposeListCompositionTest)
+java.lang.IllegalArgumentException: Path is not a file: /workspace/work/deps33/robolectric-sdk28/android-all-instrumented-12.1-robolectric-8229987-i6.jar
+	at org.robolectric.internal.dependency.LocalDependencyResolver.validateFile(LocalDependencyResolver.java:50)
+	at org.robolectric.internal.dependency.LocalDependencyResolver.getLocalArtifactUrl(LocalDependencyResolver.java:27)
+	at org.robolectric.plugins.LegacyDependencyResolver.getLocalArtifactUrl(LegacyDependencyResolver.java:95)
+	at org.robolectric.plugins.DefaultSdkProvider$DefaultSdk.getJarPath(DefaultSdkProvider.java:141)
+	at org.robolectric.internal.AndroidSandbox$SdkSandboxClassLoader.<init>(AndroidSandbox.java:130)
+	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:62)
+	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:502)
+	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:486)
+	at org.robolectric.util.inject.Injector.inject(Injector.java:259)
+	at org.robolectric.util.inject.Injector.lambda$memoized$1(Injector.java:239)
+	at org.robolectric.util.inject.Injector$MemoizingProvider.get(Injector.java:506)
+	at org.robolectric.util.inject.Injector.getInstanceInternal(Injector.java:230)
+	at org.robolectric.util.inject.Injector.resolveDependencies(Injector.java:305)
+	at org.robolectric.util.inject.Injector.inject(Injector.java:257)
+	at org.robolectric.util.inject.Injector.lambda$memoized$1(Injector.java:239)
+	at org.robolectric.util.inject.Injector$MemoizingProvider.get(Injector.java:506)
+	at org.robolectric.util.inject.Injector.getInstanceInternal(Injector.java:230)
+	at org.robolectric.util.inject.Injector.getInstance(Injector.java:214)
+	at org.robolectric.util.inject.Injector.access$700(Injector.java:96)
+	at org.robolectric.util.inject.Injector$ScopeBuilderProvider.create(Injector.java:575)
+	at org.robolectric.util.inject.Injector$ScopeBuilderProvider.lambda$get$0(Injector.java:558)
+	at jdk.proxy2/jdk.proxy2.$Proxy18.build(Unknown Source)
+	at org.robolectric.internal.SandboxManager.getAndroidSandbox(SandboxManager.java:67)
+	at org.robolectric.RobolectricTestRunner.getSandbox(RobolectricTestRunner.java:248)
+	at org.robolectric.RobolectricTestRunner.getSandbox(RobolectricTestRunner.java:61)
+	at org.robolectric.internal.SandboxTestRunner$2.evaluate(SandboxTestRunner.java:246)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.robolectric.internal.SandboxTestRunner$1.evaluate(SandboxTestRunner.java:103)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.junit.runners.Suite.runChild(Suite.java:128)
+	at org.junit.runners.Suite.runChild(Suite.java:27)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:115)
+	at org.junit.runner.JUnitCore.runMain(JUnitCore.java:77)
+	at org.junit.runner.JUnitCore.main(JUnitCore.java:36)
+8) scrollToVerse snaps a mid-chapter verse to the top of the viewport(yuku.alkitab.base.verses.VersesComposeListCompositionTest)
+java.lang.NoClassDefFoundError: Could not initialize class android.graphics.Typeface
+	at yuku.alkitab.base.verses.VersesComposeListCompositionTest.setUp(VersesComposeListCompositionTest.kt)
+	... 14 trimmed
+Caused by: java.lang.ExceptionInInitializerError: Exception java.lang.RuntimeException: java.lang.reflect.InvocationTargetException [in thread "SDK 34 Main Thread"]
+	at org.robolectric.internal.bytecode.ShadowWrangler.classInitializing(ShadowWrangler.java:164)
+	at org.robolectric.internal.bytecode.RobolectricInternals.classInitializing(RobolectricInternals.java:21)
+	at android.graphics.Typeface.<clinit>(Typeface.java)
+	... 16 more
+9) verseDown then verseUp returns to the same top verse(yuku.alkitab.base.verses.VersesComposeListCompositionTest)
+java.lang.NoClassDefFoundError: Could not initialize class android.graphics.Typeface
+	at yuku.alkitab.base.verses.VersesComposeListCompositionTest.setUp(VersesComposeListCompositionTest.kt)
+	... 14 trimmed
+Caused by: java.lang.ExceptionInInitializerError: Exception java.lang.RuntimeException: java.lang.reflect.InvocationTargetException [in thread "SDK 34 Main Thread"]
+	at org.robolectric.internal.bytecode.ShadowWrangler.classInitializing(ShadowWrangler.java:164)
+	at org.robolectric.internal.bytecode.RobolectricInternals.classInitializing(RobolectricInternals.java:21)
+	at android.graphics.Typeface.<clinit>(Typeface.java)
+	... 16 more
+10) scrollToVerse with prop offsets the verse by the requested fraction of its height(yuku.alkitab.base.verses.VersesComposeListCompositionTest)
+java.lang.NoClassDefFoundError: Could not initialize class android.graphics.Typeface
+	at yuku.alkitab.base.verses.VersesComposeListCompositionTest.setUp(VersesComposeListCompositionTest.kt)
+	... 14 trimmed
+Caused by: java.lang.ExceptionInInitializerError: Exception java.lang.RuntimeException: java.lang.reflect.InvocationTargetException [in thread "SDK 34 Main Thread"]
+	at org.robolectric.internal.bytecode.ShadowWrangler.classInitializing(ShadowWrangler.java:164)
+	at org.robolectric.internal.bytecode.RobolectricInternals.classInitializing(RobolectricInternals.java:21)
+	at android.graphics.Typeface.<clinit>(Typeface.java)
+	... 16 more
+11) pageDown advances the top verse and reports the new target(yuku.alkitab.base.verses.VersesComposeListCompositionTest)
+java.lang.NoClassDefFoundError: Could not initialize class android.graphics.Typeface
+	at yuku.alkitab.base.verses.VersesComposeListCompositionTest.setUp(VersesComposeListCompositionTest.kt)
+	... 14 trimmed
+Caused by: java.lang.ExceptionInInitializerError: Exception java.lang.RuntimeException: java.lang.reflect.InvocationTargetException [in thread "SDK 34 Main Thread"]
+	at org.robolectric.internal.bytecode.ShadowWrangler.classInitializing(ShadowWrangler.java:164)
+	at org.robolectric.internal.bytecode.RobolectricInternals.classInitializing(RobolectricInternals.java:21)
+	at android.graphics.Typeface.<clinit>(Typeface.java)
+	... 16 more
+
+FAILURES!!!
+Tests run: 11,  Failures: 11
+
+Picked up JAVA_TOOL_OPTIONS: -Djava.io.tmpdir=/tmp/k159-feedback-jvm
+ERROR: Unable to locate dependency: '/workspace/work/deps33/robolectric-sdk28/android-all-instrumented-12.1-robolectric-8229987-i6.jar'
+ERROR: Parent directory exists but is missing the dependency
+ERROR: Contents of directory '/workspace/work/deps33/robolectric-sdk28':
+ERROR: /workspace/work/deps33/robolectric-sdk28/android-all-instrumented-14-robolectric-10818077-i6.jar
+ERROR: /workspace/work/deps33/robolectric-sdk28/download-android14-i6.log
+ERROR: /workspace/work/deps33/robolectric-sdk28/android-all-instrumented-8.1.0-robolectric-4611349-i6.jar
+ERROR: /workspace/work/deps33/robolectric-sdk28/android-all-instrumented-13-robolectric-9030017-i6.jar
+ERROR: /workspace/work/deps33/robolectric-sdk28/android-all-instrumented-9-robolectric-4913185-2-i6.jar
+ERROR: /workspace/work/deps33/robolectric-sdk28/receipt-i6.json
+ERROR: /workspace/work/deps33/robolectric-sdk28/receipt.json
+ERROR: /workspace/work/deps33/robolectric-sdk28/receipt-android14-i6.json
+ERROR: /workspace/work/deps33/robolectric-sdk28/android-all-instrumented-8.0.0_r4-robolectric-r1-i6.jar
+ERROR: /workspace/work/deps33/robolectric-sdk28/android-all-instrumented-9-robolectric-4913185-2-i7.jar
+ERROR: /workspace/work/deps33/robolectric-sdk28/download-i6.log
+ERROR: /workspace/work/deps33/robolectric-sdk28/download.log

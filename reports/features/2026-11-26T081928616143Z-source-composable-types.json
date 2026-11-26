@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-26T08:19:28.616143+00:00",
+  "status": "passed",
+  "compiler": {
+    "binary_sha256": "83474e412252d091eb7b1a8dc8da29df5db633852d118dcbd6f78c1b0f31d294",
+    "source_revision": "113510066"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "evidence": [
+    "reports/correctness/2026-11-26T080652816233Z-source-composable-types.json",
+    "reports/correctness/2026-11-26T080654329719Z-compose-callbacks.json"
+  ],
+  "features": [
+    {
+      "name": "Source zero-argument Unit composable callback types",
+      "status": "partial",
+      "scope": "Genuine explicit imports/aliases and qualified Composable type uses preserve logical metadata and the physical Function2 ABI. Ordinary function parameters, returns and locals support typed identity/forwarding, capture and actual Composer-aware invocation. Four Kotlin provider/frontend combinations, fixed Java callers, generic callable signatures and a61-case existing Compose regression execute successfully.",
+      "restrictions": [
+        "Only direct nonnullable nonreceiver nonsuspend zero-argument Unit callbacks are supported. Canonical qualified annotation names and explicit imports/aliases are recognized; wildcard-only type annotation imports and other type annotations remain unsupported. Source composable declarations, nested literal creation, conditional invocation, composite callback shapes and source class stability exports remain explicit unsupported boundaries."
+      ],
+      "evidence_report": "reports/correctness/2026-11-26T080652816233Z-source-composable-types.json"
+    }
+  ],
+  "validation": {
+    "counts": {
+      "pass": 19,
+      "invalid_rejected": 6,
+      "unsupported_language": 11
+    },
+    "existing_compose_regression": "61 pass",
+    "library_tests": "295 pass",
+    "integration": "pass",
+    "clippy": "pass",
+    "format": "frozen differences recorded; owned whitespace-only prefix corrected separatelyd40583589",
+    "report_generator_tests": "8 pass"
+  },
+  "inputs": {
+    "evidence_sha256": {
+      "reports/correctness/2026-11-26T080652816233Z-source-composable-types.json": "0ed535b5e7db9d0704a48831b1dba9124b0fb0358be0f6b3065a65542d4c368c",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks.json": "3a365c3a11e904371f1c432b4152e84986090bbf83de6ec08524ff7bf3cd5b8b"
+    }
+  }
+}

@@ -76,16 +76,15 @@ fn check() {
             .arg(std::env::join_paths([&callers, output, &dependency, &standard]).unwrap())
             .arg("nullablevalues.consumer.Calls"));
     }
-    for name in ["WrongType"] {
-        let error = compile_batch_with_options(&[input(name)], &paths, &options)
-            .err()
-            .unwrap();
-        assert_eq!(
-            error.kind,
-            DiagnosticKind::InvalidKotlin,
-            "{name}: {}",
-            error.message
-        );
-    }
+    let name = "WrongType";
+    let error = compile_batch_with_options(&[input(name)], &paths, &options)
+        .err()
+        .unwrap();
+    assert_eq!(
+        error.kind,
+        DiagnosticKind::InvalidKotlin,
+        "{name}: {}",
+        error.message
+    );
     std::fs::remove_dir_all(work).unwrap();
 }

@@ -37,6 +37,38 @@ impl Checker<'_> {
                     ),
                 })
             }
+            ExprKind::When(subject, branches, otherwise)
+            | ExprKind::WhenBinding(_, subject, branches, otherwise) => {
+                let statement = |branch: &Expr| syntax::Statement {
+                    offset: branch.offset,
+                    kind: StatementKind::Expression(branch.clone()),
+                };
+                let branches = branches
+                    .iter()
+                    .map(|(conditions, value)| (conditions.clone(), vec![statement(value)]))
+                    .collect();
+                let otherwise = (!matches!(otherwise.kind, ExprKind::MissingWhenElse))
+                    .then(|| vec![statement(otherwise)]);
+                let kind = if let ExprKind::WhenBinding(name, _, _, _) = &expr.kind {
+                    StatementKind::WhenBinding(name.clone(), *subject.clone(), branches, otherwise)
+                } else {
+                    StatementKind::When(*subject.clone(), branches, otherwise)
+                };
+                let (body, _) = self.block(&[syntax::Statement {
+                    offset: expr.offset,
+                    kind,
+                }])?;
+                Ok(Value {
+                    ty: Type::Unit,
+                    kind: ValueKind::Block(
+                        body,
+                        Box::new(Value {
+                            ty: Type::Unit,
+                            kind: ValueKind::Unit,
+                        }),
+                    ),
+                })
+            }
             _ => self.value(expr),
         }
     }
@@ -225,30 +257,7 @@ impl Checker<'_> {
                 self.value(value)
             }
             ExprKind::LabeledReturn(label, value) => {
-                if !self
-                    .scopes
-                    .iter()
-                    .any(|scope| scope.contains_key(&format!("<return@{label}>")))
-                {
-                    return Err(Diagnostic::new(
-                        offset,
-                        format!("Unresolved return label: {label}"),
-                    ));
-                }
-                let value = if let Some(value) = value {
-                    self.expected_value(value, &self.result.clone())?
-                } else if self.result == Type::Unit {
-                    Value {
-                        ty: Type::Unit,
-                        kind: ValueKind::Unit,
-                    }
-                } else {
-                    return Err(Diagnostic::new(offset, "Labeled return requires a value"));
-                };
-                Ok(Value {
-                    ty: self.result.clone(),
-                    kind: ValueKind::Abrupt(vec![Statement::Return(value)]),
-                })
+                self.labeled_return(label, value.as_deref(), offset)
             }
             ExprKind::Try {
                 body,

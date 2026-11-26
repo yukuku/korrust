@@ -135,7 +135,8 @@ pub(crate) fn statements(nodes: &mut [Statement], owner: &str, visitor: &mut imp
             | Statement::Store(_, inner)
             | Statement::Expression(inner)
             | Statement::Return(inner)
-            | Statement::NonLocalReturn(inner) => value(inner, owner, visitor),
+            | Statement::NonLocalReturn(inner)
+            | Statement::TargetReturn { value: inner, .. } => value(inner, owner, visitor),
             Statement::Labeled { body, .. } => statements(body, owner, visitor),
             Statement::JavaFieldStore {
                 receiver,

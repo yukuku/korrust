@@ -652,6 +652,7 @@ pub(super) fn check_class_with_constants(
         composer: None,
         composable_target: None,
         composable_body: false,
+        label_returns: ReturnContext::default(),
         inline_argument_modes: Vec::new(),
         inline_analysis: false,
         public_inline_body: false,
@@ -842,6 +843,7 @@ pub(super) fn check_class_with_constants(
                 composer: None,
                 composable_target: None,
                 composable_body: false,
+                label_returns: ReturnContext::default(),
                 inline_argument_modes: Vec::new(),
                 inline_analysis: false,
                 public_inline_body: false,
@@ -1339,6 +1341,7 @@ pub(super) fn check_class_with_constants(
             composer: None,
             composable_target: None,
             composable_body: false,
+            label_returns: ReturnContext::default(),
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
             public_inline_body: source.methods.iter().any(|method| {
@@ -2353,6 +2356,7 @@ impl<'a> DeclarationContext<'a> {
             composer: None,
             composable_target: None,
             composable_body: false,
+            label_returns: ReturnContext::default(),
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
             public_inline_body: false,
@@ -2819,6 +2823,14 @@ fn infer_source_results_impl(
             classes.insert(path, class);
         }
     }
+    load_expression_classifiers(
+        source,
+        classpath,
+        owner,
+        &renamed_class_imports(source),
+        &mut imports,
+        &mut classes,
+    )?;
     let lambdas = Rc::new(RefCell::new(Vec::new()));
     let mut context = DeclarationContext::new(owner, classpath, &imports, &classes, &lambdas);
     for constant in source

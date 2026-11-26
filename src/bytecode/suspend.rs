@@ -61,7 +61,7 @@ pub(super) fn contains_suspension(
     found
 }
 
-fn boxed_return(value: &Value) -> Value {
+pub(super) fn boxed_return(value: &Value) -> Value {
     if value.ty == Type::Unit {
         Value {
             ty: Type::Java("kotlin/Unit".into()),

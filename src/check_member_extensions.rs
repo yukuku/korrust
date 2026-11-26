@@ -346,6 +346,16 @@ impl Checker<'_> {
         Ok(None)
     }
     pub(super) fn companion_receiver(&self, owner: &str, offset: usize) -> Result<Option<Value>> {
+        self.companion_candidate(owner, offset)?
+            .map(|(value, access)| access.map(|()| value))
+            .transpose()
+    }
+
+    fn companion_candidate(
+        &self,
+        owner: &str,
+        offset: usize,
+    ) -> Result<Option<(Value, Result<()>)>> {
         let class = self
             .classpath
             .load(owner)
@@ -364,29 +374,31 @@ impl Checker<'_> {
             .ok_or_else(|| {
                 Diagnostic::new(offset, "Companion metadata has no matching singleton field")
             })?;
-        if field.access & 1 == 0
+        let access = if field.access & 1 == 0
             && self.lambda_owner != owner
             && !self.lambda_owner.starts_with(&format!("{owner}$"))
         {
-            return Err(
+            Err(
                 Diagnostic::new(offset, "Companion is inaccessible from this declaration")
                     .with_kind(
                         crate::DiagnosticKind::InvalidKotlin,
                         "INACCESSIBLE_COMPANION",
                     ),
-            );
-        }
-        if field.access & 1 == 0 && (self.constructor_bridge_context || self.lambda_owner != owner)
+            )
+        } else if field.access & 1 == 0
+            && (self.constructor_bridge_context || self.lambda_owner != owner)
         {
-            return Err(Diagnostic::new(
+            Err(Diagnostic::new(
                 offset,
                 "Private companion singleton captures require unsupported lexical bridges",
             )
             .with_kind(
                 crate::DiagnosticKind::UnsupportedLanguage,
                 "PRIVATE_COMPANION_CAPTURE_UNSUPPORTED",
-            ));
-        }
+            ))
+        } else {
+            Ok(())
+        };
         let target = field
             .descriptor
             .strip_prefix('L')
@@ -394,13 +406,16 @@ impl Checker<'_> {
             .ok_or_else(|| {
                 Diagnostic::new(offset, "Companion field has a non-reference descriptor")
             })?;
-        Ok(Some(Value {
-            ty: Type::Java(target.into()),
-            kind: ValueKind::StaticField {
-                owner: owner.into(),
-                name: name.clone(),
+        Ok(Some((
+            Value {
+                ty: Type::Java(target.into()),
+                kind: ValueKind::StaticField {
+                    owner: owner.into(),
+                    name: name.clone(),
+                },
             },
-        }))
+            access,
+        )))
     }
     pub(super) fn implicit_extension_receiver_call(
         &mut self,
@@ -505,20 +520,23 @@ impl Checker<'_> {
         }
         Ok(None)
     }
-    pub(super) fn implicit_receiver_values(&self, offset: usize) -> Result<Vec<Value>> {
+    pub(super) fn implicit_receiver_candidates(
+        &self,
+        offset: usize,
+    ) -> Result<Vec<(Value, Result<()>)>> {
         let mut receivers = self
             .extension_receivers
             .iter()
-            .map(Self::local_receiver)
+            .map(|local| (Self::local_receiver(local), Ok(())))
             .collect::<Vec<_>>();
         if let Ok(dispatch) = self.dispatch_receiver_value(offset) {
             let companion = library::type_owner(&dispatch.ty)
-                .map(|owner| self.companion_receiver(owner, offset))
+                .map(|owner| self.companion_candidate(owner, offset))
                 .transpose()?
                 .flatten();
-            receivers.push(dispatch);
+            receivers.push((dispatch, Ok(())));
             if let Some(outer) = self.enclosing_receiver(offset)? {
-                receivers.push(outer);
+                receivers.push((outer, Ok(())));
             }
             if let Some(companion) = companion {
                 receivers.push(companion);
@@ -537,7 +555,7 @@ impl Checker<'_> {
         offset: usize,
     ) -> Result<Option<Value>> {
         let property = matches!(kind, ExtensionKind::Property | ExtensionKind::PropertySet);
-        for dispatch in self.implicit_receiver_values(offset)? {
+        for (dispatch, access) in self.implicit_receiver_candidates(offset)? {
             let Some(owner) = library::type_owner(&dispatch.ty) else {
                 continue;
             };
@@ -652,6 +670,7 @@ impl Checker<'_> {
             };
             self.scopes.pop();
             if let Some(value) = value? {
+                access?;
                 return Ok(Some(Self::wrap_lets(
                     value,
                     vec![(dispatch_slot, dispatch), (slot, receiver)],

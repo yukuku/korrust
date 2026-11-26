@@ -1,0 +1,6 @@
+tests/source_composable_types/InvalidOutside.kt:3:5: error: functions which invoke @Composable functions must be marked with the @Composable annotation
+fun invalid(callback: @Composable () -> Unit) { callback() }
+    ^^^^^^^
+tests/source_composable_types/InvalidOutside.kt:3:49: error: @Composable invocations can only happen from the context of a @Composable function
+fun invalid(callback: @Composable () -> Unit) { callback() }
+                                                ^^^^^^^^

@@ -1,0 +1,3 @@
+reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/wrong-result.kt:3:77: error: return type of 'suspend fun run(value: Int): String' is not a subtype of the return type of the overridden member 'suspend fun run(value: Int): Int' defined in 'anonymouslibrary.Single'.
+fun use(): Single = object : Single { override suspend fun run(value: Int): String = "bad" }
+                                                                            ^^^^^^

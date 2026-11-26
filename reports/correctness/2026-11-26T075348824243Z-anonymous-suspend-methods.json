@@ -1,0 +1,1192 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T07:53:48.824243+00:00",
+  "status": "passed",
+  "compiler": {
+    "binary": "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+    "binary_sha256": "5ba7a59c756be78a3e5a3b3e17a2f09457ce5fe3816b7d0104889064a47be23e",
+    "source_root": "."
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "coroutine_dependency": {
+    "schema_version": 1,
+    "coordinate": "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.9.0",
+    "version": "1.9.0",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlinx/kotlinx-coroutines-core-jvm/1.9.0/kotlinx-coroutines-core-jvm-1.9.0.jar",
+    "sha256": "ad89c2892235e670f222d819cb3d81188143cb19a05b59df9889ae4269f5c70a",
+    "license": "Apache-2.0",
+    "path": "target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar"
+  },
+  "inputs": {
+    "files_sha256": {
+      "tests/anonymous_suspend_methods/Values.kt": "6e7ccc0c38ab2402fbd708d56f61aa785686db00a0d56f2e43ed1100e2ea7866",
+      "tests/anonymous_suspend_methods/Library.kt": "519116644d99d99d8d5b02f66e27d46ca5f84f64f076eb3e12d667740635f3bd",
+      "tests/anonymous_suspend_methods/Check.java": "9613c3fec75cbc3fc68aeecfb5688674c2a174877918ba572ae4ebb63e05e872",
+      "tests/anonymous_suspend_methods/Rejections.json": "72638de8d28cf5d82a4dad306b97b67c5043f42c96b56e4ed9b1598710a9f2f2",
+      "tests/anonymous_suspend_methods/ConsumerCheck.java": "e405fa271911278326ec47d8dbecd2c48cf4c6ac65bfcf51489c4b34dff9b554",
+      "tests/anonymous_suspend_methods/Consumer.kt": "a84091b05f358a3461e8193bccf2bb3e826728be8c7cbe656879380c8f0da461",
+      "references/coroutines.json": "63b3936bcb2ba054910c617f6725291deef71b09c2f189b4e260f65ac0656dcf",
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "tools/check_anonymous_suspend_methods.py": "27b987dc438002332cdd91804999e23b9ecfc7eaf8baa6ec814bea802a9edeb1",
+      "tools/check_member_function_properties.py": "3f5a4ffab1e16e450bf5f9be3d8697d9c1fd756dd659779bf2902abfd74cdc70",
+      "tools/check_nov21_generics.py": "70fed499f3652d9181c2aabc3baf4e9a7327c436eec67c83d6fe4e4f539e4f86",
+      "tests/anonymous_suspend_methods.rs": "5aa5de90ae3bd0343be6cc7fc54f5cce21b59b52126ece7684660b0c1ea3c136",
+      "tests/suspend_receiver_functions/Library.kt": "640e127c4b4b5a2dc0443bc63eb484ac380f67ebf311c66e6e562f60be815c33",
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/annotation_declarations.rs": "76f1f3bafa4fa1ba3ced3768936d822c11803bf2aa6f877857574403c604070d",
+      "src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525",
+      "src/check_interfaces.rs": "08acbd4ba2761eec3161048a0b809bd9b697a54d8da2053f8ca21578bab6d718",
+      "src/check_java_properties.rs": "f3da739960dcbcee99a9b205e29afd330defef89e1089e9a152d5d0efd0c51fd",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/bytecode.rs": "3895e77fe81cd0eb210b20465c132e6a7f7c85e4b55ec25e96203c29cbdaa0db",
+      "src/check_local_annotations.rs": "ad5d937aae27ec3bed4528322c068a39eca915a49c449b68b2c4453f87f1a770",
+      "src/check_inner_classes.rs": "b799a4df016e056d127610e359ec06951e05e22e4778a7ffa31934e892cd6e05",
+      "src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+      "src/check_classes.rs": "a2c5cdd6f739971b0d96b04cd98080b5a1507a427f2cd10221ff65824fd03450",
+      "src/jvm_descriptor.rs": "3946ec2e66e89185c9d3e284f9d114e29e5e88d0a3eba52ec39fba2200d07ad2",
+      "src/check_unsigned.rs": "7c60ab78a2f2162d0beffbc79d41976a06bc6fb446c1cc9f91de10fc6072e606",
+      "src/check_class_delegation.rs": "1089bac71516daad07ec7245aa8594956feca30ecf926e19ff82c895caba7364",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/metadata.rs": "8cda8255ef2d8b33ec3a0d8b048aec86371f789c65f4e2eae1e13cc56b6557c0",
+      "src/check_member_extensions.rs": "4382ee7e5dccf7abb9105484ea769827fac64c149585714a94e7001e7792f4d6",
+      "src/check_varargs.rs": "6120b95639903fed551d9b1aecfd76258e236141327cbc8c750159754452c302",
+      "src/classpath.rs": "a4432f645dce79e802c61f460f0b2617f91956372336fcb32afe22b1a0c5749c",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/check_references.rs": "a4df941b6ea706d209bc878a01cedea71c22e4a34b6ef3243d9ca8aa16c4aa86",
+      "src/check_functions.rs": "81a49c528825b1c5e75583912fdfae5742fe959f8d49f6d680dd2cd77e86fc6f",
+      "src/check_companion_properties.rs": "c974d1059e7cb92644cd1a186492200828341f64b7e95d0ae4c052356537edba",
+      "src/check.rs": "c155309b83d3b25268fe5ffb1c9271bd13a03ec8fd4130141d4645071d4ab565",
+      "src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+      "src/lib.rs": "b32ce1eb31da5bfc99f9a60f5cdf12534db2c86f112f09304b66ab4b582c5fad",
+      "src/check_java_nullability.rs": "40e1e816200bc92d6d7e5ab5fa57b4e3e351967072da160996e5a888b3acb923",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/check_operations.rs": "a15bdb306a10ac311beebe21b2186fd388ef0f7010a9e7e5ce98424b73248b22",
+      "src/check_library.rs": "1d40ed218287db0a7656c9a0fff2a764cac3b04efbf9b1581219adabb174911a",
+      "src/check_relations.rs": "c9efedf157698445cc27c5a52582c1d684b8fcc328f5ee1489c599652d339340",
+      "src/check_declarations.rs": "3bc3c498f630a9356329d166d9b5af8cba64911ac4a23944e3249b174e7e020e",
+      "src/check_overloads.rs": "a1a5066cd8bf1dd196ce49975678360f043fc2d48f1c1dcf7ce607f57e00bb43",
+      "src/check_compose.rs": "e87478af92dadfc67e7ee0a0412ba8417dc84ebfceb2e54bc37a9b840077bb5a",
+      "src/check_captures.rs": "fb33dcee574506b574ca15013bbe102990e6c15dba3744128c72761d361b90ba",
+      "src/check_stable_properties.rs": "4b7b32b83094336d920362641e85e917979f09878cef431f51b023f1b6348873",
+      "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+      "src/check_ir_walk.rs": "262c923e6aea04830f95f2f1f1eca8124b328401fdc5ce1890f027fda2d58e71",
+      "src/check_variant_signatures.rs": "e63bc47c0b4db3d5a07c0e4a2239283f0a8592c1716f0923ca69c2f0ea351bd8",
+      "src/check_annotation_placements.rs": "027e77c6a6db60f98262fbaf0f44be170c53b58b03d64ae6e8cc43cdb2dc1579",
+      "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "src/check_assignment_flow.rs": "be4520c694043891aa0f72f26e3f8cf73cd902c314660b9f1381c1e48f049a5e",
+      "src/check_control.rs": "6333d7c8a5465154b5e2e519a7598f576c38f7b6a9f6dd2b5b2f5ed60811f532",
+      "src/check_constructor_inference.rs": "dd3d94a733c0acaea93af34f1e130c4338fc11127cbb7cba08f452d7c94d0d1e",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/const_eval.rs": "24319c4a5076f678ed53cbeeff7c52c4bdcf081c9f78485514326e92078e10fd",
+      "src/check_binary_defaults.rs": "c01af9b25cad391997da8de4c7798c48709ac8081c3db6df31ef52082a3d7654",
+      "src/compiled_inline.rs": "97019b68e2b7f1f8c01efbb992d217633e3e7c516962b739251e1cd26f7b9bf1",
+      "src/check_constructor_aliases.rs": "a64e341da62e7b292607926f34f5ad2a570f103f3a2141c40be6ff9bf1a94527",
+      "src/check_initialization.rs": "9c56c8abd1eb964ad4e51ac03cdf7a40d73414a4c9984ae6e6525a37f6b5bdee",
+      "src/check_objects.rs": "d45265fab0f33a9a095b80a6605ef7b0eb1af4f0a7fce21f3225b2d7dd12bc2d",
+      "src/check_contracts.rs": "06434fc5c0999ff69dfb902c50e7bc3b3d4802ae5d3592fbcf0496e9c3bb491d",
+      "src/source_inline.rs": "d59ecaba2b32264cc4190594c19e5ec7e99e6cbb5db28b33c1eaca7c7aa404e5",
+      "src/check_constructor_bridges.rs": "193f110cee019766603fe7d9798178e2f253d468c262f35994c939cd87377a29",
+      "src/check_anonymous.rs": "2b0d877c187ccde09a965486025f5bf6d561d70f65ed93b7c27825c8f28a0c55",
+      "src/syntax.rs": "8f840c900e354b1da68aa60ee5ea9ea7501097531789f1d12510d6174a6f0523",
+      "src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+      "src/classpath/value_names.rs": "b231f34a49e980875429e79cdf63e3fe131ebf853d2104c798ac32a13c88440f",
+      "src/classpath/jdk_modules.rs": "cd1a350e7f8e03cda618a1d919d4e6ee49aba7e9a26728178ebad5f73c4bd8f8",
+      "src/classpath/signature.rs": "a6af2268afb2f5bbe2295d999be6d94a4ebf4b5f66dec5c38a0235bc18dd01ba",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/nullability_defaults.rs": "8edf9187cd6214380a936c0484c280c7b3f3a973212d3f830c5316feedd4724b",
+      "src/classpath/metadata.rs": "f1b60160edda6f28389848afdae18168f0ccf8d965ab1d6c2b6cc17711eb98ed",
+      "src/classpath/source_enums.rs": "37f3e3995b1e46a8a10215e0b995f56e3019c93c478c89682d18d312eb20d3c2",
+      "src/classpath/singletons.rs": "836fe172f37cc9282e259ba446688b3d2d6bf34fde25ddc3973c1800f29c71a5",
+      "src/classpath/nested.rs": "764dd9eaf0188f91ba018707557e72df76b9c44b0120c8d69574044c8f5e78e9",
+      "src/classpath/package_info.rs": "f3bd436a8c64d48216bae3a55a2a3e82a903d354a42b629928fe1af95197061a",
+      "src/classpath/inherited_classifiers.rs": "47ceea06db1785341706ba9e3d209cdd5c4ff3b4c73794319ba0db5322e383ae",
+      "src/classpath/inline_defaults.rs": "ad6ff8bb40c0b01eee78e30a70f15f2a912ab73307a3836840ce882bc597e8cb",
+      "src/classpath/aliases.rs": "714b195f4716ea32d5dc8985048e282efb1fb3a1508490dcab5d49753534b80c",
+      "src/classpath/archive.rs": "835e4a79bbbc5c7328ce6a540ed1a2ca975fc526278fe7c31fd9433e08cc56d5",
+      "src/classpath/compose_abi.rs": "367c394423ec42e212233a82e484e16a144c827a4d7e3295a3647b665feb6d0f",
+      "src/classpath/source.rs": "2515aebeb67ebad42a7b5e0719053fad8ab1861d3edaeca0dc110b402e1885e8",
+      "src/classpath/jvm_builtins.rs": "b8c6e4789a998c1b3737da4879a15d74eb453170c4b03542d4c8ae13f6e40e86",
+      "src/classpath/import_classes.rs": "2835a7c9b72fd326d5881d0fbe41655b57f6d1b26b2e8b1bde6f71eaada580c1",
+      "src/bytecode/frames.rs": "b2e346435d7cb21fbcbf0ec248c8c54fa77273198f1321fb58d84c741e77caff",
+      "src/bytecode/annotation_files.rs": "0fe8ebba7bbd2c80fcdd6fda797b448ca8cd63945b100781361bf1e3ace02eaa",
+      "src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+      "src/bytecode/lambdas.rs": "a0addfd701db5b01d5e05acf16c21daec58c4f778a1d0b6bb228a73eee905e86",
+      "src/bytecode/inline.rs": "d1dbc06ea0c65d833333adb752ce2cdf05c5cc1678a99a6478440041d437aaea",
+      "src/bytecode/anonymous_context.rs": "0864951c7a7e94772ee8e410c49175fed879358204aff745a1f7a315fc1b0283",
+      "src/bytecode/class_companion.rs": "b5c6f75d8c24b3edbe1ae2583693c31b511e4d456734b160d2904b7c6072a62c",
+      "src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+      "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+      "src/bytecode/compose_lambdas.rs": "6355b1593355bb5aeacfbc0dcdfdcb0bc157d1ce995f9129dad742466f328f0d",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/suspend.rs": "96c2da2c1401e937f07ba88bbef67944dbcec14d5dae7993ca4fff4ecd4fe5ff",
+      "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "src/bytecode/interfaces.rs": "e283e506529e64a83d7408f6dbd52d44336cc3a5d1e768428df46670cafd4c2b",
+      "src/bytecode/defaults.rs": "8a1776d35697d05a53ffe6eef7556770ab03f027bcd4275b1b8f372605de6f32",
+      "src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/compiled_inline/defaults.rs": "a6f89d16324008cb96c777009a26eed4bbb233f1ddf91ca91fc387d803c0b2eb",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d"
+    },
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "commands": [
+    {
+      "label": "compile official/Library.kt",
+      "argv": [
+        "/workspace/work/anonymous-suspend159-proof/references/kotlinc/bin/kotlinc",
+        "/workspace/work/anonymous-suspend159-proof/tests/suspend_receiver_functions/Library.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/000-stderr.txt"
+    },
+    {
+      "label": "compile official/Library.kt",
+      "argv": [
+        "/workspace/work/anonymous-suspend159-proof/references/kotlinc/bin/kotlinc",
+        "/workspace/work/anonymous-suspend159-proof/tests/anonymous_suspend_methods/Library.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/001-stderr.txt"
+    },
+    {
+      "label": "compile official/Values.kt",
+      "argv": [
+        "/workspace/work/anonymous-suspend159-proof/references/kotlinc/bin/kotlinc",
+        "/workspace/work/anonymous-suspend159-proof/tests/anonymous_suspend_methods/Values.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/002-stderr.txt"
+    },
+    {
+      "label": "compile candidate/Values.kt",
+      "argv": [
+        "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+        "/workspace/work/anonymous-suspend159-proof/tests/anonymous_suspend_methods/Values.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/003-stderr.txt"
+    },
+    {
+      "label": "compile fixed Java caller against official",
+      "argv": [
+        "javac",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/official:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/java",
+        "/workspace/work/anonymous-suspend159-proof/tests/anonymous_suspend_methods/Check.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/004-stderr.txt"
+    },
+    {
+      "label": "verified suspended Java caller/official",
+      "argv": [
+        "java",
+        "-Xmx256m",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/java:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/official:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/005-stderr.txt"
+    },
+    {
+      "label": "JVM signature/official",
+      "argv": [
+        "javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/official:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts",
+        "anonymousfunctions.ValuesKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/006-stderr.txt"
+    },
+    {
+      "label": "verified suspended Java caller/candidate",
+      "argv": [
+        "java",
+        "-Xmx256m",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/java:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/007-stderr.txt"
+    },
+    {
+      "label": "JVM signature/candidate",
+      "argv": [
+        "javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts",
+        "anonymousfunctions.ValuesKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/008-stderr.txt"
+    },
+    {
+      "label": "compile official/Consumer.kt",
+      "argv": [
+        "/workspace/work/anonymous-suspend159-proof/references/kotlinc/bin/kotlinc",
+        "/workspace/work/anonymous-suspend159-proof/tests/anonymous_suspend_methods/Consumer.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/official:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/consumer-official-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/009-stderr.txt"
+    },
+    {
+      "label": "compile fixed consumer caller against official",
+      "argv": [
+        "javac",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/consumer-official-official:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/java:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/official:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/consumer-java",
+        "/workspace/work/anonymous-suspend159-proof/tests/anonymous_suspend_methods/ConsumerCheck.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/010-stderr.txt"
+    },
+    {
+      "label": "verified resumed consumer/official/official",
+      "argv": [
+        "java",
+        "-Xmx256m",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/consumer-java:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/consumer-official-official:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/java:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/official:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/011-stderr.txt"
+    },
+    {
+      "label": "compile candidate/Consumer.kt",
+      "argv": [
+        "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+        "/workspace/work/anonymous-suspend159-proof/tests/anonymous_suspend_methods/Consumer.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/official:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/consumer-official-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/012-stderr.txt"
+    },
+    {
+      "label": "verified resumed consumer/official/candidate",
+      "argv": [
+        "java",
+        "-Xmx256m",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/consumer-java:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/consumer-official-candidate:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/java:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/official:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/013-stderr.txt"
+    },
+    {
+      "label": "compile official/Consumer.kt",
+      "argv": [
+        "/workspace/work/anonymous-suspend159-proof/references/kotlinc/bin/kotlinc",
+        "/workspace/work/anonymous-suspend159-proof/tests/anonymous_suspend_methods/Consumer.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/consumer-candidate-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/014-stderr.txt"
+    },
+    {
+      "label": "verified resumed consumer/candidate/official",
+      "argv": [
+        "java",
+        "-Xmx256m",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/consumer-java:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/consumer-candidate-official:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/java:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/015-stderr.txt"
+    },
+    {
+      "label": "compile candidate/Consumer.kt",
+      "argv": [
+        "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+        "/workspace/work/anonymous-suspend159-proof/tests/anonymous_suspend_methods/Consumer.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/consumer-candidate-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/016-stderr.txt"
+    },
+    {
+      "label": "verified resumed consumer/candidate/candidate",
+      "argv": [
+        "java",
+        "-Xmx256m",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/consumer-java:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/consumer-candidate-candidate:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/java:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/017-stderr.txt"
+    },
+    {
+      "label": "boundary official/ordinary-overrides-suspend",
+      "argv": [
+        "/workspace/work/anonymous-suspend159-proof/references/kotlinc/bin/kotlinc",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/ordinary-overrides-suspend.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/oracle-ordinary-overrides-suspend"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/018-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/ordinary-overrides-suspend",
+      "argv": [
+        "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/ordinary-overrides-suspend.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate-ordinary-overrides-suspend"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/019-stderr.txt"
+    },
+    {
+      "label": "boundary official/suspend-overrides-ordinary",
+      "argv": [
+        "/workspace/work/anonymous-suspend159-proof/references/kotlinc/bin/kotlinc",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/suspend-overrides-ordinary.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/oracle-suspend-overrides-ordinary"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/020-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/suspend-overrides-ordinary",
+      "argv": [
+        "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/suspend-overrides-ordinary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate-suspend-overrides-ordinary"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/021-stderr.txt"
+    },
+    {
+      "label": "boundary official/missing-override",
+      "argv": [
+        "/workspace/work/anonymous-suspend159-proof/references/kotlinc/bin/kotlinc",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/missing-override.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/oracle-missing-override"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/022-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/missing-override",
+      "argv": [
+        "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/missing-override.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate-missing-override"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/023-stderr.txt"
+    },
+    {
+      "label": "boundary official/ordinary-second-member-suspends",
+      "argv": [
+        "/workspace/work/anonymous-suspend159-proof/references/kotlinc/bin/kotlinc",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/ordinary-second-member-suspends.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/oracle-ordinary-second-member-suspends"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/024-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/ordinary-second-member-suspends",
+      "argv": [
+        "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/ordinary-second-member-suspends.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate-ordinary-second-member-suspends"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/025-stderr.txt"
+    },
+    {
+      "label": "boundary official/wrong-result",
+      "argv": [
+        "/workspace/work/anonymous-suspend159-proof/references/kotlinc/bin/kotlinc",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/wrong-result.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/oracle-wrong-result"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/026-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/wrong-result",
+      "argv": [
+        "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/wrong-result.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate-wrong-result"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/027-stderr.txt"
+    },
+    {
+      "label": "boundary official/missing-member",
+      "argv": [
+        "/workspace/work/anonymous-suspend159-proof/references/kotlinc/bin/kotlinc",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/missing-member.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/oracle-missing-member"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/028-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/028-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/missing-member",
+      "argv": [
+        "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/missing-member.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate-missing-member"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/029-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/029-stderr.txt"
+    },
+    {
+      "label": "boundary official/own-suspend-member",
+      "argv": [
+        "/workspace/work/anonymous-suspend159-proof/references/kotlinc/bin/kotlinc",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/own-suspend-member.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/oracle-own-suspend-member"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/030-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/030-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/own-suspend-member",
+      "argv": [
+        "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/own-suspend-member.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate-own-suspend-member"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/031-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/031-stderr.txt"
+    },
+    {
+      "label": "boundary official/generic-suspend-member",
+      "argv": [
+        "/workspace/work/anonymous-suspend159-proof/references/kotlinc/bin/kotlinc",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/generic-suspend-member.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/oracle-generic-suspend-member"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/032-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/032-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/generic-suspend-member",
+      "argv": [
+        "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/generic-suspend-member.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate-generic-suspend-member"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/033-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/033-stderr.txt"
+    },
+    {
+      "label": "boundary official/unit-suspend-parameter",
+      "argv": [
+        "/workspace/work/anonymous-suspend159-proof/references/kotlinc/bin/kotlinc",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/unit-suspend-parameter.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/oracle-unit-suspend-parameter"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/034-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/034-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/unit-suspend-parameter",
+      "argv": [
+        "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/unit-suspend-parameter.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate-unit-suspend-parameter"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/035-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/035-stderr.txt"
+    },
+    {
+      "label": "boundary official/nullable-unit-result",
+      "argv": [
+        "/workspace/work/anonymous-suspend159-proof/references/kotlinc/bin/kotlinc",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/nullable-unit-result.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/oracle-nullable-unit-result"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/036-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/036-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/nullable-unit-result",
+      "argv": [
+        "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/nullable-unit-result.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate-nullable-unit-result"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/037-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/037-stderr.txt"
+    },
+    {
+      "label": "boundary official/nullable-inferred-result",
+      "argv": [
+        "/workspace/work/anonymous-suspend159-proof/references/kotlinc/bin/kotlinc",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/nullable-inferred-result.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/oracle-nullable-inferred-result"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/038-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/038-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/nullable-inferred-result",
+      "argv": [
+        "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/nullable-inferred-result.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate-nullable-inferred-result"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/039-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/039-stderr.txt"
+    },
+    {
+      "label": "boundary official/unrelated-inferred-result",
+      "argv": [
+        "/workspace/work/anonymous-suspend159-proof/references/kotlinc/bin/kotlinc",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/unrelated-inferred-result.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/oracle-unrelated-inferred-result"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/040-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/040-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/unrelated-inferred-result",
+      "argv": [
+        "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/unrelated-inferred-result.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate-unrelated-inferred-result"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/041-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/041-stderr.txt"
+    },
+    {
+      "label": "boundary official/different-carrier-covariance",
+      "argv": [
+        "/workspace/work/anonymous-suspend159-proof/references/kotlinc/bin/kotlinc",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/different-carrier-covariance.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/oracle-different-carrier-covariance"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/042-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/042-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/different-carrier-covariance",
+      "argv": [
+        "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/different-carrier-covariance.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate-different-carrier-covariance"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/043-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/043-stderr.txt"
+    },
+    {
+      "label": "boundary official/lexical-suspend-type-parameters",
+      "argv": [
+        "/workspace/work/anonymous-suspend159-proof/references/kotlinc/bin/kotlinc",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/lexical-suspend-type-parameters.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/oracle-lexical-suspend-type-parameters"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/044-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/044-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/lexical-suspend-type-parameters",
+      "argv": [
+        "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/lexical-suspend-type-parameters.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate-lexical-suspend-type-parameters"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/045-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/045-stderr.txt"
+    },
+    {
+      "label": "boundary official/unit-sam-parameter",
+      "argv": [
+        "/workspace/work/anonymous-suspend159-proof/references/kotlinc/bin/kotlinc",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/unit-sam-parameter.kt",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/oracle-unit-sam-parameter"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/046-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/046-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/unit-sam-parameter",
+      "argv": [
+        "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+        "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/unit-sam-parameter.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/library:/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/contracts:/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/anonymous-suspend159-proof/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/anonymous-suspend159-proof/target/checks/2026-11-26T075348824243Z-anonymous-suspend-methods/candidate-unit-sam-parameter"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/047-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/047-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "resumed-java/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "resumed-java/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "JVM-public-nonsynthetic-callable-signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "resumed-consumer/official/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "resumed-consumer/official/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "resumed-consumer/candidate/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "resumed-consumer/candidate/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "boundary/ordinary-overrides-suspend",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/ordinary-overrides-suspend.kt",
+          "offset": 107,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_SUSPEND_OVERRIDE_MISMATCH",
+          "message": "Anonymous suspend modifier differs from inherited method",
+          "path": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/ordinary-overrides-suspend.kt",
+          "line": 3,
+          "column": 48
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/suspend-overrides-ordinary",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/suspend-overrides-ordinary.kt",
+          "offset": 105,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_SUSPEND_OVERRIDE_MISMATCH",
+          "message": "Anonymous suspend modifier differs from inherited method",
+          "path": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/suspend-overrides-ordinary.kt",
+          "line": 3,
+          "column": 46
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/missing-override",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/missing-override.kt",
+          "offset": 98,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_OVERRIDE_REQUIRED",
+          "message": "Anonymous member hides an inherited member without override",
+          "path": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/missing-override.kt",
+          "line": 3,
+          "column": 39
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/ordinary-second-member-suspends",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/ordinary-second-member-suspends.kt",
+          "offset": 0,
+          "category": "invalid_kotlin",
+          "code": "SUSPEND_CALL_CONTEXT_INVALID",
+          "message": "Suspend calls require a suspend function context",
+          "path": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/ordinary-second-member-suspends.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/wrong-result",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/wrong-result.kt",
+          "offset": 107,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_OVERRIDE_RESULT_MISMATCH",
+          "message": "Anonymous override result differs from inherited method",
+          "path": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/wrong-result.kt",
+          "line": 3,
+          "column": 48
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/missing-member",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/missing-member.kt",
+          "offset": 80,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_ABSTRACT_MEMBER_MISSING",
+          "message": "Anonymous object does not implement every abstract method",
+          "path": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/missing-member.kt",
+          "line": 3,
+          "column": 21
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/own-suspend-member",
+      "outcome": "unsupported_language",
+      "oracle_exit_code": 0,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/own-suspend-member.kt",
+          "offset": 139,
+          "category": "unsupported_language",
+          "code": "ANONYMOUS_OBJECT_SHAPE_UNSUPPORTED",
+          "message": "Own anonymous suspend methods are unsupported",
+          "path": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/own-suspend-member.kt",
+          "line": 3,
+          "column": 80
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/generic-suspend-member",
+      "outcome": "unsupported_language",
+      "oracle_exit_code": 0,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/generic-suspend-member.kt",
+          "offset": 87,
+          "category": "unsupported_language",
+          "code": "ANONYMOUS_OBJECT_SHAPE_UNSUPPORTED",
+          "message": "Anonymous inherited generic methods are unsupported",
+          "path": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/generic-suspend-member.kt",
+          "line": 3,
+          "column": 28
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/unit-suspend-parameter",
+      "outcome": "unsupported_language",
+      "oracle_exit_code": 0,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/unit-suspend-parameter.kt",
+          "offset": 111,
+          "category": "unsupported_language",
+          "code": "ANONYMOUS_OBJECT_SHAPE_UNSUPPORTED",
+          "message": "Anonymous Unit-valued parameters are unsupported",
+          "path": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/unit-suspend-parameter.kt",
+          "line": 3,
+          "column": 52
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/nullable-unit-result",
+      "outcome": "unsupported_language",
+      "oracle_exit_code": 0,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/nullable-unit-result.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "SUSPEND_STATE_MACHINE_SHAPE_UNSUPPORTED",
+          "message": "Nullable Unit and Unit-valued suspend callback parameters are unsupported",
+          "path": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/nullable-unit-result.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/nullable-inferred-result",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/nullable-inferred-result.kt",
+          "offset": 123,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_OVERRIDE_RESULT_MISMATCH",
+          "message": "Anonymous inferred result differs from inherited method",
+          "path": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/nullable-inferred-result.kt",
+          "line": 3,
+          "column": 60
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/unrelated-inferred-result",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/unrelated-inferred-result.kt",
+          "offset": 95,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_OVERRIDE_RESULT_MISMATCH",
+          "message": "Anonymous inferred result differs from inherited method",
+          "path": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/unrelated-inferred-result.kt",
+          "line": 2,
+          "column": 60
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/different-carrier-covariance",
+      "outcome": "unsupported_language",
+      "oracle_exit_code": 0,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/different-carrier-covariance.kt",
+          "offset": 83,
+          "category": "unsupported_language",
+          "code": "ANONYMOUS_OBJECT_SHAPE_UNSUPPORTED",
+          "message": "Covariant anonymous inferred results are unsupported",
+          "path": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/different-carrier-covariance.kt",
+          "line": 2,
+          "column": 52
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/lexical-suspend-type-parameters",
+      "outcome": "unsupported_language",
+      "oracle_exit_code": 0,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/lexical-suspend-type-parameters.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "ANONYMOUS_SUSPEND_TYPE_PARAMETERS_UNSUPPORTED",
+          "message": "Anonymous suspend overrides with lexical type variables are unsupported",
+          "path": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/lexical-suspend-type-parameters.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/unit-sam-parameter",
+      "outcome": "unsupported_language",
+      "oracle_exit_code": 0,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/unit-sam-parameter.kt",
+          "offset": 73,
+          "category": "unsupported_language",
+          "code": "KOTLIN_SAM_SIGNATURE_UNSUPPORTED",
+          "message": "Kotlin functional interface method metadata is unsupported",
+          "path": "/workspace/work/anonymous-suspend159-proof/reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/unit-sam-parameter.kt",
+          "line": 2,
+          "column": 38
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "frozen-inputs",
+      "outcome": "pass"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/ordinary-overrides-suspend.kt",
+    "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/suspend-overrides-ordinary.kt",
+    "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/missing-override.kt",
+    "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/ordinary-second-member-suspends.kt",
+    "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/wrong-result.kt",
+    "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/missing-member.kt",
+    "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/own-suspend-member.kt",
+    "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/generic-suspend-member.kt",
+    "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/unit-suspend-parameter.kt",
+    "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/nullable-unit-result.kt",
+    "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/nullable-inferred-result.kt",
+    "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/unrelated-inferred-result.kt",
+    "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/different-carrier-covariance.kt",
+    "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/lexical-suspend-type-parameters.kt",
+    "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/unit-sam-parameter.kt"
+  ],
+  "limitations": [
+    "Anonymous non-generic suspend overrides reuse ordinary continuation frames, with separate frames for every suspending implementation and continuation forwarding through erased generic bridges. Suspend fun-interface SAM literals preserve the continuation parameter; inferred/declared covariant returns are supported when their JVM carrier matches the inherited result. Fixed Java callers compile against official output and verify parked resumption, saved receiver/captures, primitive/reference/Unit results, two sequential resumes, base dispatch and direct Continuation ABI. Kotlin provider/frontend consumers are executed by the full mode. Own and generic suspend method declarations, Unit parameters and nullable Unit results remain explicit unsupported boundaries. No reflection, whole-application or performance measurement."
+  ],
+  "source_archive": {
+    "path": "reports/correctness/2026-11-26T075348824243Z-anonymous-suspend-methods/frozen-inputs.zip",
+    "sha256": "80a1ab79bdd23ee12294ee5f34bc7c3cb9de11e52658403586d42c770cd60625"
+  },
+  "counts": {
+    "pass": 8,
+    "invalid_rejected": 8,
+    "unsupported_language": 7
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_anonymous_suspend_methods.py",
+      "--candidate",
+      "/tmp/targets159-anonymous-suspend-final/debug/korrust",
+      "--source-root",
+      "/workspace/work/anonymous-suspend159-proof",
+      "--coroutines",
+      "/workspace/work/anonymous-suspend159-proof/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar"
+    ]
+  ]
+}

@@ -1,0 +1,1594 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T08:06:54.329719+00:00",
+  "status": "passed",
+  "compiler": {
+    "binary": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+    "sha256": "83474e412252d091eb7b1a8dc8da29df5db633852d118dcbd6f78c1b0f31d294",
+    "source_revision": "113510066"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "compose_runtime": {
+    "name": "AndroidX Compose Runtime",
+    "version": "1.11.0",
+    "coordinate": "androidx.compose.runtime:runtime-android:1.11.0",
+    "url": "https://dl.google.com/dl/android/maven2/androidx/compose/runtime/runtime-android/1.11.0/runtime-android-1.11.0.aar",
+    "sha256": "65a9e3c6b496e255bb54268ff4e44d3a6a316434d7e9310bdd940f41c2e0b6e7",
+    "classes_entry": "classes.jar",
+    "classes_sha256": "03aa2514a35fcf343e64c64841311860334262efee6bb0df5b6a963ba262e938",
+    "license": "Apache-2.0",
+    "purpose": "Differential validation of the zero-argument Unit Compose callback ABI using the Compose compiler plugin bundled with the pinned Kotlin compiler",
+    "annotations": {
+      "coordinate": "androidx.compose.runtime:runtime-annotation-android:1.11.0",
+      "url": "https://dl.google.com/dl/android/maven2/androidx/compose/runtime/runtime-annotation-android/1.11.0/runtime-annotation-android-1.11.0.aar",
+      "sha256": "6b22eab92c57305facaf62cc44f22aaa27442502cce41b7687b0d6617286b3a5",
+      "classes_entry": "classes.jar",
+      "classes_sha256": "5a704878278443e66d383a0523e146aacf1562d70646f3ac50ec2451a92ad8c6",
+      "license": "Apache-2.0"
+    }
+  },
+  "inputs": {
+    "files_sha256": {
+      "src/annotation_declarations.rs": "7f119a3bf7143ab38c9e9dfe7118824bbdb2fb54e0ecd2f34161ec75d0107600",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/annotation_files.rs": "0fe8ebba7bbd2c80fcdd6fda797b448ca8cd63945b100781361bf1e3ace02eaa",
+      "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "src/bytecode/anonymous_context.rs": "0864951c7a7e94772ee8e410c49175fed879358204aff745a1f7a315fc1b0283",
+      "src/bytecode/class_companion.rs": "b5c6f75d8c24b3edbe1ae2583693c31b511e4d456734b160d2904b7c6072a62c",
+      "src/bytecode/compose_lambdas.rs": "6355b1593355bb5aeacfbc0dcdfdcb0bc157d1ce995f9129dad742466f328f0d",
+      "src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+      "src/bytecode/defaults.rs": "8a1776d35697d05a53ffe6eef7556770ab03f027bcd4275b1b8f372605de6f32",
+      "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "src/bytecode/frames.rs": "b2e346435d7cb21fbcbf0ec248c8c54fa77273198f1321fb58d84c741e77caff",
+      "src/bytecode/inline.rs": "d1dbc06ea0c65d833333adb752ce2cdf05c5cc1678a99a6478440041d437aaea",
+      "src/bytecode/interfaces.rs": "e283e506529e64a83d7408f6dbd52d44336cc3a5d1e768428df46670cafd4c2b",
+      "src/bytecode/lambdas.rs": "a0addfd701db5b01d5e05acf16c21daec58c4f778a1d0b6bb228a73eee905e86",
+      "src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+      "src/bytecode/suspend.rs": "2f0f2488e5ec1c9ba4acdda9fc82cf88241dded475b50f94e2f997f94ddcfe22",
+      "src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+      "src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+      "src/bytecode.rs": "71d66f469aeef323104feed9892864ad865c65e163692b0bb9d0f2eb0df3e7f3",
+      "src/check.rs": "3fdd0f3fd5a2dd8e14a25e09840a561f5475057d29ce5d708d4b2be59a8c4f9f",
+      "src/check_annotation_placements.rs": "027e77c6a6db60f98262fbaf0f44be170c53b58b03d64ae6e8cc43cdb2dc1579",
+      "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "src/check_anonymous.rs": "3500f8dfc43a113c80ea57a2197b0589e723538e13d382119f821c829dee60d0",
+      "src/check_assignment_flow.rs": "be4520c694043891aa0f72f26e3f8cf73cd902c314660b9f1381c1e48f049a5e",
+      "src/check_binary_defaults.rs": "c01af9b25cad391997da8de4c7798c48709ac8081c3db6df31ef52082a3d7654",
+      "src/check_captures.rs": "fb33dcee574506b574ca15013bbe102990e6c15dba3744128c72761d361b90ba",
+      "src/check_class_delegation.rs": "1089bac71516daad07ec7245aa8594956feca30ecf926e19ff82c895caba7364",
+      "src/check_classes.rs": "a2c5cdd6f739971b0d96b04cd98080b5a1507a427f2cd10221ff65824fd03450",
+      "src/check_companion_properties.rs": "c974d1059e7cb92644cd1a186492200828341f64b7e95d0ae4c052356537edba",
+      "src/check_compose.rs": "668b2531a6d69e6fee9b847daec842778f218152cc5b2ad7c798b38e8c9733f3",
+      "src/check_compose_memo.rs": "93378cc0f54ae2d69e7b12ff8ef1f5de0d062814742485b20f84119919036af4",
+      "src/check_constructor_aliases.rs": "a64e341da62e7b292607926f34f5ad2a570f103f3a2141c40be6ff9bf1a94527",
+      "src/check_constructor_bridges.rs": "193f110cee019766603fe7d9798178e2f253d468c262f35994c939cd87377a29",
+      "src/check_constructor_inference.rs": "dd3d94a733c0acaea93af34f1e130c4338fc11127cbb7cba08f452d7c94d0d1e",
+      "src/check_contracts.rs": "06434fc5c0999ff69dfb902c50e7bc3b3d4802ae5d3592fbcf0496e9c3bb491d",
+      "src/check_control.rs": "6333d7c8a5465154b5e2e519a7598f576c38f7b6a9f6dd2b5b2f5ed60811f532",
+      "src/check_declarations.rs": "3872835bac8a3245225cc8137b694f504ec443d96d53b4a53acccfb3970c1b8b",
+      "src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+      "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "src/check_functions.rs": "2c218f0763da20df11cfdc29c7c9c0e30104977401080adee4be2089b87c93d4",
+      "src/check_initialization.rs": "9c56c8abd1eb964ad4e51ac03cdf7a40d73414a4c9984ae6e6525a37f6b5bdee",
+      "src/check_inner_classes.rs": "b799a4df016e056d127610e359ec06951e05e22e4778a7ffa31934e892cd6e05",
+      "src/check_interfaces.rs": "a04f31fbe876c148ea664b204a2af9c3d24148f6196fe6b05b1073c6c1044811",
+      "src/check_ir_walk.rs": "262c923e6aea04830f95f2f1f1eca8124b328401fdc5ce1890f027fda2d58e71",
+      "src/check_java_nullability.rs": "40e1e816200bc92d6d7e5ab5fa57b4e3e351967072da160996e5a888b3acb923",
+      "src/check_java_properties.rs": "f3da739960dcbcee99a9b205e29afd330defef89e1089e9a152d5d0efd0c51fd",
+      "src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+      "src/check_library.rs": "158bb446a247cb4e6547863f108b24de968ad660ac0e3d4222e1a60140543464",
+      "src/check_local_annotations.rs": "ad5d937aae27ec3bed4528322c068a39eca915a49c449b68b2c4453f87f1a770",
+      "src/check_member_extensions.rs": "4382ee7e5dccf7abb9105484ea769827fac64c149585714a94e7001e7792f4d6",
+      "src/check_objects.rs": "d45265fab0f33a9a095b80a6605ef7b0eb1af4f0a7fce21f3225b2d7dd12bc2d",
+      "src/check_operations.rs": "a15bdb306a10ac311beebe21b2186fd388ef0f7010a9e7e5ce98424b73248b22",
+      "src/check_overloads.rs": "a1a5066cd8bf1dd196ce49975678360f043fc2d48f1c1dcf7ce607f57e00bb43",
+      "src/check_references.rs": "a4df941b6ea706d209bc878a01cedea71c22e4a34b6ef3243d9ca8aa16c4aa86",
+      "src/check_relations.rs": "23394a060919428e05073a70a0ea6aeec883c4b3e9053f66f362504ee7331ea0",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+      "src/check_stable_properties.rs": "4b7b32b83094336d920362641e85e917979f09878cef431f51b023f1b6348873",
+      "src/check_unsigned.rs": "7c60ab78a2f2162d0beffbc79d41976a06bc6fb446c1cc9f91de10fc6072e606",
+      "src/check_varargs.rs": "6120b95639903fed551d9b1aecfd76258e236141327cbc8c750159754452c302",
+      "src/check_variant_signatures.rs": "72f821eb8c88daf402fbc6338a23d18940afb79009f46e1661e60b6211a1d216",
+      "src/classpath/aliases.rs": "60c8bf9aa2b36008312588e8c723457377a5101b95f8e091274fba2c70078388",
+      "src/classpath/archive.rs": "835e4a79bbbc5c7328ce6a540ed1a2ca975fc526278fe7c31fd9433e08cc56d5",
+      "src/classpath/compose_abi.rs": "d1e90dd0a0363cceb24bc2e246855e01a1ec2033166d817ed75c0fe2583accc1",
+      "src/classpath/import_classes.rs": "2835a7c9b72fd326d5881d0fbe41655b57f6d1b26b2e8b1bde6f71eaada580c1",
+      "src/classpath/inherited_classifiers.rs": "47ceea06db1785341706ba9e3d209cdd5c4ff3b4c73794319ba0db5322e383ae",
+      "src/classpath/inline_defaults.rs": "ad6ff8bb40c0b01eee78e30a70f15f2a912ab73307a3836840ce882bc597e8cb",
+      "src/classpath/jdk_modules.rs": "cd1a350e7f8e03cda618a1d919d4e6ee49aba7e9a26728178ebad5f73c4bd8f8",
+      "src/classpath/jvm_builtins.rs": "b8c6e4789a998c1b3737da4879a15d74eb453170c4b03542d4c8ae13f6e40e86",
+      "src/classpath/metadata.rs": "0ea4df900c144c46d9bb6b26b29975d5ecacd9166500017960f42c1dc338d909",
+      "src/classpath/nested.rs": "764dd9eaf0188f91ba018707557e72df76b9c44b0120c8d69574044c8f5e78e9",
+      "src/classpath/nullability_defaults.rs": "8edf9187cd6214380a936c0484c280c7b3f3a973212d3f830c5316feedd4724b",
+      "src/classpath/package_info.rs": "f3bd436a8c64d48216bae3a55a2a3e82a903d354a42b629928fe1af95197061a",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/signature.rs": "17f7cc47481089baf3293d8512713de12278a2dcfb2a17f2e75d29dcb8f153cf",
+      "src/classpath/singletons.rs": "836fe172f37cc9282e259ba446688b3d2d6bf34fde25ddc3973c1800f29c71a5",
+      "src/classpath/source.rs": "ccc26fe9e10953fe96b52075499d4037d6a0e3292b4c0bea02891aa357fb7307",
+      "src/classpath/source_enums.rs": "397f5372a015d13ed1028bf3a42641914d5f0023c5ff384296121976519f476a",
+      "src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+      "src/classpath/value_names.rs": "b231f34a49e980875429e79cdf63e3fe131ebf853d2104c798ac32a13c88440f",
+      "src/classpath.rs": "6c718a5900c8e1fc48e2181652558847870879979e0566b5ef55211139fa8b2e",
+      "src/compiled_inline/defaults.rs": "a6f89d16324008cb96c777009a26eed4bbb233f1ddf91ca91fc387d803c0b2eb",
+      "src/compiled_inline.rs": "97019b68e2b7f1f8c01efbb992d217633e3e7c516962b739251e1cd26f7b9bf1",
+      "src/const_eval.rs": "24319c4a5076f678ed53cbeeff7c52c4bdcf081c9f78485514326e92078e10fd",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/jvm_descriptor.rs": "3946ec2e66e89185c9d3e284f9d114e29e5e88d0a3eba52ec39fba2200d07ad2",
+      "src/lib.rs": "b32ce1eb31da5bfc99f9a60f5cdf12534db2c86f112f09304b66ab4b582c5fad",
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/metadata.rs": "af2e4b8f11696105d2677e699f33d743a4568521325644f22ca73ae2a7130d72",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/source_inline.rs": "d59ecaba2b32264cc4190594c19e5ec7e99e6cbb5db28b33c1eaca7c7aa404e5",
+      "src/syntax.rs": "deaddf60adb360c04a414d64dd24bb58c74a21b25b3a98d8dc2ef8be953d37bb",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525",
+      "tests/compose_callbacks/Binary.kt": "f9695512cc21ad2181120a03c386a8a743a84af72d58b5a3597b2a0cb5455d87",
+      "tests/compose_callbacks/BinaryProtocol.java": "3a0a2cd09f628601915a559d7a02789160e09f3f1749e16cfbfe077c13826b21",
+      "tests/compose_callbacks/Capture.java": "6a92e5b4dffa7ba5d077ab26785738bc19be478e4b75e312ab1e892ac74fffcc",
+      "tests/compose_callbacks/Consumer.kt": "9502adf175ce1c81915f956545ca34c0c8ee4b2b01f03a179b7bd01f53fb2cc7",
+      "tests/compose_callbacks/Instrument.java": "f3098eb9cb5e2831ff3527f6c4d407d4da7241121c1a699fc28f176e5edcbd6f",
+      "tests/compose_callbacks/LexicalBase.java": "ebc8ad1cd4da92d051a94fea4ebed0d5e3979004e0a7ba1e70124a0e64bc266e",
+      "tests/compose_callbacks/LexicalLibrary.kt": "c3843f50ee141c45fbe23513e51321c98939a99c2bdbc599f6b4bf87c80f2d1f",
+      "tests/compose_callbacks/Library.kt": "1ce96b7082b7ac270084dc02317b264186b074b6120cfc34fa9901f2dc5456f0",
+      "tests/compose_callbacks/Lookalike.kt": "09d278c3b0188d5d0298f91141d9a6db6897a232336580f2986982f3cf8c765f",
+      "tests/compose_callbacks/Memo.kt": "77f779041ffd1f2ecced2a79d4fed575a55b9ff0c985f9f581ca415e622d503b",
+      "tests/compose_callbacks/MemoProtocol.java": "d5542896609fe8bb2a59650340ab8f82a7ca515cb844a50703000a4b5ad9c3ce",
+      "tests/compose_callbacks/ProtocolCheck.java": "d82ecfcccf9e7af1ac423e03de1a2db651f166f49f9f885e7e8ec667f091b802",
+      "tests/compose_callbacks/Rejections.json": "c8c5a36e2bd7b54794080f28b0c0d5f57cdca01bc225c23ee04b89d692e2fe6b",
+      "tests/compose_callbacks.rs": "18394a9ac8a86e8ed9837927d02d1cc5223e9cb7830a7d1999e597fbdf43f160",
+      "tools/check_compose_callbacks.py": "6bc51405001431deda229f13555539fac6142a6b54f0d6b31987639685c33b0a",
+      "tools/setup_compose_reference.py": "33f1d51ed50068545c3638a6e386d4b9e183a38f78a7a8439983c0a8fa0a3a2a",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "references/compose-runtime.json": "0bc60ceda54c6b799eb6eceb915bf60e0bcd31be48163dc0d065c75de8d79500"
+    },
+    "bundle": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/inputs.zip",
+    "bundle_sha256": "6be461eec18ad9537bee07db2bb66ae74ebccd8b3f395d36d9de75af760738b1",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "compose_plugin_sha256": "e8b44d65a4ba5fb14f3e51d10fb605d7da2a0c35a9ee275c94ffd74cb3f2b11e",
+    "jdk_release_sha256": "ebbd70bf00bab6d39addf51969c5ff244030b86b29de400b9fb10612ebd3ceec",
+    "evidence_sha256": {
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/000.txt": "48ab82c2cc0ce9fbf6cb0984250820527ba17c9cf50b2a2e1951b1876a1ee3f7",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/001.txt": "be99a5328f58fbb11c4cd66e5231f60b090dc5e4402b401f20494b279bbea477",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/002.txt": "5679671ecd70253a31724a38e50ff0e01c3dc154db54c18d6ca1659c8075869b",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/003.txt": "73d6bcc7dba7c1758e0ae5e876f682da1e76d7b625ab0a67f8367342802b0ae7",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/004.txt": "7d819a7959b58dd9788deea1ca3aa493ab38ac02bc2c3a1b100eff732cc4585c",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/005.txt": "c7a7afa6f3313326b49915c62af77363e52ba1cf46ab76aebae042453fc863a8",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/006.txt": "ea95f916344b6a9749ad220a4da3f490a95d9c442213583594998bdc2dbb8a67",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/007.txt": "e55f923eb6a67d2f3fb46b969c3134d4bdc36508ae3a0778e87f2a28c81ebf08",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/008.txt": "f6c8545214c99852b1af64491ff31e93b3c944398f9c904bfdfa7b8686ac586f",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/009.txt": "b1109244078d3fe7ae6a96fa565d1d2474a40648ad078dd37cbab705b137bf7c",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/010.txt": "6b8d91bdaadc4b7a83f3ab7daad033f09cdf7035133487a6b7ce7cf664f289c3",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/011.txt": "a46a1bc2de273f992292bb857bbc3096621936b8bb489e861fdca44304c222f6",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/012.txt": "e7644cb4001fb01ef14925d0f1c50ff2e38803bdd719d4b7a7605038fb8894d7",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/013.txt": "63593b43c5a9502b33bd9185de94af484e9d8a023dd122a606e0d3e1615bd565",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/014.txt": "ceb2582651f50b9d12bbc71bfa50fcfa38a0caeb6529f9dcf28194f9ec9fae36",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/015.txt": "6056abdde9c4fc863162b285304e95c2ad295ee4d1c6bab045c0a2c73a920e4c",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/016.txt": "6cdad817a71e8f359ffe91b9557bf0efbb636857877d8081f2e05afceb0627f8",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/017.txt": "58b11e02fa4a1661367a4de64318c29d86f38ded0f12e3e9408ed8cef9527025",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/018.txt": "92b5f42b6c25288d11a407ba4b27acd8765322c45eaf071045495d6e5ebcf107",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/019.txt": "01accdf5bb103ad2df06e12460cba5d19f68a21b8729eecdfafe45b24d0f178e",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/020.txt": "2dcf04e68eb84f52a3c2cac12d5d01a2ff794263c08582144bddd045c076ce8e",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/021.txt": "3142a365683f73ec2ac18bdfa8d9f2d75902fa4b39fe10cb6560fc87f6078321",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/022.txt": "75d332cc27acd7ecb5533c43ea61df742d2b121b043b6f737558a7dba7f40952",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/023.txt": "fc5840bd18a21a08ff931b512e6e0911eb82417b6bcac5535aaade735918b8f0",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/024.txt": "4a5af90916b2db0a83f3f4f6d4a461fcc8fafb159da513351b9e71c309f04f80",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/025.txt": "b1d847a82e72c72d4a0c5f0f4f3fcbae7bf3388c01af05d272965e331d0ad5b7",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/026.txt": "74e5dede20645004e9b2bede6334dcf34d8114fd03bef0956a36d19c513a9b99",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/027.txt": "93f27219ece6c850541ee472ef0529f0e4dbc9589254ccb71181f069670490ff",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/028.txt": "8876543781b5a6695ff003c9da9367641f7ab10f623b2bf9fc72fb79df35ad99",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/029.txt": "75dd91dbd16c7a609dd6a328b2a87ffa07755ed1e6c5287e13d10b9b51238b1b",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/030.txt": "de067363b1c9c4399c5cbe8c94f29fd51fc3a6c0d5008a6db4ffd742455d0f56",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/031.txt": "dc31326ee466affbe9f7a60568e15f498aa0cfe38b374e71dcca4b31e89522b8",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/032.txt": "7fb6e3a5c623135141e231785297e0f17c9754ee138830895bd8f8e3c07a5ddb",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/033.txt": "f0c12ea6553a1e497c37b66262ff65faa37887d1073940dfc7fd0f4341db2c4f",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/034.txt": "4067c52e637510e01b4322b136320766fb88d43fa49cd05872006f0591395948",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/035.txt": "03ed8cdc65737ba32202edd287ab9de3541099e626df278f99909074c1805410",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/036.txt": "885976178837d4228c3edf1a2f3951fcbc4a0ed75a41c3020fa97a4288dba10d",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/037.txt": "7e10cc4cbcf0acaf441f6bf9c51f867851a34638196b0bc2e9750b00adc8ebf5",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/038.txt": "317517f68cb5252d4e063d95f01e8ca9c736f4120a24e5821b5f99bd2e8644f9",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/039.txt": "09c83bba9ae99e7fe2fe9b9f7bbf75e6aded8edf6e30fe9645fd1f86ef2366ff",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/040.txt": "61e04dff814158af7e390395ba88a7225faac1b1ec9ca4b074844422679838bc",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/041.txt": "30f892140e81c3db0550d6f5095edb8dbe56d4fc19f928166ba2da32272e937c",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/042.txt": "4d9733f0e7a8d7464dc37b2402a7a4e733d8b1ea035b4b271a17bf91bf6cf24e",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/043.txt": "5f19402d3e5e2aaa0a4f2879c23cf2c55a092cc42cc8cec187832e61d3f5b5e3",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/044.txt": "4a74e03ef67838905a25b0a76874111c0e10f07eae250a41ec04620dde0bfb52",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/045.txt": "318b4ffa8c2aa2866ab2dd911fe0fe7ff5d690c27990c94c76599d78903fe967",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/046.txt": "c9ea0d95f04cb85229202cde5bc31a9d6a50af8542f09d7d2fe4284e585a7c91",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/047.txt": "f5bfe19d15ba12db858362087f18ef60c91e9cdcb7a815382a6053d2b5f398ab",
+      "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/inputs.zip": "6be461eec18ad9537bee07db2bb66ae74ebccd8b3f395d36d9de75af760738b1"
+    }
+  },
+  "commands": [
+    {
+      "label": "compile Java lexical superclass",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/compose_callbacks/LexicalBase.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/000.txt"
+    },
+    {
+      "label": "compile hidden-argument recorder",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/compose_callbacks/Capture.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/001.txt"
+    },
+    {
+      "label": "compile transformed binary dependency",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/compose_callbacks/Library.kt",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/compose_callbacks/Lookalike.kt",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/compose_callbacks/LexicalLibrary.kt",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/compose_callbacks/Binary.kt",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/compose_callbacks/Memo.kt",
+        "-no-stdlib",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/002.txt"
+    },
+    {
+      "label": "compile descriptor-preserving entry probe",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-compiler.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/instrumenter",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/compose_callbacks/Instrument.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/003.txt"
+    },
+    {
+      "label": "instrument pinned binary method arguments",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/instrumenter:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-compiler.jar",
+        "Instrument",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency/composeprobe/BinaryKt.class"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/004.txt"
+    },
+    {
+      "label": "probe pinned memo callee ABI",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/instrumenter:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-compiler.jar",
+        "Instrument",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency/composeprobe/MemoKt.class"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/005.txt"
+    },
+    {
+      "label": "compile callback consumer official",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "-no-stdlib",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/compose_callbacks/Consumer.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/006.txt"
+    },
+    {
+      "label": "compile callback consumer candidate",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/compose_callbacks/Consumer.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/007.txt"
+    },
+    {
+      "label": "fixed Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/official:/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/callers",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/compose_callbacks/ProtocolCheck.java",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/compose_callbacks/BinaryProtocol.java",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/compose_callbacks/MemoProtocol.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/008.txt"
+    },
+    {
+      "label": "verified runtime protocol official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/callers:/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/official:/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "composeprobe.ProtocolCheck"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/009.txt"
+    },
+    {
+      "label": "public JVM signatures official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/official",
+        "composeprobe.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/010.txt"
+    },
+    {
+      "label": "verified runtime protocol candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/callers:/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/candidate:/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "composeprobe.ProtocolCheck"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/011.txt"
+    },
+    {
+      "label": "public JVM signatures candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/candidate",
+        "composeprobe.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/012.txt"
+    },
+    {
+      "label": "oracle valid unsupported boundaries",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/argument.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/result.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/receiver.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/nullable.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/nested-type.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/inline.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/generic.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/nested-callback.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/composable-declaration.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/generic-composable.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/result-composable.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/conditional-composable.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/mixed-appliers.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/object-composable.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/fixed-callback-target.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/unknown-capture-stability.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/stable-interface-capture.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/inherited-stability-capture.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/conditional-memoization.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/mutable-cell-capture.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/memoized-result-shape.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/memoized-arity-shape.kt",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/generic-runtime-stability.kt",
+        "-no-stdlib",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/013.txt"
+    },
+    {
+      "label": "candidate boundary/argument",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/argument.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-argument"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/014.txt"
+    },
+    {
+      "label": "candidate boundary/result",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/result.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-result"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/015.txt"
+    },
+    {
+      "label": "candidate boundary/receiver",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/receiver.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-receiver"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/016.txt"
+    },
+    {
+      "label": "candidate boundary/nullable",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/nullable.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-nullable"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/017.txt"
+    },
+    {
+      "label": "candidate boundary/nested-type",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/nested-type.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-nested-type"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/018.txt"
+    },
+    {
+      "label": "candidate boundary/inline",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/inline.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-inline"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/019.txt"
+    },
+    {
+      "label": "candidate boundary/generic",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/generic.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-generic"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/020.txt"
+    },
+    {
+      "label": "candidate boundary/nested-callback",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/nested-callback.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-nested-callback"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/021.txt"
+    },
+    {
+      "label": "candidate boundary/composable-declaration",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/composable-declaration.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-composable-declaration"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/022.txt"
+    },
+    {
+      "label": "oracle invalid boundary/wrong-lambda-arity",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/wrong-lambda-arity.kt",
+        "-no-stdlib",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-official-wrong-lambda-arity"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/023.txt"
+    },
+    {
+      "label": "candidate boundary/wrong-lambda-arity",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/wrong-lambda-arity.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-wrong-lambda-arity"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/024.txt"
+    },
+    {
+      "label": "oracle invalid boundary/nonlocal-return",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/nonlocal-return.kt",
+        "-no-stdlib",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-official-nonlocal-return"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/025.txt"
+    },
+    {
+      "label": "candidate boundary/nonlocal-return",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/nonlocal-return.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-nonlocal-return"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/026.txt"
+    },
+    {
+      "label": "candidate boundary/generic-composable",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/generic-composable.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-generic-composable"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/027.txt"
+    },
+    {
+      "label": "candidate boundary/result-composable",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/result-composable.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-result-composable"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/028.txt"
+    },
+    {
+      "label": "candidate boundary/conditional-composable",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/conditional-composable.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-conditional-composable"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/029.txt"
+    },
+    {
+      "label": "oracle invalid boundary/outside-composable",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/outside-composable.kt",
+        "-no-stdlib",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-official-outside-composable"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/030.txt"
+    },
+    {
+      "label": "candidate boundary/outside-composable",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/outside-composable.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-outside-composable"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/031.txt"
+    },
+    {
+      "label": "candidate boundary/mixed-appliers",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/mixed-appliers.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-mixed-appliers"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/032.txt"
+    },
+    {
+      "label": "candidate boundary/object-composable",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/object-composable.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-object-composable"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/033.txt"
+    },
+    {
+      "label": "candidate boundary/fixed-callback-target",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/fixed-callback-target.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-fixed-callback-target"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/034.txt"
+    },
+    {
+      "label": "candidate boundary/unknown-capture-stability",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/unknown-capture-stability.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-unknown-capture-stability"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/035.txt"
+    },
+    {
+      "label": "candidate boundary/stable-interface-capture",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/stable-interface-capture.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-stable-interface-capture"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/036.txt"
+    },
+    {
+      "label": "candidate boundary/inherited-stability-capture",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/inherited-stability-capture.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-inherited-stability-capture"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/037.txt"
+    },
+    {
+      "label": "candidate boundary/conditional-memoization",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/conditional-memoization.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-conditional-memoization"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/038.txt"
+    },
+    {
+      "label": "candidate boundary/mutable-cell-capture",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/mutable-cell-capture.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-mutable-cell-capture"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/039.txt"
+    },
+    {
+      "label": "candidate boundary/memoized-result-shape",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/memoized-result-shape.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-memoized-result-shape"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/040.txt"
+    },
+    {
+      "label": "candidate boundary/memoized-arity-shape",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/memoized-arity-shape.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-memoized-arity-shape"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/041.txt"
+    },
+    {
+      "label": "candidate boundary/generic-runtime-stability",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/generic-runtime-stability.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-candidate-generic-runtime-stability"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/042.txt"
+    },
+    {
+      "label": "missing runtime ABI",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/missing-runtime.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/missing-runtime"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/043.txt"
+    },
+    {
+      "label": "untransformed binary dependency",
+      "argv": [
+        "/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/compose_callbacks/Library.kt",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/compose_callbacks/Lookalike.kt",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/compose_callbacks/LexicalLibrary.kt",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/compose_callbacks/Binary.kt",
+        "/workspace/work/targets159/source-composable-types-freeze2/tests/compose_callbacks/Memo.kt",
+        "-no-stdlib",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/untransformed"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/044.txt"
+    },
+    {
+      "label": "reject untransformed callback ABI",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/missing-runtime.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/untransformed:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/untransformed-candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/045.txt"
+    },
+    {
+      "label": "incompatible runtime class",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/fake-runtime",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/Composer.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/046.txt"
+    },
+    {
+      "label": "reject incompatible runtime ABI",
+      "argv": [
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/missing-runtime.kt",
+        "-cp",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/fake-runtime:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/fake-runtime-candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T080654329719Z-compose-callbacks/047.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "runtime/official",
+      "outcome": "pass",
+      "protocol_scenarios": 128,
+      "additional_assertions": [
+        "interface and top-level hosts",
+        "mutable captures",
+        "nullable reference and wide captures",
+        "local return",
+        "disabled tracing",
+        "abrupt exception",
+        "lexical dispatch and initialization",
+        "nested callback remembered identity and invalidation",
+        "primitive and String value comparisons versus unannotated interface identity",
+        "nullable host and wide captures",
+        "captureless literal and callable reference caching",
+        "deferred runtime side effects and source markers",
+        "exact binary callee flags and defaults",
+        "nearer and nested receiver precedence",
+        "labeled and nearest this"
+      ]
+    },
+    {
+      "id": "runtime/candidate",
+      "outcome": "pass",
+      "protocol_scenarios": 128,
+      "additional_assertions": [
+        "interface and top-level hosts",
+        "mutable captures",
+        "nullable reference and wide captures",
+        "local return",
+        "disabled tracing",
+        "abrupt exception",
+        "lexical dispatch and initialization",
+        "nested callback remembered identity and invalidation",
+        "primitive and String value comparisons versus unannotated interface identity",
+        "nullable host and wide captures",
+        "captureless literal and callable reference caching",
+        "deferred runtime side effects and source markers",
+        "exact binary callee flags and defaults",
+        "nearer and nested receiver precedence",
+        "labeled and nearest this"
+      ]
+    },
+    {
+      "id": "public-JVM-signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "oracle-boundary/argument",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/argument",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/argument.kt",
+        "offset": 54,
+        "category": "unsupported_language",
+        "code": "LIBRARY_DECLARATION_UNSUPPORTED",
+        "message": "Unsupported library declaration",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/argument.kt",
+        "line": 1,
+        "column": 55
+      }
+    },
+    {
+      "id": "oracle-boundary/result",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/result",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/result.kt",
+        "offset": 50,
+        "category": "unsupported_language",
+        "code": "LIBRARY_DECLARATION_UNSUPPORTED",
+        "message": "Unsupported library declaration",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/result.kt",
+        "line": 1,
+        "column": 51
+      }
+    },
+    {
+      "id": "oracle-boundary/receiver",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/receiver",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/receiver.kt",
+        "offset": 54,
+        "category": "unsupported_language",
+        "code": "LIBRARY_DECLARATION_UNSUPPORTED",
+        "message": "Unsupported library declaration",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/receiver.kt",
+        "line": 1,
+        "column": 55
+      }
+    },
+    {
+      "id": "oracle-boundary/nullable",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/nullable",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/nullable.kt",
+        "offset": 54,
+        "category": "unsupported_language",
+        "code": "LIBRARY_DECLARATION_UNSUPPORTED",
+        "message": "Unsupported library declaration",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/nullable.kt",
+        "line": 1,
+        "column": 55
+      }
+    },
+    {
+      "id": "oracle-boundary/nested-type",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/nested-type",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/nested-type.kt",
+        "offset": 55,
+        "category": "unsupported_language",
+        "code": "LIBRARY_DECLARATION_UNSUPPORTED",
+        "message": "Unsupported library declaration",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/nested-type.kt",
+        "line": 1,
+        "column": 56
+      }
+    },
+    {
+      "id": "oracle-boundary/inline",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/inline",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/inline.kt",
+        "offset": 50,
+        "category": "unsupported_language",
+        "code": "LIBRARY_DECLARATION_UNSUPPORTED",
+        "message": "Unsupported library declaration",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/inline.kt",
+        "line": 1,
+        "column": 51
+      }
+    },
+    {
+      "id": "oracle-boundary/generic",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/generic",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/generic.kt",
+        "offset": 52,
+        "category": "unsupported_language",
+        "code": "LIBRARY_DECLARATION_UNSUPPORTED",
+        "message": "Unsupported library declaration",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/generic.kt",
+        "line": 1,
+        "column": 53
+      }
+    },
+    {
+      "id": "oracle-boundary/nested-callback",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/nested-callback",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/nested-callback.kt",
+        "offset": 77,
+        "category": "unsupported_language",
+        "code": "COMPOSE_NESTED_CALLBACK_UNSUPPORTED",
+        "message": "Compose callbacks in nested or inline contexts are unsupported",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/nested-callback.kt",
+        "line": 1,
+        "column": 78
+      }
+    },
+    {
+      "id": "oracle-boundary/composable-declaration",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/composable-declaration",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/composable-declaration.kt",
+        "offset": 0,
+        "category": "unsupported_language",
+        "code": "COMPILER_PLUGIN_UNSUPPORTED",
+        "message": "Annotation androidx/compose/runtime/Composable requires unsupported compiler plugin transformations",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/composable-declaration.kt",
+        "line": 1,
+        "column": 1
+      }
+    },
+    {
+      "id": "oracle-boundary/wrong-lambda-arity",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/wrong-lambda-arity",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/wrong-lambda-arity.kt",
+        "offset": 49,
+        "category": "unclassified",
+        "code": "UNCLASSIFIED",
+        "message": "Lambda parameter count differs from expected function type",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/wrong-lambda-arity.kt",
+        "line": 1,
+        "column": 50
+      }
+    },
+    {
+      "id": "oracle-boundary/nonlocal-return",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/nonlocal-return",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/nonlocal-return.kt",
+        "offset": 51,
+        "category": "invalid_kotlin",
+        "code": "NON_LOCAL_RETURN_NOT_ALLOWED",
+        "message": "Non-local return requires an inline lambda",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/nonlocal-return.kt",
+        "line": 1,
+        "column": 52
+      }
+    },
+    {
+      "id": "oracle-boundary/generic-composable",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/generic-composable",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/generic-composable.kt",
+        "offset": 104,
+        "category": "unsupported_language",
+        "code": "LIBRARY_DECLARATION_UNSUPPORTED",
+        "message": "Unsupported library declaration",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/generic-composable.kt",
+        "line": 2,
+        "column": 72
+      }
+    },
+    {
+      "id": "oracle-boundary/result-composable",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/result-composable",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/result-composable.kt",
+        "offset": 102,
+        "category": "unsupported_language",
+        "code": "LIBRARY_DECLARATION_UNSUPPORTED",
+        "message": "Unsupported library declaration",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/result-composable.kt",
+        "line": 2,
+        "column": 71
+      }
+    },
+    {
+      "id": "oracle-boundary/conditional-composable",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/conditional-composable",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/conditional-composable.kt",
+        "offset": 114,
+        "category": "unsupported_language",
+        "code": "COMPOSE_CONTROL_FLOW_UNSUPPORTED",
+        "message": "Composable control flow requires unsupported group lowering",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/conditional-composable.kt",
+        "line": 2,
+        "column": 89
+      }
+    },
+    {
+      "id": "oracle-boundary/outside-composable",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/outside-composable",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/outside-composable.kt",
+        "offset": 42,
+        "category": "unsupported_language",
+        "code": "COMPOSE_CALL_CONTEXT_UNSUPPORTED",
+        "message": "Composable binary calls require a supported composable body",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/outside-composable.kt",
+        "line": 2,
+        "column": 17
+      }
+    },
+    {
+      "id": "oracle-boundary/mixed-appliers",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/mixed-appliers",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/mixed-appliers.kt",
+        "offset": 133,
+        "category": "unsupported_language",
+        "code": "COMPOSE_APPLIER_MISMATCH",
+        "message": "Composable calls require incompatible appliers",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/mixed-appliers.kt",
+        "line": 3,
+        "column": 77
+      }
+    },
+    {
+      "id": "oracle-boundary/object-composable",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/object-composable",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/object-composable.kt",
+        "offset": 102,
+        "category": "unsupported_language",
+        "code": "LIBRARY_DECLARATION_UNSUPPORTED",
+        "message": "Unsupported library declaration",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/object-composable.kt",
+        "line": 2,
+        "column": 71
+      }
+    },
+    {
+      "id": "oracle-boundary/fixed-callback-target",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/fixed-callback-target",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/fixed-callback-target.kt",
+        "offset": 68,
+        "category": "unsupported_language",
+        "code": "LIBRARY_DECLARATION_UNSUPPORTED",
+        "message": "Unsupported library declaration",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/fixed-callback-target.kt",
+        "line": 1,
+        "column": 69
+      }
+    },
+    {
+      "id": "oracle-boundary/unknown-capture-stability",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/unknown-capture-stability",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/unknown-capture-stability.kt",
+        "offset": 145,
+        "category": "unsupported_language",
+        "code": "COMPOSE_BODY_LAMBDA_UNSUPPORTED",
+        "message": "Unsupported function creation or capture stability in Compose callback",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/unknown-capture-stability.kt",
+        "line": 3,
+        "column": 88
+      }
+    },
+    {
+      "id": "oracle-boundary/stable-interface-capture",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/stable-interface-capture",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/stable-interface-capture.kt",
+        "offset": 135,
+        "category": "unsupported_language",
+        "code": "COMPOSE_BODY_LAMBDA_UNSUPPORTED",
+        "message": "Unsupported function creation or capture stability in Compose callback",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/stable-interface-capture.kt",
+        "line": 2,
+        "column": 108
+      }
+    },
+    {
+      "id": "oracle-boundary/inherited-stability-capture",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/inherited-stability-capture",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/inherited-stability-capture.kt",
+        "offset": 147,
+        "category": "unsupported_language",
+        "code": "COMPOSE_BODY_LAMBDA_UNSUPPORTED",
+        "message": "Unsupported function creation or capture stability in Compose callback",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/inherited-stability-capture.kt",
+        "line": 2,
+        "column": 120
+      }
+    },
+    {
+      "id": "oracle-boundary/conditional-memoization",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/conditional-memoization",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/conditional-memoization.kt",
+        "offset": 117,
+        "category": "unsupported_language",
+        "code": "COMPOSE_CONTROL_FLOW_UNSUPPORTED",
+        "message": "Composable control flow requires unsupported group lowering",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/conditional-memoization.kt",
+        "line": 2,
+        "column": 90
+      }
+    },
+    {
+      "id": "oracle-boundary/mutable-cell-capture",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/mutable-cell-capture",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/mutable-cell-capture.kt",
+        "offset": 125,
+        "category": "unsupported_language",
+        "code": "COMPOSE_BODY_LAMBDA_UNSUPPORTED",
+        "message": "Mutable capture must be initialized in the enclosing block",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/mutable-cell-capture.kt",
+        "line": 2,
+        "column": 98
+      }
+    },
+    {
+      "id": "oracle-boundary/memoized-result-shape",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/memoized-result-shape",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/memoized-result-shape.kt",
+        "offset": 103,
+        "category": "unsupported_language",
+        "code": "COMPOSE_BODY_LAMBDA_UNSUPPORTED",
+        "message": "Unsupported function creation or capture stability in Compose callback",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/memoized-result-shape.kt",
+        "line": 2,
+        "column": 73
+      }
+    },
+    {
+      "id": "oracle-boundary/memoized-arity-shape",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/memoized-arity-shape",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/memoized-arity-shape.kt",
+        "offset": 103,
+        "category": "unsupported_language",
+        "code": "COMPOSE_BODY_LAMBDA_UNSUPPORTED",
+        "message": "Unsupported function creation or capture stability in Compose callback",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/memoized-arity-shape.kt",
+        "line": 2,
+        "column": 72
+      }
+    },
+    {
+      "id": "oracle-boundary/generic-runtime-stability",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate-boundary/generic-runtime-stability",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/generic-runtime-stability.kt",
+        "offset": 151,
+        "category": "unsupported_language",
+        "code": "COMPOSE_ARGUMENT_STABILITY_UNSUPPORTED",
+        "message": "Unsupported compiled Compose stability parameter scheme",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/generic-runtime-stability.kt",
+        "line": 3,
+        "column": 79
+      }
+    },
+    {
+      "id": "missing-runtime",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/missing-runtime.kt",
+        "offset": 53,
+        "category": "unsupported_language",
+        "code": "COMPOSE_RUNTIME_ABI_UNSUPPORTED",
+        "message": "Compose runtime does not expose the supported callback protocol",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/missing-runtime.kt",
+        "line": 1,
+        "column": 54
+      }
+    },
+    {
+      "id": "untransformed-callback",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/missing-runtime.kt",
+        "offset": 44,
+        "category": "unsupported_language",
+        "code": "LIBRARY_DECLARATION_UNSUPPORTED",
+        "message": "Unsupported library declaration",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/missing-runtime.kt",
+        "line": 1,
+        "column": 45
+      }
+    },
+    {
+      "id": "incompatible-runtime",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/missing-runtime.kt",
+        "offset": 53,
+        "category": "unsupported_language",
+        "code": "COMPOSE_RUNTIME_ABI_UNSUPPORTED",
+        "message": "Compose runtime does not expose the supported callback protocol",
+        "path": "/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/missing-runtime.kt",
+        "line": 1,
+        "column": 54
+      }
+    },
+    {
+      "id": "frozen-fixtures",
+      "outcome": "pass"
+    }
+  ],
+  "limitations": [
+    "Only literal zero-argument Unit Compose callbacks passed to supported noninline, nongeneric binary methods are lowered",
+    "Source composable declarations and receiver/argument/result/suspend/nullable/generic composable callback shapes remain unsupported; binary composable calls accept only supported static noninline nongeneric Unit file-facade methods and straight-line groups; nested ordinary Unit functions support up to one parameter and stable scalar/String or annotation-free Kotlin interface captures; annotated or unknown class stability, mutable cells and conditional memoization remain explicit unsupported boundaries",
+    "Runtime protocol is pinned to AndroidX Compose Runtime 1.11.0 and the Kotlin 2.3.21 bundled plugin; keys and generated class names are compiler-specific",
+    "Composer and RecomposeScope are controlled proxies; actual pinned composableLambdaInstance wrappers and generated callback bodies execute, without a real Composition/Recomposer or Android execution claim"
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/setup_compose_reference.py"
+    ],
+    [
+      "python3",
+      "tools/check_compose_callbacks.py",
+      "--candidate",
+      "/tmp/targets159-source-composable-types/debug/korrust",
+      "--compiler-source",
+      "/workspace/work/targets159/source-composable-types-freeze2"
+    ]
+  ],
+  "counts": {
+    "pass": 61
+  },
+  "source_snapshot": "/workspace/work/targets159/source-composable-types-freeze2",
+  "evidence_text_normalization": "Copied text logs omit trailing whitespace and trailing empty lines; input bundle copied unchanged."
+}

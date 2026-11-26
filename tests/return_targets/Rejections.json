@@ -1,0 +1,22 @@
+[
+  {
+    "id": "unknown-label",
+    "source": "fun invalid(): Int = run { return@missing 1 }"
+  },
+  {
+    "id": "wrong-payload",
+    "source": "fun invalid(): String { val action: () -> String = out@{ run { return@out 1 }; \"ok\" }; return action() }"
+  },
+  {
+    "id": "forbidden-plain",
+    "source": "import targets.plain\nfun invalid(): Int { val action: () -> Int = out@{ plain { return@out 1 }; 2 }; return action() }"
+  },
+  {
+    "id": "forbidden-cross",
+    "source": "import targets.cross\nfun invalid(): Int { val action: () -> Int = out@{ cross { return@out 1 }; 2 }; return action() }"
+  },
+  {
+    "id": "forbidden-held",
+    "source": "import targets.held\nfun invalid(): Int { val action: () -> Int = out@{ held { return@out 1 }; 2 }; return action() }"
+  }
+]

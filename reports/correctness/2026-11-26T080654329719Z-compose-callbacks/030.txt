@@ -1,0 +1,7 @@
+$ /workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/bin/kotlinc /tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/outside-composable.kt -no-stdlib -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -Xlambdas=class -Xplugin=/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/compose-compiler-plugin.jar -P plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false -cp /tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/dependency:/workspace/work/targets159/source-composable-types-freeze2/references/compose/runtime.jar:/workspace/work/targets159/source-composable-types-freeze2/references/compose/annotations.jar:/workspace/work/targets159/source-composable-types-freeze2/references/kotlinc/lib/kotlin-stdlib.jar -d /tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/boundary-official-outside-composable
+/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/outside-composable.kt:2:5: error: functions which invoke @Composable functions must be marked with the @Composable annotation
+fun invalid() { paint() }
+    ^^^^^^^
+/tmp/2026-11-26T080654329719Z-compose-callbacks-txdh0h3u/outside-composable.kt:2:17: error: @Composable invocations can only happen from the context of a @Composable function
+fun invalid() { paint() }
+                ^^^^^

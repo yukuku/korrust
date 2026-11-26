@@ -1002,6 +1002,7 @@ impl Checker<'_> {
                 composer: None,
                 composable_target: None,
                 composable_body: false,
+                label_returns: ReturnContext::default(),
                 inline_argument_modes: Vec::new(),
                 inline_analysis: false,
                 public_inline_body: self.public_inline_body,
