@@ -40,7 +40,7 @@ BOUNDARIES = [
     ('internal_library', False, 'fun bad() = newfamilies.dependency.InternalKotlinType::class', 'INVALID_CLASS_LITERAL'),
     ('private_array', False, 'fun bad(): kotlin.reflect.KClass<*> = Array<newfamilies.dependency.PrivateKotlinType>::class', 'INVALID_CLASS_LITERAL'),
     ('internal_array', False, 'fun bad(): kotlin.reflect.KClass<*> = Array<newfamilies.dependency.InternalKotlinType>::class', 'INVALID_CLASS_LITERAL'),
-    ('public_java_nested', True, 'fun boundary(): kotlin.reflect.KClass<*> = java.util.Map.Entry::class', 'CLASS_LITERAL_VISIBILITY_UNSUPPORTED'),
+    ('public_java_nested', True, 'fun boundary(): kotlin.reflect.KClass<*> = java.util.Map.Entry::class', None),
     ('source_internal', True, 'internal class Hidden\nfun boundary(): kotlin.reflect.KClass<*> = Hidden::class', 'CLASS_LITERAL_VISIBILITY_UNSUPPORTED'),
     ('private_library', False, 'fun bad() = newfamilies.dependency.PrivateKotlinType::class', 'INVALID_CLASS_LITERAL'),
     ('internal_outer', False, 'fun bad() = newfamilies.dependency.InternalOuter.PublicNested::class', 'INVALID_CLASS_LITERAL'),
@@ -229,6 +229,10 @@ def main():
             destination = work / ('candidate-' + name)
             actual = compile_provider('candidate', [path], destination)
             assert bool(oracle.returncode) != valid, name + ': oracle classification changed'
+            if code is None:
+                assert valid and actual.returncode == 0, name + ': ' + actual.stderr
+                case('boundary/' + name, official_accepts=True, candidate_accepts=True)
+                continue
             assert actual.returncode and not list(destination.rglob('*.class')), name + ': must reject without classes'
             assert code in actual.stderr, name + ': ' + actual.stderr
             category = 'unsupported_language' if valid or name == 'jvm_binary_name' else 'invalid_kotlin'
