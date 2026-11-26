@@ -3,12 +3,14 @@ use std::path::PathBuf;
 
 mod aliases;
 mod archive;
+mod import_classes;
 mod jdk_modules;
 pub(crate) mod jvm_builtins;
 mod metadata;
 pub(crate) mod nested;
 mod package_info;
 mod signature;
+mod singletons;
 mod source;
 mod static_imports;
 mod value_names;
@@ -73,6 +75,7 @@ pub(crate) struct Classpath {
     friends: std::collections::HashSet<PathBuf>,
     value_scopes: std::cell::RefCell<std::collections::HashMap<String, value_names::ValueScope>>,
     lexical_parents: std::cell::RefCell<std::collections::HashMap<String, String>>,
+    nested_access: std::cell::RefCell<std::collections::HashMap<String, u16>>,
     source_files: std::cell::RefCell<std::collections::HashMap<String, (String, bool)>>,
     source_default_accessors:
         std::cell::RefCell<std::collections::HashMap<(String, String), SourceBackingField>>,
@@ -83,6 +86,7 @@ pub(crate) struct Classpath {
         std::cell::RefCell<std::collections::HashMap<(String, String, String), Vec<String>>>,
     package_names: std::cell::RefCell<std::collections::HashMap<String, Vec<String>>>,
     sources: std::cell::RefCell<std::collections::HashSet<String>>,
+    singletons: std::cell::RefCell<std::collections::HashSet<String>>,
     package_index: std::cell::RefCell<std::collections::HashMap<String, PackageIndex>>,
 }
 
@@ -213,6 +217,7 @@ pub(crate) struct LibraryTypeAlias {
 
 #[derive(Clone, Debug)]
 pub(crate) struct LibraryMethod {
+    pub vararg_index: Option<usize>,
     pub contracts: Vec<ContractEffect>,
     pub value_dispatch: bool,
     pub suspend_: bool,
@@ -283,6 +288,25 @@ pub(crate) enum InlineConstant {
 }
 
 impl JavaMethod {
+    pub(crate) fn vararg_index(&self) -> Option<usize> {
+        self.library
+            .as_ref()
+            .and_then(|library| library.vararg_index)
+            .or_else(|| {
+                (self.access & 0x80 != 0).then(|| {
+                    self.kotlin_params
+                        .as_ref()
+                        .map_or_else(
+                            || {
+                                signature::method(&self.descriptor, &[])
+                                    .map_or(0, |(_, params, _)| params.len())
+                            },
+                            Vec::len,
+                        )
+                        .saturating_sub(1)
+                })
+            })
+    }
     pub(crate) fn inherit_defaults(&mut self, parent: &JavaMethod) {
         if !self.instance_dispatch()
             || !parent.instance_dispatch()
@@ -454,6 +478,10 @@ impl Classpath {
             classifier,
             name,
         )
+    }
+
+    pub(crate) fn builtin_property_type(&self, classifier: &str, name: &str) -> Result<Type> {
+        metadata::builtin_property_type(&self.builtin_class_resource(classifier)?, classifier, name)
     }
 
     fn builtin_class_resource(&self, classifier: &str) -> Result<Vec<u8>> {
@@ -956,7 +984,12 @@ impl Classpath {
             .flatten()
     }
     pub(crate) fn source_header(&self, module: &crate::syntax::Module, owner: &str) -> Result<()> {
-        self.register_source(source::header(module, owner, self)?);
+        let header = source::header(module, owner, self)?;
+        self.singletons.borrow_mut().remove(owner);
+        if module.object_decl.is_some() {
+            self.singletons.borrow_mut().insert(owner.into());
+        }
+        self.register_source(header);
         Ok(())
     }
     #[cfg(test)]
@@ -988,6 +1021,7 @@ impl Classpath {
             friends,
             value_scopes: Default::default(),
             lexical_parents: Default::default(),
+            nested_access: Default::default(),
             source_files: Default::default(),
             source_default_accessors: Default::default(),
             origins: Default::default(),
@@ -996,6 +1030,7 @@ impl Classpath {
             exception_contracts: Default::default(),
             package_names: Default::default(),
             sources: Default::default(),
+            singletons: Default::default(),
             package_index: Default::default(),
         })
     }
@@ -1187,14 +1222,22 @@ impl Classpath {
         for (method, attributes) in class.methods.iter().zip(&method_attrs) {
             self.register_exception_contract(method, attributes.exceptions.clone());
         }
-        for (child, parent, _, _) in &attrs.inner_classes {
+        for (child, parent, _, access) in &attrs.inner_classes {
             self.register_lexical_parent(child, parent);
+            self.nested_access
+                .borrow_mut()
+                .insert(child.clone(), *access);
         }
         if let Some(annotation) = attrs
             .annotations
             .iter()
             .find(|annotation| annotation.name == "Lkotlin/Metadata;")
         {
+            self.singletons.borrow_mut().remove(expected);
+            if metadata::class_is_singleton(annotation)? {
+                self.singletons.borrow_mut().insert(expected.into());
+            }
+
             self.cache
                 .borrow_mut()
                 .insert(expected.into(), class.clone());
@@ -1248,6 +1291,14 @@ impl Classpath {
                 &method_attrs,
                 &mut |annotation| self.passive_declaration_annotation(annotation),
             );
+            if class.access & 0x4000 == 0 {
+                let _ = signature::attach_fields_with_declarations(
+                    &mut class,
+                    &attrs,
+                    &field_attrs,
+                    &mut |annotation| self.passive_declaration_annotation(annotation),
+                );
+            }
         }
         if class.access & 0x4000 != 0 {
             for (field, attributes) in class.fields.iter_mut().zip(&field_attrs) {
@@ -1866,6 +1917,7 @@ struct Attributes {
     parameter_type_annotations: Vec<(usize, Annotation)>,
     only_input_type_parameters: Vec<usize>,
     type_annotation_targets: Vec<u8>,
+    inner_type_paths: Vec<(u8, Option<usize>, u8)>,
     type_annotation_parameter_indices: Vec<usize>,
     signature: Option<String>,
     constant: Option<u16>,
@@ -2069,12 +2121,14 @@ fn attributes(
                             .push(parameter.ok_or_else(invalid)?);
                     }
                     let path_length = data.u1()?;
+                    let mut inner_path = true;
                     for _ in 0..path_length {
                         let kind = data.u1()?;
                         let index = data.u1()?;
                         if kind > 3 || kind != 3 && index != 0 {
                             return Err(invalid());
                         }
+                        inner_path &= kind == 1;
                     }
                     let value = annotation(&mut data, pool, 0)?;
                     if target == 0x01
@@ -2085,14 +2139,23 @@ fn attributes(
                         result
                             .only_input_type_parameters
                             .push(parameter.ok_or_else(invalid)?);
-                    } else if path_length != 0 || !matches!(target, 0x13 | 0x14 | 0x16) {
+                    } else if path_length != 0 && !inner_path
+                        || !matches!(target, 0x13 | 0x14 | 0x16)
+                    {
                         result.unsupported = true;
-                    } else if matches!(target, 0x13 | 0x14) {
-                        result.return_type_annotations.push(value);
                     } else {
-                        result
-                            .parameter_type_annotations
-                            .push((parameter.ok_or_else(invalid)?, value));
+                        if path_length != 0 {
+                            result
+                                .inner_type_paths
+                                .push((target, parameter, path_length));
+                        }
+                        if matches!(target, 0x13 | 0x14) {
+                            result.return_type_annotations.push(value);
+                        } else {
+                            result
+                                .parameter_type_annotations
+                                .push((parameter.ok_or_else(invalid)?, value));
+                        }
                     }
                 }
             }
@@ -3695,6 +3758,17 @@ fn parse_details_impl(
         fields,
         kotlin_class: false,
     };
+    if attrs
+        .annotations
+        .iter()
+        .any(|annotation| annotation.name == "Lkotlin/Metadata;")
+    {
+        for attributes in method_attributes.iter_mut().chain(&mut field_attributes) {
+            if !attributes.inner_type_paths.is_empty() {
+                attributes.unsupported = true;
+            }
+        }
+    }
     if !attrs.unsupported
         && attrs.signature.is_none()
         && attrs.annotations.len() == 1
@@ -3889,6 +3963,9 @@ mod tests {
         assert_eq!(valid.parameter_type_annotations[0].0, 1);
         assert!(validate_type_annotation_parameters("(J[D)V", &valid).is_ok());
         assert!(validate_type_annotation_parameters("([D)V", &valid).is_err());
+        let inner = decode(&[0, 1, 0x16, 0, 1, 1, 0, 0, 2, 0, 0]).unwrap();
+        assert!(!inner.unsupported);
+        assert_eq!(inner.inner_type_paths, [(0x16, Some(0), 1)]);
         let wrong_index = decode(&[0, 1, 0x16, 255, 0, 0, 2, 0, 0]).unwrap();
         assert!(validate_type_annotation_parameters("(J[D)V", &wrong_index).is_err());
         let nested_wrong_index = decode(&[0, 1, 0x16, 255, 1, 0, 0, 0, 2, 0, 0]).unwrap();

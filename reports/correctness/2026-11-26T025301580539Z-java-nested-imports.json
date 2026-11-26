@@ -1,0 +1,586 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T02:53:01.580539+00:00",
+  "status": "passed",
+  "compiler": {
+    "binary": "target/checks/2026-11-26T025301580539Z-java-nested-imports/korrust-frozen",
+    "sha256": "ee032f7416f04ba043a40006b6f3bc00afdfbd7256a475f2cb9162cd2852f68c",
+    "source_revision": "cc7dad72dbf1ec8c41f223d37212384daf2c8c08"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "inputs": {
+    "files_sha256": {
+      "src/annotation_declarations.rs": "68824921ba8a6cac0425cfd3c574eb87bc78c478575ade5f0fc5d7d31bb8fecc",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/annotation_files.rs": "0fe8ebba7bbd2c80fcdd6fda797b448ca8cd63945b100781361bf1e3ace02eaa",
+      "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "src/bytecode/anonymous_context.rs": "e48d7aba57745c9e3ecb0a2317ea627f3b6d9b2d86805563bae680d79a301910",
+      "src/bytecode/class_companion.rs": "7463d1e739919160b82ed1137a195ebc3a36037ed8b5419a26c1f38889b533a7",
+      "src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+      "src/bytecode/defaults.rs": "d092d8a420cfb719f92dbb9a3bcc58f7c644d67bf9b3c611c72949122c22e827",
+      "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "src/bytecode/frames.rs": "1659d0401bfa59f751e3b6db250a2395a827ccad13c156f19f62c76773983b48",
+      "src/bytecode/inline.rs": "ca8a4f4da8f11e405a3cdcbcf87c3bfde49635e331f9712fb7b2f4aca0f84d25",
+      "src/bytecode/interfaces.rs": "5456ea3de3402ee3ead9920bb2cb0e7c0baab4f6eb7b211e481a16bf9ad3207b",
+      "src/bytecode/lambdas.rs": "80d29fe68d378de0b0458e601dec4cc6daaa539a64ce137a7d9f3c10e19f2d98",
+      "src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+      "src/bytecode/suspend.rs": "dfac0ad895edaf45c25655df1fad6c1828fe3fc767fd936dabe6e45357dd96d7",
+      "src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+      "src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+      "src/bytecode.rs": "4a64af005a11fd9a87467750b5acf485aa9e6e1057a4249fa52258e41b76d712",
+      "src/check.rs": "d8e3fa10f523143cd6c6adeb36cb3277040058cc08831514cb7db6acffca80e8",
+      "src/check_annotation_placements.rs": "027e77c6a6db60f98262fbaf0f44be170c53b58b03d64ae6e8cc43cdb2dc1579",
+      "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "src/check_anonymous.rs": "8261dfdd18f10b4862fbe14aaf16ad45ca202d9e3664a06d0f46b3e3e87f86da",
+      "src/check_captures.rs": "f752d88bb81c26576caad658160a332fa21946e7275e6faf331bfd73f6a84479",
+      "src/check_class_delegation.rs": "171fec70b3ce6632bbbd704ea92e040f1ef841fbebd02659388fe88ba97135f2",
+      "src/check_classes.rs": "eaa5547ca75d6f4bef4f21d200a050bb8a47362c9c7ea3e4f47b3a66e1cca4b3",
+      "src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+      "src/check_control.rs": "23bcd78c9f4a12b2665110ed5565c4cfe63c0c00f148463ef28c608336fa38b9",
+      "src/check_declarations.rs": "ae99e68ac05ca61a2193bc50c2e9eec9ff6aa62113001664a7d30efd4254e121",
+      "src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+      "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "src/check_functions.rs": "eef3107baa96ea9a9183226506ac12b1f7dbe9b7365b47d85db6e7712c2c3da4",
+      "src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+      "src/check_interfaces.rs": "952fcff0409a30bd5b505706e466c5b3e003011d778b0b26a9a1f52f94bec5f8",
+      "src/check_ir_walk.rs": "caaeeea794075c7e23b17fc9e2d06ace5a02d366c9abffbdc9393d3c8a1a2e96",
+      "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+      "src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+      "src/check_library.rs": "cde4d38b88983cc09ea253080b5ecc673882362a7ab38daeaa7da62d68891c2b",
+      "src/check_local_annotations.rs": "b0158b9374846e71d5614602d90ac018f3a6e99a4b32ac91246e1b39197af392",
+      "src/check_member_extensions.rs": "cfca4c6c2b51effce735dd6ef1132d6490e6cf2cf358e43a3ab471e72a92d71e",
+      "src/check_objects.rs": "9af6682c6ebbdd918b3376521bbb67047526b1c1cc97053bd67b9d25907dc766",
+      "src/check_operations.rs": "c7c48d4f7a93a69ca02f8e397ae099889c88673ec31e78864fe9d3e8ee7e1f7a",
+      "src/check_overloads.rs": "03618a927df2d30db9bc245df9a57e99001e9a525a49c089968cd22cb1f0671e",
+      "src/check_references.rs": "61a780d0816443007725e52f992c717eeab828f7b971749ed3242318a8d80077",
+      "src/check_relations.rs": "def5192e81eb437e69c5c09c4bcc6b5f7eebe333d5dff7aa0b024639ccb42121",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+      "src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+      "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "src/check_varargs.rs": "a7dd5e1acfc35df5ed0de0632b2232bee62766cc8dd7abd7ae73030d4e4a0836",
+      "src/check_variant_signatures.rs": "ea8be16effafa3af58d46e0e732d196feeca4ef1468d4b373c2e1c29ee984ed3",
+      "src/classpath/aliases.rs": "2ad31713a22f8eb0607ed96d838aa96fecedf7a6b261f07473aef66b8bdb8827",
+      "src/classpath/archive.rs": "835e4a79bbbc5c7328ce6a540ed1a2ca975fc526278fe7c31fd9433e08cc56d5",
+      "src/classpath/import_classes.rs": "65a1563c6df2772ac3d71602a54e7fd1b64bab1ab51d6053e74bdb65b2bf5f4e",
+      "src/classpath/inline_defaults.rs": "834d325f8cd0648a1c9e489c633102ae8c5e1c1a6f500e2ea601da3f355b27cb",
+      "src/classpath/jdk_modules.rs": "cd1a350e7f8e03cda618a1d919d4e6ee49aba7e9a26728178ebad5f73c4bd8f8",
+      "src/classpath/jvm_builtins.rs": "b8c6e4789a998c1b3737da4879a15d74eb453170c4b03542d4c8ae13f6e40e86",
+      "src/classpath/metadata.rs": "cd83ca54bc69e6f44b626250dc41409d4255ef13e64b9e3968f788c43c18345a",
+      "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+      "src/classpath/package_info.rs": "f3bd436a8c64d48216bae3a55a2a3e82a903d354a42b629928fe1af95197061a",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/signature.rs": "5dd5097b24b9bce36682ac24d649a4d39703175cf8d9680cb5cbea995c2e03cc",
+      "src/classpath/singletons.rs": "836fe172f37cc9282e259ba446688b3d2d6bf34fde25ddc3973c1800f29c71a5",
+      "src/classpath/source.rs": "2ab37dbad2094f9b66c3307e026d0805c36c1c34f844491b1746bbffb2aec7c0",
+      "src/classpath/source_enums.rs": "1b6719565931913df35f26994fb0077985f1f5c89614fb1b5d4009e63957933d",
+      "src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+      "src/classpath/value_names.rs": "92bce0a6418edd333df08b6f388636648a2967560f8757c4bb00b1479236cae2",
+      "src/classpath.rs": "31928b7a6fa6829c10d2f25d8edf8cb78b33a7dd883649b07e2afc7354ce91b6",
+      "src/compiled_inline/defaults.rs": "89d95d8b98e4af043bc3c592ba7588bffb7924bc86bdae57d457c0b420cbde37",
+      "src/compiled_inline.rs": "dfb645a407c5bcab272665430a59d4d511a9920b76bcf465bb073c03e56b5b82",
+      "src/const_eval.rs": "bc6a053823a41c822bcc5af603023019a6ace1895c9fae75bf0372f02381dacf",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+      "src/lib.rs": "a2e8dbb18f43b903c67ad03fc8cd8d89f6c55d26a54a3e60f31a21db78de259f",
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/metadata.rs": "b3579828d0fcecc950ffa5a01bb3c34e710f52127185036c46055e18caafce34",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/source_inline.rs": "50bee0804aaea9cd3e2b8c8e0f162784e0e0e0b16b9e0770dd8c27fca764add2",
+      "src/syntax.rs": "74166c3abc3aaee195fe6568456534a287c609746eef28b558f31b2f49057dfb",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525",
+      "tests/java_nested_imports/Calls.java": "d5f27e815ba5b78d04b48873f2cf3b50fbc68cebcdf5c358b82cca9b44d8b712",
+      "tests/java_nested_imports/Consumer.kt": "7d9a3bd59eda8f474e32165e3bcb1695fe2ae0f6ea532e0abb97ad251c315b99",
+      "tests/java_nested_imports/Dollar$Pretend.java": "0b4ee8f6ceec6e9c9853945ff25cca7ced5a37e60e19cb765348a30f5c1c8932",
+      "tests/java_nested_imports/Dollar.java": "f049a5dab386893634c84c6be713bee83c9c059aebe7c00b5f859836120dcc1d",
+      "tests/java_nested_imports/KotlinLibrary.kt": "9b4fe983b6b4528a549a30e9aaef9cd2abc49ac8dcf7e667499680f264382f4f",
+      "tests/java_nested_imports/Outer.java": "58b8c14a92b9617a79b4c077e184861f57e15f57bd59a3a2eb3e097fc45de723",
+      "tests/java_nested_imports/PackageConsumer.kt": "f42095221b3febf8ee0c38b72c3c98fbe1454feac0451f0181f3f2de213e6159",
+      "tests/java_nested_imports/Rejections.json": "9a11b9c098f34f49b6d0fb8d52d6c43058a320740a0bf6580c1a2ad5c97e0106",
+      "tests/java_nested_imports.rs": "4393da9daa9d4cc94b897a01b844ddc3ce03e537d07a14eb1d3edad1638b3d2b",
+      "tools/check_java_nested_imports.py": "6e10a1392c97f3644407dcdb6e8af51682abf41d3d45f000b8583a5856f2005d",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c"
+    },
+    "bundle": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/inputs.zip",
+    "bundle_sha256": "53e21b3f835a9b5eba50c62f6535839a79e9fc61ec226f44e640f33301bfc0d7",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "jdk_release_sha256": "ebbd70bf00bab6d39addf51969c5ff244030b86b29de400b9fb10612ebd3ceec",
+    "jdk_module_sha256": {
+      "java.base.jmod": "f8d258a856a691c81ad9dd16964635bbc8a8fdd7f40edec37dcf3d904feb7ae1",
+      "java.compiler.jmod": "8ecb32088b19111c3ee0853bea6746b22194432ebcf74862167b9b274000fe91",
+      "java.datatransfer.jmod": "81080a1cf86550f26b4f97ea339b440d71f490c039219517f83057f31587c824",
+      "java.desktop.jmod": "9fe3cc48baa72ea5db726d771fc4eaf96a93e74ee3e8003d8dcd659e2be8ab16",
+      "java.instrument.jmod": "1c5e7a1b45df25593d4ed18cdf4a4bbf2cfa84973cbb3ec3bd6146089ee46317",
+      "java.logging.jmod": "e10ecae70b2bc533f3030c9d82e378c802a6e7fed290631c80e266c2bd5c3253",
+      "java.management.jmod": "6e8d448dd6faa4446337a367d5f9da0f98d1472cdc415f4df7f28d08d4ed3bd3",
+      "java.management.rmi.jmod": "96d3dcfdfb7feeb607f02c04b36a540dd277b4a2973d14474432f1cc79583b16",
+      "java.naming.jmod": "b2ec32c7fbc6eab604134eddd84c4d52f598934cec1c162ff5a618964821abcb",
+      "java.net.http.jmod": "05a8d7ad35f6c4c512ad83dfff488cf38754e6340ee4f3f67e91130cc504b7ae",
+      "java.prefs.jmod": "a976af64aac691428478043b8c0ef1438aa33b84ec265369d3b52ec8d92ebbe7",
+      "java.rmi.jmod": "fee9ea4cb68aa07b63207a967fa9e089148da5d6ab2735e69dbc1c97d625eabb",
+      "java.scripting.jmod": "153c4335816abb651b5c3677b4aafa9b9be093d68cb389cb469b81623f726fb4",
+      "java.se.jmod": "9976f9186f8b411aeb074a6fb3099ca7593cb75f235d8bcb402c0437b8146273",
+      "java.security.jgss.jmod": "8e5630c78fb65f402e7316b8e932a1285a24ba30fb43b5d60f3b94f7a114cb70",
+      "java.security.sasl.jmod": "5cbfc6356e053e43ffa1abadb892cb39ada3b1d9b046dd4dd9bcabea21590d6e",
+      "java.smartcardio.jmod": "aa3eeb8691e062a9eed9cc4fe7d761cbf206fa59ab6b0aecdf0bf07c395ee4d5",
+      "java.sql.jmod": "09fc6697b6cfb5fb156bf6ed69f462a04b41d6194f45fcfaabb20c963c8da62c",
+      "java.sql.rowset.jmod": "e6abfe2f60fb1b52c38d6069a1805ddbd118b8cffd26f1a0ad2d241e4d4ef91e",
+      "java.transaction.xa.jmod": "5f593e97ffcedc42628cd892dc328d30c4fdcf32c426b4c97ecb917d829c503b",
+      "java.xml.crypto.jmod": "97132aa0427e76aa958ec310c18d6efd735092e55e9bed92ffbe12bcd13153a8",
+      "java.xml.jmod": "47583b53613b63857528d628a56d7e5562896db526528fd2fd790c1702980877",
+      "jdk.accessibility.jmod": "e19ddb1e375d99ee6e344c4830bba068bca47a62c30209c6170dffc6a958b111",
+      "jdk.attach.jmod": "9f775b1c1875ce8808565e2c94f201ae76987554943742c2c4a518df2d7d077d",
+      "jdk.charsets.jmod": "07db04862b54e3356222fa835dbcb65b721778308ee297dada88f224ebe8420c",
+      "jdk.compiler.jmod": "d6e050030264b82fdc57732be842eaafb36a35082cf9be7f47f84552634b5244",
+      "jdk.crypto.cryptoki.jmod": "2192534d947d41a07f018f10f6c467e342047074a5a19b5064c1e8aa0c73cad7",
+      "jdk.crypto.ec.jmod": "5c0f6f12ed6ff8db3f6adaa79b6263dc2ae532c82790a2b503f2a9077547780d",
+      "jdk.dynalink.jmod": "e7556260319c24069c7b77cede622b44798644d6db27a0dfbb150fe20bb67d13",
+      "jdk.editpad.jmod": "6e4a457cab6d64bd3590f9423b6ec54e356f0d69691914c31e740c3c7a5de9a0",
+      "jdk.hotspot.agent.jmod": "71638b688326ef2d95cf1c15228914f0377151caf56e72f67159e7e014880d6e",
+      "jdk.httpserver.jmod": "ab90731e3cf2119d5a2cb4a0b4db35c8387292602afda1c1a5e99269a7dbc731",
+      "jdk.incubator.vector.jmod": "b1b35bedbc5959c48194c81873ace9466c39c8ef9594dfdfac0f735c9cd46ba7",
+      "jdk.internal.ed.jmod": "5e4183cdefea2ad90a90fea6add84cb24af8b0acba1e8753658652d01ac3279c",
+      "jdk.internal.jvmstat.jmod": "a78214fbdf970647b30d618cf50dd232881f5afded6d347a93833e1f974bfedd",
+      "jdk.internal.le.jmod": "7f376038fc5daa8d961ca96dd3c56fe0dbe1e40eea80a77ba2c27efb9afbeb11",
+      "jdk.internal.opt.jmod": "b8a9b6e9ae1bb6e88d57296f87b0c9794445efd716ad27e6fe0ae3490c759c55",
+      "jdk.internal.vm.ci.jmod": "6cf7a4a0b421a0fa3465ecda59bcc0235766329501175c65e97cdadfb385e783",
+      "jdk.internal.vm.compiler.jmod": "f611033ff5707666caa2a2f5c3da1864c6487182d0c48ee21558cb92b828fd1d",
+      "jdk.internal.vm.compiler.management.jmod": "667d7d43701a355f4fd3da371ca0c5a70658a1dcedb4184d3398e60eb0a20ec3",
+      "jdk.jartool.jmod": "3b3c66468edc46389019324297608a48f7b5452dbea6e961c4032ffac1f7a98a",
+      "jdk.javadoc.jmod": "6c3b5eceb5a584623280632d013105beac9e49790ca0f62ae09136c048234881",
+      "jdk.jcmd.jmod": "1daac8ffa53131f79c8bbf47a77981d907c4cafd9438025fdb333dff0b50eaf7",
+      "jdk.jconsole.jmod": "07420f51b3b18d1012fc3899bf599375ed0865fdc85f431d6f738f8d4c91aa19",
+      "jdk.jdeps.jmod": "603648b9a16cf8297e9b93450cc0d141c52d7a90cd51d19a6a84773c757f0cd5",
+      "jdk.jdi.jmod": "6a6ec784621e6c4c13cbffd7ddcd65e57bcc0d31f8e4d073951ce6b83f19068f",
+      "jdk.jdwp.agent.jmod": "86aa6ee1b41c4840f67a7db2b3a16458d6c6b55bb75e329c2c123e4f089709d5",
+      "jdk.jfr.jmod": "76e4416fa558f3a8e15b660c4e53525421b01c7d6d0ea16474828806a07307a8",
+      "jdk.jlink.jmod": "1d1eb5ea4ecdad9e6e319a687d307a65e99405ee85327cc029258e2da6e997d7",
+      "jdk.jpackage.jmod": "359575e07166a3b418933ccc536828883832a7e1fcca3322353efd869f47f028",
+      "jdk.jshell.jmod": "184882f480a3e0741e6ff192d288418bcdf6e3f4462f8add9f3ff6256c99853d",
+      "jdk.jsobject.jmod": "d805b75e4da6bd309aa1e1b9604156670152ead9bbfceb711558c6d24e9df87f",
+      "jdk.jstatd.jmod": "007aaf0ff0afd717d71926040216e9b58b3dda20d7ae7ab89b5c827767463d49",
+      "jdk.localedata.jmod": "978d06a09398702837a6940f301bb22d47b6d7845296e8b330b9635843dca112",
+      "jdk.management.agent.jmod": "ec973e3e1276df9e9754e45ba5ab98d16a22399828e70208131af8a53cf56384",
+      "jdk.management.jfr.jmod": "0f6f0f0037f5390555480b9b4de57d006d161e68a6083c8c419e790173151dfa",
+      "jdk.management.jmod": "b4ef8e9dde6bd917ba7184f53b96b6f3a5d1900ed0c5391b1d23f9e54c1081e9",
+      "jdk.naming.dns.jmod": "17eebef765cf9bb1cc6ca9c8b09ae750f0fc39f85a74472cd31d58ef85d9d10d",
+      "jdk.naming.rmi.jmod": "b19cdc985f3ccc56283e5792a7b031abe5c7fa289b32d033dc139e9dfab92246",
+      "jdk.net.jmod": "3b018d18ae9b313af0af150293c7149421b0d801c8820d892243ca3ecfa7ca20",
+      "jdk.nio.mapmode.jmod": "15646a6c62d4e56c9df6be47597fefa39ebecd9e965031d0c5eb4b334fd55be9",
+      "jdk.random.jmod": "e9b374bca4f6ccc9b6a92f4f3ddb43b47dcddbd6af97b46bd464ed0261951ea0",
+      "jdk.sctp.jmod": "5d95539c1e48563c4fa045d741f8051bdd4ed4ac24aae365d4875f3cae13adab",
+      "jdk.security.auth.jmod": "f856f102525420a8be0491917526101906d6fdfe73404ffb204e4d8a39029d42",
+      "jdk.security.jgss.jmod": "a85002ada4c4bc97ca550698a0d53191c6034d57145122a75bf3544701246993",
+      "jdk.unsupported.desktop.jmod": "0a60945f5e12eafec6a03d1b92badb9fa19f26af0d725d59495bd84215c5a884",
+      "jdk.unsupported.jmod": "7dbe51bf64d9b9e5f6e87d3042413b335ced61b99325750b52dacb9adbc5bb6f",
+      "jdk.xml.dom.jmod": "d0684b86dd827be5fcc49cf44aacf8fb9ed829f023ae002e075460f462e475bf",
+      "jdk.zipfs.jmod": "4ef65e80e2caa4c028fc8cca474a08d782ddfea046d7c035b3485213760bfd62"
+    }
+  },
+  "commands": [
+    {
+      "label": "compile Java nested library",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java_classes",
+        "/workspace/korrust/tests/java_nested_imports/Outer.java",
+        "/workspace/korrust/tests/java_nested_imports/Dollar.java",
+        "/workspace/korrust/tests/java_nested_imports/Dollar$Pretend.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/000.txt"
+    },
+    {
+      "label": "compile official library",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/java_nested_imports/KotlinLibrary.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java_classes:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/library"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/001.txt"
+    },
+    {
+      "label": "compile official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "/workspace/korrust/tests/java_nested_imports/Consumer.kt",
+        "/workspace/korrust/tests/java_nested_imports/PackageConsumer.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java_classes:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/002.txt"
+    },
+    {
+      "label": "compile candidate",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/korrust-frozen",
+        "/workspace/korrust/tests/java_nested_imports/Consumer.kt",
+        "/workspace/korrust/tests/java_nested_imports/PackageConsumer.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java_classes:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/003.txt"
+    },
+    {
+      "label": "fixed Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/official:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java_classes:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java",
+        "/workspace/korrust/tests/java_nested_imports/Calls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/004.txt"
+    },
+    {
+      "label": "verified fixed Java caller official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/official:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java_classes:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "nested.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/005.txt"
+    },
+    {
+      "label": "JVM signatures official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/official",
+        "nested.consumer.ConsumerKt",
+        "nested.library.PackageConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/006.txt"
+    },
+    {
+      "label": "verified fixed Java caller candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/candidate:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java_classes:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "nested.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/007.txt"
+    },
+    {
+      "label": "JVM signatures candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/candidate",
+        "nested.consumer.ConsumerKt",
+        "nested.library.PackageConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/008.txt"
+    },
+    {
+      "label": "reject official/private-same-package",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/private-same-package.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java_classes:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/invalid-official"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/009.txt"
+    },
+    {
+      "label": "reject candidate/private-same-package",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/private-same-package.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java_classes:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/invalid-candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/010.txt"
+    },
+    {
+      "label": "reject official/package-outside",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/package-outside.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java_classes:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/invalid-official"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/011.txt"
+    },
+    {
+      "label": "reject candidate/package-outside",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/package-outside.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java_classes:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/invalid-candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/012.txt"
+    },
+    {
+      "label": "reject official/protected-outside",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/protected-outside.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java_classes:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/invalid-official"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/013.txt"
+    },
+    {
+      "label": "reject candidate/protected-outside",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/protected-outside.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java_classes:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/invalid-candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/014.txt"
+    },
+    {
+      "label": "reject official/hidden-containing-class",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/hidden-containing-class.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java_classes:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/invalid-official"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/015.txt"
+    },
+    {
+      "label": "reject candidate/hidden-containing-class",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/hidden-containing-class.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java_classes:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/invalid-candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/016.txt"
+    },
+    {
+      "label": "reject official/dollar-name-is-not-nesting",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/dollar-name-is-not-nesting.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java_classes:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/invalid-official"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/017.txt"
+    },
+    {
+      "label": "reject candidate/dollar-name-is-not-nesting",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/dollar-name-is-not-nesting.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java_classes:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/invalid-candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/018.txt"
+    },
+    {
+      "label": "reject official/private-binary-name",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/private-binary-name.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java_classes:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/invalid-official"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/019.txt"
+    },
+    {
+      "label": "reject candidate/private-binary-name",
+      "argv": [
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/korrust-frozen",
+        "--diagnostic-format",
+        "json",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/private-binary-name.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java_classes:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/invalid-candidate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T025301580539Z-java-nested-imports/020.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "nested-type-import-consumer/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "nested-type-import-consumer/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "fixed-java/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "fixed-java/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "JVM-public-signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "invalid/official/private-same-package",
+      "outcome": "pass"
+    },
+    {
+      "id": "invalid/candidate/private-same-package",
+      "outcome": "pass"
+    },
+    {
+      "id": "invalid/official/package-outside",
+      "outcome": "pass"
+    },
+    {
+      "id": "invalid/candidate/package-outside",
+      "outcome": "pass"
+    },
+    {
+      "id": "invalid/official/protected-outside",
+      "outcome": "pass"
+    },
+    {
+      "id": "invalid/candidate/protected-outside",
+      "outcome": "pass"
+    },
+    {
+      "id": "invalid/official/hidden-containing-class",
+      "outcome": "pass"
+    },
+    {
+      "id": "invalid/candidate/hidden-containing-class",
+      "outcome": "pass"
+    },
+    {
+      "id": "invalid/official/dollar-name-is-not-nesting",
+      "outcome": "pass"
+    },
+    {
+      "id": "invalid/candidate/dollar-name-is-not-nesting",
+      "outcome": "pass"
+    },
+    {
+      "id": "invalid/official/private-binary-name",
+      "outcome": "pass"
+    },
+    {
+      "id": "invalid/candidate/private-binary-name",
+      "outcome": "pass"
+    },
+    {
+      "id": "frozen-fixtures",
+      "outcome": "pass"
+    }
+  ],
+  "limitations": [
+    "Declared Java nested types and explicit nested static member imports; inherited nested type lookup is outside this evidence",
+    "Enclosing and nested access checked; package and protected nested types covered through static calls within the same Java package",
+    "No full Android app or benchmark claim"
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_java_nested_imports.py",
+      "--candidate",
+      "/workspace/work/targets159/korrust-java-nested-final"
+    ]
+  ],
+  "counts": {
+    "pass": 18
+  }
+}

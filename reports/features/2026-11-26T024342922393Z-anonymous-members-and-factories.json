@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-26T02:43:42.922393+00:00",
+  "status": "passed",
+  "reference_compiler": "Kotlin 2.3.21",
+  "evidence": [
+    "reports/correctness/2026-11-26T022408661272Z-anonymous-objects.json",
+    "reports/correctness/2026-11-26T023510710342Z-sam-constructors.json",
+    "reports/correctness/2026-11-26T023314734726Z-classifier-factories.json",
+    "reports/correctness/2026-11-26T023611305614Z-classifier-factory-application.json"
+  ],
+  "features": [
+    {
+      "name": "Bounded anonymous own methods and properties",
+      "status": "supported",
+      "scope": "Stored val/var properties, computed properties with explicit or inherited types, custom getters/setters and backing fields, private accessors, additional explicit-result methods, own and enclosing receivers, declaration-order initialization and fresh per-instance state. Public providers and fixed Java callers, all four existing Kotlin provider/consumer pairs, and superclass initialization are exercised.",
+      "restrictions": [
+        "One or more supported class/interface supertypes remain required. Anonymous Kotlin metadata and EnclosingMethod/reflection parity are not claimed.",
+        "Delegates, property annotations, accessor visibility, Unit properties, own method and computed-property result inference remain outside this subset. Publicly exposed own-member results require explicit supported result types.",
+        "Initializer own receivers and references to not-yet-declared own properties are explicitly unsupported. Inferred own property types depend on supported enclosing or inherited type information."
+      ],
+      "evidence_report": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects.json",
+      "evidence_cases": [
+        "own-members/java/official",
+        "own-members/java/candidate",
+        "own-members/abi/anonymousmembers.Counted",
+        "boundary/PropertyValBackingWrite",
+        "boundary/PropertyWithoutOverride"
+      ]
+    },
+    {
+      "name": "Explicit constructors for supported functional interfaces",
+      "status": "supported",
+      "scope": "Literal-lambda constructors for same-package, imported and qualified compiled Kotlin fun interfaces and Java functional interfaces, explicit generic arguments, source fun interfaces, default dispatch and captured mutable cells.",
+      "restrictions": [
+        "Function-valued and callable-reference adapters, implicit constructor lambda labels and generic argument inference remain outside this tested constructor subset.",
+        "Only public nonsynthetic callable descriptors and generic signatures are ABI parity claims; generated accessor layouts are excluded."
+      ],
+      "evidence_report": "reports/correctness/2026-11-26T023510710342Z-sam-constructors.json",
+      "evidence_cases": [
+        "fixed-java/official",
+        "fixed-java/candidate",
+        "JVM-public-nonsynthetic-callable-signatures",
+        "boundary/ordinary-interface",
+        "boundary/function-value"
+      ]
+    },
+    {
+      "name": "Explicit imported classifier and same-FQN factory resolution",
+      "status": "supported",
+      "scope": "An imported Kotlin classifier name and import aliases retain ordinary same-FQN package factory overloads. Inferred/explicit generic interface factory calls and nongeneric Kotlin constructor/factory overload selection use normal library invocation. Ambiguous and inapplicable calls reject.",
+      "restrictions": [
+        "Concrete generic classifier constructor/factory competition is outside the bounded subset.",
+        "This evidence covers explicit imports. It does not claim arbitrary source-local, wildcard or synthetic-SAM factory competition."
+      ],
+      "evidence_report": "reports/correctness/2026-11-26T023314734726Z-classifier-factories.json",
+      "evidence_cases": [
+        "fixed-java/official",
+        "fixed-java/candidate",
+        "boundary/ambiguous-constructor-factory"
+      ]
+    },
+    {
+      "name": "Unchanged HighlightTracker production source",
+      "status": "supported",
+      "scope": "The pinned AndroidBible HighlightTracker.kt compiles unchanged. The same 23 original official JUnit tests pass against original and replacement providers with JVM verification.",
+      "restrictions": [
+        "Original Gradle-built test and dependency class files are reused. No Android runtime, full application or performance claim.",
+        "DownloadMapper advances past CoroutineScope factory resolution and remains rejected at its synchronized call."
+      ],
+      "evidence_report": "reports/correctness/2026-11-26T023611305614Z-classifier-factory-application.json",
+      "evidence_cases": [
+        "application/039",
+        "junit/HighlightTrackerTest/official",
+        "junit/HighlightTrackerTest/candidate"
+      ]
+    }
+  ],
+  "corrections": [
+    {
+      "reports": [
+        "reports/correctness/2026-11-26T022943927547Z-sam-constructors.json",
+        "reports/correctness/2026-11-26T023220435724Z-sam-constructors.json"
+      ],
+      "reason": "Development ABI extraction included compiler-generated synthetic accessors. The final SAM report compares public nonsynthetic callables and states the narrower ABI contract."
+    },
+    {
+      "reports": [
+        "reports/correctness/2026-11-26T022052294343Z-anonymous-objects.json"
+      ],
+      "reason": "Development run was interrupted before final validation to rebuild immutable-property diagnostics; the completed anonymous-objects report supersedes it."
+    }
+  ]
+}

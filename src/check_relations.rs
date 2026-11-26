@@ -518,6 +518,12 @@ pub(super) fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: 
         } else {
             actual
         };
+        if matches!(inner.as_ref(), Type::Array(_) | Type::StringArray)
+            && actual.primitive_array_element().is_none()
+            && let (Some(actual), Some(expected)) = (actual.array_element(), inner.array_element())
+        {
+            return subtype_at(cp, &actual, &Type::Platform(Box::new(expected)), depth + 1);
+        }
         return subtype_at(cp, actual, inner, depth + 1);
     }
     if let Type::Nullable(inner) = expected {
@@ -1280,6 +1286,7 @@ impl Checker<'_> {
             ),
             kotlin_result: Some(result.clone()),
             library: Some(crate::classpath::LibraryMethod {
+                vararg_index: None,
                 contracts: Vec::new(),
                 value_dispatch: false,
                 suspend_: false,
@@ -1384,6 +1391,47 @@ impl Checker<'_> {
                 continue;
             }
             if matches!(&arg.kind, ExprKind::VarargArray { elements, .. } if elements.is_empty()) {
+                continue;
+            }
+            if let ExprKind::VarargArray { array, elements } = &arg.kind
+                && let Some(pattern) = array.array_element()
+                && !matches!(pattern.base(), Type::Parameter { .. })
+                && library
+                    .type_parameters
+                    .iter()
+                    .any(|p| !fixed.contains(&p.name) && mentions(&pattern, &p.name))
+            {
+                if library
+                    .type_parameters
+                    .iter()
+                    .any(|p| p.only_input_types && mentions(&pattern, &p.name))
+                {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "OnlyInputTypes inference through a nested vararg is unsupported",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "ONLY_INPUT_TYPES_SHAPE_UNSUPPORTED",
+                    ));
+                }
+                for element in elements {
+                    let actual = if let ExprKind::Unary(op, spread) = &element.kind
+                        && op == "*"
+                    {
+                        self.value(spread)?.ty.array_element().ok_or_else(|| {
+                            Diagnostic::new(spread.offset, "Spread argument requires an array")
+                        })?
+                    } else {
+                        self.value(element)?.ty
+                    };
+                    if !self.infer_constraints(&pattern, &actual, &mut substitutions, &fixed, 0) {
+                        return Err(Diagnostic::new(
+                            element.offset,
+                            "Conflicting generic vararg element constraints",
+                        ));
+                    }
+                }
                 continue;
             }
             let specialized_array;
@@ -1539,8 +1587,19 @@ impl Checker<'_> {
                     "Conflicting expected generic result type",
                 ));
             }
+            let result_needs_widening =
+                !self.subtype(&substitute(result, &substitutions), expected);
             for (name, ty) in result_constraints {
-                substitutions.entry(name).or_insert(ty);
+                if result_needs_widening
+                    && !fixed.contains(&name)
+                    && substitutions
+                        .get(&name)
+                        .is_some_and(|input| self.subtype(input, &ty))
+                {
+                    substitutions.insert(name, ty);
+                } else {
+                    substitutions.entry(name).or_insert(ty);
+                }
             }
         }
         for _ in 0..library.type_parameters.len() {

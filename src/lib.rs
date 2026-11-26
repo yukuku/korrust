@@ -445,8 +445,14 @@ pub fn compile_batch_with_options(
             })
         })
         .collect::<Vec<_>>();
-    let normalize_imports = |module: &mut syntax::Module| {
-        for (_, path, _) in &mut module.imports {
+    let normalize_imports = |module: &mut syntax::Module| -> Result<()> {
+        let package = module.package.replace('.', "/");
+        let caller = if package.is_empty() {
+            "<imports>".into()
+        } else {
+            format!("{package}/<imports>")
+        };
+        for (_, path, offset) in &mut module.imports {
             if let Some((_, normalized)) = companion_constant_imports
                 .iter()
                 .find(|(original, _)| original == path)
@@ -454,29 +460,38 @@ pub fn compile_batch_with_options(
                 *path = normalized.clone();
                 continue;
             }
-            if let Some((parent, member)) = path
-                .rsplit_once('/')
-                .filter(|(parent, _)| parent.ends_with("/Companion"))
-            {
-                if let Some(class) = classpath.kotlin_classifier(parent) {
-                    *path = format!("{}/{member}", class.name);
-                    continue;
-                }
-            }
             if let Some((_, owner)) = source_names.iter().find(|(_, owner)| {
                 lexical_parents.contains_key(owner) && owner.replace('$', "/") == *path
             }) {
                 *path = owner.clone();
-            } else if let Some(class) = classpath.kotlin_classifier(path) {
+                continue;
+            }
+            if let Some(class) = classpath.kotlin_classifier(path) {
                 *path = class.name;
+                continue;
+            }
+            if let Some(class) = classpath.java_import_class(path, &caller, *offset)? {
+                *path = class.name;
+                continue;
+            }
+            if let Some((parent, member)) = path.rsplit_once('/') {
+                let class = if let Some(class) = classpath.kotlin_classifier(parent) {
+                    Some(class)
+                } else {
+                    classpath.java_import_class(parent, &caller, *offset)?
+                };
+                if let Some(class) = class {
+                    *path = format!("{}/{member}", class.name);
+                }
             }
         }
+        Ok(())
     };
     for module in &mut modules {
-        normalize_imports(module);
+        normalize_imports(module)?;
     }
     for (owner, unit) in &mut units {
-        normalize_imports(unit);
+        normalize_imports(unit)?;
         if lexical_parents.contains_key(owner) {
             if let Some((name, _)) = source_names.iter().find(|(_, path)| path == owner) {
                 unit.imports
@@ -664,6 +679,10 @@ pub fn compile_batch_with_options(
     for (owner, unit) in &units {
         classpath
             .source_header(unit, owner)
+            .map_err(|error| locate(error, owner))?;
+    }
+    for (owner, unit) in &units {
+        check::preflight_local_annotations(unit, &classpath, owner)
             .map_err(|error| locate(error, owner))?;
     }
     for (index, module) in modules.iter().enumerate() {
@@ -1250,6 +1269,7 @@ fn declaration_units(
         );
     }
     let mut unit = syntax::Module {
+        local_annotations: context.local_annotations.clone(),
         file_annotations: Vec::new(),
         annotation_decl: None,
         type_locations: context.type_locations.clone(),
@@ -2223,7 +2243,22 @@ fn validate_source_imports(
                                 methods.iter().any(|method| {
                                     method.source_name() == member && method.access & 9 == 9
                                 })
-                            }))
+                            })
+                            || classpath
+                                .singleton_field(package)
+                                .is_ok_and(|field| field.is_some())
+                                && classpath.methods(package).is_ok_and(|methods| {
+                                    methods.iter().any(|method| {
+                                        method.access & 9 == 1
+                                            && (method.source_name() == member
+                                                || method.source_property.as_deref()
+                                                    == Some(member))
+                                            && method
+                                                .library
+                                                .as_ref()
+                                                .is_some_and(|library| library.receiver.is_some())
+                                    })
+                                }))
                 }) {
                     continue;
                 }

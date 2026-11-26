@@ -1,0 +1,2858 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T02:24:10.563328+00:00",
+  "status": "passed",
+  "compiler": {
+    "path": "/tmp/targets159-anonymous/debug/korrust",
+    "sha256": "b4fde1fac00682ae6c39ffaeb6de3ad16a38193dfcbb606c42e50e86c6156a57"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n",
+    "options": [
+      "-language-version",
+      "2.3",
+      "-api-version",
+      "2.3",
+      "-jvm-target",
+      "1.8",
+      "-module-name",
+      "anonymous_objects"
+    ]
+  },
+  "inputs": {
+    "files_sha256": {
+      "/workspace/work/anon159-freeze/src/annotation_declarations.rs": "9f9c44425fec7867daf244b76c9dc2794224d03e5e87f7eeea968016d27d8844",
+      "/workspace/work/anon159-freeze/src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "/workspace/work/anon159-freeze/src/bytecode/annotation_files.rs": "349e861501424f9c02a177074fd7fb847837d24772ae4773e598ca8c656638c4",
+      "/workspace/work/anon159-freeze/src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "/workspace/work/anon159-freeze/src/bytecode/anonymous_context.rs": "e48d7aba57745c9e3ecb0a2317ea627f3b6d9b2d86805563bae680d79a301910",
+      "/workspace/work/anon159-freeze/src/bytecode/class_companion.rs": "7463d1e739919160b82ed1137a195ebc3a36037ed8b5419a26c1f38889b533a7",
+      "/workspace/work/anon159-freeze/src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+      "/workspace/work/anon159-freeze/src/bytecode/defaults.rs": "d092d8a420cfb719f92dbb9a3bcc58f7c644d67bf9b3c611c72949122c22e827",
+      "/workspace/work/anon159-freeze/src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "/workspace/work/anon159-freeze/src/bytecode/frames.rs": "1bde37761ced16a881b82e9e87cedf9c9e8b999baf56d4d7c0493f22d5eee7d4",
+      "/workspace/work/anon159-freeze/src/bytecode/inline.rs": "ca8a4f4da8f11e405a3cdcbcf87c3bfde49635e331f9712fb7b2f4aca0f84d25",
+      "/workspace/work/anon159-freeze/src/bytecode/interfaces.rs": "5456ea3de3402ee3ead9920bb2cb0e7c0baab4f6eb7b211e481a16bf9ad3207b",
+      "/workspace/work/anon159-freeze/src/bytecode/lambdas.rs": "80d29fe68d378de0b0458e601dec4cc6daaa539a64ce137a7d9f3c10e19f2d98",
+      "/workspace/work/anon159-freeze/src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+      "/workspace/work/anon159-freeze/src/bytecode/suspend.rs": "dfac0ad895edaf45c25655df1fad6c1828fe3fc767fd936dabe6e45357dd96d7",
+      "/workspace/work/anon159-freeze/src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+      "/workspace/work/anon159-freeze/src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+      "/workspace/work/anon159-freeze/src/bytecode.rs": "4a64af005a11fd9a87467750b5acf485aa9e6e1057a4249fa52258e41b76d712",
+      "/workspace/work/anon159-freeze/src/check.rs": "795df061dc8f812e693adbc42418b2ee3374ad678f308569997520253dd699e5",
+      "/workspace/work/anon159-freeze/src/check_annotation_placements.rs": "fc226ed5e82027736d934052e390b36456c4bbf7f72cf42c7dc1e10bfc44e2f3",
+      "/workspace/work/anon159-freeze/src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "/workspace/work/anon159-freeze/src/check_anonymous.rs": "25817090ac3a19aef8fd11a5374a77049d19b85cc14d20958768ddacf649310e",
+      "/workspace/work/anon159-freeze/src/check_captures.rs": "f752d88bb81c26576caad658160a332fa21946e7275e6faf331bfd73f6a84479",
+      "/workspace/work/anon159-freeze/src/check_class_delegation.rs": "171fec70b3ce6632bbbd704ea92e040f1ef841fbebd02659388fe88ba97135f2",
+      "/workspace/work/anon159-freeze/src/check_classes.rs": "eaa5547ca75d6f4bef4f21d200a050bb8a47362c9c7ea3e4f47b3a66e1cca4b3",
+      "/workspace/work/anon159-freeze/src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+      "/workspace/work/anon159-freeze/src/check_control.rs": "23bcd78c9f4a12b2665110ed5565c4cfe63c0c00f148463ef28c608336fa38b9",
+      "/workspace/work/anon159-freeze/src/check_declarations.rs": "a88c52c905ebbdf834af9ce0b3220f950e27303cd75df634b725051de4f67c68",
+      "/workspace/work/anon159-freeze/src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+      "/workspace/work/anon159-freeze/src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "/workspace/work/anon159-freeze/src/check_functions.rs": "209f4c7fd09fd44341e19b58e7791fa122e4a069e593822b463f2296684ff091",
+      "/workspace/work/anon159-freeze/src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+      "/workspace/work/anon159-freeze/src/check_interfaces.rs": "f7411289c4a4595b5ecca8c0788a688c3161014cce5b0631f2222b882d7e209a",
+      "/workspace/work/anon159-freeze/src/check_ir_walk.rs": "caaeeea794075c7e23b17fc9e2d06ace5a02d366c9abffbdc9393d3c8a1a2e96",
+      "/workspace/work/anon159-freeze/src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+      "/workspace/work/anon159-freeze/src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+      "/workspace/work/anon159-freeze/src/check_library.rs": "657b65be0e461e241be387807384d7b020250395e1a6eca9aa93def57f6083ec",
+      "/workspace/work/anon159-freeze/src/check_member_extensions.rs": "66a4cfa55e05e5699d510113566c91fd54fa79e1257f769df334338c0f7201e5",
+      "/workspace/work/anon159-freeze/src/check_objects.rs": "149bbaa4c8a9cab9cf634edc131bd17a37b8411493c77235311ae860a65c1766",
+      "/workspace/work/anon159-freeze/src/check_operations.rs": "5a0b0b380559259c1d11e8a2ec109a3955e1ad85f62c1b655df8632ac5362c8f",
+      "/workspace/work/anon159-freeze/src/check_overloads.rs": "03618a927df2d30db9bc245df9a57e99001e9a525a49c089968cd22cb1f0671e",
+      "/workspace/work/anon159-freeze/src/check_references.rs": "61a780d0816443007725e52f992c717eeab828f7b971749ed3242318a8d80077",
+      "/workspace/work/anon159-freeze/src/check_relations.rs": "7299487f3f673615e98603bd2e01a1979b45629e804c4ad311a3c3583b8d3f67",
+      "/workspace/work/anon159-freeze/src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "/workspace/work/anon159-freeze/src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+      "/workspace/work/anon159-freeze/src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+      "/workspace/work/anon159-freeze/src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "/workspace/work/anon159-freeze/src/check_varargs.rs": "9928a6be54a33a83360cec67726e8beffba6ed00366a7f3d378f030f1055f90d",
+      "/workspace/work/anon159-freeze/src/check_variant_signatures.rs": "ea8be16effafa3af58d46e0e732d196feeca4ef1468d4b373c2e1c29ee984ed3",
+      "/workspace/work/anon159-freeze/src/classpath/aliases.rs": "2ad31713a22f8eb0607ed96d838aa96fecedf7a6b261f07473aef66b8bdb8827",
+      "/workspace/work/anon159-freeze/src/classpath/archive.rs": "058bf434ca9c8a58db2f026cefaed85f64c9c3e274130af0f18db4fbefff5162",
+      "/workspace/work/anon159-freeze/src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+      "/workspace/work/anon159-freeze/src/classpath/metadata.rs": "abfa728c467ea8f5fe57f60282c0f74fa696e67c9e2da6e545540348dd73ce65",
+      "/workspace/work/anon159-freeze/src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+      "/workspace/work/anon159-freeze/src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "/workspace/work/anon159-freeze/src/classpath/signature.rs": "11e1e7c67cfe84b56892cddf6b6fa85daa19dfec4f34846a215a18605dfb3bec",
+      "/workspace/work/anon159-freeze/src/classpath/source.rs": "b4c5edcf8cb847ed86e3dcfa82f00a601a565d39fc3c643127a82fb439e3dc2a",
+      "/workspace/work/anon159-freeze/src/classpath/source_enums.rs": "3ae8bea81669d8feec40a16fae21a80f4a9d8006acd23c3f4f68d5d177f79be3",
+      "/workspace/work/anon159-freeze/src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+      "/workspace/work/anon159-freeze/src/classpath/value_names.rs": "a0798cfa02230410ee554e39dc09057bc9a41bf1a366f9159b73604270f83728",
+      "/workspace/work/anon159-freeze/src/classpath.rs": "6d5dc31ebee9a2a5e14a69fcf3d93892e208ba948956495e0d119555077edeec",
+      "/workspace/work/anon159-freeze/src/compiled_inline.rs": "694e4535cb5da5254818eea8ca6818a5ad919dd4f6556d890b36a40e613d489e",
+      "/workspace/work/anon159-freeze/src/const_eval.rs": "bc6a053823a41c822bcc5af603023019a6ace1895c9fae75bf0372f02381dacf",
+      "/workspace/work/anon159-freeze/src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "/workspace/work/anon159-freeze/src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "/workspace/work/anon159-freeze/src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+      "/workspace/work/anon159-freeze/src/lib.rs": "0d5fafb7ae492d9d287650e2ab5bed999cf448e816c87f7febbe0ee0d2a3100d",
+      "/workspace/work/anon159-freeze/src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "/workspace/work/anon159-freeze/src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "/workspace/work/anon159-freeze/src/metadata.rs": "b3579828d0fcecc950ffa5a01bb3c34e710f52127185036c46055e18caafce34",
+      "/workspace/work/anon159-freeze/src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "/workspace/work/anon159-freeze/src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "/workspace/work/anon159-freeze/src/source_inline.rs": "50bee0804aaea9cd3e2b8c8e0f162784e0e0e0b16b9e0770dd8c27fca764add2",
+      "/workspace/work/anon159-freeze/src/syntax.rs": "36d50b22b549d443c1104f04a3f0cdd299ccb099ef048208c4d38a12379dbe61",
+      "/workspace/work/anon159-freeze/src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "/workspace/work/anon159-freeze/src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525",
+      "/workspace/work/anon159-freeze/Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "/workspace/work/anon159-freeze/Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "tests/anonymous_objects/Compiled.kt": "23a63109dc2556847c051507c97b55c8acbd1b8aa44fcdf17f3fdad61e75f114",
+      "tests/anonymous_objects/CompiledCheck.java": "ad8aa4c78af2dd5d06a6166808e3a992daaef69b452fcd01dee24d5045281677",
+      "tests/anonymous_objects/Consumer.kt": "428708fbba590163c48cea41bbc6ab46392f28d051da10937d9b6a3e873f1ce4",
+      "tests/anonymous_objects/ConsumerCheck.java": "531c4747d02245e4e00e6ed78dad5b928360945eccdee76a1ddac86759a72f07",
+      "tests/anonymous_objects/InlineReturnCheck.java": "c72627ee5a7024b50a2ac6a4d65280f991a4b3ea37c9292fbd431fe545019a73",
+      "tests/anonymous_objects/InlineReturns.kt": "10be3ed6ee14e464f316c146b530b85fa98aedeb7fb37586324626c02db4058b",
+      "tests/anonymous_objects/Library.kt": "b21a81da8e66bd7cf7274a5cd952a98c743c682fa49365bb5560b2b07f7f96cf",
+      "tests/anonymous_objects/ObjectCheck.java": "be5287f960cef02ccb7f3eaaf7487b9f94fe8baf6b8add9c63e12102e8f0281c",
+      "tests/anonymous_objects/Objects.kt": "af1a717e1bf13e8df7bbb1ee8cf8d6796f001433ee56285572f704fb0bf92733",
+      "tests/anonymous_objects/Runnable.kt": "0a8e17e01a18910cb25145651dab08cebd731e4ca58ba7e5150cafa509cf50d0",
+      "tests/anonymous_objects/RunnableCheck.java": "1ca77fca2bbd18698ee1c0b6c7ddd4ec15fef742666925962466535b6063dab7",
+      "tests/anonymous_objects/boundaries/AbruptInlineInference.kt": "dc3aeef1f3ae7abc14a5fccb60df705403a4c387f28fcb7926d201563ff1c55a",
+      "tests/anonymous_objects/boundaries/ClassSupertype.kt": "01b42159119e308707cbf1cfa28fce069cb3b59ef718d21cb019d31352ed5701",
+      "tests/anonymous_objects/boundaries/Covariant.kt": "c7057c26f2866512da40abd7b1cb15c17200abd59ae6219ff5fb134d753096b4",
+      "tests/anonymous_objects/boundaries/Duplicate.kt": "653fa3e41c6df43bd1729f33c9cf1801d1774691ce30f0dd2b552c4886593734",
+      "tests/anonymous_objects/boundaries/ExtraMember.kt": "396da011f70b1ecce12e0bdeabae0d20124a57fb55e5e121e89715f39e379b97",
+      "tests/anonymous_objects/boundaries/Generic.kt": "3ec4e52d96184391a7b53facc1a17a7097cdcdc76cfc0e04ba27932e8bb66e49",
+      "tests/anonymous_objects/boundaries/GenericJava.kt": "4ed1b2689c12287a580f5f8df310814c68573605d3799eff7496cb0240bc982f",
+      "tests/anonymous_objects/boundaries/GenericMethod.kt": "a52dfbb3dc736765c635c33a36af716f5d20206bf8525392037b2c3d080f2f9d",
+      "tests/anonymous_objects/boundaries/InferredCovariant.kt": "3889b4f6cbc2ed234cc5c1f5f25c4093d3bfd09c6a66a94bfc6a89c367deca07",
+      "tests/anonymous_objects/boundaries/InferredWrongNumeric.kt": "0ebcfd00cd8a9b374484e99a4a3dc70b152380283106ede3e3f8211672ccfbb9",
+      "tests/anonymous_objects/boundaries/Marker.kt": "70f4630be2354d2f9fea4e5cc1b3492444fa05956ceec823ecaa24b280c66f4f",
+      "tests/anonymous_objects/boundaries/Missing.kt": "8031bdb306cc4d8162ea37f54b822da964cb5dee4877439d200160100f56a55e",
+      "tests/anonymous_objects/boundaries/MissingPropertySetter.kt": "a0f6920e4f8bae85b2995c5a9dbfffe2dc88ec96db35facbb63917fef379cfcd",
+      "tests/anonymous_objects/boundaries/Multiple.kt": "0173e3adfe0278a9785512dfa127434e2a23ba615787235df6ddf33bc3fe968f",
+      "tests/anonymous_objects/boundaries/NoSupertype.kt": "1f219763e58d3e9bf2cbbf44869d0420bc5f2df35879a7d9ee1aa047587a14a8",
+      "tests/anonymous_objects/boundaries/NullResult.kt": "37cdd517b3884aaebd23c1ba7ac46a99083a15a7a1150abdeee211c23ad1a656",
+      "tests/anonymous_objects/boundaries/PrivatePropertyOverride.kt": "b330742950fbecb34dc0ab2ee1daaa15ae22e666e5b8553b6544172d59d70be3",
+      "tests/anonymous_objects/boundaries/Property.kt": "bfd6e03e152b1278f53d107920ca9427988a733845bbf0ac9fa1f3ac6e72c683",
+      "tests/anonymous_objects/boundaries/PropertyValBackingWrite.kt": "0975e590f6f9a98d1be55f262ef05606526dc3f6ebae46a99e9ffb402b45bca9",
+      "tests/anonymous_objects/boundaries/PropertyValWrite.kt": "894e2a1f79b5d7629f6c8eec02f6ed1c2ca25ed226fa50019c30498b564dc8de",
+      "tests/anonymous_objects/boundaries/PropertyWithoutOverride.kt": "586c8a385c2d6ee0fe173550cf185cfa10af92b5b1385b3f67c3d65c2c86be7b",
+      "tests/anonymous_objects/boundaries/Sealed.kt": "afad19ced921423791e853b084977ed9177ec37ac54cb11bfb7b4a560e5741a2",
+      "tests/anonymous_objects/boundaries/Uninitialized.kt": "1411d374e05b3d2f1e866e88781e65ed7f65f65caadc57cf1accb816dd2f698b",
+      "tests/anonymous_objects/boundaries/ValWrite.kt": "47b9aa9649c6ca444dda1d1c72429099a533272ab75d1c7c1a72a32b2785a4f1",
+      "tests/anonymous_objects/boundaries/WrongParameter.kt": "ef779542b6c4fbb685d35bf02eb56e2a5bbdeb718081ca492b8ae8bba0490e85",
+      "tests/anonymous_objects/boundaries/WrongResult.kt": "c758b682a353c7e84c4948d2d0118692e1bd4ea506ef29b666df2d7a5f49eea9",
+      "tests/anonymous_members/Check.java": "23561aef8f0d76a84de610f1c5ab92fbd13905655d1c93164369c9bc7d66ea65",
+      "tests/anonymous_members/Members.kt": "47417a5b3b9a2c7b9c0eee476a8c5a05f37f0c39c4cd510f10242d057a22594e",
+      "tests/anonymous_members.rs": "ed31c263717740a7f4bb68791de848d4c397d99d390995f87b780447573fbae8",
+      "tests/anonymous_objects.rs": "08c818dae5727866bfe0dba1788c21131edd239f8cd12dd0f2944a3127aeeedc",
+      "tools/check_anonymous_objects.py": "ddafa9b3b3e90e143db2ed6892656cf7f06f172c4f83fe53dcdfe622e059a897",
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "references/kotlin/compiler/testData/codegen/box/objects/kt2663_2.kt": "c8477a827507f0c9ee1e3c856283d32b51739bea965582018fa8bb1c0380dc02",
+      "references/kotlin/compiler/testData/diagnostics/helpers/coroutines/CoroutineHelpers.kt": "d375bd036523c7b8a0a1ac34388fe8acef11f7517716fc94e98ed14827f3a882",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt": "8eed6fef3c6e06ce217c1ec325e5095b8bb6ee899bc1097d284b09712917a0e2",
+      "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/DevotionActivity.kt": "efae77bc11aa64d9763ecafbdd553bca57733dbb97dfef10b6a461a3da70f1a0",
+      "/tmp/targets159-anonymous/debug/korrust": "b4fde1fac00682ae6c39ffaeb6de3ad16a38193dfcbb606c42e50e86c6156a57",
+      "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+      "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+    }
+  },
+  "source_archive": {
+    "path": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/frozen-inputs.zip",
+    "sha256": "15ca34117e1a36a9db9d6ad196aa0930572fb6344abe9fdb7f42c6fd862fb1ed"
+  },
+  "commands": [
+    {
+      "label": "own-members/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_members/Members.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/own-members/official"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 49.361518953000086,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/000.txt"
+    },
+    {
+      "label": "own-members/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_members/Members.kt",
+        "--module-name",
+        "anonymous_objects",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/own-members/candidate"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 12.002101062999827,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/001.txt"
+    },
+    {
+      "label": "own-members/javac-once-official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/own-members/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/own-members/caller",
+        "/workspace/korrust/tests/anonymous_members/Check.java"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 6.182021232999887,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/002.txt"
+    },
+    {
+      "label": "own-members/java/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/own-members/caller:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/own-members/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 1.4227946730002259,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/003.txt"
+    },
+    {
+      "label": "own-members/java/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/own-members/caller:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/own-members/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 0.8439242090003063,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/004.txt"
+    },
+    {
+      "label": "own-members/javap/official/anonymousmembers.Counted",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/own-members/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousmembers.Counted"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 2.211898051999924,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/005.txt"
+    },
+    {
+      "label": "own-members/javap/candidate/anonymousmembers.Counted",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/own-members/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousmembers.Counted"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 2.8222893689999182,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/006.txt"
+    },
+    {
+      "label": "own-members/javap/official/anonymousmembers.MembersKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/own-members/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousmembers.MembersKt"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 1.0939731649996247,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/007.txt"
+    },
+    {
+      "label": "own-members/javap/candidate/anonymousmembers.MembersKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/own-members/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousmembers.MembersKt"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 1.9263794999997117,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/008.txt"
+    },
+    {
+      "label": "own-members/javap/official/anonymousmembers.Parent",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/own-members/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousmembers.Parent"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 1.1342999180001243,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/009.txt"
+    },
+    {
+      "label": "own-members/javap/candidate/anonymousmembers.Parent",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/own-members/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousmembers.Parent"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 1.251773731999947,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/010.txt"
+    },
+    {
+      "label": "own-members/javap/official/anonymousmembers.Outer",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/own-members/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousmembers.Outer"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 1.1617242090001128,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/011.txt"
+    },
+    {
+      "label": "own-members/javap/candidate/anonymousmembers.Outer",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/own-members/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousmembers.Outer"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 2.072624790000191,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/012.txt"
+    },
+    {
+      "label": "source/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/Objects.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/official"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 62.22756561599999,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/013.txt"
+    },
+    {
+      "label": "source/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/Objects.kt",
+        "--module-name",
+        "anonymous_objects",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/candidate"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 17.107863103,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/014.txt"
+    },
+    {
+      "label": "source/javac-once-official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/caller",
+        "/workspace/korrust/tests/anonymous_objects/ObjectCheck.java"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 6.628440105000209,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/015.txt"
+    },
+    {
+      "label": "source/java/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/caller:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ObjectCheck"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 2.6047898839997288,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/016.txt"
+    },
+    {
+      "label": "source/java/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/caller:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ObjectCheck"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 2.6278125869998803,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/017.txt"
+    },
+    {
+      "label": "source/javap/official/anonymousprobe.Counter",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousprobe.Counter"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 3.3172042589999364,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/018.txt"
+    },
+    {
+      "label": "source/javap/candidate/anonymousprobe.Counter",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousprobe.Counter"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 2.0137793459998647,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/019.txt"
+    },
+    {
+      "label": "source/javap/official/anonymousprobe.ObjectsKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousprobe.ObjectsKt"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 2.71460720999994,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/020.txt"
+    },
+    {
+      "label": "source/javap/candidate/anonymousprobe.ObjectsKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousprobe.ObjectsKt"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 2.4194216509999933,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/021.txt"
+    },
+    {
+      "label": "source/javap/official/anonymousprobe.Owner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousprobe.Owner"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 2.5662696550002693,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/022.txt"
+    },
+    {
+      "label": "source/javap/candidate/anonymousprobe.Owner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousprobe.Owner"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 2.302082835999954,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/023.txt"
+    },
+    {
+      "label": "source/javap/official/anonymousprobe.FactoryOwner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousprobe.FactoryOwner"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 2.0953953170001114,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/024.txt"
+    },
+    {
+      "label": "source/javap/candidate/anonymousprobe.FactoryOwner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousprobe.FactoryOwner"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 1.866583078000076,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/025.txt"
+    },
+    {
+      "label": "source/javap/official/anonymousprobe.Wide",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousprobe.Wide"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 1.9647850530000142,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/026.txt"
+    },
+    {
+      "label": "source/javap/candidate/anonymousprobe.Wide",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousprobe.Wide"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 1.4056651649998457,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/027.txt"
+    },
+    {
+      "label": "source/consumer/official/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/official-official-consumer"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 43.8437648690001,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/028.txt"
+    },
+    {
+      "label": "source/consumer-javac-once-official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/official-official-consumer:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/consumer-caller",
+        "/workspace/korrust/tests/anonymous_objects/ConsumerCheck.java"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 4.55303437800012,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/029.txt"
+    },
+    {
+      "label": "source/consumer-run/official/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/consumer-caller:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/official-official-consumer:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCheck"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 0.8517021880002176,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/030.txt"
+    },
+    {
+      "label": "source/consumer/official/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/Consumer.kt",
+        "--module-name",
+        "consumer",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/official-candidate-consumer"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 10.538579499000207,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/031.txt"
+    },
+    {
+      "label": "source/consumer-run/official/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/consumer-caller:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/official-candidate-consumer:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCheck"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 1.0067114850003236,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/032.txt"
+    },
+    {
+      "label": "source/consumer/candidate/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/candidate-official-consumer"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 33.644060972999796,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/033.txt"
+    },
+    {
+      "label": "source/consumer-run/candidate/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/consumer-caller:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/candidate-official-consumer:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCheck"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 1.2961488059995645,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/034.txt"
+    },
+    {
+      "label": "source/consumer/candidate/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/Consumer.kt",
+        "--module-name",
+        "consumer",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/candidate-candidate-consumer"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 8.940870546000042,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/035.txt"
+    },
+    {
+      "label": "source/consumer-run/candidate/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/consumer-caller:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/candidate-candidate-consumer:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/source/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCheck"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 0.6472569019997536,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/036.txt"
+    },
+    {
+      "label": "inline-method-return/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/InlineReturns.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/inline-method-return/official"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 37.81233269199993,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/037.txt"
+    },
+    {
+      "label": "inline-method-return/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/InlineReturns.kt",
+        "--module-name",
+        "anonymous_objects",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/inline-method-return/candidate"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 11.211502224000014,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/038.txt"
+    },
+    {
+      "label": "inline-method-return/javac-once-official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/inline-method-return/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/inline-method-return/caller",
+        "/workspace/korrust/tests/anonymous_objects/InlineReturnCheck.java"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 6.576768574999733,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/039.txt"
+    },
+    {
+      "label": "inline-method-return/java/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/inline-method-return/caller:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/inline-method-return/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "InlineReturnCheck"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 1.3043900439997742,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/040.txt"
+    },
+    {
+      "label": "inline-method-return/java/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/inline-method-return/caller:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/inline-method-return/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "InlineReturnCheck"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 1.1327145649997874,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/041.txt"
+    },
+    {
+      "label": "inline-method-return/javap/official/anonymousinline.Value",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/inline-method-return/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousinline.Value"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 1.1723523179998665,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/042.txt"
+    },
+    {
+      "label": "inline-method-return/javap/candidate/anonymousinline.Value",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/inline-method-return/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousinline.Value"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 1.4245408610004233,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/043.txt"
+    },
+    {
+      "label": "inline-method-return/javap/official/anonymousinline.InlineReturnsKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/inline-method-return/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousinline.InlineReturnsKt"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 1.213146912999946,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/044.txt"
+    },
+    {
+      "label": "inline-method-return/javap/candidate/anonymousinline.InlineReturnsKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/inline-method-return/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousinline.InlineReturnsKt"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 1.8501084760000595,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/045.txt"
+    },
+    {
+      "label": "library/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/Library.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/library"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 29.81231218899984,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/046.txt"
+    },
+    {
+      "label": "compiled-interface/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/Compiled.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/compiled-interface/official"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 36.69838202200026,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/047.txt"
+    },
+    {
+      "label": "compiled-interface/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/Compiled.kt",
+        "--module-name",
+        "anonymous_objects",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/compiled-interface/candidate"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 0.5303382409992992,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/048.txt"
+    },
+    {
+      "label": "compiled-interface/javac-once-official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/compiled-interface/official:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/compiled-interface/caller",
+        "/workspace/korrust/tests/anonymous_objects/CompiledCheck.java"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 4.745899508000548,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/049.txt"
+    },
+    {
+      "label": "compiled-interface/java/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/compiled-interface/caller:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/compiled-interface/official:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "CompiledCheck"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 0.7642559650003022,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/050.txt"
+    },
+    {
+      "label": "compiled-interface/java/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/compiled-interface/caller:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/compiled-interface/candidate:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "CompiledCheck"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 0.5848980990003838,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/051.txt"
+    },
+    {
+      "label": "compiled-interface/javap/official/anonymouscompiled.CompiledKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/compiled-interface/official:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymouscompiled.CompiledKt"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 2.2798604440004056,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/052.txt"
+    },
+    {
+      "label": "compiled-interface/javap/candidate/anonymouscompiled.CompiledKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/compiled-interface/candidate:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymouscompiled.CompiledKt"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 2.6019283350005935,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/053.txt"
+    },
+    {
+      "label": "java-interface/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/Runnable.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/java-interface/official"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 41.563716477000526,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/054.txt"
+    },
+    {
+      "label": "java-interface/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/Runnable.kt",
+        "--module-name",
+        "anonymous_objects",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/java-interface/candidate"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 0.6056149739997636,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/055.txt"
+    },
+    {
+      "label": "java-interface/javac-once-official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/java-interface/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/java-interface/caller",
+        "/workspace/korrust/tests/anonymous_objects/RunnableCheck.java"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 3.1996472529999664,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/056.txt"
+    },
+    {
+      "label": "java-interface/java/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/java-interface/caller:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/java-interface/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "RunnableCheck"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 0.8246815219999917,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/057.txt"
+    },
+    {
+      "label": "java-interface/java/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/java-interface/caller:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/java-interface/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "RunnableCheck"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 0.6174563730000955,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/058.txt"
+    },
+    {
+      "label": "java-interface/javap/official/anonymousjava.RunnableKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/java-interface/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousjava.RunnableKt"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 1.5946903909998582,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/059.txt"
+    },
+    {
+      "label": "java-interface/javap/candidate/anonymousjava.RunnableKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-s",
+        "-p",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/java-interface/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "anonymousjava.RunnableKt"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 1.2179594700000962,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/060.txt"
+    },
+    {
+      "label": "upstream-kt2663_2/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/references/kotlin/compiler/testData/codegen/box/objects/kt2663_2.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/upstream-kt2663_2/official"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 38.355906628999946,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/061.txt"
+    },
+    {
+      "label": "upstream-kt2663_2/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/references/kotlin/compiler/testData/codegen/box/objects/kt2663_2.kt",
+        "--module-name",
+        "anonymous_objects",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/upstream-kt2663_2/candidate"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 0.8087684930005707,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/062.txt"
+    },
+    {
+      "label": "upstream/javac-once-official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/upstream-kt2663_2/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/upstream-caller",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/UpstreamCheck.java"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 3.209855021000294,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/063.txt"
+    },
+    {
+      "label": "upstream/run/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/upstream-caller:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/upstream-kt2663_2/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "UpstreamCheck"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 0.7058395779995408,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/064.txt"
+    },
+    {
+      "label": "upstream/run/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/upstream-caller:/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/upstream-kt2663_2/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "UpstreamCheck"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 0.6852172220005741,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/065.txt"
+    },
+    {
+      "label": "boundary/AbruptInlineInference/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/AbruptInlineInference.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/AbruptInlineInference/official"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 35.59213357399949,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/066.txt"
+    },
+    {
+      "label": "boundary/AbruptInlineInference/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/AbruptInlineInference.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/AbruptInlineInference/candidate"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 11.221992723999392,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/067.txt"
+    },
+    {
+      "label": "boundary/ClassSupertype/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/ClassSupertype.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/ClassSupertype/official"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 36.38568673699956,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/068.txt"
+    },
+    {
+      "label": "boundary/ClassSupertype/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/ClassSupertype.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/ClassSupertype/candidate"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 0.6455042560000948,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/069.txt"
+    },
+    {
+      "label": "boundary/Covariant/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/Covariant.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/Covariant/official"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 30.11919770000077,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/070.txt"
+    },
+    {
+      "label": "boundary/Covariant/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/Covariant.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/Covariant/candidate"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 8.826228962000641,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/071.txt"
+    },
+    {
+      "label": "boundary/Duplicate/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/Duplicate.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/Duplicate/official"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 20.35945138599982,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/072.txt"
+    },
+    {
+      "label": "boundary/Duplicate/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/Duplicate.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/Duplicate/candidate"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 0.25695172700034163,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/073.txt"
+    },
+    {
+      "label": "boundary/ExtraMember/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/ExtraMember.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/ExtraMember/official"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 26.756362823999552,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/074.txt"
+    },
+    {
+      "label": "boundary/ExtraMember/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/ExtraMember.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/ExtraMember/candidate"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 0.4892497660002846,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/075.txt"
+    },
+    {
+      "label": "boundary/Generic/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/Generic.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/Generic/official"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 29.584250396999778,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/076.txt"
+    },
+    {
+      "label": "boundary/Generic/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/Generic.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/Generic/candidate"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 8.865826440999626,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/077.txt"
+    },
+    {
+      "label": "boundary/GenericJava/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/GenericJava.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/GenericJava/official"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 39.258885862999705,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/078.txt"
+    },
+    {
+      "label": "boundary/GenericJava/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/GenericJava.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/GenericJava/candidate"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 10.875426641000558,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/079.txt"
+    },
+    {
+      "label": "boundary/GenericMethod/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/GenericMethod.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/GenericMethod/official"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 32.494684549999874,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/080.txt"
+    },
+    {
+      "label": "boundary/GenericMethod/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/GenericMethod.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/GenericMethod/candidate"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 8.625792023000031,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/081.txt"
+    },
+    {
+      "label": "boundary/InferredCovariant/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/InferredCovariant.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/InferredCovariant/official"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 26.57939983599954,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/082.txt"
+    },
+    {
+      "label": "boundary/InferredCovariant/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/InferredCovariant.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/InferredCovariant/candidate"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 8.760700036000344,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/083.txt"
+    },
+    {
+      "label": "boundary/InferredWrongNumeric/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/InferredWrongNumeric.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/InferredWrongNumeric/official"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 15.568180711999958,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/084.txt"
+    },
+    {
+      "label": "boundary/InferredWrongNumeric/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/InferredWrongNumeric.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/InferredWrongNumeric/candidate"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 0.5815958539997155,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/085.txt"
+    },
+    {
+      "label": "boundary/Marker/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/Marker.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/Marker/official"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 13.875585153999964,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/086.txt"
+    },
+    {
+      "label": "boundary/Marker/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/Marker.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/Marker/candidate"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 0.42421598700002505,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/087.txt"
+    },
+    {
+      "label": "boundary/Missing/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/Missing.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/Missing/official"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 16.34661213900017,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/088.txt"
+    },
+    {
+      "label": "boundary/Missing/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/Missing.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/Missing/candidate"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 0.4035086389994831,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/089.txt"
+    },
+    {
+      "label": "boundary/MissingPropertySetter/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/MissingPropertySetter.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/MissingPropertySetter/official"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 15.001937224999892,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/090.txt"
+    },
+    {
+      "label": "boundary/MissingPropertySetter/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/MissingPropertySetter.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/MissingPropertySetter/candidate"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 0.46193874100026733,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/091.txt"
+    },
+    {
+      "label": "boundary/Multiple/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/Multiple.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/Multiple/official"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 15.922893981000016,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/092.txt"
+    },
+    {
+      "label": "boundary/Multiple/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/Multiple.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/Multiple/candidate"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 0.3087814269993032,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/093.txt"
+    },
+    {
+      "label": "boundary/NoSupertype/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/NoSupertype.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/NoSupertype/official"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 14.69560800399995,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/094.txt"
+    },
+    {
+      "label": "boundary/NoSupertype/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/NoSupertype.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/NoSupertype/candidate"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 0.04225390600004175,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/095.txt"
+    },
+    {
+      "label": "boundary/NullResult/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/NullResult.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/NullResult/official"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 13.950607052000123,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/096.txt"
+    },
+    {
+      "label": "boundary/NullResult/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/NullResult.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/NullResult/candidate"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 0.35363047999999253,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/097.txt"
+    },
+    {
+      "label": "boundary/PrivatePropertyOverride/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/PrivatePropertyOverride.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/PrivatePropertyOverride/official"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 11.88058269999965,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/098.txt"
+    },
+    {
+      "label": "boundary/PrivatePropertyOverride/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/PrivatePropertyOverride.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/PrivatePropertyOverride/candidate"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 0.6635486850000234,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/099.txt"
+    },
+    {
+      "label": "boundary/Property/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/Property.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/Property/official"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 14.836890018000304,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/100.txt"
+    },
+    {
+      "label": "boundary/Property/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/Property.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/Property/candidate"
+      ],
+      "exit_code": 0,
+      "wall_time_seconds": 3.3620061629999327,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/101.txt"
+    },
+    {
+      "label": "boundary/PropertyValBackingWrite/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/PropertyValBackingWrite.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/PropertyValBackingWrite/official"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 7.2849814309993235,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/102.txt"
+    },
+    {
+      "label": "boundary/PropertyValBackingWrite/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/PropertyValBackingWrite.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/PropertyValBackingWrite/candidate"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 0.2830158079996181,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/103.txt"
+    },
+    {
+      "label": "boundary/PropertyValWrite/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/PropertyValWrite.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/PropertyValWrite/official"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 12.554087851999611,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/104.txt"
+    },
+    {
+      "label": "boundary/PropertyValWrite/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/PropertyValWrite.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/PropertyValWrite/candidate"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 0.3029941319991849,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/105.txt"
+    },
+    {
+      "label": "boundary/PropertyWithoutOverride/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/PropertyWithoutOverride.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/PropertyWithoutOverride/official"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 8.49854833900008,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/106.txt"
+    },
+    {
+      "label": "boundary/PropertyWithoutOverride/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/PropertyWithoutOverride.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/PropertyWithoutOverride/candidate"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 0.3048879230000239,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/107.txt"
+    },
+    {
+      "label": "boundary/Sealed/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/Sealed.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/Sealed/official"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 12.796161407999534,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/108.txt"
+    },
+    {
+      "label": "boundary/Sealed/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/Sealed.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/Sealed/candidate"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 0.3132691840000916,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/109.txt"
+    },
+    {
+      "label": "boundary/Uninitialized/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/Uninitialized.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/Uninitialized/official"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 9.775748731000022,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/110.txt"
+    },
+    {
+      "label": "boundary/Uninitialized/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/Uninitialized.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/Uninitialized/candidate"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 0.3559442770001624,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/111.txt"
+    },
+    {
+      "label": "boundary/ValWrite/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/ValWrite.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/ValWrite/official"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 7.5029290800002855,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/112.txt"
+    },
+    {
+      "label": "boundary/ValWrite/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/ValWrite.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/ValWrite/candidate"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 0.16082790599921282,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/113.txt"
+    },
+    {
+      "label": "boundary/WrongParameter/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/WrongParameter.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/WrongParameter/official"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 7.971459204999519,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/114.txt"
+    },
+    {
+      "label": "boundary/WrongParameter/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/WrongParameter.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/WrongParameter/candidate"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 0.10066795200054912,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/115.txt"
+    },
+    {
+      "label": "boundary/WrongResult/official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/WrongResult.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "anonymous_objects",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/WrongResult/official"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 5.320999458000188,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/116.txt"
+    },
+    {
+      "label": "boundary/WrongResult/candidate",
+      "argv": [
+        "/tmp/targets159-anonymous/debug/korrust",
+        "/workspace/korrust/tests/anonymous_objects/boundaries/WrongResult.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/WrongResult/candidate"
+      ],
+      "exit_code": 1,
+      "wall_time_seconds": 0.2909564470000987,
+      "log": "reports/correctness/2026-11-26T022408661272Z-anonymous-objects/117.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "own-members/java/official",
+      "outcome": "pass",
+      "assertion": "Independent Java assertions of effects, identity, captures and dispatch"
+    },
+    {
+      "id": "own-members/java/candidate",
+      "outcome": "pass",
+      "assertion": "Independent Java assertions of effects, identity, captures and dispatch"
+    },
+    {
+      "id": "own-members/abi/anonymousmembers.Counted",
+      "outcome": "pass",
+      "signatures": [
+        "descriptor: ()I",
+        "descriptor: (I)I",
+        "descriptor: (Ljava/lang/String;)V",
+        "public abstract int add(int);",
+        "public abstract int getCount();",
+        "public abstract java.lang.String getLabel();",
+        "public abstract void setLabel(java.lang.String);",
+        "public interface anonymousmembers.Counted {"
+      ]
+    },
+    {
+      "id": "own-members/abi/anonymousmembers.MembersKt",
+      "outcome": "pass",
+      "signatures": [
+        "descriptor: (I)I",
+        "descriptor: (Ljava/lang/String;)V",
+        "descriptor: (Ljava/lang/String;I)I",
+        "public final class anonymousmembers.MembersKt {",
+        "public static final anonymousmembers.Counted computed(int);",
+        "public static final anonymousmembers.Counted inherited(int);",
+        "public static final anonymousmembers.Counted ordered();",
+        "public static final anonymousmembers.Counted stored(int);",
+        "public static final int localMembers(int);",
+        "public static final int tick(java.lang.String, int);",
+        "public static final java.lang.String getEffects();",
+        "public static final void setEffects(java.lang.String);"
+      ]
+    },
+    {
+      "id": "own-members/abi/anonymousmembers.Parent",
+      "outcome": "pass",
+      "signatures": [
+        "descriptor: ()I",
+        "descriptor: (I)V",
+        "public anonymousmembers.Parent(int);",
+        "public class anonymousmembers.Parent {",
+        "public final int getBase();"
+      ]
+    },
+    {
+      "id": "own-members/abi/anonymousmembers.Outer",
+      "outcome": "pass",
+      "signatures": [
+        "descriptor: ()I",
+        "descriptor: (I)V",
+        "public anonymousmembers.Outer(int);",
+        "public final anonymousmembers.Counted make();",
+        "public final class anonymousmembers.Outer {",
+        "public final int getCount();"
+      ]
+    },
+    {
+      "id": "source/java/official",
+      "outcome": "pass",
+      "assertion": "Independent Java assertions of effects, identity, captures and dispatch"
+    },
+    {
+      "id": "source/java/candidate",
+      "outcome": "pass",
+      "assertion": "Independent Java assertions of effects, identity, captures and dispatch"
+    },
+    {
+      "id": "source/abi/anonymousprobe.Counter",
+      "outcome": "pass",
+      "signatures": [
+        "descriptor: ()I",
+        "descriptor: ()I",
+        "descriptor: (I)I",
+        "public abstract anonymousprobe.Counter self();",
+        "public abstract int add(int);",
+        "public abstract int current();",
+        "public default int doubled();",
+        "public interface anonymousprobe.Counter {"
+      ]
+    },
+    {
+      "id": "source/abi/anonymousprobe.ObjectsKt",
+      "outcome": "pass",
+      "signatures": [
+        "descriptor: ()I",
+        "descriptor: ()I",
+        "descriptor: ()I",
+        "descriptor: ()I",
+        "descriptor: (I)I",
+        "public final class anonymousprobe.ObjectsKt {",
+        "public static final anonymousprobe.Counter counter(int);",
+        "public static final anonymousprobe.Counter immutable(int);",
+        "public static final anonymousprobe.Counter mixedLocal(int);",
+        "public static final anonymousprobe.Counter mixedShadow(int);",
+        "public static final anonymousprobe.Counter namedCallable();",
+        "public static final anonymousprobe.Counter namedValue();",
+        "public static final anonymousprobe.Counter shadow(int);",
+        "public static final anonymousprobe.Counter zero();",
+        "public static final anonymousprobe.Wide wide(long, double, java.lang.String);",
+        "public static final int effects();",
+        "public static final int lambdaShadow(int);",
+        "public static final int nested();",
+        "public static final int shared();",
+        "public static final int siblings();"
+      ]
+    },
+    {
+      "id": "source/abi/anonymousprobe.Owner",
+      "outcome": "pass",
+      "signatures": [
+        "descriptor: ()I",
+        "descriptor: (I)V",
+        "public anonymousprobe.Owner(int);",
+        "public final anonymousprobe.Counter make(int);",
+        "public final class anonymousprobe.Owner {",
+        "public final int getBase();"
+      ]
+    },
+    {
+      "id": "source/abi/anonymousprobe.FactoryOwner",
+      "outcome": "pass",
+      "signatures": [
+        "descriptor: (I)V",
+        "public anonymousprobe.FactoryOwner(int);",
+        "public final anonymousprobe.Counter make();",
+        "public final class anonymousprobe.FactoryOwner {"
+      ]
+    },
+    {
+      "id": "source/abi/anonymousprobe.Wide",
+      "outcome": "pass",
+      "signatures": [
+        "descriptor: (J)J",
+        "public abstract long read(long);",
+        "public interface anonymousprobe.Wide {"
+      ]
+    },
+    {
+      "id": "source/consumer/official/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "source/consumer/official/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "source/consumer/candidate/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "source/consumer/candidate/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "source/consumer-fixed-java-unchanged",
+      "outcome": "pass",
+      "classfiles_sha256": {
+        "target/checks/2026-11-26T022408661272Z-anonymous-objects/source/consumer-caller/ConsumerCheck.class": "1c52732a46ebc4e2dc9cebdb63f2eb7b4cbdeceb59a44a1495ee06ffc7eace01"
+      }
+    },
+    {
+      "id": "inline-method-return/java/official",
+      "outcome": "pass",
+      "assertion": "Independent Java assertions of effects, identity, captures and dispatch"
+    },
+    {
+      "id": "inline-method-return/java/candidate",
+      "outcome": "pass",
+      "assertion": "Independent Java assertions of effects, identity, captures and dispatch"
+    },
+    {
+      "id": "inline-method-return/abi/anonymousinline.Value",
+      "outcome": "pass",
+      "signatures": [
+        "descriptor: ()I",
+        "public abstract int read();",
+        "public interface anonymousinline.Value {"
+      ]
+    },
+    {
+      "id": "inline-method-return/abi/anonymousinline.InlineReturnsKt",
+      "outcome": "pass",
+      "signatures": [
+        "public final class anonymousinline.InlineReturnsKt {",
+        "public static final anonymousinline.Value conditional(boolean);",
+        "public static final anonymousinline.Value inferred();"
+      ]
+    },
+    {
+      "id": "compiled-interface/java/official",
+      "outcome": "pass",
+      "assertion": "Independent Java assertions of effects, identity, captures and dispatch"
+    },
+    {
+      "id": "compiled-interface/java/candidate",
+      "outcome": "pass",
+      "assertion": "Independent Java assertions of effects, identity, captures and dispatch"
+    },
+    {
+      "id": "compiled-interface/abi/anonymouscompiled.CompiledKt",
+      "outcome": "pass",
+      "signatures": [
+        "public final class anonymouscompiled.CompiledKt {",
+        "public static final anonymouslibrary.Pair make(int);"
+      ]
+    },
+    {
+      "id": "java-interface/java/official",
+      "outcome": "pass",
+      "assertion": "Independent Java assertions of effects, identity, captures and dispatch"
+    },
+    {
+      "id": "java-interface/java/candidate",
+      "outcome": "pass",
+      "assertion": "Independent Java assertions of effects, identity, captures and dispatch"
+    },
+    {
+      "id": "java-interface/abi/anonymousjava.RunnableKt",
+      "outcome": "pass",
+      "signatures": [
+        "public final class anonymousjava.RunnableKt {",
+        "public static final java.lang.Runnable action(int[]);"
+      ]
+    },
+    {
+      "id": "upstream/kt2663_2/official",
+      "outcome": "pass",
+      "source": "references/kotlin/compiler/testData/codegen/box/objects/kt2663_2.kt",
+      "directives": [
+        "TARGET_BACKEND: JVM",
+        "TARGET_BACKEND: JVM_IR"
+      ]
+    },
+    {
+      "id": "upstream/kt2663_2/candidate",
+      "outcome": "pass",
+      "source": "references/kotlin/compiler/testData/codegen/box/objects/kt2663_2.kt",
+      "directives": [
+        "TARGET_BACKEND: JVM",
+        "TARGET_BACKEND: JVM_IR"
+      ]
+    },
+    {
+      "id": "boundary/AbruptInlineInference",
+      "outcome": "unsupported_language",
+      "oracle_exit_code": 0,
+      "candidate_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/korrust/tests/anonymous_objects/boundaries/AbruptInlineInference.kt",
+          "offset": 86,
+          "category": "unsupported_language",
+          "code": "LAMBDA_ABRUPT_RESULT_INFERENCE_UNSUPPORTED",
+          "message": "Generic lambda results with unconditional nonlocal returns require unsupported Nothing inference",
+          "path": "/workspace/korrust/tests/anonymous_objects/boundaries/AbruptInlineInference.kt",
+          "line": 1,
+          "column": 87
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/ClassSupertype",
+      "outcome": "pass",
+      "oracle_exit_code": 0,
+      "candidate_exit_code": 0
+    },
+    {
+      "id": "boundary/Covariant",
+      "outcome": "unsupported_language",
+      "oracle_exit_code": 0,
+      "candidate_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/korrust/tests/anonymous_objects/boundaries/Covariant.kt",
+          "offset": 67,
+          "category": "unsupported_language",
+          "code": "ANONYMOUS_OBJECT_SHAPE_UNSUPPORTED",
+          "message": "Covariant anonymous override results are unsupported",
+          "path": "/workspace/korrust/tests/anonymous_objects/boundaries/Covariant.kt",
+          "line": 1,
+          "column": 68
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/Duplicate",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "candidate_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/korrust/tests/anonymous_objects/boundaries/Duplicate.kt",
+          "offset": 94,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_OVERRIDE_DUPLICATE",
+          "message": "Duplicate anonymous override",
+          "path": "/workspace/korrust/tests/anonymous_objects/boundaries/Duplicate.kt",
+          "line": 1,
+          "column": 95
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/ExtraMember",
+      "outcome": "pass",
+      "oracle_exit_code": 0,
+      "candidate_exit_code": 0
+    },
+    {
+      "id": "boundary/Generic",
+      "outcome": "pass",
+      "oracle_exit_code": 0,
+      "candidate_exit_code": 0
+    },
+    {
+      "id": "boundary/GenericJava",
+      "outcome": "pass",
+      "oracle_exit_code": 0,
+      "candidate_exit_code": 0
+    },
+    {
+      "id": "boundary/GenericMethod",
+      "outcome": "unsupported_language",
+      "oracle_exit_code": 0,
+      "candidate_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/korrust/tests/anonymous_objects/boundaries/GenericMethod.kt",
+          "offset": 55,
+          "category": "unsupported_language",
+          "code": "ANONYMOUS_OBJECT_SHAPE_UNSUPPORTED",
+          "message": "Anonymous inherited generic methods are unsupported",
+          "path": "/workspace/korrust/tests/anonymous_objects/boundaries/GenericMethod.kt",
+          "line": 1,
+          "column": 56
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/InferredCovariant",
+      "outcome": "unsupported_language",
+      "oracle_exit_code": 0,
+      "candidate_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/korrust/tests/anonymous_objects/boundaries/InferredCovariant.kt",
+          "offset": 67,
+          "category": "unsupported_language",
+          "code": "ANONYMOUS_OBJECT_SHAPE_UNSUPPORTED",
+          "message": "Covariant anonymous inferred results are unsupported",
+          "path": "/workspace/korrust/tests/anonymous_objects/boundaries/InferredCovariant.kt",
+          "line": 1,
+          "column": 68
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/InferredWrongNumeric",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "candidate_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/korrust/tests/anonymous_objects/boundaries/InferredWrongNumeric.kt",
+          "offset": 68,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_OVERRIDE_RESULT_MISMATCH",
+          "message": "Anonymous inferred result differs from inherited method",
+          "path": "/workspace/korrust/tests/anonymous_objects/boundaries/InferredWrongNumeric.kt",
+          "line": 1,
+          "column": 69
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/Marker",
+      "outcome": "pass",
+      "oracle_exit_code": 0,
+      "candidate_exit_code": 0
+    },
+    {
+      "id": "boundary/Missing",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "candidate_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/korrust/tests/anonymous_objects/boundaries/Missing.kt",
+          "offset": 59,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_ABSTRACT_MEMBER_MISSING",
+          "message": "Anonymous object does not implement every abstract method",
+          "path": "/workspace/korrust/tests/anonymous_objects/boundaries/Missing.kt",
+          "line": 1,
+          "column": 60
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/MissingPropertySetter",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "candidate_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/korrust/tests/anonymous_objects/boundaries/MissingPropertySetter.kt",
+          "offset": 42,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_ABSTRACT_MEMBER_MISSING",
+          "message": "Anonymous object does not implement every abstract method",
+          "path": "/workspace/korrust/tests/anonymous_objects/boundaries/MissingPropertySetter.kt",
+          "line": 2,
+          "column": 16
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/Multiple",
+      "outcome": "pass",
+      "oracle_exit_code": 0,
+      "candidate_exit_code": 0
+    },
+    {
+      "id": "boundary/NoSupertype",
+      "outcome": "unsupported_language",
+      "oracle_exit_code": 0,
+      "candidate_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/korrust/tests/anonymous_objects/boundaries/NoSupertype.kt",
+          "offset": 24,
+          "category": "unsupported_language",
+          "code": "ANONYMOUS_OBJECT_SHAPE_UNSUPPORTED",
+          "message": "Anonymous objects require a supported superclass or interface",
+          "path": "/workspace/korrust/tests/anonymous_objects/boundaries/NoSupertype.kt",
+          "line": 1,
+          "column": 25
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/NullResult",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "candidate_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/korrust/tests/anonymous_objects/boundaries/NullResult.kt",
+          "offset": 88,
+          "category": "invalid_kotlin",
+          "code": "TYPE_MISMATCH",
+          "message": "Type mismatch: expected String, found Null",
+          "path": "/workspace/korrust/tests/anonymous_objects/boundaries/NullResult.kt",
+          "line": 1,
+          "column": 89
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/PrivatePropertyOverride",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "candidate_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/korrust/tests/anonymous_objects/boundaries/PrivatePropertyOverride.kt",
+          "offset": 55,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_OVERRIDE_VISIBILITY_INVALID",
+          "message": "Anonymous overrides cannot weaken member visibility",
+          "path": "/workspace/korrust/tests/anonymous_objects/boundaries/PrivatePropertyOverride.kt",
+          "line": 2,
+          "column": 29
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/Property",
+      "outcome": "pass",
+      "oracle_exit_code": 0,
+      "candidate_exit_code": 0
+    },
+    {
+      "id": "boundary/PropertyValBackingWrite",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "candidate_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/korrust/tests/anonymous_objects/boundaries/PropertyValBackingWrite.kt",
+          "offset": 99,
+          "category": "invalid_kotlin",
+          "code": "VAL_BACKING_FIELD_REASSIGNMENT",
+          "message": "Cannot reassign val backing field",
+          "path": "/workspace/korrust/tests/anonymous_objects/boundaries/PropertyValBackingWrite.kt",
+          "line": 4,
+          "column": 17
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/PropertyValWrite",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "candidate_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/korrust/tests/anonymous_objects/boundaries/PropertyValWrite.kt",
+          "offset": 108,
+          "category": "invalid_kotlin",
+          "code": "VAL_PROPERTY_REASSIGNMENT",
+          "message": "Cannot reassign val property",
+          "path": "/workspace/korrust/tests/anonymous_objects/boundaries/PropertyValWrite.kt",
+          "line": 4,
+          "column": 29
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/PropertyWithoutOverride",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "candidate_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/korrust/tests/anonymous_objects/boundaries/PropertyWithoutOverride.kt",
+          "offset": 55,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_OVERRIDE_REQUIRED",
+          "message": "Anonymous member hides an inherited member without override",
+          "path": "/workspace/korrust/tests/anonymous_objects/boundaries/PropertyWithoutOverride.kt",
+          "line": 2,
+          "column": 29
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/Sealed",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "candidate_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/korrust/tests/anonymous_objects/boundaries/Sealed.kt",
+          "offset": 52,
+          "category": "invalid_kotlin",
+          "code": "SEALED_ANONYMOUS_SUBCLASS_INVALID",
+          "message": "Anonymous objects cannot inherit sealed classifiers",
+          "path": "/workspace/korrust/tests/anonymous_objects/boundaries/Sealed.kt",
+          "line": 1,
+          "column": 53
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/Uninitialized",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "candidate_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/korrust/tests/anonymous_objects/boundaries/Uninitialized.kt",
+          "offset": 68,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_CAPTURE_UNINITIALIZED",
+          "message": "Variable must be initialized before anonymous capture",
+          "path": "/workspace/korrust/tests/anonymous_objects/boundaries/Uninitialized.kt",
+          "line": 1,
+          "column": 69
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/ValWrite",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "candidate_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/korrust/tests/anonymous_objects/boundaries/ValWrite.kt",
+          "offset": 104,
+          "category": "invalid_kotlin",
+          "code": "IMMUTABLE_CAPTURE_ASSIGNMENT",
+          "message": "Cannot reassign an immutable lexical capture",
+          "path": "/workspace/korrust/tests/anonymous_objects/boundaries/ValWrite.kt",
+          "line": 1,
+          "column": 105
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/WrongParameter",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "candidate_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/korrust/tests/anonymous_objects/boundaries/WrongParameter.kt",
+          "offset": 77,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_OVERRIDE_MISMATCH",
+          "message": "Anonymous override requires an exact inherited method signature",
+          "path": "/workspace/korrust/tests/anonymous_objects/boundaries/WrongParameter.kt",
+          "line": 1,
+          "column": 78
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/WrongResult",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "candidate_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/korrust/tests/anonymous_objects/boundaries/WrongResult.kt",
+          "offset": 67,
+          "category": "invalid_kotlin",
+          "code": "ANONYMOUS_OVERRIDE_RESULT_MISMATCH",
+          "message": "Anonymous override result differs from inherited method",
+          "path": "/workspace/korrust/tests/anonymous_objects/boundaries/WrongResult.kt",
+          "line": 1,
+          "column": 68
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "application/DevotionDownloadBackend",
+      "outcome": "not_run",
+      "source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/devotion/DevotionDownloadBackend.kt",
+      "reason": "Request anonymous interface shape assessed; unchanged whole source requires additional application, HTTP and Android dependency support. No compile claim."
+    },
+    {
+      "id": "application/DevotionActivity",
+      "outcome": "not_run",
+      "source": "benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/ac/DevotionActivity.kt",
+      "reason": "rootListener extends a class and declares mutable properties; unchanged whole-source compilation still requires Android and application dependencies."
+    },
+    {
+      "id": "upstream/CoroutineHelpers",
+      "outcome": "not_run",
+      "source": "references/kotlin/compiler/testData/diagnostics/helpers/coroutines/CoroutineHelpers.kt",
+      "reason": "Anonymous Continuation implementations require parameterized interface, properties and Result value-class semantics."
+    }
+  ],
+  "evidence": [],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_anonymous_objects.py",
+      "--compiler",
+      "/tmp/targets159-anonymous/debug/korrust",
+      "--source-root",
+      "/workspace/work/anon159-freeze"
+    ]
+  ],
+  "limitations": [
+    "Nonsealed class and interface supertypes with superclass constructor arguments, ordinary override methods, lexical captures, fresh allocation, own and enclosing receivers. This suite covers nongeneric runtime cases and concrete generic-supertype compilation boundaries; generic-base runtime, erased bridges and JVM generic signatures have separate check_anonymous_subclasses.py evidence. Own stored and computed properties, custom accessors and explicit-result methods are exercised. Generic methods, property delegates and annotations, own method result inference and covariant results remain explicit unsupported boundaries. Generic inline lambdas with unconditional nonlocal returns still require unsupported Nothing inference; conditional method returns are exercised.",
+    "Same Java caller compiles once against official provider and runs with -Xverify:all against both. Official and candidate Kotlin consumers compile separately against both providers. Public provider ABI is compared; generated anonymous class names and private capture layouts are not ABI claims.",
+    "Generated classes omit EnclosingMethod and anonymous-class Kotlin metadata. Reflection equivalence for Class.isAnonymousClass, isLocalClass, enclosingMethod and Kotlin reflection is unsupported and unverified.",
+    "AndroidBible source inspection motivates scope; no unchanged whole AndroidBible file, full application, APK/device or full Kotlin compatibility claim. Upstream CoroutineHelpers requires generic Continuation, Result value class and property support beyond this scope."
+  ],
+  "counts": {
+    "pass": 37,
+    "unsupported_language": 5,
+    "invalid_rejected": 14,
+    "not_run": 3
+  }
+}

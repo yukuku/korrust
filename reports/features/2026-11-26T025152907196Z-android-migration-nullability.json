@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-26T02:51:53.638692+00:00",
+  "status": "complete",
+  "compiler": {
+    "feature_revision": "c3bc0cfbb",
+    "source_base_revision": "bd1caed5a09eae7ba2bfdcc01121f5b2f95c11f3",
+    "source_archive_sha256": "72ac87dac3907ce19be0f560eebcdae7ef0e782fa8c5b59eb27fe815f4d13eb0",
+    "binary_sha256": "2ec314fca9bb5ebe26a4aad000e813348764e7fd3e962188ca8330471c9353bf"
+  },
+  "reference_compiler": "Kotlin 2.3.21",
+  "evidence": [
+    "reports/correctness/2026-11-26T024315217490Z-migration-nullability.json",
+    "reports/features/2026-11-26T025152907196Z-android-migration-nullability/VerseItem-case167.json",
+    "reports/features/2026-11-26T025152907196Z-android-migration-nullability/VerseItem-typed-diagnostic.json",
+    "reports/features/2026-11-26T025152907196Z-android-migration-nullability/VerseItem-typed-diagnostic.kt",
+    "reports/features/2026-11-26T025152907196Z-android-migration-nullability/build.log",
+    "reports/features/2026-11-26T025152907196Z-android-migration-nullability/compiler-source.tar.gz",
+    "reports/features/2026-11-26T025152907196Z-android-migration-nullability/rust-tests.log"
+  ],
+  "features": [
+    {
+      "name": "Android migration nullability annotations",
+      "status": "supported",
+      "scope": "RecentlyNonNull and RecentlyNullable retain platform types under pinned default WARN enhancement. Nullable arguments, explicit nonnull result checks, nongeneric reference fields, ordinary generic calls, strict-marker precedence and generic field rejection boundaries are checked.",
+      "restrictions": [
+        "Warning diagnostics are not reproduced. Custom per-annotation enhancement settings are unsupported.",
+        "Global JSR-305 strict/ignore options do not override these annotations in the pinned reference; both are verified independently.",
+        "Nested generic type-use paths remain outside this feature."
+      ],
+      "evidence": [
+        "reports/correctness/2026-11-26T024315217490Z-migration-nullability.json"
+      ]
+    }
+  ],
+  "androidbible": {
+    "case167_outcome": "unsupported_language",
+    "remaining_boundary": "A typed diagnostic copy exposes INNER_TYPE nullability on ResourcesCompat.getDrawable Resources.Theme parameter; the unchanged source remains unresolved during delegated-property inference."
+  },
+  "limitations": [
+    "No Android runtime or full-app compatibility claim. The source archive is the exact tested compiler tree, based on the recorded revision plus this feature."
+  ]
+}

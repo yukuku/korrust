@@ -252,35 +252,91 @@ pub(super) fn field(value: &str, parameters: &[TypeParameter]) -> Result<Type> {
 }
 
 pub(super) fn attach_fields(class: &mut JavaClass, attrs: &Attributes, field_attrs: &[Attributes]) {
+    let _ = attach_fields_with_declarations(class, attrs, field_attrs, &mut |_| Ok(false));
+}
+
+pub(super) fn attach_fields_with_declarations(
+    class: &mut JavaClass,
+    attrs: &Attributes,
+    field_attrs: &[Attributes],
+    passive: &mut impl FnMut(&Annotation) -> Result<bool>,
+) -> Result<()> {
     let parameters = match attrs.signature.as_deref().map(self::class).transpose() {
         Ok(Some((parameters, _))) => parameters,
         Ok(None) => Vec::new(),
-        Err(_) => return,
+        Err(_) => return Ok(()),
     };
     for (field, attributes) in class.fields.iter_mut().zip(field_attrs) {
-        let Some(signature) = &attributes.signature else {
+        if attributes.signature.is_none()
+            && attributes.annotations.is_empty()
+            && attributes.return_type_annotations.is_empty()
+        {
             continue;
-        };
-        if attributes.unsupported || field.access & 0x1000 != 0 {
+        }
+        let signature = attributes.signature.as_deref().unwrap_or(&field.descriptor);
+        if attributes.unsupported
+            || field.access & 0x1000 != 0
+            || attributes.constant.is_some() && field.constant.is_none()
+        {
             continue;
         }
         let Ok(ty) = self::field(signature, &parameters) else {
             continue;
         };
-        if ty.descriptor() != field.descriptor {
+        if ty.descriptor() != field.descriptor
+            || attributes
+                .inner_type_paths
+                .iter()
+                .any(|(target, _, depth)| {
+                    *target != 0x13 || !inner_annotation_at_leaf(&ty, *depth, &attrs.inner_classes)
+                })
+        {
             continue;
+        }
+        let mut declarations = Vec::new();
+        for annotation in &attributes.annotations {
+            if !passive(annotation)? {
+                declarations.push(annotation);
+            }
         }
         if let Ok(ty) = nullability(
             ty,
-            attributes
-                .annotations
+            declarations
                 .iter()
+                .copied()
                 .chain(&attributes.return_type_annotations),
         ) {
             field.java_type = Some(Box::new(ty));
             field.unsupported = false;
         }
     }
+    Ok(())
+}
+
+fn inner_annotation_at_leaf(
+    ty: &Type,
+    depth: u8,
+    inner_classes: &[(String, String, String, u16)],
+) -> bool {
+    let mut owner = match ty.base() {
+        Type::Java(name) | Type::Parameterized { name, .. } => name.as_str(),
+        _ => return false,
+    };
+    let mut count = 0usize;
+    loop {
+        let mut entries = inner_classes
+            .iter()
+            .filter(|(inner, _, _, _)| inner == owner);
+        let Some((_, outer, _, _)) = entries.next() else {
+            break;
+        };
+        count += 1;
+        if entries.next().is_some() || count > usize::from(depth) {
+            return false;
+        }
+        owner = outer;
+    }
+    count == usize::from(depth)
 }
 
 pub(super) fn class(value: &str) -> Result<(Vec<TypeParameter>, Vec<Type>)> {
@@ -311,7 +367,10 @@ pub(super) fn nullability<'a>(
             annotation.name.as_str(),
             "Landroidx/annotation/RecentlyNonNull;" | "Landroidx/annotation/RecentlyNullable;"
         ) {
-            return Err(invalid());
+            if !annotation.values.is_empty() {
+                return Err(invalid());
+            }
+            continue;
         }
         let nullable = nullability_polarity(&annotation.name).ok_or_else(invalid)?;
         if !annotation.values.is_empty() || state.is_some_and(|s| s != nullable) {
@@ -332,7 +391,6 @@ fn nullability_polarity(name: &str) -> Option<bool> {
         | "Lorg/jspecify/annotations/NonNull;"
         | "Landroid/annotation/NonNull;"
         | "Landroidx/annotation/NonNull;"
-        | "Landroidx/annotation/RecentlyNonNull;"
         | "Landroid/support/annotation/NonNull;"
         | "Lcom/android/annotations/NonNull;"
         | "Lorg/checkerframework/checker/nullness/compatqual/NonNullDecl;"
@@ -349,7 +407,6 @@ fn nullability_polarity(name: &str) -> Option<bool> {
         | "Lorg/jspecify/annotations/Nullable;"
         | "Landroid/annotation/Nullable;"
         | "Landroidx/annotation/Nullable;"
-        | "Landroidx/annotation/RecentlyNullable;"
         | "Landroid/support/annotation/Nullable;"
         | "Lcom/android/annotations/Nullable;"
         | "Lorg/checkerframework/checker/nullness/compatqual/NullableDecl;"
@@ -372,7 +429,9 @@ pub(super) fn type_semantic_annotation(name: &str) -> bool {
     nullability_polarity(name).is_some()
         || matches!(
             name,
-            "Lorg/jspecify/nullness/NullMarked;"
+            "Landroidx/annotation/RecentlyNonNull;"
+                | "Landroidx/annotation/RecentlyNullable;"
+                | "Lorg/jspecify/nullness/NullMarked;"
                 | "Lorg/jspecify/annotations/NullMarked;"
                 | "Lorg/jspecify/annotations/NullUnmarked;"
                 | "Lorg/jspecify/nullness/NullnessUnspecified;"
@@ -444,7 +503,21 @@ pub(super) fn attach_with_declarations(
                 params.iter().map(Type::descriptor).collect::<String>(),
                 result.descriptor()
             );
-            if erased != method.descriptor {
+            if erased != method.descriptor
+                || attributes
+                    .inner_type_paths
+                    .iter()
+                    .any(|(target, index, depth)| {
+                        let ty = match *target {
+                            0x14 => Some(&result),
+                            0x16 => index.and_then(|index| params.get(index)),
+                            _ => None,
+                        };
+                        ty.is_none_or(|ty| {
+                            !inner_annotation_at_leaf(ty, *depth, &attrs.inner_classes)
+                        })
+                    })
+            {
                 continue;
             }
             if attributes
@@ -507,6 +580,7 @@ pub(super) fn attach_with_declarations(
                     method.kotlin_params = Some(params);
                     method.kotlin_result = Some(result);
                     method.library = Some(LibraryMethod {
+                        vararg_index: None,
                         contracts: Vec::new(),
                         value_dispatch: false,
                         suspend_: false,
@@ -638,6 +712,73 @@ mod tests {
             nullability(Type::String, &[]).unwrap(),
             Type::Platform(Box::new(Type::String))
         );
+    }
+
+    #[test]
+    fn inner_type_annotations_require_the_leaf_and_consistent_nesting() {
+        let nesting = vec![
+            ("Outer$Middle".into(), "Outer".into(), "Middle".into(), 9),
+            (
+                "Outer$Middle$Leaf".into(),
+                "Outer$Middle".into(),
+                "Leaf".into(),
+                9,
+            ),
+        ];
+        let leaf = Type::Java("Outer$Middle$Leaf".into());
+        assert!(inner_annotation_at_leaf(&leaf, 2, &nesting));
+        assert!(!inner_annotation_at_leaf(&leaf, 1, &nesting));
+        assert!(!inner_annotation_at_leaf(&Type::String, 1, &nesting));
+        assert!(!inner_annotation_at_leaf(
+            &Type::Array(Box::new(leaf.clone())),
+            2,
+            &nesting
+        ));
+        assert!(!inner_annotation_at_leaf(&leaf, 2, &[]));
+        let mut conflicting = nesting.clone();
+        conflicting.push(nesting[1].clone());
+        assert!(!inner_annotation_at_leaf(&leaf, 2, &conflicting));
+    }
+
+    #[test]
+    fn android_migration_nullability_keeps_platform_types_and_strict_markers() {
+        let marker = |name: &str| Annotation {
+            name: name.into(),
+            values: Vec::new(),
+        };
+        for recent in [
+            "Landroidx/annotation/RecentlyNonNull;",
+            "Landroidx/annotation/RecentlyNullable;",
+        ] {
+            assert_eq!(
+                nullability(Type::String, &[marker(recent)]).unwrap(),
+                Type::Platform(Box::new(Type::String))
+            );
+            for (strict, expected) in [
+                ("Landroidx/annotation/NonNull;", Type::String),
+                (
+                    "Landroidx/annotation/Nullable;",
+                    Type::Nullable(Box::new(Type::String)),
+                ),
+            ] {
+                for annotations in [
+                    vec![marker(recent), marker(strict)],
+                    vec![marker(strict), marker(recent)],
+                ] {
+                    assert_eq!(nullability(Type::String, &annotations).unwrap(), expected);
+                }
+            }
+            assert!(
+                nullability(
+                    Type::String,
+                    &[Annotation {
+                        name: recent.into(),
+                        values: vec![("value".into(), AnnotationValue::Other)],
+                    }]
+                )
+                .is_err()
+            );
+        }
     }
 
     #[test]

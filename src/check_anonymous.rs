@@ -388,7 +388,7 @@ impl Checker<'_> {
             )
             .collect::<Vec<_>>();
         let mut initializer_body = Vec::new();
-        for property in properties {
+        for (index, property) in properties.iter().enumerate() {
             if property.receiver.is_some()
                 || property.delegate.is_some()
                 || property.lateinit
@@ -400,6 +400,29 @@ impl Checker<'_> {
                     property.offset,
                     "Anonymous property delegates, annotations, and accessor visibility are unsupported",
                 ));
+            }
+            if let Some(value) = &property.initializer {
+                let mut names = HashSet::new();
+                captures::expression_names(value, &mut names);
+                if names.contains("this") {
+                    return Err(Diagnostic::new(
+                        property.offset,
+                        "Explicit own receivers in anonymous property initializers are unsupported",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "ANONYMOUS_INITIALIZER_RECEIVER_UNSUPPORTED",
+                    ));
+                }
+                if properties[index..]
+                    .iter()
+                    .any(|property| names.contains(&property.name))
+                {
+                    return Err(Diagnostic::new(property.offset, "Anonymous property initializers cannot reference own properties before their declaration in the supported subset").with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "ANONYMOUS_INITIALIZER_FORWARD_REFERENCE_UNSUPPORTED",
+                    ));
+                }
             }
             let ty = if !property.inferred {
                 self.resolve(&property.ty, property.offset)?

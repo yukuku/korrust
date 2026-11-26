@@ -1,0 +1,454 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T02:31:00.114746+00:00",
+  "status": "complete",
+  "compiler": {
+    "path": "target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/korrust-frozen",
+    "sha256": "b2e4d6515ef6866d689ede11349ca8d78fc5386a2b5a2961ea1714619946c98c",
+    "source_revision": "6dd22d9b879ea4330c65228448c63dcc687ec76d",
+    "source_patch": {
+      "path": "reports/correctness/2026-11-26T023100114746Z-compiled-nonfinal-varargs/source.patch",
+      "sha256": "24139cc7b258f8785ca5303ba0d691115eb52a53aa30a1211ba8440cbab4fbe0"
+    },
+    "source_snapshot": "Pinned baseline plus source.patch, with all compiled Rust inputs archived and hashed in inputs.zip"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "frozen_input_hashes": {
+    "src/annotation_declarations.rs": "1dbea7954f183ec549558e4bf72686b48b438a152c4b1207d8bb988943ada49f",
+    "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+    "src/bytecode/annotation_files.rs": "0fe8ebba7bbd2c80fcdd6fda797b448ca8cd63945b100781361bf1e3ace02eaa",
+    "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+    "src/bytecode/anonymous_context.rs": "e48d7aba57745c9e3ecb0a2317ea627f3b6d9b2d86805563bae680d79a301910",
+    "src/bytecode/class_companion.rs": "7463d1e739919160b82ed1137a195ebc3a36037ed8b5419a26c1f38889b533a7",
+    "src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+    "src/bytecode/defaults.rs": "d092d8a420cfb719f92dbb9a3bcc58f7c644d67bf9b3c611c72949122c22e827",
+    "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+    "src/bytecode/frames.rs": "1659d0401bfa59f751e3b6db250a2395a827ccad13c156f19f62c76773983b48",
+    "src/bytecode/inline.rs": "ca8a4f4da8f11e405a3cdcbcf87c3bfde49635e331f9712fb7b2f4aca0f84d25",
+    "src/bytecode/interfaces.rs": "5456ea3de3402ee3ead9920bb2cb0e7c0baab4f6eb7b211e481a16bf9ad3207b",
+    "src/bytecode/lambdas.rs": "80d29fe68d378de0b0458e601dec4cc6daaa539a64ce137a7d9f3c10e19f2d98",
+    "src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+    "src/bytecode/suspend.rs": "dfac0ad895edaf45c25655df1fad6c1828fe3fc767fd936dabe6e45357dd96d7",
+    "src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+    "src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+    "src/bytecode.rs": "4a64af005a11fd9a87467750b5acf485aa9e6e1057a4249fa52258e41b76d712",
+    "src/check.rs": "7c4a7c24df94aefa1151e41fd7cbe0c4c68df35a7713743041f5fbaad4eae879",
+    "src/check_annotation_placements.rs": "027e77c6a6db60f98262fbaf0f44be170c53b58b03d64ae6e8cc43cdb2dc1579",
+    "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+    "src/check_anonymous.rs": "25817090ac3a19aef8fd11a5374a77049d19b85cc14d20958768ddacf649310e",
+    "src/check_captures.rs": "f752d88bb81c26576caad658160a332fa21946e7275e6faf331bfd73f6a84479",
+    "src/check_class_delegation.rs": "171fec70b3ce6632bbbd704ea92e040f1ef841fbebd02659388fe88ba97135f2",
+    "src/check_classes.rs": "eaa5547ca75d6f4bef4f21d200a050bb8a47362c9c7ea3e4f47b3a66e1cca4b3",
+    "src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+    "src/check_control.rs": "23bcd78c9f4a12b2665110ed5565c4cfe63c0c00f148463ef28c608336fa38b9",
+    "src/check_declarations.rs": "43042a6b95fd64cfd3488c6d3a6c60c659990ceca5f22595dc13b2eb43288168",
+    "src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+    "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+    "src/check_functions.rs": "293104f0d822ac31c0e9c94da2d3069a264c6c2f75ff2a0e21e861e64dde18c4",
+    "src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+    "src/check_interfaces.rs": "866fcc764651619c0c9ed431a81fc8343d7db846adba4f34e9c6ff17db95659a",
+    "src/check_ir_walk.rs": "caaeeea794075c7e23b17fc9e2d06ace5a02d366c9abffbdc9393d3c8a1a2e96",
+    "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+    "src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+    "src/check_library.rs": "657b65be0e461e241be387807384d7b020250395e1a6eca9aa93def57f6083ec",
+    "src/check_member_extensions.rs": "a3f1ff1a9c95e0d7a84a50f3907fe08686e7eff1270251f0e838ad9f6d1d18ab",
+    "src/check_objects.rs": "14866723da0c865f81c12f7837bf042a696c6723f1a191671179cc0568a599e0",
+    "src/check_operations.rs": "5e575505401d79b1ce0e734dbd6cb0fee32d7acb5dff258e33cb55bbec4f134a",
+    "src/check_overloads.rs": "03618a927df2d30db9bc245df9a57e99001e9a525a49c089968cd22cb1f0671e",
+    "src/check_references.rs": "61a780d0816443007725e52f992c717eeab828f7b971749ed3242318a8d80077",
+    "src/check_relations.rs": "4c8f631777a422c0747c1c17d7618ac0a7cfe4ccae5f8066d8569222f03e696b",
+    "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+    "src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+    "src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+    "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+    "src/check_varargs.rs": "a7dd5e1acfc35df5ed0de0632b2232bee62766cc8dd7abd7ae73030d4e4a0836",
+    "src/check_variant_signatures.rs": "ea8be16effafa3af58d46e0e732d196feeca4ef1468d4b373c2e1c29ee984ed3",
+    "src/classpath/aliases.rs": "2ad31713a22f8eb0607ed96d838aa96fecedf7a6b261f07473aef66b8bdb8827",
+    "src/classpath/archive.rs": "058bf434ca9c8a58db2f026cefaed85f64c9c3e274130af0f18db4fbefff5162",
+    "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+    "src/classpath/metadata.rs": "36e20ca04fe30abe6fdc8365fec55769b62bf0adf2c73ee8189dc307485c94b4",
+    "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+    "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+    "src/classpath/signature.rs": "7438c668defd40b0592905a08275daeac45d684fa5521f39edb5ec8db45f18ee",
+    "src/classpath/source.rs": "e8f91db20e32497c7eff5de705b414f051f3849094cfc0bc6197e8efe8187df2",
+    "src/classpath/source_enums.rs": "3eb834a1e2c63cf5fd233437c02bd797a47f3465a426cf5274ecfe7f7434c55d",
+    "src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+    "src/classpath/value_names.rs": "a0798cfa02230410ee554e39dc09057bc9a41bf1a366f9159b73604270f83728",
+    "src/classpath.rs": "72c7fc3c60b6702afcc83e682f3930629145790e934b0dd8bd1908f01c7f3667",
+    "src/compiled_inline.rs": "4ac6c9c5b98cd806c6f7e36ea990e6fd2f05ae04aceb6b643df7e4ea3ecfa20a",
+    "src/const_eval.rs": "bc6a053823a41c822bcc5af603023019a6ace1895c9fae75bf0372f02381dacf",
+    "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+    "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+    "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+    "src/lib.rs": "0d5fafb7ae492d9d287650e2ab5bed999cf448e816c87f7febbe0ee0d2a3100d",
+    "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+    "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+    "src/metadata.rs": "b3579828d0fcecc950ffa5a01bb3c34e710f52127185036c46055e18caafce34",
+    "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+    "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+    "src/source_inline.rs": "50bee0804aaea9cd3e2b8c8e0f162784e0e0e0b16b9e0770dd8c27fca764add2",
+    "src/syntax.rs": "36d50b22b549d443c1104f04a3f0cdd299ccb099ef048208c4d38a12379dbe61",
+    "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+    "src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525",
+    "tests/nonfinal_varargs/Calls.java": "7a0b155c0afa0be70d9b07489ab65fb289a210677905b74d5f7a6aff5343bbfe",
+    "tests/nonfinal_varargs/Consumer.kt": "2e4d2401c70fadf125f3f8a9a6092855bb5b4758277aea95815edab4271dbcce",
+    "tests/nonfinal_varargs/InvalidDuplicate.kt": "d36fce34e1edca812dabfb7e87f59721a8781e6702f764487a411e0903b877e4",
+    "tests/nonfinal_varargs/InvalidMissing.kt": "5ce55b35905cacdd63cdbe095684c916675781ff57feb6e52e48c90aa4b20eb5",
+    "tests/nonfinal_varargs/InvalidType.kt": "dc36d9d5defda01a83ec4bdb964ddd95162d747bfead032d637f2becea4b44b1",
+    "tests/nonfinal_varargs/Library.kt": "4e9f9776d6f7503a95128258c2aff321d72582a80596960ab95059bff0f71332",
+    "tests/nonfinal_varargs/UnsupportedDefault.kt": "d27294b12c1160a7755489250656fd4f70ebb67aa9ee523a9742f6e7f81bd7b8",
+    "tests/nonfinal_varargs.rs": "bf493a02201841717354b448ad1cb4fea763c718c113b37eb29248208ab74653",
+    "tools/check_nonfinal_varargs.py": "9f89fa2e99fdb97450a44557fa471eaa02f7441b2d37901ad533277d373ef4fc",
+    "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+    "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+    "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/korrust-frozen": "b2e4d6515ef6866d689ede11349ca8d78fc5386a2b5a2961ea1714619946c98c",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "input_bundle": {
+    "path": "reports/correctness/2026-11-26T023100114746Z-compiled-nonfinal-varargs/inputs.zip",
+    "sha256": "e867d10f4685a5d65d890f0d0a98f25bf2910aefc2ebfa6d3c4568d2a78bcdc8"
+  },
+  "scope": "Compiled Kotlin nonfinal varargs: empty arrays, named/default arguments, trailing lambdas, spread arguments, generic elements, member functions, constructors, extensions, fixed-arity overload priority and left-to-right evaluation order",
+  "limitations": [
+    "Source declarations still require final varargs; this suite tests ordinary calls to compiled Kotlin declarations",
+    "Defaults on the vararg parameter itself remain unsupported",
+    "Existing compiled inline expansion boundaries apply; no full MockK or application execution claim"
+  ],
+  "effective_options": {
+    "language_version": "2.3",
+    "api_version": "2.3",
+    "jvm_target": "1.8"
+  },
+  "cases": [
+    {
+      "id": "official_compile",
+      "outcome": "pass",
+      "detail": "Same unmodified source, compiled dependency and standard library"
+    },
+    {
+      "id": "candidate_compile",
+      "outcome": "pass",
+      "detail": "Same unmodified source, compiled dependency and standard library"
+    },
+    {
+      "id": "fixed_java_caller_both_providers",
+      "outcome": "pass",
+      "detail": {
+        "caller_sha256": {
+          "nonfinal/consumer/Calls.class": "256f81c33a11b80b19e05f76a0c31b36b950db4467b265523da5791451b6eda5"
+        },
+        "assertions": "Empty/default result 102; filled result 322 with order 456; named result 117 with order 8451; spread 218; generic element and empty generic inference; ordinary members and constructors return 6"
+      }
+    },
+    {
+      "id": "public_jvm_signatures",
+      "outcome": "pass",
+      "detail": "Compiled from \"Consumer.kt\"\npublic final class nonfinal.consumer.ConsumerKt {\n  public static final int empty();\n    descriptor: ()I\n\n  public static final int filled();\n    descriptor: ()I\n\n  public static final int reordered();\n    descriptor: ()I\n\n  public static final int spread();\n    descriptor: ()I\n\n  public static final java.lang.String generic();\n    descriptor: ()Ljava/lang/String;\n\n  public static final java.lang.String genericEmpty();\n    descriptor: ()Ljava/lang/String;\n\n  public static final int member();\n    descriptor: ()I\n\n  public static final int constructor();\n    descriptor: ()I\n\n  public static final int extension();\n    descriptor: ()I\n\n  public static final int overload();\n    descriptor: ()I\n}\n"
+    },
+    {
+      "id": "InvalidDuplicate",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "rejections": [
+          "tests/nonfinal_varargs/InvalidDuplicate.kt:2:33: error: argument already passed for this parameter.\nfun invalid(): Int = pack(1, 2, values = intArrayOf(3), suffix = 4)\n                                ^^^^^^\n",
+          "/workspace/work/interop159-nonfinal-freeze/tests/nonfinal_varargs/InvalidDuplicate.kt:2:33: error: Duplicate vararg argument\n"
+        ]
+      }
+    },
+    {
+      "id": "InvalidMissing",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "rejections": [
+          "tests/nonfinal_varargs/InvalidMissing.kt:2:35: error: no value passed for parameter 'last'.\nfun invalid(): Int = tail<Int>(1, 2)\n                                  ^^\n",
+          "/workspace/work/interop159-nonfinal-freeze/tests/nonfinal_varargs/InvalidMissing.kt:2:22: error: Wrong argument count: missing required argument\n"
+        ]
+      }
+    },
+    {
+      "id": "InvalidType",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "rejections": [
+          "tests/nonfinal_varargs/InvalidType.kt:2:30: error: argument type mismatch: actual type is 'String', but 'Int' was expected.\nfun invalid(): Int = pack(1, \"wrong\", suffix = 2)\n                             ^^^^^^^\n",
+          "/workspace/work/interop159-nonfinal-freeze/tests/nonfinal_varargs/InvalidType.kt:2:30: error: Type mismatch: expected Int, found String\n"
+        ]
+      }
+    },
+    {
+      "id": "vararg_parameter_default_boundary",
+      "outcome": "unsupported_language",
+      "detail": {
+        "diagnostic": {
+          "source_identity": "/workspace/work/interop159-nonfinal-freeze/tests/nonfinal_varargs/UnsupportedDefault.kt",
+          "offset": 57,
+          "category": "unsupported_language",
+          "code": "LIBRARY_DECLARATION_UNSUPPORTED",
+          "message": "Unsupported library declaration",
+          "path": "/workspace/work/interop159-nonfinal-freeze/tests/nonfinal_varargs/UnsupportedDefault.kt",
+          "line": 2,
+          "column": 23
+        }
+      }
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "pass",
+      "changed": []
+    }
+  ],
+  "commands": [
+    {
+      "label": "official dependency with metadata 1.7",
+      "argv": [
+        "/workspace/work/interop159-nonfinal-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-nonfinal-freeze/tests/nonfinal_varargs/Library.kt",
+        "-d",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/dependency",
+        "-Xmetadata-version=1.7.0",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T023100114746Z-compiled-nonfinal-varargs/000.txt"
+    },
+    {
+      "label": "official consumer",
+      "argv": [
+        "/workspace/work/interop159-nonfinal-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-nonfinal-freeze/tests/nonfinal_varargs/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/dependency:/workspace/work/interop159-nonfinal-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T023100114746Z-compiled-nonfinal-varargs/001.txt"
+    },
+    {
+      "label": "candidate consumer",
+      "argv": [
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/korrust-frozen",
+        "/workspace/work/interop159-nonfinal-freeze/tests/nonfinal_varargs/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/dependency:/workspace/work/interop159-nonfinal-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T023100114746Z-compiled-nonfinal-varargs/002.txt"
+    },
+    {
+      "label": "fixed Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/official:/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/dependency:/workspace/work/interop159-nonfinal-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/caller",
+        "/workspace/work/interop159-nonfinal-freeze/tests/nonfinal_varargs/Calls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T023100114746Z-compiled-nonfinal-varargs/003.txt"
+    },
+    {
+      "label": "official independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/caller:/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/official:/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/dependency:/workspace/work/interop159-nonfinal-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "nonfinal.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T023100114746Z-compiled-nonfinal-varargs/004.txt"
+    },
+    {
+      "label": "candidate independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/caller:/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/candidate:/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/dependency:/workspace/work/interop159-nonfinal-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "nonfinal.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T023100114746Z-compiled-nonfinal-varargs/005.txt"
+    },
+    {
+      "label": "official public JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/official",
+        "nonfinal.consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T023100114746Z-compiled-nonfinal-varargs/006.txt"
+    },
+    {
+      "label": "candidate public JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/candidate",
+        "nonfinal.consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T023100114746Z-compiled-nonfinal-varargs/007.txt"
+    },
+    {
+      "label": "official InvalidDuplicate",
+      "argv": [
+        "/workspace/work/interop159-nonfinal-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-nonfinal-freeze/tests/nonfinal_varargs/InvalidDuplicate.kt",
+        "-cp",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/dependency:/workspace/work/interop159-nonfinal-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/official-InvalidDuplicate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T023100114746Z-compiled-nonfinal-varargs/008.txt"
+    },
+    {
+      "label": "candidate InvalidDuplicate",
+      "argv": [
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/korrust-frozen",
+        "/workspace/work/interop159-nonfinal-freeze/tests/nonfinal_varargs/InvalidDuplicate.kt",
+        "-cp",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/dependency:/workspace/work/interop159-nonfinal-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/candidate-InvalidDuplicate"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T023100114746Z-compiled-nonfinal-varargs/009.txt"
+    },
+    {
+      "label": "official InvalidMissing",
+      "argv": [
+        "/workspace/work/interop159-nonfinal-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-nonfinal-freeze/tests/nonfinal_varargs/InvalidMissing.kt",
+        "-cp",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/dependency:/workspace/work/interop159-nonfinal-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/official-InvalidMissing"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T023100114746Z-compiled-nonfinal-varargs/010.txt"
+    },
+    {
+      "label": "candidate InvalidMissing",
+      "argv": [
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/korrust-frozen",
+        "/workspace/work/interop159-nonfinal-freeze/tests/nonfinal_varargs/InvalidMissing.kt",
+        "-cp",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/dependency:/workspace/work/interop159-nonfinal-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/candidate-InvalidMissing"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T023100114746Z-compiled-nonfinal-varargs/011.txt"
+    },
+    {
+      "label": "official InvalidType",
+      "argv": [
+        "/workspace/work/interop159-nonfinal-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-nonfinal-freeze/tests/nonfinal_varargs/InvalidType.kt",
+        "-cp",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/dependency:/workspace/work/interop159-nonfinal-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/official-InvalidType"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T023100114746Z-compiled-nonfinal-varargs/012.txt"
+    },
+    {
+      "label": "candidate InvalidType",
+      "argv": [
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/korrust-frozen",
+        "/workspace/work/interop159-nonfinal-freeze/tests/nonfinal_varargs/InvalidType.kt",
+        "-cp",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/dependency:/workspace/work/interop159-nonfinal-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/candidate-InvalidType"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T023100114746Z-compiled-nonfinal-varargs/013.txt"
+    },
+    {
+      "label": "official vararg default parameter boundary",
+      "argv": [
+        "/workspace/work/interop159-nonfinal-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-nonfinal-freeze/tests/nonfinal_varargs/UnsupportedDefault.kt",
+        "-cp",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/dependency:/workspace/work/interop159-nonfinal-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/official-unsupported-default",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T023100114746Z-compiled-nonfinal-varargs/014.txt"
+    },
+    {
+      "label": "candidate vararg default parameter boundary",
+      "argv": [
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/korrust-frozen",
+        "/workspace/work/interop159-nonfinal-freeze/tests/nonfinal_varargs/UnsupportedDefault.kt",
+        "-cp",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/dependency:/workspace/work/interop159-nonfinal-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-nonfinal-freeze/target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs/candidate-unsupported-default",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T023100114746Z-compiled-nonfinal-varargs/015.txt"
+    }
+  ],
+  "reproduction_command": [
+    "python3",
+    "tools/check_nonfinal_varargs.py",
+    "--candidate",
+    "/tmp/interop159-nonfinal-build/debug/korrust",
+    "--output",
+    "target/checks/2026-11-26T023100114746Z-compiled-nonfinal-varargs",
+    "--evidence-directory",
+    "reports/correctness/2026-11-26T023100114746Z-compiled-nonfinal-varargs"
+  ],
+  "counts": {
+    "pass": 5,
+    "invalid_rejected": 3,
+    "unsupported_language": 1
+  }
+}

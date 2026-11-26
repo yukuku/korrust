@@ -1,0 +1,7 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/private-binary-name.kt -cp /workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/java_classes:/workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/invalid-official
+target/checks/2026-11-26T025301580539Z-java-nested-imports/private-binary-name.kt:2:23: error: unresolved reference 'Outer$Secret'.
+import nested.library.`Outer$Secret` as Hidden
+                      ^^^^^^^^^^^^^^
+target/checks/2026-11-26T025301580539Z-java-nested-imports/private-binary-name.kt:3:16: error: unresolved reference 'Hidden'.
+fun bad(value: Hidden): Int = 1
+               ^^^^^^

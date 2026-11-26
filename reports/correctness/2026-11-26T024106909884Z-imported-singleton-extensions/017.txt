@@ -1,0 +1,8 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /workspace/korrust/target/checks/2026-11-26T024106909884Z-imported-singleton-extensions/inherited-receiver.kt -cp /workspace/korrust/target/checks/2026-11-26T024106909884Z-imported-singleton-extensions/events:/workspace/korrust/target/checks/2026-11-26T024106909884Z-imported-singleton-extensions/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/korrust/target/checks/2026-11-26T024106909884Z-imported-singleton-extensions/invalid-official
+target/checks/2026-11-26T024106909884Z-imported-singleton-extensions/inherited-receiver.kt:2:18: error: return type mismatch: expected 'Int', actual 'String'.
+fun bad(): Int = 7.inherited()
+                 ^^^^^^^^^^^^^
+target/checks/2026-11-26T024106909884Z-imported-singleton-extensions/inherited-receiver.kt:2:20: error: unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+fun String.inherited(): String
+fun bad(): Int = 7.inherited()
+                   ^^^^^^^^^

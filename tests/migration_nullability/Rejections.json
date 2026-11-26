@@ -1,0 +1,18 @@
+[
+  {
+    "id": "strict_nullable_wins",
+    "source": "fun invalid(): String = Migration.strictNullable(true)"
+  },
+  {
+    "id": "strict_nonnull_parameter_wins",
+    "source": "fun invalid(): String? = Migration.strictAccept(null)"
+  },
+  {
+    "id": "strict_nullable_field_wins",
+    "source": "fun invalid(value: Migration): String = value.strictNullableField"
+  },
+  {
+    "id": "strict_nonnull_field_wins",
+    "source": "fun invalid(value: Migration) { value.strictNonNullField = null }"
+  }
+]

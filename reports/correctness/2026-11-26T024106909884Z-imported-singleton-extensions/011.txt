@@ -1,0 +1,7 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /workspace/korrust/target/checks/2026-11-26T024106909884Z-imported-singleton-extensions/private-extension.kt -cp /workspace/korrust/target/checks/2026-11-26T024106909884Z-imported-singleton-extensions/events:/workspace/korrust/target/checks/2026-11-26T024106909884Z-imported-singleton-extensions/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/korrust/target/checks/2026-11-26T024106909884Z-imported-singleton-extensions/invalid-official
+target/checks/2026-11-26T024106909884Z-imported-singleton-extensions/private-extension.kt:1:32: error: cannot access 'fun String.secret(): String': it is private in 'singleton.library.Words'.
+import singleton.library.Words.secret
+                               ^^^^^^
+target/checks/2026-11-26T024106909884Z-imported-singleton-extensions/private-extension.kt:2:25: error: cannot access 'fun String.secret(): String': it is private in 'singleton.library.Words'.
+fun bad(): String = "x".secret()
+                        ^^^^^^

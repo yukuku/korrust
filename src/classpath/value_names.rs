@@ -137,14 +137,22 @@ impl Classpath {
                             .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "INTERNAL_CLASSIFIER_VALUE_UNSUPPORTED"));
                     }
                     let classifier_visible = self.classifier_visible(caller, &class.name);
-                    if class.access & 1 == 0
+                    let jvm_visible = if class.kotlin_class {
+                        class.access & 1 != 0
+                    } else {
+                        (class.access & 1 != 0 || self.java_nested_access(&class.name).is_some())
+                            && self
+                                .check_java_import_visibility(caller, &class.name, offset)
+                                .is_ok()
+                    };
+                    if !jvm_visible
                         || !classifier_visible
                         || !internal_visible
                         || matches!(visibility, Some(2 | 5))
                     {
                         inaccessible = true;
                     }
-                    if class.access & 1 != 0
+                    if jvm_visible
                         && !class.unsupported
                         && internal_visible
                         && classifier_visible

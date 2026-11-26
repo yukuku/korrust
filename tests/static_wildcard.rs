@@ -124,7 +124,7 @@ fn java_static_wildcards_preserve_overloads_priority_visibility_and_jvm_access()
             &[SourceInput {
                 identity: file.display().to_string(),
                 file_name,
-                source: source.into(),
+                source,
             }],
             &dependencies,
             "static_wildcard_invalid",

@@ -86,17 +86,29 @@ pub(super) fn ordinary_member_methods(
     });
     for mapping in crate::classpath::jvm_builtins::PROPERTY_MAPPINGS
         .iter()
-        .filter(|mapping| mapping.jvm_name == name)
+        .filter(|mapping| mapping.source_name == name || mapping.jvm_name == name)
     {
         if relations::as_supertype(classpath, &Type::Java(owner.into()), mapping.owner).is_none() {
             continue;
         }
+        let result = classpath.builtin_property_type(mapping.classifier, mapping.source_name)?;
+        if format!("(){}", result.descriptor()) != mapping.descriptor {
+            return Err(Diagnostic::new(
+                0,
+                "Kotlin builtin property JVM mapping does not match its metadata",
+            ));
+        }
         for method in methods.iter_mut().filter(|method| {
-            method.name == mapping.jvm_name
+            !method.unsupported
+                && method.name == mapping.jvm_name
                 && method.descriptor == mapping.descriptor
                 && method.access & 9 == 1
+                && method.source_property.is_none()
         }) {
+            method.owner = mapping.owner.into();
             method.source_property = Some(mapping.source_name.into());
+            method.kotlin_params = Some(Vec::new());
+            method.kotlin_result = Some(result.clone());
         }
     }
     for mapping in crate::classpath::jvm_builtins::MAPPINGS
@@ -317,10 +329,7 @@ pub(super) fn static_import_owner(
                     .load(&method.owner)
                     .is_ok_and(|declaring| declaring.access & 0x0200 == 0))
     });
-    if class
-        .fields
-        .iter()
-        .any(|field| field.name == "INSTANCE" && field.descriptor == format!("L{};", class.name))
+    let matching_extension = classpath.singleton_field(owner)?.is_some()
         && methods.iter().any(|method| {
             method.access & 9 == 1
                 && method
@@ -329,17 +338,7 @@ pub(super) fn static_import_owner(
                     .is_some_and(|library| library.receiver.is_some())
                 && (method.source_name() == member
                     || method.source_property.as_deref() == Some(member))
-        })
-    {
-        return Err(Diagnostic::new(
-            offset,
-            "Explicit imports of singleton member extensions are unsupported",
-        )
-        .with_kind(
-            crate::DiagnosticKind::UnsupportedLanguage,
-            "SINGLETON_EXTENSION_IMPORT_UNSUPPORTED",
-        ));
-    }
+        });
     if class
         .library
         .as_ref()
@@ -362,7 +361,7 @@ pub(super) fn static_import_owner(
         .field_candidates(owner, member)?
         .iter()
         .any(|field| field.access & 9 == 9);
-    if !matching_method && !matching_field {
+    if !matching_method && !matching_field && !matching_extension {
         return Ok(None);
     }
     if matching_method && class.access & 0x0200 != 0 {
@@ -1828,27 +1827,27 @@ impl Checker<'_> {
             return Ok(None);
         }
         let root = &names[0];
-        if self.local(root).is_some()
-            || self.captured.contains_key(root)
-            || self.constants.contains_key(root)
-            || self.fields.contains_key(root)
-            || self.object_fields.contains_key(root)
-            || self.companion_fields.contains_key(root)
-            || self
-                .members
-                .values()
-                .any(|method| method.source_property.as_ref() == Some(root))
-        {
+        if self.value_name_is_bound(root) {
             return Ok(None);
         }
+        let root_class =
+            match self
+                .classpath
+                .value_symbol(&self.lambda_owner, root, expression.offset)?
+            {
+                Some(crate::classpath::ValueSymbol::Classifier(class)) => Some(class.name),
+                Some(_) => return Ok(None),
+                None => None,
+            };
         let qualified = names.join("/");
         let owner = self
             .imports
             .get(&qualified)
             .cloned()
             .or_else(|| {
-                self.imports
-                    .get(&names[0])
+                root_class
+                    .as_ref()
+                    .or_else(|| self.imports.get(root))
                     .map(|root| format!("{root}${}", names[1..].join("$")))
             })
             .unwrap_or(qualified);
@@ -2170,7 +2169,22 @@ impl Checker<'_> {
 
     pub(super) fn value_classifier(&self, expression: &Expr) -> Result<Option<JavaClass>> {
         let ExprKind::Name(name) = &expression.kind else {
-            return Ok(None);
+            if let ExprKind::Property(receiver, name) = &expression.kind
+                && let Some(parent) = self.value_classifier(receiver)?
+                && parent
+                    .library
+                    .as_ref()
+                    .and_then(|library| library.companion_name.as_ref())
+                    == Some(name)
+            {
+                return Ok(None);
+            }
+            if let Some((class, _)) =
+                self.qualified_java_classifier(expression, expression.offset)?
+            {
+                return Ok(Some(class));
+            }
+            return self.qualified_classifier(expression);
         };
         if self.value_name_is_bound(name) {
             return Ok(None);

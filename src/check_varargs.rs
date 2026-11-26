@@ -11,14 +11,17 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Vec<Expr>> {
-        if method.access & 0x80 == 0 {
+        let Some(index) = method.vararg_index() else {
             return Ok(args.to_vec());
-        }
+        };
         let (params, _) = Self::method_parameters(method)?;
-        let index = params.len().checked_sub(1).ok_or_else(|| {
-            Diagnostic::new(offset, "Vararg declaration requires an array parameter")
-        })?;
-        let array = params[index].1.clone();
+        let array = params
+            .get(index)
+            .ok_or_else(|| {
+                Diagnostic::new(offset, "Vararg declaration requires an array parameter")
+            })?
+            .1
+            .clone();
         if element_type(&array).is_none() {
             return Err(Diagnostic::new(
                 offset,
@@ -27,6 +30,7 @@ impl Checker<'_> {
         }
         let mut normalized = Vec::new();
         let mut elements = Vec::new();
+        let mut insertion = None;
         let mut named_array = false;
         let mut seen_named = false;
         for (position, argument) in args.iter().enumerate() {
@@ -46,6 +50,7 @@ impl Checker<'_> {
                     }
                     named_array = true;
                     seen_named = true;
+                    insertion = Some(normalized.len());
                     elements.push(match &value.kind {
                         ExprKind::Unary(operator, _) if operator == "*" => value.as_ref().clone(),
                         _ => Expr {
@@ -58,6 +63,21 @@ impl Checker<'_> {
                     seen_named = true;
                     normalized.push(argument.clone());
                 }
+                ExprKind::TrailingLambda(value) if index + 1 < params.len() => {
+                    if position + 1 != args.len() {
+                        return Err(Diagnostic::new(
+                            argument.offset,
+                            "Only one trailing lambda is supported",
+                        ));
+                    }
+                    normalized.push(Expr {
+                        offset: argument.offset,
+                        kind: ExprKind::NamedArgument(
+                            params.last().unwrap().0.clone(),
+                            value.clone(),
+                        ),
+                    });
+                }
                 _ if seen_named => {
                     return Err(Diagnostic::new(
                         argument.offset,
@@ -65,26 +85,25 @@ impl Checker<'_> {
                     ));
                 }
                 _ if position < index => normalized.push(argument.clone()),
-                _ => elements.push(argument.clone()),
+                _ => {
+                    insertion.get_or_insert(normalized.len());
+                    elements.push(argument.clone());
+                }
             }
         }
         let packed = Expr {
             offset,
-            kind: ExprKind::VarargArray {
-                array: array.clone(),
-                elements,
-            },
+            kind: ExprKind::VarargArray { array, elements },
         };
-        normalized.push(
-            if (seen_named || normalized.len() < index) && self.method_named(method) {
-                Expr {
-                    offset,
-                    kind: ExprKind::NamedArgument(params[index].0.clone(), Box::new(packed)),
-                }
-            } else {
-                packed
-            },
-        );
+        let packed = if self.method_named(method) {
+            Expr {
+                offset,
+                kind: ExprKind::NamedArgument(params[index].0.clone(), Box::new(packed)),
+            }
+        } else {
+            packed
+        };
+        normalized.insert(insertion.unwrap_or(normalized.len()), packed);
         Ok(normalized)
     }
 
