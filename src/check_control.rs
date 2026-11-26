@@ -37,6 +37,38 @@ impl Checker<'_> {
                     ),
                 })
             }
+            ExprKind::When(subject, branches, otherwise)
+            | ExprKind::WhenBinding(_, subject, branches, otherwise) => {
+                let statement = |branch: &Expr| syntax::Statement {
+                    offset: branch.offset,
+                    kind: StatementKind::Expression(branch.clone()),
+                };
+                let branches = branches
+                    .iter()
+                    .map(|(conditions, value)| (conditions.clone(), vec![statement(value)]))
+                    .collect();
+                let otherwise = (!matches!(otherwise.kind, ExprKind::MissingWhenElse))
+                    .then(|| vec![statement(otherwise)]);
+                let kind = if let ExprKind::WhenBinding(name, _, _, _) = &expr.kind {
+                    StatementKind::WhenBinding(name.clone(), *subject.clone(), branches, otherwise)
+                } else {
+                    StatementKind::When(*subject.clone(), branches, otherwise)
+                };
+                let (body, _) = self.block(&[syntax::Statement {
+                    offset: expr.offset,
+                    kind,
+                }])?;
+                Ok(Value {
+                    ty: Type::Unit,
+                    kind: ValueKind::Block(
+                        body,
+                        Box::new(Value {
+                            ty: Type::Unit,
+                            kind: ValueKind::Unit,
+                        }),
+                    ),
+                })
+            }
             _ => self.value(expr),
         }
     }

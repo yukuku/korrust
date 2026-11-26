@@ -1,0 +1,14 @@
+[
+  {
+    "id": "value-context",
+    "source": "fun invalid(value: Int): String = when(value) { 0 -> 1; else -> \"text\" }"
+  },
+  {
+    "id": "invalid-branch",
+    "source": "fun invalid(value: Int) { when(value) { 0 -> unknown(); else -> Unit } }"
+  },
+  {
+    "id": "bound-scope",
+    "source": "fun invalid(value: Int) { when(val subject=value) { 0 -> Unit; else -> Unit }; subject.toString() }"
+  }
+]
