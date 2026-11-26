@@ -3750,7 +3750,7 @@ pub(super) fn validate_vararg_type(
     while let Type::Nullable(inner) | Type::Platform(inner) = nominal {
         nominal = inner;
     }
-    if matches!(nominal, Type::Java(owner) if owner == "kotlin/Unit") {
+    if nominal == &Type::Unit || matches!(nominal, Type::Java(owner) if owner == "kotlin/Unit") {
         return Err(Diagnostic::new(
             function.offset,
             "Unit varargs require unsupported boxed Unit carriers",
@@ -3770,7 +3770,7 @@ pub(super) fn validate_vararg_type(
             "UNSIGNED_VARARG_UNSUPPORTED",
         ));
     }
-    if let Type::Java(owner) = nominal
+    if let Type::Java(owner) | Type::Parameterized { name: owner, .. } = nominal
         && classpath
             .load(owner)?
             .library
