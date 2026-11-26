@@ -476,6 +476,10 @@ impl Classpath {
         )
     }
 
+    pub(crate) fn builtin_property_type(&self, classifier: &str, name: &str) -> Result<Type> {
+        metadata::builtin_property_type(&self.builtin_class_resource(classifier)?, classifier, name)
+    }
+
     fn builtin_class_resource(&self, classifier: &str) -> Result<Vec<u8>> {
         if !valid_name(classifier) {
             return Err(invalid());

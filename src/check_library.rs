@@ -86,17 +86,29 @@ pub(super) fn ordinary_member_methods(
     });
     for mapping in crate::classpath::jvm_builtins::PROPERTY_MAPPINGS
         .iter()
-        .filter(|mapping| mapping.jvm_name == name)
+        .filter(|mapping| mapping.source_name == name || mapping.jvm_name == name)
     {
         if relations::as_supertype(classpath, &Type::Java(owner.into()), mapping.owner).is_none() {
             continue;
         }
+        let result = classpath.builtin_property_type(mapping.classifier, mapping.source_name)?;
+        if format!("(){}", result.descriptor()) != mapping.descriptor {
+            return Err(Diagnostic::new(
+                0,
+                "Kotlin builtin property JVM mapping does not match its metadata",
+            ));
+        }
         for method in methods.iter_mut().filter(|method| {
-            method.name == mapping.jvm_name
+            !method.unsupported
+                && method.name == mapping.jvm_name
                 && method.descriptor == mapping.descriptor
                 && method.access & 9 == 1
+                && method.source_property.is_none()
         }) {
+            method.owner = mapping.owner.into();
             method.source_property = Some(mapping.source_name.into());
+            method.kotlin_params = Some(Vec::new());
+            method.kotlin_result = Some(result.clone());
         }
     }
     for mapping in crate::classpath::jvm_builtins::MAPPINGS

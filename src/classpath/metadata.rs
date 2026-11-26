@@ -665,6 +665,36 @@ pub(super) fn builtin_member_declarations(
     builtin_declarations(bytes, classifier, Some(name))
 }
 
+pub(super) fn builtin_property_type(bytes: &[u8], classifier: &str, name: &str) -> Result<Type> {
+    let (strings, qualified_names, class) = builtin_classifier(bytes, classifier)?;
+    let mut context = Context::new(&strings, &class)?;
+    context.qualified_names = Some(&qualified_names);
+    context.type_parameters(&class, 5)?;
+    let mut result = None;
+    for bytes in class.messages(10)? {
+        let property = Proto::parse(bytes)?;
+        if metadata_name(&strings, property.integer(2)?)? != name {
+            continue;
+        }
+        let flags = property.integer(11)?.unwrap_or(518);
+        if flags & 14 != 6
+            || flags & 512 == 0
+            || !property.messages(4)?.is_empty()
+            || property.bytes(5)?.is_some()
+            || property.integer(10)?.is_some()
+            || !property.messages(12)?.is_empty()
+            || !numbers(&property, 13)?.is_empty()
+            || !property.messages(17)?.is_empty()
+        {
+            return Err(invalid());
+        }
+        if result.replace(context.field(&property, 3, 9)?).is_some() {
+            return Err(invalid());
+        }
+    }
+    result.ok_or_else(invalid)
+}
+
 fn builtin_classifier<'a>(
     bytes: &'a [u8],
     classifier: &str,

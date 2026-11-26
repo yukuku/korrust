@@ -26,14 +26,56 @@ pub(crate) const MAPPINGS: &[Mapping] = &[
     },
 ];
 
-pub(crate) const PROPERTY_MAPPINGS: &[Mapping] = &[Mapping {
-    owner: "java/lang/CharSequence",
-    classifier: "kotlin/CharSequence",
-    source_name: "length",
-    descriptor: "()I",
-    jvm_name: "length",
-    inherited_only: false,
-}];
+pub(crate) const PROPERTY_MAPPINGS: &[Mapping] = &[
+    Mapping {
+        owner: "java/lang/CharSequence",
+        classifier: "kotlin/CharSequence",
+        source_name: "length",
+        descriptor: "()I",
+        jvm_name: "length",
+        inherited_only: false,
+    },
+    Mapping {
+        owner: "java/util/Collection",
+        classifier: "kotlin/collections/Collection",
+        source_name: "size",
+        descriptor: "()I",
+        jvm_name: "size",
+        inherited_only: false,
+    },
+    Mapping {
+        owner: "java/util/Map",
+        classifier: "kotlin/collections/Map",
+        source_name: "size",
+        descriptor: "()I",
+        jvm_name: "size",
+        inherited_only: false,
+    },
+    Mapping {
+        owner: "java/util/Map",
+        classifier: "kotlin/collections/Map",
+        source_name: "keys",
+        descriptor: "()Ljava/util/Set;",
+        jvm_name: "keySet",
+        inherited_only: false,
+    },
+    Mapping {
+        owner: "java/util/Map",
+        classifier: "kotlin/collections/Map",
+        source_name: "values",
+        descriptor: "()Ljava/util/Collection;",
+        jvm_name: "values",
+        inherited_only: false,
+    },
+    Mapping {
+        owner: "java/util/Map",
+        classifier: "kotlin/collections/Map",
+        source_name: "entries",
+        descriptor: "()Ljava/util/Set;",
+        jvm_name: "entrySet",
+        inherited_only: false,
+    },
+];
 
 #[cfg(test)]
 mod tests {
@@ -45,7 +87,41 @@ mod tests {
             "../../references/kotlin/core/compiler.common.jvm/src/org/jetbrains/kotlin/load/java/BuiltinSpecialProperties.kt"
         );
         assert!(reference.contains("StandardNames.FqNames.charSequence.childSafe(\"length\") to Name.identifier(\"length\")"));
-        assert_eq!(PROPERTY_MAPPINGS[0].descriptor, "()I");
+        for mapping in PROPERTY_MAPPINGS {
+            let classifier = match mapping.classifier {
+                "kotlin/CharSequence" => "charSequence.childSafe",
+                "kotlin/collections/Collection" => "collection.child",
+                "kotlin/collections/Map" => "map.child",
+                _ => panic!("unverified builtin property classifier"),
+            };
+            assert!(reference.contains(&format!(
+                "StandardNames.FqNames.{classifier}(\"{}\") to Name.identifier(\"{}\")",
+                mapping.source_name, mapping.jvm_name,
+            )));
+        }
+    }
+
+    #[test]
+    fn mapped_properties_retain_builtin_generic_parameters() {
+        let standard = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("references/kotlinc/lib/kotlin-stdlib.jar");
+        let classpath = crate::classpath::Classpath::new(&[standard]).unwrap();
+        for mapping in PROPERTY_MAPPINGS {
+            let result = classpath
+                .builtin_property_type(mapping.classifier, mapping.source_name)
+                .unwrap();
+            assert_eq!(format!("(){}", result.descriptor()), mapping.descriptor);
+            if mapping.source_name == "keys" {
+                let crate::syntax::Type::Parameterized { name, arguments } = result else {
+                    panic!("keys must retain its generic set type");
+                };
+                assert_eq!(name, "java/util/Set");
+                assert!(matches!(
+                    arguments[0].ty.as_ref(),
+                    Some(crate::syntax::Type::Parameter { name, .. }) if name == "K"
+                ));
+            }
+        }
     }
 
     #[test]
