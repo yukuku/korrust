@@ -1,0 +1,30 @@
+[
+  {
+    "id": "mutable-widening",
+    "source": "import variance.Bags\nimport variance.Box\nimport variance.GenericBox\nfun invalid(value: MutableList<String>): Int = Bags.accept(value)"
+  },
+  {
+    "id": "static-overload",
+    "source": "import variance.Bags\nimport variance.Box\nimport variance.GenericBox\nfun invalid(value: MutableList<String>): Int = Bags.choose(value)"
+  },
+  {
+    "id": "instance-overload",
+    "source": "import variance.Bags\nimport variance.Box\nimport variance.GenericBox\nfun invalid(holder: Bags, value: MutableList<String>): Int = holder.select(value)"
+  },
+  {
+    "id": "direct-setter",
+    "source": "import variance.Bags\nimport variance.Box\nimport variance.GenericBox\nfun invalid(holder: Bags, value: MutableList<String>) { holder.setValue(value) }"
+  },
+  {
+    "id": "constructor-overload",
+    "source": "import variance.Bags\nimport variance.Box\nimport variance.GenericBox\nfun invalid(value: MutableList<String>) = Box(value)"
+  },
+  {
+    "id": "generic-constructor",
+    "source": "import variance.Bags\nimport variance.Box\nimport variance.GenericBox\nfun invalid(value: MutableList<String>) = GenericBox<CharSequence>(value)"
+  },
+  {
+    "id": "flexible-widening",
+    "source": "import variance.Bags\nimport variance.Box\nimport variance.GenericBox\nfun invalid(): Int = Bags.accept(Bags.strings())"
+  }
+]

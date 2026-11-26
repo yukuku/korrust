@@ -888,6 +888,7 @@ impl Classpath {
             | Type::Platform(ty)
             | Type::List(ty)
             | Type::MutableList(ty)
+            | Type::FlexibleList(ty)
             | Type::Array(ty)
             | Type::OutArray(ty)
             | Type::ThreadLocal(ty) => {
@@ -3049,12 +3050,15 @@ fn kotlin_typed_class(
         match ty {
             Type::Nullable(inner) if !inner.is_reference() => ty.descriptor(),
             Type::Nullable(inner) => generic_type(inner, variance, argument),
-            Type::List(inner) | Type::MutableList(inner) => {
+            Type::List(inner) | Type::MutableList(inner) | Type::FlexibleList(inner) => {
                 let prefix = if variance
                     && matches!(ty, Type::List(_))
                     && matches!(
                         inner.as_ref(),
-                        Type::Java(_) | Type::List(_) | Type::MutableList(_)
+                        Type::Java(_)
+                            | Type::List(_)
+                            | Type::MutableList(_)
+                            | Type::FlexibleList(_)
                     ) {
                     "+"
                 } else {

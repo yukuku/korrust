@@ -54,6 +54,22 @@ pub(super) fn resolve(ty: &Type, module: &Module, cp: &Classpath) -> Type {
     }
     match ty {
         Type::Java(n) => Type::Java(name(n, module, cp)),
+        Type::Parameterized { name: n, arguments }
+            if matches!(n.as_str(), "List" | "kotlin/collections/List")
+                && matches!(
+                    arguments.as_slice(),
+                    [TypeArgument {
+                        variance: crate::syntax::Variance::Out,
+                        ty: Some(_)
+                    }]
+                ) =>
+        {
+            Type::List(Box::new(resolve(
+                arguments[0].ty.as_ref().unwrap(),
+                module,
+                cp,
+            )))
+        }
         Type::Parameterized { name: n, arguments } => Type::Parameterized {
             name: name(n, module, cp),
             arguments: arguments
@@ -68,6 +84,7 @@ pub(super) fn resolve(ty: &Type, module: &Module, cp: &Classpath) -> Type {
         Type::Platform(t) => Type::Platform(Box::new(resolve(t, module, cp))),
         Type::List(t) => Type::List(Box::new(resolve(t, module, cp))),
         Type::MutableList(t) => Type::MutableList(Box::new(resolve(t, module, cp))),
+        Type::FlexibleList(t) => Type::FlexibleList(Box::new(resolve(t, module, cp))),
         Type::Array(t) => Type::Array(Box::new(resolve(t, module, cp))),
         Type::OutArray(t) => Type::OutArray(Box::new(resolve(t, module, cp))),
         Type::ThreadLocal(t) => Type::Parameterized {
@@ -1269,6 +1286,7 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) -> Result<()> {
             | Type::Platform(value)
             | Type::List(value)
             | Type::MutableList(value)
+            | Type::FlexibleList(value)
             | Type::ThreadLocal(value) => ty(value, names),
             Type::Parameter { upper_bound, .. } => ty(upper_bound, names),
             Type::Function { params, result } | Type::SuspendFunction { params, result } => {

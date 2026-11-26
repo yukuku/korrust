@@ -951,7 +951,17 @@ impl Checker<'_> {
                 .map(|library| library.parameter_modes.clone())
                 .unwrap_or_default(),
         );
-        let checked = self.arguments(&params, &defaults, args, named, offset);
+        let checked = self.arguments_checked(
+            &params,
+            &defaults,
+            args,
+            named,
+            method
+                .library
+                .as_ref()
+                .is_some_and(|library| !library.kotlin_declared),
+            offset,
+        );
         self.inline_result = old_inline;
         self.inline_argument_modes = old_modes;
         let (mut values, lets, mut mask) = checked?;
@@ -1367,6 +1377,7 @@ pub(super) fn default_type_imports(
             | Type::Platform(inner)
             | Type::List(inner)
             | Type::MutableList(inner)
+            | Type::FlexibleList(inner)
             | Type::ThreadLocal(inner) => visit(inner, imports, classpath),
             Type::Parameter { upper_bound, .. } => visit(upper_bound, imports, classpath),
             Type::Function { params, result } | Type::SuspendFunction { params, result } => {
@@ -1878,8 +1889,17 @@ impl Checker<'_> {
         let normalized = self.vararg_arguments(&method, args, offset)?;
         let args = normalized.as_slice();
         let (params, defaults) = Self::method_parameters(&method)?;
-        let (values, lets, mask) =
-            self.arguments(&params, &defaults, args, self.method_named(&method), offset)?;
+        let (values, lets, mask) = self.arguments_checked(
+            &params,
+            &defaults,
+            args,
+            self.method_named(&method),
+            method
+                .library
+                .as_ref()
+                .is_some_and(|library| !library.kotlin_declared),
+            offset,
+        )?;
         let mut raw = method.clone();
         raw.kotlin_params = None;
         raw.kotlin_result = None;

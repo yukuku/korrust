@@ -111,7 +111,9 @@ impl Checker<'_> {
     ) -> Result<Statement> {
         let iterable = self.value(iterable)?;
         let iterator_element = match iterable.ty.base() {
-            Type::List(element) | Type::MutableList(element) => Some(*element.clone()),
+            Type::List(element) | Type::MutableList(element) | Type::FlexibleList(element) => {
+                Some(*element.clone())
+            }
             _ => relations::as_supertype(self.classpath, &iterable.ty, "java/lang/Iterable")
                 .and_then(|ty| match ty {
                     Type::Parameterized { arguments, .. }

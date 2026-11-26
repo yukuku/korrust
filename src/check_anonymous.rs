@@ -23,6 +23,7 @@ pub(super) fn check_exposed_types(source: &syntax::Module, classpath: &Classpath
             | Type::Platform(inner)
             | Type::List(inner)
             | Type::MutableList(inner)
+            | Type::FlexibleList(inner)
             | Type::ThreadLocal(inner)
             | Type::Array(inner)
             | Type::OutArray(inner) => contains_anonymous(inner, classpath),

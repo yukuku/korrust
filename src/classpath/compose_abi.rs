@@ -12,7 +12,8 @@ pub(crate) fn contains(ty: &Type) -> bool {
         | Type::Array(inner)
         | Type::OutArray(inner)
         | Type::List(inner)
-        | Type::MutableList(inner) => contains(inner),
+        | Type::MutableList(inner)
+        | Type::FlexibleList(inner) => contains(inner),
         Type::Parameterized { arguments, .. } => {
             arguments.iter().filter_map(|a| a.ty.as_ref()).any(contains)
         }

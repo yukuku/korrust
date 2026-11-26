@@ -52,6 +52,7 @@ fn final_type(ty: &Type, cp: &Classpath) -> bool {
         }
         Type::List(_)
         | Type::MutableList(_)
+        | Type::FlexibleList(_)
         | Type::Function { .. }
         | Type::SuspendFunction { .. }
         | Type::ReceiverFunction { .. } => false,
@@ -160,7 +161,7 @@ fn signature_type(ty: &Type, cp: &Classpath, mode: Mode, names: &[&str], argumen
             mode,
             names,
         ),
-        Type::List(t) | Type::MutableList(t) => parameterized(
+        Type::List(t) | Type::MutableList(t) | Type::FlexibleList(t) => parameterized(
             "java/util/List",
             &[syntax::TypeArgument {
                 variance: syntax::Variance::Invariant,
@@ -366,7 +367,7 @@ fn projected_type(ty: &Type, cp: &Classpath, mode: Mode) -> Type {
         Type::Parameterized { name, arguments } => {
             classifier(name, arguments, &declaration_variances(name, cp), cp, mode)
         }
-        Type::List(t) | Type::MutableList(t) => classifier(
+        Type::List(t) | Type::MutableList(t) | Type::FlexibleList(t) => classifier(
             "java/util/List",
             &[argument(t)],
             &[if matches!(ty, Type::List(_)) {
@@ -475,6 +476,7 @@ fn exposed_field(ty: &Type, cp: &Classpath) -> Result<()> {
         | Type::OutArray(t)
         | Type::List(t)
         | Type::MutableList(t)
+        | Type::FlexibleList(t)
         | Type::ThreadLocal(t) => exposed_field(t, cp)?,
         Type::Function { params, result } | Type::SuspendFunction { params, result } => {
             for p in params {
@@ -503,6 +505,7 @@ fn classifier_context(ty: &Type, cp: &Classpath, bound: bool, offset: usize) -> 
         | Type::Array(t)
         | Type::OutArray(t)
         | Type::MutableList(t)
+        | Type::FlexibleList(t)
         | Type::ThreadLocal(t) => classifier_context(t, cp, true, offset)?,
         Type::List(t) => {
             if bound {

@@ -253,7 +253,9 @@ impl<'a> Context<'a> {
                 "kotlin/collections/List" | "kotlin/collections/MutableList"
                     if arguments.len() == 1
                         && arguments[0].ty.is_some()
-                        && arguments[0].variance == Variance::Invariant =>
+                        && (arguments[0].variance == Variance::Invariant
+                            || name == "kotlin/collections/List"
+                                && arguments[0].variance == Variance::Out) =>
                 {
                     let inner = Box::new(arguments.remove(0).ty.unwrap());
                     if name.ends_with("/MutableList") {
@@ -391,7 +393,35 @@ impl<'a> Context<'a> {
             if p.bytes(5)?.is_none() && p.integer(8)?.is_none() {
                 return Err(invalid());
             }
-            ty = Type::Platform(Box::new(ty));
+            fn list_bound(ty: &Type) -> Option<(&Type, bool, bool)> {
+                match ty {
+                    Type::Nullable(inner) => {
+                        list_bound(inner).map(|(element, mutable, _)| (element, mutable, true))
+                    }
+                    Type::List(element) => Some((element, false, false)),
+                    Type::MutableList(element) => Some((element, true, false)),
+                    _ => None,
+                }
+            }
+            let upper = if matches!(list_bound(&ty), Some((_, true, _))) {
+                Some(self.field_at(&p, 5, 8, depth + 1)?)
+            } else {
+                None
+            };
+            ty = match (list_bound(&ty), upper.as_ref().and_then(list_bound)) {
+                (Some((lower, true, lower_nullable)), Some((upper, false, upper_nullable)))
+                    if lower == upper =>
+                {
+                    let list = Type::FlexibleList(Box::new(lower.clone()));
+                    match (lower_nullable, upper_nullable) {
+                        (false, false) => list,
+                        (false, true) => Type::Platform(Box::new(list)),
+                        (true, true) => Type::Nullable(Box::new(list)),
+                        (true, false) => return Err(invalid()),
+                    }
+                }
+                _ => Type::Platform(Box::new(ty)),
+            };
         }
         Ok(ty)
     }

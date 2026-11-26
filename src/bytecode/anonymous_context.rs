@@ -253,6 +253,7 @@ pub(super) fn parameters(ty: &Type, result: &mut HashSet<String>) {
         | Type::OutArray(inner)
         | Type::List(inner)
         | Type::MutableList(inner)
+        | Type::FlexibleList(inner)
         | Type::ThreadLocal(inner) => parameters(inner, result),
         Type::Function {
             params,

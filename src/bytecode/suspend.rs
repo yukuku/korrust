@@ -242,13 +242,18 @@ fn plan(function: &crate::check::Function, functions: &[crate::check::Function])
                 } => {
                     let element = match iterable.ty.base() {
                         Type::String => Type::Char,
-                        Type::List(element) | Type::MutableList(element) => *element.clone(),
+                        Type::List(element)
+                        | Type::MutableList(element)
+                        | Type::FlexibleList(element) => *element.clone(),
                         array => array.array_element().unwrap(),
                     };
                     self.fields.insert(*slot, element);
                     self.fields.insert(
                         *iterable_slot,
-                        if matches!(iterable.ty.base(), Type::List(_) | Type::MutableList(_)) {
+                        if matches!(
+                            iterable.ty.base(),
+                            Type::List(_) | Type::MutableList(_) | Type::FlexibleList(_)
+                        ) {
                             Type::Java("java/util/Iterator".into())
                         } else {
                             iterable.ty.clone()
@@ -307,6 +312,7 @@ fn unsupported_unit_type(ty: &Type) -> bool {
         | Type::OutArray(inner)
         | Type::List(inner)
         | Type::MutableList(inner)
+        | Type::FlexibleList(inner)
         | Type::ThreadLocal(inner)
         | Type::Parameter {
             upper_bound: inner, ..
@@ -353,6 +359,7 @@ fn forbidden_type(ty: &Type, owners: &std::collections::BTreeSet<String>) -> boo
         | Type::OutArray(inner)
         | Type::List(inner)
         | Type::MutableList(inner)
+        | Type::FlexibleList(inner)
         | Type::ThreadLocal(inner)
         | Type::Parameter {
             upper_bound: inner, ..

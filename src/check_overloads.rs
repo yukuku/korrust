@@ -12,6 +12,7 @@ fn upper_bounds(ty: &Type, depth: usize) -> Type {
         Type::OutArray(inner) => Type::OutArray(Box::new(upper_bounds(inner, depth + 1))),
         Type::List(inner) => Type::List(Box::new(upper_bounds(inner, depth + 1))),
         Type::MutableList(inner) => Type::MutableList(Box::new(upper_bounds(inner, depth + 1))),
+        Type::FlexibleList(inner) => Type::FlexibleList(Box::new(upper_bounds(inner, depth + 1))),
         Type::ThreadLocal(inner) => Type::ThreadLocal(Box::new(upper_bounds(inner, depth + 1))),
         Type::Parameterized { name, arguments } => Type::Parameterized {
             name: name.clone(),

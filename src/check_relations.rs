@@ -6,7 +6,7 @@ pub(super) fn type_owner(ty: &Type) -> Option<&str> {
         Type::Java(name) | Type::Parameterized { name, .. } => Some(name),
         Type::String => Some("java/lang/String"),
         Type::Parameter { upper_bound, .. } => type_owner(upper_bound),
-        Type::List(_) | Type::MutableList(_) => Some("java/util/List"),
+        Type::List(_) | Type::MutableList(_) | Type::FlexibleList(_) => Some("java/util/List"),
         _ => None,
     }
 }
@@ -51,6 +51,7 @@ pub(super) fn substitute(ty: &Type, substitutions: &HashMap<String, Type>) -> Ty
         Type::OutArray(inner) => Type::OutArray(Box::new(substitute(inner, substitutions))),
         Type::List(inner) => Type::List(Box::new(substitute(inner, substitutions))),
         Type::MutableList(inner) => Type::MutableList(Box::new(substitute(inner, substitutions))),
+        Type::FlexibleList(inner) => Type::FlexibleList(Box::new(substitute(inner, substitutions))),
         Type::ThreadLocal(inner) => Type::ThreadLocal(Box::new(substitute(inner, substitutions))),
         Type::Parameterized { name, arguments } => Type::Parameterized {
             name: name.clone(),
@@ -95,10 +96,12 @@ pub(super) fn substitute(ty: &Type, substitutions: &HashMap<String, Type>) -> Ty
 fn arguments(ty: &Type) -> Option<Vec<TypeArgument>> {
     match ty.base() {
         Type::Parameterized { arguments, .. } => Some(arguments.clone()),
-        Type::List(inner) | Type::MutableList(inner) => Some(vec![TypeArgument {
-            variance: Variance::Invariant,
-            ty: Some(inner.as_ref().clone()),
-        }]),
+        Type::List(inner) | Type::MutableList(inner) | Type::FlexibleList(inner) => {
+            Some(vec![TypeArgument {
+                variance: Variance::Invariant,
+                ty: Some(inner.as_ref().clone()),
+            }])
+        }
         _ => None,
     }
 }
@@ -174,7 +177,7 @@ fn project_supertype(
                 .map(|value| argument(value, substitutions, projections))
                 .collect(),
         },
-        Type::List(inner) | Type::MutableList(inner)
+        Type::List(inner) | Type::MutableList(inner) | Type::FlexibleList(inner)
             if projections.iter().any(|(name, projection)| {
                 (projection.ty.is_none() || projection.variance != Variance::Invariant)
                     && mentions(inner, name)
@@ -261,6 +264,7 @@ fn mentions(ty: &Type, name: &str) -> bool {
         | Type::OutArray(inner)
         | Type::List(inner)
         | Type::MutableList(inner)
+        | Type::FlexibleList(inner)
         | Type::ThreadLocal(inner) => mentions(inner, name),
         Type::Parameterized { arguments, .. } => arguments
             .iter()
@@ -463,7 +467,7 @@ pub(super) fn specialize_receiver(
     if let Some(result) = &mut method.kotlin_result {
         let precise_mapped_parameter = matches!(
             receiver.base(),
-            Type::List(_) | Type::MutableList(_)
+            Type::List(_) | Type::MutableList(_) | Type::FlexibleList(_)
         ) && matches!(result, Type::Platform(inner) if matches!(inner.as_ref(), Type::Parameter { .. }));
         if precise_mapped_parameter {
             if let Type::Platform(inner) = result {
@@ -665,7 +669,8 @@ pub(super) fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: 
             };
             let variance = if expected_argument.variance != Variance::Invariant {
                 expected_argument.variance
-            } else if matches!(expected, Type::List(_)) {
+            } else if matches!(expected, Type::List(_)) || matches!(expected, Type::FlexibleList(_))
+            {
                 Variance::Out
             } else {
                 declared
@@ -808,6 +813,7 @@ pub(super) fn validate_type_arguments_with_classes(
             | Type::OutArray(inner)
             | Type::List(inner)
             | Type::MutableList(inner)
+            | Type::FlexibleList(inner)
             | Type::ThreadLocal(inner) => validate(inner, cp, classes, offset, depth + 1)?,
             Type::Platform(_) => {}
             Type::Parameter { .. } => {}
@@ -1882,6 +1888,7 @@ impl Checker<'_> {
                         | Type::Parameterized { .. }
                         | Type::List(_)
                         | Type::MutableList(_)
+                        | Type::FlexibleList(_)
                         | Type::Function { .. }
                         | Type::ReceiverFunction { .. }
                         | Type::Unit
@@ -1897,6 +1904,7 @@ impl Checker<'_> {
                         Type::Parameterized { .. }
                         | Type::List(_)
                         | Type::MutableList(_)
+                        | Type::FlexibleList(_)
                         | Type::Java(_)
                         | Type::String => true,
                         _ => false,

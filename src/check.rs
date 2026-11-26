@@ -836,7 +836,10 @@ impl Checker<'_> {
             ("kotlin/Any", "java/lang/Object"),
         ] {
             if classifier == "kotlin/collections/MutableList"
-                && !matches!(receiver.ty.base(), Type::MutableList(_))
+                && !matches!(
+                    receiver.ty.base(),
+                    Type::MutableList(_) | Type::FlexibleList(_)
+                )
             {
                 continue;
             }
@@ -922,7 +925,7 @@ impl Checker<'_> {
         }
         let (element, mutable) = match receiver.ty.base() {
             Type::List(e) => (e.as_ref().clone(), false),
-            Type::MutableList(e) => (e.as_ref().clone(), true),
+            Type::MutableList(e) | Type::FlexibleList(e) => (e.as_ref().clone(), true),
             _ => unreachable!(),
         };
         if name == "get" && args.len() == 1 {
@@ -1751,6 +1754,61 @@ impl Checker<'_> {
         named: bool,
         offset: usize,
     ) -> Result<CheckedArguments> {
+        self.arguments_checked(params, defaults, args, named, false, offset)
+    }
+    fn java_list_argument(&mut self, expr: &Expr, expected: &Type) -> Result<Option<Value>> {
+        fn element(ty: &Type) -> Option<&Type> {
+            match ty {
+                Type::Nullable(inner) | Type::Platform(inner) => element(inner),
+                Type::FlexibleList(element) => Some(element),
+                _ => None,
+            }
+        }
+        fn bound(ty: &Type) -> &Type {
+            match ty {
+                Type::Nullable(inner) | Type::Platform(inner) => bound(inner),
+                Type::Parameter { upper_bound, .. } => bound(upper_bound),
+                _ => ty,
+            }
+        }
+        let Some(element) = element(expected) else {
+            return Ok(None);
+        };
+        let value = self.value_expected(expr, Some(expected))?;
+        if value.ty != Type::Null {
+            let actual =
+                relations::as_supertype(self.classpath, bound(&value.ty), "java/util/List")
+                    .unwrap_or_else(|| bound(&value.ty).clone());
+            if !matches!(actual, Type::List(_)) {
+                let mut actual = actual;
+                if let Type::Parameterized { arguments, .. } = &mut actual {
+                    for argument in arguments {
+                        if argument.variance == syntax::Variance::Out {
+                            argument.variance = syntax::Variance::Invariant;
+                        }
+                    }
+                }
+                let lower = Type::MutableList(Box::new(element.clone()));
+                if !self.subtype(&actual, &lower) {
+                    return Err(Diagnostic::new(
+                        expr.offset,
+                        "Java collection argument requires invariant mutable element types",
+                    )
+                    .with_kind(crate::DiagnosticKind::InvalidKotlin, "JAVA_TYPE_MISMATCH"));
+                }
+            }
+        }
+        self.coerce(value, expected.clone(), expr.offset).map(Some)
+    }
+    fn arguments_checked(
+        &mut self,
+        params: &[(String, Type)],
+        defaults: &[bool],
+        args: &[Expr],
+        named: bool,
+        java_variance: bool,
+        offset: usize,
+    ) -> Result<CheckedArguments> {
         if params.len() > 64 && defaults.iter().any(|d| *d) {
             return Err(Diagnostic::new(
                 offset,
@@ -1769,7 +1827,14 @@ impl Checker<'_> {
             } else {
                 arg
             };
-            let value = self.inline_argument_value(expr, &params[index].1, index)?;
+            let value = if java_variance {
+                match self.java_list_argument(expr, &params[index].1)? {
+                    Some(value) => value,
+                    None => self.inline_argument_value(expr, &params[index].1, index)?,
+                }
+            } else {
+                self.inline_argument_value(expr, &params[index].1, index)?
+            };
             ordered[index] = Some(if reordered {
                 let slot = self.allocate_typed_slot(&value.ty, offset)?;
                 let ty = value.ty.clone();
@@ -1840,7 +1905,12 @@ impl Checker<'_> {
         named: bool,
         offset: usize,
     ) -> Result<Value> {
-        let (mut values, lets, mask) = self.arguments(params, defaults, args, named, offset)?;
+        let java_variance = self
+            .classpath
+            .load(owner)
+            .is_ok_and(|class| !class.kotlin_class);
+        let (mut values, lets, mask) =
+            self.arguments_checked(params, defaults, args, named, java_variance, offset)?;
         let raw_descriptor = format!(
             "({})V",
             params.iter().map(|p| p.1.descriptor()).collect::<String>()
@@ -2329,6 +2399,17 @@ impl Checker<'_> {
         extension: bool,
         offset: usize,
     ) -> Result<Value> {
+        self.member_call_checked(method, receiver, args, extension, true, offset)
+    }
+    fn member_call_checked(
+        &mut self,
+        method: JavaMethod,
+        receiver: Value,
+        args: &[Expr],
+        extension: bool,
+        java_variance: bool,
+        offset: usize,
+    ) -> Result<Value> {
         if let Some((owner, name)) = method.owner.rsplit_once('$')
             && self.classpath.load(owner).is_ok_and(|class| {
                 class
@@ -2453,7 +2534,7 @@ impl Checker<'_> {
             self.inline_result = previous_result;
             checked?
         } else {
-            self.arguments(&params, &defaults, args, self.method_named(&method), offset)?
+            self.arguments_checked(&params, &defaults, args, self.method_named(&method), java_variance && method.library.as_ref().is_some_and(|library| !library.kotlin_declared), offset)?
         };
         if extension {
             mask >>= 1;
@@ -2773,8 +2854,10 @@ impl Checker<'_> {
                 });
             }
         }
-        if let (Type::List(expected_element), Type::List(element) | Type::MutableList(element)) =
-            (&expected, &value.ty)
+        if let (
+            Type::List(expected_element),
+            Type::List(element) | Type::MutableList(element) | Type::FlexibleList(element),
+        ) = (&expected, &value.ty)
         {
             if matches!(expected_element.as_ref(),Type::Nullable(inner) if inner.as_ref()==element.as_ref())
             {
@@ -2793,14 +2876,17 @@ impl Checker<'_> {
             }
         }
         if let (
-            Type::List(element) | Type::MutableList(element),
+            Type::List(element) | Type::MutableList(element) | Type::FlexibleList(element),
             ValueKind::ListFactory { elements, .. },
         ) = (&expected, &value.kind)
         {
             let compatible = matches!(
                 (&expected, &value.ty),
-                (Type::List(_), Type::List(_) | Type::MutableList(_))
-                    | (Type::MutableList(_), Type::MutableList(_))
+                (
+                    Type::List(_),
+                    Type::List(_) | Type::MutableList(_) | Type::FlexibleList(_)
+                ) | (Type::MutableList(_), Type::MutableList(_))
+                    | (Type::FlexibleList(_), Type::List(_) | Type::MutableList(_))
             );
             if elements.is_empty() && unresolved_list(&value.ty) && compatible {
                 let _ = element;
@@ -3332,10 +3418,12 @@ impl Checker<'_> {
         if !candidates.iter().any(|field| field.access & 1 != 0) {
             if let Some(value) = &receiver {
                 if let Some(method) = self.java_property_setter(&value.ty, name, offset)? {
-                    let call = self.member_call(
+                    let call = self.member_call_checked(
                         method,
                         value.clone(),
                         std::slice::from_ref(expr),
+                        false,
+                        false,
                         offset,
                     )?;
                     return Ok(Statement::Expression(call));
@@ -3458,7 +3546,8 @@ impl Checker<'_> {
             Type::Nullable(element)
             | Type::Array(element)
             | Type::List(element)
-            | Type::MutableList(element) => Self::concrete_java_field_type(element),
+            | Type::MutableList(element)
+            | Type::FlexibleList(element) => Self::concrete_java_field_type(element),
             Type::Function { params, result } | Type::SuspendFunction { params, result } => {
                 params.iter().all(Self::concrete_java_field_type)
                     && Self::concrete_java_field_type(result)
@@ -3481,7 +3570,8 @@ impl Checker<'_> {
             Type::Parameter { .. }
             | Type::Parameterized { .. }
             | Type::List(_)
-            | Type::MutableList(_) => false,
+            | Type::MutableList(_)
+            | Type::FlexibleList(_) => false,
             Type::Nullable(element) | Type::Array(element) => Self::plain_java_field_type(element),
             _ => true,
         }
@@ -5258,6 +5348,7 @@ impl Checker<'_> {
                             | Type::Parameterized { .. }
                             | Type::List(_)
                             | Type::MutableList(_)
+                            | Type::FlexibleList(_)
                     ))
                     && !matches!(op.as_str(), "==" | "!=" | "===" | "!==" | "&&" | "||")
                 {
@@ -5535,7 +5626,10 @@ impl Checker<'_> {
                             offset,
                         );
                     }
-                    if matches!(receiver.ty.base(), Type::List(_) | Type::MutableList(_)) {
+                    if matches!(
+                        receiver.ty.base(),
+                        Type::List(_) | Type::MutableList(_) | Type::FlexibleList(_)
+                    ) {
                         if unresolved_list(&receiver.ty) {
                             return Err(Diagnostic::new(
                                 offset,
@@ -6194,7 +6288,10 @@ impl Checker<'_> {
                     {
                         return Ok(value);
                     }
-                    if matches!(receiver.ty.base(), Type::List(_) | Type::MutableList(_)) {
+                    if matches!(
+                        receiver.ty.base(),
+                        Type::List(_) | Type::MutableList(_) | Type::FlexibleList(_)
+                    ) {
                         return self.list_call(receiver, name, args, offset);
                     }
                     if let Type::ThreadLocal(element) = receiver.ty.base() {
@@ -6524,6 +6621,7 @@ fn nested_type_imports(
         | Type::Platform(inner)
         | Type::List(inner)
         | Type::MutableList(inner)
+        | Type::FlexibleList(inner)
         | Type::ThreadLocal(inner)
         | Type::Parameter {
             upper_bound: inner, ..
@@ -6694,6 +6792,18 @@ fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> 
             result: Box::new(resolve_type(result, imports, offset)?),
         }),
         Type::Parameterized { name, arguments } => {
+            if matches!(name.as_str(), "List" | "kotlin/collections/List")
+                && let [
+                    syntax::TypeArgument {
+                        variance: syntax::Variance::Out,
+                        ty: Some(element),
+                    },
+                ] = arguments.as_slice()
+            {
+                return Ok(Type::List(Box::new(resolve_type(
+                    element, imports, offset,
+                )?)));
+            }
             if name == "Array" {
                 return Err(Diagnostic::new(offset, "Only Array<String> is supported"));
             }
@@ -6725,6 +6835,9 @@ fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> 
             }
             Ok(Type::Nullable(Box::new(inner)))
         }
+        Type::FlexibleList(element) => Ok(Type::FlexibleList(Box::new(resolve_type(
+            element, imports, offset,
+        )?))),
         Type::MutableList(element) => Ok(Type::MutableList(Box::new(resolve_type(
             element, imports, offset,
         )?))),
@@ -7074,13 +7187,17 @@ pub(crate) fn body_call_names(body: &[syntax::Statement], names: &mut HashSet<St
 fn has_platform(ty: &Type) -> bool {
     match ty {
         Type::Platform(_) => true,
-        Type::Nullable(t) | Type::List(t) | Type::MutableList(t) => has_platform(t),
+        Type::Nullable(t) | Type::List(t) | Type::MutableList(t) | Type::FlexibleList(t) => {
+            has_platform(t)
+        }
         _ => false,
     }
 }
 fn unresolved_list(ty: &Type) -> bool {
     match ty {
-        Type::List(t) | Type::MutableList(t) => t.as_ref() == &Type::Null || unresolved_list(t),
+        Type::List(t) | Type::MutableList(t) | Type::FlexibleList(t) => {
+            t.as_ref() == &Type::Null || unresolved_list(t)
+        }
         Type::Nullable(t) => unresolved_list(t),
         _ => false,
     }
@@ -7377,6 +7494,7 @@ pub fn check_with_owner(
             Type::Nullable(inner)
             | Type::List(inner)
             | Type::MutableList(inner)
+            | Type::FlexibleList(inner)
             | Type::Array(inner)
             | Type::OutArray(inner)
             | Type::ThreadLocal(inner) => collect_type(inner, names),

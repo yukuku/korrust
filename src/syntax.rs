@@ -52,6 +52,7 @@ pub enum Type {
     Null,
     List(Box<Type>),
     MutableList(Box<Type>),
+    FlexibleList(Box<Type>),
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -198,6 +199,7 @@ impl Type {
                 | Self::Null
                 | Self::List(_)
                 | Self::MutableList(_)
+                | Self::FlexibleList(_)
         )
     }
     pub fn is_nullable(&self) -> bool {
@@ -264,7 +266,9 @@ impl Type {
                 format!("Lkotlin/jvm/functions/Function{};", params.len())
             }
             Self::ThreadLocal(_) => "Ljava/lang/ThreadLocal;".into(),
-            Self::List(_) | Self::MutableList(_) => "Ljava/util/List;".into(),
+            Self::List(_) | Self::MutableList(_) | Self::FlexibleList(_) => {
+                "Ljava/util/List;".into()
+            }
             Self::Null => "Ljava/lang/Object;".into(),
             Self::Nullable(inner) => match inner.base() {
                 Self::Int => "Ljava/lang/Integer;".into(),

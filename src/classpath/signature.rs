@@ -255,7 +255,7 @@ impl<'a> Signature<'a> {
                     && arguments[0].ty.is_some()
                     && arguments[0].variance == Variance::Invariant
                 {
-                    Type::List(Box::new(arguments.remove(0).ty.unwrap()))
+                    Type::FlexibleList(Box::new(arguments.remove(0).ty.unwrap()))
                 } else {
                     Type::Parameterized { name, arguments }
                 }
@@ -418,6 +418,7 @@ pub(super) fn nullability<'a>(
         return Ok(ty);
     }
     let mut state = None;
+    let mut mutability = None;
     for annotation in annotations {
         if annotation.name == "Ljdk/internal/vm/annotation/IntrinsicCandidate;"
             && annotation.values.is_empty()
@@ -433,12 +434,36 @@ pub(super) fn nullability<'a>(
             }
             continue;
         }
+        let mutable = match annotation.name.as_str() {
+            "Lorg/jetbrains/annotations/ReadOnly;" | "Lkotlin/annotations/jvm/ReadOnly;" => {
+                Some(false)
+            }
+            "Lorg/jetbrains/annotations/Mutable;" | "Lkotlin/annotations/jvm/Mutable;" => {
+                Some(true)
+            }
+            _ => None,
+        };
+        if let Some(mutable) = mutable {
+            if !annotation.values.is_empty()
+                || mutability.is_some_and(|previous| previous != mutable)
+            {
+                return Err(invalid());
+            }
+            mutability = Some(mutable);
+            continue;
+        }
         let nullable = nullability_polarity(&annotation.name).ok_or_else(invalid)?;
         if !annotation.values.is_empty() || state.is_some_and(|s| s != nullable) {
             return Err(invalid());
         }
         state = Some(nullable);
     }
+    let ty = match (ty, mutability) {
+        (Type::FlexibleList(element), Some(false)) => Type::List(element),
+        (Type::FlexibleList(element), Some(true)) => Type::MutableList(element),
+        (ty, None) => ty,
+        _ => return Err(invalid()),
+    };
     Ok(match state {
         Some(true) => Type::Nullable(Box::new(ty)),
         Some(false) => ty,

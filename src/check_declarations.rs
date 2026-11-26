@@ -308,9 +308,10 @@ pub(super) fn check_class_with_constants(
             | Type::Function { .. }
             | Type::Java(_)
             | Type::Parameterized { .. } => true,
-            Type::Nullable(inner) | Type::List(inner) | Type::MutableList(inner) => {
-                data_type(inner)
-            }
+            Type::Nullable(inner)
+            | Type::List(inner)
+            | Type::MutableList(inner)
+            | Type::FlexibleList(inner) => data_type(inner),
             _ => false,
         }
     }
@@ -2689,6 +2690,7 @@ fn infer_source_results_impl(
             Type::Nullable(t)
             | Type::List(t)
             | Type::MutableList(t)
+            | Type::FlexibleList(t)
             | Type::Array(t)
             | Type::OutArray(t) => type_names(t, out),
             Type::Parameterized { name, arguments } => {
@@ -4745,6 +4747,7 @@ pub(super) fn validate_classifier_generics(
                     | Type::OutArray(t)
                     | Type::List(t)
                     | Type::MutableList(t)
+                    | Type::FlexibleList(t)
                     | Type::ThreadLocal(t) => dependent(t),
                     Type::Parameterized { arguments, .. } => arguments
                         .iter()
@@ -4855,7 +4858,7 @@ pub(super) fn validate_variance(
         Type::Nullable(t) | Type::Platform(t) | Type::List(t) | Type::OutArray(t) => {
             validate_variance(parameters, t, polarity, classpath, imports, offset)?
         }
-        Type::Array(t) | Type::MutableList(t) | Type::ThreadLocal(t) => {
+        Type::Array(t) | Type::MutableList(t) | Type::FlexibleList(t) | Type::ThreadLocal(t) => {
             validate_variance(parameters, t, 0, classpath, imports, offset)?
         }
         Type::Parameterized { name, arguments } => {

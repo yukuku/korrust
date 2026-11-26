@@ -162,6 +162,7 @@ fn expand_at(
         Type::OutArray(t) => Type::OutArray(Box::new(recurse(t)?)),
         Type::List(t) => Type::List(Box::new(recurse(t)?)),
         Type::MutableList(t) => Type::MutableList(Box::new(recurse(t)?)),
+        Type::FlexibleList(t) => Type::FlexibleList(Box::new(recurse(t)?)),
         Type::ThreadLocal(t) => Type::ThreadLocal(Box::new(recurse(t)?)),
         Type::Parameter { name, upper_bound } => Type::Parameter {
             name: name.clone(),
@@ -251,6 +252,7 @@ fn substitute(ty: &Type, arguments: &HashMap<String, TypeArgument>) -> Result<Ty
         Type::OutArray(t) => Type::OutArray(Box::new(recurse(t)?)),
         Type::List(t) => Type::List(Box::new(recurse(t)?)),
         Type::MutableList(t) => Type::MutableList(Box::new(recurse(t)?)),
+        Type::FlexibleList(t) => Type::FlexibleList(Box::new(recurse(t)?)),
         Type::ThreadLocal(t) => Type::ThreadLocal(Box::new(recurse(t)?)),
         Type::Parameter { name, upper_bound } => Type::Parameter {
             name: name.clone(),
