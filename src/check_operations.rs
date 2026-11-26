@@ -5,6 +5,22 @@ pub(super) fn is_infix_name(token: &str) -> bool {
         && !matches!(token, "in" | "and" | "or" | "xor" | "shl" | "shr" | "ushr")
 }
 
+pub(super) fn char_arithmetic(op: &str, left: Value, right: Value) -> Value {
+    let difference = op == "-" && right.ty == Type::Char;
+    let value = Value {
+        ty: Type::Int,
+        kind: ValueKind::Binary(op.into(), Box::new(left), Box::new(right)),
+    };
+    if difference {
+        value
+    } else {
+        Value {
+            ty: Type::Char,
+            kind: ValueKind::Convert(Type::Char, Box::new(value)),
+        }
+    }
+}
+
 pub(super) enum ExtensionKind {
     Ordinary,
     Operator,

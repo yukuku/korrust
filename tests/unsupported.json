@@ -46,7 +46,11 @@
   },
   {
     "id": "char_arithmetic",
-    "source": "fun f(c: Char): Char = c + 1"
+    "source": "fun f(c: Char): Char = c + 1",
+    "supported_regression": {
+      "facade": "Char_arithmeticKt",
+      "java_assertions": "if (Char_arithmeticKt.f((char) 65535) != 0 || Char_arithmeticKt.f((char) 0xd7ff) != 0xd800) throw new AssertionError();"
+    }
   },
   {
     "id": "char_array_construction",

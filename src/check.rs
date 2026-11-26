@@ -5128,6 +5128,12 @@ impl Checker<'_> {
                         "Nullable operands support only equality with null and Elvis",
                     ));
                 }
+                if a.ty == Type::Char
+                    && ((op == "-" && b.ty == Type::Char)
+                        || (matches!(op.as_str(), "+" | "-") && b.ty == Type::Int))
+                {
+                    return Ok(operations::char_arithmetic(op, a, b));
+                }
                 let (a, b) = self.promote_integral_operands(op, a, b);
                 if matches!(a.ty, Type::Unit | Type::Float)
                     || matches!(b.ty, Type::Unit | Type::Float)
