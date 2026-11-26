@@ -608,6 +608,11 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                     source.mutable_params.contains(name),
                     !source.public_params.contains(name),
                 );
+                if !source.mutable_params.contains(name) {
+                    cp.source_stable_getters
+                        .borrow_mut()
+                        .insert((owner.to_owned(), methods[0].name.clone()));
+                }
                 if !source.override_params.contains(name) {
                     for method in &mut methods {
                         method.access |= 0x10;
@@ -642,6 +647,15 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                     property.setter.is_none() && property.delegate.is_none() && !property.lateinit,
                     false,
                 );
+                if !property.mutable
+                    && property.body.is_empty()
+                    && property.delegate.is_none()
+                    && !property.lateinit
+                {
+                    cp.source_stable_getters
+                        .borrow_mut()
+                        .insert((owner.to_owned(), methods[0].name.clone()));
+                }
                 if !property.open {
                     for method in &mut methods {
                         method.access |= 0x10;

@@ -50,19 +50,7 @@ impl Checker<'_> {
                 let [method] = getters.as_slice() else {
                     return None;
                 };
-                if !self.classpath.internal_visible(&method.owner) {
-                    return None;
-                }
-                let class = self.classpath.load(&method.owner).ok()?;
-                if method.access & 0x10 == 0 && class.access & 0x10 == 0 {
-                    return None;
-                }
-                if !class.fields.iter().any(|field| {
-                    field
-                        .kotlin
-                        .as_ref()
-                        .is_some_and(|property| property.name == *name && property.stable)
-                }) {
+                if !self.classpath.stable_kotlin_getter(method, name) {
                     return None;
                 }
                 let receiver_class = self.classpath.load(owner).ok()?;
@@ -82,6 +70,37 @@ impl Checker<'_> {
         }
     }
 
+    fn implicit_getter_subject(&self, expression: &Expr, value: &Value) -> Option<Subject> {
+        let ExprKind::Name(name) = &expression.kind else {
+            return None;
+        };
+        let (ValueKind::JavaCall { method, args } | ValueKind::MemberCall { method, args, .. }) =
+            &value.kind
+        else {
+            return None;
+        };
+        let [
+            Value {
+                kind: ValueKind::Local(slot),
+                ..
+            },
+        ] = args.as_slice()
+        else {
+            return None;
+        };
+        if method.source_property.as_ref() != Some(name)
+            || !method.instance_dispatch()
+            || !self.classpath.stable_kotlin_getter(method, name)
+        {
+            return None;
+        }
+        Some(Subject::Property(
+            Box::new(Subject::Local(*slot)),
+            method.owner.clone(),
+            method.name.clone(),
+        ))
+    }
+
     pub(super) fn refine_stable_property(&mut self, condition: &Expr, truth: bool) {
         let ExprKind::Binary(operator, left, right) = &condition.kind else {
             return;
@@ -92,17 +111,24 @@ impl Checker<'_> {
             return;
         }
         let value = match (&left.kind, &right.kind) {
-            (ExprKind::Property(..), ExprKind::Null) => left,
-            (ExprKind::Null, ExprKind::Property(..)) => right,
+            (ExprKind::Property(..) | ExprKind::Name(_), ExprKind::Null) => left,
+            (ExprKind::Null, ExprKind::Property(..) | ExprKind::Name(_)) => right,
             _ => return,
         };
-        let Some(subject) = self.stable_property_subject(value) else {
-            return;
+        let explicit = match &value.kind {
+            ExprKind::Property(..) => {
+                let Some(subject) = self.stable_property_subject(value) else {
+                    return;
+                };
+                Some(subject)
+            }
+            ExprKind::Name(name) if self.local(name).is_none() => None,
+            _ => return,
         };
-        if let Ok(Value {
-            ty: Type::Nullable(inner),
-            ..
-        }) = self.value(value)
+        if let Ok(checked) = self.value(value)
+            && let Some(subject) =
+                explicit.or_else(|| self.implicit_getter_subject(value, &checked))
+            && let Type::Nullable(inner) = checked.ty
         {
             self.refinements.insert(subject, *inner);
         }
@@ -113,7 +139,7 @@ impl Checker<'_> {
         expression: &Expr,
         value: Value,
     ) -> Result<Value> {
-        if !matches!(expression.kind, ExprKind::Property(..))
+        if !matches!(expression.kind, ExprKind::Property(..) | ExprKind::Name(_))
             || !self
                 .refinements
                 .keys()
@@ -121,9 +147,11 @@ impl Checker<'_> {
         {
             return Ok(value);
         }
-        if let Some(subject) = self.stable_property_subject(expression)
-            && let Some(ty) = self.refinements.get(&subject)
-        {
+        let subject = match &expression.kind {
+            ExprKind::Name(_) => self.implicit_getter_subject(expression, &value),
+            _ => self.stable_property_subject(expression),
+        };
+        if let Some(ty) = subject.and_then(|key| self.refinements.get(&key)) {
             return Ok(Value {
                 ty: ty.clone(),
                 kind: ValueKind::Cast {

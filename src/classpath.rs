@@ -80,6 +80,7 @@ pub(crate) struct Classpath {
     lexical_parents: std::cell::RefCell<std::collections::HashMap<String, String>>,
     nested_access: std::cell::RefCell<std::collections::HashMap<String, u16>>,
     source_files: std::cell::RefCell<std::collections::HashMap<String, (String, bool)>>,
+    source_stable_getters: std::cell::RefCell<std::collections::HashSet<(String, String)>>,
     source_default_accessors:
         std::cell::RefCell<std::collections::HashMap<(String, String), SourceBackingField>>,
     origins: std::cell::RefCell<std::collections::HashMap<String, PathBuf>>,
@@ -1029,6 +1030,26 @@ impl Classpath {
         source::resolve(ty, module, self)
     }
 
+    pub(crate) fn stable_kotlin_getter(&self, method: &JavaMethod, name: &str) -> bool {
+        if !self.internal_visible(&method.owner) {
+            return false;
+        }
+        let Ok(class) = self.load(&method.owner) else {
+            return false;
+        };
+        (method.access & 0x10 != 0 || class.access & 0x10 != 0)
+            && (self
+                .source_stable_getters
+                .borrow()
+                .contains(&(method.owner.clone(), method.name.clone()))
+                || class.fields.iter().any(|field| {
+                    field
+                        .kotlin
+                        .as_ref()
+                        .is_some_and(|property| property.name == name && property.stable)
+                }))
+    }
+
     pub(crate) fn default_source_accessor(
         &self,
         method: &JavaMethod,
@@ -1083,6 +1104,7 @@ impl Classpath {
             lexical_parents: Default::default(),
             nested_access: Default::default(),
             source_files: Default::default(),
+            source_stable_getters: Default::default(),
             source_default_accessors: Default::default(),
             origins: Default::default(),
             cache: Default::default(),
