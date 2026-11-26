@@ -12,8 +12,12 @@
   {
     "id": "safe_unit_result",
     "source": "import ten.trace.Trace\nfun f(value: Trace?): Unit? = value?.markReceiver()",
-    "scope": "Nullable Unit results are outside the boxed scalar safe-call subset.",
-    "candidate_diagnostic": "Nullable Unit is not supported"
+    "scope": "Nullable Unit safe calls return null for missing receivers and kotlin.Unit.INSTANCE after the void call; fixed official-compiled Java caller checks skipped effects and JVM return ABI.",
+    "supported_regression": {
+      "facade": "Boundary_safe_unit_resultKt",
+      "java_fixture": "SafeUnitBoundaryCheck.java",
+      "main_class": "SafeUnitBoundaryCheck"
+    }
   },
   {
     "id": "unsupported_list_scalar",

@@ -1923,12 +1923,6 @@ impl Checker<'_> {
         self.initialized.remove(&slot);
         self.refinements.remove(&slot.into());
         let result = result?;
-        if result.ty == Type::Unit {
-            return Err(Diagnostic::new(
-                offset,
-                "Safe calls returning Unit are not supported",
-            ));
-        }
         let result = if result.ty.is_reference() {
             result
         } else {
@@ -6494,7 +6488,7 @@ fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> 
         }
         Type::Nullable(inner) => {
             let inner = resolve_type(inner, imports, offset)?;
-            if inner == Type::Unit || inner.is_nullable() {
+            if inner.is_nullable() {
                 return Err(Diagnostic::new(offset, "Unsupported nullable type"));
             }
             Ok(Type::Nullable(Box::new(inner)))

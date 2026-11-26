@@ -532,7 +532,7 @@ pub(super) fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: 
         return false;
     }
     if matches!(expected, Type::Java(name) if name == "java/lang/Object") {
-        return actual != &Type::Unit;
+        return true;
     }
     if actual.array_element().is_some()
         && matches!(expected, Type::Java(name) if matches!(name.as_str(), "java/lang/Cloneable" | "java/io/Serializable"))

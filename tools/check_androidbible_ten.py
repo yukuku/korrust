@@ -273,11 +273,11 @@ class Harness(SimpleHarness):
             self.compile(provider, source, destination, [self.outputs[provider]["java"]])
             outputs[provider] = destination
         callers = self.work / ("regression-callers-" + case["id"])
-        self.run("Compile fixed regression caller against official " + case["id"], [self.javac, "-cp", classpath(outputs["official"], self.stdlib), "-d", callers, java_source])
+        self.run("Compile fixed regression caller against official " + case["id"], [self.javac, "-cp", classpath(outputs["official"], self.outputs["official"]["java"], self.stdlib), "-d", callers, java_source])
         fixed_callers = tree_hashes(callers, ".class")
         observations = []
         for provider, output in outputs.items():
-            result = self.run("Run fixed regression assertions " + provider + "/" + case["id"], [self.java, "-Xverify:all", "-cp", classpath(callers, output, self.stdlib), regression["main_class"]])
+            result = self.run("Run fixed regression assertions " + provider + "/" + case["id"], [self.java, "-Xverify:all", "-cp", classpath(callers, output, self.outputs[provider]["java"], self.stdlib), regression["main_class"]])
             observation = json.loads(result.stdout)
             if observation.get("id") != case["id"] or not isinstance(observation.get("checks"), int) or observation["checks"] <= 0:
                 raise AssertionError("Missing independent regression assertions: " + case["id"])

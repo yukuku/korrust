@@ -182,6 +182,7 @@ fn boxed_owner(ty: &Type) -> &'static str {
         Type::Short => "java/lang/Short",
         Type::Char => "java/lang/Character",
         Type::Boolean => "java/lang/Boolean",
+        Type::Unit => "kotlin/Unit",
         _ => "java/lang/Object",
     }
 }
@@ -195,6 +196,7 @@ fn boxed_descriptor(ty: &Type) -> &'static str {
         Type::Short => "Ljava/lang/Short;",
         Type::Char => "Ljava/lang/Character;",
         Type::Boolean => "Ljava/lang/Boolean;",
+        Type::Unit => "Lkotlin/Unit;",
         _ => "Ljava/lang/Object;",
     }
 }
@@ -1257,10 +1259,10 @@ impl Code<'_> {
         Ok(())
     }
     fn box_value(&mut self, ty: &Type) -> Result<()> {
+        if ty.base() == &Type::Unit {
+            return self.field_reference(0xb2, "kotlin/Unit", "INSTANCE", "Lkotlin/Unit;");
+        }
         if self.coroutine {
-            if ty == &Type::Unit {
-                return self.field_reference(0xb2, "kotlin/Unit", "INSTANCE", "Lkotlin/Unit;");
-            }
             let suffix = match ty.base() {
                 Type::Int => "Int",
                 Type::Long => "Long",
@@ -1287,6 +1289,10 @@ impl Code<'_> {
         )
     }
     fn unbox_value(&mut self, ty: &Type) -> Result<()> {
+        if ty.base() == &Type::Unit {
+            self.bytes.push(0x57);
+            return Ok(());
+        }
         let name = match ty {
             Type::Int => "intValue",
             Type::Long => "longValue",

@@ -272,6 +272,7 @@ impl Type {
                 Self::Boolean => "Ljava/lang/Boolean;".into(),
                 Self::Float => "Ljava/lang/Float;".into(),
                 Self::Double => "Ljava/lang/Double;".into(),
+                Self::Unit => "Lkotlin/Unit;".into(),
                 _ => inner.descriptor(),
             },
             Self::Platform(_) => unreachable!(),
@@ -1920,12 +1921,6 @@ impl Parser {
         }
         let ty = self.nonnullable_ty()?;
         let ty = if self.take("?") {
-            if ty == Type::Unit {
-                return Err(self.error("Nullable Unit is not supported").with_kind(
-                    DiagnosticKind::UnsupportedLanguage,
-                    "NULLABLE_UNIT_UNSUPPORTED",
-                ));
-            }
             Type::Nullable(Box::new(ty))
         } else {
             ty
