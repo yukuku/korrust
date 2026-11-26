@@ -2520,10 +2520,12 @@ impl Checker<'_> {
                 && !matches!(expected, Type::Platform(_)))
         {
             if value.ty.is_reference() {
-                return Ok(Value {
-                    ty: expected,
-                    kind: value.kind,
-                });
+                let kind = if value.ty.descriptor() == expected.descriptor() {
+                    value.kind
+                } else {
+                    ValueKind::Box(Box::new(value))
+                };
+                return Ok(Value { ty: expected, kind });
             }
             if expected.is_reference() {
                 return Ok(Value {
