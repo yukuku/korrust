@@ -12,7 +12,7 @@ fun writeFields(value: Migration, text: String?) {
     value.nullableField = text
     value.nonNullField = text
 }
-fun strictNonNull(): String = Migration.strictNonNull()
+fun checkedStrictNonNull(): String = Migration.strictNonNull()
 fun strictNullable(missing: Boolean): String? = Migration.strictNullable(missing)
 fun generic(value: String?): String? = Migration.identity(value)
 fun strictFieldNonNull(value: Migration): String = value.strictNonNullField

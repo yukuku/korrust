@@ -1,0 +1,505 @@
+Classfile /workspace/korrust/target/checks/2026-11-26T024315217490Z-migration-nullability/official/EffectsKt.class
+  Last modified Nov 26, 2026; size 3480 bytes
+  SHA-256 checksum 8de45e56f2146483ef27c53813093dfe4586727d29465ea93d3f9bf869427c0e
+  Compiled from "Effects.kt"
+public final class EffectsKt
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // EffectsKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 18, attributes: 2
+Constant pool:
+    #1 = Utf8               EffectsKt
+    #2 = Class              #1            // EffectsKt
+    #3 = Utf8               java/lang/Object
+    #4 = Class              #3            // java/lang/Object
+    #5 = Utf8               acceptNull
+    #6 = Utf8               ()Ljava/lang/String;
+    #7 = Utf8               Lorg/jetbrains/annotations/Nullable;
+    #8 = Utf8               Migration
+    #9 = Class              #8            // Migration
+   #10 = Utf8               accept
+   #11 = Utf8               (Ljava/lang/String;)Ljava/lang/String;
+   #12 = NameAndType        #10:#11       // accept:(Ljava/lang/String;)Ljava/lang/String;
+   #13 = Methodref          #9.#12        // Migration.accept:(Ljava/lang/String;)Ljava/lang/String;
+   #14 = Utf8               acceptNullable
+   #15 = Utf8               value
+   #16 = Utf8               Ljava/lang/String;
+   #17 = Utf8               nullableParameter
+   #18 = NameAndType        #17:#11       // nullableParameter:(Ljava/lang/String;)Ljava/lang/String;
+   #19 = Methodref          #9.#18        // Migration.nullableParameter:(Ljava/lang/String;)Ljava/lang/String;
+   #20 = Utf8               nonNullAsNonNull
+   #21 = Utf8               (Z)Ljava/lang/String;
+   #22 = Utf8               Lorg/jetbrains/annotations/NotNull;
+   #23 = Utf8               nonNull
+   #24 = NameAndType        #23:#21       // nonNull:(Z)Ljava/lang/String;
+   #25 = Methodref          #9.#24        // Migration.nonNull:(Z)Ljava/lang/String;
+   #26 = Utf8               nonNull(...)
+   #27 = String             #26           // nonNull(...)
+   #28 = Utf8               kotlin/jvm/internal/Intrinsics
+   #29 = Class              #28           // kotlin/jvm/internal/Intrinsics
+   #30 = Utf8               checkNotNullExpressionValue
+   #31 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+   #32 = NameAndType        #30:#31       // checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+   #33 = Methodref          #29.#32       // kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+   #34 = Utf8               missing
+   #35 = Utf8               Z
+   #36 = Utf8               nonNullAsNullable
+   #37 = Utf8               nullableAsNonNull
+   #38 = Utf8               nullable
+   #39 = NameAndType        #38:#21       // nullable:(Z)Ljava/lang/String;
+   #40 = Methodref          #9.#39        // Migration.nullable:(Z)Ljava/lang/String;
+   #41 = Utf8               nullable(...)
+   #42 = String             #41           // nullable(...)
+   #43 = Utf8               nullableAsNullable
+   #44 = Utf8               nullableLength
+   #45 = Utf8               (Z)I
+   #46 = Utf8               java/lang/String
+   #47 = Class              #46           // java/lang/String
+   #48 = Utf8               length
+   #49 = Utf8               ()I
+   #50 = NameAndType        #48:#49       // length:()I
+   #51 = Methodref          #47.#50       // java/lang/String.length:()I
+   #52 = Utf8               readNullableField
+   #53 = Utf8               (LMigration;)Ljava/lang/String;
+   #54 = String             #15           // value
+   #55 = Utf8               checkNotNullParameter
+   #56 = NameAndType        #55:#31       // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+   #57 = Methodref          #29.#56       // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+   #58 = Utf8               nullableField
+   #59 = NameAndType        #58:#16       // nullableField:Ljava/lang/String;
+   #60 = Fieldref           #9.#59        // Migration.nullableField:Ljava/lang/String;
+   #61 = Utf8               LMigration;
+   #62 = Utf8               readNonNullField
+   #63 = Utf8               nonNullField
+   #64 = NameAndType        #63:#16       // nonNullField:Ljava/lang/String;
+   #65 = Fieldref           #9.#64        // Migration.nonNullField:Ljava/lang/String;
+   #66 = String             #63           // nonNullField
+   #67 = Utf8               writeFields
+   #68 = Utf8               (LMigration;Ljava/lang/String;)V
+   #69 = Utf8               text
+   #70 = Utf8               checkedStrictNonNull
+   #71 = Utf8               strictNonNull
+   #72 = NameAndType        #71:#6        // strictNonNull:()Ljava/lang/String;
+   #73 = Methodref          #9.#72        // Migration.strictNonNull:()Ljava/lang/String;
+   #74 = Utf8               strictNonNull(...)
+   #75 = String             #74           // strictNonNull(...)
+   #76 = Utf8               strictNullable
+   #77 = NameAndType        #76:#21       // strictNullable:(Z)Ljava/lang/String;
+   #78 = Methodref          #9.#77        // Migration.strictNullable:(Z)Ljava/lang/String;
+   #79 = Utf8               generic
+   #80 = Utf8               identity
+   #81 = Utf8               (Ljava/lang/Object;)Ljava/lang/Object;
+   #82 = NameAndType        #80:#81       // identity:(Ljava/lang/Object;)Ljava/lang/Object;
+   #83 = Methodref          #9.#82        // Migration.identity:(Ljava/lang/Object;)Ljava/lang/Object;
+   #84 = Utf8               strictFieldNonNull
+   #85 = Utf8               strictNonNullField
+   #86 = NameAndType        #85:#16       // strictNonNullField:Ljava/lang/String;
+   #87 = Fieldref           #9.#86        // Migration.strictNonNullField:Ljava/lang/String;
+   #88 = String             #85           // strictNonNullField
+   #89 = Utf8               strictFieldNullable
+   #90 = Utf8               strictNullableField
+   #91 = NameAndType        #90:#16       // strictNullableField:Ljava/lang/String;
+   #92 = Fieldref           #9.#91        // Migration.strictNullableField:Ljava/lang/String;
+   #93 = Utf8               staticField
+   #94 = NameAndType        #93:#16       // staticField:Ljava/lang/String;
+   #95 = Fieldref           #9.#94        // Migration.staticField:Ljava/lang/String;
+   #96 = Utf8               writeStaticField
+   #97 = Utf8               (Ljava/lang/String;)V
+   #98 = Utf8               Lkotlin/Metadata;
+   #99 = Utf8               mv
+  #100 = Integer            2
+  #101 = Integer            3
+  #102 = Integer            0
+  #103 = Utf8               k
+  #104 = Utf8               xi
+  #105 = Integer            48
+  #106 = Utf8               d1
+  #107 = Utf8               \u0000(\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0005\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0002\b\t\u001a\b\u0010\u0000\u001a\u0004\u0018\u00010\u0001\u001a\u0012\u0010\u0002\u001a\u0004\u0018\u00010\u00012\b\u0010\u0003\u001a\u0004\u0018\u00010\u0001\u001a\u0012\u0010\u0004\u001a\u0004\u0018\u00010\u00012\b\u0010\u0003\u001a\u0004\u0018\u00010\u0001\u001a\u000e\u0010\u0005\u001a\u00020\u00012\u0006\u0010\u0006\u001a\u00020\u0007\u001a\u0010\u0010\b\u001a\u0004\u0018\u00010\u00012\u0006\u0010\u0006\u001a\u00020\u0007\u001a\u000e\u0010\t\u001a\u00020\u00012\u0006\u0010\u0006\u001a\u00020\u0007\u001a\u0010\u0010\n\u001a\u0004\u0018\u00010\u00012\u0006\u0010\u0006\u001a\u00020\u0007\u001a\u000e\u0010\u000b\u001a\u00020\f2\u0006\u0010\u0006\u001a\u00020\u0007\u001a\u0010\u0010\r\u001a\u0004\u0018\u00010\u00012\u0006\u0010\u0003\u001a\u00020\u000e\u001a\u000e\u0010\u000f\u001a\u00020\u00012\u0006\u0010\u0003\u001a\u00020\u000e\u001a\u0018\u0010\u0010\u001a\u00020\u00112\u0006\u0010\u0003\u001a\u00020\u000e2\b\u0010\u0012\u001a\u0004\u0018\u00010\u0001\u001a\u0006\u0010\u0013\u001a\u00020\u0001\u001a\u0010\u0010\u0014\u001a\u0004\u0018\u00010\u00012\u0006\u0010\u0006\u001a\u00020\u0007\u001a\u0012\u0010\u0015\u001a\u0004\u0018\u00010\u00012\b\u0010\u0003\u001a\u0004\u0018\u00010\u0001\u001a\u000e\u0010\u0016\u001a\u00020\u00012\u0006\u0010\u0003\u001a\u00020\u000e\u001a\u0010\u0010\u0017\u001a\u0004\u0018\u00010\u00012\u0006\u0010\u0003\u001a\u00020\u000e\u001a\b\u0010\u0018\u001a\u0004\u0018\u00010\u0001\u001a\u0010\u0010\u0019\u001a\u00020\u00112\b\u0010\u0003\u001a\u0004\u0018\u00010\u0001¨\u0006\u001a
+  #108 = Utf8               d2
+  #109 = Utf8
+  #110 = Utf8               migration_nullability
+  #111 = Utf8               Effects.kt
+  #112 = Utf8               Code
+  #113 = Utf8               LineNumberTable
+  #114 = Utf8               RuntimeInvisibleAnnotations
+  #115 = Utf8               LocalVariableTable
+  #116 = Utf8               RuntimeInvisibleParameterAnnotations
+  #117 = Utf8               SourceFile
+  #118 = Utf8               RuntimeVisibleAnnotations
+{
+  public static final java.lang.String acceptNull();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: aconst_null
+         1: invokestatic  #13                 // Method Migration.accept:(Ljava/lang/String;)Ljava/lang/String;
+         4: areturn
+      LineNumberTable:
+        line 1: 0
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.Nullable
+
+  public static final java.lang.String acceptNullable(java.lang.String);
+    descriptor: (Ljava/lang/String;)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokestatic  #13                 // Method Migration.accept:(Ljava/lang/String;)Ljava/lang/String;
+         4: areturn
+      LineNumberTable:
+        line 2: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0 value   Ljava/lang/String;
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.Nullable
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #7()
+          org.jetbrains.annotations.Nullable
+
+  public static final java.lang.String nullableParameter(java.lang.String);
+    descriptor: (Ljava/lang/String;)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokestatic  #19                 // Method Migration.nullableParameter:(Ljava/lang/String;)Ljava/lang/String;
+         4: areturn
+      LineNumberTable:
+        line 3: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0 value   Ljava/lang/String;
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.Nullable
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #7()
+          org.jetbrains.annotations.Nullable
+
+  public static final java.lang.String nonNullAsNonNull(boolean);
+    descriptor: (Z)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: iload_0
+         1: invokestatic  #25                 // Method Migration.nonNull:(Z)Ljava/lang/String;
+         4: dup
+         5: ldc           #27                 // String nonNull(...)
+         7: invokestatic  #33                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+        10: areturn
+      LineNumberTable:
+        line 4: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      11     0 missing   Z
+    RuntimeInvisibleAnnotations:
+      0: #22()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String nonNullAsNullable(boolean);
+    descriptor: (Z)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: iload_0
+         1: invokestatic  #25                 // Method Migration.nonNull:(Z)Ljava/lang/String;
+         4: areturn
+      LineNumberTable:
+        line 5: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0 missing   Z
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.Nullable
+
+  public static final java.lang.String nullableAsNonNull(boolean);
+    descriptor: (Z)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: iload_0
+         1: invokestatic  #40                 // Method Migration.nullable:(Z)Ljava/lang/String;
+         4: dup
+         5: ldc           #42                 // String nullable(...)
+         7: invokestatic  #33                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+        10: areturn
+      LineNumberTable:
+        line 6: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      11     0 missing   Z
+    RuntimeInvisibleAnnotations:
+      0: #22()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String nullableAsNullable(boolean);
+    descriptor: (Z)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: iload_0
+         1: invokestatic  #40                 // Method Migration.nullable:(Z)Ljava/lang/String;
+         4: areturn
+      LineNumberTable:
+        line 7: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0 missing   Z
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.Nullable
+
+  public static final int nullableLength(boolean);
+    descriptor: (Z)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: iload_0
+         1: invokestatic  #40                 // Method Migration.nullable:(Z)Ljava/lang/String;
+         4: invokevirtual #51                 // Method java/lang/String.length:()I
+         7: ireturn
+      LineNumberTable:
+        line 8: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       8     0 missing   Z
+
+  public static final java.lang.String readNullableField(Migration);
+    descriptor: (LMigration;)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #54                 // String value
+         3: invokestatic  #57                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: getfield      #60                 // Field Migration.nullableField:Ljava/lang/String;
+        10: areturn
+      LineNumberTable:
+        line 9: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      11     0 value   LMigration;
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.Nullable
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #22()
+          org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String readNonNullField(Migration);
+    descriptor: (LMigration;)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #54                 // String value
+         3: invokestatic  #57                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: getfield      #65                 // Field Migration.nonNullField:Ljava/lang/String;
+        10: dup
+        11: ldc           #66                 // String nonNullField
+        13: invokestatic  #33                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+        16: areturn
+      LineNumberTable:
+        line 10: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      17     0 value   LMigration;
+    RuntimeInvisibleAnnotations:
+      0: #22()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #22()
+          org.jetbrains.annotations.NotNull
+
+  public static final void writeFields(Migration, java.lang.String);
+    descriptor: (LMigration;Ljava/lang/String;)V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload_0
+         1: ldc           #54                 // String value
+         3: invokestatic  #57                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: aload_1
+         8: putfield      #60                 // Field Migration.nullableField:Ljava/lang/String;
+        11: aload_0
+        12: aload_1
+        13: putfield      #65                 // Field Migration.nonNullField:Ljava/lang/String;
+        16: return
+      LineNumberTable:
+        line 12: 6
+        line 13: 11
+        line 14: 16
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      17     0 value   LMigration;
+            0      17     1  text   Ljava/lang/String;
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #22()
+          org.jetbrains.annotations.NotNull
+      parameter 1:
+        0: #7()
+          org.jetbrains.annotations.Nullable
+
+  public static final java.lang.String checkedStrictNonNull();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: invokestatic  #73                 // Method Migration.strictNonNull:()Ljava/lang/String;
+         3: dup
+         4: ldc           #75                 // String strictNonNull(...)
+         6: invokestatic  #33                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+         9: areturn
+      LineNumberTable:
+        line 15: 0
+    RuntimeInvisibleAnnotations:
+      0: #22()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String strictNullable(boolean);
+    descriptor: (Z)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: iload_0
+         1: invokestatic  #78                 // Method Migration.strictNullable:(Z)Ljava/lang/String;
+         4: areturn
+      LineNumberTable:
+        line 16: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0 missing   Z
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.Nullable
+
+  public static final java.lang.String generic(java.lang.String);
+    descriptor: (Ljava/lang/String;)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokestatic  #83                 // Method Migration.identity:(Ljava/lang/Object;)Ljava/lang/Object;
+         4: checkcast     #47                 // class java/lang/String
+         7: areturn
+      LineNumberTable:
+        line 17: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       8     0 value   Ljava/lang/String;
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.Nullable
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #7()
+          org.jetbrains.annotations.Nullable
+
+  public static final java.lang.String strictFieldNonNull(Migration);
+    descriptor: (LMigration;)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #54                 // String value
+         3: invokestatic  #57                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: getfield      #87                 // Field Migration.strictNonNullField:Ljava/lang/String;
+        10: dup
+        11: ldc           #88                 // String strictNonNullField
+        13: invokestatic  #33                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+        16: areturn
+      LineNumberTable:
+        line 18: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      17     0 value   LMigration;
+    RuntimeInvisibleAnnotations:
+      0: #22()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #22()
+          org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String strictFieldNullable(Migration);
+    descriptor: (LMigration;)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #54                 // String value
+         3: invokestatic  #57                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: getfield      #92                 // Field Migration.strictNullableField:Ljava/lang/String;
+        10: areturn
+      LineNumberTable:
+        line 19: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      11     0 value   LMigration;
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.Nullable
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #22()
+          org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String staticField();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: getstatic     #95                 // Field Migration.staticField:Ljava/lang/String;
+         3: areturn
+      LineNumberTable:
+        line 20: 0
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.Nullable
+
+  public static final void writeStaticField(java.lang.String);
+    descriptor: (Ljava/lang/String;)V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: putstatic     #95                 // Field Migration.staticField:Ljava/lang/String;
+         4: return
+      LineNumberTable:
+        line 21: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0 value   Ljava/lang/String;
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #7()
+          org.jetbrains.annotations.Nullable
+}
+SourceFile: "Effects.kt"
+RuntimeVisibleAnnotations:
+  0: #98(#99=[I#100,I#101,I#102],#103=I#100,#104=I#105,#106=[s#107],#108=[s#5,s#109,s#14,s#15,s#17,s#20,s#34,s#109,s#36,s#37,s#43,s#44,s#109,s#52,s#61,s#62,s#67,s#109,s#69,s#70,s#76,s#79,s#84,s#89,s#93,s#96,s#110])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000(\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0005\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0002\b\t\u001a\b\u0010\u0000\u001a\u0004\u0018\u00010\u0001\u001a\u0012\u0010\u0002\u001a\u0004\u0018\u00010\u00012\b\u0010\u0003\u001a\u0004\u0018\u00010\u0001\u001a\u0012\u0010\u0004\u001a\u0004\u0018\u00010\u00012\b\u0010\u0003\u001a\u0004\u0018\u00010\u0001\u001a\u000e\u0010\u0005\u001a\u00020\u00012\u0006\u0010\u0006\u001a\u00020\u0007\u001a\u0010\u0010\b\u001a\u0004\u0018\u00010\u00012\u0006\u0010\u0006\u001a\u00020\u0007\u001a\u000e\u0010\t\u001a\u00020\u00012\u0006\u0010\u0006\u001a\u00020\u0007\u001a\u0010\u0010\n\u001a\u0004\u0018\u00010\u00012\u0006\u0010\u0006\u001a\u00020\u0007\u001a\u000e\u0010\u000b\u001a\u00020\f2\u0006\u0010\u0006\u001a\u00020\u0007\u001a\u0010\u0010\r\u001a\u0004\u0018\u00010\u00012\u0006\u0010\u0003\u001a\u00020\u000e\u001a\u000e\u0010\u000f\u001a\u00020\u00012\u0006\u0010\u0003\u001a\u00020\u000e\u001a\u0018\u0010\u0010\u001a\u00020\u00112\u0006\u0010\u0003\u001a\u00020\u000e2\b\u0010\u0012\u001a\u0004\u0018\u00010\u0001\u001a\u0006\u0010\u0013\u001a\u00020\u0001\u001a\u0010\u0010\u0014\u001a\u0004\u0018\u00010\u00012\u0006\u0010\u0006\u001a\u00020\u0007\u001a\u0012\u0010\u0015\u001a\u0004\u0018\u00010\u00012\b\u0010\u0003\u001a\u0004\u0018\u00010\u0001\u001a\u000e\u0010\u0016\u001a\u00020\u00012\u0006\u0010\u0003\u001a\u00020\u000e\u001a\u0010\u0010\u0017\u001a\u0004\u0018\u00010\u00012\u0006\u0010\u0003\u001a\u00020\u000e\u001a\b\u0010\u0018\u001a\u0004\u0018\u00010\u0001\u001a\u0010\u0010\u0019\u001a\u00020\u00112\b\u0010\u0003\u001a\u0004\u0018\u00010\u0001¨\u0006\u001a"]
+      d2=["acceptNull","","acceptNullable","value","nullableParameter","nonNullAsNonNull","missing","","nonNullAsNullable","nullableAsNonNull","nullableAsNullable","nullableLength","","readNullableField","LMigration;","readNonNullField","writeFields","","text","checkedStrictNonNull","strictNullable","generic","strictFieldNonNull","strictFieldNullable","staticField","writeStaticField","migration_nullability"]
+    )

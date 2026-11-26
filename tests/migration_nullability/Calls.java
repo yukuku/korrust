@@ -33,7 +33,7 @@ public final class Calls {
         check(EffectsKt.readNonNullField(value).equals("field"));
         EffectsKt.writeFields(value, null);
         check(value.nullableField == null && value.nonNullField == null);
-        check(EffectsKt.strictNonNull().equals("strict"));
+        check(EffectsKt.checkedStrictNonNull().equals("strict"));
         check(EffectsKt.strictNullable(true) == null);
         check(EffectsKt.generic(null) == null && EffectsKt.generic("generic").equals("generic"));
         System.out.println("OK");

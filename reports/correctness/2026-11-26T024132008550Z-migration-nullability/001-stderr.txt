@@ -1,0 +1,18 @@
+tests/migration_nullability/Effects.kt:1:46: warning: Java type mismatch: inferred type is 'Nothing?', but 'String' was expected.
+fun acceptNull(): String? = Migration.accept(null)
+                                             ^^^^
+tests/migration_nullability/Effects.kt:2:64: warning: Java type mismatch: inferred type is 'String?', but 'String' was expected.
+fun acceptNullable(value: String?): String? = Migration.accept(value)
+                                                               ^^^^^
+tests/migration_nullability/Effects.kt:6:51: warning: Java type mismatch: inferred type is 'String?', but 'String' was expected.
+fun nullableAsNonNull(missing: Boolean): String = Migration.nullable(missing)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/migration_nullability/Effects.kt:8:45: warning: only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'String?'.
+fun nullableLength(missing: Boolean): Int = Migration.nullable(missing).length
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/migration_nullability/Effects.kt:13:26: warning: Java type mismatch: inferred type is 'String?', but 'String' was expected.
+    value.nonNullField = text
+                         ^^^^
+tests/migration_nullability/Effects.kt:17:59: warning: Java type mismatch: inferred type is 'String?', but 'String' was expected.
+fun generic(value: String?): String? = Migration.identity(value)
+                                                          ^^^^^

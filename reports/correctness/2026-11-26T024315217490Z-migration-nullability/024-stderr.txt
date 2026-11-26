@@ -1,0 +1,18 @@
+tests/migration_nullability/Effects.kt:1:46: error: null cannot be a value of a non-null type 'String'.
+fun acceptNull(): String? = Migration.accept(null)
+                                             ^^^^
+tests/migration_nullability/Effects.kt:2:64: error: argument type mismatch: actual type is 'String?', but 'String' was expected.
+fun acceptNullable(value: String?): String? = Migration.accept(value)
+                                                               ^^^^^
+tests/migration_nullability/Effects.kt:6:51: error: return type mismatch: expected 'String', actual 'String?'.
+fun nullableAsNonNull(missing: Boolean): String = Migration.nullable(missing)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/migration_nullability/Effects.kt:8:72: error: only safe (?.) or non-null asserted (!!.) calls are allowed on a nullable receiver of type 'String?'.
+fun nullableLength(missing: Boolean): Int = Migration.nullable(missing).length
+                                                                       ^
+tests/migration_nullability/Effects.kt:13:24: error: assignment type mismatch: actual type is 'String?', but 'String' was expected.
+    value.nonNullField = text
+                       ^
+tests/migration_nullability/Effects.kt:17:59: error: argument type mismatch: actual type is 'String?', but 'String' was expected.
+fun generic(value: String?): String? = Migration.identity(value)
+                                                          ^^^^^
