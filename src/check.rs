@@ -41,6 +41,8 @@ pub(crate) use variant_signatures::{
 };
 #[path = "check_anonymous.rs"]
 mod anonymous;
+#[path = "check_assignment_flow.rs"]
+mod assignment_flow;
 #[path = "check_captures.rs"]
 mod captures;
 #[path = "check_classes.rs"]
@@ -739,6 +741,7 @@ struct Checker<'a> {
     captured_cells: HashMap<String, Type>,
     cells: HashMap<u8, String>,
     cell_names: HashSet<String>,
+    changing_cells: HashSet<u8>,
     lambda_owner: String,
     inline_result: Option<Type>,
     nonlocal_result: Option<Type>,
@@ -1102,7 +1105,10 @@ impl Checker<'_> {
             if (op == "is" && truth) || (op == "!is" && !truth) {
                 if let ExprKind::Name(name) = &value.kind {
                     if let Some(local) = self.local(name) {
-                        if !local.mutable {
+                        if !local.mutable
+                            || matches!(local.ty, Type::Nullable(ref inner) if inner.is_reference())
+                                && self.refinement_stable(&local)
+                        {
                             if let Ok(target) = self.resolve(target, condition.offset) {
                                 self.refinements.insert(local.slot.into(), target);
                             }
@@ -1132,16 +1138,34 @@ impl Checker<'_> {
                 _ => None,
             };
             if let Some(name) = name {
+                if ((matches!(op.as_str(), "==" | "===") && truth)
+                    || (matches!(op.as_str(), "!=" | "!==") && !truth))
+                    && let Some(local) = self.local(name)
+                    && local.mutable
+                {
+                    self.refinements.remove(&local.slot.into());
+                }
                 if (matches!(op.as_str(), "!=" | "!==") && truth)
                     || (matches!(op.as_str(), "==" | "===") && !truth)
                 {
                     if let Some(local) = self.local(name) {
-                        if !local.mutable {
-                            match local.ty {
-                                Type::Nullable(inner) => {
+                        if !local.mutable
+                            || matches!(local.ty, Type::Nullable(ref inner) if inner.is_reference())
+                                && self.refinement_stable(&local)
+                        {
+                            let known = self
+                                .refinements
+                                .get(&local.slot.into())
+                                .cloned()
+                                .unwrap_or(local.ty);
+                            match known {
+                                Type::Nullable(inner) | Type::Platform(inner) => {
                                     self.refinements.insert(local.slot.into(), *inner);
                                 }
                                 ty @ Type::Parameter { .. } => {
+                                    self.refinements.insert(local.slot.into(), ty);
+                                }
+                                ty if ty.is_reference() => {
                                     self.refinements.insert(local.slot.into(), ty);
                                 }
                                 _ => {}
@@ -1166,6 +1190,7 @@ impl Checker<'_> {
         let before = self.next;
         let refinements = self.refinements.clone();
         let initialized = self.initialized.clone();
+        let changing_cells = self.changing_cells.clone();
         let lambda_count = self.lambdas.borrow().len();
         let mut score = 0;
         let result = (|| {
@@ -1191,6 +1216,7 @@ impl Checker<'_> {
         self.next = before;
         self.refinements = refinements;
         self.initialized = initialized;
+        self.changing_cells = changing_cells;
         result
     }
     fn select_function(
@@ -1337,12 +1363,14 @@ impl Checker<'_> {
             let saved_contract_facts = self.contract_facts.clone();
             let next = self.next;
             let count = self.lambdas.borrow().len();
+            let changing_cells = self.changing_cells.clone();
             let specialized =
                 self.specialize_method_expected(original, normalized, explicit, expected, offset);
             self.contract_facts = saved_contract_facts;
             self.contract_registration = saved_contract_registration;
             self.next = next;
             self.lambdas.borrow_mut().truncate(count);
+            self.changing_cells = changing_cells;
             let method = match specialized {
                 Ok(method) => method,
                 Err(error) => {
@@ -2464,7 +2492,9 @@ impl Checker<'_> {
             let private_allowed = self
                 .classpath
                 .file_private_visible(&self.lambda_owner, &method)
-                || self.classpath.private_companion_method_visible(&self.lambda_owner, &method)
+                || self
+                    .classpath
+                    .private_companion_method_visible(&self.lambda_owner, &method)
                 || method.access & 2 != 0
                     && (self.lambda_owner == method.owner
                         || self.lambda_owner.starts_with(&format!("{}$", method.owner)));
@@ -3981,6 +4011,7 @@ impl Checker<'_> {
         let mut body = Vec::new();
         let mut returns = false;
         for statement in source {
+            self.invalidate_statement_writes(statement);
             let offset = statement.offset;
             if returns {
                 return Err(Diagnostic::new(
@@ -4443,7 +4474,7 @@ impl Checker<'_> {
                         ));
                     }
                     if let Some((cell, ty)) = self.cell_binding(name) {
-                        let value = self.expected_value(expr, &ty)?;
+                        let (value, actual) = self.assigned_value(expr, &ty)?;
                         if control::expression_terminates(expr) {
                             body.push(Statement::Expression(value));
                             returns = true;
@@ -4458,6 +4489,7 @@ impl Checker<'_> {
                                 )?;
                             }
                             self.initialized.insert(local.slot);
+                            self.assigned_refinement(local.slot, &actual);
                         }
                         body.push(self.cell_store(cell, ty, value, offset)?);
                         continue;
@@ -4503,7 +4535,7 @@ impl Checker<'_> {
                             format!("Cannot reassign val or parameter: {name}"),
                         ));
                     }
-                    let value = self.expected_value(expr, &local.ty)?;
+                    let (value, actual) = self.assigned_value(expr, &local.ty)?;
                     if control::expression_terminates(expr) {
                         returns = true;
                         Statement::Expression(value)
@@ -4513,6 +4545,7 @@ impl Checker<'_> {
                                 .check_write(local.slot, self.loop_depth, offset)?;
                         }
                         self.initialized.insert(local.slot);
+                        self.assigned_refinement(local.slot, &actual);
                         Statement::Store(local.slot, value)
                     }
                 }
@@ -4657,23 +4690,35 @@ impl Checker<'_> {
                 StatementKind::If(cond, yes, no) => {
                     let source_condition = cond;
                     let before_refinements = self.refinements.clone();
+                    let before_changing = self.changing_cells.clone();
                     let cond = self.value(cond)?;
                     self.require(&cond, Type::Boolean, offset)?;
                     let before = self.initialized.clone();
                     self.refine(source_condition, true);
                     let (yes, y) = self.block(yes)?;
                     let yes_refinements = self.refinements.clone();
+                    let yes_changing = self.changing_cells.clone();
                     self.refinements = before_refinements.clone();
+                    self.changing_cells = before_changing;
                     self.refine(source_condition, false);
                     let yes_initialized = self.initialized.clone();
                     self.initialized = before;
                     let (no, n) = self.block(no)?;
                     let no_initialized = self.initialized.clone();
                     let no_refinements = self.refinements.clone();
+                    let no_changing = self.changing_cells.clone();
+                    self.changing_cells = match (y, n) {
+                        (true, false) => no_changing,
+                        (false, true) => yes_changing,
+                        _ => yes_changing.union(&no_changing).copied().collect(),
+                    };
                     self.refinements = match (y, n) {
                         (true, false) => no_refinements,
                         (false, true) => yes_refinements,
-                        _ => before_refinements,
+                        (false, false) => {
+                            Self::intersect_refinements(&[yes_refinements, no_refinements])
+                        }
+                        (true, true) => before_refinements,
                     };
                     self.initialized = match (y, n) {
                         (false, false) => yes_initialized.joined(&no_initialized),
@@ -4723,10 +4768,14 @@ impl Checker<'_> {
         }
         if !matches!(expr.kind, ExprKind::Call(..)) {
             let value = self.value_untracked(expr, expected)?;
+            self.invalidate_expression_writes(expr);
             return self.refined_property_value(expr, value);
         }
         let previous = self.contract_registration.take();
         let result = self.value_untracked(expr, expected);
+        if result.is_ok() {
+            self.invalidate_expression_writes(expr);
+        }
         if result.is_err() || self.contract_registration != Some(expr.offset) {
             self.contract_facts.remove(&expr.offset);
         }
@@ -5030,6 +5079,7 @@ impl Checker<'_> {
             ExprKind::If(condition, yes, no) => {
                 let source_condition = condition;
                 let before_refinements = self.refinements.clone();
+                let before_changing = self.changing_cells.clone();
                 let condition = self.value(condition)?;
                 self.require(&condition, Type::Boolean, offset)?;
                 let before_initialized = self.initialized.clone();
@@ -5039,7 +5089,9 @@ impl Checker<'_> {
                 let mut yes = self.value(yes)?;
                 let yes_initialized = self.initialized.clone();
                 self.initialized = before_initialized.clone();
+                let yes_changing = self.changing_cells.clone();
                 self.refinements = before_refinements.clone();
+                self.changing_cells = before_changing;
                 self.refine(source_condition, false);
                 let mut no = self.value(no)?;
                 self.initialized = match (yes_terminates, no_terminates) {
@@ -5049,6 +5101,7 @@ impl Checker<'_> {
                     (true, true) => before_initialized,
                 };
                 self.refinements = before_refinements;
+                self.changing_cells.extend(yes_changing);
                 if yes.ty == Type::Unit {
                     return Err(Diagnostic::new(
                         offset,
@@ -5244,7 +5297,11 @@ impl Checker<'_> {
                             ));
                         }
                     }
-                    return Ok(self.cell_read(cell, ty));
+                    let raw = self.cell_read(cell, ty);
+                    return Ok(match self.local(name) {
+                        Some(local) => self.refined_local_read(&local, raw),
+                        None => raw,
+                    });
                 }
                 if let Some((owner, ty)) = self
                     .captured
@@ -5290,23 +5347,11 @@ impl Checker<'_> {
                             "UNINITIALIZED_VARIABLE",
                         ));
                     }
-                    if let Some(refined) = self.refinements.get(&local.slot.into()) {
-                        if !local.mutable {
-                            let raw = Value {
-                                ty: local.ty.clone(),
-                                kind: ValueKind::Local(local.slot),
-                            };
-                            return Ok(Value {
-                                ty: refined.clone(),
-                                kind: ValueKind::Cast {
-                                    value: Box::new(raw),
-                                    target: refined.clone(),
-                                    safe: false,
-                                },
-                            });
-                        }
-                    }
-                    (local.ty, ValueKind::Local(local.slot))
+                    let raw = Value {
+                        ty: local.ty.clone(),
+                        kind: ValueKind::Local(local.slot),
+                    };
+                    return Ok(self.refined_local_read(&local, raw));
                 } else if let Some((owner, ty)) = self
                     .object_fields
                     .get(name)
@@ -8242,6 +8287,7 @@ pub fn check_with_owner(
             captured_cells: HashMap::new(),
             cells: HashMap::new(),
             cell_names: HashSet::new(),
+            changing_cells: HashSet::new(),
             lambda_owner: owner.into(),
             inline_result: None,
             nonlocal_result: None,

@@ -431,7 +431,9 @@ impl Checker<'_> {
                     &method.owner,
                     method.access,
                 )
-                || self.classpath.private_companion_method_visible(&self.lambda_owner, method)
+                || self
+                    .classpath
+                    .private_companion_method_visible(&self.lambda_owner, method)
                 || method.access & 2 != 0
                     && (self.lambda_owner == method.owner
                         || self.lambda_owner.starts_with(&format!("{}$", method.owner)))
@@ -563,7 +565,10 @@ impl Checker<'_> {
             let mut seen_scopes = HashSet::new();
             while let Some(owner) = scope {
                 if !seen_scopes.insert(owner.clone()) {
-                    return Err(Diagnostic::new(offset, "Cyclic lexical classifier hierarchy"));
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Cyclic lexical classifier hierarchy",
+                    ));
                 }
                 scope = self.classpath.lexical_parent(&owner);
                 let Ok(class) = self.classpath.load(&owner) else {

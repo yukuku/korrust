@@ -1,0 +1,34 @@
+[
+  {
+    "id": "null-reassignment",
+    "source": "fun invalid(): Int { var value: String? = null; value = \"a\"; value = null; return value.length }"
+  },
+  {
+    "id": "nullable-reassignment",
+    "source": "fun invalid(input: String?): Int { var value: String? = null; value = \"a\"; value = input; return value.length }"
+  },
+  {
+    "id": "branch-mutation",
+    "source": "fun invalid(flag: Boolean): Int { var value: String? = null; value = \"a\"; if (flag) value = null; return value.length }"
+  },
+  {
+    "id": "loop-backedge",
+    "source": "fun invalid(flag: Boolean): Int { var value: String? = null; value = \"a\"; while (flag) { value.length; value = null }; return 0 }"
+  },
+  {
+    "id": "changing-capture",
+    "source": "fun invalid(): Int { var value: String? = null; value = \"a\"; val change: () -> Unit = { value = null }; return value.length }"
+  },
+  {
+    "id": "reassigned-changing-capture",
+    "source": "fun invalid(): Int { var value: String? = null; val change: () -> Unit = { value = null }; value = \"a\"; return value.length }"
+  },
+  {
+    "id": "invoked-changing-capture",
+    "source": "fun invalid(): Int { var value: String? = null; value = \"a\"; val change: () -> Unit = { value = null }; change(); return value.length }"
+  },
+  {
+    "id": "null-branch",
+    "source": "import assign.Lookup\nimport assign.Leaf\nfun invalid(lookup: Lookup): Int { var value: Leaf? = null; value = lookup.leaf(1); if (value == null) return value.inputType; return 0 }"
+  }
+]

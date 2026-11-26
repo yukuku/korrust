@@ -2677,6 +2677,7 @@ impl Checker<'_> {
                 let refinements = self.refinements.clone();
                 let cells = self.cells.clone();
                 let cell_names = self.cell_names.clone();
+                let changing_cells = self.changing_cells.clone();
                 let scopes = self.scopes.len();
                 let loop_depth = self.loop_depth;
                 let count = self.lambdas.borrow().len();
@@ -2694,6 +2695,7 @@ impl Checker<'_> {
                 self.refinements = refinements;
                 self.cells = cells;
                 self.cell_names = cell_names;
+                self.changing_cells = changing_cells;
                 self.scopes.truncate(scopes);
                 self.loop_depth = loop_depth;
                 self.lambdas.borrow_mut().truncate(count);
@@ -2707,6 +2709,7 @@ impl Checker<'_> {
         let refinements = self.refinements.clone();
         let cells = self.cells.clone();
         let cell_names = self.cell_names.clone();
+        let changing_cells = self.changing_cells.clone();
         let saved = self.lambdas.borrow().len();
         let allow_return = self.allow_return;
         let inline_result = self.inline_result.take();
@@ -2742,6 +2745,7 @@ impl Checker<'_> {
         self.refinements = refinements;
         self.cells = cells;
         self.cell_names = cell_names;
+        self.changing_cells = changing_cells;
         self.lambdas.borrow_mut().truncate(saved);
         self.allow_return = allow_return;
         self.inline_result = inline_result;

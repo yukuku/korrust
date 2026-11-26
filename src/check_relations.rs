@@ -1221,6 +1221,7 @@ impl Checker<'_> {
         let refinements = self.refinements.clone();
         let cells = self.cells.clone();
         let cell_names = self.cell_names.clone();
+        let changing_cells = self.changing_cells.clone();
         let count = self.lambdas.borrow().len();
         let allow_return = self.allow_return;
         self.allow_return = false;
@@ -1259,6 +1260,7 @@ impl Checker<'_> {
         self.refinements = refinements;
         self.cells = cells;
         self.cell_names = cell_names;
+        self.changing_cells = changing_cells;
         self.lambdas.borrow_mut().truncate(count);
         let inferred = inferred?;
         if !self.infer_constraints(result, &inferred, substitutions, fixed, 0) {
@@ -2076,6 +2078,7 @@ mod tests {
             captured_cells: HashMap::new(),
             cells: HashMap::new(),
             cell_names: HashSet::new(),
+            changing_cells: HashSet::new(),
             lambda_owner: "Relations".into(),
             inline_result: None,
             nonlocal_result: None,

@@ -397,6 +397,7 @@ impl Checker<'_> {
             expr.offset,
             self.lambdas.borrow().len()
         );
+        self.mark_changing_captures(captures::free_written_names(&statements, &names));
         let mut capture_names = captures::free_names(&statements, &names);
         let receiver_dependent = capture_names.iter().any(|name| {
             if name == "this" {
@@ -437,7 +438,10 @@ impl Checker<'_> {
                     expr.offset,
                     format!("Variable {name} must be initialized before capture"),
                 )
-                .with_kind(crate::DiagnosticKind::InvalidKotlin, "UNINITIALIZED_VARIABLE"));
+                .with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "UNINITIALIZED_VARIABLE",
+                ));
             }
             let value = if let Some((cell, ty)) = self.cell_binding(&name) {
                 if self.cell_is_readonly(&name) {
@@ -512,6 +516,7 @@ impl Checker<'_> {
             captured_cells,
             cells: HashMap::new(),
             cell_names: HashSet::new(),
+            changing_cells: HashSet::new(),
             lambda_owner: self.lambda_owner.clone(),
             inline_result: None,
             nonlocal_result: if local_return {
@@ -868,6 +873,7 @@ impl Checker<'_> {
         let refinements = self.refinements.clone();
         let cells = self.cells.clone();
         let cell_names = self.cell_names.clone();
+        let changing_cells = self.changing_cells.clone();
         let contract_registration = self.contract_registration;
         let contract_facts = self.contract_facts.clone();
         let count = self.lambdas.borrow().len();
@@ -904,6 +910,7 @@ impl Checker<'_> {
             self.refinements = refinements;
             self.cells = cells;
             self.cell_names = cell_names;
+            self.changing_cells = changing_cells;
             self.contract_registration = contract_registration;
             self.contract_facts = contract_facts;
             self.lambdas.borrow_mut().truncate(count);
@@ -1303,6 +1310,7 @@ mod shadowing_tests {
             captured_cells: HashMap::new(),
             cells: HashMap::new(),
             cell_names: HashSet::new(),
+            changing_cells: HashSet::new(),
             lambda_owner: "Shadowed".into(),
             inline_result: None,
             nonlocal_result: None,
@@ -1368,6 +1376,13 @@ impl Checker<'_> {
         &mut self,
         function: &syntax::Function,
     ) -> Result<(Vec<Statement>, bool)> {
+        let mut bound_names = function
+            .params
+            .iter()
+            .map(|p| p.0.clone())
+            .collect::<Vec<_>>();
+        bound_names.push(function.name.clone());
+        self.mark_changing_captures(captures::free_written_names(&function.body, &bound_names));
         if function.vararg {
             return Err(Diagnostic::new(
                 function.offset,
@@ -1416,6 +1431,7 @@ impl Checker<'_> {
             let refinements = self.refinements.clone();
             let cells = self.cells.clone();
             let cell_names = self.cell_names.clone();
+            let changing_cells = self.changing_cells.clone();
             let loop_depth = self.loop_depth;
             let lambda_count = self.lambdas.borrow().len();
             self.scopes.push(HashMap::new());
@@ -1443,6 +1459,7 @@ impl Checker<'_> {
             self.refinements = refinements;
             self.cells = cells;
             self.cell_names = cell_names;
+            self.changing_cells = changing_cells;
             self.loop_depth = loop_depth;
             self.lambdas.borrow_mut().truncate(lambda_count);
             inferred?

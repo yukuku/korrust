@@ -149,6 +149,27 @@ impl Checker<'_> {
         properties: &[syntax::PropertyDecl],
         offset: usize,
     ) -> Result<Value> {
+        let mut written = HashSet::new();
+        let members = properties
+            .iter()
+            .map(|p| p.name.clone())
+            .chain(std::iter::once("this".into()))
+            .collect::<Vec<_>>();
+        for method in methods.iter().chain(own_methods) {
+            let mut bound = members.clone();
+            bound.extend(method.params.iter().map(|p| p.0.clone()));
+            written.extend(captures::free_written_names(&method.body, &bound));
+        }
+        for property in properties {
+            let mut bound = members.clone();
+            bound.push("field".into());
+            written.extend(captures::free_written_names(&property.body, &bound));
+            if let Some((parameter, body)) = &property.setter {
+                bound.push(parameter.clone());
+                written.extend(captures::free_written_names(body, &bound));
+            }
+        }
+        self.mark_changing_captures(written);
         let owner = format!("{}$object${offset}", self.lambda_owner);
         let mut parent = "java/lang/Object".to_string();
         let mut interfaces = Vec::new();
@@ -967,6 +988,7 @@ impl Checker<'_> {
                 captured_cells: captured_cells.clone(),
                 cells: HashMap::new(),
                 cell_names: HashSet::new(),
+                changing_cells: HashSet::new(),
                 lambda_owner: owner.clone(),
                 inline_result: None,
                 nonlocal_result: None,

@@ -2239,7 +2239,8 @@ impl Code<'_> {
                 }
                 if (self.in_lambda
                     || self.owner != method.owner
-                        && (method.access & 8 == 0 || self.owner.starts_with(&format!("{}$", method.owner))))
+                        && (method.access & 8 == 0
+                            || self.owner.starts_with(&format!("{}$", method.owner))))
                     && method.access & 2 != 0
                 {
                     self.method_reference(
@@ -2446,7 +2447,7 @@ impl Code<'_> {
                     self.class_reference(0xc0, &class)?;
                     self.mark(done);
                 } else {
-                    if !target.is_nullable() {
+                    if !target.is_nullable() && !matches!(target, Type::Platform(_)) {
                         self.bytes.push(0x59);
                         let message = self.pool.string(&format!(
                             "null cannot be cast to non-null type {}",
@@ -2547,8 +2548,7 @@ impl Code<'_> {
                             .map_err(|_| failure("Too many interface call arguments"))?,
                         0,
                     ]);
-                } else if (self.in_lambda || self.owner != method.owner) && method.access & 2 != 0
-                {
+                } else if (self.in_lambda || self.owner != method.owner) && method.access & 2 != 0 {
                     self.method_reference(
                         0xb8,
                         &method.owner,
