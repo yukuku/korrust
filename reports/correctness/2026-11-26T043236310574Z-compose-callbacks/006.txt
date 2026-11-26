@@ -1,0 +1,10 @@
+$ /workspace/korrust-setup/jdk-21/bin/java -Xverify:all -cp /tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/callers:/tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/official:/tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/dependency:/workspace/korrust/references/compose/runtime.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar composeprobe.ProtocolCheck
+Exception in thread "main" java.lang.AssertionError: public abstract java.lang.Object androidx.compose.runtime.Composer.rememberedValue()
+	at composeprobe.ProtocolCheck$State.invoke(ProtocolCheck.java:54)
+	at jdk.proxy1/jdk.proxy1.$Proxy1.rememberedValue(Unknown Source)
+	at composeprobe.ComposableSingletons$ConsumerKt$lambda$-441458004$1.invoke(Consumer.kt:45)
+	at composeprobe.ComposableSingletons$ConsumerKt$lambda$-441458004$1.invoke(Consumer.kt:22)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.kt:122)
+	at androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.kt:52)
+	at composeprobe.ProtocolCheck.checkBody(ProtocolCheck.java:154)
+	at composeprobe.ProtocolCheck.main(ProtocolCheck.java:135)

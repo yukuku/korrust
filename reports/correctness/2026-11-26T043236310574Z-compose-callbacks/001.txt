@@ -1,0 +1,4 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /workspace/korrust/tests/compose_callbacks/Library.kt /workspace/korrust/tests/compose_callbacks/Lookalike.kt /workspace/korrust/tests/compose_callbacks/LexicalLibrary.kt -no-stdlib -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -Xlambdas=class -Xplugin=/workspace/korrust/references/kotlinc/lib/compose-compiler-plugin.jar -P plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false -cp /workspace/korrust/references/compose/runtime.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/dependency
+tests/compose_callbacks/Library.kt:23:20: warning: expected performance impact from inlining is insignificant. Inlining works best for functions with parameters of function types.
+class InlineSink { inline fun accept(noinline block: @Composable () -> Unit) {} }
+                   ^^^^^^
