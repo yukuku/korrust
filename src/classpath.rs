@@ -3,6 +3,7 @@ use std::path::PathBuf;
 
 mod aliases;
 mod archive;
+mod import_classes;
 mod jdk_modules;
 pub(crate) mod jvm_builtins;
 mod metadata;
@@ -74,6 +75,7 @@ pub(crate) struct Classpath {
     friends: std::collections::HashSet<PathBuf>,
     value_scopes: std::cell::RefCell<std::collections::HashMap<String, value_names::ValueScope>>,
     lexical_parents: std::cell::RefCell<std::collections::HashMap<String, String>>,
+    nested_access: std::cell::RefCell<std::collections::HashMap<String, u16>>,
     source_files: std::cell::RefCell<std::collections::HashMap<String, (String, bool)>>,
     source_default_accessors:
         std::cell::RefCell<std::collections::HashMap<(String, String), SourceBackingField>>,
@@ -1019,6 +1021,7 @@ impl Classpath {
             friends,
             value_scopes: Default::default(),
             lexical_parents: Default::default(),
+            nested_access: Default::default(),
             source_files: Default::default(),
             source_default_accessors: Default::default(),
             origins: Default::default(),
@@ -1219,8 +1222,11 @@ impl Classpath {
         for (method, attributes) in class.methods.iter().zip(&method_attrs) {
             self.register_exception_contract(method, attributes.exceptions.clone());
         }
-        for (child, parent, _, _) in &attrs.inner_classes {
+        for (child, parent, _, access) in &attrs.inner_classes {
             self.register_lexical_parent(child, parent);
+            self.nested_access
+                .borrow_mut()
+                .insert(child.clone(), *access);
         }
         if let Some(annotation) = attrs
             .annotations

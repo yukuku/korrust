@@ -1,0 +1,32 @@
+$ /workspace/korrust-setup/jdk-21/bin/javap -public -s -cp /workspace/korrust/target/checks/2026-11-26T025301580539Z-java-nested-imports/candidate nested.consumer.ConsumerKt nested.library.PackageConsumerKt
+Compiled from "Consumer.kt"
+public final class nested.consumer.ConsumerKt {
+  public static final int value();
+    descriptor: ()I
+
+  public static final nested.library.Outer$Kind kind();
+    descriptor: ()Lnested/library/Outer$Kind;
+
+  public static final java.lang.String leaf();
+    descriptor: ()Ljava/lang/String;
+
+  public static final java.lang.String unbox(nested.library.Outer$Box<java.lang.String>);
+    descriptor: (Lnested/library/Outer$Box;)Ljava/lang/String;
+
+  public static final int inner(nested.library.Outer$Inner);
+    descriptor: (Lnested/library/Outer$Inner;)I
+
+  public static final java.lang.String shadow(kotlin.jvm.functions.Function0<java.lang.String>);
+    descriptor: (Lkotlin/jvm/functions/Function0;)Ljava/lang/String;
+
+  public static final int kotlinNested();
+    descriptor: ()I
+
+  public static final int dollar();
+    descriptor: ()I
+}
+Compiled from "PackageConsumer.kt"
+public final class nested.library.PackageConsumerKt {
+  public static final int samePackage();
+    descriptor: ()I
+}

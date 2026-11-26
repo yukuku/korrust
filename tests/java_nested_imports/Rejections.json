@@ -1,0 +1,26 @@
+[
+  {
+    "id": "private-same-package",
+    "source": "package nested.library\nimport nested.library.Outer.Secret\nfun bad(): Int = Secret.number()"
+  },
+  {
+    "id": "package-outside",
+    "source": "package nested.consumer\nimport nested.library.Outer.PackageItem\nfun bad(): Int = PackageItem.number()"
+  },
+  {
+    "id": "protected-outside",
+    "source": "package nested.consumer\nimport nested.library.Outer.ProtectedItem\nfun bad(): Int = ProtectedItem.number()"
+  },
+  {
+    "id": "hidden-containing-class",
+    "source": "package nested.consumer\nimport nested.library.Outer.HiddenOwner.Exposed\nfun bad(value: Exposed): Int = 1"
+  },
+  {
+    "id": "dollar-name-is-not-nesting",
+    "source": "package nested.consumer\nimport nested.library.Dollar.Pretend\nfun bad(): Int = Pretend.number()"
+  },
+  {
+    "id": "private-binary-name",
+    "source": "package nested.library\nimport nested.library.`Outer$Secret` as Hidden\nfun bad(value: Hidden): Int = 1"
+  }
+]

@@ -7079,6 +7079,9 @@ pub fn check_with_owner(
         }
         let class = classpath.load(name)?;
         classpath.check_classifier_visibility(owner, &class.name, *offset)?;
+        if !class.kotlin_class {
+            classpath.check_java_import_visibility(owner, &class.name, *offset)?;
+        }
         let supported_jvm_marker = matches!(
             name.as_str(),
             "kotlin/jvm/JvmOverloads"
@@ -7099,7 +7102,10 @@ pub fn check_with_owner(
                 "ANNOTATION_DEFINITION_UNSUPPORTED",
             ));
         }
-        if class.access & 1 == 0 || (class.unsupported && !supported_jvm_marker) {
+        if class.access & 1 == 0
+            && (class.kotlin_class || classpath.java_nested_access(&class.name).is_none())
+            || (class.unsupported && !supported_jvm_marker)
+        {
             if class
                 .library
                 .as_ref()
