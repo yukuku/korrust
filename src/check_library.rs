@@ -2622,6 +2622,17 @@ impl Checker<'_> {
             .as_ref()
             .is_some_and(|library| !library.type_parameters.is_empty())
         {
+            if !class.methods.iter().any(|method| {
+                method.name == "<init>"
+                    && self
+                        .classpath
+                        .constructor_visible(&self.lambda_owner, method)
+            }) && let ExprKind::Property(package, name) = &expression.kind
+                && let Some(factory) =
+                    self.qualified_package_call(package, name, args, types, expected, offset)?
+            {
+                return Ok(Some(factory));
+            }
             return self.generic_constructor_expected(
                 &class.name,
                 types,
