@@ -734,15 +734,12 @@ pub(crate) fn validate(
         })?;
     }
     for lambda in &module.lambdas {
-        if lambda.function.suspend_ {
-            validate_function(&lambda.function, &module.functions, forbidden_owners)?;
-        } else if contains_suspension(&lambda.function.body, &module.functions) {
-            return Err(
-                Diagnostic::new(0, "Suspend calls require a suspend function context").with_kind(
-                    crate::DiagnosticKind::InvalidKotlin,
-                    "SUSPEND_CALL_CONTEXT_INVALID",
-                ),
-            );
+        let implementations = lambda
+            .anonymous_methods
+            .as_deref()
+            .unwrap_or(std::slice::from_ref(&lambda.function));
+        for function in implementations {
+            validate_function(function, &module.functions, forbidden_owners)?;
         }
     }
     Ok(())

@@ -567,10 +567,10 @@ impl Checker<'_> {
             ));
         }
         let mut selected = Vec::new();
+        let mut precise_results = false;
         let mut seen = HashSet::new();
         for (source, is_override, property) in &sources {
-            if source.suspend_
-                || source.inline
+            if source.inline
                 || source.vararg
                 || source.receiver.is_some()
                 || !source.type_params.is_empty()
@@ -619,6 +619,12 @@ impl Checker<'_> {
                     .with_kind(
                         crate::DiagnosticKind::InvalidKotlin,
                         "ANONYMOUS_OVERRIDE_REQUIRED",
+                    ));
+                }
+                if source.suspend_ {
+                    return Err(unsupported(
+                        source.offset,
+                        "Own anonymous suspend methods are unsupported",
                     ));
                 }
                 if source.result_inferred {
@@ -691,6 +697,22 @@ impl Checker<'_> {
                     "ANONYMOUS_OVERRIDE_MISMATCH",
                 ));
             }
+            if candidates.iter().any(|method| {
+                method
+                    .library
+                    .as_ref()
+                    .is_some_and(|library| library.suspend_)
+                    != source.suspend_
+            }) {
+                return Err(Diagnostic::new(
+                    source.offset,
+                    "Anonymous suspend modifier differs from inherited method",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "ANONYMOUS_SUSPEND_OVERRIDE_MISMATCH",
+                ));
+            }
             if source.private {
                 return Err(Diagnostic::new(
                     source.offset,
@@ -731,7 +753,10 @@ impl Checker<'_> {
             let (_, mut result) = class_method_types(&method)?;
             if !source.result_inferred {
                 let declared_result = self.resolve(&source.result, source.offset)?;
-                if !override_type(&declared_result, &result) {
+                if !override_type(&declared_result, &result)
+                    && !(declared_result.descriptor() == result.descriptor()
+                        && self.subtype(&declared_result, &result))
+                {
                     if method.kotlin_result.is_none()
                         && declared_result.descriptor() == result.descriptor()
                     {
@@ -757,9 +782,11 @@ impl Checker<'_> {
                         "ANONYMOUS_OVERRIDE_RESULT_MISMATCH",
                     ));
                 }
+                precise_results |= !override_type(&declared_result, &result);
                 result = declared_result;
             }
-            if result == Type::Unit
+            if !source.suspend_
+                && result == Type::Unit
                 && crate::jvm_descriptor::method_types(&method.descriptor)?
                     .1
                     .is_reference()
@@ -782,8 +809,9 @@ impl Checker<'_> {
         let mut anonymous_class = self.classpath.load(&owner)?;
         anonymous_class.methods = selected
             .iter()
-            .map(|(_, _, _, method, _, property, _)| {
+            .map(|(_, _, result, method, _, property, _)| {
                 let mut method = method.clone();
+                method.kotlin_result = Some(result.clone());
                 method.owner = owner.clone();
                 method.access = (method.access & !0x0400) | 0x0010;
                 method.source_property = property.clone();
@@ -962,7 +990,7 @@ impl Checker<'_> {
                 anonymous_members.insert(format!("{prefix}{property}"), method.clone());
             }
         }
-        for (source, params, result, method, overrides, property, is_override) in selected {
+        for (source, params, mut result, method, overrides, property, is_override) in selected {
             let mut method_members = anonymous_members.clone();
             if let Some(property) = &property {
                 let mut backing = method.clone();
@@ -1046,6 +1074,9 @@ impl Checker<'_> {
             for (name, ty) in &params {
                 checker.declare(name, ty.clone(), false, source.offset)?;
             }
+            if source.suspend_ {
+                checker.next += 1;
+            }
             let mut setup = Vec::new();
             for (_, name, ty, labels) in &receiver_fields {
                 let slot = checker.allocate_typed_slot(ty, offset)?;
@@ -1099,7 +1130,10 @@ impl Checker<'_> {
                 let inferred = probe.value(expression);
                 checker.lambdas.borrow_mut().truncate(saved_count);
                 let inferred = inferred?;
-                if !override_type(&inferred.ty, &result) {
+                if !override_type(&inferred.ty, &result)
+                    && !(inferred.ty.descriptor() == result.descriptor()
+                        && checker.subtype(&inferred.ty, &result))
+                {
                     if checker.subtype(&inferred.ty, &result)
                         || result == Type::Java("java/lang/Object".into())
                     {
@@ -1117,6 +1151,9 @@ impl Checker<'_> {
                         "ANONYMOUS_OVERRIDE_RESULT_MISMATCH",
                     ));
                 }
+                precise_results |= !override_type(&inferred.ty, &result);
+                result = inferred.ty;
+                checker.result = result.clone();
             }
             let (mut body, returns) = checker.block(&source.body)?;
             if !returns {
@@ -1133,16 +1170,22 @@ impl Checker<'_> {
             }
             setup.append(&mut body);
             let erased_result = crate::jvm_descriptor::method_types(&method.descriptor)?.1;
-            let jvm_result =
-                if !result.is_reference() && result != Type::Unit && erased_result.is_reference() {
-                    let boxed = Type::Nullable(Box::new(result.clone())).descriptor();
-                    Some(Type::Java(
-                        boxed.trim_start_matches('L').trim_end_matches(';').into(),
-                    ))
-                } else {
-                    None
-                };
-            if let Some(storage) = &jvm_result {
+            let jvm_result = if source.suspend_ {
+                Some(Type::Nullable(Box::new(Type::Java(
+                    "java/lang/Object".into(),
+                ))))
+            } else if !result.is_reference() && result != Type::Unit && erased_result.is_reference()
+            {
+                let boxed = Type::Nullable(Box::new(result.clone())).descriptor();
+                Some(Type::Java(
+                    boxed.trim_start_matches('L').trim_end_matches(';').into(),
+                ))
+            } else {
+                None
+            };
+            if let Some(storage) = &jvm_result
+                && !source.suspend_
+            {
                 struct Returns(Type);
                 impl ir_walk::Visitor for Returns {
                     fn value(&mut self, _: &mut Value, _: &str) {}
@@ -1161,21 +1204,35 @@ impl Checker<'_> {
             }
             let physical_result = jvm_result.as_ref().unwrap_or(&result);
             let descriptor = format!(
-                "({}){}",
+                "({}{}){}",
                 params.iter().map(|p| p.1.descriptor()).collect::<String>(),
+                if source.suspend_ {
+                    "Lkotlin/coroutines/Continuation;"
+                } else {
+                    ""
+                },
                 physical_result.descriptor()
             );
             for inherited in overrides {
                 if descriptor != inherited.descriptor {
+                    let mut target_params = params.iter().map(|p| p.1.clone()).collect::<Vec<_>>();
+                    if source.suspend_ {
+                        target_params.push(Type::Java("kotlin/coroutines/Continuation".into()));
+                    }
                     bridges.push(GenericBridge {
                         erased: inherited,
-                        target_params: params.iter().map(|p| p.1.clone()).collect(),
+                        target_params,
                         target_result: physical_result.clone(),
                     });
                 }
             }
+            for member in anonymous_members.values_mut() {
+                if member.name == method.name && member.descriptor == method.descriptor {
+                    member.kotlin_result = Some(result.clone());
+                }
+            }
             implementations.push(Function {
-                suspend_: false,
+                suspend_: source.suspend_,
                 inline: false,
                 extension_receiver: false,
                 class_type_params: Vec::new(),
@@ -1195,6 +1252,15 @@ impl Checker<'_> {
                 body: setup,
             });
         }
+        let mut anonymous_class = self.classpath.load(&owner)?;
+        for method in &mut anonymous_class.methods {
+            if let Some(member) =
+                anonymous_members.get(&format!("{}{}", method.name, method.descriptor))
+            {
+                method.kotlin_result = member.kotlin_result.clone();
+            }
+        }
+        self.classpath.register_source(anonymous_class);
         let first = implementations.first().cloned().unwrap_or(Function {
             suspend_: false,
             inline: false,
@@ -1247,7 +1313,11 @@ impl Checker<'_> {
             interface: None,
         });
         Ok(Value {
-            ty: if supertypes.len() == 1 && properties.is_empty() && own_methods.is_empty() {
+            ty: if !precise_results
+                && supertypes.len() == 1
+                && properties.is_empty()
+                && own_methods.is_empty()
+            {
                 interface
             } else {
                 Type::Java(owner.clone())

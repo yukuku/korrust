@@ -1113,13 +1113,32 @@ impl Checker<'_> {
             library::specialize_receiver(methods[0].clone(), expected, &class, self.classpath);
         method.owner = owner.into();
         let (params, result) = class_method_types(&method)?;
-        Ok(Some((
-            method,
+        let function = if method
+            .library
+            .as_ref()
+            .is_some_and(|library| library.suspend_)
+        {
+            if params.iter().any(|ty| ty.base() == &Type::Unit) {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Unit-valued suspend SAM parameters are unsupported",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "SUSPEND_SAM_UNIT_PARAMETER_UNSUPPORTED",
+                ));
+            }
+            Type::SuspendFunction {
+                params,
+                result: Box::new(result),
+            }
+        } else {
             Type::Function {
                 params,
                 result: Box::new(result),
-            },
-        )))
+            }
+        };
+        Ok(Some((method, function)))
     }
 }
 
