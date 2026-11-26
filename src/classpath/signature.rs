@@ -326,14 +326,17 @@ pub(super) fn attach_fields_with_declarations(
         {
             continue;
         }
-        let signature = attributes.signature.as_deref().unwrap_or(&field.descriptor);
         if attributes.unsupported
             || field.access & 0x1000 != 0
             || attributes.constant.is_some() && field.constant.is_none()
         {
             continue;
         }
-        let Ok(ty) = self::field(signature, &parameters) else {
+        let ty = match &attributes.signature {
+            Some(signature) => self::field(signature, &parameters),
+            None => crate::jvm_descriptor::field_type(&field.descriptor),
+        };
+        let Ok(ty) = ty else {
             continue;
         };
         if ty.descriptor() != field.descriptor
@@ -351,6 +354,11 @@ pub(super) fn attach_fields_with_declarations(
             if !passive(annotation)? {
                 declarations.push(annotation);
             }
+        }
+        if !ty.is_reference()
+            && (!declarations.is_empty() || !attributes.return_type_annotations.is_empty())
+        {
+            continue;
         }
         if let Ok(ty) = nullability(
             ty,
