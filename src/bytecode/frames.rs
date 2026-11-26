@@ -155,7 +155,15 @@ fn instruction_len(op: u8) -> Result<usize> {
         | 0xc6
         | 0xc7 => 3,
         0xb9 => 5,
-        0x00..=0x0f | 0x1a..=0x35 | 0x3b..=0x83 | 0x85..=0x98 | 0xac..=0xb1 | 0xbe | 0xbf => 1,
+        0x00..=0x0f
+        | 0x1a..=0x35
+        | 0x3b..=0x83
+        | 0x85..=0x98
+        | 0xac..=0xb1
+        | 0xbe
+        | 0xbf
+        | 0xc2
+        | 0xc3 => 1,
         _ => return Err(failure("Unsupported instruction during frame generation")),
     })
 }
@@ -380,6 +388,9 @@ fn transfer(
         0xbe | 0xc1 => {
             pop(&mut frame)?;
             frame.stack.push(Verification::Int);
+        }
+        0xc2 | 0xc3 => {
+            pop(&mut frame)?;
         }
         0xc0 => {
             pop(&mut frame)?;
