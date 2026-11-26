@@ -2795,78 +2795,31 @@ impl Checker<'_> {
         )
         .with_kind(crate::DiagnosticKind::InvalidKotlin, "TYPE_MISMATCH"))
     }
-    fn java_type(&self, descriptor: &str, cursor: &mut usize, offset: usize) -> Result<Type> {
-        let bytes = descriptor.as_bytes();
-        let start = *cursor;
-        *cursor += 1;
-        let ty = match bytes.get(start) {
-            Some(b'I') => Type::Int,
-            Some(b'J') => Type::Long,
-            Some(b'F') => Type::Float,
-            Some(b'D') => Type::Double,
-            Some(b'B') => Type::Byte,
-            Some(b'S') => Type::Short,
-            Some(b'C') => Type::Char,
-            Some(b'Z') => Type::Boolean,
-            Some(b'V') => Type::Unit,
-            Some(b'[') if bytes.get(*cursor) == Some(&b'B') => {
-                *cursor += 1;
-                Type::ByteArray
-            }
-            Some(b'[') if bytes.get(*cursor) == Some(&b'S') => {
-                *cursor += 1;
-                Type::ShortArray
-            }
-            Some(b'[') if bytes.get(*cursor) == Some(&b'C') => {
-                *cursor += 1;
-                Type::CharArray
-            }
-            Some(b'[') if bytes.get(*cursor) == Some(&b'I') => {
-                *cursor += 1;
-                Type::IntArray
-            }
-            Some(b'[') if bytes.get(*cursor) == Some(&b'J') => {
-                *cursor += 1;
-                Type::LongArray
-            }
-            Some(b'[') if bytes.get(*cursor) == Some(&b'Z') => {
-                *cursor += 1;
-                Type::BooleanArray
-            }
-            Some(b'[') if bytes.get(*cursor) == Some(&b'F') => {
-                *cursor += 1;
-                Type::FloatArray
-            }
-            Some(b'[') if bytes.get(*cursor) == Some(&b'D') => {
-                *cursor += 1;
-                Type::DoubleArray
-            }
-            Some(b'L') => {
-                let end = descriptor[*cursor..]
-                    .find(';')
-                    .map(|n| n + *cursor)
-                    .ok_or_else(|| Diagnostic::new(offset, "Invalid Java descriptor"))?;
-                let name = &descriptor[*cursor..end];
-                *cursor = end + 1;
-                if name == "java/lang/String" {
-                    Type::String
-                } else if self.classes.contains_key(name)
-                    || self
-                        .classpath
-                        .load(name)
-                        .is_ok_and(|class| !class.unsupported)
+    fn java_field_descriptor_type(&self, descriptor: &str, offset: usize) -> Result<Type> {
+        fn component(checker: &Checker<'_>, ty: Type, offset: usize) -> Result<Type> {
+            Ok(match ty {
+                Type::StringArray => Type::Array(Box::new(java_parameter(Type::String))),
+                Type::Array(element) => Type::Array(Box::new(java_parameter(component(
+                    checker, *element, offset,
+                )?))),
+                Type::Java(ref name)
+                    if !checker.classes.contains_key(name)
+                        && !checker
+                            .classpath
+                            .load(name)
+                            .is_ok_and(|class| !class.unsupported) =>
                 {
-                    Type::Java(name.into())
-                } else {
                     return Err(Diagnostic::new(
                         offset,
                         "Java reference types require explicit imports",
                     ));
                 }
-            }
-            _ => return Err(Diagnostic::new(offset, "Unsupported Java descriptor type")),
-        };
-        Ok(ty)
+                other => other,
+            })
+        }
+        let ty = crate::jvm_descriptor::field_type(descriptor)
+            .map_err(|_| Diagnostic::new(offset, "Invalid Java field descriptor"))?;
+        component(self, ty, offset)
     }
     fn java_call(
         &mut self,
@@ -3341,13 +3294,12 @@ impl Checker<'_> {
                 "GENERIC_JAVA_FIELD_WRITE_UNSUPPORTED",
             ));
         }
-        let mut cursor = 0;
         let ty = if let Some(kotlin) = &field.kotlin {
             kotlin.ty.clone()
         } else if let Some(logical) = &field.java_type {
             logical.as_ref().clone()
         } else {
-            java_parameter(self.java_type(&field.descriptor, &mut cursor, offset)?)
+            java_parameter(self.java_field_descriptor_type(&field.descriptor, offset)?)
         };
         let value = self.expected_value(expr, &ty)?;
         let store = Statement::JavaFieldStore {
@@ -3597,7 +3549,6 @@ impl Checker<'_> {
                     ),
             );
         }
-        let mut cursor = 0;
         let ty = if let Some(logical) = &field.java_type {
             if Self::plain_java_field_type(logical) {
                 logical.as_ref().clone()
@@ -3613,7 +3564,7 @@ impl Checker<'_> {
         } else if let Some(kotlin) = &field.kotlin {
             kotlin.ty.clone()
         } else {
-            self.java_type(&field.descriptor, &mut cursor, offset)?
+            self.java_field_descriptor_type(&field.descriptor, offset)?
         };
         if let Some(constant) = field.constant.as_ref().filter(|_| {
             field.access & 0x18 == 0x18 && field.kotlin.as_ref().is_none_or(|field| field.constant)
