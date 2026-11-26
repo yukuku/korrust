@@ -1,0 +1,1162 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T02:13:43.065330+00:00",
+  "status": "complete",
+  "compiler": {
+    "path": "target/checks/2026-11-26T021343065330Z-legacy-package-metadata/korrust-frozen",
+    "sha256": "22c7490e796eaa72cbb1b976dfe2f55781be02904e4c2f307ee9fb52ce4ef638",
+    "source_revision": "d679737a00bf94991aae21e1966f7c1d7f304958",
+    "source_snapshot": "git archive d679737a0 src tests tools Cargo.toml Cargo.lock references/compiler.json references/sources.json; isolated snapshot with the pinned reference compiler"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "frozen_input_hashes": {
+    "src/annotation_declarations.rs": "ac237d773c71a2fc26faeb2d79b837265c6d557ef7bb31aab748fa8b1c7572be",
+    "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+    "src/bytecode/annotation_files.rs": "349e861501424f9c02a177074fd7fb847837d24772ae4773e598ca8c656638c4",
+    "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+    "src/bytecode/anonymous_context.rs": "e48d7aba57745c9e3ecb0a2317ea627f3b6d9b2d86805563bae680d79a301910",
+    "src/bytecode/class_companion.rs": "7463d1e739919160b82ed1137a195ebc3a36037ed8b5419a26c1f38889b533a7",
+    "src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+    "src/bytecode/defaults.rs": "d092d8a420cfb719f92dbb9a3bcc58f7c644d67bf9b3c611c72949122c22e827",
+    "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+    "src/bytecode/frames.rs": "1bde37761ced16a881b82e9e87cedf9c9e8b999baf56d4d7c0493f22d5eee7d4",
+    "src/bytecode/inline.rs": "ca8a4f4da8f11e405a3cdcbcf87c3bfde49635e331f9712fb7b2f4aca0f84d25",
+    "src/bytecode/interfaces.rs": "5456ea3de3402ee3ead9920bb2cb0e7c0baab4f6eb7b211e481a16bf9ad3207b",
+    "src/bytecode/lambdas.rs": "dd0d577c594954559bdc0c9eeec19d7442070893dcdc7d3e35e1a70c8125c306",
+    "src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+    "src/bytecode/suspend.rs": "dfac0ad895edaf45c25655df1fad6c1828fe3fc767fd936dabe6e45357dd96d7",
+    "src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+    "src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+    "src/bytecode.rs": "930a749e4aab2232bf797d15800728a74e49a8e4c5df6acfc82e9f9d7376cd84",
+    "src/check.rs": "01ecc7b27a1a94702e94dd36ca40e130f1bc46e09c5cda2b5f2f988950cb3da3",
+    "src/check_annotation_placements.rs": "fc226ed5e82027736d934052e390b36456c4bbf7f72cf42c7dc1e10bfc44e2f3",
+    "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+    "src/check_anonymous.rs": "c100534b577e31bb01002d5886c640032bfbaab6198783931cb2f21ce4ef147f",
+    "src/check_captures.rs": "4ae1823c1c10f138f4a4f0c36b15a24c9466c428f08102f366e966306e8b98fa",
+    "src/check_class_delegation.rs": "171fec70b3ce6632bbbd704ea92e040f1ef841fbebd02659388fe88ba97135f2",
+    "src/check_classes.rs": "eaa5547ca75d6f4bef4f21d200a050bb8a47362c9c7ea3e4f47b3a66e1cca4b3",
+    "src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+    "src/check_control.rs": "23bcd78c9f4a12b2665110ed5565c4cfe63c0c00f148463ef28c608336fa38b9",
+    "src/check_declarations.rs": "2a8dfe283fb5066b0dcd359200424f36a161122bcab837e2c6dde60f9cb6f430",
+    "src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+    "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+    "src/check_functions.rs": "209f4c7fd09fd44341e19b58e7791fa122e4a069e593822b463f2296684ff091",
+    "src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+    "src/check_interfaces.rs": "f7411289c4a4595b5ecca8c0788a688c3161014cce5b0631f2222b882d7e209a",
+    "src/check_ir_walk.rs": "caaeeea794075c7e23b17fc9e2d06ace5a02d366c9abffbdc9393d3c8a1a2e96",
+    "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+    "src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+    "src/check_library.rs": "2c4fa25ff64acca08e433b65f0089c8bed713807f67254efd260bd0b0d69df09",
+    "src/check_member_extensions.rs": "66a4cfa55e05e5699d510113566c91fd54fa79e1257f769df334338c0f7201e5",
+    "src/check_objects.rs": "149bbaa4c8a9cab9cf634edc131bd17a37b8411493c77235311ae860a65c1766",
+    "src/check_operations.rs": "5a0b0b380559259c1d11e8a2ec109a3955e1ad85f62c1b655df8632ac5362c8f",
+    "src/check_overloads.rs": "cd57712984b4c3b52eee025ab50b2b10f7d41612c1540f52f40145af7e4909dd",
+    "src/check_references.rs": "61a780d0816443007725e52f992c717eeab828f7b971749ed3242318a8d80077",
+    "src/check_relations.rs": "5774b3f66fea8c12768633c096728361dae026af9f3534495dff344fc275ea14",
+    "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+    "src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+    "src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+    "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+    "src/check_varargs.rs": "9928a6be54a33a83360cec67726e8beffba6ed00366a7f3d378f030f1055f90d",
+    "src/check_variant_signatures.rs": "ea8be16effafa3af58d46e0e732d196feeca4ef1468d4b373c2e1c29ee984ed3",
+    "src/classpath/aliases.rs": "2ad31713a22f8eb0607ed96d838aa96fecedf7a6b261f07473aef66b8bdb8827",
+    "src/classpath/archive.rs": "0510927e9b2d694000f668fc93909e7d5bff69a348c15fa2bc89159da8d8dd0f",
+    "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+    "src/classpath/metadata.rs": "abfa728c467ea8f5fe57f60282c0f74fa696e67c9e2da6e545540348dd73ce65",
+    "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+    "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+    "src/classpath/signature.rs": "11e1e7c67cfe84b56892cddf6b6fa85daa19dfec4f34846a215a18605dfb3bec",
+    "src/classpath/source.rs": "b4c5edcf8cb847ed86e3dcfa82f00a601a565d39fc3c643127a82fb439e3dc2a",
+    "src/classpath/source_enums.rs": "3ae8bea81669d8feec40a16fae21a80f4a9d8006acd23c3f4f68d5d177f79be3",
+    "src/classpath/value_names.rs": "d56f1b2781524c0d4d834296a9a7a130b1e3d83f56a2f97676f3de5310bed3ad",
+    "src/classpath.rs": "1feea090368b5e96748a04cc02602b8630f00a47e8f0b620b4793b0532f0e4a3",
+    "src/compiled_inline.rs": "694e4535cb5da5254818eea8ca6818a5ad919dd4f6556d890b36a40e613d489e",
+    "src/const_eval.rs": "bc6a053823a41c822bcc5af603023019a6ace1895c9fae75bf0372f02381dacf",
+    "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+    "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+    "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+    "src/lib.rs": "0e0b6c5ac2c9a3ce2864e9b559af668f2027bb2b65ab718fdd0f0a9e06b05619",
+    "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+    "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+    "src/metadata.rs": "b3579828d0fcecc950ffa5a01bb3c34e710f52127185036c46055e18caafce34",
+    "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+    "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+    "src/source_inline.rs": "50bee0804aaea9cd3e2b8c8e0f162784e0e0e0b16b9e0770dd8c27fca764add2",
+    "src/syntax.rs": "f927db439ad5a0e20cfc0d7234b6b58573f8049093e83c0dedba2fb6c387adb7",
+    "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+    "src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525",
+    "tests/legacy_package_metadata/Calls.java": "334be0123879bde91fb627dbc7fe8d5b376947c94f174b33cd7db803eafda025",
+    "tests/legacy_package_metadata/Consumer.kt": "7d970ab3c7600f00d18ecdd39927bad80534d4cd766ea163002184c31925a895",
+    "tests/legacy_package_metadata/First.kt": "828f23144d301313830b5dbbc15d99b54e609e4f6d36d6b28308d4b9f103778c",
+    "tests/legacy_package_metadata/Library.kt": "4d8eb80f2ce9d9229526eacce0221e90869b6ad7240a881252262464400c0ad2",
+    "tests/legacy_package_metadata/Second.kt": "9e5ad66c574ef93cbd7ec06f47fdce08ceabf414200bdd21841e56af5ab6b767",
+    "tests/legacy_package_metadata.rs": "840ef0e5ea281899b56c99089b3af1bce35974cf5fa6434312f4bfee6cef7dba",
+    "tools/check_legacy_package_metadata.py": "5600266b7e0bc1f3430f453f4e80d5d3f3fd347b1773e7cc55bb8ae896113f6f",
+    "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+    "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+    "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "target/checks/2026-11-26T021343065330Z-legacy-package-metadata/korrust-frozen": "22c7490e796eaa72cbb1b976dfe2f55781be02904e4c2f307ee9fb52ce4ef638",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "input_bundle": {
+    "path": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/inputs.zip",
+    "sha256": "4ea2ce3cd322b31c1db79acb949b947a8b926163bf918f060c2fd5a989bafecd"
+  },
+  "scope": "Compiled Kotlin package imports for metadata versions 1.4 through 1.9 and 2.3: renamed facade and function, aliased imports, generic inference, named/default arguments, extension function, property, constant, type alias, annotation definition and multifile package parts",
+  "limitations": [
+    "Metadata generated by the pinned compiler using -Xmetadata-version; this is bounded schema compatibility evidence, not validation of every historical compiler",
+    "Existing member/JVM signature checks and unsupported-language boundaries still apply",
+    "No complete MockK execution, application compatibility or performance claim"
+  ],
+  "effective_options": {
+    "language_version": "2.3",
+    "api_version": "2.3",
+    "jvm_target": "1.8"
+  },
+  "cases": [
+    {
+      "id": "metadata_1.4.0",
+      "outcome": "pass",
+      "detail": {
+        "dependency_hashes": {
+          "META-INF/main.kotlin_module": "4073d6239c51233dc090e31160effe9ed0ade8f5392bc139ad1e6364dac4c76d",
+          "compatibility/library/Marker.class": "70107a3ca2d30c297aa444f17eec53bdc76f4a1460897d90042e99af88a18ef9",
+          "compatibility/library/PortableApi.class": "1f2d969a218f88bd5418d41d5de20997ca390f7c5018b2fcf34ea4b92751b73f",
+          "compatibility/parts/Parts.class": "dcd9154bc4c036621381821574cab030c791210fbda533de23f3972c6f522c6c",
+          "compatibility/parts/Parts__FirstKt.class": "b00a2ba088295217c15047059dfd951d260d0677f0fb68912c4a448ff50e932a",
+          "compatibility/parts/Parts__SecondKt.class": "fe1ac9d846629c9d7b8b6cc706576d3341e5b36ca6e212945243b5bd6c133e79"
+        },
+        "caller_sha256": {
+          "compatibility/consumer/Calls.class": "a09c8d0bfefa19c491ad825649d7031d77945d496e8c759e4697a1e84623c123"
+        },
+        "providers": [
+          "official",
+          "candidate"
+        ],
+        "independent_assertions": "value() == 103; label(\"meta\") == \"meta\"; retained Marker.label == \"older\"; fixed Java caller and matching public JVM signatures"
+      }
+    },
+    {
+      "id": "metadata_1.5.0",
+      "outcome": "pass",
+      "detail": {
+        "dependency_hashes": {
+          "META-INF/main.kotlin_module": "b20503192187b0935a9b67fc2d05f68710eb7d76c9e71b7c35b838acd09088f4",
+          "compatibility/library/Marker.class": "815b10c49c3adc1acc00fed1e74b9a30d11f3564225ef653ce017f6189367e15",
+          "compatibility/library/PortableApi.class": "1b6aecd7b85457acf10cbcaee21e5e488d9e74f16dc4b47fb8411dcdac8f3629",
+          "compatibility/parts/Parts.class": "f0901e969043aaaf79e7a23f4520767f79d6159522acf586a6b66f65a63facbb",
+          "compatibility/parts/Parts__FirstKt.class": "73c546a6ea4daed490609e8c54ec256655dccbf24eadb079ef65e58e292ced43",
+          "compatibility/parts/Parts__SecondKt.class": "0c792a5d70ff711b703b133129e2817092d203b5b9a570ab4a6fb79a5130964b"
+        },
+        "caller_sha256": {
+          "compatibility/consumer/Calls.class": "a09c8d0bfefa19c491ad825649d7031d77945d496e8c759e4697a1e84623c123"
+        },
+        "providers": [
+          "official",
+          "candidate"
+        ],
+        "independent_assertions": "value() == 103; label(\"meta\") == \"meta\"; retained Marker.label == \"older\"; fixed Java caller and matching public JVM signatures"
+      }
+    },
+    {
+      "id": "metadata_1.6.0",
+      "outcome": "pass",
+      "detail": {
+        "dependency_hashes": {
+          "META-INF/main.kotlin_module": "7f7a8497441a89d8a056ca649ebb3b817ab588f3e4745df2390e64cb04907109",
+          "compatibility/library/Marker.class": "2a439581dfba5f86a15d81083ddc8cb67295682d299b5cae8e94124d085a6bf0",
+          "compatibility/library/PortableApi.class": "558de3b6d11e4f3c645c2f9cf83d6956ee9921dbe8769da1e6996ceb8a379cb2",
+          "compatibility/parts/Parts.class": "560be8d8cb53d2b3566748ed1a7400a78c395bcda0451f8b01d1add1e3517515",
+          "compatibility/parts/Parts__FirstKt.class": "7afa112b21c6e7e7447bdcd1cfc5745ac7eb78dea390604977175ecd8585c39f",
+          "compatibility/parts/Parts__SecondKt.class": "a9f7f47400ee3be642ba88ad88c4bf74011e262042e38706b958153c3f6514ee"
+        },
+        "caller_sha256": {
+          "compatibility/consumer/Calls.class": "a09c8d0bfefa19c491ad825649d7031d77945d496e8c759e4697a1e84623c123"
+        },
+        "providers": [
+          "official",
+          "candidate"
+        ],
+        "independent_assertions": "value() == 103; label(\"meta\") == \"meta\"; retained Marker.label == \"older\"; fixed Java caller and matching public JVM signatures"
+      }
+    },
+    {
+      "id": "metadata_1.7.0",
+      "outcome": "pass",
+      "detail": {
+        "dependency_hashes": {
+          "META-INF/main.kotlin_module": "ea4ebb19af8784b1b7bba8cfe44d73a0d32f031a3cc7c5428b030e2d0c7e4136",
+          "compatibility/library/Marker.class": "5919e45ef918a0733418fe86db2db2ee091ac22fb475640fe4085428dfef4359",
+          "compatibility/library/PortableApi.class": "b59ec1f90a36ce014c06c0d54dd3121c8f619bf4287716995b801f158098d8d3",
+          "compatibility/parts/Parts.class": "65aa7914b53e21eb701dbeb737764d0686152f6a109bcbdc59ba3c9f0fee6051",
+          "compatibility/parts/Parts__FirstKt.class": "a41af52d099ab6f40a1f39f073a9a96085150301ecc6e4ecb682a6d04d2177fd",
+          "compatibility/parts/Parts__SecondKt.class": "020d0d52ec56b2a0cd63ecaad18f11d78dc7b604b70c60f95afb4ac1ec9162b5"
+        },
+        "caller_sha256": {
+          "compatibility/consumer/Calls.class": "a09c8d0bfefa19c491ad825649d7031d77945d496e8c759e4697a1e84623c123"
+        },
+        "providers": [
+          "official",
+          "candidate",
+          "candidate-jar"
+        ],
+        "independent_assertions": "value() == 103; label(\"meta\") == \"meta\"; retained Marker.label == \"older\"; fixed Java caller and matching public JVM signatures"
+      }
+    },
+    {
+      "id": "metadata_1.8.0",
+      "outcome": "pass",
+      "detail": {
+        "dependency_hashes": {
+          "META-INF/main.kotlin_module": "9e91e9d7e52f1f4c63d7883fc2273dd0c6f7199312a83611384830bbf8e1ea1f",
+          "compatibility/library/Marker.class": "cb05375a2f5bd4db426b56df077bd84899c8f718a5c1381f01709a921a38b805",
+          "compatibility/library/PortableApi.class": "213229ee3f32c1a9a91f9d39760790b1ee98a7d81d0391c273959da815af2ba3",
+          "compatibility/parts/Parts.class": "3583986e53915fbc477924d24fb3a9109fc55d654776501e610752c992c3d1f8",
+          "compatibility/parts/Parts__FirstKt.class": "fbdd6eb3acb9044d507824de430c4ab1763241ee32674a3a2638405c6d92d2cb",
+          "compatibility/parts/Parts__SecondKt.class": "e00f6839f3ba7d12262a1886554acabffbe68498b659cad5e507c65a8128b3c9"
+        },
+        "caller_sha256": {
+          "compatibility/consumer/Calls.class": "a09c8d0bfefa19c491ad825649d7031d77945d496e8c759e4697a1e84623c123"
+        },
+        "providers": [
+          "official",
+          "candidate"
+        ],
+        "independent_assertions": "value() == 103; label(\"meta\") == \"meta\"; retained Marker.label == \"older\"; fixed Java caller and matching public JVM signatures"
+      }
+    },
+    {
+      "id": "metadata_1.9.0",
+      "outcome": "pass",
+      "detail": {
+        "dependency_hashes": {
+          "META-INF/main.kotlin_module": "a69e9a991bc87f0f7f1db02b4d9625c835a2c1e61a10f2cbda69baf34bd9371e",
+          "compatibility/library/Marker.class": "0cc68ee0c975112f405395654ae2dcbd5311be4816ffd1f237c3bb05e681ec08",
+          "compatibility/library/PortableApi.class": "a44a6f61ab9dd4c63459de4078743a84a72726713ffed88f674415f603f4b2e2",
+          "compatibility/parts/Parts.class": "459ccaf7bc40ba9d5b19c49ef0c67b4eb59048f37124e517729294b373229d9a",
+          "compatibility/parts/Parts__FirstKt.class": "07763ad55aec062b262c59690c1fb11508083dc06b80f6b24e946590be417c1d",
+          "compatibility/parts/Parts__SecondKt.class": "c9910fb335c0ce53d917c52b0c31b41a9163ca57b8bde5782e252a003bb38ed3"
+        },
+        "caller_sha256": {
+          "compatibility/consumer/Calls.class": "a09c8d0bfefa19c491ad825649d7031d77945d496e8c759e4697a1e84623c123"
+        },
+        "providers": [
+          "official",
+          "candidate"
+        ],
+        "independent_assertions": "value() == 103; label(\"meta\") == \"meta\"; retained Marker.label == \"older\"; fixed Java caller and matching public JVM signatures"
+      }
+    },
+    {
+      "id": "metadata_2.3.0",
+      "outcome": "pass",
+      "detail": {
+        "dependency_hashes": {
+          "META-INF/main.kotlin_module": "f29dceff7d1105a03b7f67f56e1db013f56850fc37b883322268c3405c122911",
+          "compatibility/library/Marker.class": "9cfda5a18b92d2320d10edc293f7254ffa8cc68956eb0aa0d1152e246c69d45c",
+          "compatibility/library/PortableApi.class": "306a066d8f7ea68ab11de770e896945e65359b0c418278702cf7dfa7521f5f0a",
+          "compatibility/parts/Parts.class": "80eaa08f4c13f375db8abbc2a910f1f7f2fcabaeaf3dd939cbdbbc8257a1a04b",
+          "compatibility/parts/Parts__FirstKt.class": "79a4786e848693e1df46adf016c6f235c54802cd0535d28b44b14e5f32f7fd88",
+          "compatibility/parts/Parts__SecondKt.class": "662feb517cb72ec2a7e6b94bbba740c8afdd0b80075e8d0fe94219c0b2a1b512"
+        },
+        "caller_sha256": {
+          "compatibility/consumer/Calls.class": "a09c8d0bfefa19c491ad825649d7031d77945d496e8c759e4697a1e84623c123"
+        },
+        "providers": [
+          "official",
+          "candidate"
+        ],
+        "independent_assertions": "value() == 103; label(\"meta\") == \"meta\"; retained Marker.label == \"older\"; fixed Java caller and matching public JVM signatures"
+      }
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "pass",
+      "changed": []
+    }
+  ],
+  "commands": [
+    {
+      "label": "1.4.0 official dependency",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Library.kt",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/First.kt",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Second.kt",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.4.0/dependency",
+        "-Xmetadata-version=1.4.0",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/000.txt"
+    },
+    {
+      "label": "1.4.0 official consumer",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.4.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.4.0/official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/001.txt"
+    },
+    {
+      "label": "1.4.0 candidate consumer",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/korrust-frozen",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.4.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.4.0/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/002.txt"
+    },
+    {
+      "label": "1.4.0 fixed Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.4.0/official:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.4.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.4.0/caller",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Calls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/003.txt"
+    },
+    {
+      "label": "1.4.0 official independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.4.0/caller:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.4.0/official:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.4.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/004.txt"
+    },
+    {
+      "label": "1.4.0 official public JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.4.0/official",
+        "compatibility.consumer.ConsumerKt",
+        "compatibility.consumer.Tagged"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/005.txt"
+    },
+    {
+      "label": "1.4.0 candidate independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.4.0/caller:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.4.0/candidate:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.4.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/006.txt"
+    },
+    {
+      "label": "1.4.0 candidate public JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.4.0/candidate",
+        "compatibility.consumer.ConsumerKt",
+        "compatibility.consumer.Tagged"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/007.txt"
+    },
+    {
+      "label": "1.5.0 official dependency",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Library.kt",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/First.kt",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Second.kt",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.5.0/dependency",
+        "-Xmetadata-version=1.5.0",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/008.txt"
+    },
+    {
+      "label": "1.5.0 official consumer",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.5.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.5.0/official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/009.txt"
+    },
+    {
+      "label": "1.5.0 candidate consumer",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/korrust-frozen",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.5.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.5.0/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/010.txt"
+    },
+    {
+      "label": "1.5.0 fixed Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.5.0/official:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.5.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.5.0/caller",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Calls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/011.txt"
+    },
+    {
+      "label": "1.5.0 official independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.5.0/caller:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.5.0/official:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.5.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/012.txt"
+    },
+    {
+      "label": "1.5.0 official public JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.5.0/official",
+        "compatibility.consumer.ConsumerKt",
+        "compatibility.consumer.Tagged"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/013.txt"
+    },
+    {
+      "label": "1.5.0 candidate independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.5.0/caller:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.5.0/candidate:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.5.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/014.txt"
+    },
+    {
+      "label": "1.5.0 candidate public JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.5.0/candidate",
+        "compatibility.consumer.ConsumerKt",
+        "compatibility.consumer.Tagged"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/015.txt"
+    },
+    {
+      "label": "1.6.0 official dependency",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Library.kt",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/First.kt",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Second.kt",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.6.0/dependency",
+        "-Xmetadata-version=1.6.0",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/016.txt"
+    },
+    {
+      "label": "1.6.0 official consumer",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.6.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.6.0/official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/017.txt"
+    },
+    {
+      "label": "1.6.0 candidate consumer",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/korrust-frozen",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.6.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.6.0/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/018.txt"
+    },
+    {
+      "label": "1.6.0 fixed Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.6.0/official:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.6.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.6.0/caller",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Calls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/019.txt"
+    },
+    {
+      "label": "1.6.0 official independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.6.0/caller:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.6.0/official:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.6.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/020.txt"
+    },
+    {
+      "label": "1.6.0 official public JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.6.0/official",
+        "compatibility.consumer.ConsumerKt",
+        "compatibility.consumer.Tagged"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/021.txt"
+    },
+    {
+      "label": "1.6.0 candidate independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.6.0/caller:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.6.0/candidate:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.6.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/022.txt"
+    },
+    {
+      "label": "1.6.0 candidate public JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.6.0/candidate",
+        "compatibility.consumer.ConsumerKt",
+        "compatibility.consumer.Tagged"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/023.txt"
+    },
+    {
+      "label": "1.7.0 official dependency",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Library.kt",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/First.kt",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Second.kt",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/dependency",
+        "-Xmetadata-version=1.7.0",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/024.txt"
+    },
+    {
+      "label": "1.7.0 official consumer",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/025.txt"
+    },
+    {
+      "label": "1.7.0 candidate consumer",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/korrust-frozen",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/026.txt"
+    },
+    {
+      "label": "1.7.0 candidate archive imports",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/korrust-frozen",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/dependency.jar:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/candidate-jar"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/027.txt"
+    },
+    {
+      "label": "1.7.0 fixed Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/official:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/caller",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Calls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/028.txt"
+    },
+    {
+      "label": "1.7.0 official independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/caller:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/official:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/029.txt"
+    },
+    {
+      "label": "1.7.0 official public JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/official",
+        "compatibility.consumer.ConsumerKt",
+        "compatibility.consumer.Tagged"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/030.txt"
+    },
+    {
+      "label": "1.7.0 candidate independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/caller:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/candidate:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/031.txt"
+    },
+    {
+      "label": "1.7.0 candidate public JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/candidate",
+        "compatibility.consumer.ConsumerKt",
+        "compatibility.consumer.Tagged"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/032.txt"
+    },
+    {
+      "label": "1.7.0 candidate-jar independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/caller:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/candidate-jar:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/033.txt"
+    },
+    {
+      "label": "1.7.0 candidate-jar public JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.7.0/candidate-jar",
+        "compatibility.consumer.ConsumerKt",
+        "compatibility.consumer.Tagged"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/034.txt"
+    },
+    {
+      "label": "1.8.0 official dependency",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Library.kt",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/First.kt",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Second.kt",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.8.0/dependency",
+        "-Xmetadata-version=1.8.0",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/035.txt"
+    },
+    {
+      "label": "1.8.0 official consumer",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.8.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.8.0/official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/036.txt"
+    },
+    {
+      "label": "1.8.0 candidate consumer",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/korrust-frozen",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.8.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.8.0/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/037.txt"
+    },
+    {
+      "label": "1.8.0 fixed Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.8.0/official:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.8.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.8.0/caller",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Calls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/038.txt"
+    },
+    {
+      "label": "1.8.0 official independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.8.0/caller:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.8.0/official:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.8.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/039.txt"
+    },
+    {
+      "label": "1.8.0 official public JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.8.0/official",
+        "compatibility.consumer.ConsumerKt",
+        "compatibility.consumer.Tagged"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/040.txt"
+    },
+    {
+      "label": "1.8.0 candidate independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.8.0/caller:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.8.0/candidate:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.8.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/041.txt"
+    },
+    {
+      "label": "1.8.0 candidate public JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.8.0/candidate",
+        "compatibility.consumer.ConsumerKt",
+        "compatibility.consumer.Tagged"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/042.txt"
+    },
+    {
+      "label": "1.9.0 official dependency",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Library.kt",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/First.kt",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Second.kt",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.9.0/dependency",
+        "-Xmetadata-version=1.9.0",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/043.txt"
+    },
+    {
+      "label": "1.9.0 official consumer",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.9.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.9.0/official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/044.txt"
+    },
+    {
+      "label": "1.9.0 candidate consumer",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/korrust-frozen",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.9.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.9.0/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/045.txt"
+    },
+    {
+      "label": "1.9.0 fixed Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.9.0/official:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.9.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.9.0/caller",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Calls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/046.txt"
+    },
+    {
+      "label": "1.9.0 official independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.9.0/caller:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.9.0/official:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.9.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/047.txt"
+    },
+    {
+      "label": "1.9.0 official public JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.9.0/official",
+        "compatibility.consumer.ConsumerKt",
+        "compatibility.consumer.Tagged"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/048.txt"
+    },
+    {
+      "label": "1.9.0 candidate independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.9.0/caller:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.9.0/candidate:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.9.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/049.txt"
+    },
+    {
+      "label": "1.9.0 candidate public JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/1.9.0/candidate",
+        "compatibility.consumer.ConsumerKt",
+        "compatibility.consumer.Tagged"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/050.txt"
+    },
+    {
+      "label": "2.3.0 official dependency",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Library.kt",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/First.kt",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Second.kt",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/2.3.0/dependency",
+        "-Xmetadata-version=2.3.0",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/051.txt"
+    },
+    {
+      "label": "2.3.0 official consumer",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/2.3.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/2.3.0/official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/052.txt"
+    },
+    {
+      "label": "2.3.0 candidate consumer",
+      "argv": [
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/korrust-frozen",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/2.3.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/2.3.0/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/053.txt"
+    },
+    {
+      "label": "2.3.0 fixed Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/2.3.0/official:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/2.3.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/2.3.0/caller",
+        "/workspace/work/interop159-metadata-freeze/tests/legacy_package_metadata/Calls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/054.txt"
+    },
+    {
+      "label": "2.3.0 official independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/2.3.0/caller:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/2.3.0/official:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/2.3.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/055.txt"
+    },
+    {
+      "label": "2.3.0 official public JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/2.3.0/official",
+        "compatibility.consumer.ConsumerKt",
+        "compatibility.consumer.Tagged"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/056.txt"
+    },
+    {
+      "label": "2.3.0 candidate independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/2.3.0/caller:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/2.3.0/candidate:/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/2.3.0/dependency:/workspace/work/interop159-metadata-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "compatibility.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/057.txt"
+    },
+    {
+      "label": "2.3.0 candidate public JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/interop159-metadata-freeze/target/checks/2026-11-26T021343065330Z-legacy-package-metadata/2.3.0/candidate",
+        "compatibility.consumer.ConsumerKt",
+        "compatibility.consumer.Tagged"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata/058.txt"
+    }
+  ],
+  "reproduction_command": [
+    "python3",
+    "tools/check_legacy_package_metadata.py",
+    "--candidate",
+    "/tmp/interop159-metadata-build/debug/korrust",
+    "--output",
+    "target/checks/2026-11-26T021343065330Z-legacy-package-metadata",
+    "--evidence-directory",
+    "reports/correctness/2026-11-26T021343065330Z-legacy-package-metadata"
+  ],
+  "counts": {
+    "pass": 8
+  }
+}
