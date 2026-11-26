@@ -71,7 +71,7 @@ def main():
         report['fixed_java_caller_sha256'] = {str(p.relative_to(callers)): sha(p) for p in callers.rglob('*.class')}
         for provider, output in providers.items():
             result = run(provider + '/runtime', ['java', '-Xverify:all', '-cp', cp(callers, output, stdlib), 'whenjoinscheck.Calls'])
-            case(provider + '/runtime', result.returncode == 0 and result.stdout.strip() == 'when-result-joins-ok', observed=result.stdout.strip())
+            case(provider + '/runtime', result.returncode == 0 and result.stdout.strip() == 'when-joins-ok', observed=result.stdout.strip())
             signatures = run(provider + '/signatures', ['javap', '-protected', '-s', '-v', '-classpath', output, 'whenjoins.JoinsKt', 'whenjoins.Base', 'whenjoins.Child', 'whenjoins.Probe'])
             case(provider + '/signatures-read', signatures.returncode == 0)
             report[provider + '_signatures'] = signatures.stdout
