@@ -993,12 +993,12 @@ pub(super) fn value_abi_dependencies(
         let _ = context.type_parameters(&root, 5)?;
     }
     let mut dependencies = std::collections::BTreeSet::new();
-    let mut remember = |logical: &Type, physical: &Type| {
+    let mut remember = |logical: &Type, physical: &Type, marker_constructor: bool| {
         let base = match logical.base() {
             Type::Nullable(inner) => inner.base(),
             base => base,
         };
-        if logical.descriptor() != physical.descriptor() {
+        if marker_constructor || logical.descriptor() != physical.descriptor() {
             if let Type::Java(owner) = base {
                 if owner != &class.name {
                     dependencies.insert(owner.clone());
@@ -1041,13 +1041,19 @@ pub(super) fn value_abi_dependencies(
                             .as_ref()
                             .is_some_and(|library| library.value_class.is_some()),
                 );
-                if physical.len() == logical.len() + skip {
+                let marker_constructor = constructor
+                    && physical.len() == logical.len() + 1
+                    && physical.last()
+                        == Some(&Type::Java(
+                            "kotlin/jvm/internal/DefaultConstructorMarker".into(),
+                        ));
+                if physical.len() == logical.len() + skip || marker_constructor {
                     for (logical, physical) in logical.iter().zip(&physical[skip..]) {
-                        remember(logical, physical);
+                        remember(logical, physical, marker_constructor);
                     }
                 }
                 if !constructor {
-                    remember(&scope.field(&member, 3, 7)?, &result);
+                    remember(&scope.field(&member, 3, 7)?, &result, false);
                 }
                 Ok(())
             })();
@@ -1066,7 +1072,7 @@ pub(super) fn value_abi_dependencies(
                         getter.integer(2)?.and_then(|id| names.get(id as usize))
                     {
                         let (_, result) = crate::jvm_descriptor::method_types(descriptor)?;
-                        remember(&logical, &result);
+                        remember(&logical, &result, false);
                     }
                 }
             }
@@ -1391,6 +1397,18 @@ fn attach_member(
         }
         return Err(invalid());
     };
+    if name == "<init>"
+        && attributes[*index].annotations.iter().any(|annotation| {
+            annotation.name == "Lkotlin/Deprecated;"
+                && annotation.values.iter().any(|(name, value)| {
+                    name == "level"
+                        && matches!(value, AnnotationValue::Enum { descriptor, name }
+                            if descriptor == "Lkotlin/DeprecationLevel;" && name == "HIDDEN")
+                })
+        })
+    {
+        return Err(invalid());
+    }
     super::compose_abi::validate_member(
         &params,
         &result,
@@ -1432,7 +1450,20 @@ fn attach_member(
             .collect::<String>(),
         physical_result.descriptor()
     );
-    if jvm_descriptor != descriptor && jvm_descriptor != physical {
+    let constructor_marker = name == "<init>"
+        && own.is_none()
+        && class.enclosing_instance().is_none()
+        && explicit_descriptor
+        && params
+            .iter()
+            .any(|(_, ty, _)| crate::value_abi::value_parameter(ty, &registry))
+        && jvm_descriptor
+            == physical.replace(")V", "Lkotlin/jvm/internal/DefaultConstructorMarker;)V")
+        && class.methods[*index].access & 0x1000 != 0
+        && class.methods.iter().any(|method| {
+            method.name == "<init>" && method.descriptor == physical && method.access & 2 != 0
+        });
+    if jvm_descriptor != descriptor && jvm_descriptor != physical && !constructor_marker {
         let (logical_parameters, _) = descriptor.split_once(')').ok_or_else(invalid)?;
         let (physical_parameters, physical_result) =
             jvm_descriptor.split_once(')').ok_or_else(invalid)?;
@@ -1486,7 +1517,10 @@ fn attach_member(
             && class
                 .enclosing_instance()
                 .is_some_and(|outer| jvm_descriptor == format!("(L{outer};{}", &erased[1..]));
-        if erased != jvm_descriptor && !inner_signature {
+        let marker_signature = constructor_marker
+            && jvm_descriptor
+                == erased.replace(")V", "Lkotlin/jvm/internal/DefaultConstructorMarker;)V");
+        if erased != jvm_descriptor && !inner_signature && !marker_signature {
             return Err(invalid());
         }
     }
@@ -1496,8 +1530,13 @@ fn attach_member(
             return Err(invalid());
         }
         let original = &class.methods[*index];
-        let closing = descriptor.find(')').ok_or_else(invalid)?;
-        let parameters = &descriptor[1..closing];
+        let default_descriptor = if name == "<init>" {
+            &physical
+        } else {
+            &descriptor
+        };
+        let closing = default_descriptor.find(')').ok_or_else(invalid)?;
+        let parameters = &default_descriptor[1..closing];
         let (bridge_name, bridge_descriptor) = if name == "<init>" {
             (
                 "<init>".into(),
@@ -2216,6 +2255,7 @@ pub(super) fn attach_with_values(
             }) {
                 marker.kotlin_params = constructor.kotlin_params;
                 marker.kotlin_result = constructor.kotlin_result;
+                marker.kotlin_internal = constructor.kotlin_internal;
                 marker.library = constructor.library;
                 marker.unsupported = false;
             }

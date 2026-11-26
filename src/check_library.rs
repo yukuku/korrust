@@ -998,6 +998,16 @@ impl Checker<'_> {
         if method.name == "<init>" {
             let normalized = self.vararg_arguments(&method, args, offset)?;
             let (params, defaults) = Self::method_parameters(&method)?;
+            let class = self.classpath.load(&method.owner)?;
+            if let Some(value) = self.binary_marker_constructor(
+                &class,
+                &method,
+                &normalized,
+                Type::Java(class.name.clone()),
+                offset,
+            )? {
+                return Ok(value);
+            }
             return self.constructor_call(
                 &method.owner,
                 &params,
@@ -1745,6 +1755,15 @@ impl Checker<'_> {
         let method = self.select_method(&constructors, args, offset)?;
         let normalized = self.vararg_arguments(&method, args, offset)?;
         let (params, defaults) = Self::method_parameters(&method)?;
+        if let Some(value) = self.binary_marker_constructor(
+            &class,
+            &method,
+            &normalized,
+            Type::Java(class.name.clone()),
+            offset,
+        )? {
+            return Ok(Some(value));
+        }
         self.constructor_call(
             &class.name,
             &params,
@@ -2040,6 +2059,11 @@ impl Checker<'_> {
         };
         let normalized = self.vararg_arguments(&method, args, offset)?;
         let args = normalized.as_slice();
+        if let Some(value) =
+            self.binary_marker_constructor(&class, &method, args, ty.clone(), offset)?
+        {
+            return Ok(Some(value));
+        }
         let (params, defaults) = Self::method_parameters(&method)?;
         let (values, lets, mask) = self.arguments_checked(
             &params,
@@ -2506,6 +2530,15 @@ impl Checker<'_> {
         let method = self.select_method(&constructors, args, offset)?;
         let normalized = self.vararg_arguments(&method, args, offset)?;
         let (params, defaults) = Self::method_parameters(&method)?;
+        if let Some(value) = self.binary_marker_constructor(
+            &class,
+            &method,
+            &normalized,
+            Type::Java(class.name.clone()),
+            offset,
+        )? {
+            return Ok(Some(value));
+        }
         self.constructor_call(
             &class.name,
             &params,

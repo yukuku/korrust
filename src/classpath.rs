@@ -940,6 +940,15 @@ impl Classpath {
     }
 
     pub(crate) fn constructor_visible(&self, caller: &str, method: &JavaMethod) -> bool {
+        if method
+            .library
+            .as_ref()
+            .is_some_and(|library| library.kotlin_declared && !library.kotlin_public)
+            && !method.kotlin_internal
+            && !self.lexically_within(caller, &method.owner)
+        {
+            return false;
+        }
         (!method.kotlin_internal || self.internal_visible(&method.owner))
             && (method.access & 1 != 0
                 || method.access & 2 != 0 && self.lexically_within(caller, &method.owner)

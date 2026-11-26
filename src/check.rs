@@ -49,6 +49,8 @@ mod captures;
 mod classes;
 #[path = "check_constructor_aliases.rs"]
 mod constructor_aliases;
+#[path = "check_constructor_bridges.rs"]
+mod constructor_bridges;
 #[path = "check_constructor_inference.rs"]
 mod constructor_inference;
 #[path = "check_contracts.rs"]
@@ -6198,6 +6200,15 @@ impl Checker<'_> {
                                     .map(|(i, t)| (format!("p{i}"), java_parameter(t), false))
                                     .collect()
                             });
+                            if let Some(value) = self.binary_marker_constructor(
+                                &class,
+                                &method,
+                                args,
+                                Type::Java(owner.clone()),
+                                offset,
+                            )? {
+                                return Ok(value);
+                            }
                             return self.constructor_call(
                                 owner,
                                 &params
