@@ -72,10 +72,6 @@ fn valid_unsupported_sealed_shapes_fail_explicitly_at_the_source() {
             "sealed class S(val value:Int=1)",
             "SEALED_CONSTRUCTOR_DEFAULTS_UNSUPPORTED",
         ),
-        (
-            "fun f():Int=try{1}catch(_:Exception){2}",
-            "DISCARD_CATCH_BINDING_UNSUPPORTED",
-        ),
     ] {
         let error = compile_outputs_with_classpath(source, "Boundary.kt", &classpath())
             .err()
@@ -87,9 +83,6 @@ fn valid_unsupported_sealed_shapes_fail_explicitly_at_the_source() {
             error.message
         );
         assert_eq!(error.code, code, "{}", error.message);
-        if code == "DISCARD_CATCH_BINDING_UNSUPPORTED" {
-            assert_eq!(error.offset, source.find('_').unwrap());
-        }
     }
 }
 
@@ -130,4 +123,20 @@ fn data_objects_close_sealed_interfaces() {
             .iter()
             .any(|output| output.relative_path == "A.class")
     );
+}
+
+#[test]
+fn discarded_catch_parameter_has_no_binding() {
+    compile_outputs_with_classpath(
+        include_str!("discard_catch/Probe.kt"),
+        "Probe.kt",
+        &classpath(),
+    )
+    .unwrap();
+    for source in [
+        "fun f():Int=try{1}catch(_:String){2}",
+        "fun f():Int=try{1}catch(_:Exception){_}",
+    ] {
+        assert!(compile_outputs_with_classpath(source, "Invalid.kt", &classpath()).is_err());
+    }
 }

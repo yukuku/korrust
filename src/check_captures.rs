@@ -458,7 +458,7 @@ pub(super) fn free_names(
                 body_names(body, &mut bound.clone(), free);
                 for catch in catches {
                     let mut bound = bound.clone();
-                    bound.insert(catch.name.clone());
+                    bound.extend(catch.name.iter().cloned());
                     body_names(&catch.body, &mut bound, free);
                 }
                 body_names(finally, &mut bound.clone(), free);

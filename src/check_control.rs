@@ -183,7 +183,10 @@ impl Checker<'_> {
                         return Err(Diagnostic::new(offset, "Catch type must inherit Throwable"));
                     }
                     self.scopes.push(HashMap::new());
-                    let slot = self.declare(&catch.name, ty, false, offset)?;
+                    let slot = match &catch.name {
+                        Some(name) => self.declare(name, ty, false, offset)?,
+                        None => self.allocate_slot(offset)?,
+                    };
                     let (catch_body, catch_result) =
                         self.result_block(&catch.body, offset, expected)?;
                     self.scopes.pop();

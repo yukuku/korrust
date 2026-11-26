@@ -366,7 +366,7 @@ pub struct SecondaryConstructor {
 }
 #[derive(Clone, Debug)]
 pub struct CatchClause {
-    pub name: String,
+    pub name: Option<String>,
     pub ty: Type,
     pub body: Vec<Statement>,
 }
@@ -6247,15 +6247,11 @@ impl Parser {
                 self.lines();
                 if self.take("catch") {
                     self.expect("(")?;
-                    if self.at("_") {
-                        return Err(self
-                            .error("Discarded catch bindings are unsupported")
-                            .with_kind(
-                                DiagnosticKind::UnsupportedLanguage,
-                                "DISCARD_CATCH_BINDING_UNSUPPORTED",
-                            ));
-                    }
-                    let name = self.declaration_name()?;
+                    let name = if self.take("_") {
+                        None
+                    } else {
+                        Some(self.declaration_name()?)
+                    };
                     self.expect(":")?;
                     self.lines();
                     let ty = self.ty()?;

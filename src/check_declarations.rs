@@ -4375,7 +4375,7 @@ fn constructor_read(
             for catch in catches {
                 let mut block = state.clone();
                 let mut locals = locals.clone();
-                locals.insert(catch.name.clone());
+                locals.extend(catch.name.iter().cloned());
                 constructor_assignment_block(&catch.body, fields, &locals, &mut block, false)?;
             }
             let mut block = state.clone();
