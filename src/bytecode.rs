@@ -603,7 +603,34 @@ fn cast_type_name(ty: &Type) -> String {
         Type::Char => "kotlin.Char".into(),
         Type::Boolean => "kotlin.Boolean".into(),
         Type::String => "kotlin.String".into(),
-        Type::Java(name) | Type::Parameterized { name, .. } => name.replace('/', "."),
+        Type::Java(name) => crate::classpath::kotlin_mapped_classifier(name)
+            .unwrap_or(name)
+            .replace(['/', '$'], "."),
+        Type::Parameterized { name, arguments } => {
+            let arguments = arguments
+                .iter()
+                .map(|arg| {
+                    let Some(ty) = &arg.ty else {
+                        return "*".to_owned();
+                    };
+                    let prefix = match arg.variance {
+                        crate::syntax::Variance::In => "in ",
+                        crate::syntax::Variance::Out => "out ",
+                        crate::syntax::Variance::Invariant => "",
+                    };
+                    format!("{prefix}{}", cast_type_name(ty))
+                })
+                .collect::<Vec<_>>()
+                .join(", ");
+            let classifier = crate::classpath::kotlin_mapped_classifier(name)
+                .unwrap_or(name)
+                .replace(['/', '$'], ".");
+            format!("{classifier}<{arguments}>")
+        }
+        Type::Nullable(inner) => format!("{}?", cast_type_name(inner)),
+        Type::Array(inner) => format!("kotlin.Array<{}>", cast_type_name(inner)),
+        Type::OutArray(inner) => format!("kotlin.Array<out {}>", cast_type_name(inner)),
+        Type::Parameter { name, .. } => name.clone(),
         Type::IntArray => "kotlin.IntArray".into(),
         Type::ByteArray => "kotlin.ByteArray".into(),
         Type::ShortArray => "kotlin.ShortArray".into(),
@@ -614,8 +641,10 @@ fn cast_type_name(ty: &Type) -> String {
         Type::DoubleArray => "kotlin.DoubleArray".into(),
 
         Type::StringArray => "kotlin.Array<kotlin.String>".into(),
-        Type::List(_) => "kotlin.collections.List".into(),
-        Type::MutableList(_) => "kotlin.collections.MutableList".into(),
+        Type::List(inner) => format!("kotlin.collections.List<{}>", cast_type_name(inner)),
+        Type::MutableList(inner) => {
+            format!("kotlin.collections.MutableList<{}>", cast_type_name(inner))
+        }
         _ => format!("{ty:?}"),
     }
 }

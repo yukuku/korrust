@@ -8,6 +8,14 @@ public class Caller {
         if ((Object) ConsumerKt.safe(wrong) != wrong) throw new AssertionError();
         try { ConsumerKt.read(wrong); throw new AssertionError(); } catch (ClassCastException expected) { }
         try { ConsumerKt.cast("x"); throw new AssertionError(); } catch (ClassCastException expected) { }
-        try { ConsumerKt.cast(null); throw new AssertionError(); } catch (NullPointerException expected) { }
+        try { ConsumerKt.cast(null); throw new AssertionError(); } catch (NullPointerException expected) {
+            if (!"null cannot be cast to non-null type fixture.Box<kotlin.String>".equals(expected.getMessage())) throw expected;
+        }
+        try { ConsumerKt.projected(null); throw new AssertionError(); } catch (NullPointerException expected) {
+            if (!"null cannot be cast to non-null type fixture.Box<out kotlin.collections.List<kotlin.String?>>".equals(expected.getMessage())) throw expected;
+        }
+        try { ConsumerKt.star(null); throw new AssertionError(); } catch (NullPointerException expected) {
+            if (!"null cannot be cast to non-null type fixture.Box<*>".equals(expected.getMessage())) throw expected;
+        }
     }
 }
