@@ -3247,7 +3247,11 @@ impl Checker<'_> {
                 ),
             );
         }
-        if field.java_type.is_some() {
+        if field
+            .java_type
+            .as_deref()
+            .is_some_and(|ty| !Self::plain_java_field_type(ty))
+        {
             return Err(
                 Diagnostic::new(offset, "Generic Java field writes are unsupported").with_kind(
                     crate::DiagnosticKind::UnsupportedLanguage,
@@ -3258,6 +3262,8 @@ impl Checker<'_> {
         let mut cursor = 0;
         let ty = if let Some(kotlin) = &field.kotlin {
             kotlin.ty.clone()
+        } else if let Some(logical) = &field.java_type {
+            logical.as_ref().clone()
         } else {
             java_parameter(self.java_type(&field.descriptor, &mut cursor, offset)?)
         };
@@ -3288,6 +3294,16 @@ impl Checker<'_> {
         } else {
             store
         })
+    }
+    fn plain_java_field_type(ty: &Type) -> bool {
+        match ty.base() {
+            Type::Parameter { .. }
+            | Type::Parameterized { .. }
+            | Type::List(_)
+            | Type::MutableList(_) => false,
+            Type::Nullable(element) | Type::Array(element) => Self::plain_java_field_type(element),
+            _ => true,
+        }
     }
     fn static_field_receiver_supported(value: &Value, storage: &str) -> bool {
         match &value.kind {
@@ -3455,7 +3471,12 @@ impl Checker<'_> {
                 "Java field is inaccessible or unsupported",
             ));
         }
-        if field.java_type.is_some() && receiver.is_none() {
+        if field
+            .java_type
+            .as_deref()
+            .is_some_and(|ty| !Self::plain_java_field_type(ty))
+            && receiver.is_none()
+        {
             return Err(
                 Diagnostic::new(offset, "Generic Java static field reads are unsupported")
                     .with_kind(
@@ -3466,13 +3487,17 @@ impl Checker<'_> {
         }
         let mut cursor = 0;
         let ty = if let Some(logical) = &field.java_type {
-            relations::specialize_field(
-                logical,
-                &receiver.as_ref().unwrap().ty,
-                &field.owner,
-                self.classpath,
-                offset,
-            )?
+            if Self::plain_java_field_type(logical) {
+                logical.as_ref().clone()
+            } else {
+                relations::specialize_field(
+                    logical,
+                    &receiver.as_ref().unwrap().ty,
+                    &field.owner,
+                    self.classpath,
+                    offset,
+                )?
+            }
         } else if let Some(kotlin) = &field.kotlin {
             kotlin.ty.clone()
         } else {

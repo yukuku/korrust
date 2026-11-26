@@ -258,10 +258,17 @@ pub(super) fn attach_fields(class: &mut JavaClass, attrs: &Attributes, field_att
         Err(_) => return,
     };
     for (field, attributes) in class.fields.iter_mut().zip(field_attrs) {
-        let Some(signature) = &attributes.signature else {
+        if attributes.signature.is_none()
+            && attributes.annotations.is_empty()
+            && attributes.return_type_annotations.is_empty()
+        {
             continue;
-        };
-        if attributes.unsupported || field.access & 0x1000 != 0 {
+        }
+        let signature = attributes.signature.as_deref().unwrap_or(&field.descriptor);
+        if attributes.unsupported
+            || field.access & 0x1000 != 0
+            || attributes.constant.is_some() && field.constant.is_none()
+        {
             continue;
         }
         let Ok(ty) = self::field(signature, &parameters) else {
@@ -311,7 +318,10 @@ pub(super) fn nullability<'a>(
             annotation.name.as_str(),
             "Landroidx/annotation/RecentlyNonNull;" | "Landroidx/annotation/RecentlyNullable;"
         ) {
-            return Err(invalid());
+            if !annotation.values.is_empty() {
+                return Err(invalid());
+            }
+            continue;
         }
         let nullable = nullability_polarity(&annotation.name).ok_or_else(invalid)?;
         if !annotation.values.is_empty() || state.is_some_and(|s| s != nullable) {
@@ -332,7 +342,6 @@ fn nullability_polarity(name: &str) -> Option<bool> {
         | "Lorg/jspecify/annotations/NonNull;"
         | "Landroid/annotation/NonNull;"
         | "Landroidx/annotation/NonNull;"
-        | "Landroidx/annotation/RecentlyNonNull;"
         | "Landroid/support/annotation/NonNull;"
         | "Lcom/android/annotations/NonNull;"
         | "Lorg/checkerframework/checker/nullness/compatqual/NonNullDecl;"
@@ -349,7 +358,6 @@ fn nullability_polarity(name: &str) -> Option<bool> {
         | "Lorg/jspecify/annotations/Nullable;"
         | "Landroid/annotation/Nullable;"
         | "Landroidx/annotation/Nullable;"
-        | "Landroidx/annotation/RecentlyNullable;"
         | "Landroid/support/annotation/Nullable;"
         | "Lcom/android/annotations/Nullable;"
         | "Lorg/checkerframework/checker/nullness/compatqual/NullableDecl;"
@@ -372,7 +380,9 @@ pub(super) fn type_semantic_annotation(name: &str) -> bool {
     nullability_polarity(name).is_some()
         || matches!(
             name,
-            "Lorg/jspecify/nullness/NullMarked;"
+            "Landroidx/annotation/RecentlyNonNull;"
+                | "Landroidx/annotation/RecentlyNullable;"
+                | "Lorg/jspecify/nullness/NullMarked;"
                 | "Lorg/jspecify/annotations/NullMarked;"
                 | "Lorg/jspecify/annotations/NullUnmarked;"
                 | "Lorg/jspecify/nullness/NullnessUnspecified;"
@@ -639,6 +649,47 @@ mod tests {
             nullability(Type::String, &[]).unwrap(),
             Type::Platform(Box::new(Type::String))
         );
+    }
+
+    #[test]
+    fn android_migration_nullability_keeps_platform_types_and_strict_markers() {
+        let marker = |name: &str| Annotation {
+            name: name.into(),
+            values: Vec::new(),
+        };
+        for recent in [
+            "Landroidx/annotation/RecentlyNonNull;",
+            "Landroidx/annotation/RecentlyNullable;",
+        ] {
+            assert_eq!(
+                nullability(Type::String, &[marker(recent)]).unwrap(),
+                Type::Platform(Box::new(Type::String))
+            );
+            for (strict, expected) in [
+                ("Landroidx/annotation/NonNull;", Type::String),
+                (
+                    "Landroidx/annotation/Nullable;",
+                    Type::Nullable(Box::new(Type::String)),
+                ),
+            ] {
+                for annotations in [
+                    vec![marker(recent), marker(strict)],
+                    vec![marker(strict), marker(recent)],
+                ] {
+                    assert_eq!(nullability(Type::String, &annotations).unwrap(), expected);
+                }
+            }
+            assert!(
+                nullability(
+                    Type::String,
+                    &[Annotation {
+                        name: recent.into(),
+                        values: vec![("value".into(), AnnotationValue::Other)],
+                    }]
+                )
+                .is_err()
+            );
+        }
     }
 
     #[test]
