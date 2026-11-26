@@ -1345,11 +1345,11 @@ impl Classpath {
                 }
             }
         }
-        self.attach_companion_constants(&mut class, &attrs, &method_attrs, &field_attrs)?;
+        self.attach_companion_fields(&mut class, &attrs, &method_attrs, &field_attrs)?;
         Ok(class)
     }
 
-    fn attach_companion_constants(
+    fn attach_companion_fields(
         &self,
         class: &mut JavaClass,
         attrs: &Attributes,
@@ -1359,6 +1359,15 @@ impl Classpath {
         if !class.kotlin_class {
             return Ok(());
         }
+        let exposed = |attributes: &Attributes| {
+            attributes.annotations.iter().any(|annotation| {
+                annotation.name == "Lkotlin/jvm/JvmField;" && annotation.values.is_empty()
+            })
+        };
+        let physical_field = |field: &JavaField, attributes: &Attributes| {
+            field.access & 8 != 0
+                && (exposed(attributes) || field.access & 16 != 0 && field.constant.is_some())
+        };
         let sibling = |name: &str| -> Result<Option<Vec<u8>>> {
             for path in &self.paths {
                 if let Some(bytes) = self.read_resource(path, &format!("{name}.class"))? {
@@ -1375,17 +1384,23 @@ impl Classpath {
             mut outer,
             outer_fields,
             is_companion,
-        ) = if let Some(parent) = class.name.strip_suffix("$Companion") {
-            if !attrs.annotations.iter().any(|annotation| {
+        ) = if let Some((parent, short)) = class.name.rsplit_once('$')
+            && attrs.annotations.iter().any(|annotation| {
                 annotation.name == "Lkotlin/Metadata;"
-                    && metadata::companion_has_constants(annotation).unwrap_or(false)
+                    && metadata::companion_has_fields(annotation).unwrap_or(false)
             }) {
-                return Ok(());
-            }
             let Some(bytes) = sibling(parent)? else {
                 return Ok(());
             };
             let (outer, _, _, outer_fields) = parse_details_with_fields(&bytes, parent)?;
+            if outer
+                .library
+                .as_ref()
+                .and_then(|library| library.companion_name.as_deref())
+                != Some(short)
+            {
+                return Ok(());
+            }
             (
                 class.clone(),
                 attrs.clone(),
@@ -1395,14 +1410,17 @@ impl Classpath {
                 outer_fields,
                 true,
             )
-        } else if class
+        } else if let Some(short) = class
             .library
             .as_ref()
             .and_then(|library| library.companion_name.as_deref())
-            == Some("Companion")
-            && class.fields.iter().any(|field| field.constant.is_some())
+            && class
+                .fields
+                .iter()
+                .zip(field_attrs)
+                .any(|(field, attrs)| physical_field(field, attrs))
         {
-            let name = format!("{}$Companion", class.name);
+            let name = format!("{}${short}", class.name);
             let Some(bytes) = sibling(&name)? else {
                 return Ok(());
             };
@@ -1424,8 +1442,7 @@ impl Classpath {
         }
         let declared_fields = companion.fields.len();
         for (field, attributes) in outer.fields.iter().zip(&outer_fields) {
-            if field.constant.is_some()
-                && field.access & 0x18 == 0x18
+            if physical_field(field, attributes)
                 && !companion.fields.iter().any(|existing| {
                     existing.name == field.name && existing.descriptor == field.descriptor
                 })
@@ -1455,25 +1472,27 @@ impl Classpath {
         let mut index = 0;
         companion.fields.retain(|field| {
             let keep = index < declared_fields
-                || field.kotlin.as_ref().is_some_and(|kotlin| kotlin.constant);
+                || field
+                    .kotlin
+                    .as_ref()
+                    .is_some_and(|kotlin| kotlin.constant || exposed(&companion_fields[index]));
             index += 1;
             keep
         });
-        for field in outer
-            .fields
-            .iter_mut()
-            .filter(|field| field.constant.is_some())
-        {
-            if let Some(constant) = companion.fields.iter().find(|candidate| {
+        for (field, attributes) in outer.fields.iter_mut().zip(&outer_fields) {
+            if !physical_field(field, attributes) {
+                continue;
+            }
+            if let Some(declaration) = companion.fields.iter().find(|candidate| {
                 candidate.name == field.name
                     && candidate.descriptor == field.descriptor
                     && candidate
                         .kotlin
                         .as_ref()
-                        .is_some_and(|kotlin| kotlin.constant)
+                        .is_some_and(|kotlin| kotlin.constant || exposed(attributes))
             }) {
-                field.kotlin = constant.kotlin.clone();
-                field.unsupported = constant.unsupported;
+                field.kotlin = declaration.kotlin.clone();
+                field.unsupported = declaration.unsupported;
             }
         }
         if is_companion {

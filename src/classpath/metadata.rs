@@ -1562,7 +1562,7 @@ pub(super) fn class_is_singleton(annotation: &Annotation) -> Result<bool> {
     Ok(matches!((proto.integer(1)?.unwrap_or(6) >> 6) & 7, 5 | 6))
 }
 
-pub(super) fn companion_has_constants(annotation: &Annotation) -> Result<bool> {
+pub(super) fn companion_has_fields(annotation: &Annotation) -> Result<bool> {
     if integer(annotation, "k")?.unwrap_or(1) != 1 {
         return Ok(false);
     }
@@ -1578,7 +1578,10 @@ pub(super) fn companion_has_constants(annotation: &Annotation) -> Result<bool> {
         return Ok(false);
     }
     for property in proto.messages(10)? {
-        if Proto::parse(property)?.integer(11)?.unwrap_or(0) & 2048 != 0 {
+        let property = Proto::parse(property)?;
+        if let Some(signature) = property.bytes(100)?
+            && Proto::parse(signature)?.bytes(1)?.is_some()
+        {
             return Ok(true);
         }
     }
