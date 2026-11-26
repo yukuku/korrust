@@ -751,6 +751,15 @@ impl Classpath {
         self.lexical_parents.borrow().get(owner).cloned()
     }
 
+    pub(crate) fn private_companion_method_visible(&self, caller: &str, method: &JavaMethod) -> bool {
+        method.access & 2 != 0 && self.is_source(&method.owner)
+            && method.owner.rsplit_once('$').is_some_and(|(outer, name)| {
+                self.lexically_within(caller, outer) && self.load(outer).is_ok_and(|class| {
+                    class.library.as_ref().and_then(|l| l.companion_name.as_deref()) == Some(name)
+                })
+            })
+    }
+
     pub(crate) fn lexically_within(&self, caller: &str, outer: &str) -> bool {
         let parents = self.lexical_parents.borrow();
         let mut current = caller;

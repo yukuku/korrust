@@ -886,7 +886,7 @@ fn companion_classes(
             }
         }
         for function in &state.methods {
-            if !lambdas.is_empty() && function.private {
+            if function.private {
                 builder.methods.push(private_method_bridge(
                     &mut builder.pool,
                     &companion.owner,

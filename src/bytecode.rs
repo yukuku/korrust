@@ -2193,7 +2193,7 @@ impl Code<'_> {
                 }
                 if (self.in_lambda
                     || self.owner != method.owner
-                        && self.owner.starts_with(&format!("{}$", method.owner)))
+                        && (method.access & 8 == 0 || self.owner.starts_with(&format!("{}$", method.owner))))
                     && method.access & 2 != 0
                 {
                     self.method_reference(
@@ -2501,10 +2501,7 @@ impl Code<'_> {
                             .map_err(|_| failure("Too many interface call arguments"))?,
                         0,
                     ]);
-                } else if (self.in_lambda
-                    || self.owner != method.owner
-                        && self.owner.starts_with(&format!("{}$", method.owner)))
-                    && method.access & 2 != 0
+                } else if (self.in_lambda || self.owner != method.owner) && method.access & 2 != 0
                 {
                     self.method_reference(
                         0xb8,

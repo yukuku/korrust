@@ -414,6 +414,7 @@ impl Checker<'_> {
                     &method.owner,
                     method.access,
                 )
+                || self.classpath.private_companion_method_visible(&self.lambda_owner, method)
                 || method.access & 2 != 0
                     && (self.lambda_owner == method.owner
                         || self.lambda_owner.starts_with(&format!("{}$", method.owner)))

@@ -2447,6 +2447,7 @@ impl Checker<'_> {
             let private_allowed = self
                 .classpath
                 .file_private_visible(&self.lambda_owner, &method)
+                || self.classpath.private_companion_method_visible(&self.lambda_owner, &method)
                 || method.access & 2 != 0
                     && (self.lambda_owner == method.owner
                         || self.lambda_owner.starts_with(&format!("{}$", method.owner)));
