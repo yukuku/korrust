@@ -1,0 +1,294 @@
+Classfile /workspace/korrust/target/checks/2026-11-26T025222509523Z-inner-type-nullability/candidate/EffectsKt.class
+  Last modified Nov 26, 2026; size 2303 bytes
+  SHA-256 checksum 65fdc991c84744229597afd1de21b84537110cc44bf482bdd390c8af4837dd49
+  Compiled from "Effects.kt"
+public final class EffectsKt
+  minor version: 0
+  major version: 49
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // EffectsKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 10, attributes: 2
+Constant pool:
+   #1 = Utf8               EffectsKt
+   #2 = Class              #1             // EffectsKt
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               SourceFile
+   #6 = Utf8               Effects.kt
+   #7 = Utf8               nestedapi/Provider
+   #8 = Class              #7             // nestedapi/Provider
+   #9 = Utf8               nullable
+  #10 = Utf8               (Z)Lnestedapi/Outer$Leaf;
+  #11 = NameAndType        #9:#10         // nullable:(Z)Lnestedapi/Outer$Leaf;
+  #12 = Methodref          #8.#11         // nestedapi/Provider.nullable:(Z)Lnestedapi/Outer$Leaf;
+  #13 = Utf8               Code
+  #14 = Utf8               Lorg/jetbrains/annotations/Nullable;
+  #15 = Utf8               RuntimeVisibleAnnotations
+  #16 = Utf8               RuntimeInvisibleAnnotations
+  #17 = Utf8               nonNull
+  #18 = Utf8               ()Lnestedapi/Outer$Leaf;
+  #19 = NameAndType        #17:#18        // nonNull:()Lnestedapi/Outer$Leaf;
+  #20 = Methodref          #8.#19         // nestedapi/Provider.nonNull:()Lnestedapi/Outer$Leaf;
+  #21 = Utf8               Lorg/jetbrains/annotations/NotNull;
+  #22 = Utf8               nested
+  #23 = Utf8               (Z)Lnestedapi/Outer$Middle$Leaf;
+  #24 = NameAndType        #22:#23        // nested:(Z)Lnestedapi/Outer$Middle$Leaf;
+  #25 = Methodref          #8.#24         // nestedapi/Provider.nested:(Z)Lnestedapi/Outer$Middle$Leaf;
+  #26 = Utf8               accept
+  #27 = Utf8               (Lnestedapi/Outer$Leaf;)I
+  #28 = NameAndType        #26:#27        // accept:(Lnestedapi/Outer$Leaf;)I
+  #29 = Methodref          #8.#28         // nestedapi/Provider.accept:(Lnestedapi/Outer$Leaf;)I
+  #30 = Utf8               acceptNull
+  #31 = Utf8               ()I
+  #32 = Utf8               RuntimeInvisibleParameterAnnotations
+  #33 = Utf8               nestedapi/Outer$Leaf
+  #34 = Class              #33            // nestedapi/Outer$Leaf
+  #35 = Utf8               null cannot be cast to non-null type nestedapi.Outer$Leaf
+  #36 = String             #35            // null cannot be cast to non-null type nestedapi.Outer$Leaf
+  #37 = Utf8               kotlin/jvm/internal/Intrinsics
+  #38 = Class              #37            // kotlin/jvm/internal/Intrinsics
+  #39 = Utf8               checkNotNull
+  #40 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+  #41 = NameAndType        #39:#40        // checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V
+  #42 = Methodref          #38.#41        // kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V
+  #43 = Utf8               value
+  #44 = Utf8               I
+  #45 = NameAndType        #43:#44        // value:I
+  #46 = Fieldref           #34.#45        // nestedapi/Outer$Leaf.value:I
+  #47 = Utf8               java/lang/Integer
+  #48 = Class              #47            // java/lang/Integer
+  #49 = Utf8               valueOf
+  #50 = Utf8               (I)Ljava/lang/Integer;
+  #51 = NameAndType        #49:#50        // valueOf:(I)Ljava/lang/Integer;
+  #52 = Methodref          #48.#51        // java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+  #53 = Utf8               intValue
+  #54 = NameAndType        #53:#31        // intValue:()I
+  #55 = Methodref          #48.#54        // java/lang/Integer.intValue:()I
+  #56 = Utf8               (Z)I
+  #57 = String             #43            // value
+  #58 = Utf8               checkNotNullParameter
+  #59 = NameAndType        #58:#40        // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #60 = Methodref          #38.#59        // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #61 = Utf8               field
+  #62 = Utf8               Lnestedapi/Outer$Leaf;
+  #63 = NameAndType        #61:#62        // field:Lnestedapi/Outer$Leaf;
+  #64 = Fieldref           #8.#63         // nestedapi/Provider.field:Lnestedapi/Outer$Leaf;
+  #65 = Utf8               (Lnestedapi/Provider;)Lnestedapi/Outer$Leaf;
+  #66 = Utf8               write
+  #67 = Utf8               (Lnestedapi/Provider;Lnestedapi/Outer$Leaf;)V
+  #68 = Utf8               staticField
+  #69 = Utf8               Lnestedapi/Outer$Middle$Leaf;
+  #70 = NameAndType        #68:#69        // staticField:Lnestedapi/Outer$Middle$Leaf;
+  #71 = Fieldref           #8.#70         // nestedapi/Provider.staticField:Lnestedapi/Outer$Middle$Leaf;
+  #72 = Utf8               ()Lnestedapi/Outer$Middle$Leaf;
+  #73 = Utf8               writeStatic
+  #74 = Utf8               (Lnestedapi/Outer$Middle$Leaf;)V
+  #75 = Utf8               Lkotlin/Metadata;
+  #76 = Utf8               mv
+  #77 = Integer            2
+  #78 = Integer            3
+  #79 = Integer            0
+  #80 = Utf8               k
+  #81 = Utf8               xi
+  #82 = Integer            48
+  #83 = Utf8               d1
+  #84 = Utf8               \u0000\b\n\u0002\b\u001c\n\u0002\b\u0001\u001a\u0019H\u0006\u0010\u0000\u001a\u00040\u0001\u0018\u00012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0000\u0010\u0004\u001a\u000fH\u0006\u0010\u0005\u001a\u00020\u0001¢\u0006\u0004\b\u0005\u0010\u0006\u001a\u0019H\u0006\u0010\u0007\u001a\u00040\b\u0018\u00012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0007\u0010\t\u001a\u000fH\u0006\u0010\n\u001a\u00020\u000b¢\u0006\u0004\b\n\u0010\f\u001a\u0019H\u0006\u0010\r\u001a\u00020\u000b2\b\u0010\u000e\u001a\u00040\u0001\u0018\u0001¢\u0006\u0004\b\r\u0010\u000f\u001a\u0017H\u0006\u0010\u000e\u001a\u00020\u000b2\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u000e\u0010\u0010\u001a\u0019H\u0006\u0010\u0011\u001a\u00040\u0001\u0018\u00012\u0006\u0010\u000e\u001a\u00020\u0012¢\u0006\u0004\b\u0011\u0010\u0013\u001a!H\u0006\u0010\u0014\u001a\u00020\u00152\u0006\u0010\u000e\u001a\u00020\u00122\b\u0010\u0016\u001a\u00040\u0001\u0018\u0001¢\u0006\u0004\b\u0014\u0010\u0017\u001a\u0011H\u0006\u0010\u0018\u001a\u00040\b\u0018\u0001¢\u0006\u0004\b\u0018\u0010\u0019\u001a\u0019H\u0006\u0010\u001a\u001a\u00020\u00152\b\u0010\u000e\u001a\u00040\b\u0018\u0001¢\u0006\u0004\b\u001a\u0010\u001b¨\u0006\u001c
+  #85 = Utf8               d2
+  #86 = Utf8               nestedapi/Outer.Leaf
+  #87 = Utf8               missing
+  #88 = Utf8               kotlin/Boolean
+  #89 = Utf8               nestedapi/Outer.Middle.Leaf
+  #90 = Utf8               kotlin/Int
+  #91 = Utf8               kotlin/Unit
+  #92 = Utf8               item
+  #93 = Utf8               inner_type_nullability
+{
+  public static final nestedapi.Outer$Leaf nullable(boolean);
+    descriptor: (Z)Lnestedapi/Outer$Leaf;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: iload         0
+         2: invokestatic  #12                 // Method nestedapi/Provider.nullable:(Z)Lnestedapi/Outer$Leaf;
+         5: areturn
+         6: aconst_null
+         7: athrow
+    RuntimeInvisibleAnnotations:
+      0: #14()
+        org.jetbrains.annotations.Nullable
+
+  public static final nestedapi.Outer$Leaf nonNull();
+    descriptor: ()Lnestedapi/Outer$Leaf;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: invokestatic  #20                 // Method nestedapi/Provider.nonNull:()Lnestedapi/Outer$Leaf;
+         3: areturn
+         4: aconst_null
+         5: athrow
+    RuntimeInvisibleAnnotations:
+      0: #21()
+        org.jetbrains.annotations.NotNull
+
+  public static final nestedapi.Outer$Middle$Leaf nested(boolean);
+    descriptor: (Z)Lnestedapi/Outer$Middle$Leaf;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: iload         0
+         2: invokestatic  #25                 // Method nestedapi/Provider.nested:(Z)Lnestedapi/Outer$Middle$Leaf;
+         5: areturn
+         6: aconst_null
+         7: athrow
+    RuntimeInvisibleAnnotations:
+      0: #14()
+        org.jetbrains.annotations.Nullable
+
+  public static final int acceptNull();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: aconst_null
+         1: invokestatic  #29                 // Method nestedapi/Provider.accept:(Lnestedapi/Outer$Leaf;)I
+         4: ireturn
+         5: aconst_null
+         6: athrow
+
+  public static final int accept(nestedapi.Outer$Leaf);
+    descriptor: (Lnestedapi/Outer$Leaf;)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload         0
+         2: invokestatic  #29                 // Method nestedapi/Provider.accept:(Lnestedapi/Outer$Leaf;)I
+         5: ireturn
+         6: aconst_null
+         7: athrow
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #14()
+          org.jetbrains.annotations.Nullable
+
+  public static final int value(boolean);
+    descriptor: (Z)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=4, locals=3, args_size=1
+         0: iload         0
+         2: invokestatic  #12                 // Method nestedapi/Provider.nullable:(Z)Lnestedapi/Outer$Leaf;
+         5: checkcast     #34                 // class nestedapi/Outer$Leaf
+         8: astore        1
+        10: aload         1
+        12: ifnull        19
+        15: iconst_0
+        16: goto          20
+        19: iconst_1
+        20: ifeq          27
+        23: aconst_null
+        24: goto          45
+        27: aload         1
+        29: dup
+        30: ldc_w         #36                 // String null cannot be cast to non-null type nestedapi.Outer$Leaf
+        33: invokestatic  #42                 // Method kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V
+        36: checkcast     #34                 // class nestedapi/Outer$Leaf
+        39: getfield      #46                 // Field nestedapi/Outer$Leaf.value:I
+        42: invokestatic  #52                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        45: checkcast     #48                 // class java/lang/Integer
+        48: astore        2
+        50: aload         2
+        52: ifnull        59
+        55: iconst_0
+        56: goto          60
+        59: iconst_1
+        60: ifeq          67
+        63: iconst_m1
+        64: goto          72
+        67: aload         2
+        69: invokevirtual #55                 // Method java/lang/Integer.intValue:()I
+        72: ireturn
+        73: aconst_null
+        74: athrow
+
+  public static final nestedapi.Outer$Leaf field(nestedapi.Provider);
+    descriptor: (Lnestedapi/Provider;)Lnestedapi/Outer$Leaf;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload         0
+         2: ldc_w         #57                 // String value
+         5: invokestatic  #60                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         0
+        10: getfield      #64                 // Field nestedapi/Provider.field:Lnestedapi/Outer$Leaf;
+        13: areturn
+        14: aconst_null
+        15: athrow
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #21()
+          org.jetbrains.annotations.NotNull
+    RuntimeInvisibleAnnotations:
+      0: #14()
+        org.jetbrains.annotations.Nullable
+
+  public static final void write(nestedapi.Provider, nestedapi.Outer$Leaf);
+    descriptor: (Lnestedapi/Provider;Lnestedapi/Outer$Leaf;)V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload         0
+         2: ldc_w         #57                 // String value
+         5: invokestatic  #60                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         0
+        10: aload         1
+        12: putfield      #64                 // Field nestedapi/Provider.field:Lnestedapi/Outer$Leaf;
+        15: return
+        16: aconst_null
+        17: athrow
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #21()
+          org.jetbrains.annotations.NotNull
+      parameter 1:
+        0: #14()
+          org.jetbrains.annotations.Nullable
+
+  public static final nestedapi.Outer$Middle$Leaf staticField();
+    descriptor: ()Lnestedapi/Outer$Middle$Leaf;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: getstatic     #71                 // Field nestedapi/Provider.staticField:Lnestedapi/Outer$Middle$Leaf;
+         3: areturn
+         4: aconst_null
+         5: athrow
+    RuntimeInvisibleAnnotations:
+      0: #14()
+        org.jetbrains.annotations.Nullable
+
+  public static final void writeStatic(nestedapi.Outer$Middle$Leaf);
+    descriptor: (Lnestedapi/Outer$Middle$Leaf;)V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload         0
+         2: putstatic     #71                 // Field nestedapi/Provider.staticField:Lnestedapi/Outer$Middle$Leaf;
+         5: return
+         6: aconst_null
+         7: athrow
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #14()
+          org.jetbrains.annotations.Nullable
+}
+SourceFile: "Effects.kt"
+RuntimeVisibleAnnotations:
+  0: #75(#76=[I#77,I#78,I#79],#80=I#77,#81=I#82,#83=[s#84],#85=[s#9,s#86,s#87,s#88,s#10,s#17,s#18,s#22,s#89,s#23,s#30,s#90,s#31,s#26,s#43,s#27,s#56,s#61,s#7,s#65,s#66,s#91,s#92,s#67,s#68,s#72,s#73,s#74,s#93])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u001c\n\u0002\b\u0001\u001a\u0019H\u0006\u0010\u0000\u001a\u00040\u0001\u0018\u00012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0000\u0010\u0004\u001a\u000fH\u0006\u0010\u0005\u001a\u00020\u0001¢\u0006\u0004\b\u0005\u0010\u0006\u001a\u0019H\u0006\u0010\u0007\u001a\u00040\b\u0018\u00012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0007\u0010\t\u001a\u000fH\u0006\u0010\n\u001a\u00020\u000b¢\u0006\u0004\b\n\u0010\f\u001a\u0019H\u0006\u0010\r\u001a\u00020\u000b2\b\u0010\u000e\u001a\u00040\u0001\u0018\u0001¢\u0006\u0004\b\r\u0010\u000f\u001a\u0017H\u0006\u0010\u000e\u001a\u00020\u000b2\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u000e\u0010\u0010\u001a\u0019H\u0006\u0010\u0011\u001a\u00040\u0001\u0018\u00012\u0006\u0010\u000e\u001a\u00020\u0012¢\u0006\u0004\b\u0011\u0010\u0013\u001a!H\u0006\u0010\u0014\u001a\u00020\u00152\u0006\u0010\u000e\u001a\u00020\u00122\b\u0010\u0016\u001a\u00040\u0001\u0018\u0001¢\u0006\u0004\b\u0014\u0010\u0017\u001a\u0011H\u0006\u0010\u0018\u001a\u00040\b\u0018\u0001¢\u0006\u0004\b\u0018\u0010\u0019\u001a\u0019H\u0006\u0010\u001a\u001a\u00020\u00152\b\u0010\u000e\u001a\u00040\b\u0018\u0001¢\u0006\u0004\b\u001a\u0010\u001b¨\u0006\u001c"]
+      d2=["nullable","nestedapi/Outer.Leaf","missing","kotlin/Boolean","(Z)Lnestedapi/Outer$Leaf;","nonNull","()Lnestedapi/Outer$Leaf;","nested","nestedapi/Outer.Middle.Leaf","(Z)Lnestedapi/Outer$Middle$Leaf;","acceptNull","kotlin/Int","()I","accept","value","(Lnestedapi/Outer$Leaf;)I","(Z)I","field","nestedapi/Provider","(Lnestedapi/Provider;)Lnestedapi/Outer$Leaf;","write","kotlin/Unit","item","(Lnestedapi/Provider;Lnestedapi/Outer$Leaf;)V","staticField","()Lnestedapi/Outer$Middle$Leaf;","writeStatic","(Lnestedapi/Outer$Middle$Leaf;)V","inner_type_nullability"]
+    )
