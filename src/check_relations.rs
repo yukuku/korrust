@@ -1797,6 +1797,24 @@ impl Checker<'_> {
             let result_needs_widening =
                 !self.subtype(&substitute(result, &substitutions), expected);
             for (name, ty) in result_constraints {
+                // An expected supertype bounds a bare result variable from above.
+                // Its declared bound can be more specific than that expectation.
+                let ty = if !substitutions.contains_key(&name)
+                    && matches!(pattern.base(), Type::Parameter { name: result_name, .. } if *result_name == name)
+                    && let Some(parameter) = library.type_parameters.iter().find(|p| p.name == name)
+                    && let Some(bound) = parameter
+                        .bounds
+                        .iter()
+                        .map(|bound| substitute(bound, &substitutions))
+                        .find(|bound| {
+                            matches!(bound.base(), Type::Java(_) | Type::String)
+                                && !self.subtype(&ty, bound)
+                                && self.subtype(bound, &ty)
+                        }) {
+                    bound
+                } else {
+                    ty
+                };
                 if result_needs_widening
                     && !fixed.contains(&name)
                     && substitutions
