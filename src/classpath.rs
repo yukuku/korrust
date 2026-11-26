@@ -3,6 +3,7 @@ use std::path::PathBuf;
 
 mod aliases;
 mod archive;
+pub(crate) mod compose_abi;
 mod import_classes;
 mod inline_defaults;
 mod jdk_modules;
@@ -751,6 +752,15 @@ impl Classpath {
     }
 
     pub(crate) fn classifier_visible(&self, caller: &str, owner: &str) -> bool {
+        self.classifier_visible_with_internal(caller, owner, true)
+    }
+
+    fn classifier_visible_with_internal(
+        &self,
+        caller: &str,
+        owner: &str,
+        allow_internal: bool,
+    ) -> bool {
         let mut current = owner.to_owned();
         for _ in 0..64 {
             if let Ok(class) = self.load(&current) {
@@ -768,7 +778,7 @@ impl Classpath {
                             return false;
                         }
                     }
-                    Some(0) if !self.internal_visible(&current) => return false,
+                    Some(0) if !allow_internal || !self.internal_visible(&current) => return false,
                     _ => {}
                 }
             }
@@ -830,13 +840,37 @@ impl Classpath {
         ty: &Type,
         offset: usize,
     ) -> Result<()> {
+        self.check_type_visibility_policy(caller, ty, offset, true)
+    }
+
+    pub(crate) fn check_public_type_visibility(&self, ty: &Type, offset: usize) -> Result<()> {
+        self.check_type_visibility_policy("", ty, offset, false)
+    }
+
+    fn check_type_visibility_policy(
+        &self,
+        caller: &str,
+        ty: &Type,
+        offset: usize,
+        allow_internal: bool,
+    ) -> Result<()> {
         match ty {
             Type::Java(owner) | Type::Parameterized { name: owner, .. } => {
                 self.check_classifier_visibility(caller, owner, offset)?;
+                if !allow_internal && !self.classifier_visible_with_internal(caller, owner, false) {
+                    return Err(Diagnostic::new(
+                        offset,
+                        format!("Classifier is not public: {owner}"),
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "EXPOSED_INTERNAL_CLASSIFIER",
+                    ));
+                }
                 if let Type::Parameterized { arguments, .. } = ty {
                     for argument in arguments {
                         if let Some(ty) = &argument.ty {
-                            self.check_type_visibility(caller, ty, offset)?;
+                            self.check_type_visibility_policy(caller, ty, offset, allow_internal)?;
                         }
                     }
                 }
@@ -847,26 +881,28 @@ impl Classpath {
             | Type::MutableList(ty)
             | Type::Array(ty)
             | Type::OutArray(ty)
-            | Type::ThreadLocal(ty) => self.check_type_visibility(caller, ty, offset)?,
+            | Type::ThreadLocal(ty) => {
+                self.check_type_visibility_policy(caller, ty, offset, allow_internal)?
+            }
             Type::Function { params, result } | Type::SuspendFunction { params, result } => {
                 for ty in params {
-                    self.check_type_visibility(caller, ty, offset)?;
+                    self.check_type_visibility_policy(caller, ty, offset, allow_internal)?;
                 }
-                self.check_type_visibility(caller, result, offset)?;
+                self.check_type_visibility_policy(caller, result, offset, allow_internal)?;
             }
             Type::ReceiverFunction {
                 receiver,
                 params,
                 result,
             } => {
-                self.check_type_visibility(caller, receiver, offset)?;
+                self.check_type_visibility_policy(caller, receiver, offset, allow_internal)?;
                 for ty in params {
-                    self.check_type_visibility(caller, ty, offset)?;
+                    self.check_type_visibility_policy(caller, ty, offset, allow_internal)?;
                 }
-                self.check_type_visibility(caller, result, offset)?;
+                self.check_type_visibility_policy(caller, result, offset, allow_internal)?;
             }
             Type::Parameter { upper_bound, .. } => {
-                self.check_type_visibility(caller, upper_bound, offset)?
+                self.check_type_visibility_policy(caller, upper_bound, offset, allow_internal)?
             }
             _ => {}
         }
@@ -1345,11 +1381,11 @@ impl Classpath {
                 }
             }
         }
-        self.attach_companion_constants(&mut class, &attrs, &method_attrs, &field_attrs)?;
+        self.attach_companion_fields(&mut class, &attrs, &method_attrs, &field_attrs)?;
         Ok(class)
     }
 
-    fn attach_companion_constants(
+    fn attach_companion_fields(
         &self,
         class: &mut JavaClass,
         attrs: &Attributes,
@@ -1359,6 +1395,15 @@ impl Classpath {
         if !class.kotlin_class {
             return Ok(());
         }
+        let exposed = |attributes: &Attributes| {
+            attributes.annotations.iter().any(|annotation| {
+                annotation.name == "Lkotlin/jvm/JvmField;" && annotation.values.is_empty()
+            })
+        };
+        let physical_field = |field: &JavaField, attributes: &Attributes| {
+            field.access & 8 != 0
+                && (exposed(attributes) || field.access & 16 != 0 && field.constant.is_some())
+        };
         let sibling = |name: &str| -> Result<Option<Vec<u8>>> {
             for path in &self.paths {
                 if let Some(bytes) = self.read_resource(path, &format!("{name}.class"))? {
@@ -1375,17 +1420,23 @@ impl Classpath {
             mut outer,
             outer_fields,
             is_companion,
-        ) = if let Some(parent) = class.name.strip_suffix("$Companion") {
-            if !attrs.annotations.iter().any(|annotation| {
+        ) = if let Some((parent, short)) = class.name.rsplit_once('$')
+            && attrs.annotations.iter().any(|annotation| {
                 annotation.name == "Lkotlin/Metadata;"
-                    && metadata::companion_has_constants(annotation).unwrap_or(false)
+                    && metadata::companion_has_fields(annotation).unwrap_or(false)
             }) {
-                return Ok(());
-            }
             let Some(bytes) = sibling(parent)? else {
                 return Ok(());
             };
             let (outer, _, _, outer_fields) = parse_details_with_fields(&bytes, parent)?;
+            if outer
+                .library
+                .as_ref()
+                .and_then(|library| library.companion_name.as_deref())
+                != Some(short)
+            {
+                return Ok(());
+            }
             (
                 class.clone(),
                 attrs.clone(),
@@ -1395,14 +1446,17 @@ impl Classpath {
                 outer_fields,
                 true,
             )
-        } else if class
+        } else if let Some(short) = class
             .library
             .as_ref()
             .and_then(|library| library.companion_name.as_deref())
-            == Some("Companion")
-            && class.fields.iter().any(|field| field.constant.is_some())
+            && class
+                .fields
+                .iter()
+                .zip(field_attrs)
+                .any(|(field, attrs)| physical_field(field, attrs))
         {
-            let name = format!("{}$Companion", class.name);
+            let name = format!("{}${short}", class.name);
             let Some(bytes) = sibling(&name)? else {
                 return Ok(());
             };
@@ -1424,8 +1478,7 @@ impl Classpath {
         }
         let declared_fields = companion.fields.len();
         for (field, attributes) in outer.fields.iter().zip(&outer_fields) {
-            if field.constant.is_some()
-                && field.access & 0x18 == 0x18
+            if physical_field(field, attributes)
                 && !companion.fields.iter().any(|existing| {
                     existing.name == field.name && existing.descriptor == field.descriptor
                 })
@@ -1455,25 +1508,27 @@ impl Classpath {
         let mut index = 0;
         companion.fields.retain(|field| {
             let keep = index < declared_fields
-                || field.kotlin.as_ref().is_some_and(|kotlin| kotlin.constant);
+                || field
+                    .kotlin
+                    .as_ref()
+                    .is_some_and(|kotlin| kotlin.constant || exposed(&companion_fields[index]));
             index += 1;
             keep
         });
-        for field in outer
-            .fields
-            .iter_mut()
-            .filter(|field| field.constant.is_some())
-        {
-            if let Some(constant) = companion.fields.iter().find(|candidate| {
+        for (field, attributes) in outer.fields.iter_mut().zip(&outer_fields) {
+            if !physical_field(field, attributes) {
+                continue;
+            }
+            if let Some(declaration) = companion.fields.iter().find(|candidate| {
                 candidate.name == field.name
                     && candidate.descriptor == field.descriptor
                     && candidate
                         .kotlin
                         .as_ref()
-                        .is_some_and(|kotlin| kotlin.constant)
+                        .is_some_and(|kotlin| kotlin.constant || exposed(attributes))
             }) {
-                field.kotlin = constant.kotlin.clone();
-                field.unsupported = constant.unsupported;
+                field.kotlin = declaration.kotlin.clone();
+                field.unsupported = declaration.unsupported;
             }
         }
         if is_companion {
@@ -4515,7 +4570,32 @@ mod tests {
     fn kotlin_metadata_keeps_internal_class_and_member_visibility_restricted() {
         let files =
             crate::compile_all("internal class Hidden(val value: Int)", "Hidden.kt").unwrap();
-        assert!(parse(&files[0].bytes, "Hidden").unwrap().unsupported);
+        let parsed = parse(&files[0].bytes, "Hidden").unwrap();
+        assert!(!parsed.unsupported);
+        assert_eq!(parsed.library.unwrap().kotlin_visibility, Some(0));
+        let dependency = std::env::temp_dir().join(format!(
+            "korrust-internal-class-visibility-{}",
+            std::process::id()
+        ));
+        std::fs::create_dir_all(&dependency).unwrap();
+        std::fs::write(dependency.join("Hidden.class"), &files[0].bytes).unwrap();
+        let unrelated = Classpath::new(std::slice::from_ref(&dependency)).unwrap();
+        assert!(!unrelated.classifier_visible("Consumer", "Hidden"));
+        let friend = Classpath::with_options(
+            std::slice::from_ref(&dependency),
+            &crate::CompileOptions {
+                module_name: "consumer".into(),
+                friend_paths: vec![dependency.clone()],
+            },
+        )
+        .unwrap();
+        assert!(friend.classifier_visible("Consumer", "Hidden"));
+        assert!(
+            friend
+                .check_public_type_visibility(&Type::Java("Hidden".into()), 0)
+                .is_err()
+        );
+        std::fs::remove_dir_all(dependency).unwrap();
         let (metadata, class, attributes) = fixture_metadata(false, &[], 550, 0, 32);
         let (methods, _) = kotlin_typed_class(&metadata, &class, &attributes).unwrap();
         assert!(

@@ -633,6 +633,7 @@ pub(super) fn check_class_with_constants(
     }
     let mut mutable_fields: HashSet<_> = source.mutable_params.iter().cloned().collect();
     let mut initializer_checker = Checker {
+        composable_body: false,
         inline_argument_modes: Vec::new(),
         inline_analysis: false,
         public_inline_body: false,
@@ -817,6 +818,7 @@ pub(super) fn check_class_with_constants(
         }
         if let Some(expr) = &property.initializer {
             let mut checker = Checker {
+                composable_body: false,
                 inline_argument_modes: Vec::new(),
                 inline_analysis: false,
                 public_inline_body: false,
@@ -995,7 +997,7 @@ pub(super) fn check_class_with_constants(
     let mut companion_static_fields = HashMap::new();
     let mut checked_companion = None;
     if let Some(companion) = &source.companion {
-        let checked = check_static_state(
+        let mut checked = check_static_state(
             &format!("{owner}$Companion"),
             &owner,
             &companion.properties,
@@ -1008,6 +1010,7 @@ pub(super) fn check_class_with_constants(
             classes,
             lambdas,
         )?;
+        checked.private = companion.private;
         for property in &checked.properties {
             companion_static_fields
                 .insert(property.name.clone(), (owner.clone(), property.ty.clone()));
@@ -1299,6 +1302,7 @@ pub(super) fn check_class_with_constants(
             }
         }
         let mut checker = Checker {
+            composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
             public_inline_body: source.methods.iter().any(|method| {
@@ -2287,6 +2291,7 @@ impl<'a> DeclarationContext<'a> {
     }
     pub fn checker(&self, receiver: bool, next: u16, result: Type) -> Checker<'_> {
         Checker {
+            composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
             public_inline_body: false,
@@ -3678,6 +3683,7 @@ pub(super) fn check_static_state(
         }
     }
     Ok(ClassCompanion {
+        private: false,
         constants: source_constants.to_vec(),
         exposed_fields: source_properties
             .iter()

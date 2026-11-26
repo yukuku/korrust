@@ -2,6 +2,7 @@ use crate::{Diagnostic, DiagnosticKind, Result};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Type {
+    ComposableUnitFunction,
     SuspendFunction {
         params: Vec<Type>,
         result: Box<Type>,
@@ -191,6 +192,7 @@ impl Type {
                 | Self::Parameterized { .. }
                 | Self::Parameter { .. }
                 | Self::Function { .. }
+                | Self::ComposableUnitFunction
                 | Self::SuspendFunction { .. }
                 | Self::ThreadLocal(_)
                 | Self::Null
@@ -212,6 +214,7 @@ impl Type {
     }
     pub fn descriptor(&self) -> String {
         match self.base() {
+            Self::ComposableUnitFunction => "Lkotlin/jvm/functions/Function2;".into(),
             Self::Int => "I".into(),
             Self::Long => "J".into(),
             Self::Byte => "B".into(),
@@ -566,6 +569,7 @@ pub struct InterfaceDelegate {
 }
 #[derive(Clone, Debug)]
 pub struct ClassCompanion {
+    pub private: bool,
     pub constants: Vec<ConstDecl>,
     pub properties: Vec<ClassCompanionProperty>,
     pub methods: Vec<ClassMethod>,
@@ -2363,6 +2367,9 @@ impl Parser {
             let Some(token) = self.tokens.get(index) else {
                 return false;
             };
+            if token.text == kind {
+                return true;
+            }
             if matches!(
                 token.text.as_str(),
                 "public"
@@ -4095,7 +4102,7 @@ impl Parser {
             } else if self.take("init") {
                 self.lines();
                 declaration.initializers.push((offset, self.block()?));
-            } else if !self.at("companion")
+            } else if !self.starts_declaration("companion")
                 && (self.starts_class()
                     || self.starts_enum()
                     || self.starts_object()
@@ -4106,7 +4113,7 @@ impl Parser {
                 declaration
                     .secondary_constructors
                     .push(self.secondary_constructor()?);
-            } else if self.at("companion") {
+            } else if self.starts_declaration("companion") {
                 if declaration.companion.is_some() {
                     return Err(self.error("Classes support only one companion object"));
                 }
@@ -4650,6 +4657,11 @@ impl Parser {
         })
     }
     fn class_companion(&mut self) -> Result<ClassCompanion> {
+        let private = self.take("private");
+        if !private {
+            self.take("public");
+        }
+        self.lines();
         self.expect("companion")?;
         self.lines();
         self.expect("object")?;
@@ -4659,6 +4671,7 @@ impl Parser {
             self.pos = after_header;
             if matches!(self.token().text.as_str(), "\n" | ";" | "}" | "<eof>") {
                 return Ok(ClassCompanion {
+                    private,
                     constants: Vec::new(),
                     properties: Vec::new(),
                     methods: Vec::new(),
@@ -4748,6 +4761,7 @@ impl Parser {
             });
         }
         Ok(ClassCompanion {
+            private,
             constants,
             properties,
             methods: declaration.methods,

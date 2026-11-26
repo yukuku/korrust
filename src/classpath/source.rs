@@ -718,6 +718,20 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         if let Some(companion) = &source.companion {
             let companion_owner = format!("{owner}$Companion");
             let mut nested = empty(&companion_owner);
+            if companion.private {
+                nested.access &= !1;
+            }
+            nested.library = Some(LibraryClass {
+                value_class: None,
+                companion_name: None,
+                kotlin_visibility: Some(if companion.private { 1 } else { 3 }),
+                type_aliases: Vec::new(),
+                type_parameters: Vec::new(),
+                supertypes: Vec::new(),
+                package: None,
+                multifile_facade: None,
+            });
+            cp.register_lexical_parent(&companion_owner, owner);
             constants(&mut class, &companion.constants)?;
             let mut companion_constants = empty(owner);
             constants(&mut companion_constants, &companion.constants)?;
@@ -764,7 +778,11 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                 owner: owner.into(),
                 name: "Companion".into(),
                 descriptor: format!("L{owner}$Companion;"),
-                access: 0x19,
+                access: if source.companion.as_ref().is_some_and(|c| c.private) {
+                    0x1a
+                } else {
+                    0x19
+                },
                 unsupported: false,
             });
         }
@@ -1711,74 +1729,146 @@ pub(super) fn validate_private_signatures(
     owner: &str,
     cp: &Classpath,
 ) -> Result<()> {
-    let signature = |ty: &Type, private: bool, scope: &str, offset: usize| -> Result<()> {
-        let ty = resolve(ty, module, cp);
-        cp.check_type_visibility(scope, &ty, offset)?;
-        let domain = if private {
-            Some(scope.to_owned())
-        } else {
-            cp.private_domain(scope)
-        };
-        if cp
-            .check_type_visibility(domain.as_deref().unwrap_or(""), &ty, offset)
-            .is_err()
-        {
-            return Err(
-                Diagnostic::new(offset, "Declaration exposes a private nested classifier")
-                    .with_kind(
-                        crate::DiagnosticKind::InvalidKotlin,
-                        "EXPOSED_PRIVATE_CLASSIFIER",
-                    ),
-            );
+    let nonpublic_scope = |scope: &str| {
+        let mut current = scope.to_owned();
+        for _ in 0..64 {
+            if cp.load(&current).is_ok_and(|class| {
+                class
+                    .library
+                    .as_ref()
+                    .is_some_and(|library| matches!(library.kotlin_visibility, Some(0 | 1 | 4)))
+            }) {
+                return true;
+            }
+            let Some(parent) = cp.lexical_parents.borrow().get(&current).cloned() else {
+                return false;
+            };
+            current = parent;
         }
-        Ok(())
+        false
     };
+    let signature =
+        |ty: &Type, private: bool, internal: bool, scope: &str, offset: usize| -> Result<()> {
+            let ty = resolve(ty, module, cp);
+            cp.check_type_visibility(scope, &ty, offset)?;
+            let domain = if private {
+                Some(scope.to_owned())
+            } else {
+                cp.private_domain(scope)
+            };
+            if cp
+                .check_type_visibility(domain.as_deref().unwrap_or(""), &ty, offset)
+                .is_err()
+            {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Declaration exposes a private nested classifier",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "EXPOSED_PRIVATE_CLASSIFIER",
+                ));
+            }
+            if !private
+                && !internal
+                && !nonpublic_scope(scope)
+                && cp.check_public_type_visibility(&ty, offset).is_err()
+            {
+                return Err(
+                    Diagnostic::new(offset, "Declaration exposes an internal classifier")
+                        .with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "EXPOSED_INTERNAL_CLASSIFIER",
+                        ),
+                );
+            }
+            Ok(())
+        };
     let function = |f: &Function, scope: &str| -> Result<()> {
         for (_, ty) in &f.params {
-            signature(ty, f.private, scope, f.offset)?;
+            signature(ty, f.private, f.internal, scope, f.offset)?;
         }
-        signature(&f.result, f.private, scope, f.offset)?;
+        signature(&f.result, f.private, f.internal, scope, f.offset)?;
         if let Some(receiver) = &f.receiver {
-            signature(receiver, f.private, scope, f.offset)?;
+            signature(receiver, f.private, f.internal, scope, f.offset)?;
         }
         for parameter in &f.type_params {
             for bound in &parameter.bounds {
-                signature(bound, f.private, scope, f.offset)?;
+                signature(bound, f.private, f.internal, scope, f.offset)?;
             }
         }
         Ok(())
     };
+    for alias in &module.type_aliases {
+        signature(&alias.expanded, alias.private, false, owner, alias.offset)?;
+        for parameter in &alias.type_params {
+            for bound in &parameter.bounds {
+                signature(bound, alias.private, false, owner, alias.offset)?;
+            }
+        }
+    }
+    if let Some(annotation) = &module.annotation_decl {
+        for parameter in &annotation.parameters {
+            signature(&parameter.ty, false, false, owner, parameter.offset)?;
+        }
+    }
     for f in &module.functions {
         function(f, owner)?;
     }
     for property in &module.properties {
-        signature(&property.ty, property.private, owner, property.offset)?;
+        signature(
+            &property.ty,
+            property.private,
+            property.internal,
+            owner,
+            property.offset,
+        )?;
     }
     let class = module
         .class_decl
         .as_ref()
         .or_else(|| module.enum_decl.as_ref().map(|d| &d.body));
     if let Some(class) = class {
-        for (_, ty) in &class.params {
-            signature(ty, false, owner, class.offset)?;
+        for (name, ty) in &class.params {
+            let exposed_property = class.public_params.contains(name);
+            signature(
+                ty,
+                class.constructor_visibility == 2 && !exposed_property,
+                class.constructor_visibility == 0 && !exposed_property,
+                owner,
+                class.offset,
+            )?;
         }
         for constructor in &class.secondary_constructors {
             for (_, ty) in &constructor.params {
-                signature(ty, false, owner, constructor.offset)?;
+                signature(ty, false, false, owner, constructor.offset)?;
             }
         }
         for property in &class.properties {
-            signature(&property.ty, property.private, owner, property.offset)?;
+            signature(
+                &property.ty,
+                property.private,
+                property.internal,
+                owner,
+                property.offset,
+            )?;
         }
         for f in &class.methods {
             function(&f.function, owner)?;
         }
         for ty in &class.super_types {
-            signature(ty, false, owner, class.offset)?;
+            let resolved = resolve(ty, module, cp);
+            let interface = match &resolved {
+                Type::Java(name) | Type::Parameterized { name, .. } => {
+                    cp.load(name).is_ok_and(|class| class.access & 0x200 != 0)
+                }
+                _ => false,
+            };
+            signature(ty, false, interface, owner, class.offset)?;
         }
         for parameter in &class.type_params {
             for bound in &parameter.bounds {
-                signature(bound, false, owner, class.offset)?;
+                signature(bound, false, false, owner, class.offset)?;
             }
         }
         if let Some(companion) = &class.companion {
@@ -1788,7 +1878,13 @@ pub(super) fn validate_private_signatures(
             }
             for property in &companion.properties {
                 if let Some(ty) = &property.ty {
-                    signature(ty, property.private, &scope, property.offset)?;
+                    signature(
+                        ty,
+                        property.private,
+                        property.internal,
+                        &scope,
+                        property.offset,
+                    )?;
                 }
             }
         }
@@ -1799,7 +1895,13 @@ pub(super) fn validate_private_signatures(
         }
         for property in &object.fields {
             if let Some(ty) = &property.ty {
-                signature(ty, property.private, owner, property.offset)?;
+                signature(
+                    ty,
+                    property.private,
+                    property.internal,
+                    owner,
+                    property.offset,
+                )?;
             }
         }
     }
@@ -1808,10 +1910,10 @@ pub(super) fn validate_private_signatures(
             function(&f.function, owner)?;
         }
         for property in &interface.properties {
-            signature(&property.ty, false, owner, property.offset)?;
+            signature(&property.ty, false, false, owner, property.offset)?;
         }
         for ty in &interface.super_types {
-            signature(ty, false, owner, interface.offset)?;
+            signature(ty, false, false, owner, interface.offset)?;
         }
     }
     Ok(())

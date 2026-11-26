@@ -593,6 +593,16 @@ fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<
     }
     let mut proto = Proto::default();
     let name = match ty {
+        Type::ComposableUnitFunction => {
+            return Err(Diagnostic::new(
+                0,
+                "Composable function values are supported only as binary callback arguments",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "COMPOSE_CALLBACK_EXPORT_UNSUPPORTED",
+            ));
+        }
         Type::Int => "kotlin/Int",
         Type::Long => "kotlin/Long",
         Type::Null => {
@@ -1863,7 +1873,7 @@ pub(crate) fn for_class_companion(
     let mut strings = Strings::default();
     strings.checked_methods(companion.methods.iter());
     let mut proto = Proto::default();
-    proto.number(1, 390);
+    proto.number(1, if source.private { 386 } else { 390 });
     proto.number(3, strings.id(&companion.owner.replace('$', "."))?);
     proto.message(
         6,

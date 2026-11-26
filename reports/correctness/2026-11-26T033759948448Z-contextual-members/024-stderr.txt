@@ -1,0 +1,9 @@
+target/checks/2026-11-26T033759948448Z-contextual-members/bad_argument.kt:1:69: error: none of the following candidates is applicable:
+
+fun <T : Item!> lookup(p0: Int): T!:
+  Argument type mismatch: actual type is 'Boolean', but 'Int' was expected.
+
+fun <T : Item!> lookup(p0: String!): T!:
+  Argument type mismatch: actual type is 'Boolean', but 'String!' was expected.
+fun invalid(value: contextcalls.Service): contextcalls.Leaf = value.lookup(true)
+                                                                    ^^^^^^

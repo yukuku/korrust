@@ -43,6 +43,9 @@ pub fn emit_lambdas(
             &exposed,
             contexts.get(&lambda.owner),
         )?);
+        if let Some(key) = lambda.composable_key {
+            files.push(super::compose_lambdas::emit(lambda, key, file)?);
+        }
         if lambda.function.suspend_ {
             files.extend(suspend::emit_frames_in(
                 std::slice::from_ref(&lambda.function),
@@ -749,6 +752,7 @@ mod tests {
     #[test]
     fn generated_bridges_execute_with_jvm_verification() {
         let long = crate::check::LambdaDecl {
+            composable_key: None,
             anonymous_methods: None,
             anonymous_super: None,
             defaults: Vec::new(),
@@ -781,6 +785,7 @@ mod tests {
             interface: None,
         };
         let unit = crate::check::LambdaDecl {
+            composable_key: None,
             anonymous_methods: None,
             anonymous_super: None,
             defaults: Vec::new(),
@@ -798,6 +803,7 @@ mod tests {
             interface: None,
         };
         let sam = crate::check::LambdaDecl {
+            composable_key: None,
             anonymous_methods: None,
             anonymous_super: None,
             defaults: Vec::new(),

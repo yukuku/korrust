@@ -268,14 +268,40 @@ impl<'a> Context<'a> {
                         .map(|a| a.ty.ok_or_else(invalid))
                         .collect::<Result<Vec<_>>>()?;
                     let result = Box::new(types.pop().ok_or_else(invalid)?);
-                    let extension = p.messages(100)?.into_iter().any(|bytes| {
-                        Proto::parse(bytes)
-                            .ok()
-                            .and_then(|annotation| annotation.integer(1).ok().flatten())
-                            .and_then(|id| self.strings.get(id as usize))
-                            .is_some_and(|name| name == "kotlin/ExtensionFunctionType")
-                    });
-                    if extension && !types.is_empty() {
+                    let mut extension = false;
+                    let mut composable = false;
+                    for bytes in p.messages(100)?.into_iter().chain(p.messages(14)?) {
+                        let annotation = Proto::parse(bytes)?;
+                        let name = metadata_name(
+                            self.qualified_names.unwrap_or(self.strings),
+                            annotation.integer(1)?,
+                        )?;
+                        if name == "kotlin/ExtensionFunctionType" {
+                            extension = true;
+                        }
+                        if name == "androidx/compose/runtime/Composable" {
+                            annotation.allowed(&[1])?;
+                            composable = true;
+                        }
+                    }
+                    if composable {
+                        if name != "kotlin/Function0"
+                            || extension
+                            || !types.is_empty()
+                            || result.as_ref() != &Type::Unit
+                            || suspend_function
+                        {
+                            return Err(Diagnostic::new(
+                                0,
+                                "Only zero-argument Unit Compose callbacks are supported",
+                            )
+                            .with_kind(
+                                crate::DiagnosticKind::UnsupportedLanguage,
+                                "COMPOSE_CALLBACK_SHAPE_UNSUPPORTED",
+                            ));
+                        }
+                        Type::ComposableUnitFunction
+                    } else if extension && !types.is_empty() {
                         Type::ReceiverFunction {
                             receiver: Box::new(types.remove(0)),
                             params: types,
@@ -592,7 +618,9 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
             continue;
         };
         let parameter = Proto::parse(parameter)?;
-        if parameter.bytes(4)?.is_none() && parameter.integer(6)?.is_none() {
+        let vararg = parameter.bytes(4)?.is_some() || parameter.integer(6)?.is_some();
+        let name = metadata_name(&strings, function.integer(2)?)?.to_owned();
+        if !vararg && name != "arrayOfNulls" {
             continue;
         }
         let flags = function.integer(9)?.unwrap_or(6);
@@ -606,26 +634,34 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
         context.set_table(&function)?;
         let type_parameters = context.type_parameters_with_reified(&function, 4, true)?;
         let array = context.field(&parameter, 3, 5)?;
-        let element = context.field(&parameter, 4, 6)?;
         let returned = context.field(&function, 3, 7)?;
-        let component = match &array {
-            array if array.array_element().is_some() => array.array_element().unwrap(),
-            _ => continue,
-        };
-        if component != element
-            || returned.array_element().as_ref() != Some(&element)
-            || returned.descriptor() != array.descriptor()
-        {
-            continue;
+        if vararg {
+            let element = context.field(&parameter, 4, 6)?;
+            if array.array_element().as_ref() != Some(&element)
+                || returned.array_element().as_ref() != Some(&element)
+                || returned.descriptor() != array.descriptor()
+            {
+                continue;
+            }
+        } else {
+            let [parameter] = type_parameters.as_slice() else {
+                continue;
+            };
+            if !parameter.reified
+                || array != Type::Int
+                || !matches!(&returned,
+                Type::Array(element) if matches!(element.as_ref(), Type::Nullable(t) if matches!(t.as_ref(), Type::Parameter {name, ..} if name == &parameter.name)))
+            {
+                continue;
+            }
         }
-        let name = metadata_name(&strings, function.integer(2)?)?.to_owned();
         let parameter_name = metadata_name(&strings, parameter.integer(2)?)?.to_owned();
         let descriptor = format!("({}){}", array.descriptor(), returned.descriptor());
         result.push(JavaMethod {
             owner: "kotlin/<builtins>".into(),
             name: name.clone(),
             descriptor,
-            access: 0x89,
+            access: if vararg { 0x89 } else { 0x09 },
             unsupported: false,
             source_property: None,
             kotlin_params: Some(vec![(parameter_name, array.clone(), false)]),
@@ -1311,6 +1347,18 @@ fn attach_member(
         }
         return Err(invalid());
     };
+    super::compose_abi::validate_member(
+        &params,
+        &result,
+        receiver.as_ref(),
+        flags,
+        &type_parameters,
+        attributes[*index].signature.as_deref(),
+        class
+            .library
+            .as_ref()
+            .map_or(&[][..], |library| library.type_parameters.as_slice()),
+    )?;
     let own = class
         .library
         .as_ref()
@@ -1562,7 +1610,7 @@ pub(super) fn class_is_singleton(annotation: &Annotation) -> Result<bool> {
     Ok(matches!((proto.integer(1)?.unwrap_or(6) >> 6) & 7, 5 | 6))
 }
 
-pub(super) fn companion_has_constants(annotation: &Annotation) -> Result<bool> {
+pub(super) fn companion_has_fields(annotation: &Annotation) -> Result<bool> {
     if integer(annotation, "k")?.unwrap_or(1) != 1 {
         return Ok(false);
     }
@@ -1578,7 +1626,10 @@ pub(super) fn companion_has_constants(annotation: &Annotation) -> Result<bool> {
         return Ok(false);
     }
     for property in proto.messages(10)? {
-        if Proto::parse(property)?.integer(11)?.unwrap_or(0) & 2048 != 0 {
+        let property = Proto::parse(property)?;
+        if let Some(signature) = property.bytes(100)?
+            && Proto::parse(signature)?.bytes(1)?.is_some()
+        {
             return Ok(true);
         }
     }
@@ -1797,8 +1848,7 @@ pub(super) fn attach_with_values(
 
     class.kotlin_fun_interface = kind == 1 && class.kotlin_interface && class_flags & 16384 != 0;
     class.unsupported = kind == 1
-        && (class_flags & 14 == 0
-            || class_flags & (2048 | 4096) != 0
+        && (class_flags & (2048 | 4096) != 0
             || class.library.as_ref().is_some_and(|library| {
                 library.value_class.as_ref().is_some_and(|info| {
                     !library.type_parameters.is_empty()
@@ -2389,6 +2439,7 @@ mod tests {
                 .collect::<Vec<_>>(),
             [
                 "arrayOf",
+                "arrayOfNulls",
                 "booleanArrayOf",
                 "byteArrayOf",
                 "charArrayOf",
@@ -2401,6 +2452,12 @@ mod tests {
         );
         for method in &methods {
             assert_eq!(method.owner, "kotlin/<builtins>");
+            if method.name == "arrayOfNulls" {
+                assert_eq!(method.access, 0x09);
+                assert_eq!(method.descriptor, "(I)[Ljava/lang/Object;");
+                assert!(method.library.as_ref().unwrap().type_parameters[0].reified);
+                continue;
+            }
             assert_eq!(method.access, 0x89);
             assert!(method.library.as_ref().unwrap().builtin_array);
             assert_eq!(method.kotlin_params.as_ref().unwrap()[0].0, "elements");

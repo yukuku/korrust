@@ -1073,6 +1073,7 @@ fn check_function(
     let signatures = Vec::new();
     let extensions = HashSet::new();
     let mut checker = Checker {
+        composable_body: false,
         inline_argument_modes: Vec::new(),
         inline_analysis: false,
         public_inline_body: false,
@@ -1404,7 +1405,7 @@ interface Catalog {
         );
         rejects(
             r#"interface Root { val IllegalArgumentException: Int; fun fail(): String { throw IllegalArgumentException("bad") } }"#,
-            "No applicable",
+            "Property is not callable",
         );
     }
     #[test]
@@ -1456,6 +1457,7 @@ interface Catalog {
                 panic!()
             };
             let mut checker = Checker {
+                composable_body: false,
                 inline_argument_modes: Vec::new(),
                 inline_analysis: false,
                 public_inline_body: false,

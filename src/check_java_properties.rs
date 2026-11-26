@@ -28,6 +28,20 @@ fn property_name(method: &str) -> Option<String> {
     (!suffix.as_bytes().first()?.is_ascii_lowercase()).then(|| method.into())
 }
 
+fn accessor_types_match(getter: &Type, setter: &Type) -> bool {
+    if getter == setter {
+        return true;
+    }
+    let (platform, annotated) = match (getter, setter) {
+        (Type::Platform(inner), other) | (other, Type::Platform(inner)) => (inner.as_ref(), other),
+        _ => return false,
+    };
+    match annotated {
+        Type::Nullable(inner) => platform == inner.as_ref(),
+        other => platform == other,
+    }
+}
+
 fn java_origin(
     classpath: &Classpath,
     owner: &str,
@@ -218,9 +232,15 @@ impl Checker<'_> {
             {
                 continue;
             }
-            let method = library::specialize_receiver(method, receiver, &class, self.classpath);
-            let (parameters, _) = class_method_types(&method)?;
-            if parameters == [property_type.clone()] && !method.unsupported {
+            let mut method = library::specialize_receiver(method, receiver, &class, self.classpath);
+            let (parameters, result) = class_method_types(&method)?;
+            if let [parameter] = parameters.as_slice()
+                && !method.unsupported
+                && accessor_types_match(&property_type, parameter)
+            {
+                // Kotlin checks an assignment against the synthetic property's getter type.
+                method.kotlin_params = Some(vec![("value".into(), property_type.clone(), false)]);
+                method.kotlin_result = Some(result);
                 setters.push(method);
             }
         }

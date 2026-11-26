@@ -1,7 +1,12 @@
 use super::*;
 use crate::check::ClassCompanion;
 
-pub(super) fn inner_attribute(pool: &mut Pool, owner: &str, companion: &str) -> Result<Vec<u8>> {
+pub(super) fn inner_attribute(
+    pool: &mut Pool,
+    owner: &str,
+    companion: &str,
+    private: bool,
+) -> Result<Vec<u8>> {
     let mut attribute = Vec::new();
     u2(&mut attribute, pool.utf8("InnerClasses")?);
     u4(&mut attribute, 10);
@@ -9,7 +14,7 @@ pub(super) fn inner_attribute(pool: &mut Pool, owner: &str, companion: &str) -> 
     u2(&mut attribute, pool.class(companion)?);
     u2(&mut attribute, pool.class(owner)?);
     u2(&mut attribute, pool.utf8("Companion")?);
-    u2(&mut attribute, 0x0019);
+    u2(&mut attribute, if private { 0x001a } else { 0x0019 });
     Ok(attribute)
 }
 
@@ -28,7 +33,7 @@ pub(super) fn outer(
         pool,
         "Companion",
         &Type::Java(companion.owner.clone()),
-        0x0019,
+        if companion.private { 0x001a } else { 0x0019 },
     )?);
     for constant in &companion.constants {
         fields.extend(constant_field(pool, constant)?);
@@ -443,7 +448,7 @@ pub(super) fn emit(
         None,
         false,
     )?);
-    let inner = inner_attribute(&mut pool, owner, &companion.owner)?;
+    let inner = inner_attribute(&mut pool, owner, &companion.owner, companion.private)?;
     let source_name = pool.utf8("SourceFile")?;
     let source_file = pool.utf8(file)?;
     let metadata = metadata_attribute(&mut pool, metadata)?;
@@ -453,7 +458,7 @@ pub(super) fn emit(
     u2(&mut bytes, 52);
     defaults::unique_methods(&pool, &methods)?;
     pool.write(&mut bytes);
-    u2(&mut bytes, 0x0031);
+    u2(&mut bytes, if companion.private { 0x0030 } else { 0x0031 });
     u2(&mut bytes, this);
     u2(&mut bytes, parent);
     u2(&mut bytes, 0);

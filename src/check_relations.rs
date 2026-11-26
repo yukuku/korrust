@@ -1409,6 +1409,38 @@ impl Checker<'_> {
             named,
             offset,
         )?;
+        let expected_result =
+            expected
+                .zip(method.kotlin_result.as_ref())
+                .map(|(expected, result)| {
+                    let expected = match (result.base(), expected.base()) {
+                        (Type::Parameter { .. } | Type::Nullable(_), _) => expected,
+                        (_, Type::Nullable(inner)) => inner.as_ref(),
+                        _ => expected,
+                    };
+                    let pattern = if method.name == "<init>" {
+                        type_owner(expected)
+                            .and_then(|owner| as_supertype(self.classpath, result, owner))
+                            .unwrap_or_else(|| result.clone())
+                    } else {
+                        result.clone()
+                    };
+                    (pattern, expected.clone())
+                });
+        if method.name == "<init>"
+            && let Some((pattern, expected)) = &expected_result
+        {
+            let mut contextual = HashMap::new();
+            if !self.infer_constraints(pattern, expected, &mut contextual, &HashSet::new(), 0) {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Conflicting expected constructor type",
+                ));
+            }
+            for (name, ty) in contextual {
+                substitutions.entry(name).or_insert(ty);
+            }
+        }
         for (arg, index) in args.iter().zip(&mapping) {
             let arg = if let ExprKind::NamedArgument(_, expr) | ExprKind::TrailingLambda(expr) =
                 &arg.kind
@@ -1496,16 +1528,22 @@ impl Checker<'_> {
             };
             let fixed_types = substitutions
                 .iter()
-                .filter(|(name, _)| fixed.contains(*name))
+                .filter(|(name, _)| {
+                    fixed.contains(*name) || method.name == "<init>" && expected.is_some()
+                })
                 .map(|(name, ty)| (name.clone(), ty.clone()))
                 .collect::<HashMap<_, _>>();
             let expected_argument = substitute(&params[*index].1, &fixed_types);
-            let value = if !fixed.is_empty()
+            let value = if (!fixed.is_empty() || method.name == "<init>" && expected.is_some())
                 && !library.type_parameters.iter().any(|parameter| {
                     !fixed.contains(&parameter.name)
                         && mentions(&expected_argument, &parameter.name)
                 }) {
-                self.argument_value(arg, &expected_argument)?
+                if method.name == "<init>" && fixed.is_empty() {
+                    self.constructor_argument_with_context(arg, &expected_argument)?
+                } else {
+                    self.argument_value(arg, &expected_argument)?
+                }
             } else {
                 self.argument_with_result_hint(
                     arg,
@@ -1579,6 +1617,21 @@ impl Checker<'_> {
                     .or_default()
                     .push(input);
             }
+            if method.name == "<init>"
+                && expected.is_some()
+                && value.ty == Type::Null
+                && matches!(params[*index].1, Type::Nullable(_) | Type::Platform(_))
+            {
+                let contextual = substitute(&params[*index].1, &substitutions);
+                if (contextual.is_nullable() || matches!(contextual, Type::Platform(_)))
+                    && !library
+                        .type_parameters
+                        .iter()
+                        .any(|parameter| mentions(&contextual, &parameter.name))
+                {
+                    continue;
+                }
+            }
             if !self.infer_constraints(&params[*index].1, &value.ty, &mut substitutions, &fixed, 0)
             {
                 return Err(Diagnostic::new(
@@ -1627,15 +1680,11 @@ impl Checker<'_> {
             self.nonlocal_result = previous_nonlocal;
             inferred?;
         }
-        if let (Some(expected), Some(result)) = (expected, &method.kotlin_result) {
-            let expected = match (result.base(), expected.base()) {
-                (Type::Parameter { .. } | Type::Nullable(_), _) => expected,
-                (_, Type::Nullable(inner)) => inner.as_ref(),
-                _ => expected,
-            };
+        if let Some((pattern, expected)) = &expected_result {
+            let result = method.kotlin_result.as_ref().unwrap();
             let mut result_constraints = HashMap::new();
             if !self.infer_constraints(
-                result,
+                pattern,
                 expected,
                 &mut result_constraints,
                 &HashSet::new(),
@@ -1889,6 +1938,7 @@ mod tests {
 
     fn with_checker(cp: &Classpath, action: impl FnOnce(&mut Checker<'_>)) {
         let mut checker = Checker {
+            composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
             public_inline_body: false,

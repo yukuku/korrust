@@ -11,6 +11,7 @@ Install Rust, Python, and JDK 21, and set `JAVA_HOME` to that JDK. Cargo should 
 ```sh
 cargo fetch --locked
 python3 tools/setup_reference.py
+python3 tools/setup_compose_reference.py
 python3 tools/check.py
 ```
 

@@ -28,7 +28,14 @@ fn encoded(text: &str) -> Result<Vec<u8>> {
     Ok(result)
 }
 
-fn rewrite(bytes: &[u8], owner: &str, renamed: &str, removals: &[Vec<usize>]) -> Result<Vec<u8>> {
+fn rewrite(
+    bytes: &[u8],
+    owner: &str,
+    renamed: &str,
+    caller: &str,
+    offset: usize,
+    removals: &[Vec<usize>],
+) -> Result<Vec<u8>> {
     let mut reader = Reader { bytes, offset: 8 };
     let count = reader.u2()?;
     let mut pool = vec![Vec::new(); usize::from(count)];
@@ -79,10 +86,12 @@ fn rewrite(bytes: &[u8], owner: &str, renamed: &str, removals: &[Vec<usize>]) ->
             pool[usize::from(*index)] = encoded(&new)?;
         }
     }
-    let mut output = bytes[..10].to_vec();
+    let mut output = bytes[..8].to_vec();
+    output.extend(count.checked_add(1).ok_or_else(invalid)?.to_be_bytes());
     for entry in pool {
         output.extend(entry);
     }
+    output.extend(encoded("KorrustInlineOrigin")?);
     let start = reader.offset;
     reader.take(6)?;
     let interfaces = usize::from(reader.u2()?);
@@ -131,8 +140,23 @@ fn rewrite(bytes: &[u8], owner: &str, renamed: &str, removals: &[Vec<usize>]) ->
         }) {
             continue;
         }
-        attributes.push((name, payload));
+        attributes.push((name, payload.to_vec()));
     }
+    let mut origin = 1u16.to_be_bytes().to_vec();
+    for value in [owner, caller] {
+        origin.extend(
+            u16::try_from(value.len())
+                .map_err(|_| invalid())?
+                .to_be_bytes(),
+        );
+        origin.extend(value.as_bytes());
+    }
+    origin.extend((offset as u64).to_be_bytes());
+    let digest = bytes.iter().fold(0xcbf29ce484222325u64, |value, byte| {
+        (value ^ u64::from(*byte)).wrapping_mul(0x100000001b3)
+    });
+    origin.extend(digest.to_be_bytes());
+    attributes.push((count, origin));
     output.extend((attributes.len() as u16).to_be_bytes());
     for (name, payload) in attributes {
         output.extend(name.to_be_bytes());
@@ -242,7 +266,7 @@ impl Classpath {
             }
             removals.push(removed);
         }
-        let output = rewrite(&bytes, owner, &renamed, &removals)?;
+        let output = rewrite(&bytes, owner, &renamed, caller, offset, &removals)?;
         let class = parse_details_impl(&output, &renamed, false)?.0;
         self.cache.borrow_mut().insert(renamed.clone(), class);
         self.inline_default_classes

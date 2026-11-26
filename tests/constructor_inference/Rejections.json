@@ -1,0 +1,42 @@
+[
+  {
+    "id": "missing-constraints",
+    "source": "import constructors.consumer.KDefault\nfun bad() = KDefault()"
+  },
+  {
+    "id": "violated-bound",
+    "source": "import constructors.library.JavaTypes.Bounded\nfun bad() = Bounded(7)"
+  },
+  {
+    "id": "wrong-expected",
+    "source": "import constructors.consumer.Producer\nfun bad(): Producer<String> = Producer(7)"
+  },
+  {
+    "id": "invariant-explicit",
+    "source": "import constructors.consumer.KBox\nfun bad(): KBox<CharSequence> = KBox<String>(\"x\")"
+  },
+  {
+    "id": "constructor-own-bound",
+    "source": "import constructors.library.JavaTypes.Shadow\nfun bad(): Shadow<Int> = Shadow(7)"
+  },
+  {
+    "id": "java-named",
+    "source": "import constructors.library.JavaTypes.Box\nfun bad() = Box(value = \"x\")"
+  },
+  {
+    "id": "private-constructor",
+    "source": "import constructors.library.Private\nfun bad() = Private(\"x\")"
+  },
+  {
+    "id": "invalid-context-lambda",
+    "source": "import constructors.consumer.KCallback\nfun bad(): KCallback<Int> = KCallback { it.length }"
+  },
+  {
+    "id": "overload-expected-result",
+    "source": "import constructors.library.JavaTypes.Choice\nfun bad(): Choice<List<String>> = Choice(listOf(\"x\"))"
+  },
+  {
+    "id": "nonnull-context-null",
+    "source": "import constructors.consumer.KBox\nfun bad(): KBox<String> = KBox(null)"
+  }
+]

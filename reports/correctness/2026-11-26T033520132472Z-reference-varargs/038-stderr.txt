@@ -1,0 +1,3 @@
+target/checks/2026-11-26T033520132472Z-reference-varargs/indexed-write.kt:1:46: error: receiver type 'Array<out String>' contains out projection which prohibits the use of 'fun set(index: Int, value: T): Unit'.
+fun bad(vararg values: String) { values[0] = "wrong" }
+                                             ^^^^^^^

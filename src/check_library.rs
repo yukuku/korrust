@@ -503,6 +503,14 @@ impl Checker<'_> {
             }
         }
         if applicable.is_empty() {
+            if self.dispatch_receiver.is_some() {
+                let receiver = self.dispatch_receiver_value(offset)?;
+                if let Some(value) =
+                    self.member_property_invoke(receiver, name, args, explicit, offset)?
+                {
+                    return Ok(Some(value));
+                }
+            }
             if let Some(error) = failures.into_iter().next() {
                 return Err(error);
             }
@@ -945,7 +953,12 @@ impl Checker<'_> {
                 ));
             }
             let mut value = values.remove(0);
-            if matches!((value.ty.base(), result.base()), (Type::OutArray(actual), Type::Array(expected)) if actual == expected)
+            if method.name == "arrayOfNulls" && value.ty == Type::Int {
+                value = Value {
+                    ty: result.clone(),
+                    kind: ValueKind::NewArray(result, Box::new(value)),
+                };
+            } else if matches!((value.ty.base(), result.base()), (Type::OutArray(actual), Type::Array(expected)) if actual == expected)
             {
                 value.ty = result;
             } else {
@@ -1555,11 +1568,59 @@ impl Checker<'_> {
 }
 
 impl Checker<'_> {
+    pub(super) fn inferred_generic_constructor(
+        &mut self,
+        name: &str,
+        args: &[Expr],
+        expected: Option<&Type>,
+        offset: usize,
+    ) -> Result<Option<Value>> {
+        if self.value_name_is_bound(name)
+            || self.functions.contains_key(name)
+            || self.object_methods.contains_key(name)
+            || !self.library_call_candidates(name).is_empty()
+            || self
+                .imports
+                .get(name)
+                .is_some_and(|binding| binding.contains("::"))
+        {
+            return Ok(None);
+        }
+        let class = match self
+            .classpath
+            .value_symbol(&self.lambda_owner, name, offset)?
+        {
+            Some(crate::classpath::ValueSymbol::Classifier(class)) => *class,
+            _ => return Ok(None),
+        };
+        if class
+            .library
+            .as_ref()
+            .is_none_or(|library| library.type_parameters.is_empty())
+            || class.access & (0x200 | 0x400 | 0x4000) != 0
+            || class.enclosing_instance().is_some()
+        {
+            return Ok(None);
+        }
+        self.generic_constructor_expected(name, &[], args, expected, offset)
+    }
+
     pub(super) fn generic_constructor(
         &mut self,
         name: &str,
         types: &[Type],
         args: &[Expr],
+        offset: usize,
+    ) -> Result<Option<Value>> {
+        self.generic_constructor_expected(name, types, args, None, offset)
+    }
+
+    fn generic_constructor_expected(
+        &mut self,
+        name: &str,
+        types: &[Type],
+        args: &[Expr],
+        expected: Option<&Type>,
         offset: usize,
     ) -> Result<Option<Value>> {
         if self
@@ -1606,6 +1667,11 @@ impl Checker<'_> {
                 .cloned()
                 .map(Ok)
                 .unwrap_or_else(|| self.classpath.load(owner))?
+        } else if let Some(crate::classpath::ValueSymbol::Classifier(class)) = self
+            .classpath
+            .value_symbol(&self.lambda_owner, name, offset)?
+        {
+            *class
         } else if let Some(class) = default_class(self.classpath, name) {
             class
         } else {
@@ -1624,7 +1690,44 @@ impl Checker<'_> {
         if !self.library_call_candidates(name).is_empty() {
             return Ok(None);
         }
-        let ty = if alias {
+        let inferred = if types.is_empty() && !alias {
+            Some(
+                self.infer_constructor_method(&class, args, expected, offset)
+                    .map_err(|mut error| {
+                        for (index, parameter) in class
+                            .library
+                            .as_ref()
+                            .unwrap()
+                            .type_parameters
+                            .iter()
+                            .enumerate()
+                        {
+                            error.message = error
+                                .message
+                                .replace(&format!("<constructor-class-{index}>"), &parameter.name);
+                        }
+                        for (method_index, method) in class.methods.iter().enumerate() {
+                            if let Some(library) = &method.library {
+                                for (index, parameter) in library.type_parameters.iter().enumerate()
+                                {
+                                    error.message = error.message.replace(
+                                        &format!("<constructor-method-{method_index}-{index}>"),
+                                        &parameter.name,
+                                    );
+                                }
+                            }
+                        }
+                        error
+                    })?,
+            )
+        } else {
+            None
+        };
+        let ty = if let Some(method) = &inferred {
+            method.kotlin_result.clone().ok_or_else(|| {
+                Diagnostic::new(offset, "Inferred constructor has no classifier result")
+            })?
+        } else if alias {
             self.resolve(&expanded, offset)?
         } else {
             let Type::Parameterized { arguments, .. } = requested else {
@@ -1704,7 +1807,11 @@ impl Checker<'_> {
                 ),
             );
         }
-        let method = self.select_method(&constructors, args, offset)?;
+        let method = if let Some(method) = inferred {
+            method
+        } else {
+            self.select_method(&constructors, args, offset)?
+        };
         let normalized = self.vararg_arguments(&method, args, offset)?;
         let args = normalized.as_slice();
         let (params, defaults) = Self::method_parameters(&method)?;
@@ -1717,7 +1824,7 @@ impl Checker<'_> {
         let mut values = values
             .into_iter()
             .zip(storage)
-            .map(|(value, ty)| self.coerce(value, java_parameter(ty), offset))
+            .map(|(value, ty)| self.constructor_storage_value(value, java_parameter(ty), offset))
             .collect::<Result<Vec<_>>>()?;
         let descriptor = if mask == 0 {
             method.descriptor.clone()
@@ -2239,6 +2346,22 @@ impl Checker<'_> {
     pub(super) fn imported_value(&mut self, name: &str, offset: usize) -> Result<Option<Value>> {
         if self.value_name_is_bound(name) {
             return Ok(None);
+        }
+        let mut lexical = self.lambda_owner.as_str();
+        loop {
+            if let Ok(class) = self.classpath.load(lexical)
+                && class
+                    .library
+                    .as_ref()
+                    .and_then(|library| library.companion_name.as_deref())
+                    == Some(name)
+            {
+                return self.companion_receiver(lexical, offset);
+            }
+            let Some((parent, _)) = lexical.rsplit_once('$') else {
+                break;
+            };
+            lexical = parent;
         }
         match self
             .classpath

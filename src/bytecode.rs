@@ -14,6 +14,7 @@ use std::collections::{HashMap, HashSet};
 use std::{cell::RefCell, rc::Rc};
 
 mod class_companion;
+mod compose_lambdas;
 mod data;
 mod defaults;
 mod enums;
@@ -1794,6 +1795,64 @@ impl Code<'_> {
                 )?;
             }
             ValueKind::Lambda { owner, captures } => {
+                let composable_key = self
+                    .lambdas
+                    .iter()
+                    .find(|lambda| &lambda.owner == owner)
+                    .and_then(|lambda| lambda.composable_key);
+                if let Some(key) = composable_key {
+                    let adapter = compose_lambdas::owner(owner);
+                    if captures.is_empty() {
+                        self.field_reference(
+                            0xb2,
+                            &adapter,
+                            "INSTANCE",
+                            "Lkotlin/jvm/functions/Function2;",
+                        )?;
+                    } else {
+                        self.integer(key)?;
+                        self.bytes.push(0x04);
+                        self.class_reference(0xbb, &adapter)?;
+                        self.bytes.push(0x59);
+                        self.class_reference(0xbb, owner)?;
+                        self.bytes.push(0x59);
+                        for capture in captures {
+                            self.value(capture)?;
+                        }
+                        self.max_stack = self.max_stack.max(
+                            6 + captures
+                                .iter()
+                                .map(|capture| capture.ty.slots())
+                                .sum::<usize>(),
+                        );
+                        self.method_reference(
+                            0xb7,
+                            owner,
+                            "<init>",
+                            &format!(
+                                "({})V",
+                                captures
+                                    .iter()
+                                    .map(|capture| capture.ty.descriptor())
+                                    .collect::<String>(),
+                            ),
+                        )?;
+                        self.method_reference(
+                            0xb7,
+                            &adapter,
+                            "<init>",
+                            "(Lkotlin/jvm/functions/Function0;)V",
+                        )?;
+                        self.method_reference(
+                            0xb8,
+                            crate::classpath::compose_abi::FACTORY,
+                            "composableLambdaInstance",
+                            "(IZLjava/lang/Object;)Landroidx/compose/runtime/internal/ComposableLambda;",
+                        )?;
+                        self.class_reference(0xc0, "kotlin/jvm/functions/Function2")?;
+                    }
+                    return Ok(());
+                }
                 self.class_reference(0xbb, owner)?;
                 self.bytes.push(0x59);
                 for capture in captures {
@@ -5146,6 +5205,7 @@ fn emit_class_with(
                 &mut pool,
                 owner,
                 &companion.owner,
+                companion.private,
             )?);
         }
     } else if !class.delegated_properties.is_empty() || enum_data.is_some() {

@@ -21,6 +21,12 @@ public class Calls {
         lists[0] = new java.util.ArrayList<String>();
         Object[] generic = UsesKt.<String>genericClasses(3);
         if (generic.getClass().getComponentType() != Class.class || generic.length != 3) throw new AssertionError("erased nested parameter");
+        UsesKt.resetFallbackCalls();
+        if (UsesKt.inferredFallback(classes) != classes || UsesKt.inferredFallback(null).getClass().getComponentType() != Class.class) throw new AssertionError("inferred fallback");
+        if (UsesKt.lazyFallback(classes) != classes || UsesKt.fallbackCalls() != 0) throw new AssertionError("lazy present");
+        if (UsesKt.lazyFallback(null).length != 0 || UsesKt.fallbackCalls() != 1) throw new AssertionError("lazy missing");
+        if (UsesKt.nullableFallback(null, null) != null || !UsesKt.nullableFallback(null, "fallback").equals("fallback") || !UsesKt.nullableFallback("kept", null).equals("kept")) throw new AssertionError("nullable fallback");
+        if (UsesKt.nullLeftFallback().getClass().getComponentType() != Class.class || UsesKt.nullLeftFallback().length != 0) throw new AssertionError("null left fallback");
         System.out.println("reified-reference-arrays-ok");
     }
 }

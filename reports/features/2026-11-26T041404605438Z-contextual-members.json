@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-26T04:14:04.605438+00:00",
+  "status": "complete",
+  "compiler": {
+    "implementation_revisions": [
+      "9c1d12da1",
+      "d2c7e2125"
+    ],
+    "source_base_revision": "609d0980d27c4db67e083c2baefe59385250d222",
+    "source_archive_sha256": "31f1ba4f9ff8e195d88d0804e44c0c08dc7a665b15b187bb9b2c0ccd19b2ffb8",
+    "binary_sha256": "5ec08508f3db54cf1b7e126a673eb0d9dcfd1eed0e2f3cda9f04cde273a1d834"
+  },
+  "reference_compiler": "Kotlin 2.3.21",
+  "evidence": [
+    "reports/correctness/2026-11-26T033759948448Z-contextual-members.json",
+    "reports/correctness/2026-11-26T035825859606Z-reified-reference-arrays.json",
+    "reports/features/2026-11-26T041404605438Z-contextual-members/VerseItem-case167.json",
+    "reports/features/2026-11-26T041404605438Z-contextual-members/build.log",
+    "reports/features/2026-11-26T041404605438Z-contextual-members/compiler-source.tar.gz",
+    "reports/features/2026-11-26T041404605438Z-contextual-members/rust-tests.log"
+  ],
+  "features": [
+    {
+      "name": "Expected result types for ordinary generic member calls",
+      "status": "supported",
+      "scope": "Typed locals, property assignments, function returns and generic expected results reach explicit, this-qualified and implicit dispatch-receiver calls through ordinary overload selection and bound checks. Name calls use the existing expected-result selector without forcing unrelated receiver or argument expressions into the result context.",
+      "restrictions": [
+        "Safe-call result inference and implicit extension-receiver member contexts remain bounded.",
+        "The pinned compiler accepts incompatible expected Java upper bounds with KT-51221 warnings; intersection/Nothing inference for these cases remains explicitly unsupported."
+      ],
+      "counts": {
+        "pass": 16,
+        "unsupported_language": 2
+      },
+      "evidence": [
+        "reports/correctness/2026-11-26T033759948448Z-contextual-members.json"
+      ]
+    }
+  ],
+  "androidbible": {
+    "case167_outcome": "rejected",
+    "candidate_diagnostic_category": "unclassified",
+    "remaining_boundary_at_this_evidence": "Java non-null List result loses collection mutability at event.text.add(contentDescription), line266. The unchanged-source receipt is preserved; later flexible-list work is separate."
+  },
+  "limitations": [
+    "Four provider/consumer JVM combinations, a fixed Java caller compiled against official output, generic signatures, runtime null/cast checks, evaluation order, invalid inputs and two unsupported KT-51221 cases are recorded.",
+    "The source archive is the exact frozen source for the contextual-member differential. The imported-name follow-up is additionally exercised by the reified-array/Elvis report.",
+    "No Android runtime or full-app claim."
+  ]
+}

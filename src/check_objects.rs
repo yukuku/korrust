@@ -246,6 +246,7 @@ fn legacy_check(
         let signatures = Vec::new();
         let extensions = HashSet::new();
         let mut checker = Checker {
+            composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
             public_inline_body: false,
@@ -339,6 +340,7 @@ fn legacy_check(
             classes,
         )?;
         let mut checker = Checker {
+            composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
             public_inline_body: false,

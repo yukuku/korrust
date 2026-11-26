@@ -1,0 +1,1427 @@
+diff --git a/src/check.rs b/src/check.rs
+index 67f87a5e6..693243599 100644
+--- a/src/check.rs
++++ b/src/check.rs
+@@ -7518,7 +7518,7 @@ pub fn check_with_owner(
+             if class.access & 1 == 0 || class.unsupported {
+                 return Err(Diagnostic::new(
+                     type_offset,
+-                    "Same-package class is inaccessible or unsupported",
++                    format!("Same-package class is inaccessible or unsupported: {owner}"),
+                 ));
+             }
+             entry.insert(owner.clone());
+@@ -7586,10 +7586,13 @@ pub fn check_with_owner(
+             continue;
+         }
+         if let Ok(class) = classpath.load(&owner) {
++            if !classpath.classifier_visible(lexical_owner, &class.name) {
++                continue;
++            }
+             if class.access & 1 == 0 || class.unsupported {
+                 return Err(Diagnostic::new(
+                     0,
+-                    "Same-package class is inaccessible or unsupported",
++                    format!("Same-package class is inaccessible or unsupported: {owner}"),
+                 ));
+             }
+             imports.insert(alias, owner.clone());
+diff --git a/src/classpath.rs b/src/classpath.rs
+index 81d26e6df..2fab2fd68 100644
+--- a/src/classpath.rs
++++ b/src/classpath.rs
+@@ -751,6 +751,15 @@ impl Classpath {
+     }
+ 
+     pub(crate) fn classifier_visible(&self, caller: &str, owner: &str) -> bool {
++        self.classifier_visible_with_internal(caller, owner, true)
++    }
++
++    fn classifier_visible_with_internal(
++        &self,
++        caller: &str,
++        owner: &str,
++        allow_internal: bool,
++    ) -> bool {
+         let mut current = owner.to_owned();
+         for _ in 0..64 {
+             if let Ok(class) = self.load(&current) {
+@@ -768,7 +777,7 @@ impl Classpath {
+                             return false;
+                         }
+                     }
+-                    Some(0) if !self.internal_visible(&current) => return false,
++                    Some(0) if !allow_internal || !self.internal_visible(&current) => return false,
+                     _ => {}
+                 }
+             }
+@@ -829,14 +838,38 @@ impl Classpath {
+         caller: &str,
+         ty: &Type,
+         offset: usize,
++    ) -> Result<()> {
++        self.check_type_visibility_policy(caller, ty, offset, true)
++    }
++
++    pub(crate) fn check_public_type_visibility(&self, ty: &Type, offset: usize) -> Result<()> {
++        self.check_type_visibility_policy("", ty, offset, false)
++    }
++
++    fn check_type_visibility_policy(
++        &self,
++        caller: &str,
++        ty: &Type,
++        offset: usize,
++        allow_internal: bool,
+     ) -> Result<()> {
+         match ty {
+             Type::Java(owner) | Type::Parameterized { name: owner, .. } => {
+                 self.check_classifier_visibility(caller, owner, offset)?;
++                if !allow_internal && !self.classifier_visible_with_internal(caller, owner, false) {
++                    return Err(Diagnostic::new(
++                        offset,
++                        format!("Classifier is not public: {owner}"),
++                    )
++                    .with_kind(
++                        crate::DiagnosticKind::InvalidKotlin,
++                        "EXPOSED_INTERNAL_CLASSIFIER",
++                    ));
++                }
+                 if let Type::Parameterized { arguments, .. } = ty {
+                     for argument in arguments {
+                         if let Some(ty) = &argument.ty {
+-                            self.check_type_visibility(caller, ty, offset)?;
++                            self.check_type_visibility_policy(caller, ty, offset, allow_internal)?;
+                         }
+                     }
+                 }
+@@ -847,26 +880,28 @@ impl Classpath {
+             | Type::MutableList(ty)
+             | Type::Array(ty)
+             | Type::OutArray(ty)
+-            | Type::ThreadLocal(ty) => self.check_type_visibility(caller, ty, offset)?,
++            | Type::ThreadLocal(ty) => {
++                self.check_type_visibility_policy(caller, ty, offset, allow_internal)?
++            }
+             Type::Function { params, result } | Type::SuspendFunction { params, result } => {
+                 for ty in params {
+-                    self.check_type_visibility(caller, ty, offset)?;
++                    self.check_type_visibility_policy(caller, ty, offset, allow_internal)?;
+                 }
+-                self.check_type_visibility(caller, result, offset)?;
++                self.check_type_visibility_policy(caller, result, offset, allow_internal)?;
+             }
+             Type::ReceiverFunction {
+                 receiver,
+                 params,
+                 result,
+             } => {
+-                self.check_type_visibility(caller, receiver, offset)?;
++                self.check_type_visibility_policy(caller, receiver, offset, allow_internal)?;
+                 for ty in params {
+-                    self.check_type_visibility(caller, ty, offset)?;
++                    self.check_type_visibility_policy(caller, ty, offset, allow_internal)?;
+                 }
+-                self.check_type_visibility(caller, result, offset)?;
++                self.check_type_visibility_policy(caller, result, offset, allow_internal)?;
+             }
+             Type::Parameter { upper_bound, .. } => {
+-                self.check_type_visibility(caller, upper_bound, offset)?
++                self.check_type_visibility_policy(caller, upper_bound, offset, allow_internal)?
+             }
+             _ => {}
+         }
+diff --git a/src/classpath/inline_defaults.rs b/src/classpath/inline_defaults.rs
+index c40df5b4b..b60e4a132 100644
+--- a/src/classpath/inline_defaults.rs
++++ b/src/classpath/inline_defaults.rs
+@@ -28,7 +28,14 @@ fn encoded(text: &str) -> Result<Vec<u8>> {
+     Ok(result)
+ }
+ 
+-fn rewrite(bytes: &[u8], owner: &str, renamed: &str, removals: &[Vec<usize>]) -> Result<Vec<u8>> {
++fn rewrite(
++    bytes: &[u8],
++    owner: &str,
++    renamed: &str,
++    caller: &str,
++    offset: usize,
++    removals: &[Vec<usize>],
++) -> Result<Vec<u8>> {
+     let mut reader = Reader { bytes, offset: 8 };
+     let count = reader.u2()?;
+     let mut pool = vec![Vec::new(); usize::from(count)];
+@@ -79,10 +86,12 @@ fn rewrite(bytes: &[u8], owner: &str, renamed: &str, removals: &[Vec<usize>]) ->
+             pool[usize::from(*index)] = encoded(&new)?;
+         }
+     }
+-    let mut output = bytes[..10].to_vec();
++    let mut output = bytes[..8].to_vec();
++    output.extend(count.checked_add(1).ok_or_else(invalid)?.to_be_bytes());
+     for entry in pool {
+         output.extend(entry);
+     }
++    output.extend(encoded("KorrustInlineOrigin")?);
+     let start = reader.offset;
+     reader.take(6)?;
+     let interfaces = usize::from(reader.u2()?);
+@@ -131,8 +140,23 @@ fn rewrite(bytes: &[u8], owner: &str, renamed: &str, removals: &[Vec<usize>]) ->
+         }) {
+             continue;
+         }
+-        attributes.push((name, payload));
++        attributes.push((name, payload.to_vec()));
+     }
++    let mut origin = 1u16.to_be_bytes().to_vec();
++    for value in [owner, caller] {
++        origin.extend(
++            u16::try_from(value.len())
++                .map_err(|_| invalid())?
++                .to_be_bytes(),
++        );
++        origin.extend(value.as_bytes());
++    }
++    origin.extend((offset as u64).to_be_bytes());
++    let digest = bytes.iter().fold(0xcbf29ce484222325u64, |value, byte| {
++        (value ^ u64::from(*byte)).wrapping_mul(0x100000001b3)
++    });
++    origin.extend(digest.to_be_bytes());
++    attributes.push((count, origin));
+     output.extend((attributes.len() as u16).to_be_bytes());
+     for (name, payload) in attributes {
+         output.extend(name.to_be_bytes());
+@@ -242,7 +266,7 @@ impl Classpath {
+             }
+             removals.push(removed);
+         }
+-        let output = rewrite(&bytes, owner, &renamed, &removals)?;
++        let output = rewrite(&bytes, owner, &renamed, caller, offset, &removals)?;
+         let class = parse_details_impl(&output, &renamed, false)?.0;
+         self.cache.borrow_mut().insert(renamed.clone(), class);
+         self.inline_default_classes
+diff --git a/src/classpath/metadata.rs b/src/classpath/metadata.rs
+index a2f59e228..4c3785321 100644
+--- a/src/classpath/metadata.rs
++++ b/src/classpath/metadata.rs
+@@ -1797,8 +1797,7 @@ pub(super) fn attach_with_values(
+ 
+     class.kotlin_fun_interface = kind == 1 && class.kotlin_interface && class_flags & 16384 != 0;
+     class.unsupported = kind == 1
+-        && (class_flags & 14 == 0
+-            || class_flags & (2048 | 4096) != 0
++        && (class_flags & (2048 | 4096) != 0
+             || class.library.as_ref().is_some_and(|library| {
+                 library.value_class.as_ref().is_some_and(|info| {
+                     !library.type_parameters.is_empty()
+diff --git a/src/classpath/source.rs b/src/classpath/source.rs
+index d928aeff6..87e84b8c2 100644
+--- a/src/classpath/source.rs
++++ b/src/classpath/source.rs
+@@ -1711,74 +1711,146 @@ pub(super) fn validate_private_signatures(
+     owner: &str,
+     cp: &Classpath,
+ ) -> Result<()> {
+-    let signature = |ty: &Type, private: bool, scope: &str, offset: usize| -> Result<()> {
+-        let ty = resolve(ty, module, cp);
+-        cp.check_type_visibility(scope, &ty, offset)?;
+-        let domain = if private {
+-            Some(scope.to_owned())
+-        } else {
+-            cp.private_domain(scope)
+-        };
+-        if cp
+-            .check_type_visibility(domain.as_deref().unwrap_or(""), &ty, offset)
+-            .is_err()
+-        {
+-            return Err(
+-                Diagnostic::new(offset, "Declaration exposes a private nested classifier")
+-                    .with_kind(
+-                        crate::DiagnosticKind::InvalidKotlin,
+-                        "EXPOSED_PRIVATE_CLASSIFIER",
+-                    ),
+-            );
++    let nonpublic_scope = |scope: &str| {
++        let mut current = scope.to_owned();
++        for _ in 0..64 {
++            if cp.load(&current).is_ok_and(|class| {
++                class
++                    .library
++                    .as_ref()
++                    .is_some_and(|library| matches!(library.kotlin_visibility, Some(0 | 1 | 4)))
++            }) {
++                return true;
++            }
++            let Some(parent) = cp.lexical_parents.borrow().get(&current).cloned() else {
++                return false;
++            };
++            current = parent;
+         }
+-        Ok(())
++        false
+     };
++    let signature =
++        |ty: &Type, private: bool, internal: bool, scope: &str, offset: usize| -> Result<()> {
++            let ty = resolve(ty, module, cp);
++            cp.check_type_visibility(scope, &ty, offset)?;
++            let domain = if private {
++                Some(scope.to_owned())
++            } else {
++                cp.private_domain(scope)
++            };
++            if cp
++                .check_type_visibility(domain.as_deref().unwrap_or(""), &ty, offset)
++                .is_err()
++            {
++                return Err(Diagnostic::new(
++                    offset,
++                    "Declaration exposes a private nested classifier",
++                )
++                .with_kind(
++                    crate::DiagnosticKind::InvalidKotlin,
++                    "EXPOSED_PRIVATE_CLASSIFIER",
++                ));
++            }
++            if !private
++                && !internal
++                && !nonpublic_scope(scope)
++                && cp.check_public_type_visibility(&ty, offset).is_err()
++            {
++                return Err(
++                    Diagnostic::new(offset, "Declaration exposes an internal classifier")
++                        .with_kind(
++                            crate::DiagnosticKind::InvalidKotlin,
++                            "EXPOSED_INTERNAL_CLASSIFIER",
++                        ),
++                );
++            }
++            Ok(())
++        };
+     let function = |f: &Function, scope: &str| -> Result<()> {
+         for (_, ty) in &f.params {
+-            signature(ty, f.private, scope, f.offset)?;
++            signature(ty, f.private, f.internal, scope, f.offset)?;
+         }
+-        signature(&f.result, f.private, scope, f.offset)?;
++        signature(&f.result, f.private, f.internal, scope, f.offset)?;
+         if let Some(receiver) = &f.receiver {
+-            signature(receiver, f.private, scope, f.offset)?;
++            signature(receiver, f.private, f.internal, scope, f.offset)?;
+         }
+         for parameter in &f.type_params {
+             for bound in &parameter.bounds {
+-                signature(bound, f.private, scope, f.offset)?;
++                signature(bound, f.private, f.internal, scope, f.offset)?;
+             }
+         }
+         Ok(())
+     };
++    for alias in &module.type_aliases {
++        signature(&alias.expanded, alias.private, false, owner, alias.offset)?;
++        for parameter in &alias.type_params {
++            for bound in &parameter.bounds {
++                signature(bound, alias.private, false, owner, alias.offset)?;
++            }
++        }
++    }
++    if let Some(annotation) = &module.annotation_decl {
++        for parameter in &annotation.parameters {
++            signature(&parameter.ty, false, false, owner, parameter.offset)?;
++        }
++    }
+     for f in &module.functions {
+         function(f, owner)?;
+     }
+     for property in &module.properties {
+-        signature(&property.ty, property.private, owner, property.offset)?;
++        signature(
++            &property.ty,
++            property.private,
++            property.internal,
++            owner,
++            property.offset,
++        )?;
+     }
+     let class = module
+         .class_decl
+         .as_ref()
+         .or_else(|| module.enum_decl.as_ref().map(|d| &d.body));
+     if let Some(class) = class {
+-        for (_, ty) in &class.params {
+-            signature(ty, false, owner, class.offset)?;
++        for (name, ty) in &class.params {
++            let exposed_property = class.public_params.contains(name);
++            signature(
++                ty,
++                class.constructor_visibility == 2 && !exposed_property,
++                class.constructor_visibility == 0 && !exposed_property,
++                owner,
++                class.offset,
++            )?;
+         }
+         for constructor in &class.secondary_constructors {
+             for (_, ty) in &constructor.params {
+-                signature(ty, false, owner, constructor.offset)?;
++                signature(ty, false, false, owner, constructor.offset)?;
+             }
+         }
+         for property in &class.properties {
+-            signature(&property.ty, property.private, owner, property.offset)?;
++            signature(
++                &property.ty,
++                property.private,
++                property.internal,
++                owner,
++                property.offset,
++            )?;
+         }
+         for f in &class.methods {
+             function(&f.function, owner)?;
+         }
+         for ty in &class.super_types {
+-            signature(ty, false, owner, class.offset)?;
++            let resolved = resolve(ty, module, cp);
++            let interface = match &resolved {
++                Type::Java(name) | Type::Parameterized { name, .. } => {
++                    cp.load(name).is_ok_and(|class| class.access & 0x200 != 0)
++                }
++                _ => false,
++            };
++            signature(ty, false, interface, owner, class.offset)?;
+         }
+         for parameter in &class.type_params {
+             for bound in &parameter.bounds {
+-                signature(bound, false, owner, class.offset)?;
++                signature(bound, false, false, owner, class.offset)?;
+             }
+         }
+         if let Some(companion) = &class.companion {
+@@ -1788,7 +1860,13 @@ pub(super) fn validate_private_signatures(
+             }
+             for property in &companion.properties {
+                 if let Some(ty) = &property.ty {
+-                    signature(ty, property.private, &scope, property.offset)?;
++                    signature(
++                        ty,
++                        property.private,
++                        property.internal,
++                        &scope,
++                        property.offset,
++                    )?;
+                 }
+             }
+         }
+@@ -1799,7 +1877,13 @@ pub(super) fn validate_private_signatures(
+         }
+         for property in &object.fields {
+             if let Some(ty) = &property.ty {
+-                signature(ty, property.private, owner, property.offset)?;
++                signature(
++                    ty,
++                    property.private,
++                    property.internal,
++                    owner,
++                    property.offset,
++                )?;
+             }
+         }
+     }
+@@ -1808,10 +1892,10 @@ pub(super) fn validate_private_signatures(
+             function(&f.function, owner)?;
+         }
+         for property in &interface.properties {
+-            signature(&property.ty, false, owner, property.offset)?;
++            signature(&property.ty, false, false, owner, property.offset)?;
+         }
+         for ty in &interface.super_types {
+-            signature(ty, false, owner, interface.offset)?;
++            signature(ty, false, false, owner, interface.offset)?;
+         }
+     }
+     Ok(())
+diff --git a/tests/compiled_internal_classifiers.rs b/tests/compiled_internal_classifiers.rs
+new file mode 100644
+index 000000000..5b07bea93
+--- /dev/null
++++ b/tests/compiled_internal_classifiers.rs
+@@ -0,0 +1,108 @@
++use korrust::{CompileOptions, DiagnosticKind, SourceInput, compile_batch_with_options};
++use std::path::PathBuf;
++use std::process::Command;
++
++#[test]
++fn compiled_internal_classifier_visibility_follows_friend_origins() {
++    std::thread::Builder::new()
++        .stack_size(32 * 1024 * 1024)
++        .spawn(check_friend_classifiers)
++        .unwrap()
++        .join()
++        .unwrap();
++}
++
++fn check_friend_classifiers() {
++    let project = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
++    let fixture = project.join("tests/compiled_internal_classifiers");
++    let temporary = std::env::temp_dir().join(format!(
++        "korrust-internal-classifiers-{}",
++        std::process::id()
++    ));
++    let dependency = temporary.join("dependency");
++    let output = Command::new(project.join("references/kotlinc/bin/kotlinc"))
++        .arg(fixture.join("Library.kt"))
++        .args([
++            "-jvm-target",
++            "1.8",
++            "-module-name",
++            "friends_production",
++            "-d",
++        ])
++        .arg(&dependency)
++        .output()
++        .unwrap();
++    assert!(
++        output.status.success(),
++        "{}",
++        String::from_utf8_lossy(&output.stderr)
++    );
++    let standard = project.join("references/kotlinc/lib/kotlin-stdlib.jar");
++    let paths = [dependency.clone(), standard];
++    let input = |name: &str| SourceInput {
++        identity: fixture.join(format!("{name}.kt")).display().to_string(),
++        file_name: format!("{name}.kt"),
++        source: std::fs::read_to_string(fixture.join(format!("{name}.kt"))).unwrap(),
++    };
++    let friend = CompileOptions {
++        module_name: "friends_consumer".into(),
++        friend_paths: vec![dependency],
++    };
++    let unrelated = CompileOptions {
++        module_name: "friends_production".into(),
++        friend_paths: Vec::new(),
++    };
++    compile_batch_with_options(
++        &[
++            input("Consumer"),
++            input("Explicit"),
++            input("SamePackage"),
++            input("AllowedSignatures"),
++            input("SuperInterface"),
++            input("PrivateAlias"),
++        ],
++        &paths,
++        &friend,
++    )
++    .unwrap();
++    compile_batch_with_options(
++        &[input("PublicInheritance"), input("Shadow")],
++        &paths,
++        &unrelated,
++    )
++    .unwrap();
++    for name in ["Explicit", "Consumer", "SamePackage", "NoFriendType"] {
++        let error = compile_batch_with_options(&[input(name)], &paths, &unrelated)
++            .err()
++            .unwrap();
++        assert_eq!(
++            error.kind,
++            DiagnosticKind::InvalidKotlin,
++            "{name}: {}",
++            error.message
++        );
++    }
++    for name in [
++        "PrivateFriend",
++        "Exposed",
++        "ExposedInferred",
++        "ExposedProperty",
++        "ExposedConstructor",
++        "ExposedMember",
++        "ExposedArray",
++        "ExposedSuperInterface",
++        "ExposedAlias",
++        "ExposedAnnotation",
++    ] {
++        let error = compile_batch_with_options(&[input(name)], &paths, &friend)
++            .err()
++            .unwrap();
++        assert_eq!(
++            error.kind,
++            DiagnosticKind::InvalidKotlin,
++            "{name}: {}",
++            error.message
++        );
++    }
++    std::fs::remove_dir_all(temporary).unwrap();
++}
+diff --git a/tests/compiled_internal_classifiers/ActualCalls.java b/tests/compiled_internal_classifiers/ActualCalls.java
+new file mode 100644
+index 000000000..ed15b5b32
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/ActualCalls.java
+@@ -0,0 +1,7 @@
++package yuku.alkitab.base.appwidget;
++public class ActualCalls {
++    public static void main(String[] args) {
++        if (ActualConfigurationKt.actualConfiguration() != 25) throw new AssertionError("real internal data class");
++        System.out.println("actual-internal-configuration-ok");
++    }
++}
+diff --git a/tests/compiled_internal_classifiers/ActualConfiguration.kt b/tests/compiled_internal_classifiers/ActualConfiguration.kt
+new file mode 100644
+index 000000000..da53f2076
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/ActualConfiguration.kt
+@@ -0,0 +1,6 @@
++package yuku.alkitab.base.appwidget
++fun actualConfiguration(): Int {
++    val original = DailyVerseConfiguration(textSize = 21)
++    val changed = original.copy(transparency = 3)
++    return changed.textSize + changed.transparency + if (changed.isTransparent) 1 else 0
++}
+diff --git a/tests/compiled_internal_classifiers/AllowedSignatures.kt b/tests/compiled_internal_classifiers/AllowedSignatures.kt
+new file mode 100644
+index 000000000..eaabc30cb
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/AllowedSignatures.kt
+@@ -0,0 +1,11 @@
++package friends.consumer
++import friends.library.Plain
++
++internal fun hiddenSignature(value: Plain): Plain = value
++internal class InternalWrapper(val value: Plain) {
++    fun echo(other: Plain): Plain = other
++}
++class PrivateConstructor private constructor(value: Plain) {
++    private val stored: Plain = value
++}
++class InternalConstructor internal constructor(private val stored: Plain)
+diff --git a/tests/compiled_internal_classifiers/Calls.java b/tests/compiled_internal_classifiers/Calls.java
+new file mode 100644
+index 000000000..43beb3142
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/Calls.java
+@@ -0,0 +1,9 @@
++package friends.consumer;
++public class Calls {
++    public static void main(String[] args) {
++        if (ConsumerKt.total() != 41 || ExplicitKt.explicit() != 9 || friends.library.SamePackageKt.samePackage() != 8) throw new AssertionError("friend classifier calls");
++        if (new PublicCounter().value() != 23 || PublicInheritanceKt.publicInheritance() != 60 || friends.library.ShadowKt.shadow() != 12) throw new AssertionError("public inheritance / shadowing");
++        if (PrivateAliasKt.privateAlias() != 2) throw new AssertionError("private alias");
++        System.out.println("internal-classifiers-ok");
++    }
++}
+diff --git a/tests/compiled_internal_classifiers/Consumer.kt b/tests/compiled_internal_classifiers/Consumer.kt
+new file mode 100644
+index 000000000..a87127a93
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/Consumer.kt
+@@ -0,0 +1,6 @@
++package friends.consumer
++import friends.library.*
++
++private fun consume(counter: Counter): Int = counter.value()
++fun total(): Int = Plain(3).bump() + Data().copy(value = 5).value +
++    consume(Implementation(7)) + Singleton.value() + Choice.FIRST.value()
+diff --git a/tests/compiled_internal_classifiers/Explicit.kt b/tests/compiled_internal_classifiers/Explicit.kt
+new file mode 100644
+index 000000000..04133cb49
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/Explicit.kt
+@@ -0,0 +1,3 @@
++package friends.consumer
++import friends.library.Plain as Imported
++fun explicit(): Int = Imported(9).value
+diff --git a/tests/compiled_internal_classifiers/Exposed.kt b/tests/compiled_internal_classifiers/Exposed.kt
+new file mode 100644
+index 000000000..7d44f3e1e
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/Exposed.kt
+@@ -0,0 +1,3 @@
++package friends.consumer
++import friends.library.Plain
++fun exposed(value: Plain): Plain = value
+diff --git a/tests/compiled_internal_classifiers/ExposedAlias.kt b/tests/compiled_internal_classifiers/ExposedAlias.kt
+new file mode 100644
+index 000000000..2ee5a7288
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/ExposedAlias.kt
+@@ -0,0 +1,3 @@
++package friends.consumer
++import friends.library.Plain
++typealias Exposed = Plain
+diff --git a/tests/compiled_internal_classifiers/ExposedAnnotation.kt b/tests/compiled_internal_classifiers/ExposedAnnotation.kt
+new file mode 100644
+index 000000000..936da30ca
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/ExposedAnnotation.kt
+@@ -0,0 +1,3 @@
++package friends.consumer
++import friends.library.Choice
++annotation class Exposed(val value: Choice)
+diff --git a/tests/compiled_internal_classifiers/ExposedArray.kt b/tests/compiled_internal_classifiers/ExposedArray.kt
+new file mode 100644
+index 000000000..f96093151
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/ExposedArray.kt
+@@ -0,0 +1,3 @@
++package friends.consumer
++import friends.library.Plain
++fun exposed(value: Array<Plain>): Array<Plain> = value
+diff --git a/tests/compiled_internal_classifiers/ExposedConstructor.kt b/tests/compiled_internal_classifiers/ExposedConstructor.kt
+new file mode 100644
+index 000000000..ee10dd15e
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/ExposedConstructor.kt
+@@ -0,0 +1,3 @@
++package friends.consumer
++import friends.library.Plain
++class Exposed(val value: Plain)
+diff --git a/tests/compiled_internal_classifiers/ExposedInferred.kt b/tests/compiled_internal_classifiers/ExposedInferred.kt
+new file mode 100644
+index 000000000..f8b98a1cc
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/ExposedInferred.kt
+@@ -0,0 +1,3 @@
++package friends.consumer
++import friends.library.Plain
++fun exposed() = Plain(1)
+diff --git a/tests/compiled_internal_classifiers/ExposedMember.kt b/tests/compiled_internal_classifiers/ExposedMember.kt
+new file mode 100644
+index 000000000..0a456baff
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/ExposedMember.kt
+@@ -0,0 +1,5 @@
++package friends.consumer
++import friends.library.Plain
++class Exposed {
++    fun exposed(value: Plain): Plain = value
++}
+diff --git a/tests/compiled_internal_classifiers/ExposedProperty.kt b/tests/compiled_internal_classifiers/ExposedProperty.kt
+new file mode 100644
+index 000000000..27bf827cf
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/ExposedProperty.kt
+@@ -0,0 +1,3 @@
++package friends.consumer
++import friends.library.Plain
++val exposed: Plain = Plain(1)
+diff --git a/tests/compiled_internal_classifiers/ExposedSuperInterface.kt b/tests/compiled_internal_classifiers/ExposedSuperInterface.kt
+new file mode 100644
+index 000000000..32b84ed03
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/ExposedSuperInterface.kt
+@@ -0,0 +1,3 @@
++package friends.consumer
++import friends.library.Counter
++interface Exposed : Counter
+diff --git a/tests/compiled_internal_classifiers/Library.kt b/tests/compiled_internal_classifiers/Library.kt
+new file mode 100644
+index 000000000..d9eee46e5
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/Library.kt
+@@ -0,0 +1,17 @@
++package friends.library
++
++internal class Plain(val value: Int) {
++    fun bump(delta: Int = 2): Int = value + delta
++}
++internal data class Data(val value: Int = 4, val label: String? = null, val enabled: Boolean = false)
++internal interface Counter { fun value(): Int; fun base(): Int = 31 }
++class PublicImplementation : Counter { override fun value(): Int = 29 }
++internal class Implementation(private val value: Int) : Counter {
++    override fun value(): Int = value
++}
++internal object Singleton { fun value(delta: Int = 0): Int = 11 + delta }
++internal enum class Choice {
++    FIRST;
++    fun value(): Int = 13
++}
++private class FileHidden
+diff --git a/tests/compiled_internal_classifiers/NoFriendType.kt b/tests/compiled_internal_classifiers/NoFriendType.kt
+new file mode 100644
+index 000000000..50b6d6250
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/NoFriendType.kt
+@@ -0,0 +1,3 @@
++package friends.consumer
++import friends.library.*
++private fun invalid(value: Plain): Int = value.value
+diff --git a/tests/compiled_internal_classifiers/PrivateAlias.kt b/tests/compiled_internal_classifiers/PrivateAlias.kt
+new file mode 100644
+index 000000000..5339870c8
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/PrivateAlias.kt
+@@ -0,0 +1,5 @@
++package friends.consumer
++import friends.library.Plain
++private typealias Hidden = Plain
++private fun read(value: Hidden): Int = value.value
++fun privateAlias(): Int = read(Plain(2))
+diff --git a/tests/compiled_internal_classifiers/PrivateFriend.kt b/tests/compiled_internal_classifiers/PrivateFriend.kt
+new file mode 100644
+index 000000000..adb4a5dc9
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/PrivateFriend.kt
+@@ -0,0 +1,3 @@
++package friends.consumer
++import friends.library.FileHidden
++private fun invalid(value: FileHidden): Unit = Unit
+diff --git a/tests/compiled_internal_classifiers/PublicInheritance.kt b/tests/compiled_internal_classifiers/PublicInheritance.kt
+new file mode 100644
+index 000000000..0ef191680
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/PublicInheritance.kt
+@@ -0,0 +1,4 @@
++package friends.consumer
++import friends.library.PublicImplementation
++fun readPublic(value: PublicImplementation): Int = value.value() + value.base()
++fun publicInheritance(): Int = readPublic(PublicImplementation())
+diff --git a/tests/compiled_internal_classifiers/SamePackage.kt b/tests/compiled_internal_classifiers/SamePackage.kt
+new file mode 100644
+index 000000000..5265788b9
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/SamePackage.kt
+@@ -0,0 +1,2 @@
++package friends.library
++fun samePackage(): Int = Plain(8).value
+diff --git a/tests/compiled_internal_classifiers/Shadow.kt b/tests/compiled_internal_classifiers/Shadow.kt
+new file mode 100644
+index 000000000..f5f018ffb
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/Shadow.kt
+@@ -0,0 +1,6 @@
++package friends.library
++class PublicValue(val value: Int)
++fun shadow(): Int {
++    val Plain = PublicValue(12)
++    return Plain.value
++}
+diff --git a/tests/compiled_internal_classifiers/SuperInterface.kt b/tests/compiled_internal_classifiers/SuperInterface.kt
+new file mode 100644
+index 000000000..0ac4dd1c9
+--- /dev/null
++++ b/tests/compiled_internal_classifiers/SuperInterface.kt
+@@ -0,0 +1,3 @@
++package friends.consumer
++import friends.library.Counter
++class PublicCounter : Counter { override fun value(): Int = 23 }
+diff --git a/tools/check_compiled_inline_defaults.py b/tools/check_compiled_inline_defaults.py
+index 1ad649a1c..74e496726 100644
+--- a/tools/check_compiled_inline_defaults.py
++++ b/tools/check_compiled_inline_defaults.py
+@@ -10,6 +10,9 @@ import shutil
+ import subprocess
+ import zipfile
+ 
++from check_androidbible_class_listener import ownership
++from inline_origins import ATTRIBUTE, parse, verify_inline_origin, verify_owned_class_origins
++
+ ROOT = Path(__file__).resolve().parents[1]
+ FIXTURES = ROOT / 'tests/compiled_inline_defaults'
+ 
+@@ -29,6 +32,7 @@ def main():
+     parser.add_argument('--output', type=Path)
+     parser.add_argument('--evidence-directory', type=Path)
+     parser.add_argument('--mockk-classpath', help='Optional complete MockK runtime JAR classpath')
++    parser.add_argument('--skip-html', action='store_true')
+     args = parser.parse_args()
+     created = datetime.now(timezone.utc)
+     stamp = created.strftime('%Y-%m-%dT%H%M%S%fZ') + '-compiled-inline-defaults'
+@@ -42,7 +46,7 @@ def main():
+     standard = ROOT / 'references/kotlinc/lib/kotlin-stdlib.jar'
+     java = Path(os.environ['JAVA_HOME']) / 'bin'
+     options = ['-language-version', '2.3', '-api-version', '2.3', '-jvm-target', '1.8']
+-    inputs = [*sorted((ROOT / 'src').rglob('*.rs')), *sorted(FIXTURES.iterdir()), ROOT / 'tests/compiled_inline_defaults.rs', Path(__file__), ROOT / 'Cargo.toml', ROOT / 'Cargo.lock', ROOT / 'references/compiler.json', ROOT / 'references/sources.json']
++    inputs = [*sorted((ROOT / 'src').rglob('*.rs')), *sorted(FIXTURES.iterdir()), ROOT / 'tests/compiled_inline_defaults.rs', Path(__file__), ROOT / 'tools/inline_origins.py', ROOT / 'tools/check_androidbible_class_listener.py', ROOT / 'Cargo.toml', ROOT / 'Cargo.lock', ROOT / 'references/compiler.json', ROOT / 'references/sources.json']
+     dependency_inputs = [Path(path).absolute() for path in args.mockk_classpath.split(os.pathsep)] if args.mockk_classpath else []
+     frozen = {relative(path): sha(path) for path in [*inputs, candidate, standard, ROOT / 'references/kotlinc/lib/kotlin-compiler.jar', *dependency_inputs]}
+     with zipfile.ZipFile(evidence / 'inputs.zip', 'w', zipfile.ZIP_DEFLATED) as archive:
+@@ -93,6 +97,54 @@ def main():
+             run(name + ' consumer', [(official if name == 'official' else candidate), FIXTURES / 'Consumer.kt', '-cp', cp, '-d', output, *(options if name == 'official' else [])])
+             return 'Same unmodified source, compiled dependency and standard library'
+         case(name + '_compile', compile_consumer)
++    def provenance():
++        output = providers[1][1]
++        records = ownership(output, FIXTURES / 'Consumer.kt')
++        origins = verify_owned_class_origins(output, FIXTURES / 'Consumer.kt', [dependency, standard], records)
++        assert origins, records
++        helper = output / next(iter(origins))
++        data = helper.read_bytes()
++        info = parse(data)
++        marker = next(entry for entry in info['attributes'] if entry['name'] == ATTRIBUTE)
++        errors = []
++
++        def rejects(label, operation):
++            try:
++                operation()
++            except (ValueError, IndexError, KeyError, UnicodeError) as error:
++                errors.append(dict(id=label, diagnostic=str(error)))
++            else:
++                raise AssertionError('Invalid origin accepted: ' + label)
++
++        changed = bytearray(data)
++        changed[info['methods'][0]['attributes'][0]['payload_start'] + 8] ^= 1
++        rejects('changed_method_code', lambda: verify_inline_origin(bytes(changed), [dependency, standard]))
++        rejects('missing_original', lambda: verify_inline_origin(data, [standard]))
++        changed = bytearray(data)
++        changed[marker['end'] - 1] ^= 1
++        rejects('forged_origin_digest', lambda: verify_inline_origin(bytes(changed), [dependency, standard]))
++        changed = data.replace(b'Library.kt', b'Forged!.kt')
++        assert changed != data
++        rejects('forged_SourceFile', lambda: verify_inline_origin(changed, [dependency, standard]))
++        shadow = directory / 'origin-shadow'
++        original_name = next(iter(origins.values()))['origin']
++        original = dependency / (original_name + '.class')
++        replacement = shadow / (original_name + '.class')
++        replacement.parent.mkdir(parents=True, exist_ok=True)
++        replacement.write_bytes(original.read_bytes().replace(b'Library.kt', b'Changed.kt'))
++        rejects('first_resolved_classpath_shadow', lambda: verify_inline_origin(data, [shadow, dependency, standard]))
++        absent = dict(records)
++        del absent[next(name for name in absent if name == origins[next(iter(origins))]['caller'] + '.class')]
++        rejects('missing_owned_caller', lambda: verify_owned_class_origins(output, FIXTURES / 'Consumer.kt', [dependency, standard], absent))
++        target = directory / 'forged-no-origin'
++        shutil.copytree(output, target)
++        stripped = data[:info['attributes_start']] + (len(info['attributes']) - 1).to_bytes(2, 'big')
++        stripped += b''.join(data[entry['start']:entry['end']] for entry in info['attributes'] if entry['name'] != ATTRIBUTE)
++        (target / helper.relative_to(output)).write_bytes(stripped)
++        rejects('unattributed_foreign_SourceFile', lambda: verify_owned_class_origins(target, FIXTURES / 'Consumer.kt', [dependency, standard], records))
++        rejects('changed_output_manifest_hash', lambda: ownership(target, FIXTURES / 'Consumer.kt'))
++        return dict(origins=origins, invalid_origins_rejected=errors)
++    case('strict_inline_origin_provenance', provenance)
+     def runtime():
+         caller = directory / 'caller'
+         run('fixed Java caller against official', [java / 'javac', '-cp', os.pathsep.join(map(str, [providers[0][1], dependency, standard])), '-d', caller, FIXTURES / 'Calls.java'])
+@@ -148,16 +200,20 @@ def main():
+         callers = directory / 'mockk-callers'
+         run('fixed Java MockK caller against official', [java / 'javac', '-cp', os.pathsep.join([str(outputs[0][1]), args.mockk_classpath]), '-d', callers, FIXTURES / 'MockKCalls.java'])
+         caller_hashes = {str(path.relative_to(callers)): sha(path) for path in callers.rglob('*.class')}
++        records = ownership(outputs[1][1], model)
++        origins = verify_owned_class_origins(outputs[1][1], model, args.mockk_classpath.split(os.pathsep), records)
++        assert origins, records
+         for name, output in outputs:
+             result = run(name + ' live MockK independent assertions', [java / 'java', '-Xverify:all', '-cp', os.pathsep.join([str(callers), str(output), args.mockk_classpath]), 'defaults.mocking.MockKCalls'])
+             assert result.stdout == 'mockk-inline-defaults-ok\n', result.stdout
+-        return dict(caller_sha256=caller_hashes, dependencies={relative(path): sha(path) for path in dependency_inputs}, assertions='Real relaxed mock returns zero before stubbing and 17 after stubbing; real strict mock with all defaults returns 19 after stubbing')
++        return dict(inline_origins=origins, caller_sha256=caller_hashes, dependencies={relative(path): sha(path) for path in dependency_inputs}, assertions='Real relaxed mock returns zero before stubbing and 17 after stubbing; real strict mock with all defaults returns 19 after stubbing')
+     case('live_mockk_default_dispatch_and_stubbing', mockk)
+     changed = [name for name, digest in frozen.items() if sha(ROOT / name) != digest]
+     report['cases'].append(dict(id='frozen_inputs', outcome='correctness_failure' if changed else 'pass', changed=changed))
+     report['status'] = 'failed' if any(case['outcome'] == 'correctness_failure' for case in report['cases']) else 'complete'
+     save()
+-    subprocess.run(['python3', ROOT / 'tools/reports.py'], cwd=ROOT, check=True)
++    if not args.skip_html:
++        subprocess.run(['python3', ROOT / 'tools/reports.py'], cwd=ROOT, check=True)
+     print(json.dumps(dict(report=relative(report_path), status=report['status'], counts=report['counts'])))
+     return report['status'] != 'complete'
+ 
+diff --git a/tools/check_compiled_internal_classifiers.py b/tools/check_compiled_internal_classifiers.py
+new file mode 100644
+index 000000000..4b1e67aa4
+--- /dev/null
++++ b/tools/check_compiled_internal_classifiers.py
+@@ -0,0 +1,180 @@
++#!/usr/bin/env python3
++import argparse
++from collections import Counter
++from datetime import datetime, timezone
++import hashlib
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import zipfile
++
++ROOT = Path(__file__).resolve().parents[1]
++FIXTURES = ROOT / 'tests/compiled_internal_classifiers'
++APP = ROOT / 'benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget'
++
++
++def sha(path):
++    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++
++def relative(path):
++    path = Path(path).absolute()
++    return str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)
++
++
++def main():
++    parser = argparse.ArgumentParser()
++    parser.add_argument('--candidate', type=Path, default=ROOT / 'target/release/korrust')
++    parser.add_argument('--baseline', type=Path)
++    parser.add_argument('--app-classpath')
++    parser.add_argument('--app-friend-path')
++    parser.add_argument('--output', type=Path)
++    parser.add_argument('--evidence-directory', type=Path)
++    args = parser.parse_args()
++    created = datetime.now(timezone.utc)
++    stamp = created.strftime('%Y-%m-%dT%H%M%S%fZ') + '-compiled-internal-classifiers'
++    directory = (args.output or ROOT / 'target/checks' / stamp).absolute()
++    evidence = (args.evidence_directory or ROOT / 'reports/correctness' / stamp).absolute()
++    directory.mkdir(parents=True, exist_ok=False)
++    evidence.mkdir(parents=True, exist_ok=False)
++    candidate = directory / 'korrust-frozen'
++    shutil.copy2(args.candidate.resolve(), candidate)
++    official = ROOT / 'references/kotlinc/bin/kotlinc'
++    standard = ROOT / 'references/kotlinc/lib/kotlin-stdlib.jar'
++    java = Path(os.environ['JAVA_HOME']) / 'bin'
++    options = ['-language-version', '2.3', '-api-version', '2.3', '-jvm-target', '1.8']
++    app_sources = [APP / (name + '.kt') for name in ['DailyVerseConfigurationTest', 'DailyVerseConfigurationScreenTest']] if args.app_classpath else []
++    inputs = [*sorted((ROOT / 'src').rglob('*.rs')), *sorted(FIXTURES.iterdir()), ROOT / 'tests/compiled_internal_classifiers.rs', Path(__file__), ROOT / 'Cargo.toml', ROOT / 'Cargo.lock', ROOT / 'references/compiler.json', ROOT / 'references/sources.json', *app_sources]
++    dependencies = [Path(path) for path in args.app_classpath.split(os.pathsep) if Path(path).is_file()] if args.app_classpath else []
++    frozen = {relative(path): sha(path) for path in [*inputs, candidate, standard, ROOT / 'references/kotlinc/lib/kotlin-compiler.jar', *dependencies, *([args.baseline] if args.baseline else [])]}
++    with zipfile.ZipFile(evidence / 'inputs.zip', 'w', zipfile.ZIP_DEFLATED) as archive:
++        for path in inputs:
++            archive.writestr(relative(path), path.read_bytes())
++    report_path = evidence.with_suffix('.json')
++    report = dict(schema_version=1, kind='correctness', created_at=created.isoformat(), status='running',
++        compiler=dict(path=relative(candidate), sha256=sha(candidate), source_revision=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()),
++        reference_compiler=json.loads((ROOT / 'references/compiler.json').read_text()),
++        frozen_input_hashes=frozen, input_bundle=dict(path=relative(evidence / 'inputs.zip'), sha256=sha(evidence / 'inputs.zip')),
++        scope='Compiled internal class, data-class, interface, object and enum metadata; exact directory/JAR friend origins; explicit/wildcard/same-package references; named/default calls; public class implementation of internal interfaces; visibility, shadowing and public exposure validation; optional real AndroidBible binary and unchanged test probes',
++        limitations=['Existing classifier shape, member signature and language boundaries still apply', 'A later rejection of an unchanged app file is progress evidence, not a pass or application compatibility claim'],
++        effective_options=dict(language_version='2.3', api_version='2.3', jvm_target='1.8'), cases=[], commands=[],
++        reproduction_command=['python3', relative(__file__), '--candidate', relative(args.candidate)])
++    for flag, value in [('--baseline', args.baseline), ('--app-classpath', args.app_classpath), ('--app-friend-path', args.app_friend_path)]:
++        if value:
++            report['reproduction_command'].extend([flag, str(value)])
++
++    def save():
++        report['counts'] = dict(Counter(case['outcome'] for case in report['cases']))
++        report_path.write_text(json.dumps(report, indent=2) + '\n')
++
++    def run(label, command, accepted=(0,)):
++        command = [str(part) for part in command]
++        result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=360)
++        log = evidence / f'{len(report["commands"]):03d}.txt'
++        log.write_text('$ ' + ' '.join(command) + '\n' + result.stdout + result.stderr)
++        report['commands'].append(dict(label=label, argv=command, exit_code=result.returncode, log=relative(log)))
++        save()
++        assert result.returncode in accepted, label + ': ' + result.stdout + result.stderr
++        return result
++
++    def case(name, operation):
++        try:
++            detail = operation()
++            outcome = detail.pop('outcome', 'pass') if isinstance(detail, dict) else 'pass'
++            report['cases'].append(dict(id=name, outcome=outcome, detail=detail))
++        except Exception as error:
++            report['cases'].append(dict(id=name, outcome='correctness_failure', detail=str(error)))
++        save()
++
++    def check(version, archive):
++        work = directory / (version + ('-jar' if archive else '-directory'))
++        work.mkdir()
++        dependency = work / 'dependency'
++        run('official dependency ' + str(work.name), [official, FIXTURES / 'Library.kt', '-module-name', 'friends_production', '-Xmetadata-version=' + version, '-d', dependency, *options])
++        if archive:
++            packed = work / 'dependency.jar'
++            with zipfile.ZipFile(packed, 'w', zipfile.ZIP_DEFLATED) as jar:
++                for path in sorted(dependency.rglob('*')):
++                    if path.is_file():
++                        jar.write(path, str(path.relative_to(dependency)))
++            dependency = packed
++        cp = os.pathsep.join(map(str, [dependency, standard]))
++        providers = []
++        for name, compiler in [('official', official), ('candidate', candidate)]:
++            models, public = work / name, work / (name + '-public')
++            sources = [FIXTURES / (source + '.kt') for source in ['Consumer', 'Explicit', 'SamePackage', 'AllowedSignatures', 'SuperInterface', 'PrivateAlias']]
++            run(name + ' friend declarations', [compiler, *sources, '-cp', cp, '-d', models, *(['-Xfriend-paths=' + str(dependency), *options] if name == 'official' else ['--friend-paths', dependency])])
++            run(name + ' public inherited members and lexical shadow', [compiler, FIXTURES / 'PublicInheritance.kt', FIXTURES / 'Shadow.kt', '-cp', cp, '-d', public, *(options if name == 'official' else [])])
++            providers.append((name, models, public))
++        callers = work / 'callers'
++        run('fixed Java caller against official', [java / 'javac', '-cp', os.pathsep.join(map(str, [providers[0][1], providers[0][2], dependency, standard])), '-d', callers, FIXTURES / 'Calls.java'])
++        for name, models, public in providers:
++            result = run(name + ' independent JVM assertions', [java / 'java', '-Xverify:all', '-cp', os.pathsep.join(map(str, [callers, models, public, dependency, standard])), 'friends.consumer.Calls'])
++            assert result.stdout == 'internal-classifiers-ok\n', result.stdout
++        signatures = []
++        for name, models, public in providers:
++            listing = run(name + ' public JVM descriptors', [java / 'javap', '-public', '-s', '-classpath', os.pathsep.join(map(str, [models, public, dependency, standard])), 'friends.consumer.ConsumerKt', 'friends.consumer.ExplicitKt', 'friends.library.SamePackageKt', 'friends.consumer.PublicCounter', 'friends.consumer.PublicInheritanceKt', 'friends.library.ShadowKt'])
++            lines = listing.stdout.splitlines()
++            signatures.append([(lines[index - 1].strip().split('(')[0].split()[-1], line.strip()) for index, line in enumerate(lines) if line.strip().startswith('descriptor:')])
++        assert signatures[0] == signatures[1], signatures
++        return dict(dependency=str(dependency), caller_sha256={str(path.relative_to(callers)): sha(path) for path in callers.rglob('*.class')}, public_jvm_descriptors=signatures[0], assertions='Friend calls sum to 41, alias 9, same-package 8; public class implements internal interface; public inherited default member returns 31; inaccessible classifier does not shadow local variable (12)')
++
++    for version, archive in [('1.7.0', False), ('2.3.0', False), ('2.3.0', True)]:
++        case('friend_metadata_' + version + ('_jar' if archive else '_directory'), lambda version=version, archive=archive: check(version, archive))
++
++    dependency = directory / '2.3.0-directory/dependency'
++    cp = os.pathsep.join(map(str, [dependency, standard]))
++    def reject(source, friend, label, wrong=False):
++        unrelated = directory / 'unrelated'
++        unrelated.mkdir(exist_ok=True)
++        for name, compiler in [('official', official), ('candidate', candidate)]:
++            extra = (['-Xfriend-paths=' + str(unrelated if wrong else dependency)] if name == 'official' else ['--friend-paths', unrelated if wrong else dependency]) if friend else []
++            result = run(name + ' reject ' + label, [compiler, FIXTURES / (source + '.kt'), '-cp', cp, '-module-name' if name == 'official' else '--module-name', 'friends_production', '-d', directory / (name + '-' + label), *extra, *(options if name == 'official' else ['--diagnostic-format', 'json'])], accepted=(1,))
++            if name == 'candidate':
++                diagnostic = json.loads(result.stderr)
++                assert diagnostic['category'] == 'invalid_kotlin', diagnostic
++        return dict(outcome='invalid_rejected', diagnostic=diagnostic)
++    for source in ['Explicit', 'Consumer', 'SamePackage', 'NoFriendType']:
++        case('no_friend_' + source, lambda source=source: reject(source, False, 'no-friend-' + source))
++    case('unrelated_friend_origin', lambda: reject('Explicit', True, 'unrelated-friend', True))
++    for source in ['PrivateFriend', *[path.stem for path in sorted(FIXTURES.glob('Exposed*.kt'))]]:
++        case('friend_reject_' + source, lambda source=source: reject(source, True, source))
++
++    if args.app_classpath and args.app_friend_path:
++        def actual():
++            outputs = []
++            for name, compiler in [('official', official), ('candidate', candidate)]:
++                output = directory / ('actual-' + name)
++                extra = ['-Xfriend-paths=' + args.app_friend_path, *options] if name == 'official' else ['--friend-paths', args.app_friend_path]
++                run(name + ' actual production internal data class', [compiler, FIXTURES / 'ActualConfiguration.kt', '-cp', args.app_classpath, '-d', output, *extra])
++                outputs.append(output)
++            callers = directory / 'actual-callers'
++            run('fixed actual binary caller against official', [java / 'javac', '-cp', os.pathsep.join([str(outputs[0]), args.app_classpath]), '-d', callers, FIXTURES / 'ActualCalls.java'])
++            for name, output in zip(['official', 'candidate'], outputs):
++                result = run(name + ' actual production class JVM assertions', [java / 'java', '-Xverify:all', '-cp', os.pathsep.join([str(callers), str(output), args.app_classpath]), 'yuku.alkitab.base.appwidget.ActualCalls'])
++                assert result.stdout == 'actual-internal-configuration-ok\n', result.stdout
++            return 'Real unmodified DailyVerseConfiguration binary: named constructor defaults, copy defaults, getters and computed Boolean property yield 25'
++        case('actual_production_internal_data_class', actual)
++        if args.baseline:
++            for source in app_sources:
++                def advance(source=source):
++                    results = []
++                    for name, compiler in [('baseline', args.baseline), ('candidate', candidate)]:
++                        result = run(name + ' unchanged ' + source.name, [compiler, source, '-cp', args.app_classpath, '--friend-paths', args.app_friend_path, '-d', directory / (name + '-' + source.stem), '--diagnostic-format', 'json'], accepted=(0, 1))
++                        results.append(result)
++                    assert results[0].returncode == 1 and 'Same-package class is inaccessible or unsupported' in results[0].stderr, results[0].stderr
++                    assert 'Same-package class is inaccessible or unsupported' not in results[1].stderr, results[1].stderr
++                    return dict(outcome='compiled_unchanged' if results[1].returncode == 0 else 'advanced_to_later_rejection', source=relative(source), source_sha256=sha(source), before=results[0].stderr, after=results[1].stderr)
++                case('unchanged_' + source.stem, advance)
++    changed = [name for name, digest in frozen.items() if sha(ROOT / name) != digest]
++    report['cases'].append(dict(id='frozen_inputs', outcome='correctness_failure' if changed else 'pass', changed=changed))
++    report['status'] = 'failed' if any(case['outcome'] == 'correctness_failure' for case in report['cases']) else 'complete'
++    save()
++    print(json.dumps(dict(report=relative(report_path), status=report['status'], counts=report['counts'])))
++    return report['status'] != 'complete'
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())
+diff --git a/tools/inline_origins.py b/tools/inline_origins.py
+new file mode 100644
+index 000000000..4ebc92929
+--- /dev/null
++++ b/tools/inline_origins.py
+@@ -0,0 +1,320 @@
++"""Verify relocated inline singletons against resolved classpath and output ownership."""
++import hashlib
++from pathlib import Path
++import struct
++import zipfile
++
++ATTRIBUTE = 'KorrustInlineOrigin'
++
++
++def fnv(data):
++    value = 0xcbf29ce484222325
++    for byte in data:
++        value = ((value ^ byte) * 0x100000001b3) & 0xffffffffffffffff
++    return value
++
++
++def mutf_decode(data):
++    units = []
++    position = 0
++    while position < len(data):
++        byte = data[position]
++        position += 1
++        if 0 < byte < 128:
++            units.append(byte)
++        elif byte & 0xe0 == 0xc0:
++            other = data[position]
++            position += 1
++            if other & 0xc0 != 0x80:
++                raise ValueError('Invalid modified UTF-8')
++            units.append(((byte & 31) << 6) | (other & 63))
++        elif byte & 0xf0 == 0xe0:
++            second, third = data[position:position + 2]
++            position += 2
++            if second & 0xc0 != 0x80 or third & 0xc0 != 0x80:
++                raise ValueError('Invalid modified UTF-8')
++            units.append(((byte & 15) << 12) | ((second & 63) << 6) | (third & 63))
++        else:
++            raise ValueError('Invalid modified UTF-8')
++    return b''.join(struct.pack('>H', unit) for unit in units).decode('utf-16-be', errors='surrogatepass')
++
++
++def mutf_encode(value):
++    units = value.encode('utf-16-be', errors='surrogatepass')
++    data = bytearray()
++    for position in range(0, len(units), 2):
++        unit = int.from_bytes(units[position:position + 2], 'big')
++        if 0 < unit < 128:
++            data.append(unit)
++        elif unit < 2048:
++            data.extend((0xc0 | unit >> 6, 0x80 | unit & 63))
++        else:
++            data.extend((0xe0 | unit >> 12, 0x80 | unit >> 6 & 63, 0x80 | unit & 63))
++    return b'\x01' + struct.pack('>H', len(data)) + data
++
++
++class Reader:
++    def __init__(self, data, position=0):
++        self.data, self.position = data, position
++
++    def take(self, size):
++        start = self.position
++        self.position += size
++        if size < 0 or self.position > len(self.data):
++            raise ValueError('Truncated classfile or origin record')
++        return self.data[start:self.position]
++
++    def number(self, size):
++        return int.from_bytes(self.take(size), 'big')
++
++
++def parse(data):
++    reader = Reader(data)
++    if reader.take(4) != b'\xca\xfe\xba\xbe':
++        raise ValueError('Invalid classfile magic')
++    reader.take(4)
++    count = reader.number(2)
++    pool, raw = [None] * count, [b''] * count
++    index = 1
++    while index < count:
++        start = reader.position
++        tag = reader.number(1)
++        if tag == 1:
++            value = mutf_decode(reader.take(reader.number(2)))
++        elif tag in (7, 8, 16, 19, 20):
++            value = reader.number(2)
++        elif tag in (9, 10, 11, 12, 17, 18):
++            value = (reader.number(2), reader.number(2))
++        elif tag in (3, 4):
++            value = reader.take(4)
++        elif tag in (5, 6):
++            value = reader.take(8)
++        elif tag == 15:
++            value = reader.take(3)
++        else:
++            raise ValueError('Unknown constant-pool tag')
++        pool[index] = (tag, value)
++        raw[index] = data[start:reader.position]
++        index += 2 if tag in (5, 6) else 1
++    pool_end = reader.position
++    flags, owner, parent = reader.number(2), reader.number(2), reader.number(2)
++    interfaces = [reader.number(2) for _ in range(reader.number(2))]
++
++    def text(index):
++        tag, value = pool[index]
++        if tag != 1:
++            raise ValueError('Expected UTF-8 constant')
++        return value
++
++    def class_name(index):
++        tag, value = pool[index]
++        if tag != 7:
++            raise ValueError('Expected class constant')
++        return text(value)
++
++    def attributes():
++        entries = []
++        for _ in range(reader.number(2)):
++            start = reader.position
++            name = reader.number(2)
++            payload_start = reader.position + 4
++            payload = reader.take(reader.number(4))
++            entries.append(dict(name=text(name), index=name, payload=payload,
++                                start=start, payload_start=payload_start, end=reader.position))
++        return entries
++
++    groups = []
++    for _ in range(2):
++        members = []
++        for _ in range(reader.number(2)):
++            access, name, descriptor = reader.number(2), text(reader.number(2)), text(reader.number(2))
++            members.append(dict(access=access, name=name, descriptor=descriptor, attributes=attributes()))
++        groups.append(members)
++    attributes_start = reader.position
++    attrs = attributes()
++    if reader.position != len(data) or len({entry['name'] for entry in attrs}) != len(attrs):
++        raise ValueError('Trailing classfile bytes or duplicate class attributes')
++    return dict(pool=pool, raw=raw, pool_end=pool_end, name=class_name(owner), parent=class_name(parent) if parent else None,
++                flags=flags, interfaces=[class_name(index) for index in interfaces], fields=groups[0], methods=groups[1],
++                attributes=attrs, attributes_start=attributes_start, text=text, class_name=class_name)
++
++
++def instructions(code):
++    position = 0
++    while position < len(code):
++        start, opcode = position, code[position]
++        if opcode in (0xaa, 0xab):
++            position += 1
++            position += (-position) & 3
++            reader = Reader(code, position)
++            reader.take(4)
++            if opcode == 0xaa:
++                low = int.from_bytes(reader.take(4), 'big', signed=True)
++                high = int.from_bytes(reader.take(4), 'big', signed=True)
++                count = high - low + 1
++                if count < 0:
++                    raise ValueError('Invalid tableswitch')
++                reader.take(count * 4)
++            else:
++                count = int.from_bytes(reader.take(4), 'big', signed=True)
++                reader.take(count * 8)
++            position = reader.position
++        elif opcode == 0xc4:
++            if position + 1 >= len(code) or code[position + 1] not in (*range(0x15, 0x1a), *range(0x36, 0x3b), 0x84, 0xa9):
++                raise ValueError('Invalid wide instruction')
++            position += 6 if code[position + 1] == 0x84 else 4
++        elif opcode in (0x10, 0x12, *range(0x15, 0x1a), *range(0x36, 0x3b), 0xa9, 0xbc):
++            position += 2
++        elif opcode in (0x11, 0x13, 0x14, 0x84, *range(0x99, 0xa9), *range(0xb2, 0xb9), 0xbb, 0xbd, 0xc0, 0xc1, 0xc6, 0xc7):
++            position += 3
++        elif opcode in (0xb9, 0xba, 0xc8, 0xc9):
++            position += 5
++        elif opcode == 0xc5:
++            position += 4
++        elif opcode <= 0xc9:
++            position += 1
++        else:
++            raise ValueError('Invalid JVM opcode')
++        if position > len(code):
++            raise ValueError('Truncated JVM instruction')
++        yield start, opcode
++
++
++def source_file(info):
++    values = [entry for entry in info['attributes'] if entry['name'] == 'SourceFile']
++    if len(values) != 1 or len(values[0]['payload']) != 2:
++        raise ValueError('Missing or invalid original SourceFile')
++    return info['text'](int.from_bytes(values[0]['payload'], 'big'))
++
++
++def resolve_class(classpath, owner):
++    resource = owner + '.class'
++    for path in map(Path, classpath):
++        if path.is_dir():
++            entry = path / resource
++            if entry.is_file():
++                return entry.read_bytes(), str(entry)
++        elif path.is_file():
++            with zipfile.ZipFile(path) as archive:
++                if resource in archive.namelist():
++                    return archive.read(resource), str(path) + '!/' + resource
++    raise ValueError('Inline origin absent from resolved classpath: ' + owner)
++
++
++def reconstruct(original, output_info, payload):
++    origin = parse(original)
++    marker = Reader(payload)
++    if marker.number(2) != 1:
++        raise ValueError('Unsupported inline origin version')
++    owner, caller = [marker.take(marker.number(2)).decode('utf-8') for _ in range(2)]
++    offset, digest = marker.number(8), marker.number(8)
++    if marker.position != len(payload) or digest != fnv(original) or owner != origin['name']:
++        raise ValueError('Inline origin record does not match resolved original bytes')
++    renamed = output_info['name']
++    prefix = caller + '$inlineDefault$' + str(offset) + '$'
++    suffix = renamed.removeprefix(prefix)
++    if not renamed.startswith(prefix) or len(suffix) != 16 or any(char not in '0123456789abcdef' for char in suffix):
++        raise ValueError('Inline origin owner or offset does not match helper name')
++    fields, methods = origin['fields'], origin['methods']
++    if (origin['flags'] & 0x11 != 0x11 or origin['parent'] not in ('java/lang/Object', 'kotlin/jvm/internal/Lambda')
++            or len(fields) != 1 or fields[0]['name'] != 'INSTANCE' or fields[0]['descriptor'] != 'L' + owner + ';'
++            or fields[0]['access'] & 0x19 != 0x19 or len(origin['interfaces']) != 1
++            or not origin['interfaces'][0].startswith('kotlin/jvm/functions/Function')
++            or not any(method['name'] == '<init>' and method['descriptor'] == '()V' and method['access'] & 1 for method in methods)
++            or any(method['name'] not in ('invoke', '<init>', '<clinit>') for method in methods)):
++        raise ValueError('Origin is not a supported capture-free inline default singleton')
++    pool, raw = origin['pool'], origin['raw'][:]
++    literals = {value for entry in pool if entry and entry[0] == 8 for value in [entry[1]]}
++    for index, entry in enumerate(pool):
++        if entry and entry[0] == 1:
++            name = entry[1]
++            new = renamed if name == owner else name.replace('L' + owner + ';', 'L' + renamed + ';')
++            if new != name:
++                if index in literals:
++                    raise ValueError('Relocation changes a string literal')
++                raw[index] = mutf_encode(new)
++    body = bytearray(original[origin['pool_end']:origin['attributes_start']])
++    for method in methods:
++        codes = [entry for entry in method['attributes'] if entry['name'] == 'Code']
++        if len(codes) != 1:
++            raise ValueError('Inline singleton method lacks executable code')
++        entry = codes[0]
++        code_reader = Reader(entry['payload'], 4)
++        code = code_reader.take(code_reader.number(4))
++        for position, opcode in instructions(code):
++            if opcode != 0xb8:
++                continue
++            tag, reference = pool[int.from_bytes(code[position + 1:position + 3], 'big')]
++            if tag != 10:
++                continue
++            class_index, signature_index = reference
++            _, (name_index, descriptor_index) = pool[signature_index]
++            name = origin['text'](name_index)
++            if origin['class_name'](class_index) != 'kotlin/jvm/internal/Intrinsics':
++                continue
++            if name == 'reifiedOperationMarker' or name == 'needClassReification' and method['name'] != '<clinit>':
++                raise ValueError('Origin requires unsupported reified regeneration')
++            if name == 'needClassReification':
++                if origin['text'](descriptor_index) != '()V':
++                    raise ValueError('Invalid reification marker signature')
++                start = entry['payload_start'] + 8 + position - origin['pool_end']
++                body[start:start + 3] = b'\0\0\0'
++    attrs = [entry for entry in origin['attributes'] if entry['name'] not in ('InnerClasses', 'EnclosingMethod', 'NestHost', 'NestMembers')]
++    if any(entry['name'] == ATTRIBUTE for entry in attrs):
++        raise ValueError('Nested inline origin records are unsupported')
++    result = original[:8] + struct.pack('>H', len(pool) + 1) + b''.join(raw) + mutf_encode(ATTRIBUTE) + body
++    result += struct.pack('>H', len(attrs) + 1)
++    result += b''.join(original[entry['start']:entry['end']] for entry in attrs)
++    result += struct.pack('>HI', len(pool), len(payload)) + payload
++    return result, dict(origin=owner, caller=caller, offset=offset, source_file=source_file(origin), original_sha256=hashlib.sha256(original).hexdigest())
++
++
++def verify_inline_origin(data, classpath):
++    info = parse(data)
++    entries = [entry for entry in info['attributes'] if entry['name'] == ATTRIBUTE]
++    if not entries:
++        return None
++    if len(entries) != 1:
++        raise ValueError('Duplicate inline origin attributes')
++    payload = entries[0]['payload']
++    marker = Reader(payload)
++    marker.take(2)
++    owner = marker.take(marker.number(2)).decode('utf-8')
++    original, resource = resolve_class(classpath, owner)
++    expected, detail = reconstruct(original, info, payload)
++    if expected != data:
++        raise ValueError('Inline helper differs from exact resolved-library relocation')
++    if source_file(info) != detail['source_file']:
++        raise ValueError('Inline relocation changes SourceFile')
++    return dict(detail, resource=resource, helper=info['name'], helper_sha256=hashlib.sha256(data).hexdigest())
++
++
++def verify_owned_class_origins(output, source, classpath, records):
++    """Require source provenance or exact inline relocation for every owned class.
++
++    `records` must first pass the output ownership index validation, including
++    the source identity, checksum, content hashes, and complete output set.
++    """
++    classes = {}
++    origins = {}
++    for name in records:
++        if not name.endswith('.class'):
++            continue
++        data = (Path(output) / name).read_bytes()
++        info = parse(data)
++        if name != info['name'] + '.class':
++            raise ValueError('Owned class path does not match declared class name')
++        classes[info['name']] = info
++        origin = verify_inline_origin(data, classpath)
++        if origin:
++            origins[name] = origin
++        elif source_file(info) != Path(source).name:
++            raise ValueError('Owned class lacks source or verified inline provenance: ' + name)
++    for name, origin in origins.items():
++        caller = classes.get(origin['caller'])
++        if caller is None or source_file(caller) != Path(source).name:
++            raise ValueError('Inline origin caller is not owned by the compiled source')
++        references = {caller['class_name'](index) for index, entry in enumerate(caller['pool']) if entry and entry[0] == 7}
++        if origin['helper'] not in references:
++            raise ValueError('Owned inline caller does not reference its relocated helper')
++    return origins

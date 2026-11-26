@@ -944,6 +944,7 @@ impl Checker<'_> {
                 method_members.insert("#backing".into(), backing);
             }
             let mut checker = Checker {
+                composable_body: false,
                 inline_argument_modes: Vec::new(),
                 inline_analysis: false,
                 public_inline_body: self.public_inline_body,
@@ -1199,6 +1200,7 @@ impl Checker<'_> {
         let mut property_fields = property_fields.into_iter().collect::<Vec<_>>();
         property_fields.sort_by(|a, b| a.0.cmp(&b.0));
         self.lambdas.borrow_mut().push(LambdaDecl {
+            composable_key: None,
             anonymous_methods: Some(implementations),
             anonymous_super: Some(AnonymousSuper {
                 supertypes: resolved_supertypes,

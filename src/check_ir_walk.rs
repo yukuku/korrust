@@ -358,6 +358,7 @@ mod tests {
 
     fn companion_with(owner: &str, number: i32) -> ClassCompanion {
         ClassCompanion {
+            private: false,
             constants: Vec::new(),
             exposed_fields: HashMap::new(),
             methods: vec![function_with(number + 2)],
@@ -494,6 +495,7 @@ mod tests {
             constants: Vec::new(),
             functions: vec![top_function],
             lambdas: vec![LambdaDecl {
+                composable_key: None,
                 anonymous_methods: None,
                 anonymous_super: None,
                 defaults: Vec::new(),

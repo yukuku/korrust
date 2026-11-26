@@ -43,6 +43,8 @@ mod anonymous;
 mod captures;
 #[path = "check_classes.rs"]
 mod classes;
+#[path = "check_constructor_inference.rs"]
+mod constructor_inference;
 #[path = "check_contracts.rs"]
 mod contracts;
 #[path = "check_control.rs"]
@@ -120,6 +122,7 @@ pub struct AnonymousSuper {
     pub interfaces: Vec<String>,
 }
 pub struct LambdaDecl {
+    pub composable_key: Option<i32>,
     pub anonymous_super: Option<AnonymousSuper>,
     pub anonymous_methods: Option<Vec<Function>>,
     pub defaults: Vec<JavaMethod>,
@@ -234,6 +237,7 @@ pub struct ClassCompanionProperty {
     pub value: Value,
 }
 pub struct ClassCompanion {
+    pub private: bool,
     pub constants: Vec<syntax::ConstDecl>,
     pub exposed_fields: HashMap<String, u16>,
     pub methods: Vec<Function>,
@@ -602,11 +606,18 @@ impl Value {
             }
             ValueKind::Lambda { captures, .. } => captures
                 .iter()
-                .scan(2, |n, v| {
-                    let m = *n + v.stack();
-                    *n += v.ty.slots();
-                    Some(m)
-                })
+                .scan(
+                    if self.ty.base() == &Type::ComposableUnitFunction {
+                        6
+                    } else {
+                        2
+                    },
+                    |n, v| {
+                        let m = *n + v.stack();
+                        *n += v.ty.slots();
+                        Some(m)
+                    },
+                )
                 .max()
                 .unwrap_or(2),
             ValueKind::FunctionInvoke { function, args } => function.stack().max(
@@ -707,6 +718,7 @@ type CheckedArguments = (Vec<Value>, Vec<(u8, Value)>, u64);
 type CallableParameters = (Vec<(String, Type)>, Vec<bool>);
 #[derive(Clone)]
 struct Checker<'a> {
+    composable_body: bool,
     inline_argument_modes: Vec<syntax::InlineParameterMode>,
     inline_analysis: bool,
     public_inline_body: bool,
@@ -1059,10 +1071,7 @@ impl Checker<'_> {
             self.initialized = earlier.clone();
             let value = expr
                 .as_ref()
-                .map(|expr| {
-                    let value = self.value(expr)?;
-                    self.coerce(value, ty.clone(), expr.offset)
-                })
+                .map(|expr| self.expected_value(expr, ty))
                 .transpose()?;
             values.push(value);
             if let Some(local) = self.local(name) {
@@ -2056,11 +2065,17 @@ impl Checker<'_> {
             },
         })
     }
-    fn elvis(&mut self, left: &Expr, right: &Expr, offset: usize) -> Result<Value> {
+    fn elvis(
+        &mut self,
+        left: &Expr,
+        right: &Expr,
+        expected: Option<&Type>,
+        offset: usize,
+    ) -> Result<Value> {
         let source_left = left;
         let left = self.value(left)?;
         if left.ty == Type::Null {
-            let body = self.value(right)?;
+            let body = self.value_expected(right, expected)?;
             let slot = self.allocate_slot(offset)?;
             return Ok(Value {
                 ty: body.ty.clone(),
@@ -2081,7 +2096,7 @@ impl Checker<'_> {
                 ));
             }
         };
-        let right = self.value(right)?;
+        let right = self.value_expected(right, expected.or(Some(&inner)))?;
         let abrupt = matches!(right.kind, ValueKind::Abrupt(_));
         if abrupt {
             if let ExprKind::Name(name) = &source_left.kind {
@@ -2308,6 +2323,21 @@ impl Checker<'_> {
         extension: bool,
         offset: usize,
     ) -> Result<Value> {
+        if let Some((owner, name)) = method.owner.rsplit_once('$')
+            && self.classpath.load(owner).is_ok_and(|class| {
+                class
+                    .library
+                    .as_ref()
+                    .and_then(|library| library.companion_name.as_deref())
+                    == Some(name)
+            })
+        {
+            self.classpath.check_classifier_visibility(
+                &self.lambda_owner,
+                &method.owner,
+                offset,
+            )?;
+        }
         let method = if let Some(class) = library::type_owner(&receiver.ty).and_then(|owner| {
             self.classes
                 .get(owner)
@@ -2351,6 +2381,18 @@ impl Checker<'_> {
         }
         if method.unsupported {
             return Err(Diagnostic::new(offset, "Unsupported library member"));
+        }
+        if !method.instance_dispatch() {
+            let call = self.library_static_call(method, args, offset)?;
+            let slot = self.allocate_typed_slot(&receiver.ty, offset)?;
+            return Ok(Value {
+                ty: call.ty.clone(),
+                kind: ValueKind::Let {
+                    slot,
+                    value: Box::new(receiver),
+                    body: Box::new(call),
+                },
+            });
         }
         let method = self.classpath.source_value_method(method, true);
         let (types, mut result) = class_method_types(&method)?;
@@ -2907,6 +2949,11 @@ impl Checker<'_> {
             })
             .collect::<Vec<_>>();
         if methods.is_empty() {
+            if let Some(value) =
+                self.member_property_invoke(receiver.clone(), name, args, types, offset)?
+            {
+                return Ok(value);
+            }
             if !types.is_empty() {
                 return self.extension_call(receiver, name, args, types, offset);
             }
@@ -2963,7 +3010,14 @@ impl Checker<'_> {
             Err(_) if !types.is_empty() => {
                 return self.extension_call(receiver, name, args, types, offset);
             }
-            Err(error) => return self.member_extension_fallback(receiver, name, args, error),
+            Err(error) => {
+                if let Some(value) =
+                    self.member_property_invoke(receiver.clone(), name, args, types, offset)?
+                {
+                    return Ok(value);
+                }
+                return self.member_extension_fallback(receiver, name, args, error);
+            }
         };
         if !method.instance_dispatch() {
             let call = self.library_static_call(method, args, offset)?;
@@ -4362,6 +4416,9 @@ impl Checker<'_> {
                     Statement::While(cond, body)
                 }
             };
+            if let Statement::Expression(value) | Statement::Store(_, value) = &typed {
+                self.refine_evaluated_assertions(value);
+            }
             body.push(typed);
         }
         if pop_scope {
@@ -5064,7 +5121,7 @@ impl Checker<'_> {
             }
             ExprKind::Binary(op, a, b) => {
                 if op == "?:" {
-                    return self.elvis(a, b, offset);
+                    return self.elvis(a, b, expected_result, offset);
                 }
                 if op == "in" || op == "!in" {
                     let value = self.value(a)?;
@@ -5415,83 +5472,10 @@ impl Checker<'_> {
                             });
                         }
                     }
-                    if self
-                        .dispatch_receiver
-                        .as_ref()
-                        .is_some_and(|this| this.ty == receiver.ty)
+                    if let Some(value) =
+                        self.member_property_value(receiver.clone(), name, offset)?
                     {
-                        if let Some(method) = self.members.get(&format!("#get:{name}")) {
-                            return self.member_call(method.clone(), receiver, &[], offset);
-                        }
-                    }
-                    if self
-                        .dispatch_receiver
-                        .as_ref()
-                        .is_some_and(|this| this.ty == receiver.ty)
-                    {
-                        if let Some(ty) = self.fields.get(name) {
-                            return Ok(Value {
-                                ty: ty.clone(),
-                                kind: ValueKind::Field(name.clone(), Box::new(receiver)),
-                            });
-                        }
-                    }
-                    if self
-                        .dispatch_receiver
-                        .as_ref()
-                        .is_some_and(|this| this.ty == receiver.ty)
-                    {
-                        if let Some(method) = self.members.values().find(|method| {
-                            method.source_property.as_deref() == Some(name)
-                                && method
-                                    .library
-                                    .as_ref()
-                                    .is_none_or(|library| library.receiver.is_none())
-                                && method.source_name() == getter_name(name)
-                        }) {
-                            return self.member_call(method.clone(), receiver, &[], offset);
-                        }
-                    }
-                    if let Some(owner) = library::type_owner(&receiver.ty).map(str::to_owned) {
-                        let loaded = self.classpath.load(&owner).ok();
-                        if let Some(class) = self.classes.get(&owner).or(loaded.as_ref()) {
-                            if let Some(method) =
-                                library::ordinary_member_methods(self.classpath, &owner, name, 0)
-                                    .unwrap_or_else(|_| class.methods.clone())
-                                    .into_iter()
-                                    .find(|m| {
-                                        m.source_property.as_deref() == Some(name)
-                                            && m.library
-                                                .as_ref()
-                                                .is_none_or(|library| library.receiver.is_none())
-                                            && m.kotlin_params.as_ref().is_some_and(Vec::is_empty)
-                                    })
-                            {
-                                let method = library::specialize_receiver(
-                                    method,
-                                    &receiver.ty,
-                                    class,
-                                    self.classpath,
-                                );
-                                return self.member_call(method, receiver, &[], offset);
-                            }
-                            if self
-                                .classpath
-                                .field_candidates(&owner, name)?
-                                .iter()
-                                .any(|field| field.access & 1 != 0)
-                            {
-                                return self.java_field(
-                                    &owner.clone(),
-                                    name,
-                                    Some(receiver),
-                                    offset,
-                                );
-                            }
-                        }
-                    }
-                    if let Some(method) = self.java_property_getter(&receiver.ty, name, offset)? {
-                        return self.member_call(method, receiver, &[], offset);
+                        return Ok(value);
                     }
                     if let Some(value) = enums::property(self, &receiver, name, offset)? {
                         return Ok(value);
@@ -5731,6 +5715,11 @@ impl Checker<'_> {
                             offset,
                         )?;
                         return self.library_static_call(method, args, offset);
+                    }
+                    if let Some(value) =
+                        self.inferred_generic_constructor(name, args, None, offset)?
+                    {
+                        return Ok(value);
                     }
                     if let Some((owner, params, defaults)) = self.constructor {
                         if self.imports.get(name).is_some_and(|n| n == owner) {
@@ -6054,35 +6043,17 @@ impl Checker<'_> {
                                     if class.fields.iter().any(|f| {
                                         f.name == "INSTANCE" && f.descriptor == format!("L{owner};")
                                     }) {
-                                        let methods = library::ordinary_member_methods(
-                                            self.classpath,
-                                            owner,
+                                        return self.java_call_types_expected(
+                                            Value {
+                                                ty: Type::Java(owner.clone()),
+                                                kind: ValueKind::ObjectInstance(owner.clone()),
+                                            },
                                             name,
-                                            args.len(),
-                                        )?
-                                        .into_iter()
-                                        .filter(|m| {
-                                            m.source_name() == name
-                                                && m.access & 1 != 0
-                                                && m.library.as_ref().is_none_or(|library| {
-                                                    library.receiver.is_none()
-                                                })
-                                        })
-                                        .collect::<Vec<_>>();
-                                        let method = self.select_method(&methods, args, offset)?;
-                                        return if !method.instance_dispatch() {
-                                            self.library_static_call(method, args, offset)
-                                        } else {
-                                            self.member_call(
-                                                method,
-                                                Value {
-                                                    ty: Type::Java(owner.clone()),
-                                                    kind: ValueKind::ObjectInstance(owner.clone()),
-                                                },
-                                                args,
-                                                offset,
-                                            )
-                                        };
+                                            args,
+                                            &[],
+                                            expected_result,
+                                            offset,
+                                        );
                                     }
                                     if let Some(field) = class.fields.iter().find(|f| {
                                         class
@@ -7512,7 +7483,7 @@ pub fn check_with_owner(
             if class.access & 1 == 0 || class.unsupported {
                 return Err(Diagnostic::new(
                     type_offset,
-                    "Same-package class is inaccessible or unsupported",
+                    format!("Same-package class is inaccessible or unsupported: {owner}"),
                 ));
             }
             entry.insert(owner.clone());
@@ -7580,10 +7551,13 @@ pub fn check_with_owner(
             continue;
         }
         if let Ok(class) = classpath.load(&owner) {
+            if !classpath.classifier_visible(lexical_owner, &class.name) {
+                continue;
+            }
             if class.access & 1 == 0 || class.unsupported {
                 return Err(Diagnostic::new(
                     0,
-                    "Same-package class is inaccessible or unsupported",
+                    format!("Same-package class is inaccessible or unsupported: {owner}"),
                 ));
             }
             imports.insert(alias, owner.clone());
@@ -7839,6 +7813,7 @@ pub fn check_with_owner(
     for (id, function) in source.functions.iter().enumerate() {
         let (params, return_type) = signatures[id].clone();
         let mut checker = Checker {
+            composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
             public_inline_body: function.inline && !function.private && !function.internal,

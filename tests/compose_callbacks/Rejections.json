@@ -1,0 +1,15 @@
+[
+  {"id":"argument", "source":"fun unsupported(s: composeprobe.ArgumentSink) { s.accept { value -> println(value) } }", "oracle":"accept", "code":"LIBRARY_DECLARATION_UNSUPPORTED"},
+  {"id":"result", "source":"fun unsupported(s: composeprobe.ResultSink) { s.accept { 42 } }", "oracle":"accept", "code":"LIBRARY_DECLARATION_UNSUPPORTED"},
+  {"id":"receiver", "source":"fun unsupported(s: composeprobe.ReceiverSink) { s.accept { println(this) } }", "oracle":"accept", "code":"LIBRARY_DECLARATION_UNSUPPORTED"},
+  {"id":"nullable", "source":"fun unsupported(s: composeprobe.NullableSink) { s.accept {} }", "oracle":"accept", "code":"LIBRARY_DECLARATION_UNSUPPORTED"},
+  {"id":"nested-type", "source":"fun unsupported(s: composeprobe.NestedSink) { s.accept(emptyList()) }", "oracle":"accept", "code":"LIBRARY_DECLARATION_UNSUPPORTED"},
+  {"id":"inline", "source":"fun unsupported(s: composeprobe.InlineSink) { s.accept {} }", "oracle":"accept", "code":"LIBRARY_DECLARATION_UNSUPPORTED"},
+  {"id":"generic", "source":"fun unsupported(s: composeprobe.GenericSink) { s.accept(1) {} }", "oracle":"accept", "code":"LIBRARY_DECLARATION_UNSUPPORTED"},
+  {"id":"nonliteral", "source":"fun unsupported(s: composeprobe.Registry, b: @androidx.compose.runtime.Composable () -> Unit) { s.accept(b) }", "oracle":"accept", "code":"ANNOTATION_TYPE_USE_UNSUPPORTED"},
+  {"id":"nested-callback", "source":"fun unsupported(s: composeprobe.Registry) { s.accept { s.accept {} } }", "oracle":"accept", "code":"COMPOSE_NESTED_CALLBACK_UNSUPPORTED"},
+  {"id":"composable-declaration", "source":"@androidx.compose.runtime.Composable fun unsupported() {}", "oracle":"accept", "code":"COMPILER_PLUGIN_UNSUPPORTED"},
+  {"id":"hidden-composer-call", "source":"import androidx.compose.runtime.SideEffect\nfun unsupported(s: composeprobe.Registry) { s.accept { SideEffect {} } }", "oracle":"accept", "code":"LIBRARY_DECLARATION_UNSUPPORTED"},
+  {"id":"wrong-lambda-arity", "source":"fun invalid(s: composeprobe.Registry) { s.accept { value -> println(value) } }", "oracle":"reject"},
+  {"id":"nonlocal-return", "source":"fun invalid(s: composeprobe.Registry) { s.accept { return } }", "oracle":"reject"}
+]
