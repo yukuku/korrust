@@ -1,0 +1,761 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T06:41:56.506548+00:00",
+  "status": "passed",
+  "compiler": {
+    "binary": "/tmp/targets159-variance/debug/korrust",
+    "binary_sha256": "da750e95b8056db9b8a00489767ac0d8a7767a1e90b3ec66c2d83a01f116457d",
+    "source_revision": "621dc6b7974f9a9aad0e2080581d4acafa1a2180"
+  },
+  "source_archive": {
+    "path": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/frozen-inputs.zip",
+    "sha256": "87b05987545bcdcb6bc4455a6cab6355262437e9a25465d7540dc7c38128f619"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "inputs": {
+    "files_sha256": {
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "references/kotlin/compiler/ir/backend.common/src/org/jetbrains/kotlin/backend/common/lower/FlattenStringConcatenationLowering.kt": "1237ad8c7c560700c13e0606ab00e08b663faf567cee0321da8edf376094def4",
+      "references/kotlin/compiler/ir/backend.jvm/codegen/src/org/jetbrains/kotlin/backend/jvm/intrinsics/IrIntrinsicMethods.kt": "682c39d30eaa9eb7211ec216e36dca936fdf9a9fe0d605ed64c1e311d8f92d2e",
+      "references/kotlin/compiler/ir/backend.jvm/src/org/jetbrains/kotlin/backend/jvm/JvmSymbols.kt": "7329fb9d4491f14957d0a0938b4586eb80ff64fcc9a7e76836eaf954f9289efe",
+      "references/kotlin/libraries/stdlib/jvm/builtins/Library.kt": "a145db21ad95318e509bd761b098a97508011b0b287105b35849efd221e4f608",
+      "tests/nullable_to_string/Alias.kt": "7f201a9dfd6ab4ffb730da18c0f7388079532957de82e7f9db61fa64edda8eab",
+      "tests/nullable_to_string/Calls.java": "7d3e9a26d3cbb41fc92e6d43766f2bf1aaccd188526e521e5ed00925812157d6",
+      "tests/nullable_to_string/ConsumeCalls.java": "2b6da7cd034a725319517e1077d5b0b23d9faa7a93e6468e567e97da953950a3",
+      "tests/nullable_to_string/Consumer.kt": "19a72a081beeb553812431b11bd57562eac189fd691a0068f77958494f2f0aa2",
+      "tests/nullable_to_string/ConsumerRejections.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "tests/nullable_to_string/Effects.kt": "367232e3ee86990c7012bd027899204fa9d72562160f59ac93fb5ce9b89289d5",
+      "tests/nullable_to_string/Imported.kt": "8ec3e8aee95b930f6565d3d6588f2247e0a8809568b9ec68636ed8e71df8c157",
+      "tests/nullable_to_string/Library.kt": "0fc467082d89286bf55b7cdc25bc21218b0d430af42c85a7897955c719fd9e05",
+      "tests/nullable_to_string/Local.kt": "1845c42cff7074a08b75aac6663429be440ec4a4cfe173137d7cdbac16d48aaf",
+      "tests/nullable_to_string/Member.kt": "528be89d87f1a75014c382ff3563d8a2aa1095898670d2cf1db4536a97c80caf",
+      "tests/nullable_to_string/Rejections.json": "7978b6c31edf5aebf508632031ccff7828c1780a7a5db8dffa10587ab32be90b",
+      "tests/nullable_to_string/java/stringify/Probe.java": "57ecf61406d3f32341b7322265b9f848c2e68ba91b871286f4ebf4c9434b96df",
+      "tests/nullable_to_string.rs": "c015022aad5f5665dbc0e06fa1ef736debd58544835503fc096c96078d2270a8",
+      "tools/check_nov21_generics.py": "70fed499f3652d9181c2aabc3baf4e9a7327c436eec67c83d6fe4e4f539e4f86",
+      "tools/check_nullable_to_string.py": "428fe27267e23563518a9caf76041a6c5bf70bca84a12bce1ed61ac8a1ae979c",
+      "/workspace/work/nullable-string003/Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "/workspace/work/nullable-string003/Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "/workspace/work/nullable-string003/src/annotation_declarations.rs": "76f1f3bafa4fa1ba3ced3768936d822c11803bf2aa6f877857574403c604070d",
+      "/workspace/work/nullable-string003/src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "/workspace/work/nullable-string003/src/bytecode/annotation_files.rs": "0fe8ebba7bbd2c80fcdd6fda797b448ca8cd63945b100781361bf1e3ace02eaa",
+      "/workspace/work/nullable-string003/src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "/workspace/work/nullable-string003/src/bytecode/anonymous_context.rs": "0864951c7a7e94772ee8e410c49175fed879358204aff745a1f7a315fc1b0283",
+      "/workspace/work/nullable-string003/src/bytecode/class_companion.rs": "b5c6f75d8c24b3edbe1ae2583693c31b511e4d456734b160d2904b7c6072a62c",
+      "/workspace/work/nullable-string003/src/bytecode/compose_lambdas.rs": "6355b1593355bb5aeacfbc0dcdfdcb0bc157d1ce995f9129dad742466f328f0d",
+      "/workspace/work/nullable-string003/src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+      "/workspace/work/nullable-string003/src/bytecode/defaults.rs": "8a1776d35697d05a53ffe6eef7556770ab03f027bcd4275b1b8f372605de6f32",
+      "/workspace/work/nullable-string003/src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "/workspace/work/nullable-string003/src/bytecode/frames.rs": "b2e346435d7cb21fbcbf0ec248c8c54fa77273198f1321fb58d84c741e77caff",
+      "/workspace/work/nullable-string003/src/bytecode/inline.rs": "d1dbc06ea0c65d833333adb752ce2cdf05c5cc1678a99a6478440041d437aaea",
+      "/workspace/work/nullable-string003/src/bytecode/interfaces.rs": "e283e506529e64a83d7408f6dbd52d44336cc3a5d1e768428df46670cafd4c2b",
+      "/workspace/work/nullable-string003/src/bytecode/lambdas.rs": "1cacc1ea9acb473c0079dd302e50933e919826e8791370d1f4c19e4abdf48d6c",
+      "/workspace/work/nullable-string003/src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+      "/workspace/work/nullable-string003/src/bytecode/suspend.rs": "df9416ead45864e78a8543c5f17dc1b010befbdf878c4160d978840b374b583a",
+      "/workspace/work/nullable-string003/src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+      "/workspace/work/nullable-string003/src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+      "/workspace/work/nullable-string003/src/bytecode.rs": "edabdb4b7ccc553d5bbab5c79b99dad6bc45614c6c36787288003ca19a605688",
+      "/workspace/work/nullable-string003/src/check.rs": "4d1522f06dd47037d7be8931d3098af1d2301063e2c2c4768103f7c9027f8aa4",
+      "/workspace/work/nullable-string003/src/check_annotation_placements.rs": "027e77c6a6db60f98262fbaf0f44be170c53b58b03d64ae6e8cc43cdb2dc1579",
+      "/workspace/work/nullable-string003/src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "/workspace/work/nullable-string003/src/check_anonymous.rs": "b0293e5ab506dff2a976529a0653f6e0a82a484e089e050cd7c1eb8edefe8b22",
+      "/workspace/work/nullable-string003/src/check_assignment_flow.rs": "be4520c694043891aa0f72f26e3f8cf73cd902c314660b9f1381c1e48f049a5e",
+      "/workspace/work/nullable-string003/src/check_captures.rs": "fb33dcee574506b574ca15013bbe102990e6c15dba3744128c72761d361b90ba",
+      "/workspace/work/nullable-string003/src/check_class_delegation.rs": "1089bac71516daad07ec7245aa8594956feca30ecf926e19ff82c895caba7364",
+      "/workspace/work/nullable-string003/src/check_classes.rs": "a2c5cdd6f739971b0d96b04cd98080b5a1507a427f2cd10221ff65824fd03450",
+      "/workspace/work/nullable-string003/src/check_companion_properties.rs": "c974d1059e7cb92644cd1a186492200828341f64b7e95d0ae4c052356537edba",
+      "/workspace/work/nullable-string003/src/check_compose.rs": "e87478af92dadfc67e7ee0a0412ba8417dc84ebfceb2e54bc37a9b840077bb5a",
+      "/workspace/work/nullable-string003/src/check_constructor_aliases.rs": "a64e341da62e7b292607926f34f5ad2a570f103f3a2141c40be6ff9bf1a94527",
+      "/workspace/work/nullable-string003/src/check_constructor_bridges.rs": "193f110cee019766603fe7d9798178e2f253d468c262f35994c939cd87377a29",
+      "/workspace/work/nullable-string003/src/check_constructor_inference.rs": "dd3d94a733c0acaea93af34f1e130c4338fc11127cbb7cba08f452d7c94d0d1e",
+      "/workspace/work/nullable-string003/src/check_contracts.rs": "06434fc5c0999ff69dfb902c50e7bc3b3d4802ae5d3592fbcf0496e9c3bb491d",
+      "/workspace/work/nullable-string003/src/check_control.rs": "6333d7c8a5465154b5e2e519a7598f576c38f7b6a9f6dd2b5b2f5ed60811f532",
+      "/workspace/work/nullable-string003/src/check_declarations.rs": "3a773db71062cc8c0ee2807e93026d5e1d8ec85c3e5f759f5095f78cc1ebab7d",
+      "/workspace/work/nullable-string003/src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+      "/workspace/work/nullable-string003/src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "/workspace/work/nullable-string003/src/check_functions.rs": "e7fcfd767236a97be1a94903bd5c508aa854b9995d52edae97648a02f8398479",
+      "/workspace/work/nullable-string003/src/check_initialization.rs": "9c56c8abd1eb964ad4e51ac03cdf7a40d73414a4c9984ae6e6525a37f6b5bdee",
+      "/workspace/work/nullable-string003/src/check_inner_classes.rs": "b799a4df016e056d127610e359ec06951e05e22e4778a7ffa31934e892cd6e05",
+      "/workspace/work/nullable-string003/src/check_interfaces.rs": "5514963c52b03da1442a9aec1c8bc3a6daeb10326011c9602509a5ca29d32606",
+      "/workspace/work/nullable-string003/src/check_ir_walk.rs": "6a7c435002dee1142b592d2c42551b845d9dbe3a6416ba9cd3f04c2d70c1c38a",
+      "/workspace/work/nullable-string003/src/check_java_nullability.rs": "40e1e816200bc92d6d7e5ab5fa57b4e3e351967072da160996e5a888b3acb923",
+      "/workspace/work/nullable-string003/src/check_java_properties.rs": "f3da739960dcbcee99a9b205e29afd330defef89e1089e9a152d5d0efd0c51fd",
+      "/workspace/work/nullable-string003/src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+      "/workspace/work/nullable-string003/src/check_library.rs": "90bd19b31cf8004928c67fff4fd99caf872ff447363ab73d69096962b33e7ab7",
+      "/workspace/work/nullable-string003/src/check_local_annotations.rs": "ad5d937aae27ec3bed4528322c068a39eca915a49c449b68b2c4453f87f1a770",
+      "/workspace/work/nullable-string003/src/check_member_extensions.rs": "943af7b1c7b65c2a495dd628e42b105f44f41f6f19b736fa8e57a0cfd255a81f",
+      "/workspace/work/nullable-string003/src/check_objects.rs": "8bfab29b600a5b9197c1ef9778db52f85546ae3dcb9dbdcbce0a180866a99d19",
+      "/workspace/work/nullable-string003/src/check_operations.rs": "40ab95920907433e6bf84f53c413f8f8811b8909d8b6dca80b7d2982a5dd08a3",
+      "/workspace/work/nullable-string003/src/check_overloads.rs": "a1a5066cd8bf1dd196ce49975678360f043fc2d48f1c1dcf7ce607f57e00bb43",
+      "/workspace/work/nullable-string003/src/check_references.rs": "1b416efc0ba31fd0214f3399ca9b265e4d5bd2c47f683986ebee5244a555a421",
+      "/workspace/work/nullable-string003/src/check_relations.rs": "c436cf3f3a7184308832050fb30c41b86ba2a8fccc7c304cc69989bf50635a44",
+      "/workspace/work/nullable-string003/src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "/workspace/work/nullable-string003/src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+      "/workspace/work/nullable-string003/src/check_stable_properties.rs": "4b7b32b83094336d920362641e85e917979f09878cef431f51b023f1b6348873",
+      "/workspace/work/nullable-string003/src/check_unsigned.rs": "7c60ab78a2f2162d0beffbc79d41976a06bc6fb446c1cc9f91de10fc6072e606",
+      "/workspace/work/nullable-string003/src/check_varargs.rs": "461fe197ed8507a21ab7aa60cede390d70fd1fce9867015561b1d43738d7d14b",
+      "/workspace/work/nullable-string003/src/check_variant_signatures.rs": "e63bc47c0b4db3d5a07c0e4a2239283f0a8592c1716f0923ca69c2f0ea351bd8",
+      "/workspace/work/nullable-string003/src/classpath/aliases.rs": "714b195f4716ea32d5dc8985048e282efb1fb3a1508490dcab5d49753534b80c",
+      "/workspace/work/nullable-string003/src/classpath/archive.rs": "835e4a79bbbc5c7328ce6a540ed1a2ca975fc526278fe7c31fd9433e08cc56d5",
+      "/workspace/work/nullable-string003/src/classpath/compose_abi.rs": "367c394423ec42e212233a82e484e16a144c827a4d7e3295a3647b665feb6d0f",
+      "/workspace/work/nullable-string003/src/classpath/import_classes.rs": "2835a7c9b72fd326d5881d0fbe41655b57f6d1b26b2e8b1bde6f71eaada580c1",
+      "/workspace/work/nullable-string003/src/classpath/inherited_classifiers.rs": "0566fcd4eb53479558d9f2ff2555424701a2906f16edf78acf7e108f7c78df02",
+      "/workspace/work/nullable-string003/src/classpath/inline_defaults.rs": "ad6ff8bb40c0b01eee78e30a70f15f2a912ab73307a3836840ce882bc597e8cb",
+      "/workspace/work/nullable-string003/src/classpath/jdk_modules.rs": "cd1a350e7f8e03cda618a1d919d4e6ee49aba7e9a26728178ebad5f73c4bd8f8",
+      "/workspace/work/nullable-string003/src/classpath/jvm_builtins.rs": "b8c6e4789a998c1b3737da4879a15d74eb453170c4b03542d4c8ae13f6e40e86",
+      "/workspace/work/nullable-string003/src/classpath/metadata.rs": "969f780c140d6dd3f20358549a28d9cd139cc3599d78f2dbede26358afd4c736",
+      "/workspace/work/nullable-string003/src/classpath/nested.rs": "764dd9eaf0188f91ba018707557e72df76b9c44b0120c8d69574044c8f5e78e9",
+      "/workspace/work/nullable-string003/src/classpath/nullability_defaults.rs": "8edf9187cd6214380a936c0484c280c7b3f3a973212d3f830c5316feedd4724b",
+      "/workspace/work/nullable-string003/src/classpath/package_info.rs": "f3bd436a8c64d48216bae3a55a2a3e82a903d354a42b629928fe1af95197061a",
+      "/workspace/work/nullable-string003/src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "/workspace/work/nullable-string003/src/classpath/signature.rs": "3e6bf3db6b06af97ddb6ec0db28a22cd6f1c6dcb08c6009c8614a0585a624a8b",
+      "/workspace/work/nullable-string003/src/classpath/singletons.rs": "836fe172f37cc9282e259ba446688b3d2d6bf34fde25ddc3973c1800f29c71a5",
+      "/workspace/work/nullable-string003/src/classpath/source.rs": "c5691fc0affe35e98a92c14ad64bf813669bb254cc8c41cd379f680e54489d03",
+      "/workspace/work/nullable-string003/src/classpath/source_enums.rs": "37f3e3995b1e46a8a10215e0b995f56e3019c93c478c89682d18d312eb20d3c2",
+      "/workspace/work/nullable-string003/src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+      "/workspace/work/nullable-string003/src/classpath/value_names.rs": "1bd48bbe3a45019357c7d2167eec70eaaf02579bf1672122b6ec5a6cc13cdf99",
+      "/workspace/work/nullable-string003/src/classpath.rs": "302d838575774656728936b518e58f5d3d77a1a5b4bd3190485ec6cb7c6cf88c",
+      "/workspace/work/nullable-string003/src/compiled_inline/defaults.rs": "89d95d8b98e4af043bc3c592ba7588bffb7924bc86bdae57d457c0b420cbde37",
+      "/workspace/work/nullable-string003/src/compiled_inline.rs": "e83e7b8a60ae06b204d943123cc4c0aceaad9f8640f8fa078dc5314c0bd00f3e",
+      "/workspace/work/nullable-string003/src/const_eval.rs": "24319c4a5076f678ed53cbeeff7c52c4bdcf081c9f78485514326e92078e10fd",
+      "/workspace/work/nullable-string003/src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "/workspace/work/nullable-string003/src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "/workspace/work/nullable-string003/src/jvm_descriptor.rs": "3946ec2e66e89185c9d3e284f9d114e29e5e88d0a3eba52ec39fba2200d07ad2",
+      "/workspace/work/nullable-string003/src/lib.rs": "b32ce1eb31da5bfc99f9a60f5cdf12534db2c86f112f09304b66ab4b582c5fad",
+      "/workspace/work/nullable-string003/src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "/workspace/work/nullable-string003/src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "/workspace/work/nullable-string003/src/metadata.rs": "fdf4fcfe25ef5174651d65aa1e0a83daa03fc87d8cf610066c45beeea2ea46ae",
+      "/workspace/work/nullable-string003/src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "/workspace/work/nullable-string003/src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "/workspace/work/nullable-string003/src/source_inline.rs": "d59ecaba2b32264cc4190594c19e5ec7e99e6cbb5db28b33c1eaca7c7aa404e5",
+      "/workspace/work/nullable-string003/src/syntax.rs": "1c60e3c11c3339afa4b69c7b6ff3d79a25e97764df448d0170eeef67f647480c",
+      "/workspace/work/nullable-string003/src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "/workspace/work/nullable-string003/src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525"
+    },
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "commands": [
+    {
+      "label": "compile imported Kotlin shadow extension",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nullable_to_string/Library.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/000-stderr.txt"
+    },
+    {
+      "label": "compile Java override provider",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies",
+        "/workspace/korrust/tests/nullable_to_string/java/stringify/Probe.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/001-stderr.txt"
+    },
+    {
+      "label": "compile official Effects.kt/Local.kt/Imported.kt/Alias.kt/Member.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nullable_to_string/Effects.kt",
+        "/workspace/korrust/tests/nullable_to_string/Local.kt",
+        "/workspace/korrust/tests/nullable_to_string/Imported.kt",
+        "/workspace/korrust/tests/nullable_to_string/Alias.kt",
+        "/workspace/korrust/tests/nullable_to_string/Member.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nullable_to_string",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/002-stderr.txt"
+    },
+    {
+      "label": "compile candidate Effects.kt/Local.kt/Imported.kt/Alias.kt/Member.kt",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/tests/nullable_to_string/Effects.kt",
+        "/workspace/korrust/tests/nullable_to_string/Local.kt",
+        "/workspace/korrust/tests/nullable_to_string/Imported.kt",
+        "/workspace/korrust/tests/nullable_to_string/Alias.kt",
+        "/workspace/korrust/tests/nullable_to_string/Member.kt",
+        "--module-name",
+        "nullable_to_string",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/003-stderr.txt"
+    },
+    {
+      "label": "compile fixed Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/java",
+        "/workspace/korrust/tests/nullable_to_string/Calls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/004-stderr.txt"
+    },
+    {
+      "label": "verified fixed Java caller official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/java:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/005-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official/EffectsKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official",
+        "EffectsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/006-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official/localshadow.LocalKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official",
+        "localshadow.LocalKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/007-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official/importedshadow.ImportedKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official",
+        "importedshadow.ImportedKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/008-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official/aliasshadow.AliasKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official",
+        "aliasshadow.AliasKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/009-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official/membershadow.MemberKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official",
+        "membershadow.MemberKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/010-stderr.txt"
+    },
+    {
+      "label": "compile official Consumer.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nullable_to_string/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nullable_to_string",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/011-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official-official:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official-official-runner",
+        "/workspace/korrust/tests/nullable_to_string/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/012-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer official/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official-official-runner:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official-official:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/013-stderr.txt"
+    },
+    {
+      "label": "compile candidate Consumer.kt",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/tests/nullable_to_string/Consumer.kt",
+        "--module-name",
+        "nullable_to_string",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/014-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official-candidate:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official-candidate-runner",
+        "/workspace/korrust/tests/nullable_to_string/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/015-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer official/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official-candidate-runner:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official-candidate:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/official:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/016-stderr.txt"
+    },
+    {
+      "label": "verified fixed Java caller candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/java:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/017-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate/EffectsKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate",
+        "EffectsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/018-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate/localshadow.LocalKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate",
+        "localshadow.LocalKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/019-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate/importedshadow.ImportedKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate",
+        "importedshadow.ImportedKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/020-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate/aliasshadow.AliasKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate",
+        "aliasshadow.AliasKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/021-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate/membershadow.MemberKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate",
+        "membershadow.MemberKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/022-stderr.txt"
+    },
+    {
+      "label": "compile official Consumer.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/nullable_to_string/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "nullable_to_string",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/023-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate-official:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate-official-runner",
+        "/workspace/korrust/tests/nullable_to_string/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/024-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer candidate/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate-official-runner:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate-official:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/025-stderr.txt"
+    },
+    {
+      "label": "compile candidate Consumer.kt",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/tests/nullable_to_string/Consumer.kt",
+        "--module-name",
+        "nullable_to_string",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/026-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate-candidate:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate-candidate-runner",
+        "/workspace/korrust/tests/nullable_to_string/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/027-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer candidate/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate-candidate-runner:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate-candidate:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate:/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/028-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/028-stderr.txt"
+    },
+    {
+      "label": "negative official/extra-argument",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/extra-argument.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/029-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/029-stderr.txt"
+    },
+    {
+      "label": "negative candidate/extra-argument",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/extra-argument.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/030-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/030-stderr.txt"
+    },
+    {
+      "label": "negative official/wrong-result",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/wrong-result.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/031-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/031-stderr.txt"
+    },
+    {
+      "label": "negative candidate/wrong-result",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/wrong-result.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/032-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/032-stderr.txt"
+    },
+    {
+      "label": "negative official/nullable-member",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/nullable-member.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/033-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/033-stderr.txt"
+    },
+    {
+      "label": "negative candidate/nullable-member",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/nullable-member.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/034-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T064156506548Z-nullable-to-string/034-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "fixed-java/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/official/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/official/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "fixed-java/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/candidate/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/candidate/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "JVM-public-callable-signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/extra-argument",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/extra-argument",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/wrong-result",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/wrong-result",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/nullable-member",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/nullable-member",
+      "outcome": "pass"
+    },
+    {
+      "id": "frozen-inputs",
+      "outcome": "pass"
+    }
+  ],
+  "evidence": [],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_nullable_to_string.py",
+      "--candidate",
+      "/tmp/targets159-variance/debug/korrust",
+      "--reference-root",
+      "/workspace/korrust",
+      "--source-root",
+      "/workspace/work/nullable-string003"
+    ]
+  ],
+  "limitations": [
+    "The canonical kotlin.Any?.toString builtin declaration is validated from pinned Kotlin builtin metadata and mapped to its public String.valueOf(Object) JVM target through normal extension selection. Source, import and alias precedence remain in ordinary resolution. No Android runtime or full-app claim."
+  ],
+  "counts": {
+    "pass": 14
+  }
+}

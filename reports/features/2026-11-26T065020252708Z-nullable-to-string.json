@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-26T06:50:20.252708+00:00",
+  "status": "complete",
+  "compiler": {
+    "binary": "/tmp/targets159-variance/debug/korrust",
+    "binary_sha256": "da750e95b8056db9b8a00489767ac0d8a7767a1e90b3ec66c2d83a01f116457d",
+    "source_revision": "621dc6b7974f9a9aad0e2080581d4acafa1a2180",
+    "implementation_revisions": [
+      "b401466ec",
+      "662ca3ba5"
+    ]
+  },
+  "reference_compiler": "Kotlin 2.3.21",
+  "reference_sources": {
+    "references/kotlin/libraries/stdlib/jvm/builtins/Library.kt": "a145db21ad95318e509bd761b098a97508011b0b287105b35849efd221e4f608",
+    "references/kotlin/compiler/ir/backend.common/src/org/jetbrains/kotlin/backend/common/lower/FlattenStringConcatenationLowering.kt": "1237ad8c7c560700c13e0606ab00e08b663faf567cee0321da8edf376094def4",
+    "references/kotlin/compiler/ir/backend.jvm/src/org/jetbrains/kotlin/backend/jvm/JvmSymbols.kt": "7329fb9d4491f14957d0a0938b4586eb80ff64fcc9a7e76836eaf954f9289efe",
+    "references/kotlin/compiler/ir/backend.jvm/codegen/src/org/jetbrains/kotlin/backend/jvm/intrinsics/IrIntrinsicMethods.kt": "682c39d30eaa9eb7211ec216e36dca936fdf9a9fe0d605ed64c1e311d8f92d2e"
+  },
+  "counts": {
+    "pass": 14
+  },
+  "features": [
+    {
+      "name": "Kotlin nullable toString builtin",
+      "status": "supported",
+      "scope": "Validate kotlin.Any?.toString from pinned builtin metadata, resolve it through ordinary extension candidate selection and lower the selected builtin to the checked public String.valueOf(Object) JVM target. Nulls, boxed primitives, arrays, generic values, bound references, source/import/alias shadowing and ordinary Java member priority are exercised.",
+      "evidence": [
+        "reports/correctness/2026-11-26T064156506548Z-nullable-to-string.json"
+      ]
+    }
+  ],
+  "validation": {
+    "rust_api_tests": 1,
+    "clippy": "Frozen library, binary and owned integration test passed with warnings denied.",
+    "format": "Owned source and integration test passed.",
+    "report_viewer_tests": 8,
+    "interop": "Java caller compiled against official output verifies both providers with -Xverify:all; all4 Kotlin provider/consumer pairs and public callable signatures match.",
+    "null_override": "An override returning Java null propagates it without an extra Java-expression assertion, matching the intrinsic contract and official bytecode. Exceptions and receiver evaluation counts are checked."
+  },
+  "androidbible": {
+    "case003": "The callback now advances through etInput?.text.toString() and putExtra. A labeled diagnostic copy with explicit SAM construction exposes the next failure at inherited Java static field RESULT_OK in setResult. The original source is not claimed compiled.",
+    "diagnostic_source_sha256": "975c53be7f1670b932708cf8b687f99b7a1c957751d64d26a02646a8cd19f4b2"
+  },
+  "evidence": [
+    "reports/correctness/2026-11-26T064156506548Z-nullable-to-string.json",
+    "reports/correctness/2026-11-26T063524026288Z-nullable-to-string.json",
+    "reports/features/2026-11-26T065020252708Z-nullable-to-string/AlertDialogActivity-diagnostic.json",
+    "reports/features/2026-11-26T065020252708Z-nullable-to-string/AlertDialogActivity-diagnostic.kt",
+    "reports/features/2026-11-26T065020252708Z-nullable-to-string/Android-putExtra-probe.kt",
+    "reports/features/2026-11-26T065020252708Z-nullable-to-string/Android-putExtra-probe.log",
+    "reports/features/2026-11-26T065020252708Z-nullable-to-string/build.log",
+    "reports/features/2026-11-26T065020252708Z-nullable-to-string/clippy.log",
+    "reports/features/2026-11-26T065020252708Z-nullable-to-string/official-bytecode.txt",
+    "reports/features/2026-11-26T065020252708Z-nullable-to-string/owned-format.log",
+    "reports/features/2026-11-26T065020252708Z-nullable-to-string/rust-api.log",
+    "reports/features/2026-11-26T065020252708Z-nullable-to-string/viewer-tests.log"
+  ],
+  "limitations": [
+    "This maps the canonical Kotlin builtin declaration; broader builtin member indexing and unrelated extension precedence remain at existing support.",
+    "The historical exploration report records a Java-expression null assertion failure corrected in the final StaticCall intrinsic lowering. Only final14 cases count.",
+    "Combined branch checks are separate from this exact frozen source. No Android runtime or full-app claim."
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_nullable_to_string.py",
+      "--candidate",
+      "/tmp/targets159-variance/debug/korrust",
+      "--reference-root",
+      "/workspace/korrust",
+      "--source-root",
+      "/workspace/work/nullable-string003"
+    ]
+  ]
+}
