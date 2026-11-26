@@ -74,7 +74,7 @@ pub(crate) fn supports_erased_reified_classifier(method: &JavaMethod, parameter:
     let Ok(body) = decode(code) else {
         return false;
     };
-    let mut uses_array = false;
+    let mut uses_classifier = false;
     let mut indirect_reification = false;
     for (index, instruction) in body.instructions.iter().enumerate() {
         if matches!(&instruction.kind, InlineOp::Reference { constant: InlineConstant::Method { owner, name, .. }, .. } if owner == "kotlin/jvm/internal/Intrinsics" && name == "needClassReification")
@@ -102,28 +102,33 @@ pub(crate) fn supports_erased_reified_classifier(method: &JavaMethod, parameter:
         if classifier != parameter {
             continue;
         }
-        if !matches!(&body.instructions[index - 2].kind, InlineOp::Raw { opcode: 0x03, operands } if operands.is_empty())
-            && !matches!(
-                &body.instructions[index - 2].kind,
-                InlineOp::Constant(InlineConstant::Integer(0))
-            )
-        {
-            return false;
-        }
-        if !matches!(
-            &body.instructions[index + 1].kind,
-            InlineOp::Reference {
-                opcode: 0xbd,
-                constant: InlineConstant::Class(_),
-                ..
+        let operation = match &body.instructions[index - 2].kind {
+            InlineOp::Raw { opcode, operands }
+                if operands.is_empty() && (0x03..=0x08).contains(opcode) =>
+            {
+                i32::from(*opcode - 0x03)
             }
+            InlineOp::Constant(InlineConstant::Integer(operation)) => *operation,
+            _ => return false,
+        };
+        let next = &body.instructions[index + 1].kind;
+        if !matches!(
+            (operation, next),
+            (
+                0,
+                InlineOp::Reference {
+                    opcode: 0xbd,
+                    constant: InlineConstant::Class(_),
+                    ..
+                }
+            ) | (4, InlineOp::Constant(InlineConstant::Class(_)))
         ) {
             return false;
         }
-        uses_array = true;
+        uses_classifier = true;
     }
     !indirect_reification
-        && (uses_array
+        && (uses_classifier
             || method
                 .kotlin_params
                 .as_ref()
