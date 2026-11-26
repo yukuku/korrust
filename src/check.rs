@@ -806,6 +806,73 @@ impl Checker<'_> {
         self.extension_receivers.insert(0, receiver);
         Ok((name, ty))
     }
+    fn declared_list_call(
+        &mut self,
+        receiver: &Value,
+        name: &str,
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<Option<Value>> {
+        let mut candidates = Vec::new();
+        for (classifier, owner) in [
+            ("kotlin/collections/MutableList", "java/util/List"),
+            ("kotlin/collections/List", "java/util/List"),
+            ("kotlin/Any", "java/lang/Object"),
+        ] {
+            if classifier == "kotlin/collections/MutableList"
+                && !matches!(receiver.ty.base(), Type::MutableList(_))
+            {
+                continue;
+            }
+            let declarations = match self.classpath.builtin_member_declarations(classifier, name) {
+                Ok(methods) => methods,
+                Err(error) if error.code == "BUILTIN_DECLARATIONS_NOT_FOUND" => continue,
+                Err(error) => return Err(error),
+            };
+            if declarations.is_empty() {
+                continue;
+            }
+            let class = self.classpath.load(owner)?;
+            for mut method in declarations {
+                let Some(physical) = class.methods.iter().find(|m| {
+                    m.name == method.name
+                        && m.descriptor == method.descriptor
+                        && m.access & 9 == 1
+                        && !m.unsupported
+                }) else {
+                    continue;
+                };
+                if candidates
+                    .iter()
+                    .any(|existing: &JavaMethod| existing.descriptor == method.descriptor)
+                {
+                    continue;
+                }
+                method.owner.clone_from(&class.name);
+                method.access = physical.access;
+                candidates.push(library::specialize_receiver(
+                    method,
+                    &receiver.ty,
+                    &class,
+                    self.classpath,
+                ));
+            }
+        }
+        if candidates.is_empty() {
+            return Ok(None);
+        }
+        let method = match self.select_method(&candidates, args, offset) {
+            Ok(method) => method,
+            Err(error) if error.message.contains("Ambiguous") => return Err(error),
+            Err(error) => {
+                return self
+                    .member_extension_fallback(receiver.clone(), name, args, error)
+                    .map(Some);
+            }
+        };
+        self.member_call(method, receiver.clone(), args, offset)
+            .map(Some)
+    }
     fn list_call(
         &mut self,
         receiver: Value,
@@ -862,6 +929,11 @@ impl Checker<'_> {
                     }),
                 ),
             });
+        }
+        if !matches!(name, "set" | "add")
+            && let Some(value) = self.declared_list_call(&receiver, name, args, offset)?
+        {
+            return Ok(value);
         }
         if !mutable {
             return self.extension_call(receiver, name, args, &[], offset);
