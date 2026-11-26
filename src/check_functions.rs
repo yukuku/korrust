@@ -406,6 +406,12 @@ impl Checker<'_> {
                 || self.members.values().any(|method| {
                     method.source_name() == name || method.source_property.as_ref() == Some(name)
                 })
+                || self.library_candidates(name).iter().any(|method| {
+                    method
+                        .library
+                        .as_ref()
+                        .is_some_and(|library| library.receiver.is_some())
+                })
                 || self.local(name).is_none()
                     && !self.captured.contains_key(name)
                     && !self.functions.contains_key(name)
