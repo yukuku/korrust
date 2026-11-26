@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T03:51:35.353369+00:00",
+  "status": "complete",
+  "selection": "Runtime results of nested conditionals in try/catch expressions after expanded vararg overload resolution",
+  "compiler": {
+    "feature_commit": "e3ea809375c3ec7afc41bce61bbce1599f16cd92",
+    "binary_sha256": "d03663b045531e27a2152cc3352a942377adb7b7c0a20e616bd73262d8088f7b"
+  },
+  "cases": [
+    {
+      "path": "Alkitab/src/test/java/yuku/alkitabconverter/util/DesktopVerseParserGoldenTest.kt",
+      "group": "Alkitab/test",
+      "source_sha256": "d9b9d09dadb10f0eaffcede5335b4426edd8985e07be1bca37cfed7b23db3221",
+      "attempts": [
+        {
+          "configuration": "resolved",
+          "exit_code": 0,
+          "diagnostic": "",
+          "outcome": "compiled",
+          "class_count": 5,
+          "owned_outputs": {
+            "yuku/alkitabconverter/util/DesktopVerseParserGoldenTest$Companion$lambda$1461$0.class": {
+              "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitabconverter/util/DesktopVerseParserGoldenTest.kt",
+              "sha256": "ffcf1784bb1f3c4e178c35c625cb50dacb4f5b41de106c2c436d8e2e8adbbe6d"
+            },
+            "yuku/alkitabconverter/util/DesktopVerseParserGoldenTest$Companion$lambda$1494$0.class": {
+              "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitabconverter/util/DesktopVerseParserGoldenTest.kt",
+              "sha256": "8f54a8b8ac5b24fded99e5276524fac8f1ba094b8d8d70c66d37dfbea845a92b"
+            },
+            "yuku/alkitabconverter/util/DesktopVerseParserGoldenTest$Companion.class": {
+              "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitabconverter/util/DesktopVerseParserGoldenTest.kt",
+              "sha256": "ad82e528d26cb819ea0a0b8adbf4251536527133e912ae46081504e95d93f75b"
+            },
+            "yuku/alkitabconverter/util/DesktopVerseParserGoldenTest$lambda$843$2.class": {
+              "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitabconverter/util/DesktopVerseParserGoldenTest.kt",
+              "sha256": "11aa2a44a75568e7e16ea984ed10a9699c4e200d9c595c48c27782769cd965be"
+            },
+            "yuku/alkitabconverter/util/DesktopVerseParserGoldenTest.class": {
+              "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitabconverter/util/DesktopVerseParserGoldenTest.kt",
+              "sha256": "c373e042b262e730be877f3879527b079a562d06aa97e42d6c832aa9f382bfd7"
+            }
+          }
+        }
+      ],
+      "excluded_classes": [
+        "yuku/alkitabconverter/util/DesktopVerseParserGoldenTest$Companion.class",
+        "yuku/alkitabconverter/util/DesktopVerseParserGoldenTest.class"
+      ],
+      "junit": {
+        "source": "Alkitab/src/test/java/yuku/alkitabconverter/util/DesktopVerseParserGoldenTest.kt",
+        "source_sha256": "d9b9d09dadb10f0eaffcede5335b4426edd8985e07be1bca37cfed7b23db3221",
+        "class": "yuku.alkitabconverter.util.DesktopVerseParserGoldenTest",
+        "kotlin": {
+          "exit_code": 0,
+          "passed_tests": 3704
+        },
+        "korrust": {
+          "exit_code": 0,
+          "passed_tests": 3704
+        }
+      }
+    }
+  ],
+  "junit_tests_per_compiler": 3704,
+  "evidence": [
+    "reports/correctness/2026-11-26T035135Z-try-branch-results-androidbible/388-korrust.log",
+    "reports/correctness/2026-11-26T035135Z-try-branch-results-androidbible/388-kotlin.log",
+    "reports/correctness/2026-11-26T035135Z-try-branch-results-androidbible/differential.log",
+    "reports/correctness/2026-11-26T035135Z-try-branch-results-androidbible/verify.py"
+  ],
+  "prior_result": {
+    "source_sha256": "d9b9d09dadb10f0eaffcede5335b4426edd8985e07be1bca37cfed7b23db3221",
+    "kotlin": {
+      "exit_code": 0,
+      "passed_tests": 3704
+    },
+    "korrust": {
+      "exit_code": 1,
+      "passed_tests": null
+    },
+    "failure": "All 3704 assertions saw kotlin.Unit as the actual value before try-block result normalization.",
+    "binary_sha256": "78352f7a578c8d44cd27b12706a4a9b092fa67d651369f63da75acc7f8f8bd20"
+  }
+}
