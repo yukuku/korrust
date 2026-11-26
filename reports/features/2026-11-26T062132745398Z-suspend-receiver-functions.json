@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-26T06:21:32.745398+00:00",
+  "status": "passed",
+  "compiler": {
+    "binary": "/tmp/targets159-suspend-headcheck/debug/korrust",
+    "binary_sha256": "d6a72878ba129ee92c5f11333e2257bbe8407753f988116e68ace49fdf72113f",
+    "source_root": ".",
+    "source_revision": "090691d56e1222aa6b97fe8329120362d35a8b86"
+  },
+  "reference_compiler": "Kotlin 2.3.21",
+  "coroutine_dependency": {
+    "schema_version": 1,
+    "coordinate": "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.9.0",
+    "version": "1.9.0",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlinx/kotlinx-coroutines-core-jvm/1.9.0/kotlinx-coroutines-core-jvm-1.9.0.jar",
+    "sha256": "ad89c2892235e670f222d819cb3d81188143cb19a05b59df9889ae4269f5c70a",
+    "license": "Apache-2.0",
+    "path": "target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar"
+  },
+  "evidence": [
+    "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions.json",
+    "reports/correctness/2026-11-26T055530070785Z-suspend-receiver-functions.json",
+    "reports/features/2026-11-26T062132745398Z-suspend-receiver-functions/committed-archive-build.log",
+    "reports/features/2026-11-26T062132745398Z-suspend-receiver-functions/committed-archive-check.log",
+    "reports/features/2026-11-26T062132745398Z-suspend-receiver-functions/parser-unit.log",
+    "reports/features/2026-11-26T062132745398Z-suspend-receiver-functions/development-library-clippy.log",
+    "reports/features/2026-11-26T062132745398Z-suspend-receiver-functions/report-generator-tests.log"
+  ],
+  "features": [
+    {
+      "name": "Suspend receiver function types and coroutine lambda frames",
+      "status": "supported",
+      "scope": "Source types and Kotlin metadata preserve extension receivers together with suspension. Ordinary and receiver suspend lambdas use continuation frames; generic calls infer callback receiver/results. Java callers independently wait until the coroutine thread parks before resuming, checking CoroutineScope context identity, saved primitive locals and captured mutable state. Exported callback APIs execute in all four Kotlin provider/frontend combinations, and nonsynthetic public JVM signatures match.",
+      "restrictions": [
+        "Existing explicit frame/declaration boundaries remain; ordinary-to-suspend function-value adaptation, inline suspend callback declarations, suspend callable references, Unit receiver/argument shapes and defaulted suspend declarations remain unsupported.",
+        "The unchanged AudioSetsRepositoryTest and BibleAudioRepositoryTest advance to anonymous suspend overrides. VersionDownloadWorkerTest advances to its builder extension; AlkitabGptIntegrationTest advances to nested suspension operands, covered by a separate follow-up. No whole-application or performance measurement."
+      ],
+      "evidence_report": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions.json"
+    }
+  ],
+  "validation": {
+    "final_differential_counts": {
+      "pass": 8,
+      "invalid_rejected": 6,
+      "unsupported_language": 4
+    },
+    "committed_archive_build": "passed; complete src hashes matched committed090691d56",
+    "committed_archive_check": "passed",
+    "targeted_parser_unit": "1 passed;295 library tests discovered",
+    "development_library_clippy": "passed",
+    "report_generator_tests": "8 passed"
+  },
+  "delivery_corrections": [
+    {
+      "commits": [
+        "74f398258"
+      ],
+      "reason": "The first staged source delivery omitted the metadata receiver binding and included a Compose-only block without its uncommitted helper. Exact prerequisite corrections preceded the final build and differential run from the committed archive."
+    },
+    {
+      "commits": [
+        "facdc39dd"
+      ],
+      "reason": "Promoted the previous parser rejection of a suspend String receiver callback into exact positive type and Function2 descriptor assertions; all other negative rows were retained."
+    }
+  ],
+  "inputs": {
+    "evidence_sha256": {
+      "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions.json": "360e5862cdb3ab93513aecf54f44a46083aa70c16d5b0e56c1face4fc34825dd",
+      "reports/correctness/2026-11-26T055530070785Z-suspend-receiver-functions.json": "e1f13f54053762882a6fad80aaea5b094af69f3a717b26ff79b2895366362bd8",
+      "reports/features/2026-11-26T062132745398Z-suspend-receiver-functions/committed-archive-build.log": "069602fda5bcffd8f492781f8dbf9400abb43d77ca102b60a822425ff1048dcc",
+      "reports/features/2026-11-26T062132745398Z-suspend-receiver-functions/committed-archive-check.log": "e67724595c32b5f5c808c67d33406bdc92df375b6a3815c30a84b66c5e9629d7",
+      "reports/features/2026-11-26T062132745398Z-suspend-receiver-functions/parser-unit.log": "245510cb624f2aa68fa2e0dff548c6001bbb6ca096a57fd694a3c2895658a378",
+      "reports/features/2026-11-26T062132745398Z-suspend-receiver-functions/development-library-clippy.log": "22212a549a6189b4c511ccaaf680a3d82add872bfc32ae3d80036b1bed9df710",
+      "reports/features/2026-11-26T062132745398Z-suspend-receiver-functions/report-generator-tests.log": "af8e84bb5584b4b521ae3345f1b1b27ddad84eac99aff5357f2241e7d6df50c0"
+    }
+  }
+}

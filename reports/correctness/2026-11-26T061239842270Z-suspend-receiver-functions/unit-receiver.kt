@@ -1,0 +1,1 @@
+fun limited(block: suspend Unit.() -> Int): Int = 1

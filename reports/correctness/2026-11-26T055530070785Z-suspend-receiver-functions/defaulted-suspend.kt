@@ -1,0 +1,1 @@
+suspend fun limited(value: Int = 1): Int = value
