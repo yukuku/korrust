@@ -7959,3 +7959,7 @@ fn java_parameter(ty: Type) -> Type {
         ty
     }
 }
+
+pub(crate) fn annotation_class_subtype(cp: &Classpath, actual: &Type, expected: &Type) -> bool {
+    relations::subtype_at(cp, actual, expected, 0)
+}

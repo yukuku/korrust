@@ -105,6 +105,7 @@ pub(crate) enum AnnotationRetention {
 pub(crate) struct AnnotationDefinition {
     pub kotlin_parameters: Option<Vec<String>>,
     pub kotlin_types: Vec<Type>,
+    pub java_class_types: Vec<(String, Type)>,
     pub kotlin_targets: Option<Vec<String>>,
     pub vararg: Option<String>,
     pub retention: AnnotationRetention,
@@ -3187,6 +3188,26 @@ fn validate_annotation_default(descriptor: &str, payload: &[u8], pool: &[Constan
     Ok(())
 }
 
+fn java_annotation_type(ty: Type) -> Type {
+    match ty {
+        Type::Java(name) if name == "java/lang/Class" => Type::Parameterized {
+            name: "kotlin/reflect/KClass".into(),
+            arguments: vec![crate::syntax::TypeArgument {
+                variance: crate::syntax::Variance::Invariant,
+                ty: None,
+            }],
+        },
+        Type::Parameterized { name, arguments } if name == "java/lang/Class" => {
+            Type::Parameterized {
+                name: "kotlin/reflect/KClass".into(),
+                arguments,
+            }
+        }
+        Type::Array(inner) => Type::Array(Box::new(java_annotation_type(*inner))),
+        other => other,
+    }
+}
+
 fn annotation_definition(
     class: &JavaClass,
     attrs: &Attributes,
@@ -3327,6 +3348,7 @@ fn annotation_definition(
         return Ok(None);
     }
     let mut parameters = Vec::new();
+    let mut java_class_types = Vec::new();
     for (method, attrs) in class.methods.iter().zip(methods) {
         if method.name.starts_with('<') {
             continue;
@@ -3354,23 +3376,30 @@ fn annotation_definition(
             return Ok(None);
         }
         if let Some(signature) = &attrs.signature {
-            fn supported_annotation_signature(ty: &Type) -> bool {
+            fn supported_annotation_signature(ty: &Type, bounded: bool) -> bool {
                 match ty {
                     Type::Parameterized { name, arguments } => {
                         name == "java/lang/Class"
                             && arguments.len() == 1
-                            && arguments[0].ty.is_none()
+                            && arguments[0].ty.as_ref().is_none_or(|ty| {
+                                bounded && matches!(ty.base(), Type::Java(_) | Type::String)
+                            })
                     }
-                    Type::Array(inner) => supported_annotation_signature(inner),
+                    Type::Array(inner) => supported_annotation_signature(inner, bounded),
                     _ => true,
                 }
             }
-            let (parameters, args, result) = signature::method(signature, &[])?;
+            let (parameters, args, signature_result) = signature::method(signature, &[])?;
             if !parameters.is_empty()
                 || !args.is_empty()
-                || !supported_annotation_signature(&result)
+                || signature_result.descriptor() != result
+                || !supported_annotation_signature(&signature_result, kotlin_parameters.is_none())
             {
                 return Ok(None);
+            }
+            if kotlin_parameters.is_none() {
+                java_class_types
+                    .push((method.name.clone(), java_annotation_type(signature_result)));
             }
         }
         if let Some(payload) = &attrs.annotation_default_payload {
@@ -3411,6 +3440,7 @@ fn annotation_definition(
     Ok(Some(AnnotationDefinition {
         kotlin_parameters,
         kotlin_types,
+        java_class_types,
         kotlin_targets,
         vararg,
         retention,
@@ -3703,28 +3733,16 @@ fn parse_details_impl(
                             .and_then(|index| definition.kotlin_types.get(index))
                             .cloned()
                     } else {
-                        fn annotation_type(ty: Type) -> Type {
-                            match ty {
-                                Type::Java(name) | Type::Parameterized { name, .. }
-                                    if name == "java/lang/Class" =>
-                                {
-                                    Type::Parameterized {
-                                        name: "kotlin/reflect/KClass".into(),
-                                        arguments: vec![crate::syntax::TypeArgument {
-                                            variance: crate::syntax::Variance::Invariant,
-                                            ty: None,
-                                        }],
-                                    }
-                                }
-                                Type::Array(inner) => {
-                                    Type::Array(Box::new(annotation_type(*inner)))
-                                }
-                                other => other,
-                            }
-                        }
-                        Some(annotation_type(
-                            signature::method(&method.descriptor, &[])?.2,
-                        ))
+                        Some(
+                            definition
+                                .java_class_types
+                                .iter()
+                                .find(|(parameter, _)| parameter == name)
+                                .map(|(_, ty)| ty.clone())
+                                .unwrap_or(java_annotation_type(
+                                    signature::method(&method.descriptor, &[])?.2,
+                                )),
+                        )
                     };
                     method.source_property = Some(name.clone());
                     method.kotlin_params = Some(Vec::new());

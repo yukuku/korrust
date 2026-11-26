@@ -357,6 +357,7 @@ pub(crate) fn definition(
         targets: jvm_targets,
         parameters,
         kotlin_types: Vec::new(),
+        java_class_types: Vec::new(),
         kotlin_parameters: Some(source.parameters.iter().map(|p| p.name.clone()).collect()),
         kotlin_targets: Some(kotlin_targets),
         vararg,
@@ -761,6 +762,45 @@ fn class_literal_value(
     })
 }
 
+fn validate_class_bound(
+    value: &Value,
+    expected: &Type,
+    cp: &Classpath,
+    offset: usize,
+) -> Result<()> {
+    match (value, expected) {
+        (Value::Array(values), Type::Array(element)) => {
+            for value in values {
+                validate_class_bound(value, element, cp, offset)?;
+            }
+        }
+        (Value::Class { logical, .. }, Type::Parameterized { name, .. })
+            if name == "kotlin/reflect/KClass" =>
+        {
+            let logical = if logical == &Type::Unit {
+                Type::Java("kotlin/Unit".into())
+            } else {
+                logical.clone()
+            };
+            let actual = Type::Parameterized {
+                name: name.clone(),
+                arguments: vec![TypeArgument {
+                    variance: Variance::Invariant,
+                    ty: Some(logical),
+                }],
+            };
+            if !crate::check::annotation_class_subtype(cp, &actual, expected) {
+                return Err(invalid(
+                    offset,
+                    "Annotation class literal does not satisfy the declared class bound",
+                ));
+            }
+        }
+        _ => {}
+    }
+    Ok(())
+}
+
 pub(crate) fn arguments_value(
     name: &str,
     arguments: &[(Option<String>, Expr)],
@@ -844,15 +884,14 @@ pub(crate) fn arguments_value(
         if !supplied.insert(key.clone()) {
             return Err(invalid(expression.offset, "Duplicate annotation argument"));
         }
-        let checked = if order.is_none() && key == "value" && descriptor.starts_with('[') {
+        let checked = if order.is_none()
+            && key == "value"
+            && descriptor.starts_with('[')
+            && arguments[position].0.is_none()
+        {
             if let ExprKind::Unary(operator, expression) = &expression.kind
                 && operator == "*"
             {
-                value(expression, descriptor, imports, cp, depth + 1, scope)?
-            } else if matches!(
-                expression.kind,
-                ExprKind::AnnotationArray(_) | ExprKind::Call(_, _)
-            ) {
                 value(expression, descriptor, imports, cp, depth + 1, scope)?
             } else {
                 Value::Array(vec![value(
@@ -867,6 +906,13 @@ pub(crate) fn arguments_value(
         } else {
             value(expression, descriptor, imports, cp, depth + 1, scope)?
         };
+        if let Some((_, expected)) = definition
+            .java_class_types
+            .iter()
+            .find(|(name, _)| name == &key)
+        {
+            validate_class_bound(&checked, expected, cp, expression.offset)?;
+        }
         values.push((key, checked));
     }
     if let Some(name) = &definition.vararg {
