@@ -1,6 +1,46 @@
 use super::*;
 
+#[derive(Clone, Copy)]
+enum BlockResult<'a> {
+    Discard,
+    Value(Option<&'a Type>),
+}
+
 impl Checker<'_> {
+    pub(super) fn discarded_value(&mut self, expr: &Expr) -> Result<Value> {
+        match &expr.kind {
+            ExprKind::Try { .. } | ExprKind::Block(_) => {
+                self.check_control_result(expr, BlockResult::Discard)
+            }
+            ExprKind::If(cond, yes, no) => {
+                let statement = |branch: &Expr| syntax::Statement {
+                    offset: branch.offset,
+                    kind: StatementKind::Expression(branch.clone()),
+                };
+                let branches = syntax::Statement {
+                    offset: expr.offset,
+                    kind: StatementKind::If(
+                        *cond.clone(),
+                        vec![statement(yes)],
+                        vec![statement(no)],
+                    ),
+                };
+                let (body, _) = self.block(&[branches])?;
+                Ok(Value {
+                    ty: Type::Unit,
+                    kind: ValueKind::Block(
+                        body,
+                        Box::new(Value {
+                            ty: Type::Unit,
+                            kind: ValueKind::Unit,
+                        }),
+                    ),
+                })
+            }
+            _ => self.value(expr),
+        }
+    }
+
     pub(super) fn join_when_results(
         &self,
         left: &Type,
@@ -72,8 +112,23 @@ impl Checker<'_> {
         &mut self,
         statements: &[syntax::Statement],
         _offset: usize,
-        expected: Option<&Type>,
+        mode: BlockResult<'_>,
     ) -> Result<(Vec<Statement>, Value)> {
+        let BlockResult::Value(expected) = mode else {
+            let (body, abrupt) = self.block(statements)?;
+            let kind = if abrupt {
+                ValueKind::Abrupt(Vec::new())
+            } else {
+                ValueKind::Unit
+            };
+            return Ok((
+                body,
+                Value {
+                    ty: Type::Unit,
+                    kind,
+                },
+            ));
+        };
         let tail = statements.last().cloned().and_then(|mut statement| {
             syntax::normalize_result_tail(std::slice::from_mut(&mut statement));
             match statement.kind {
@@ -117,10 +172,14 @@ impl Checker<'_> {
         expr: &Expr,
         expected: Option<&Type>,
     ) -> Result<Value> {
+        self.check_control_result(expr, BlockResult::Value(expected))
+    }
+
+    fn check_control_result(&mut self, expr: &Expr, mode: BlockResult<'_>) -> Result<Value> {
         let offset = expr.offset;
         match &expr.kind {
             ExprKind::Block(statements) => {
-                let (mut body, result) = self.result_block(statements, offset, expected)?;
+                let (mut body, result) = self.result_block(statements, offset, mode)?;
                 if let ValueKind::Abrupt(tail) = result.kind {
                     body.extend(tail);
                     return Ok(Value {
@@ -198,7 +257,7 @@ impl Checker<'_> {
             } => {
                 let before = self.initialized.clone();
                 let refinements = self.refinements.clone();
-                let (body, mut result) = self.result_block(body, offset, expected)?;
+                let (body, mut result) = self.result_block(body, offset, mode)?;
                 let mut initialized = if matches!(result.kind, ValueKind::Abrupt(_)) {
                     None
                 } else {
@@ -223,7 +282,7 @@ impl Checker<'_> {
                         None => self.allocate_slot(offset)?,
                     };
                     let (catch_body, catch_result) =
-                        self.result_block(&catch.body, offset, expected)?;
+                        self.result_block(&catch.body, offset, mode)?;
                     self.scopes.pop();
                     if !matches!(catch_result.kind, ValueKind::Abrupt(_)) {
                         initialized = Some(match initialized {

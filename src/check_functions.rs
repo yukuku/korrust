@@ -640,7 +640,7 @@ impl Checker<'_> {
                 ..
             }) => {
                 if result.as_ref() == &Type::Unit {
-                    body.push(Statement::Expression(checker.value(&value)?));
+                    body.push(Statement::Expression(checker.discarded_value(&value)?));
                     body.push(Statement::Return(Value {
                         ty: Type::Unit,
                         kind: ValueKind::Unit,
