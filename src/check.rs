@@ -2919,6 +2919,22 @@ impl Checker<'_> {
             .qualified_java_classifier(expression, expression.offset)?
             .map(|(class, _)| class.name))
     }
+    fn java_static_methods(&self, owner: &str, name: &str) -> Result<Vec<JavaMethod>> {
+        Ok(self
+            .classpath
+            .methods(owner)?
+            .into_iter()
+            .filter(|m| {
+                m.source_name() == name
+                    && m.access & 9 == 9
+                    && (m.owner == owner
+                        || self
+                            .classpath
+                            .load(&m.owner)
+                            .is_ok_and(|declaring| declaring.access & 0x0200 == 0))
+            })
+            .collect())
+    }
     fn java_static(
         &mut self,
         owner: &str,
@@ -2940,20 +2956,7 @@ impl Checker<'_> {
                 "INNER_CONSTRUCTOR_RECEIVER_REQUIRED",
             ));
         }
-        let methods = self
-            .classpath
-            .methods(owner)?
-            .into_iter()
-            .filter(|m| {
-                m.source_name() == name
-                    && m.access & 9 == 9
-                    && (m.owner == owner
-                        || self
-                            .classpath
-                            .load(&m.owner)
-                            .is_ok_and(|declaring| declaring.access & 0x0200 == 0))
-            })
-            .collect::<Vec<_>>();
+        let methods = self.java_static_methods(owner, name)?;
         if methods.is_empty()
             && self
                 .classpath

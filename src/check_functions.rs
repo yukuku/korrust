@@ -108,6 +108,40 @@ impl Checker<'_> {
                 _ => (target.as_ref(), &[][..]),
             };
             if let ExprKind::Property(receiver, name) = &target.kind {
+                let classifier = match &receiver.kind {
+                    ExprKind::Name(_) => self.value_classifier(receiver)?,
+                    ExprKind::Property(..) => self
+                        .qualified_java_classifier(receiver, expr.offset)?
+                        .map(|(class, _)| class),
+                    _ => None,
+                };
+                if let Some(class) = classifier
+                    && !class.kotlin_class
+                    && class.access & 1 != 0
+                {
+                    let methods = self.java_static_methods(&class.name, name)?;
+                    if let [method] = methods.as_slice()
+                        && method.owner == class.name
+                        && method
+                            .library
+                            .as_ref()
+                            .is_some_and(|m| !m.type_parameters.is_empty())
+                        && self
+                            .classpath
+                            .java_member_class(&class.name, name)?
+                            .is_none()
+                    {
+                        let method = self.select_method_expected(
+                            &methods,
+                            args,
+                            explicit,
+                            Some(expected),
+                            expr.offset,
+                        )?;
+                        let value = self.library_static_call(method, args, expr.offset)?;
+                        return self.coerce(value, expected.clone(), expr.offset);
+                    }
+                }
                 if let Some(value) = self.contextual_extension_call(
                     receiver,
                     name,
