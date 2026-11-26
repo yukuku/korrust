@@ -151,6 +151,32 @@ impl Checker<'_> {
         Ok((expanded, parameters.len().saturating_sub(packed.len())))
     }
 
+    fn common_vararg_reference(&self, left: &Type, right: &Type) -> Option<Type> {
+        let nonnull = |ty: &Type| match ty.base() {
+            Type::Nullable(inner) => inner.as_ref().clone(),
+            ty => ty.clone(),
+        };
+        let (first, other) = (nonnull(left), nonnull(right));
+        let mut owner = relations::type_owner(&first)?.to_string();
+        let mut seen = HashSet::new();
+        while seen.insert(owner.clone()) {
+            let class = self.classpath.load(&owner).ok()?;
+            owner = class.super_name?;
+            if owner == "java/lang/Object" {
+                return None;
+            }
+            let parent = relations::as_supertype(self.classpath, &first, &owner)?;
+            if self.subtype(&other, &parent) {
+                return Some(if left.is_nullable() || right.is_nullable() {
+                    Type::Nullable(Box::new(parent))
+                } else {
+                    parent
+                });
+            }
+        }
+        None
+    }
+
     pub(super) fn vararg_array(
         &mut self,
         array: &Type,
@@ -180,6 +206,10 @@ impl Checker<'_> {
             let actual = if spread {
                 element_type(&value.ty).ok_or_else(|| {
                     Diagnostic::new(expr.offset, "Spread argument requires a non-null array")
+                        .with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "VARARG_SPREAD_REQUIRES_ARRAY",
+                        )
                 })?
             } else {
                 value.ty.clone()
@@ -204,7 +234,11 @@ impl Checker<'_> {
                     }
                     Some(previous) if self.subtype(&actual, &previous) => previous,
                     Some(previous) if self.subtype(&previous, &actual) => actual,
-                    Some(_) => Type::Nullable(Box::new(Type::Java("java/lang/Object".into()))),
+                    Some(previous) => self
+                        .common_vararg_reference(&previous, &actual)
+                        .unwrap_or_else(|| {
+                            Type::Nullable(Box::new(Type::Java("java/lang/Object".into())))
+                        }),
                 });
             }
             checked.push((spread, value, expr.offset));
@@ -230,10 +264,13 @@ impl Checker<'_> {
                     )
                 };
                 if !matching_array_kind || !self.subtype(&actual, &element) {
-                    return Err(Diagnostic::new(
-                        position,
-                        "Spread array component type mismatch",
-                    ));
+                    return Err(
+                        Diagnostic::new(position, "Spread array component type mismatch")
+                            .with_kind(
+                                crate::DiagnosticKind::InvalidKotlin,
+                                "VARARG_SPREAD_COMPONENT_MISMATCH",
+                            ),
+                    );
                 }
                 values.push((true, value));
             } else {

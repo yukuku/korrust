@@ -1,0 +1,47 @@
+{
+  "id": "suspending-constructor-operand",
+  "status": "passed",
+  "source_sha256": "57d84714742f7e4c4c3f3551c06a87105ee90a007b5bd51f6b14108d385bdcb6",
+  "fixture_sha256": "d9da4f257c4376ea32ef1b87048d0a5b2432fd56216054689749550ab7c5b62b",
+  "binary_sha256": "90ea6f46d86f6cc79815089325cbadcb0531c2195c94bbebf984ac17cad04994",
+  "commands": [
+    {
+      "provider": "official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/suspend-constructor-final/Boundary.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055530070785Z-suspend-receiver-functions/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar",
+        "-d",
+        "/workspace/work/targets159/suspend-constructor-final/official"
+      ],
+      "exit_code": 0
+    },
+    {
+      "provider": "candidate",
+      "argv": [
+        "/tmp/targets159-suspend-committed/debug/korrust",
+        "/workspace/work/targets159/suspend-constructor-final/Boundary.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T055530070785Z-suspend-receiver-functions/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar",
+        "-d",
+        "/workspace/work/targets159/suspend-constructor-final/candidate"
+      ],
+      "exit_code": 1,
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/suspend-constructor-final/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "SUSPEND_STATE_MACHINE_SHAPE_UNSUPPORTED",
+          "message": "Suspension inside expression operands is unsupported",
+          "path": "/workspace/work/targets159/suspend-constructor-final/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+target/checks/2026-11-26T061931926969Z-nullable-sam/wrong-arity.kt:2:37: error: argument type mismatch: actual type is '(Int, ??? (Unknown type for value parameter b)) -> Int', but '((Int) -> Int)?' was expected.
+fun invalid(): Int = Callbacks.call({ a, b -> a + b }, 4)
+                                    ^^^^^^^^^^^^^^^^^
+target/checks/2026-11-26T061931926969Z-nullable-sam/wrong-arity.kt:2:42: error: cannot infer type for value parameter 'b'. Specify it explicitly.
+fun invalid(): Int = Callbacks.call({ a, b -> a + b }, 4)
+                                         ^

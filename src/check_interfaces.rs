@@ -387,6 +387,8 @@ fn register_classes(
                     || function.operator
                     || !function.type_params.is_empty())
                 .then(|| crate::classpath::LibraryMethod {
+                    compose: None,
+                    stable_result: false,
                     default_code: None,
                     vararg_index: None,
                     contracts: Vec::new(),
@@ -1073,6 +1075,8 @@ fn check_function(
     let signatures = Vec::new();
     let extensions = HashSet::new();
     let mut checker = Checker {
+        composer: None,
+        composable_target: None,
         composable_body: false,
         inline_argument_modes: Vec::new(),
         inline_analysis: false,
@@ -1087,6 +1091,7 @@ fn check_function(
         captured_cells: HashMap::new(),
         cells: HashMap::new(),
         cell_names: HashSet::new(),
+        changing_cells: HashSet::new(),
         lambda_owner: owner.into(),
         inline_result: None,
         nonlocal_result: None,
@@ -1126,7 +1131,7 @@ fn check_function(
         contract_facts: HashMap::new(),
         contract_registration: None,
         refinements: HashMap::new(),
-        initialized: HashSet::new(),
+        initialized: InitializationState::default(),
         loop_depth: 0,
         scopes: vec![HashMap::new()],
         next: 1,
@@ -1457,6 +1462,8 @@ interface Catalog {
                 panic!()
             };
             let mut checker = Checker {
+                composer: None,
+                composable_target: None,
                 composable_body: false,
                 inline_argument_modes: Vec::new(),
                 inline_analysis: false,
@@ -1471,6 +1478,7 @@ interface Catalog {
                 captured_cells: HashMap::new(),
                 cells: HashMap::new(),
                 cell_names: HashSet::new(),
+                changing_cells: HashSet::new(),
                 lambda_owner: "Korrust".into(),
                 inline_result: None,
                 nonlocal_result: None,
@@ -1499,7 +1507,7 @@ interface Catalog {
                 contract_facts: HashMap::new(),
                 contract_registration: None,
                 refinements: HashMap::new(),
-                initialized: HashSet::new(),
+                initialized: InitializationState::default(),
                 loop_depth: 0,
                 scopes: vec![HashMap::new()],
                 next: 0,

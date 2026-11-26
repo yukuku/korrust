@@ -143,37 +143,55 @@ impl Classpath {
                     .iter()
                     .any(|(alias, imported, _)| imported == path && alias == name)
         };
-        let mut groups = scope
-            .lexical_values
-            .iter()
-            .map(|classifiers| {
+        let mut groups = Vec::new();
+        let mut lexical_owner = Some(owner.to_owned());
+        for classifiers in &scope.lexical_values {
+            groups.push((
                 classifiers
                     .iter()
                     .filter(|(alias, _)| alias == name)
                     .map(|(_, path)| path.clone())
-                    .collect::<Vec<_>>()
-            })
-            .collect::<Vec<_>>();
+                    .collect::<Vec<_>>(),
+                None,
+            ));
+            if let Some(owner) = lexical_owner {
+                groups.push((Vec::new(), Some(owner.clone())));
+                lexical_owner = self.scope_parent(&owner);
+            }
+        }
         let import_priority = groups.len();
-        groups.extend([explicit, vec![qualified(&scope.package, name)]]);
-        groups.push(
+        groups.extend(
+            [explicit, vec![qualified(&scope.package, name)]]
+                .into_iter()
+                .map(|paths| (paths, None)),
+        );
+        groups.push((
             scope
                 .imports
                 .iter()
                 .filter(|(alias, _, _)| alias == "*")
                 .map(|(_, path, _)| qualified(path.trim_end_matches("/*"), name))
                 .collect(),
-        );
-        groups.push(
+            None,
+        ));
+        groups.push((
             DEFAULT_KOTLIN_PACKAGES
                 .iter()
                 .copied()
                 .chain(["java/lang"])
                 .map(|package| qualified(package, name))
                 .collect(),
-        );
+            None,
+        ));
         let mut inaccessible = false;
-        for (priority, paths) in groups.into_iter().enumerate() {
+        for (priority, (mut paths, inherited)) in groups.into_iter().enumerate() {
+            if let Some(owner) = inherited {
+                paths = self
+                    .inherited_member_class(caller, &owner, name)?
+                    .into_iter()
+                    .map(|class| class.name)
+                    .collect();
+            }
             let explicit = priority == import_priority && !paths.is_empty();
             let mut symbols = std::collections::BTreeMap::new();
             for path in paths {
@@ -191,7 +209,12 @@ impl Classpath {
                         return Err(Diagnostic::new(offset, "Compiled internal classifier values require unsupported class metadata")
                             .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "INTERNAL_CLASSIFIER_VALUE_UNSUPPORTED"));
                     }
-                    let classifier_visible = self.classifier_visible(caller, &class.name);
+                    let declaring = self.lexical_parents.borrow().get(&class.name).cloned();
+                    let classifier_visible = self.classifier_visible(caller, &class.name)
+                        && (visibility != Some(2)
+                            || declaring.as_ref().is_some_and(|declaring| {
+                                self.inheritance_scope(caller, declaring)
+                            }));
                     let jvm_visible = if class.kotlin_class {
                         class.access & 1 != 0
                     } else {
@@ -203,7 +226,7 @@ impl Classpath {
                     if !jvm_visible
                         || !classifier_visible
                         || !internal_visible
-                        || matches!(visibility, Some(2 | 5))
+                        || matches!(visibility, Some(5))
                     {
                         inaccessible = true;
                     }
@@ -211,7 +234,7 @@ impl Classpath {
                         && !class.unsupported
                         && internal_visible
                         && classifier_visible
-                        && !matches!(visibility, Some(2 | 5))
+                        && !matches!(visibility, Some(5))
                     {
                         symbols.insert(
                             format!("class:{}", class.name),

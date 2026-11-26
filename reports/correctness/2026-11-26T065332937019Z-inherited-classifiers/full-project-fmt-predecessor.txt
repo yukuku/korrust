@@ -1,0 +1,18 @@
+Diff in /workspace/work/targets159/inherited-dev/src/syntax.rs:3738:
+                     "CLASS_VISIBILITY_UNSUPPORTED",
+                 ));
+         }
+-        if visibility.as_deref() == Some("private")
+-            && (value_ || sealed_ || open || abstract_)
+-        {
+-            return Err(self.error("Private nested value, sealed, open and abstract classes are unsupported").with_kind(DiagnosticKind::UnsupportedLanguage, "PRIVATE_NESTED_SHAPE_UNSUPPORTED"));
++        if visibility.as_deref() == Some("private") && (value_ || sealed_ || open || abstract_) {
++            return Err(self
++                .error("Private nested value, sealed, open and abstract classes are unsupported")
++                .with_kind(
++                    DiagnosticKind::UnsupportedLanguage,
++                    "PRIVATE_NESTED_SHAPE_UNSUPPORTED",
++                ));
+         }
+         if !self.take("class") {
+             return Err(self.error("Only ordinary final classes are supported"));

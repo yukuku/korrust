@@ -1,0 +1,30 @@
+Diff in /workspace/work/targets159/when-joins-freeze/src/check_library.rs:545:
+             let mut seen_scopes = HashSet::new();
+             while let Some(owner) = scope {
+                 if !seen_scopes.insert(owner.clone()) {
+-                    return Err(Diagnostic::new(offset, "Cyclic lexical classifier hierarchy"));
++                    return Err(Diagnostic::new(
++                        offset,
++                        "Cyclic lexical classifier hierarchy",
++                    ));
+                 }
+                 scope = self.classpath.lexical_parent(&owner);
+                 let Ok(class) = self.classpath.load(&owner) else {
+Diff in /workspace/work/targets159/when-joins-freeze/src/syntax.rs:3738:
+                     "CLASS_VISIBILITY_UNSUPPORTED",
+                 ));
+         }
+-        if visibility.as_deref() == Some("private")
+-            && (value_ || sealed_ || open || abstract_)
+-        {
+-            return Err(self.error("Private nested value, sealed, open and abstract classes are unsupported").with_kind(DiagnosticKind::UnsupportedLanguage, "PRIVATE_NESTED_SHAPE_UNSUPPORTED"));
++        if visibility.as_deref() == Some("private") && (value_ || sealed_ || open || abstract_) {
++            return Err(self
++                .error("Private nested value, sealed, open and abstract classes are unsupported")
++                .with_kind(
++                    DiagnosticKind::UnsupportedLanguage,
++                    "PRIVATE_NESTED_SHAPE_UNSUPPORTED",
++                ));
+         }
+         if !self.take("class") {
+             return Err(self.error("Only ordinary final classes are supported"));

@@ -1,0 +1,268 @@
+$ /workspace/korrust-setup/jdk-21/bin/javap -c -p -classpath /workspace/work/interop159-marker-final-run/directory/official markers.consumer.ConsumerKt
+Compiled from "Consumer.kt"
+public final class markers.consumer.ConsumerKt {
+  public static final markers.library.PairBox defaultBox();
+    Code:
+       0: new           #9                  // class markers/library/PairBox
+       3: dup
+       4: lconst_0
+       5: iconst_0
+       6: aconst_null
+       7: bipush        7
+       9: aconst_null
+      10: invokespecial #13                 // Method markers/library/PairBox."<init>":(JILjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+      13: areturn
+
+  public static final markers.library.PairBox explicitBox();
+    Code:
+       0: new           #9                  // class markers/library/PairBox
+       3: dup
+       4: ldc2_w        #15                 // long 31l
+       7: invokestatic  #22                 // Method markers/library/Key."constructor-impl":(J)J
+      10: iconst_5
+      11: invokestatic  #27                 // Method markers/library/Small."constructor-impl":(I)I
+      14: ldc           #29                 // String given
+      16: aconst_null
+      17: invokespecial #32                 // Method markers/library/PairBox."<init>":(JILjava/lang/String;Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+      20: areturn
+
+  public static final markers.library.PairBox reordered();
+    Code:
+       0: ldc2_w        #34                 // long 41l
+       3: invokestatic  #22                 // Method markers/library/Key."constructor-impl":(J)J
+       6: lstore_0
+       7: new           #9                  // class markers/library/PairBox
+      10: dup
+      11: lload_0
+      12: iconst_0
+      13: ldc           #37                 // String named
+      15: iconst_2
+      16: aconst_null
+      17: invokespecial #13                 // Method markers/library/PairBox."<init>":(JILjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+      20: areturn
+
+  public static final markers.library.NullableBox nullableBox();
+    Code:
+       0: new           #41                 // class markers/library/NullableBox
+       3: dup
+       4: aconst_null
+       5: iconst_1
+       6: aconst_null
+       7: invokespecial #44                 // Method markers/library/NullableBox."<init>":(Lmarkers/library/Key;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+      10: areturn
+
+  public static final markers.library.GenericBox<java.lang.String> genericBox();
+    Code:
+       0: new           #49                 // class markers/library/GenericBox
+       3: dup
+       4: lconst_0
+       5: ldc           #51                 // String generic
+       7: iconst_1
+       8: aconst_null
+       9: invokespecial #54                 // Method markers/library/GenericBox."<init>":(JLjava/lang/Object;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+      12: areturn
+
+  public static final markers.library.PairBox qualified();
+    Code:
+       0: new           #9                  // class markers/library/PairBox
+       3: dup
+       4: lconst_0
+       5: iconst_0
+       6: ldc           #56                 // String qualified
+       8: iconst_3
+       9: aconst_null
+      10: invokespecial #13                 // Method markers/library/PairBox."<init>":(JILjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+      13: areturn
+
+  public static final long numeric();
+    Code:
+       0: invokestatic  #60                 // Method defaultBox:()Lmarkers/library/PairBox;
+       3: invokevirtual #63                 // Method markers/library/PairBox."getKey-ySs0q0o":()J
+       6: invokestatic  #65                 // Method explicitBox:()Lmarkers/library/PairBox;
+       9: invokevirtual #63                 // Method markers/library/PairBox."getKey-ySs0q0o":()J
+      12: ladd
+      13: invokestatic  #67                 // Method reordered:()Lmarkers/library/PairBox;
+      16: invokevirtual #63                 // Method markers/library/PairBox."getKey-ySs0q0o":()J
+      19: ladd
+      20: lreturn
+
+  public static final java.lang.String defaults();
+    Code:
+       0: new           #71                 // class java/lang/StringBuilder
+       3: dup
+       4: invokespecial #74                 // Method java/lang/StringBuilder."<init>":()V
+       7: invokestatic  #60                 // Method defaultBox:()Lmarkers/library/PairBox;
+      10: invokevirtual #77                 // Method markers/library/PairBox.getText:()Ljava/lang/String;
+      13: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      16: bipush        58
+      18: invokevirtual #84                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      21: invokestatic  #67                 // Method reordered:()Lmarkers/library/PairBox;
+      24: invokevirtual #77                 // Method markers/library/PairBox.getText:()Ljava/lang/String;
+      27: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      30: bipush        58
+      32: invokevirtual #84                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      35: invokestatic  #86                 // Method genericBox:()Lmarkers/library/GenericBox;
+      38: invokevirtual #90                 // Method markers/library/GenericBox.getItem:()Ljava/lang/Object;
+      41: checkcast     #92                 // class java/lang/String
+      44: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      47: bipush        58
+      49: invokevirtual #84                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      52: invokestatic  #94                 // Method qualified:()Lmarkers/library/PairBox;
+      55: invokevirtual #77                 // Method markers/library/PairBox.getText:()Ljava/lang/String;
+      58: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      61: invokevirtual #97                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      64: areturn
+
+  public static final boolean nullable();
+    Code:
+       0: invokestatic  #101                // Method nullableBox:()Lmarkers/library/NullableBox;
+       3: invokevirtual #105                // Method markers/library/NullableBox."getKey-qTi5DFQ":()Lmarkers/library/Key;
+       6: ifnonnull     13
+       9: iconst_1
+      10: goto          14
+      13: iconst_0
+      14: ireturn
+
+  public static final long wide();
+    Code:
+       0: new           #108                // class markers/library/WideBox
+       3: dup
+       4: lconst_0
+       5: iconst_0
+       6: iconst_0
+       7: iconst_0
+       8: iconst_0
+       9: iconst_0
+      10: iconst_0
+      11: iconst_0
+      12: iconst_0
+      13: iconst_0
+      14: iconst_0
+      15: iconst_0
+      16: iconst_0
+      17: iconst_0
+      18: iconst_0
+      19: iconst_0
+      20: iconst_0
+      21: iconst_0
+      22: iconst_0
+      23: iconst_0
+      24: iconst_0
+      25: iconst_0
+      26: iconst_0
+      27: iconst_0
+      28: iconst_0
+      29: iconst_0
+      30: iconst_0
+      31: iconst_0
+      32: iconst_0
+      33: iconst_0
+      34: iconst_0
+      35: iconst_0
+      36: bipush        99
+      38: iconst_0
+      39: iconst_m1
+      40: iconst_2
+      41: aconst_null
+      42: invokespecial #111                // Method markers/library/WideBox."<init>":(JIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+      45: invokevirtual #114                // Method markers/library/WideBox."getP0-ySs0q0o":()J
+      48: new           #108                // class markers/library/WideBox
+      51: dup
+      52: lconst_0
+      53: iconst_0
+      54: iconst_0
+      55: iconst_0
+      56: iconst_0
+      57: iconst_0
+      58: iconst_0
+      59: iconst_0
+      60: iconst_0
+      61: iconst_0
+      62: iconst_0
+      63: iconst_0
+      64: iconst_0
+      65: iconst_0
+      66: iconst_0
+      67: iconst_0
+      68: iconst_0
+      69: iconst_0
+      70: iconst_0
+      71: iconst_0
+      72: iconst_0
+      73: iconst_0
+      74: iconst_0
+      75: iconst_0
+      76: iconst_0
+      77: iconst_0
+      78: iconst_0
+      79: iconst_0
+      80: iconst_0
+      81: iconst_0
+      82: iconst_0
+      83: iconst_0
+      84: iconst_0
+      85: iconst_0
+      86: iconst_m1
+      87: iconst_3
+      88: aconst_null
+      89: invokespecial #111                // Method markers/library/WideBox."<init>":(JIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+      92: invokevirtual #118                // Method markers/library/WideBox."getP33-Rajg4UQ":()I
+      95: i2l
+      96: ladd
+      97: lreturn
+
+  public static final java.lang.String order();
+    Code:
+       0: invokestatic  #124                // Method markers/library/LibraryKt.reset:()V
+       3: ldc           #126                // String a
+       5: invokestatic  #130                // Method markers/library/LibraryKt.textEvent:(Ljava/lang/String;)Ljava/lang/String;
+       8: astore_1
+       9: ldc           #132                // String b
+      11: invokestatic  #136                // Method markers/library/LibraryKt.keyEvent:(Ljava/lang/String;)J
+      14: lstore_2
+      15: new           #138                // class markers/library/Ordered
+      18: dup
+      19: lload_2
+      20: iconst_0
+      21: aload_1
+      22: iconst_2
+      23: aconst_null
+      24: invokespecial #139                // Method markers/library/Ordered."<init>":(JILjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+      27: astore_0
+      28: new           #71                 // class java/lang/StringBuilder
+      31: dup
+      32: invokespecial #74                 // Method java/lang/StringBuilder."<init>":()V
+      35: invokestatic  #142                // Method markers/library/LibraryKt.trace:()Ljava/lang/String;
+      38: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      41: bipush        58
+      43: invokevirtual #84                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      46: aload_0
+      47: invokevirtual #143                // Method markers/library/Ordered.getText:()Ljava/lang/String;
+      50: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      53: invokevirtual #97                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      56: areturn
+
+  public static final java.lang.String evolved();
+    Code:
+       0: new           #148                // class markers/library/Evolved
+       3: dup
+       4: lconst_0
+       5: aconst_null
+       6: iconst_3
+       7: aconst_null
+       8: invokespecial #151                // Method markers/library/Evolved."<init>":(JLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+      11: astore_0
+      12: new           #71                 // class java/lang/StringBuilder
+      15: dup
+      16: invokespecial #74                 // Method java/lang/StringBuilder."<init>":()V
+      19: aload_0
+      20: invokevirtual #154                // Method markers/library/Evolved.getSuffix:()Ljava/lang/String;
+      23: invokevirtual #81                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      26: bipush        58
+      28: invokevirtual #84                 // Method java/lang/StringBuilder.append:(C)Ljava/lang/StringBuilder;
+      31: aload_0
+      32: invokevirtual #155                // Method markers/library/Evolved."getKey-ySs0q0o":()J
+      35: invokevirtual #158                // Method java/lang/StringBuilder.append:(J)Ljava/lang/StringBuilder;
+      38: invokevirtual #97                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      41: areturn
+}

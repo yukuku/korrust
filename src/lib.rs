@@ -719,7 +719,7 @@ pub fn compile_batch_with_options(
     }
     for (owner, unit) in &mut units {
         classpath
-            .source_default_imports(unit)
+            .source_default_imports(unit, owner)
             .map_err(|error| locate(error, owner))?;
     }
     loop {

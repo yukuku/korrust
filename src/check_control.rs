@@ -1,12 +1,134 @@
 use super::*;
 
+#[derive(Clone, Copy)]
+enum BlockResult<'a> {
+    Discard,
+    Value(Option<&'a Type>),
+}
+
 impl Checker<'_> {
+    pub(super) fn discarded_value(&mut self, expr: &Expr) -> Result<Value> {
+        match &expr.kind {
+            ExprKind::Try { .. } | ExprKind::Block(_) => {
+                self.check_control_result(expr, BlockResult::Discard)
+            }
+            ExprKind::If(cond, yes, no) => {
+                let statement = |branch: &Expr| syntax::Statement {
+                    offset: branch.offset,
+                    kind: StatementKind::Expression(branch.clone()),
+                };
+                let branches = syntax::Statement {
+                    offset: expr.offset,
+                    kind: StatementKind::If(
+                        *cond.clone(),
+                        vec![statement(yes)],
+                        vec![statement(no)],
+                    ),
+                };
+                let (body, _) = self.block(&[branches])?;
+                Ok(Value {
+                    ty: Type::Unit,
+                    kind: ValueKind::Block(
+                        body,
+                        Box::new(Value {
+                            ty: Type::Unit,
+                            kind: ValueKind::Unit,
+                        }),
+                    ),
+                })
+            }
+            _ => self.value(expr),
+        }
+    }
+
+    pub(super) fn join_when_results(
+        &self,
+        left: &Type,
+        right: &Type,
+        offset: usize,
+    ) -> Result<Type> {
+        let nullable = |ty: &Type| {
+            if ty.is_nullable() {
+                ty.clone()
+            } else {
+                Type::Nullable(Box::new(ty.clone()))
+            }
+        };
+        if left == right {
+            return Ok(left.clone());
+        }
+        if left == &Type::Null {
+            return Ok(nullable(right));
+        }
+        if right == &Type::Null {
+            return Ok(nullable(left));
+        }
+        let left_inner = if let Type::Nullable(inner) = left.base() {
+            inner.as_ref()
+        } else {
+            left
+        };
+        let right_inner = if let Type::Nullable(inner) = right.base() {
+            inner.as_ref()
+        } else {
+            right
+        };
+        let result = if (matches!(left_inner, Type::Platform(_))
+            || matches!(right_inner, Type::Platform(_)))
+            && left_inner.base() == right_inner.base()
+        {
+            Type::Platform(Box::new(left_inner.base().clone()))
+        } else if self.subtype(right_inner, left_inner) {
+            left_inner.clone()
+        } else if self.subtype(left_inner, right_inner) {
+            right_inner.clone()
+        } else {
+            return Err(
+                Diagnostic::new(offset, "The when branch common type is unsupported").with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "WHEN_RESULT_JOIN_UNSUPPORTED",
+                ),
+            );
+        };
+        Ok(if left.is_nullable() || right.is_nullable() {
+            nullable(&result)
+        } else {
+            result
+        })
+    }
+
+    pub(super) fn intersect_refinements(
+        paths: &[HashMap<stable_properties::Subject, Type>],
+    ) -> HashMap<stable_properties::Subject, Type> {
+        let Some(first) = paths.first() else {
+            return HashMap::new();
+        };
+        let mut result = first.clone();
+        result.retain(|subject, ty| paths[1..].iter().all(|path| path.get(subject) == Some(ty)));
+        result
+    }
+
     fn result_block(
         &mut self,
         statements: &[syntax::Statement],
         _offset: usize,
-        expected: Option<&Type>,
+        mode: BlockResult<'_>,
     ) -> Result<(Vec<Statement>, Value)> {
+        let BlockResult::Value(expected) = mode else {
+            let (body, abrupt) = self.block(statements)?;
+            let kind = if abrupt {
+                ValueKind::Abrupt(Vec::new())
+            } else {
+                ValueKind::Unit
+            };
+            return Ok((
+                body,
+                Value {
+                    ty: Type::Unit,
+                    kind,
+                },
+            ));
+        };
         let tail = statements.last().cloned().and_then(|mut statement| {
             syntax::normalize_result_tail(std::slice::from_mut(&mut statement));
             match statement.kind {
@@ -50,10 +172,14 @@ impl Checker<'_> {
         expr: &Expr,
         expected: Option<&Type>,
     ) -> Result<Value> {
+        self.check_control_result(expr, BlockResult::Value(expected))
+    }
+
+    fn check_control_result(&mut self, expr: &Expr, mode: BlockResult<'_>) -> Result<Value> {
         let offset = expr.offset;
         match &expr.kind {
             ExprKind::Block(statements) => {
-                let (mut body, result) = self.result_block(statements, offset, expected)?;
+                let (mut body, result) = self.result_block(statements, offset, mode)?;
                 if let ValueKind::Abrupt(tail) = result.kind {
                     body.extend(tail);
                     return Ok(Value {
@@ -131,7 +257,10 @@ impl Checker<'_> {
             } => {
                 let before = self.initialized.clone();
                 let refinements = self.refinements.clone();
-                let (body, mut result) = self.result_block(body, offset, expected)?;
+                let (body, mut result) = self.result_block(body, offset, mode)?;
+                if self.initialized.outer_deferred_writes(&before) {
+                    return Err(Diagnostic::new(offset, "Deferred val assignment across try exits requires unsupported exception-flow analysis").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "DEFERRED_VAL_TRY_INITIALIZATION_UNSUPPORTED"));
+                }
                 let mut initialized = if matches!(result.kind, ValueKind::Abrupt(_)) {
                     None
                 } else {
@@ -156,13 +285,14 @@ impl Checker<'_> {
                         None => self.allocate_slot(offset)?,
                     };
                     let (catch_body, catch_result) =
-                        self.result_block(&catch.body, offset, expected)?;
+                        self.result_block(&catch.body, offset, mode)?;
+                    if self.initialized.outer_deferred_writes(&before) {
+                        return Err(Diagnostic::new(offset, "Deferred val assignment across catch exits requires unsupported exception-flow analysis").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "DEFERRED_VAL_TRY_INITIALIZATION_UNSUPPORTED"));
+                    }
                     self.scopes.pop();
                     if !matches!(catch_result.kind, ValueKind::Abrupt(_)) {
                         initialized = Some(match initialized {
-                            Some(previous) => {
-                                previous.intersection(&self.initialized).copied().collect()
-                            }
+                            Some(previous) => previous.joined(&self.initialized),
                             None => self.initialized.clone(),
                         });
                     }
@@ -204,6 +334,9 @@ impl Checker<'_> {
                 self.initialized = before.clone();
                 self.refinements = refinements;
                 let (finally, _) = self.block(finally)?;
+                if self.initialized.outer_deferred_writes(&before) {
+                    return Err(Diagnostic::new(offset, "Deferred val assignment in finally requires unsupported exception-flow analysis").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "DEFERRED_VAL_TRY_INITIALIZATION_UNSUPPORTED"));
+                }
                 if let Some(initialized) = initialized {
                     self.initialized.extend(initialized);
                 }

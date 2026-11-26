@@ -1,0 +1,926 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T06:12:39.842270+00:00",
+  "status": "passed",
+  "compiler": {
+    "binary": "/tmp/targets159-suspend-headcheck/debug/korrust",
+    "binary_sha256": "d6a72878ba129ee92c5f11333e2257bbe8407753f988116e68ace49fdf72113f",
+    "source_root": "."
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "coroutine_dependency": {
+    "schema_version": 1,
+    "coordinate": "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.9.0",
+    "version": "1.9.0",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlinx/kotlinx-coroutines-core-jvm/1.9.0/kotlinx-coroutines-core-jvm-1.9.0.jar",
+    "sha256": "ad89c2892235e670f222d819cb3d81188143cb19a05b59df9889ae4269f5c70a",
+    "license": "Apache-2.0",
+    "path": "target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar"
+  },
+  "inputs": {
+    "files_sha256": {
+      "tests/suspend_receiver_functions/Values.kt": "a68bbd17c3dbcdc8e44d6df4c0f02fb26d3aa399de921909bc9655d42eaea576",
+      "tests/suspend_receiver_functions/Library.kt": "640e127c4b4b5a2dc0443bc63eb484ac380f67ebf311c66e6e562f60be815c33",
+      "tests/suspend_receiver_functions/Check.java": "9907857c685e67dfe1227a9d3ed8ec6c06e98c5718802ec25b94120af8de42ef",
+      "tests/suspend_receiver_functions/Rejections.json": "f3cf699ca4800af373c74a8767e4495b32b291e882d823012a22e137ff3fe814",
+      "tests/suspend_receiver_functions/ConsumerCheck.java": "5d5a4def55d4c31279d98ad128e7f1be6361a4522af0f307f91f803c3669622f",
+      "tests/suspend_receiver_functions/Consumer.kt": "1984b455228dd6fba8102886f99e1cfcb2e2bb0117d00be8ed36902971868233",
+      "references/coroutines.json": "63b3936bcb2ba054910c617f6725291deef71b09c2f189b4e260f65ac0656dcf",
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "tools/check_suspend_receiver_functions.py": "8c89d457d5609052a2d544473aca54fc634ae7425a909ca801b501e61df437c1",
+      "tools/check_member_function_properties.py": "3f5a4ffab1e16e450bf5f9be3d8697d9c1fd756dd659779bf2902abfd74cdc70",
+      "tools/check_nov21_generics.py": "70fed499f3652d9181c2aabc3baf4e9a7327c436eec67c83d6fe4e4f539e4f86",
+      "tests/suspend_receiver_functions.rs": "f2537a8f86b8e88172baa9ade860876654645ecd5c3254e33465cd4777cee2d4",
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/annotation_declarations.rs": "baaecfc70c577f5bfd2da8556ccac3716f888b409883cd80829b8c798918c782",
+      "src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525",
+      "src/check_interfaces.rs": "5ac2f3e28ad58c1901788b0204eb626a6fb04ad4aad3ceb14f606c613d04d3a5",
+      "src/check_java_properties.rs": "f3da739960dcbcee99a9b205e29afd330defef89e1089e9a152d5d0efd0c51fd",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/bytecode.rs": "7d29689a9bcc5a3fe37a68cf6e5cb213635ab524fba925ecacd61cfa836df74c",
+      "src/check_local_annotations.rs": "ad5d937aae27ec3bed4528322c068a39eca915a49c449b68b2c4453f87f1a770",
+      "src/check_inner_classes.rs": "b799a4df016e056d127610e359ec06951e05e22e4778a7ffa31934e892cd6e05",
+      "src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+      "src/check_classes.rs": "730d30f5c5047eb9f1c7aaa55fda19e3e2117a954c1cbda4bbc62d52d2acdf53",
+      "src/jvm_descriptor.rs": "3946ec2e66e89185c9d3e284f9d114e29e5e88d0a3eba52ec39fba2200d07ad2",
+      "src/check_unsigned.rs": "7c60ab78a2f2162d0beffbc79d41976a06bc6fb446c1cc9f91de10fc6072e606",
+      "src/check_class_delegation.rs": "1089bac71516daad07ec7245aa8594956feca30ecf926e19ff82c895caba7364",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/metadata.rs": "fdf4fcfe25ef5174651d65aa1e0a83daa03fc87d8cf610066c45beeea2ea46ae",
+      "src/check_member_extensions.rs": "943af7b1c7b65c2a495dd628e42b105f44f41f6f19b736fa8e57a0cfd255a81f",
+      "src/check_varargs.rs": "461fe197ed8507a21ab7aa60cede390d70fd1fce9867015561b1d43738d7d14b",
+      "src/classpath.rs": "e4aec48fee1cf31e61480b16ac5a3ae3d1fd4fec4c0002743221055b0db7bc02",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/check_references.rs": "1b416efc0ba31fd0214f3399ca9b265e4d5bd2c47f683986ebee5244a555a421",
+      "src/check_functions.rs": "00e6ee9a5348908e08881c88e73882507d601cfc7793cfc90fb660a7e240ef76",
+      "src/check_companion_properties.rs": "c974d1059e7cb92644cd1a186492200828341f64b7e95d0ae4c052356537edba",
+      "src/check.rs": "8bb22ebec8a3b034d2122145db2274361ac5fc4d9420d003cc79b78a80ca23fc",
+      "src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+      "src/lib.rs": "db0338e838d0b0ee095d2fec4f37fc73f96955fd868231743f9b3dfb3182d712",
+      "src/check_java_nullability.rs": "40e1e816200bc92d6d7e5ab5fa57b4e3e351967072da160996e5a888b3acb923",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/check_operations.rs": "cc85ce35431dfeaefbcf5822966c58aaf8cc3465108252f383a40eb928f85b0f",
+      "src/check_library.rs": "0b73897d4fb87d5f587137a69f03133525b5bf5ef5ec6db8375ac4a16660c3c7",
+      "src/check_relations.rs": "273e00869f0dcd41a61333f97dfaf7b3c1d6b57ba500dfd7581dd9e79fc8cf15",
+      "src/check_declarations.rs": "4147a9b6bcc3b5e502fdca3e6262ebbe722c26d1bd5da76d63343b1bf223a9d6",
+      "src/check_overloads.rs": "a1a5066cd8bf1dd196ce49975678360f043fc2d48f1c1dcf7ce607f57e00bb43",
+      "src/check_captures.rs": "f752d88bb81c26576caad658160a332fa21946e7275e6faf331bfd73f6a84479",
+      "src/check_stable_properties.rs": "ab5802177db74c4652aa8643124bd93b5acb7fff925e6c0ad6c990c877dc80fe",
+      "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+      "src/check_ir_walk.rs": "6a7c435002dee1142b592d2c42551b845d9dbe3a6416ba9cd3f04c2d70c1c38a",
+      "src/check_variant_signatures.rs": "e63bc47c0b4db3d5a07c0e4a2239283f0a8592c1716f0923ca69c2f0ea351bd8",
+      "src/check_annotation_placements.rs": "027e77c6a6db60f98262fbaf0f44be170c53b58b03d64ae6e8cc43cdb2dc1579",
+      "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "src/check_control.rs": "2b29e40794e4c4ca848b254667c9aa9c361a750ef348bbe1e25b544dcfd43c51",
+      "src/check_constructor_inference.rs": "dd3d94a733c0acaea93af34f1e130c4338fc11127cbb7cba08f452d7c94d0d1e",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/const_eval.rs": "24319c4a5076f678ed53cbeeff7c52c4bdcf081c9f78485514326e92078e10fd",
+      "src/compiled_inline.rs": "8ea572f28116c44057b1341b02a9869a2690c0d3cd6b38a086ce063675791ed1",
+      "src/check_constructor_aliases.rs": "a64e341da62e7b292607926f34f5ad2a570f103f3a2141c40be6ff9bf1a94527",
+      "src/check_objects.rs": "a0e2252e86da5e9d1b834204e9963eeecca068b0e9095d604ae1223762fab008",
+      "src/check_contracts.rs": "06434fc5c0999ff69dfb902c50e7bc3b3d4802ae5d3592fbcf0496e9c3bb491d",
+      "src/source_inline.rs": "d59ecaba2b32264cc4190594c19e5ec7e99e6cbb5db28b33c1eaca7c7aa404e5",
+      "src/check_anonymous.rs": "c7a4204dc13efe5f86b1007cec43abc72fb8830c89adbf37a85bb652cf1b3e9e",
+      "src/syntax.rs": "6296bb50080dcc8df7e2e352e1cfc85b17f6ec0384aa41aa48336721b38a4b2d",
+      "src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+      "src/classpath/value_names.rs": "3987b5b3c7bda875d213bda719a1a7a5b44797b3f1f3b49170108200bb4348ce",
+      "src/classpath/jdk_modules.rs": "cd1a350e7f8e03cda618a1d919d4e6ee49aba7e9a26728178ebad5f73c4bd8f8",
+      "src/classpath/signature.rs": "acac544bc6e8b57d298f203413f302e209792a3e57cfe455c0965deb53a438d8",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/nullability_defaults.rs": "8edf9187cd6214380a936c0484c280c7b3f3a973212d3f830c5316feedd4724b",
+      "src/classpath/metadata.rs": "7cc0054676dba5cc649cec0b113612a2a9471c810fa40ef651ac7985d11165e0",
+      "src/classpath/source_enums.rs": "1b6719565931913df35f26994fb0077985f1f5c89614fb1b5d4009e63957933d",
+      "src/classpath/singletons.rs": "836fe172f37cc9282e259ba446688b3d2d6bf34fde25ddc3973c1800f29c71a5",
+      "src/classpath/nested.rs": "764dd9eaf0188f91ba018707557e72df76b9c44b0120c8d69574044c8f5e78e9",
+      "src/classpath/package_info.rs": "f3bd436a8c64d48216bae3a55a2a3e82a903d354a42b629928fe1af95197061a",
+      "src/classpath/inline_defaults.rs": "dadace0ef70c2e788fa6c7ffb49bb53119a74be6221435c6c124c1abc8391c5b",
+      "src/classpath/aliases.rs": "714b195f4716ea32d5dc8985048e282efb1fb3a1508490dcab5d49753534b80c",
+      "src/classpath/archive.rs": "835e4a79bbbc5c7328ce6a540ed1a2ca975fc526278fe7c31fd9433e08cc56d5",
+      "src/classpath/compose_abi.rs": "3d143c364e3cf818c12cd15593be34edc45ec8a3f70a12403a99174bb912e4f7",
+      "src/classpath/source.rs": "c45629824c6d436700a34414910c8d8791afa3837f5aaca4a3cb68a45b359db4",
+      "src/classpath/jvm_builtins.rs": "b8c6e4789a998c1b3737da4879a15d74eb453170c4b03542d4c8ae13f6e40e86",
+      "src/classpath/import_classes.rs": "65a1563c6df2772ac3d71602a54e7fd1b64bab1ab51d6053e74bdb65b2bf5f4e",
+      "src/bytecode/frames.rs": "b2e346435d7cb21fbcbf0ec248c8c54fa77273198f1321fb58d84c741e77caff",
+      "src/bytecode/annotation_files.rs": "0fe8ebba7bbd2c80fcdd6fda797b448ca8cd63945b100781361bf1e3ace02eaa",
+      "src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+      "src/bytecode/lambdas.rs": "1cacc1ea9acb473c0079dd302e50933e919826e8791370d1f4c19e4abdf48d6c",
+      "src/bytecode/inline.rs": "d1dbc06ea0c65d833333adb752ce2cdf05c5cc1678a99a6478440041d437aaea",
+      "src/bytecode/anonymous_context.rs": "0864951c7a7e94772ee8e410c49175fed879358204aff745a1f7a315fc1b0283",
+      "src/bytecode/class_companion.rs": "b5c6f75d8c24b3edbe1ae2583693c31b511e4d456734b160d2904b7c6072a62c",
+      "src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+      "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+      "src/bytecode/compose_lambdas.rs": "9c74c11d3e2deaaf5846bbe294614c440c0c1d0ad9881ae662caaf48ea1574ef",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/suspend.rs": "12d14af2ae28e70681d318341540ec257892ac65b0afb1604465bc3ce9658979",
+      "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "src/bytecode/interfaces.rs": "e283e506529e64a83d7408f6dbd52d44336cc3a5d1e768428df46670cafd4c2b",
+      "src/bytecode/defaults.rs": "d092d8a420cfb719f92dbb9a3bcc58f7c644d67bf9b3c611c72949122c22e827",
+      "src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/compiled_inline/defaults.rs": "89d95d8b98e4af043bc3c592ba7588bffb7924bc86bdae57d457c0b420cbde37",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d"
+    },
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "commands": [
+    {
+      "label": "compile official/Library.kt",
+      "argv": [
+        "/workspace/work/suspend-receiver159-headcheck/references/kotlinc/bin/kotlinc",
+        "/workspace/work/suspend-receiver159-headcheck/tests/suspend_receiver_functions/Library.kt",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/000-stderr.txt"
+    },
+    {
+      "label": "compile official/Values.kt",
+      "argv": [
+        "/workspace/work/suspend-receiver159-headcheck/references/kotlinc/bin/kotlinc",
+        "/workspace/work/suspend-receiver159-headcheck/tests/suspend_receiver_functions/Values.kt",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/001-stderr.txt"
+    },
+    {
+      "label": "compile candidate/Values.kt",
+      "argv": [
+        "/tmp/targets159-suspend-headcheck/debug/korrust",
+        "/workspace/work/suspend-receiver159-headcheck/tests/suspend_receiver_functions/Values.kt",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/002-stderr.txt"
+    },
+    {
+      "label": "compile fixed Java caller against official",
+      "argv": [
+        "javac",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/official:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/java",
+        "/workspace/work/suspend-receiver159-headcheck/tests/suspend_receiver_functions/Check.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/003-stderr.txt"
+    },
+    {
+      "label": "verified suspended Java caller/official",
+      "argv": [
+        "java",
+        "-Xmx256m",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/java:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/official:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/004-stderr.txt"
+    },
+    {
+      "label": "JVM signature/official",
+      "argv": [
+        "javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/official:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library",
+        "receiverfunctions.ValuesKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/005-stderr.txt"
+    },
+    {
+      "label": "verified suspended Java caller/candidate",
+      "argv": [
+        "java",
+        "-Xmx256m",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/java:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/candidate:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Check"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/006-stderr.txt"
+    },
+    {
+      "label": "JVM signature/candidate",
+      "argv": [
+        "javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/candidate:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library",
+        "receiverfunctions.ValuesKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/007-stderr.txt"
+    },
+    {
+      "label": "compile official/Consumer.kt",
+      "argv": [
+        "/workspace/work/suspend-receiver159-headcheck/references/kotlinc/bin/kotlinc",
+        "/workspace/work/suspend-receiver159-headcheck/tests/suspend_receiver_functions/Consumer.kt",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/official:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/consumer-official-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/008-stderr.txt"
+    },
+    {
+      "label": "compile fixed consumer caller against official",
+      "argv": [
+        "javac",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/consumer-official-official:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/java:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/official:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/consumer-java",
+        "/workspace/work/suspend-receiver159-headcheck/tests/suspend_receiver_functions/ConsumerCheck.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/009-stderr.txt"
+    },
+    {
+      "label": "verified resumed consumer/official/official",
+      "argv": [
+        "java",
+        "-Xmx256m",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/consumer-java:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/consumer-official-official:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/java:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/official:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/010-stderr.txt"
+    },
+    {
+      "label": "compile candidate/Consumer.kt",
+      "argv": [
+        "/tmp/targets159-suspend-headcheck/debug/korrust",
+        "/workspace/work/suspend-receiver159-headcheck/tests/suspend_receiver_functions/Consumer.kt",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/official:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/consumer-official-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/011-stderr.txt"
+    },
+    {
+      "label": "verified resumed consumer/official/candidate",
+      "argv": [
+        "java",
+        "-Xmx256m",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/consumer-java:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/consumer-official-candidate:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/java:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/official:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/012-stderr.txt"
+    },
+    {
+      "label": "compile official/Consumer.kt",
+      "argv": [
+        "/workspace/work/suspend-receiver159-headcheck/references/kotlinc/bin/kotlinc",
+        "/workspace/work/suspend-receiver159-headcheck/tests/suspend_receiver_functions/Consumer.kt",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/candidate:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/consumer-candidate-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/013-stderr.txt"
+    },
+    {
+      "label": "verified resumed consumer/candidate/official",
+      "argv": [
+        "java",
+        "-Xmx256m",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/consumer-java:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/consumer-candidate-official:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/java:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/candidate:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/014-stderr.txt"
+    },
+    {
+      "label": "compile candidate/Consumer.kt",
+      "argv": [
+        "/tmp/targets159-suspend-headcheck/debug/korrust",
+        "/workspace/work/suspend-receiver159-headcheck/tests/suspend_receiver_functions/Consumer.kt",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/candidate:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/consumer-candidate-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/015-stderr.txt"
+    },
+    {
+      "label": "verified resumed consumer/candidate/candidate",
+      "argv": [
+        "java",
+        "-Xmx256m",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/consumer-java:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/consumer-candidate-candidate:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/java:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/candidate:/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumerCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/016-stderr.txt"
+    },
+    {
+      "label": "boundary official/outside-suspend",
+      "argv": [
+        "/workspace/work/suspend-receiver159-headcheck/references/kotlinc/bin/kotlinc",
+        "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/outside-suspend.kt",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/oracle-outside-suspend"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/017-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/outside-suspend",
+      "argv": [
+        "/tmp/targets159-suspend-headcheck/debug/korrust",
+        "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/outside-suspend.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/candidate-outside-suspend"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/018-stderr.txt"
+    },
+    {
+      "label": "boundary official/function-value-outside-suspend",
+      "argv": [
+        "/workspace/work/suspend-receiver159-headcheck/references/kotlinc/bin/kotlinc",
+        "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/function-value-outside-suspend.kt",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/oracle-function-value-outside-suspend"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/019-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/function-value-outside-suspend",
+      "argv": [
+        "/tmp/targets159-suspend-headcheck/debug/korrust",
+        "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/function-value-outside-suspend.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/candidate-function-value-outside-suspend"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/020-stderr.txt"
+    },
+    {
+      "label": "boundary official/wrong-lambda-arity",
+      "argv": [
+        "/workspace/work/suspend-receiver159-headcheck/references/kotlinc/bin/kotlinc",
+        "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/wrong-lambda-arity.kt",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/oracle-wrong-lambda-arity"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/021-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/wrong-lambda-arity",
+      "argv": [
+        "/tmp/targets159-suspend-headcheck/debug/korrust",
+        "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/wrong-lambda-arity.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/candidate-wrong-lambda-arity"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/022-stderr.txt"
+    },
+    {
+      "label": "boundary official/wrong-result",
+      "argv": [
+        "/workspace/work/suspend-receiver159-headcheck/references/kotlinc/bin/kotlinc",
+        "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/wrong-result.kt",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/oracle-wrong-result"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/023-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/wrong-result",
+      "argv": [
+        "/tmp/targets159-suspend-headcheck/debug/korrust",
+        "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/wrong-result.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/candidate-wrong-result"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/024-stderr.txt"
+    },
+    {
+      "label": "boundary official/explicit-wrong-result",
+      "argv": [
+        "/workspace/work/suspend-receiver159-headcheck/references/kotlinc/bin/kotlinc",
+        "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/explicit-wrong-result.kt",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/oracle-explicit-wrong-result"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/025-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/explicit-wrong-result",
+      "argv": [
+        "/tmp/targets159-suspend-headcheck/debug/korrust",
+        "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/explicit-wrong-result.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/candidate-explicit-wrong-result"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/026-stderr.txt"
+    },
+    {
+      "label": "boundary official/nullable-function",
+      "argv": [
+        "/workspace/work/suspend-receiver159-headcheck/references/kotlinc/bin/kotlinc",
+        "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/nullable-function.kt",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/oracle-nullable-function"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/027-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/nullable-function",
+      "argv": [
+        "/tmp/targets159-suspend-headcheck/debug/korrust",
+        "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/nullable-function.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/candidate-nullable-function"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/028-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/028-stderr.txt"
+    },
+    {
+      "label": "boundary official/suspend-adapter",
+      "argv": [
+        "/workspace/work/suspend-receiver159-headcheck/references/kotlinc/bin/kotlinc",
+        "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/suspend-adapter.kt",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/oracle-suspend-adapter"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/029-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/029-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/suspend-adapter",
+      "argv": [
+        "/tmp/targets159-suspend-headcheck/debug/korrust",
+        "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/suspend-adapter.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/candidate-suspend-adapter"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/030-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/030-stderr.txt"
+    },
+    {
+      "label": "boundary official/unit-receiver",
+      "argv": [
+        "/workspace/work/suspend-receiver159-headcheck/references/kotlinc/bin/kotlinc",
+        "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/unit-receiver.kt",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/oracle-unit-receiver"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/031-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/031-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/unit-receiver",
+      "argv": [
+        "/tmp/targets159-suspend-headcheck/debug/korrust",
+        "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/unit-receiver.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/candidate-unit-receiver"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/032-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/032-stderr.txt"
+    },
+    {
+      "label": "boundary official/defaulted-suspend",
+      "argv": [
+        "/workspace/work/suspend-receiver159-headcheck/references/kotlinc/bin/kotlinc",
+        "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/defaulted-suspend.kt",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/oracle-defaulted-suspend"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/033-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/033-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/defaulted-suspend",
+      "argv": [
+        "/tmp/targets159-suspend-headcheck/debug/korrust",
+        "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/defaulted-suspend.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/candidate-defaulted-suspend"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/034-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/034-stderr.txt"
+    },
+    {
+      "label": "boundary official/inline-suspend-parameter",
+      "argv": [
+        "/workspace/work/suspend-receiver159-headcheck/references/kotlinc/bin/kotlinc",
+        "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/inline-suspend-parameter.kt",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/oracle-inline-suspend-parameter"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/035-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/035-stderr.txt"
+    },
+    {
+      "label": "boundary candidate/inline-suspend-parameter",
+      "argv": [
+        "/tmp/targets159-suspend-headcheck/debug/korrust",
+        "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/inline-suspend-parameter.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/library:/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/suspend-receiver159-headcheck/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/suspend-receiver159-headcheck/target/checks/2026-11-26T061239842270Z-suspend-receiver-functions/candidate-inline-suspend-parameter"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/036-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/036-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "resumed-java/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "resumed-java/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "JVM-public-nonsynthetic-callable-signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "resumed-consumer/official/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "resumed-consumer/official/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "resumed-consumer/candidate/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "resumed-consumer/candidate/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "boundary/outside-suspend",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/outside-suspend.kt",
+          "offset": 34,
+          "category": "invalid_kotlin",
+          "code": "SUSPEND_CALL_CONTEXT_INVALID",
+          "message": "Suspend calls require a suspend function context",
+          "path": "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/outside-suspend.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/function-value-outside-suspend",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/function-value-outside-suspend.kt",
+          "offset": 41,
+          "category": "invalid_kotlin",
+          "code": "SUSPEND_CALL_CONTEXT_INVALID",
+          "message": "Suspend calls require a suspend function context",
+          "path": "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/function-value-outside-suspend.kt",
+          "line": 2,
+          "column": 1
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/wrong-lambda-arity",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/wrong-lambda-arity.kt",
+          "offset": 67,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Lambda parameter count mismatch",
+          "path": "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/wrong-lambda-arity.kt",
+          "line": 2,
+          "column": 30
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/wrong-result",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/wrong-result.kt",
+          "offset": 58,
+          "category": "invalid_kotlin",
+          "code": "TYPE_MISMATCH",
+          "message": "Type mismatch: expected String, found Int",
+          "path": "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/wrong-result.kt",
+          "line": 2,
+          "column": 21
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/explicit-wrong-result",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/explicit-wrong-result.kt",
+          "offset": 74,
+          "category": "invalid_kotlin",
+          "code": "TYPE_MISMATCH",
+          "message": "Type mismatch: expected Int, found String",
+          "path": "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/explicit-wrong-result.kt",
+          "line": 2,
+          "column": 37
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/nullable-function",
+      "outcome": "invalid_rejected",
+      "oracle_exit_code": 1,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/nullable-function.kt",
+          "offset": 131,
+          "category": "unclassified",
+          "code": "UNCLASSIFIED",
+          "message": "Nullable function values require a safe call or not-null assertion",
+          "path": "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/nullable-function.kt",
+          "line": 2,
+          "column": 91
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/suspend-adapter",
+      "outcome": "unsupported_language",
+      "oracle_exit_code": 0,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/suspend-adapter.kt",
+          "offset": 151,
+          "category": "unsupported_language",
+          "code": "SUSPEND_FUNCTION_ADAPTER_UNSUPPORTED",
+          "message": "Ordinary-to-suspend function value adaptation is unsupported",
+          "path": "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/suspend-adapter.kt",
+          "line": 3,
+          "column": 73
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/unit-receiver",
+      "outcome": "unsupported_language",
+      "oracle_exit_code": 0,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/unit-receiver.kt",
+          "offset": 41,
+          "category": "unsupported_language",
+          "code": "SUSPEND_FUNCTION_TYPE_SHAPE_UNSUPPORTED",
+          "message": "Suspend function types require at most 21 ordinary parameters",
+          "path": "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/unit-receiver.kt",
+          "line": 1,
+          "column": 42
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/defaulted-suspend",
+      "outcome": "unsupported_language",
+      "oracle_exit_code": 0,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/defaulted-suspend.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "SUSPEND_DECLARATION_SHAPE_UNSUPPORTED",
+          "message": "Generic, extension, inline, vararg, and defaulted suspend declarations are unsupported",
+          "path": "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/defaulted-suspend.kt",
+          "line": 1,
+          "column": 1
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "boundary/inline-suspend-parameter",
+      "outcome": "unsupported_language",
+      "oracle_exit_code": 0,
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/inline-suspend-parameter.kt",
+          "offset": 108,
+          "category": "unsupported_language",
+          "code": "SUSPEND_INLINE_PARAMETER_UNSUPPORTED",
+          "message": "Suspend function parameter inline modifiers are unsupported",
+          "path": "/workspace/work/suspend-receiver159-headcheck/reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/inline-suspend-parameter.kt",
+          "line": 2,
+          "column": 68
+        }
+      ],
+      "rejection_check": "pass"
+    },
+    {
+      "id": "frozen-inputs",
+      "outcome": "pass"
+    }
+  ],
+  "evidence": [
+    "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/outside-suspend.kt",
+    "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/function-value-outside-suspend.kt",
+    "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/wrong-lambda-arity.kt",
+    "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/wrong-result.kt",
+    "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/explicit-wrong-result.kt",
+    "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/nullable-function.kt",
+    "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/suspend-adapter.kt",
+    "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/unit-receiver.kt",
+    "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/defaulted-suspend.kt",
+    "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/inline-suspend-parameter.kt"
+  ],
+  "limitations": [
+    "Ordinary and receiver suspend lambdas use the existing explicit frame subset. Fixed Java callers resume only after observing the suspended thread parked, checking receiver/context identity, saved primitives, and captured mutable state. Four Kotlin provider/frontend combinations exercise exported callback metadata. Unsupported frame and declaration shapes remain explicit boundaries. No debugger/reflection, Android, full-application or performance claim."
+  ],
+  "source_archive": {
+    "path": "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions/frozen-inputs.zip",
+    "sha256": "9422ee6d7484368a7622819ea5a15f6c0291a8a256ab503da54bed5647c931a9"
+  },
+  "counts": {
+    "pass": 8,
+    "invalid_rejected": 6,
+    "unsupported_language": 4
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_suspend_receiver_functions.py",
+      "--candidate",
+      "/tmp/targets159-suspend-headcheck/debug/korrust",
+      "--source-root",
+      "/workspace/work/suspend-receiver159-headcheck",
+      "--coroutines",
+      "/workspace/work/suspend-receiver159-headcheck/target/reference-libs/kotlinx-coroutines-core-jvm-1.9.0.jar"
+    ]
+  ]
+}

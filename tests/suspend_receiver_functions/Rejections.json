@@ -1,0 +1,12 @@
+[
+  {"id":"outside-suspend","source":"import receiverlibrary.checkpoint\nfun bad(): Int = checkpoint()"},
+  {"id":"function-value-outside-suspend","source":"import kotlinx.coroutines.CoroutineScope\nfun bad(scope: CoroutineScope, block: suspend CoroutineScope.() -> Int): Int = block(scope)"},
+  {"id":"wrong-lambda-arity","source":"import kotlinx.coroutines.runBlocking\nfun bad(): Int = runBlocking { value -> value }"},
+  {"id":"wrong-result","source":"import kotlinx.coroutines.runBlocking\nfun bad(): String = runBlocking { 1 }"},
+  {"id":"explicit-wrong-result","source":"import kotlinx.coroutines.runBlocking\nfun bad(): Int = runBlocking<Int> { \"wrong\" }"},
+  {"id":"nullable-function","source":"import kotlinx.coroutines.CoroutineScope\nsuspend fun bad(scope: CoroutineScope, block: (suspend CoroutineScope.() -> Int)?): Int = block(scope)"},
+  {"id":"suspend-adapter","source":"import kotlinx.coroutines.CoroutineScope\nimport kotlinx.coroutines.runBlocking\nfun limited(block: CoroutineScope.() -> Int): Int = runBlocking(block = block)","unsupported":true},
+  {"id":"unit-receiver","source":"fun limited(block: suspend Unit.() -> Int): Int = 1","unsupported":true},
+  {"id":"defaulted-suspend","source":"suspend fun limited(value: Int = 1): Int = value","unsupported":true},
+  {"id":"inline-suspend-parameter","source":"import kotlinx.coroutines.CoroutineScope\ninline fun limited(noinline block: suspend CoroutineScope.() -> Int): Int = 1","unsupported":true}
+]

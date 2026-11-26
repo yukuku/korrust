@@ -7,6 +7,11 @@ pub enum Type {
         params: Vec<Type>,
         result: Box<Type>,
     },
+    SuspendReceiverFunction {
+        receiver: Box<Type>,
+        params: Vec<Type>,
+        result: Box<Type>,
+    },
     Int,
     Long,
     Byte,
@@ -188,6 +193,7 @@ impl Type {
                 | Self::Array(_)
                 | Self::OutArray(_)
                 | Self::ReceiverFunction { .. }
+                | Self::SuspendReceiverFunction { .. }
                 | Self::String
                 | Self::Java(_)
                 | Self::Parameterized { .. }
@@ -245,6 +251,9 @@ impl Type {
                     Self::Nullable(element.clone())
                 };
                 format!("[{}", boxed.descriptor())
+            }
+            Self::SuspendReceiverFunction { params, .. } => {
+                format!("Lkotlin/jvm/functions/Function{};", params.len() + 2)
             }
             Self::ReceiverFunction { params, .. } => {
                 format!("Lkotlin/jvm/functions/Function{};", params.len() + 1)
@@ -542,6 +551,7 @@ pub struct ClassDecl {
     pub param_annotations: Vec<Vec<AnnotationUse>>,
     pub annotations: Vec<AnnotationUse>,
     pub primary_constructor: bool,
+    pub constructor_vararg: bool,
     pub constructor_visibility: u16,
     pub constructor_annotations: Vec<AnnotationUse>,
     pub name: String,
@@ -664,6 +674,20 @@ pub struct PropertyDecl {
     pub open: bool,
 }
 impl PropertyDecl {
+    pub(crate) fn inference_expression(&self) -> Option<&Expr> {
+        self.initializer
+            .as_ref()
+            .or(match self.body.as_slice() {
+                [
+                    Statement {
+                        kind: StatementKind::Return(Some(expr)),
+                        ..
+                    },
+                ] => Some(expr),
+                _ => None,
+            })
+    }
+
     pub fn visibility(&self) -> PropertyVisibility {
         if self.private {
             PropertyVisibility::Private
@@ -2054,6 +2078,20 @@ impl Parser {
                     if params.len() < 22 && params.iter().all(|ty| ty != &Type::Unit) =>
                 {
                     Ok(Type::SuspendFunction { params, result })
+                }
+                Type::ReceiverFunction {
+                    receiver,
+                    params,
+                    result,
+                } if params.len() < 21
+                    && *receiver != Type::Unit
+                    && params.iter().all(|ty| ty != &Type::Unit) =>
+                {
+                    Ok(Type::SuspendReceiverFunction {
+                        receiver,
+                        params,
+                        result,
+                    })
                 }
                 _ => Err(self
                     .error("Suspend function types require at most 21 ordinary parameters")
@@ -3582,7 +3620,8 @@ impl Parser {
                 "VALUE_MODIFIERS_INVALID",
             ));
         }
-        if class.params.len() != 1
+        if class.constructor_vararg
+            || class.params.len() != 1
             || class.param_properties.len() != 1
             || !class.mutable_params.is_empty()
         {
@@ -3891,6 +3930,7 @@ impl Parser {
         let mut override_params = Vec::new();
         let mut mutable_params = Vec::new();
         let mut defaults = Vec::new();
+        let mut constructor_vararg = false;
         let mut property_names = std::collections::HashSet::new();
         let mut param_names = std::collections::HashSet::new();
         if has_constructor {
@@ -3900,11 +3940,27 @@ impl Parser {
                     let mut annotations = self.annotations()?;
                     let is_override = self.take("override");
                     self.reject_internal_property()?;
+                    let leading_vararg = self.take("vararg");
+                    self.lines();
                     let private = self.take("private");
                     let public = !private && self.take("public");
                     self.lines();
                     annotations.extend(self.annotations()?);
                     self.reject_internal_property()?;
+                    let trailing_vararg = self.take("vararg");
+                    let parameter_vararg = leading_vararg || trailing_vararg;
+                    if leading_vararg && trailing_vararg || constructor_vararg && parameter_vararg {
+                        return Err(self
+                            .error(
+                                "A constructor cannot have repeated vararg modifiers or parameters",
+                            )
+                            .with_kind(DiagnosticKind::InvalidKotlin, "REPEATED_VARARG_INVALID"));
+                    }
+                    if constructor_vararg {
+                        return Err(self.error("A source constructor vararg parameter must be last in the supported subset").with_kind(DiagnosticKind::UnsupportedLanguage, "SOURCE_NONFINAL_VARARG_UNSUPPORTED"));
+                    }
+                    constructor_vararg = parameter_vararg;
+                    self.lines();
                     let mutable = self.take("var");
                     let property = mutable || self.take("val");
                     if (private || public) && !property {
@@ -3936,7 +3992,14 @@ impl Parser {
                             mutable_params.push(param.clone());
                         }
                     }
-                    params.push((param, self.ty()?));
+                    let ty = self.ty()?;
+                    let ty = if parameter_vararg {
+                        Type::primitive_array_for(&ty)
+                            .unwrap_or_else(|| Type::OutArray(Box::new(ty)))
+                    } else {
+                        ty
+                    };
+                    params.push((param, ty));
                     param_annotations.push(annotations);
                     if params.iter().map(|(_, ty)| ty.slots()).sum::<usize>() > 254 {
                         return Err(
@@ -3945,6 +4008,9 @@ impl Parser {
                     }
                     self.lines();
                     defaults.push(if self.take("=") {
+                        if parameter_vararg {
+                            return Err(self.error("Vararg constructor parameters with default values are unsupported").with_kind(DiagnosticKind::UnsupportedLanguage, "VARARG_DEFAULT_UNSUPPORTED"));
+                        }
                         self.lines();
                         Some(self.expr(0)?)
                     } else {
@@ -4045,6 +4111,7 @@ impl Parser {
             annotations,
             param_annotations,
             primary_constructor: true,
+            constructor_vararg,
             constructor_visibility,
             constructor_annotations,
             name,
@@ -4459,7 +4526,8 @@ impl Parser {
                 getter_visibility = accessor_visibility;
                 if self.at("(") {
                     let getter_offset = self.tokens[self.pos - 1].offset;
-                    body = self.getter_body()?;
+                    body = self
+                        .getter_body(ty.is_none() && initializer.is_none() && delegate.is_none())?;
                     if body.is_empty() {
                         let known_non_unit = !matches!(
                             ty.as_ref(),
@@ -4700,6 +4768,7 @@ impl Parser {
             annotations: Vec::new(),
             param_annotations: Vec::new(),
             primary_constructor: true,
+            constructor_vararg: false,
             constructor_visibility: 1,
             constructor_annotations: Vec::new(),
             name: "Companion".into(),
@@ -5030,7 +5099,7 @@ impl Parser {
                                 "Mutable interface properties require abstract default accessors",
                             ));
                         }
-                        Some(self.getter_body()?)
+                        Some(self.getter_body(false)?)
                     } else {
                         self.pos = after_type;
                         None
@@ -5059,7 +5128,7 @@ impl Parser {
         self.type_parameters.truncate(scope);
         Ok(declaration)
     }
-    fn getter_body(&mut self) -> Result<Vec<Statement>> {
+    fn getter_body(&mut self, infer_from_expression: bool) -> Result<Vec<Statement>> {
         self.expect("(")?;
         self.expect(")")?;
         self.lines();
@@ -5069,6 +5138,9 @@ impl Parser {
                 offset: self.token().offset,
                 kind: StatementKind::Return(Some(self.expression_body()?)),
             }])
+        } else if infer_from_expression {
+            Err(self
+                .error("A block-bodied property getter requires an explicit type or initializer"))
         } else {
             self.block()
         }
@@ -5288,6 +5360,7 @@ impl Parser {
                     annotations: Vec::new(),
                     param_annotations: Vec::new(),
                     primary_constructor: true,
+                    constructor_vararg: false,
                     constructor_visibility: 1,
                     constructor_annotations: Vec::new(),
                     name: String::new(),
@@ -5505,6 +5578,19 @@ impl Parser {
                     ),
                     ty => matches!(ty, Type::Function { .. } | Type::ReceiverFunction { .. }),
                 };
+                if mode != InlineParameterMode::Ordinary
+                    && matches!(
+                        ty.base(),
+                        Type::SuspendFunction { .. } | Type::SuspendReceiverFunction { .. }
+                    )
+                {
+                    return Err(self
+                        .error("Suspend function parameter inline modifiers are unsupported")
+                        .with_kind(
+                            DiagnosticKind::UnsupportedLanguage,
+                            "SUSPEND_INLINE_PARAMETER_UNSUPPORTED",
+                        ));
+                }
                 if mode != InlineParameterMode::Ordinary && !function_type {
                     return Err(self
                         .error("Inline parameter modifiers require a function type")
@@ -8959,12 +9045,24 @@ fun h(): String = target(prefix = "named") label@{ return@label "tail" }"#,
             "fun <T: Int?> f(value: T): T = value",
             "fun <T: Unit> f(value: T): T = value",
             "fun <T> f(value: T): T where T: Any = value",
-            "fun f(value: suspend String.() -> Unit): Unit {}",
             "fun f(value: List<in String>): Unit {}",
             "fun f(value: Comparable<out String>): Unit {}",
         ] {
             assert!(parse(source).is_err(), "{source}");
         }
+        let module = parse("fun f(value: suspend String.() -> Unit): Unit {}").unwrap();
+        assert_eq!(
+            module.functions[0].params[0].1,
+            Type::SuspendReceiverFunction {
+                receiver: Box::new(Type::String),
+                params: Vec::new(),
+                result: Box::new(Type::Unit),
+            }
+        );
+        assert_eq!(
+            module.functions[0].params[0].1.descriptor(),
+            "Lkotlin/jvm/functions/Function2;"
+        );
         let source = format!(
             "fun f(value: ({}) -> Int): Unit {{}}",
             vec!["Int"; 23].join(",")

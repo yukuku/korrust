@@ -1,0 +1,6 @@
+reports/correctness/2026-11-26T055530070785Z-suspend-receiver-functions/wrong-lambda-arity.kt:2:30: error: argument type mismatch: actual type is 'suspend CoroutineScope.(??? (Unknown type for value parameter value)) -> Int', but 'suspend CoroutineScope.() -> Int' was expected.
+fun bad(): Int = runBlocking { value -> value }
+                             ^^^^^^^^^^^^^^^^^^
+reports/correctness/2026-11-26T055530070785Z-suspend-receiver-functions/wrong-lambda-arity.kt:2:32: error: cannot infer type for value parameter 'value'. Specify it explicitly.
+fun bad(): Int = runBlocking { value -> value }
+                               ^^^^^

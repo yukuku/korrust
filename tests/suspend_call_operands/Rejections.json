@@ -1,0 +1,7 @@
+[
+  {
+    "id": "suspending-constructor-operand",
+    "unsupported": true,
+    "source": "import kotlinx.coroutines.runBlocking\nimport receiverlibrary.checkpoint\nclass Box(val value: Int)\nfun use(): Int = runBlocking { Box(checkpoint()).value }\n"
+  }
+]

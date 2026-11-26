@@ -359,7 +359,7 @@ pub(super) fn emit(
         )? {
             methods.push(default);
         }
-        if !lambdas.is_empty() && function.private {
+        if function.private {
             methods.push(private_method_bridge(
                 &mut pool,
                 &companion.owner,

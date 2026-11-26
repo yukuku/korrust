@@ -51,12 +51,13 @@ impl Checker<'_> {
                 _ => false,
             };
             if callable
-                && matches!(
+                && (matches!(
                     inner.base(),
                     Type::Function { .. }
                         | Type::ReceiverFunction { .. }
                         | Type::SuspendFunction { .. }
-                )
+                        | Type::SuspendReceiverFunction { .. }
+                ) || self.sam_function(inner, expr.offset)?.is_some())
             {
                 let value = self.expected_value(expr, inner)?;
                 return self.coerce(value, expected.clone(), expr.offset);
@@ -223,12 +224,13 @@ impl Checker<'_> {
             }
         }
         let mut value = self.value_expected(expr, Some(expected))?;
-        if matches!(expected.base(), Type::SuspendFunction { .. })
-            && matches!(
-                value.ty.base(),
-                Type::Function { .. } | Type::ReceiverFunction { .. }
-            )
-        {
+        if matches!(
+            expected.base(),
+            Type::SuspendFunction { .. } | Type::SuspendReceiverFunction { .. }
+        ) && matches!(
+            value.ty.base(),
+            Type::Function { .. } | Type::ReceiverFunction { .. }
+        ) {
             return Err(Diagnostic::new(
                 expr.offset,
                 "Ordinary-to-suspend function value adaptation is unsupported",
@@ -291,8 +293,7 @@ impl Checker<'_> {
                 ));
             }
             crate::classpath::compose_abi::validate_runtime(self.classpath, expr.offset)?;
-            self.composable_body = true;
-            let checked = self.lambda_context(
+            let checked = self.ordinary_lambda_context(
                 expr,
                 &Type::Function {
                     params: Vec::new(),
@@ -301,8 +302,8 @@ impl Checker<'_> {
                 None,
                 local_return,
                 label,
+                true,
             );
-            self.composable_body = false;
             let mut value = checked?;
             let ValueKind::Lambda { owner, .. } = &value.kind else {
                 unreachable!()
@@ -316,14 +317,18 @@ impl Checker<'_> {
             value.ty = expected.clone();
             return Ok(value);
         }
-        if matches!(expected.base(), Type::SuspendFunction { .. }) && !local_return {
-            return Err(
-                Diagnostic::new(expr.offset, "Source suspend lambdas are unsupported").with_kind(
-                    crate::DiagnosticKind::UnsupportedLanguage,
-                    "SUSPEND_LAMBDA_UNSUPPORTED",
-                ),
-            );
-        }
+        self.ordinary_lambda_context(expr, expected, interface, local_return, label, false)
+    }
+
+    fn ordinary_lambda_context(
+        &mut self,
+        expr: &Expr,
+        expected: &Type,
+        interface: Option<JavaMethod>,
+        local_return: bool,
+        label: Option<&str>,
+        composable: bool,
+    ) -> Result<Value> {
         let (params, result, receiver_type) = match expected.base() {
             Type::Function { params, result } | Type::SuspendFunction { params, result } => {
                 (params, result, None)
@@ -332,13 +337,20 @@ impl Checker<'_> {
                 receiver,
                 params,
                 result,
+            }
+            | Type::SuspendReceiverFunction {
+                receiver,
+                params,
+                result,
             } => (params, result, Some(receiver.as_ref().clone())),
             _ => {
                 if let Some((method, function)) = self.sam_function(expected, expr.offset)? {
-                    return self.lambda(expr, &function, Some(method)).map(|mut value| {
-                        value.ty = expected.clone();
-                        value
-                    });
+                    return self
+                        .lambda_context(expr, &function, Some(method), local_return, label)
+                        .map(|mut value| {
+                            value.ty = expected.clone();
+                            value
+                        });
                 }
                 return Err(Diagnostic::new(
                     expr.offset,
@@ -398,6 +410,7 @@ impl Checker<'_> {
             expr.offset,
             self.lambdas.borrow().len()
         );
+        self.mark_changing_captures(captures::free_written_names(&statements, &names));
         let mut capture_names = captures::free_names(&statements, &names);
         let receiver_dependent = capture_names.iter().any(|name| {
             if name == "this" {
@@ -437,6 +450,10 @@ impl Checker<'_> {
                 return Err(Diagnostic::new(
                     expr.offset,
                     format!("Variable {name} must be initialized before capture"),
+                )
+                .with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "UNINITIALIZED_VARIABLE",
                 ));
             }
             let value = if let Some((cell, ty)) = self.cell_binding(&name) {
@@ -498,7 +515,9 @@ impl Checker<'_> {
             }
         }
         let mut checker = Checker {
-            composable_body: self.composable_body,
+            composer: None,
+            composable_target: None,
+            composable_body: composable,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
             public_inline_body: self.public_inline_body,
@@ -512,6 +531,7 @@ impl Checker<'_> {
             captured_cells,
             cells: HashMap::new(),
             cell_names: HashSet::new(),
+            changing_cells: HashSet::new(),
             lambda_owner: self.lambda_owner.clone(),
             inline_result: None,
             nonlocal_result: if local_return {
@@ -544,7 +564,7 @@ impl Checker<'_> {
             contract_facts: HashMap::new(),
             contract_registration: None,
             refinements: HashMap::new(),
-            initialized: HashSet::new(),
+            initialized: InitializationState::default(),
             loop_depth: 0,
             scopes: vec![HashMap::new()],
             next: 1,
@@ -564,6 +584,16 @@ impl Checker<'_> {
             .into_iter()
             .zip(params.iter().cloned())
             .collect::<Vec<_>>();
+        if composable {
+            let ty = Type::Java(crate::classpath::compose_abi::COMPOSER.into());
+            let slot = checker.allocate_typed_slot(&ty, expr.offset)?;
+            checker.initialized.insert(slot);
+            checker.composer = Some(Local {
+                slot,
+                ty,
+                mutable: false,
+            });
+        }
         if let Some(receiver) = receiver_type {
             function_params.insert(0, ("this".into(), receiver));
         }
@@ -591,7 +621,19 @@ impl Checker<'_> {
                 }
             }
         }
-        let suspend_ = matches!(expected.base(), Type::SuspendFunction { .. });
+        if composable {
+            function_params.insert(
+                0,
+                (
+                    "<composer>".into(),
+                    Type::Java(crate::classpath::compose_abi::COMPOSER.into()),
+                ),
+            );
+        }
+        let suspend_ = matches!(
+            expected.base(),
+            Type::SuspendFunction { .. } | Type::SuspendReceiverFunction { .. }
+        );
         if suspend_ {
             checker.next += 1;
         }
@@ -640,7 +682,7 @@ impl Checker<'_> {
                 ..
             }) => {
                 if result.as_ref() == &Type::Unit {
-                    body.push(Statement::Expression(checker.value(&value)?));
+                    body.push(Statement::Expression(checker.discarded_value(&value)?));
                     body.push(Statement::Return(Value {
                         ty: Type::Unit,
                         kind: ValueKind::Unit,
@@ -671,7 +713,8 @@ impl Checker<'_> {
             })),
             None => return Err(Diagnostic::new(expr.offset, "Lambda must produce a result")),
         }
-        if self.composable_body {
+        if composable {
+            self.validate_composable_groups(&mut body, expr.offset)?;
             let mut used = HashSet::new();
             let mut creates_function = false;
             ir_walk::statements(&mut body, &owner, &mut |value: &mut Value, _: &str| {
@@ -865,6 +908,7 @@ impl Checker<'_> {
         let refinements = self.refinements.clone();
         let cells = self.cells.clone();
         let cell_names = self.cell_names.clone();
+        let changing_cells = self.changing_cells.clone();
         let contract_registration = self.contract_registration;
         let contract_facts = self.contract_facts.clone();
         let count = self.lambdas.borrow().len();
@@ -883,6 +927,7 @@ impl Checker<'_> {
                 Type::Function { .. }
                     | Type::ReceiverFunction { .. }
                     | Type::SuspendFunction { .. }
+                    | Type::SuspendReceiverFunction { .. }
                     | Type::Nullable(_)
             ) {
                 return Err(
@@ -900,6 +945,7 @@ impl Checker<'_> {
             self.refinements = refinements;
             self.cells = cells;
             self.cell_names = cell_names;
+            self.changing_cells = changing_cells;
             self.contract_registration = contract_registration;
             self.contract_facts = contract_facts;
             self.lambdas.borrow_mut().truncate(count);
@@ -924,6 +970,11 @@ impl Checker<'_> {
                 (params.clone(), result.as_ref().clone())
             }
             Type::ReceiverFunction {
+                receiver,
+                params,
+                result,
+            }
+            | Type::SuspendReceiverFunction {
                 receiver,
                 params,
                 result,
@@ -1062,13 +1113,32 @@ impl Checker<'_> {
             library::specialize_receiver(methods[0].clone(), expected, &class, self.classpath);
         method.owner = owner.into();
         let (params, result) = class_method_types(&method)?;
-        Ok(Some((
-            method,
+        let function = if method
+            .library
+            .as_ref()
+            .is_some_and(|library| library.suspend_)
+        {
+            if params.iter().any(|ty| ty.base() == &Type::Unit) {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Unit-valued suspend SAM parameters are unsupported",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "SUSPEND_SAM_UNIT_PARAMETER_UNSUPPORTED",
+                ));
+            }
+            Type::SuspendFunction {
+                params,
+                result: Box::new(result),
+            }
+        } else {
             Type::Function {
                 params,
                 result: Box::new(result),
-            },
-        )))
+            }
+        };
+        Ok(Some((method, function)))
     }
 }
 
@@ -1247,6 +1317,8 @@ mod shadowing_tests {
                 kotlin_interface: false,
                 methods: vec![JavaMethod {
                     library: Some(crate::classpath::LibraryMethod {
+                        compose: None,
+                        stable_result: false,
                         default_code: None,
                         vararg_index: None,
                         contracts: Vec::new(),
@@ -1280,6 +1352,8 @@ mod shadowing_tests {
             },
         )]);
         let mut checker = Checker {
+            composer: None,
+            composable_target: None,
             composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
@@ -1294,6 +1368,7 @@ mod shadowing_tests {
             captured_cells: HashMap::new(),
             cells: HashMap::new(),
             cell_names: HashSet::new(),
+            changing_cells: HashSet::new(),
             lambda_owner: "Shadowed".into(),
             inline_result: None,
             nonlocal_result: None,
@@ -1322,7 +1397,7 @@ mod shadowing_tests {
             contract_facts: HashMap::new(),
             contract_registration: None,
             refinements: HashMap::new(),
-            initialized: HashSet::new(),
+            initialized: InitializationState::default(),
             loop_depth: 0,
             scopes: vec![HashMap::new()],
             next: 0,
@@ -1359,6 +1434,13 @@ impl Checker<'_> {
         &mut self,
         function: &syntax::Function,
     ) -> Result<(Vec<Statement>, bool)> {
+        let mut bound_names = function
+            .params
+            .iter()
+            .map(|p| p.0.clone())
+            .collect::<Vec<_>>();
+        bound_names.push(function.name.clone());
+        self.mark_changing_captures(captures::free_written_names(&function.body, &bound_names));
         if function.vararg {
             return Err(Diagnostic::new(
                 function.offset,
@@ -1407,6 +1489,7 @@ impl Checker<'_> {
             let refinements = self.refinements.clone();
             let cells = self.cells.clone();
             let cell_names = self.cell_names.clone();
+            let changing_cells = self.changing_cells.clone();
             let loop_depth = self.loop_depth;
             let lambda_count = self.lambdas.borrow().len();
             self.scopes.push(HashMap::new());
@@ -1434,6 +1517,7 @@ impl Checker<'_> {
             self.refinements = refinements;
             self.cells = cells;
             self.cell_names = cell_names;
+            self.changing_cells = changing_cells;
             self.loop_depth = loop_depth;
             self.lambdas.borrow_mut().truncate(lambda_count);
             inferred?

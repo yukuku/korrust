@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-26T07:07:27.638113+00:00",
+  "status": "passed",
+  "compiler": {
+    "binary_sha256": "e85294752c84f9131bac18c04c3d7f270dec0a8478d59211b61d5d3ca20d2e37",
+    "source_revision": "3271b159f"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "evidence": [
+    "reports/correctness/2026-11-26T065348382664Z-constructor-varargs.json"
+  ],
+  "features": [
+    {
+      "name": "Final source primary constructor varargs",
+      "status": "partial",
+      "scope": "Primitive, wide, nullable and explicit generic varargs lower to specialized/projected arrays. Constructor val/var properties, private property modifier orders, natural/empty/named packing, spread copying, leading defaults, Java varargs flags and Kotlin metadata are tested. Normal and spread superclass/secondary-constructor delegation preserve JVM verification and argument order.",
+      "restrictions": [
+        "Source primary constructor varargs must be final, and defaults on the vararg parameter itself remain explicitly unsupported. Unit and unsigned vararg carrier boundaries remain as for source functions. Data/value classes and projected element writes are rejected in accordance with Kotlin rules."
+      ],
+      "evidence_report": "reports/correctness/2026-11-26T065348382664Z-constructor-varargs.json"
+    },
+    {
+      "name": "Unchanged GotoScreenNavigationTest285 parsing",
+      "status": "partial",
+      "scope": "Whole-file parsing accepts the nested Screen(vararg val titles:String) declaration. Semantic checking reaches the explicit CompositionLocalProvider library boundary at line133.",
+      "restrictions": [
+        "The original test file does not yet compile and no Android runtime pass is claimed."
+      ],
+      "evidence_report": "reports/correctness/2026-11-26T065348382664Z-constructor-varargs.json"
+    }
+  ],
+  "validation": {
+    "differential_counts": {
+      "pass": 17,
+      "invalid_rejected": 11,
+      "unsupported_language": 3
+    },
+    "library_tests": "295 pass",
+    "constructor_integration": "pass",
+    "clippy": "pass",
+    "format": "unrelated predecessor differences recorded",
+    "report_generator_tests": "8 pass"
+  },
+  "inputs": {
+    "evidence_sha256": {
+      "reports/correctness/2026-11-26T065348382664Z-constructor-varargs.json": "fd59ef1ff315e7acaf37e0b9638efdcdce59ae2f04d8e1701ab4c3a5f00f19c6"
+    }
+  }
+}

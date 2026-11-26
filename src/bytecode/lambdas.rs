@@ -55,9 +55,13 @@ pub fn emit_lambdas(
         if let Some(key) = lambda.composable_key {
             files.push(super::compose_lambdas::emit(lambda, key, file)?);
         }
-        if lambda.function.suspend_ {
+        let implementations = lambda
+            .anonymous_methods
+            .as_deref()
+            .unwrap_or(std::slice::from_ref(&lambda.function));
+        if implementations.iter().any(|function| function.suspend_) {
             files.extend(suspend::emit_frames_in(
-                std::slice::from_ref(&lambda.function),
+                implementations,
                 &module.functions,
                 &lambda.owner,
                 file,
@@ -110,6 +114,21 @@ fn emit_in(
             anonymous_context::parameters(ty, &mut parameters);
         }
         if !parameters.is_empty()
+            && lambda
+                .anonymous_methods
+                .as_ref()
+                .is_some_and(|methods| methods.iter().any(|method| method.suspend_))
+        {
+            return Err(Diagnostic::new(
+                0,
+                "Anonymous suspend overrides with lexical type variables are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "ANONYMOUS_SUSPEND_TYPE_PARAMETERS_UNSUPPORTED",
+            ));
+        }
+        if !parameters.is_empty()
             && enclosing.is_none_or(|context| {
                 !context.supported || !parameters.is_subset(&context.parameters)
             })
@@ -157,7 +176,7 @@ fn emit_in(
     } else {
         vec![pool.class(&interface)?]
     };
-    if function.suspend_ && lambda.anonymous_methods.is_none() {
+    if function.suspend_ && lambda.anonymous_methods.is_none() && lambda.interface.is_none() {
         interface_classes.push(pool.class("kotlin/coroutines/jvm/internal/SuspendFunction")?);
     }
     let mut fields = Vec::new();
@@ -244,7 +263,7 @@ fn emit_in(
         .anonymous_methods
         .as_deref()
         .unwrap_or(std::slice::from_ref(function));
-    for function in implementations {
+    for (index, function) in implementations.iter().enumerate() {
         if function.suspend_ {
             methods.push(suspend::emit_method_in(
                 &mut pool,
@@ -253,7 +272,7 @@ fn emit_in(
                 owner,
                 facade,
                 function,
-                0,
+                index,
                 Some(0x0011),
             )?);
             continue;

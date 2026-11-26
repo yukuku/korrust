@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-26T06:28:48.941843+00:00",
+  "status": "passed",
+  "compiler": {
+    "binary": "/tmp/targets159-suspend-committed/debug/korrust",
+    "binary_sha256": "90ea6f46d86f6cc79815089325cbadcb0531c2195c94bbebf984ac17cad04994",
+    "source_root": ".",
+    "source_revision": "ed81c188ad8582cadbf1e6a418c5b11ff1a02013"
+  },
+  "reference_compiler": "Kotlin 2.3.21",
+  "evidence": [
+    "reports/correctness/2026-11-26T062326331756Z-suspend-call-operands.json",
+    "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application.json",
+    "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions.json",
+    "reports/features/2026-11-26T062848941843Z-suspension-call-operands/committed-archive-build.log",
+    "reports/features/2026-11-26T062848941843Z-suspension-call-operands/committed-archive-library-clippy.log",
+    "reports/features/2026-11-26T062848941843Z-suspension-call-operands/formatting.log",
+    "reports/features/2026-11-26T062848941843Z-suspension-call-operands/report-generator-tests.log"
+  ],
+  "features": [
+    {
+      "name": "Suspension in ordinary call operands",
+      "status": "supported",
+      "scope": "Source, compiled static/member and function-value invocation operands evaluate once in source order, including the receiver and callback value. Temporaries are saved across coroutine resumption before invoking the enclosing call. Fixed Java callers compiled against official output verify member receiver/argument traces, two sequential suspensions in nested call arguments, function-value/source calls, and exceptions both before and after a resumed argument.",
+      "restrictions": [
+        "Constructor operands remain explicitly unsupported to preserve allocation and initialization timing. Existing JVM local limits and unsupported state-machine/declaration shapes remain explicit."
+      ],
+      "evidence_report": "reports/correctness/2026-11-26T062326331756Z-suspend-call-operands.json"
+    },
+    {
+      "name": "Unchanged AlkitabGptIntegrationTest",
+      "status": "supported",
+      "scope": "The pinned original source compiles unchanged into nine owned JVM classes. The same five original Robolectric JUnit tests pass against official and replacement providers with Java21 verification and Android SDK34 resources.",
+      "restrictions": [
+        "Captured original Gradle dependencies, class files, manifests and resources are reused. This is a bounded provider replacement test; whole-application and performance results remain unmeasured."
+      ],
+      "evidence_report": "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application.json"
+    }
+  ],
+  "validation": {
+    "targeted_resumed_runtime_counts": {
+      "pass": 6
+    },
+    "prior_full_core_counts": {
+      "pass": 8,
+      "invalid_rejected": 6,
+      "unsupported_language": 4
+    },
+    "application_counts": {
+      "pass": 3,
+      "unsupported_language": 1
+    },
+    "original_junit_tests_per_provider": 5,
+    "committed_archive_build": "passed; all src files match committed ed81c188a",
+    "committed_archive_library_clippy": "passed",
+    "formatting": "passed",
+    "report_generator_tests": "8 passed"
+  },
+  "delivery_corrections": [
+    {
+      "commits": [
+        "3902afa5a",
+        "ed81c188a"
+      ],
+      "reason": "Archive review caught an omitted planner prerequisite in the first staged operand delivery. The corrected committed archive uses the normalized body and local count; the final runtime, application and Clippy evidence all use that corrected archive."
+    }
+  ],
+  "inputs": {
+    "evidence_sha256": {
+      "reports/correctness/2026-11-26T062326331756Z-suspend-call-operands.json": "175d4e9acfd47f25e6315506645fab49925e4e11506e1d4b82a0f0b69e1c8992",
+      "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application.json": "95c3aea1f50aee484ea29dff1a5e365bbbe035f652e3b40cffbfe84ff6f518dc",
+      "reports/correctness/2026-11-26T061239842270Z-suspend-receiver-functions.json": "360e5862cdb3ab93513aecf54f44a46083aa70c16d5b0e56c1face4fc34825dd",
+      "reports/features/2026-11-26T062848941843Z-suspension-call-operands/committed-archive-build.log": "e8ddc429cb725fb7f455fea3d6ff8ec7b31d2efbb6ef754317704a30291c5d88",
+      "reports/features/2026-11-26T062848941843Z-suspension-call-operands/committed-archive-library-clippy.log": "60e6d537a27728d79f8f1b93050a1d12a90fc21851af5088e7c26298d83e0f27",
+      "reports/features/2026-11-26T062848941843Z-suspension-call-operands/formatting.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/features/2026-11-26T062848941843Z-suspension-call-operands/report-generator-tests.log": "d5f97c504de9b12b7557f324ff5c90de87f05fd85bdcad33083ff1a83e35ab20"
+    }
+  }
+}

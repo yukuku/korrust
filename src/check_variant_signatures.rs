@@ -55,7 +55,8 @@ fn final_type(ty: &Type, cp: &Classpath) -> bool {
         | Type::FlexibleList(_)
         | Type::Function { .. }
         | Type::SuspendFunction { .. }
-        | Type::ReceiverFunction { .. } => false,
+        | Type::ReceiverFunction { .. }
+        | Type::SuspendReceiverFunction { .. } => false,
         Type::ThreadLocal(_) => false,
         _ => true,
     }
@@ -204,6 +205,21 @@ fn signature_type(ty: &Type, cp: &Classpath, mode: Mode, names: &[&str], argumen
             names,
             argument,
         ),
+        Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => {
+            let mut all = vec![receiver.as_ref().clone()];
+            all.extend(params.clone());
+            signature_type(
+                &Type::suspend_runtime(&all, result),
+                cp,
+                mode,
+                names,
+                argument,
+            )
+        }
         Type::ReceiverFunction {
             receiver,
             params,
@@ -395,6 +411,15 @@ fn projected_type(ty: &Type, cp: &Classpath, mode: Mode) -> Type {
                 mode,
             )
         }
+        Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => {
+            let mut all = vec![receiver.as_ref().clone()];
+            all.extend(params.clone());
+            projected_type(&Type::suspend_runtime(&all, result), cp, mode)
+        }
         Type::ReceiverFunction {
             receiver,
             params,
@@ -485,6 +510,11 @@ fn exposed_field(ty: &Type, cp: &Classpath) -> Result<()> {
             exposed_field(result, cp)?;
         }
         Type::ReceiverFunction {
+            receiver,
+            params,
+            result,
+        }
+        | Type::SuspendReceiverFunction {
             receiver,
             params,
             result,

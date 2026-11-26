@@ -91,6 +91,23 @@ pub(super) fn ordinary_member_methods(
             method.descriptor.clone(),
         ))
     });
+    let getter = getter_name(name);
+    for method in methods.iter_mut().filter(|method| {
+        method.name == getter
+            && method.access & 9 == 1
+            && !method.unsupported
+            && method.source_property.is_none()
+            && method.descriptor.starts_with("()")
+    }) {
+        if let Some(classifier) = crate::classpath::kotlin_mapped_classifier(&method.owner)
+            && let Ok(result) = classpath.builtin_property_type(classifier, name)
+            && method.descriptor == format!("(){}", result.descriptor())
+        {
+            method.source_property = Some(name.into());
+            method.kotlin_params = Some(Vec::new());
+            method.kotlin_result = Some(result);
+        }
+    }
     for mapping in crate::classpath::jvm_builtins::PROPERTY_MAPPINGS
         .iter()
         .filter(|mapping| mapping.source_name == name || mapping.jvm_name == name)
@@ -414,6 +431,9 @@ impl Checker<'_> {
                     &method.owner,
                     method.access,
                 )
+                || self
+                    .classpath
+                    .private_companion_method_visible(&self.lambda_owner, method)
                 || method.access & 2 != 0
                     && (self.lambda_owner == method.owner
                         || self.lambda_owner.starts_with(&format!("{}$", method.owner)))
@@ -545,7 +565,10 @@ impl Checker<'_> {
             let mut seen_scopes = HashSet::new();
             while let Some(owner) = scope {
                 if !seen_scopes.insert(owner.clone()) {
-                    return Err(Diagnostic::new(offset, "Cyclic lexical classifier hierarchy"));
+                    return Err(Diagnostic::new(
+                        offset,
+                        "Cyclic lexical classifier hierarchy",
+                    ));
                 }
                 scope = self.classpath.lexical_parent(&owner);
                 let Ok(class) = self.classpath.load(&owner) else {
@@ -975,6 +998,16 @@ impl Checker<'_> {
         if method.name == "<init>" {
             let normalized = self.vararg_arguments(&method, args, offset)?;
             let (params, defaults) = Self::method_parameters(&method)?;
+            let class = self.classpath.load(&method.owner)?;
+            if let Some(value) = self.binary_marker_constructor(
+                &class,
+                &method,
+                &normalized,
+                Type::Java(class.name.clone()),
+                offset,
+            )? {
+                return Ok(value);
+            }
             return self.constructor_call(
                 &method.owner,
                 &params,
@@ -1088,6 +1121,16 @@ impl Checker<'_> {
         if method
             .library
             .as_ref()
+            .is_some_and(|library| library.compose.is_some())
+        {
+            let value = self.composable_call(method, values, lets, mask, offset)?;
+            self.contract_registration = Some(offset);
+            self.contract_facts.insert(offset, contract_facts);
+            return Ok(value);
+        }
+        if method
+            .library
+            .as_ref()
             .is_some_and(|library| library.builtin_array)
         {
             if mask != 0 || values.len() != 1 {
@@ -1109,6 +1152,50 @@ impl Checker<'_> {
                 value = self.coerce(value, result, offset)?;
             }
             return Ok(Self::wrap_lets(value, lets));
+        }
+        if method.owner == "kotlin/<builtins>" {
+            if method.name != "toString"
+                || method.descriptor != "(Ljava/lang/Object;)Ljava/lang/String;"
+                || mask != 0
+                || values.len() != 1
+                || result != Type::String
+            {
+                return Err(
+                    Diagnostic::new(offset, "Unsupported Kotlin builtin invocation").with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "BUILTIN_DECLARATION_UNSUPPORTED",
+                    ),
+                );
+            }
+            let target = self
+                .classpath
+                .load("java/lang/String")?
+                .methods
+                .into_iter()
+                .find(|target| {
+                    target.name == "valueOf"
+                        && target.descriptor == method.descriptor
+                        && target.access & 9 == 9
+                        && !target.unsupported
+                })
+                .ok_or_else(|| {
+                    Diagnostic::new(offset, "Missing JVM nullable toString target").with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "BUILTIN_JVM_TARGET_UNSUPPORTED",
+                    )
+                })?;
+            return Ok(Self::wrap_lets(
+                Value {
+                    ty: result,
+                    kind: ValueKind::StaticCall {
+                        owner: target.owner,
+                        name: target.name,
+                        descriptor: target.descriptor,
+                        args: values,
+                    },
+                },
+                lets,
+            ));
         }
         if method.access & 1 == 0
             && !self.classpath.java_package_member_visible(
@@ -1148,6 +1235,7 @@ impl Checker<'_> {
         {
             mask >>= 1;
         }
+        self.physical_default_values(&method, &mut values, mask, offset)?;
         let method = if inline && mask != 0 {
             let parameters = params.len()
                 - usize::from(
@@ -1514,6 +1602,11 @@ pub(super) fn default_type_imports(
                 receiver,
                 params,
                 result,
+            }
+            | Type::SuspendReceiverFunction {
+                receiver,
+                params,
+                result,
             } => {
                 visit(receiver, imports, classpath);
                 for param in params {
@@ -1717,6 +1810,15 @@ impl Checker<'_> {
         let method = self.select_method(&constructors, args, offset)?;
         let normalized = self.vararg_arguments(&method, args, offset)?;
         let (params, defaults) = Self::method_parameters(&method)?;
+        if let Some(value) = self.binary_marker_constructor(
+            &class,
+            &method,
+            &normalized,
+            Type::Java(class.name.clone()),
+            offset,
+        )? {
+            return Ok(Some(value));
+        }
         self.constructor_call(
             &class.name,
             &params,
@@ -2012,6 +2114,11 @@ impl Checker<'_> {
         };
         let normalized = self.vararg_arguments(&method, args, offset)?;
         let args = normalized.as_slice();
+        if let Some(value) =
+            self.binary_marker_constructor(&class, &method, args, ty.clone(), offset)?
+        {
+            return Ok(Some(value));
+        }
         let (params, defaults) = Self::method_parameters(&method)?;
         let (values, lets, mask) = self.arguments_checked(
             &params,
@@ -2067,6 +2174,54 @@ impl Checker<'_> {
 }
 
 impl Checker<'_> {
+    pub(super) fn qualified_package_call(
+        &mut self,
+        receiver: &Expr,
+        name: &str,
+        args: &[Expr],
+        types: &[Type],
+        expected: Option<&Type>,
+        offset: usize,
+    ) -> Result<Option<Value>> {
+        let Some(path) = classes::source_path(receiver) else {
+            return Ok(None);
+        };
+        let root = &path[0];
+        if !self.unshadowed(root)
+            || self.value_name_is_bound(root)
+            || self
+                .classpath
+                .value_symbol(&self.lambda_owner, root, offset)?
+                .is_some()
+        {
+            return Ok(None);
+        }
+        let methods = self
+            .classpath
+            .package_methods(&path.join("/"), name)?
+            .into_iter()
+            .filter(|method| {
+                method.access & 8 != 0
+                    && method.library.as_ref().is_some_and(|info| {
+                        info.receiver.is_none()
+                            && info.source_name == name
+                            && (method.access & 1 != 0
+                                || info.inline && info.kotlin_public
+                                || self
+                                    .classpath
+                                    .file_private_visible(&self.lambda_owner, method))
+                    })
+                    && (!method.kotlin_internal || self.classpath.internal_visible(&method.owner))
+                    && method.source_property.is_none()
+            })
+            .collect::<Vec<_>>();
+        if methods.is_empty() {
+            return Ok(None);
+        }
+        let method = self.select_method_expected(&methods, args, types, expected, offset)?;
+        self.library_static_call(method, args, offset).map(Some)
+    }
+
     pub(super) fn qualified_java_classifier(
         &self,
         expression: &Expr,
@@ -2086,8 +2241,25 @@ impl Checker<'_> {
             }
         }
         let mut names = Vec::new();
-        if !parts(expression, &mut names) || names.len() < 2 || self.value_name_is_bound(names[0]) {
+        if !parts(expression, &mut names) || self.value_name_is_bound(names[0]) {
             return Ok(None);
+        }
+        if names.len() == 1 {
+            return Ok(
+                match self
+                    .classpath
+                    .value_symbol(&self.lambda_owner, names[0], offset)?
+                {
+                    Some(crate::classpath::ValueSymbol::Classifier(class))
+                        if !class.kotlin_class
+                            && self.classpath.java_nested_access(&class.name).is_some() =>
+                    {
+                        let access = self.classpath.java_nested_access(&class.name);
+                        Some((*class, access))
+                    }
+                    _ => None,
+                },
+            );
         }
         let symbol = self
             .classpath
@@ -2359,6 +2531,9 @@ impl Checker<'_> {
         if let Some(value) = self.java_callee_collision(expression, args, offset)? {
             return Ok(Some(value));
         }
+        if matches!(expression.kind, ExprKind::Name(_)) {
+            return Ok(None);
+        }
         let java = self.qualified_java_classifier(expression, offset)?;
         if java
             .as_ref()
@@ -2478,6 +2653,15 @@ impl Checker<'_> {
         let method = self.select_method(&constructors, args, offset)?;
         let normalized = self.vararg_arguments(&method, args, offset)?;
         let (params, defaults) = Self::method_parameters(&method)?;
+        if let Some(value) = self.binary_marker_constructor(
+            &class,
+            &method,
+            &normalized,
+            Type::Java(class.name.clone()),
+            offset,
+        )? {
+            return Ok(Some(value));
+        }
         self.constructor_call(
             &class.name,
             &params,

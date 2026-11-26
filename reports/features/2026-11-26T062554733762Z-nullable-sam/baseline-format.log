@@ -1,0 +1,73 @@
+Diff in /workspace/work/nullable-sam003/src/classpath.rs:751:
+         self.lexical_parents.borrow().get(owner).cloned()
+     }
+
+-    pub(crate) fn private_companion_method_visible(&self, caller: &str, method: &JavaMethod) -> bool {
+-        method.access & 2 != 0 && self.is_source(&method.owner)
++    pub(crate) fn private_companion_method_visible(
++        &self,
++        caller: &str,
++        method: &JavaMethod,
++    ) -> bool {
++        method.access & 2 != 0
++            && self.is_source(&method.owner)
+             && method.owner.rsplit_once('$').is_some_and(|(outer, name)| {
+-                self.lexically_within(caller, outer) && self.load(outer).is_ok_and(|class| {
+-                    class.library.as_ref().and_then(|l| l.companion_name.as_deref()) == Some(name)
+-                })
++                self.lexically_within(caller, outer)
++                    && self.load(outer).is_ok_and(|class| {
++                        class
++                            .library
++                            .as_ref()
++                            .and_then(|l| l.companion_name.as_deref())
++                            == Some(name)
++                    })
+             })
+     }
+
+Diff in /workspace/work/nullable-sam003/src/syntax.rs:674:
+ }
+ impl PropertyDecl {
+     pub(crate) fn inference_expression(&self) -> Option<&Expr> {
+-        self.initializer
+-            .as_ref()
+-            .or(match self.body.as_slice() {
+-                [
+-                    Statement {
+-                        kind: StatementKind::Return(Some(expr)),
+-                        ..
+-                    },
+-                ] => Some(expr),
+-                _ => None,
+-            })
++        self.initializer.as_ref().or(match self.body.as_slice() {
++            [
++                Statement {
++                    kind: StatementKind::Return(Some(expr)),
++                    ..
++                },
++            ] => Some(expr),
++            _ => None,
++        })
+     }
+
+     pub fn visibility(&self) -> PropertyVisibility {
+Diff in /workspace/work/nullable-sam003/src/syntax.rs:3775:
+                     "CLASS_VISIBILITY_UNSUPPORTED",
+                 ));
+         }
+-        if visibility.as_deref() == Some("private")
+-            && (value_ || sealed_ || open || abstract_)
+-        {
+-            return Err(self.error("Private nested value, sealed, open and abstract classes are unsupported").with_kind(DiagnosticKind::UnsupportedLanguage, "PRIVATE_NESTED_SHAPE_UNSUPPORTED"));
++        if visibility.as_deref() == Some("private") && (value_ || sealed_ || open || abstract_) {
++            return Err(self
++                .error("Private nested value, sealed, open and abstract classes are unsupported")
++                .with_kind(
++                    DiagnosticKind::UnsupportedLanguage,
++                    "PRIVATE_NESTED_SHAPE_UNSUPPORTED",
++                ));
+         }
+         if !self.take("class") {
+             return Err(self.error("Only ordinary final classes are supported"));

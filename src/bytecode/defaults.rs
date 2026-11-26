@@ -58,8 +58,7 @@ pub(super) fn function(
             body.integer((1u32 << parameter) as i32)?;
             body.bytes.push(0x7e);
             body.branch(0x99, next);
-            body.value(value)?;
-            body.bytes.extend([store_opcode(ty), slot as u8]);
+            store_default(&mut body, value, ty, slot)?;
             body.mark(next);
         }
     }
@@ -128,6 +127,16 @@ pub(super) fn function(
     Ok(Some(method))
 }
 
+fn store_default(body: &mut Code<'_>, value: &Value, parameter: &Type, slot: usize) -> Result<()> {
+    body.value(value)?;
+    if parameter.is_reference() {
+        // Both paths into the mask join must retain the parameter's verifier type.
+        body.class_reference(0xc0, &reference_class(parameter)?)?;
+    }
+    body.bytes.extend([store_opcode(parameter), slot as u8]);
+    Ok(())
+}
+
 pub(super) fn constructors(
     pool: &mut Pool,
     class: &crate::check::ClassDecl,
@@ -185,8 +194,7 @@ pub(super) fn constructors_with_offset(
             body.integer((1u32 << (index - hidden)) as i32)?;
             body.bytes.push(0x7e);
             body.branch(0x99, next);
-            body.value(value)?;
-            body.bytes.extend([store_opcode(ty), slot as u8]);
+            store_default(&mut body, value, ty, slot)?;
             body.mark(next);
         }
     }

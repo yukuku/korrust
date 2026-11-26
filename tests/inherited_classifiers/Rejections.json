@@ -1,0 +1,42 @@
+[
+  {
+    "id": "private-java",
+    "source": "import inherited.library.JavaTypes.Base\nclass Bad: Base() { fun bad(value: Hidden): Hidden = value }"
+  },
+  {
+    "id": "protected-import",
+    "source": "import inherited.library.JavaTypes.Base.Protected\nfun bad(): String = Protected.tag()"
+  },
+  {
+    "id": "package-outside",
+    "source": "import inherited.library.JavaTypes.Base\nclass Bad: Base() { fun bad(value: PackageType): PackageType = value }"
+  },
+  {
+    "id": "own-shadow",
+    "source": "import inherited.library.JavaTypes.Base\nclass Bad: Base() { class Result; fun bad(value: Base.Result): Result = value }"
+  },
+  {
+    "id": "explicit-shadow",
+    "source": "import inherited.library.JavaTypes.Base\nimport inherited.library.JavaTypes.Other\nimport inherited.library.JavaTypes.Other.Result\nclass Bad: Base() { fun bad(): Result = Other.Result() }"
+  },
+  {
+    "id": "sibling-scope",
+    "source": "import inherited.library.JavaTypes.Base\nclass Inherits: Base() { fun value(arg: Token<String>): Token<String> = arg }\nclass Unrelated { fun bad(arg: Token<String>): Token<String> = arg }"
+  },
+  {
+    "id": "protected-unrelated",
+    "source": "import inherited.library.JavaTypes.Base\nclass Bad { fun bad(): String = Protected.tag() }"
+  },
+  {
+    "id": "private-kotlin",
+    "source": "import inherited.library.KotlinBase\nclass Bad: KotlinBase() { fun bad(value: KHidden): KHidden = value }"
+  },
+  {
+    "id": "method-parameter-type-shadow",
+    "source": "import inherited.library.JavaTypes.Base\nclass Bad: Base() { fun <Result> bad(value: Base.Result): Result = value }"
+  },
+  {
+    "id": "class-parameter-type-shadow",
+    "source": "import inherited.library.JavaTypes.Base\nclass Bad<Result>: Base() { fun bad(value: Base.Result): Result = value }"
+  }
+]

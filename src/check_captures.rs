@@ -426,7 +426,29 @@ pub(super) fn free_names(
     statements: &[syntax::Statement],
     parameters: &[String],
 ) -> HashSet<String> {
-    fn expression(expr: &Expr, bound: &HashSet<String>, free: &mut HashSet<String>) {
+    free_names_mode(statements, parameters, false, None)
+}
+pub(super) fn free_written_names(
+    statements: &[syntax::Statement],
+    parameters: &[String],
+) -> HashSet<String> {
+    free_names_mode(statements, parameters, true, None)
+}
+pub(super) fn free_written_expression(expression: &Expr) -> HashSet<String> {
+    free_names_mode(&[], &[], true, Some(expression))
+}
+fn free_names_mode(
+    statements: &[syntax::Statement],
+    parameters: &[String],
+    writes_only: bool,
+    value: Option<&Expr>,
+) -> HashSet<String> {
+    fn expression(
+        expr: &Expr,
+        bound: &HashSet<String>,
+        free: &mut HashSet<String>,
+        writes_only: bool,
+    ) {
         match &expr.kind {
             ExprKind::AnonymousObject {
                 supertypes,
@@ -437,7 +459,7 @@ pub(super) fn free_names(
                 for (_, args) in supertypes {
                     if let Some(args) = args {
                         for arg in args {
-                            expression(arg, bound, free);
+                            expression(arg, bound, free, writes_only);
                         }
                     }
                 }
@@ -445,21 +467,26 @@ pub(super) fn free_names(
                 bound.extend(properties.iter().map(|p| p.name.clone()));
                 for property in properties {
                     if let Some(value) = &property.initializer {
-                        expression(value, &bound, free);
+                        expression(value, &bound, free, writes_only);
                     }
                     let mut accessor_bound = bound.clone();
                     accessor_bound.extend(["this".into(), "field".into()]);
-                    body_names(&property.body, &mut accessor_bound.clone(), free);
+                    body_names(
+                        &property.body,
+                        &mut accessor_bound.clone(),
+                        free,
+                        writes_only,
+                    );
                     if let Some((name, body)) = &property.setter {
                         accessor_bound.insert(name.clone());
-                        body_names(body, &mut accessor_bound, free);
+                        body_names(body, &mut accessor_bound, free, writes_only);
                     }
                 }
                 for method in methods.iter().chain(own_methods) {
                     let mut bound = bound.clone();
                     bound.insert("this".into());
                     bound.extend(method.params.iter().map(|p| p.0.clone()));
-                    body_names(&method.body, &mut bound, free);
+                    body_names(&method.body, &mut bound, free, writes_only);
                 }
             }
             ExprKind::Name(name)
@@ -467,17 +494,17 @@ pub(super) fn free_names(
                 receiver: None,
                 name,
             } => {
-                if !bound.contains(name) {
+                if !writes_only && !bound.contains(name) {
                     free.insert(name.clone());
                 }
             }
-            ExprKind::Block(body) => body_names(body, &mut bound.clone(), free),
-            ExprKind::Labeled(_, value) => expression(value, bound, free),
-            ExprKind::LabeledReturn(_, Some(value)) => expression(value, bound, free),
+            ExprKind::Block(body) => body_names(body, &mut bound.clone(), free, writes_only),
+            ExprKind::Labeled(_, value) => expression(value, bound, free, writes_only),
+            ExprKind::LabeledReturn(_, Some(value)) => expression(value, bound, free, writes_only),
             ExprKind::Indices(receiver, indices) => {
-                expression(receiver, bound, free);
+                expression(receiver, bound, free, writes_only);
                 for index in indices {
-                    expression(index, bound, free);
+                    expression(index, bound, free, writes_only);
                 }
             }
             ExprKind::Try {
@@ -485,44 +512,46 @@ pub(super) fn free_names(
                 catches,
                 finally,
             } => {
-                body_names(body, &mut bound.clone(), free);
+                body_names(body, &mut bound.clone(), free, writes_only);
                 for catch in catches {
                     let mut bound = bound.clone();
                     bound.extend(catch.name.iter().cloned());
-                    body_names(&catch.body, &mut bound, free);
+                    body_names(&catch.body, &mut bound, free, writes_only);
                 }
-                body_names(finally, &mut bound.clone(), free);
+                body_names(finally, &mut bound.clone(), free, writes_only);
             }
             ExprKind::WhenBinding(name, subject, branches, otherwise) => {
-                expression(subject, bound, free);
+                expression(subject, bound, free, writes_only);
                 let mut bound = bound.clone();
                 bound.insert(name.clone());
                 for (conditions, body) in branches {
                     for condition in conditions {
-                        expression(condition, &bound, free);
+                        expression(condition, &bound, free, writes_only);
                     }
-                    expression(body, &bound, free);
+                    expression(body, &bound, free, writes_only);
                 }
-                expression(otherwise, &bound, free);
+                expression(otherwise, &bound, free, writes_only);
             }
             ExprKind::LambdaWithParams { params, body } => {
                 let mut bound = bound.clone();
                 if let Some(params) = params {
                     bound.extend(params.iter().map(|p| p.name.clone()));
-                } else {
+                } else if !writes_only {
                     bound.insert("it".into());
                 }
-                body_names(body, &mut bound, free);
+                body_names(body, &mut bound, free, writes_only);
             }
             ExprKind::Lambda(body) => {
                 let mut bound = bound.clone();
-                bound.insert("it".into());
-                expression(body, &bound, free);
+                if !writes_only {
+                    bound.insert("it".into());
+                }
+                expression(body, &bound, free, writes_only);
             }
             ExprKind::Call(target, args) => {
-                expression(target, bound, free);
+                expression(target, bound, free, writes_only);
                 for arg in args {
-                    expression(arg, bound, free);
+                    expression(arg, bound, free, writes_only);
                 }
             }
             ExprKind::ClassLiteral { receiver: a, .. }
@@ -532,38 +561,44 @@ pub(super) fn free_names(
             | ExprKind::Unary(_, a)
             | ExprKind::NonNull(a)
             | ExprKind::Throw(a)
-            | ExprKind::Increment { value: a, .. }
-            | ExprKind::Decrement { value: a, .. }
             | ExprKind::TypeOperation(_, a, _)
             | ExprKind::Property(a, _)
-            | ExprKind::SafeProperty(a, _) => expression(a, bound, free),
+            | ExprKind::SafeProperty(a, _) => expression(a, bound, free, writes_only),
+            ExprKind::Increment { value: a, .. } | ExprKind::Decrement { value: a, .. } => {
+                if let ExprKind::Name(name) = &a.kind
+                    && !bound.contains(name)
+                {
+                    free.insert(name.clone());
+                }
+                expression(a, bound, free, writes_only);
+            }
             ExprKind::CallableReference {
                 receiver: Some(a), ..
             }
-            | ExprKind::Return(Some(a)) => expression(a, bound, free),
+            | ExprKind::Return(Some(a)) => expression(a, bound, free, writes_only),
             ExprKind::Binary(_, a, b) | ExprKind::Index(a, b) => {
-                expression(a, bound, free);
-                expression(b, bound, free);
+                expression(a, bound, free, writes_only);
+                expression(b, bound, free, writes_only);
             }
             ExprKind::If(a, b, c) => {
-                expression(a, bound, free);
-                expression(b, bound, free);
-                expression(c, bound, free);
+                expression(a, bound, free, writes_only);
+                expression(b, bound, free, writes_only);
+                expression(c, bound, free, writes_only);
             }
             ExprKind::Template(parts) => {
                 for part in parts {
-                    expression(part, bound, free);
+                    expression(part, bound, free, writes_only);
                 }
             }
             ExprKind::When(a, branches, otherwise) => {
-                expression(a, bound, free);
+                expression(a, bound, free, writes_only);
                 for (conditions, value) in branches {
                     for condition in conditions {
-                        expression(condition, bound, free);
+                        expression(condition, bound, free, writes_only);
                     }
-                    expression(value, bound, free);
+                    expression(value, bound, free, writes_only);
                 }
-                expression(otherwise, bound, free);
+                expression(otherwise, bound, free, writes_only);
             }
             _ => {}
         }
@@ -572,6 +607,7 @@ pub(super) fn free_names(
         statements: &[syntax::Statement],
         bound: &mut HashSet<String>,
         free: &mut HashSet<String>,
+        writes_only: bool,
     ) {
         for statement in statements {
             match &statement.kind {
@@ -579,39 +615,44 @@ pub(super) fn free_names(
                     bound.insert(function.name.clone());
                     let mut nested = bound.clone();
                     nested.extend(function.params.iter().map(|p| p.0.clone()));
-                    body_names(&function.body, &mut nested, free);
+                    body_names(&function.body, &mut nested, free, writes_only);
                 }
-                StatementKind::Block(body) => body_names(body, &mut bound.clone(), free),
-                StatementKind::Labeled(_, body) => {
-                    body_names(std::slice::from_ref(body), &mut bound.clone(), free)
+                StatementKind::Block(body) => {
+                    body_names(body, &mut bound.clone(), free, writes_only)
                 }
+                StatementKind::Labeled(_, body) => body_names(
+                    std::slice::from_ref(body),
+                    &mut bound.clone(),
+                    free,
+                    writes_only,
+                ),
                 StatementKind::Destructure(names, _, value) => {
-                    expression(value, bound, free);
+                    expression(value, bound, free, writes_only);
                     bound.extend(names.iter().filter_map(|entry| entry.name.clone()));
                 }
                 StatementKind::IndicesAssign(receiver, indices, value) => {
-                    expression(receiver, bound, free);
+                    expression(receiver, bound, free, writes_only);
                     for index in indices {
-                        expression(index, bound, free);
+                        expression(index, bound, free, writes_only);
                     }
-                    expression(value, bound, free);
+                    expression(value, bound, free, writes_only);
                 }
                 StatementKind::WhenBinding(name, subject, branches, otherwise) => {
-                    expression(subject, bound, free);
+                    expression(subject, bound, free, writes_only);
                     let mut bound = bound.clone();
                     bound.insert(name.clone());
                     for (conditions, body) in branches {
                         for condition in conditions {
-                            expression(condition, &bound, free);
+                            expression(condition, &bound, free, writes_only);
                         }
-                        body_names(body, &mut bound.clone(), free);
+                        body_names(body, &mut bound.clone(), free, writes_only);
                     }
                     if let Some(body) = otherwise {
-                        body_names(body, &mut bound, free);
+                        body_names(body, &mut bound, free, writes_only);
                     }
                 }
                 StatementKind::Let(name, _, _, expr) => {
-                    expression(expr, bound, free);
+                    expression(expr, bound, free, writes_only);
                     bound.insert(name.clone());
                 }
                 StatementKind::Declare(name, _, _) => {
@@ -623,54 +664,62 @@ pub(super) fn free_names(
                     if !bound.contains(name) {
                         free.insert(name.clone());
                     }
-                    expression(expr, bound, free);
+                    expression(expr, bound, free, writes_only);
                 }
                 StatementKind::Return(Some(expr))
                 | StatementKind::Throw(expr)
-                | StatementKind::Expression(expr) => expression(expr, bound, free),
+                | StatementKind::Expression(expr) => expression(expr, bound, free, writes_only),
                 StatementKind::IndexAssign(a, b, c) => {
-                    expression(a, bound, free);
-                    expression(b, bound, free);
-                    expression(c, bound, free);
+                    expression(a, bound, free, writes_only);
+                    expression(b, bound, free, writes_only);
+                    expression(c, bound, free, writes_only);
                 }
-                StatementKind::LvalueCompoundAssign(a, _, b)
-                | StatementKind::PropertyAssign(a, _, b)
+                StatementKind::LvalueCompoundAssign(a, _, b) => {
+                    if let ExprKind::Name(name) = &a.kind
+                        && !bound.contains(name)
+                    {
+                        free.insert(name.clone());
+                    }
+                    expression(a, bound, free, writes_only);
+                    expression(b, bound, free, writes_only);
+                }
+                StatementKind::PropertyAssign(a, _, b)
                 | StatementKind::SafePropertyAssign(a, _, b) => {
-                    expression(a, bound, free);
-                    expression(b, bound, free);
+                    expression(a, bound, free, writes_only);
+                    expression(b, bound, free, writes_only);
                 }
                 StatementKind::If(a, b, c) => {
-                    expression(a, bound, free);
-                    body_names(b, &mut bound.clone(), free);
-                    body_names(c, &mut bound.clone(), free);
+                    expression(a, bound, free, writes_only);
+                    body_names(b, &mut bound.clone(), free, writes_only);
+                    body_names(c, &mut bound.clone(), free, writes_only);
                 }
                 StatementKind::While(a, b) | StatementKind::DoWhile(a, b) => {
-                    expression(a, bound, free);
-                    body_names(b, &mut bound.clone(), free);
+                    expression(a, bound, free, writes_only);
+                    body_names(b, &mut bound.clone(), free, writes_only);
                 }
                 StatementKind::ForEach(name, a, b) => {
-                    expression(a, bound, free);
+                    expression(a, bound, free, writes_only);
                     let mut bound = bound.clone();
                     bound.insert(name.clone());
-                    body_names(b, &mut bound, free);
+                    body_names(b, &mut bound, free, writes_only);
                 }
                 StatementKind::ForUntil(name, a, b, c) => {
-                    expression(a, bound, free);
-                    expression(b, bound, free);
+                    expression(a, bound, free, writes_only);
+                    expression(b, bound, free, writes_only);
                     let mut bound = bound.clone();
                     bound.insert(name.clone());
-                    body_names(c, &mut bound, free);
+                    body_names(c, &mut bound, free, writes_only);
                 }
                 StatementKind::When(a, branches, otherwise) => {
-                    expression(a, bound, free);
+                    expression(a, bound, free, writes_only);
                     for (conditions, body) in branches {
                         for condition in conditions {
-                            expression(condition, bound, free);
+                            expression(condition, bound, free, writes_only);
                         }
-                        body_names(body, &mut bound.clone(), free);
+                        body_names(body, &mut bound.clone(), free, writes_only);
                     }
                     if let Some(body) = otherwise {
-                        body_names(body, &mut bound.clone(), free);
+                        body_names(body, &mut bound.clone(), free, writes_only);
                     }
                 }
                 _ => {}
@@ -679,7 +728,10 @@ pub(super) fn free_names(
     }
     let mut bound = parameters.iter().cloned().collect();
     let mut free = HashSet::new();
-    body_names(statements, &mut bound, &mut free);
+    if let Some(value) = value {
+        expression(value, &bound, &mut free, writes_only);
+    }
+    body_names(statements, &mut bound, &mut free, writes_only);
     free
 }
 

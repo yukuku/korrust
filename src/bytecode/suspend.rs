@@ -41,7 +41,10 @@ pub(super) fn suspension(value: &Value, functions: &[crate::check::Function]) ->
             .as_ref()
             .is_some_and(|method| method.suspend_),
         ValueKind::FunctionInvoke { function, .. } => {
-            matches!(function.ty.base(), Type::SuspendFunction { .. })
+            matches!(
+                function.ty.base(),
+                Type::SuspendFunction { .. } | Type::SuspendReceiverFunction { .. }
+            )
         }
         _ => false,
     }
@@ -79,6 +82,86 @@ fn boxed_return(value: &Value) -> Value {
             kind: ValueKind::Box(Box::new(value.clone())),
         }
     }
+}
+
+fn operand_calls(
+    body: &mut [Statement],
+    functions: &[crate::check::Function],
+    locals: u16,
+) -> Result<u16> {
+    struct Hoist<'a> {
+        functions: &'a [crate::check::Function],
+        counts: Vec<usize>,
+        locals: u16,
+        error: Option<Diagnostic>,
+    }
+    impl crate::check::ir_walk::Visitor for Hoist<'_> {
+        fn enter_value(&mut self, _: &Value) {
+            self.counts.push(0);
+        }
+        fn value(&mut self, value: &mut Value, _: &str) {
+            let nested = self.counts.pop().unwrap();
+            let total = nested + usize::from(suspension(value, self.functions));
+            if let Some(parent) = self.counts.last_mut() {
+                *parent += total;
+            }
+            if nested == 0 || self.error.is_some() {
+                return;
+            }
+            let mut invocation = value.clone();
+            let (function, arguments) = match &mut invocation.kind {
+                ValueKind::Call(_, args)
+                | ValueKind::JavaCall { args, .. }
+                | ValueKind::MemberCall { args, .. }
+                | ValueKind::StaticCall { args, .. } => (None, args),
+                ValueKind::FunctionInvoke { function, args } => (Some(function), args),
+                _ => return,
+            };
+            let mut operands = Vec::new();
+            if let Some(function) = function {
+                operands.push(function.as_mut());
+            }
+            operands.extend(arguments.iter_mut());
+            let mut stores = Vec::new();
+            for operand in operands {
+                if operand.ty == Type::Unit || self.locals as usize + operand.ty.slots() > 255 {
+                    self.error = Some(unsupported(
+                        "Suspension call operands exceed supported JVM storage",
+                    ));
+                    return;
+                }
+                let slot = self.locals as u8;
+                self.locals += operand.ty.slots() as u16;
+                let local = Value {
+                    ty: operand.ty.clone(),
+                    kind: ValueKind::Local(slot),
+                };
+                stores.push((slot, std::mem::replace(operand, local)));
+            }
+            for (slot, operand) in stores.into_iter().rev() {
+                invocation = Value {
+                    ty: invocation.ty.clone(),
+                    kind: ValueKind::Let {
+                        slot,
+                        value: Box::new(operand),
+                        body: Box::new(invocation),
+                    },
+                };
+            }
+            *value = invocation;
+        }
+    }
+    let mut hoist = Hoist {
+        functions,
+        counts: Vec::new(),
+        locals,
+        error: None,
+    };
+    crate::check::ir_walk::statements(body, "", &mut hoist);
+    if let Some(error) = hoist.error {
+        return Err(error);
+    }
+    Ok(hoist.locals)
 }
 
 fn plan(function: &crate::check::Function, functions: &[crate::check::Function]) -> Result<Plan> {
@@ -282,6 +365,8 @@ fn plan(function: &crate::check::Function, functions: &[crate::check::Function])
         .zip(&function.params)
         .map(|(slot, (_, ty))| (slot as u8, ty.clone()))
         .collect();
+    let mut body = function.body.clone();
+    let locals = operand_calls(&mut body, functions, function.locals)?;
     let mut planner = Planner {
         functions,
         fields,
@@ -289,9 +374,8 @@ fn plan(function: &crate::check::Function, functions: &[crate::check::Function])
         error: None,
         suspend_: function.suspend_,
         counts: Vec::new(),
-        locals: function.locals,
+        locals,
     };
-    let mut body = function.body.clone();
     crate::check::ir_walk::statements(&mut body, "", &mut planner);
     if let Some(error) = planner.error {
         return Err(error);
@@ -321,6 +405,18 @@ fn unsupported_unit_type(ty: &Type) -> bool {
             .iter()
             .filter_map(|argument| argument.ty.as_ref())
             .any(unsupported_unit_type),
+        Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => {
+            receiver.as_ref() == &Type::Unit
+                || unsupported_unit_type(receiver)
+                || params
+                    .iter()
+                    .any(|ty| ty == &Type::Unit || unsupported_unit_type(ty))
+                || unsupported_unit_type(result)
+        }
         Type::SuspendFunction { params, result } => {
             params
                 .iter()
@@ -368,6 +464,11 @@ fn forbidden_type(ty: &Type, owners: &std::collections::BTreeSet<String>) -> boo
             params.iter().any(|ty| forbidden_type(ty, owners)) || forbidden_type(result, owners)
         }
         Type::ReceiverFunction {
+            receiver,
+            params,
+            result,
+        }
+        | Type::SuspendReceiverFunction {
             receiver,
             params,
             result,
@@ -633,15 +734,12 @@ pub(crate) fn validate(
         })?;
     }
     for lambda in &module.lambdas {
-        if lambda.function.suspend_ {
-            validate_function(&lambda.function, &module.functions, forbidden_owners)?;
-        } else if contains_suspension(&lambda.function.body, &module.functions) {
-            return Err(
-                Diagnostic::new(0, "Suspend calls require a suspend function context").with_kind(
-                    crate::DiagnosticKind::InvalidKotlin,
-                    "SUSPEND_CALL_CONTEXT_INVALID",
-                ),
-            );
+        let implementations = lambda
+            .anonymous_methods
+            .as_deref()
+            .unwrap_or(std::slice::from_ref(&lambda.function));
+        for function in implementations {
+            validate_function(function, &module.functions, forbidden_owners)?;
         }
     }
     Ok(())

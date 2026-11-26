@@ -1,0 +1,263 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T06:02:06.415077+00:00",
+  "status": "complete",
+  "compiler": {
+    "revision": "991a94ef916d2c7c093d62e8a040bd8df9a650a0",
+    "binary_sha256": "1bdca6049b65787b47d481ed4f3f3607b63e0b0c9d422f1040023a41cacddc74",
+    "command": "CARGO_PROFILE_DEV_DEBUG=0 CARGO_INCREMENTAL=0 cargo build --locked --offline"
+  },
+  "method": "Re-executed the three wave11 test classes which reported native library loading or linking errors in one JVM run. Reused both original compiler outputs and set java.io.tmpdir to a directory with sufficient free space.",
+  "previous_report": "reports/correctness/2026-11-26T055137Z-androidbible-159-verified.json",
+  "cases": [
+    {
+      "source": "Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseDataTest.kt",
+      "source_sha256": "44227294360fc7a1444cb5860729544a6ea0c5c0de8e106ce447730935f6ddb8",
+      "class": "yuku.alkitab.base.appwidget.DailyVerseDataTest",
+      "kotlin": {
+        "exit_code": 0,
+        "passed_tests": 4
+      },
+      "korrust": {
+        "exit_code": 0,
+        "passed_tests": 4
+      },
+      "receipt": {
+        "path": "Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseDataTest.kt",
+        "group": "Alkitab/test",
+        "source_sha256": "44227294360fc7a1444cb5860729544a6ea0c5c0de8e106ce447730935f6ddb8",
+        "attempts": [
+          {
+            "configuration": "resolved",
+            "exit_code": 0,
+            "diagnostic": "",
+            "inline_origins": {
+              "yuku/alkitab/base/appwidget/DailyVerseDataTest$inlineDefault$1356$938b223c2b11f35f.class": {
+                "origin": "io/mockk/MockKKt$mockk$1",
+                "caller": "yuku/alkitab/base/appwidget/DailyVerseDataTest",
+                "offset": 1356,
+                "source_file": "MockK.kt",
+                "original_sha256": "3844e9bb6c03426e75e704b6f617d52cdd313abcd93cf96f8831c2e9119b1512",
+                "resource": "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-jvm/1.13.13/eb46a802b52a43ee2ec1286055b651473e6fd4bf/mockk-jvm-1.13.13.jar!/io/mockk/MockKKt$mockk$1.class",
+                "helper": "yuku/alkitab/base/appwidget/DailyVerseDataTest$inlineDefault$1356$938b223c2b11f35f",
+                "helper_sha256": "3842d6d88c123fe0564e6a1b2e4167990e9deaa539a11dd778cd55b14e6dfb1b"
+              },
+              "yuku/alkitab/base/appwidget/DailyVerseDataTest$inlineDefault$3126$938b223c2b11f35f.class": {
+                "origin": "io/mockk/MockKKt$mockk$1",
+                "caller": "yuku/alkitab/base/appwidget/DailyVerseDataTest",
+                "offset": 3126,
+                "source_file": "MockK.kt",
+                "original_sha256": "3844e9bb6c03426e75e704b6f617d52cdd313abcd93cf96f8831c2e9119b1512",
+                "resource": "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-jvm/1.13.13/eb46a802b52a43ee2ec1286055b651473e6fd4bf/mockk-jvm-1.13.13.jar!/io/mockk/MockKKt$mockk$1.class",
+                "helper": "yuku/alkitab/base/appwidget/DailyVerseDataTest$inlineDefault$3126$938b223c2b11f35f",
+                "helper_sha256": "2621971badfa5c51703733dded74780037a10df1f6f94eb04d6933a5a61af8e9"
+              }
+            },
+            "outcome": "compiled",
+            "class_count": 12,
+            "owned_outputs": {
+              "yuku/alkitab/base/appwidget/DailyVerseDataTest$inlineDefault$1356$938b223c2b11f35f.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseDataTest.kt",
+                "sha256": "3842d6d88c123fe0564e6a1b2e4167990e9deaa539a11dd778cd55b14e6dfb1b"
+              },
+              "yuku/alkitab/base/appwidget/DailyVerseDataTest$inlineDefault$3126$938b223c2b11f35f.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseDataTest.kt",
+                "sha256": "2621971badfa5c51703733dded74780037a10df1f6f94eb04d6933a5a61af8e9"
+              },
+              "yuku/alkitab/base/appwidget/DailyVerseDataTest$lambda$1518$0.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseDataTest.kt",
+                "sha256": "5b725fa5635f39f64584d42c557669c3b399b52dfee93c09f8ff42ccaf8f7e77"
+              },
+              "yuku/alkitab/base/appwidget/DailyVerseDataTest$lambda$1592$1.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseDataTest.kt",
+                "sha256": "7c069f53631f3defc3225a03074d0f3efb66c898969db5d4048112599576417e"
+              },
+              "yuku/alkitab/base/appwidget/DailyVerseDataTest$lambda$1695$2.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseDataTest.kt",
+                "sha256": "746c16e3834aa7edf1570393e661befde278c2c0b74b6c52012218336a72561b"
+              },
+              "yuku/alkitab/base/appwidget/DailyVerseDataTest$lambda$1891$3.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseDataTest.kt",
+                "sha256": "d7e12913c3056fd6a227b1c9f81a79ec2a67aab8640d203b92e05472acd69590"
+              },
+              "yuku/alkitab/base/appwidget/DailyVerseDataTest$lambda$2197$4.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseDataTest.kt",
+                "sha256": "620e9338eb8ec83d2f008d174a43d96df911ce7f00162692d3c88d957b2949d5"
+              },
+              "yuku/alkitab/base/appwidget/DailyVerseDataTest$lambda$3157$5.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseDataTest.kt",
+                "sha256": "c1cc354b0d75639bc262b4fe13e98f671df4611bfffd5910d979ab44599dad89"
+              },
+              "yuku/alkitab/base/appwidget/DailyVerseDataTest$lambda$3304$6.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseDataTest.kt",
+                "sha256": "187327de058a4defed4713941ce0c1d9ce054a822571f2848ee870724f5766ff"
+              },
+              "yuku/alkitab/base/appwidget/DailyVerseDataTest$lambda$3714$7.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseDataTest.kt",
+                "sha256": "75d2d1f739f1bfde98d61323e084a860df82165dd1587ee3583f48650466f017"
+              },
+              "yuku/alkitab/base/appwidget/DailyVerseDataTest$lambda$4479$8.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseDataTest.kt",
+                "sha256": "47122291adbd3fcd5e0e003793f978a8a6137408ed992140570d1443f74f8d69"
+              },
+              "yuku/alkitab/base/appwidget/DailyVerseDataTest.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/appwidget/DailyVerseDataTest.kt",
+                "sha256": "2cca2490e2302554351183ce7494de7e66aef272d896eed612a87c3549c5f56c"
+              }
+            }
+          }
+        ],
+        "excluded_classes": [
+          "yuku/alkitab/base/appwidget/DailyVerseDataTest.class"
+        ]
+      }
+    },
+    {
+      "source": "Alkitab/src/test/java/yuku/alkitab/base/storage/ReadingPlanDaoTest.kt",
+      "source_sha256": "3f3bff449b8e10f218ffffdbe935b00f7d57f3b67c34c32ff38fac96ce0cf59e",
+      "class": "yuku.alkitab.base.storage.ReadingPlanDaoTest",
+      "kotlin": {
+        "exit_code": 0,
+        "passed_tests": 11
+      },
+      "korrust": {
+        "exit_code": 0,
+        "passed_tests": 11
+      },
+      "receipt": {
+        "path": "Alkitab/src/test/java/yuku/alkitab/base/storage/ReadingPlanDaoTest.kt",
+        "group": "Alkitab/test",
+        "source_sha256": "3f3bff449b8e10f218ffffdbe935b00f7d57f3b67c34c32ff38fac96ce0cf59e",
+        "attempts": [
+          {
+            "configuration": "resolved",
+            "exit_code": 0,
+            "diagnostic": "",
+            "outcome": "compiled",
+            "class_count": 5,
+            "owned_outputs": {
+              "yuku/alkitab/base/storage/ReadingPlanDaoTest$lambda$1103$0.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/ReadingPlanDaoTest.kt",
+                "sha256": "9fa79115a623c668e16c45f1a28b8e31daf98ef2745b3a62e7f5955741c2cfa9"
+              },
+              "yuku/alkitab/base/storage/ReadingPlanDaoTest$lambda$1379$1.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/ReadingPlanDaoTest.kt",
+                "sha256": "dded9aa7ee1115d429edc1a53732f80cd1e22b083f6b212a00a82dec359e1869"
+              },
+              "yuku/alkitab/base/storage/ReadingPlanDaoTest$lambda$2899$2.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/ReadingPlanDaoTest.kt",
+                "sha256": "65c9efded20f220f66afc42cd0a63c526d276a4dacef7e5d07b0088b6f9fc510"
+              },
+              "yuku/alkitab/base/storage/ReadingPlanDaoTest$lambda$6272$3.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/ReadingPlanDaoTest.kt",
+                "sha256": "17ac18be4634dcc5b2aceaeedf5deb5a1801f74093735f6c8c975310594e661b"
+              },
+              "yuku/alkitab/base/storage/ReadingPlanDaoTest.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/ReadingPlanDaoTest.kt",
+                "sha256": "0bf567d6646819c06a612c0593b464f0173f53568e1d60079b692c6e5f4b0625"
+              }
+            }
+          }
+        ],
+        "excluded_classes": [
+          "yuku/alkitab/base/storage/ReadingPlanDaoTest.class"
+        ]
+      }
+    },
+    {
+      "source": "Alkitab/src/test/java/yuku/alkitab/base/storage/SongDbTest.kt",
+      "source_sha256": "d11a020134dfa0a37107768b0c62d44b2d220fa779bf6014c5ef233af298cf42",
+      "class": "yuku.alkitab.base.storage.SongDbTest",
+      "kotlin": {
+        "exit_code": 0,
+        "passed_tests": 25
+      },
+      "korrust": {
+        "exit_code": 0,
+        "passed_tests": 25
+      },
+      "receipt": {
+        "path": "Alkitab/src/test/java/yuku/alkitab/base/storage/SongDbTest.kt",
+        "group": "Alkitab/test",
+        "source_sha256": "d11a020134dfa0a37107768b0c62d44b2d220fa779bf6014c5ef233af298cf42",
+        "attempts": [
+          {
+            "configuration": "resolved",
+            "exit_code": 0,
+            "diagnostic": "",
+            "outcome": "compiled",
+            "class_count": 13,
+            "owned_outputs": {
+              "yuku/alkitab/base/storage/SongDbTest$lambda$12750$9.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/SongDbTest.kt",
+                "sha256": "b7c2368f37859d9d9c51419ba530b9da2703e4c6d94221c11cf2df83da7e21b8"
+              },
+              "yuku/alkitab/base/storage/SongDbTest$lambda$14038$10.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/SongDbTest.kt",
+                "sha256": "56c4631844267559a39db6e2966a46fe0b2c657e265e45b94198a22994a9f8d3"
+              },
+              "yuku/alkitab/base/storage/SongDbTest$lambda$15648$11.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/SongDbTest.kt",
+                "sha256": "2c1906def4394b1af5d503331dfb5eea2d5120ed255c29bdce0e4f8658006f05"
+              },
+              "yuku/alkitab/base/storage/SongDbTest$lambda$4259$0.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/SongDbTest.kt",
+                "sha256": "e37be2d1a2fd8bc8f4ef1262d89065f6e39bf8371ac7df02e5ac9c2ccdd2748a"
+              },
+              "yuku/alkitab/base/storage/SongDbTest$lambda$6791$1.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/SongDbTest.kt",
+                "sha256": "ad6975d774ff7fe28d4ee80919336df18a32c6de6452b270991fe2d9955b14b4"
+              },
+              "yuku/alkitab/base/storage/SongDbTest$lambda$6887$2.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/SongDbTest.kt",
+                "sha256": "b16f89a6aa082b1aea4a8c184238a9c123ef1b5a172a9fcb5e35f265f627062f"
+              },
+              "yuku/alkitab/base/storage/SongDbTest$lambda$7345$3.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/SongDbTest.kt",
+                "sha256": "8c1c96e6a3acf6e59e2cbdf0fa533f750f25341aa232315fcae6cdca9fbd093d"
+              },
+              "yuku/alkitab/base/storage/SongDbTest$lambda$8538$4.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/SongDbTest.kt",
+                "sha256": "fb4bd8cd91eb30e91d1f29cf55b6a98eb1c20faf77c75812b9749a668b63b73d"
+              },
+              "yuku/alkitab/base/storage/SongDbTest$lambda$8607$5.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/SongDbTest.kt",
+                "sha256": "64d588607f2edb7f5424068791b04075b50c6c3b377f13ee2a274a145109eb26"
+              },
+              "yuku/alkitab/base/storage/SongDbTest$lambda$8971$6.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/SongDbTest.kt",
+                "sha256": "9d3263fc907ee7f3fcb651026d13da4d6ce6737c31df9ff427b5f5dd70b3ae46"
+              },
+              "yuku/alkitab/base/storage/SongDbTest$lambda$9043$7.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/SongDbTest.kt",
+                "sha256": "edae7ff71509a8c7c692ac8a2c3135ad81cfdfa08ebaf2ad9b476c87a0dee008"
+              },
+              "yuku/alkitab/base/storage/SongDbTest$lambda$9542$8.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/SongDbTest.kt",
+                "sha256": "f6ce3495b0cb552abbdb760f14d2a034385fe0b61c369daeabdf1e52b7c56585"
+              },
+              "yuku/alkitab/base/storage/SongDbTest.class": {
+                "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/storage/SongDbTest.kt",
+                "sha256": "378a834aa2293acc597459f8ad920236e31fa36c2c5c7d02e0331eeb6a9fb5ec"
+              }
+            }
+          }
+        ],
+        "excluded_classes": [
+          "yuku/alkitab/base/storage/SongDbTest.class"
+        ]
+      }
+    }
+  ],
+  "passed_per_compiler": 40,
+  "evidence": [
+    "reports/correctness/2026-11-26T060206Z-robolectric-native-runtime-recheck/260-korrust.log",
+    "reports/correctness/2026-11-26T060206Z-robolectric-native-runtime-recheck/260-kotlin.log",
+    "reports/correctness/2026-11-26T060206Z-robolectric-native-runtime-recheck/306-korrust.log",
+    "reports/correctness/2026-11-26T060206Z-robolectric-native-runtime-recheck/306-kotlin.log",
+    "reports/correctness/2026-11-26T060206Z-robolectric-native-runtime-recheck/307-korrust.log",
+    "reports/correctness/2026-11-26T060206Z-robolectric-native-runtime-recheck/307-kotlin.log",
+    "reports/correctness/2026-11-26T060206Z-robolectric-native-runtime-recheck/verify.py"
+  ]
+}

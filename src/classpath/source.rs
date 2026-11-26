@@ -19,8 +19,14 @@ pub(super) fn resolve(ty: &Type, module: &Module, cp: &Classpath) -> Type {
                 return format!("{owner}${}", nested.replace('/', "$"));
             }
             let parts = name.split('/').collect::<Vec<_>>();
-            for split in (1..parts.len()).rev() {
-                let Ok(mut class) = cp.load(&parts[..split].join("/")) else {
+            let package = module.package.replace('.', "/");
+            let relative = (!package.is_empty()).then(|| (format!("{package}/{root}"), 1));
+            for (owner, split) in relative.into_iter().chain(
+                (1..parts.len())
+                    .rev()
+                    .map(|split| (parts[..split].join("/"), split)),
+            ) {
+                let Ok(mut class) = cp.load(&owner) else {
                     continue;
                 };
                 for member in &parts[split..] {
@@ -106,6 +112,15 @@ pub(super) fn resolve(ty: &Type, module: &Module, cp: &Classpath) -> Type {
             params: params.iter().map(|t| resolve(t, module, cp)).collect(),
             result: Box::new(resolve(result, module, cp)),
         },
+        Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => Type::SuspendReceiverFunction {
+            receiver: Box::new(resolve(receiver, module, cp)),
+            params: params.iter().map(|t| resolve(t, module, cp)).collect(),
+            result: Box::new(resolve(result, module, cp)),
+        },
         Type::ReceiverFunction {
             receiver,
             params,
@@ -160,6 +175,8 @@ fn method(
     );
     JavaMethod {
         library: Some(LibraryMethod {
+            compose: None,
+            stable_result: false,
             default_code: None,
             vararg_index: None,
             contracts: Vec::new(),
@@ -528,7 +545,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                     4
                 } else {
                     source.constructor_visibility.max(1)
-                },
+                } | if source.constructor_vararg { 0x80 } else { 0 },
                 unsupported: false,
                 source_property: None,
                 kotlin_params: Some(params),
@@ -691,6 +708,8 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                 let name = format!("component{}", index + 1);
                 class.methods.push(JavaMethod {
                     library: Some(LibraryMethod {
+                        compose: None,
+                        stable_result: false,
                         default_code: None,
                         vararg_index: None,
                         contracts: Vec::new(),
@@ -833,6 +852,8 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
             if !p.annotations.is_empty() {
                 for method in &mut methods {
                     method.library = Some(LibraryMethod {
+                        compose: None,
+                        stable_result: false,
                         default_code: None,
                         vararg_index: None,
                         contracts: Vec::new(),
@@ -1122,6 +1143,8 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                     library.code = None;
                 } else {
                     method.library = Some(LibraryMethod {
+                        compose: None,
+                        stable_result: false,
                         default_code: None,
                         vararg_index: None,
                         contracts: Vec::new(),
@@ -1266,15 +1289,15 @@ fn constants(class: &mut JavaClass, constants: &[crate::syntax::ConstDecl]) -> R
     Ok(())
 }
 
-pub(super) fn defaults(module: &mut Module, cp: &Classpath) -> Result<()> {
+pub(super) fn defaults(module: &mut Module, cp: &Classpath, owner: &str) -> Result<()> {
     if let Some(mut enumeration) = module.enum_decl.take() {
         let mut context = module.clone();
         context.class_decl = Some(enumeration.body.clone());
-        defaults(&mut context, cp)?;
+        defaults(&mut context, cp, owner)?;
         enumeration.body = context.class_decl.take().unwrap();
         for entry in enumeration.entry_bodies.iter_mut().flatten() {
             context.class_decl = Some(entry.clone());
-            defaults(&mut context, cp)?;
+            defaults(&mut context, cp, owner)?;
             *entry = context.class_decl.take().unwrap();
         }
         module.imports = context.imports;
@@ -1310,6 +1333,11 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) -> Result<()> {
                 ty(result, names);
             }
             Type::ReceiverFunction {
+                receiver,
+                params,
+                result,
+            }
+            | Type::SuspendReceiverFunction {
                 receiver,
                 params,
                 result,
@@ -1405,9 +1433,6 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) -> Result<()> {
                         function(&value.function, names);
                     }
                 }
-                for value in &value.nested {
-                    declaration(value, names);
-                }
             }
             crate::syntax::Declaration::Object(value) => {
                 annotations(&value.annotation_uses, names);
@@ -1422,12 +1447,6 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) -> Result<()> {
                 }
                 for value in &value.methods {
                     function(&value.function, names);
-                }
-                for value in &value.nested {
-                    declaration(value, names);
-                }
-                for value in &value.objects {
-                    declaration(&crate::syntax::Declaration::Object(value.clone()), names);
                 }
             }
             crate::syntax::Declaration::Interface(value) => {
@@ -1457,12 +1476,6 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) -> Result<()> {
                     for value in &value.methods {
                         function(&value.function, names);
                     }
-                }
-                for value in &value.declarations {
-                    declaration(value, names);
-                }
-                for value in &value.nested {
-                    declaration(&crate::syntax::Declaration::Interface(value.clone()), names);
                 }
             }
             crate::syntax::Declaration::Annotation(_) | crate::syntax::Declaration::Enum(_) => {}
@@ -1497,6 +1510,7 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) -> Result<()> {
             &mut names,
         );
     }
+    let direct_names = names.clone();
     names.extend(
         module
             .type_locations
@@ -1530,6 +1544,27 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) -> Result<()> {
             .filter_map(|name| name.split_once('/').map(|(root, _)| root.to_owned()))
             .collect::<Vec<_>>(),
     );
+    let inherited_names = names
+        .iter()
+        .cloned()
+        .chain(
+            module
+                .imports
+                .iter()
+                .filter(|(alias, _, _)| alias != "*")
+                .map(|(alias, _, _)| alias.clone()),
+        )
+        .collect::<std::collections::BTreeSet<_>>();
+    for name in inherited_names {
+        if !name.contains('/')
+            && !name.contains('.')
+            && !name.contains('$')
+            && let Some(class) = cp.scoped_member_classifier(owner, &name)?
+        {
+            module.imports.retain(|(alias, _, _)| alias != &name);
+            module.imports.push((name, class.name, 0));
+        }
+    }
     for name in names {
         if name.contains('/')
             || name.contains('.')
@@ -1561,10 +1596,9 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) -> Result<()> {
             }
         };
         let classifier = |package: &str| -> Result<bool> {
-            Ok(cp
-                .load(&path(package))
-                .is_ok_and(|class| class.access & 1 != 0)
-                || cp.type_alias(package, &name)?.is_some())
+            Ok(cp.load(&path(package)).is_ok_and(|class| {
+                class.access & 1 != 0 && (!class.unsupported || direct_names.contains(&name))
+            }) || cp.type_alias(package, &name)?.is_some())
         };
         let source_package = module.package.replace('.', "/");
         if classifier(&source_package)? {
@@ -1964,14 +1998,14 @@ mod import_priority_tests {
             "package use\nimport one.*\nimport two.*\nclass Holder(val value: Collision)",
         )
         .unwrap();
-        let error = defaults(&mut module, &classpath).unwrap_err();
+        let error = defaults(&mut module, &classpath, "use/Holder").unwrap_err();
         assert_eq!(error.kind, crate::DiagnosticKind::InvalidKotlin);
         assert_eq!(error.code, "AMBIGUOUS_CLASSIFIER_IMPORT");
         let mut module = crate::syntax::parse(
             "package use\nimport one.*\nimport one.*\nclass Holder(val value: Collision)",
         )
         .unwrap();
-        defaults(&mut module, &classpath).unwrap();
+        defaults(&mut module, &classpath, "use/Holder").unwrap();
         assert!(
             module
                 .imports

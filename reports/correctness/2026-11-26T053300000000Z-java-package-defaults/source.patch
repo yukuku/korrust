@@ -1,0 +1,1552 @@
+diff --git a/src/check.rs b/src/check.rs
+index 475c40d8e..8ead6719b 100644
+--- a/src/check.rs
++++ b/src/check.rs
+@@ -59,6 +59,8 @@ mod function_values;
+ mod inner_classes;
+ #[path = "check_ir_walk.rs"]
+ pub(crate) mod ir_walk;
++#[path = "check_java_nullability.rs"]
++mod java_nullability;
+ #[path = "check_java_properties.rs"]
+ mod java_properties;
+ #[path = "check_library.rs"]
+@@ -2764,6 +2766,15 @@ impl Checker<'_> {
+     }
+     #[allow(clippy::only_used_in_recursion)]
+     fn coerce(&self, value: Value, expected: Type, offset: usize) -> Result<Value> {
++        let value = if expected.is_reference()
++            && !expected.is_nullable()
++            && !matches!(expected, Type::Platform(_))
++            && !matches!(&expected, Type::Parameter { upper_bound, .. } if upper_bound.is_nullable())
++        {
++            self.enhanced_java_nonnull(value)
++        } else {
++            value
++        };
+         if matches!(value.kind, ValueKind::Abrupt(_)) {
+             return Ok(Value {
+                 ty: expected,
+@@ -4082,7 +4093,8 @@ impl Checker<'_> {
+                     let mut value = if let Some(ty) = annotation {
+                         self.expected_value(expr, &self.resolve(ty, offset)?)?
+                     } else {
+-                        self.value(expr)?
++                        let value = self.value(expr)?;
++                        self.enhanced_java_nonnull(value)
+                     };
+                     if let Some(ty) = annotation {
+                         if matches!(ty, Type::ThreadLocal(_)) {
+diff --git a/src/check_java_nullability.rs b/src/check_java_nullability.rs
+new file mode 100644
+index 000000000..29fb86904
+--- /dev/null
++++ b/src/check_java_nullability.rs
+@@ -0,0 +1,48 @@
++use super::*;
++
++impl Checker<'_> {
++    fn java_nonnull_message(&self, value: &Value) -> Option<String> {
++        if !value.ty.is_reference()
++            || value.ty.is_nullable()
++            || matches!(value.ty, Type::Platform(_))
++        {
++            return None;
++        }
++        match &value.kind {
++            ValueKind::JavaCall { method, .. } | ValueKind::MemberCall { method, .. }
++                if method
++                    .library
++                    .as_ref()
++                    .is_some_and(|library| !library.kotlin_declared) =>
++            {
++                Some(format!("{}(...)", method.name))
++            }
++            ValueKind::JavaField { owner, name, .. } => self
++                .classpath
++                .field_candidates(owner, name)
++                .ok()?
++                .iter()
++                .find(|field| {
++                    field.kotlin.is_none()
++                        && field.java_type.as_deref().is_some_and(|ty| {
++                            ty.is_reference()
++                                && !ty.is_nullable()
++                                && !matches!(ty, Type::Platform(_))
++                        })
++                })
++                .map(|_| name.clone()),
++            ValueKind::Let { body, .. } => self.java_nonnull_message(body),
++            _ => None,
++        }
++    }
++
++    pub(super) fn enhanced_java_nonnull(&self, value: Value) -> Value {
++        let Some(message) = self.java_nonnull_message(&value) else {
++            return value;
++        };
++        Value {
++            ty: value.ty.clone(),
++            kind: ValueKind::NotNull(Box::new(value), message),
++        }
++    }
++}
+diff --git a/src/check_operations.rs b/src/check_operations.rs
+index b5c07f061..761231f3c 100644
+--- a/src/check_operations.rs
++++ b/src/check_operations.rs
+@@ -1646,6 +1646,7 @@ impl Checker<'_> {
+         }];
+         all_args.extend_from_slice(args);
+         let mut dispatch_binding = None;
++        let mut coerced_receiver = None;
+         let result = (|| {
+             let mut applicable_groups = Vec::new();
+             let mut failures = Vec::new();
+@@ -1800,6 +1801,13 @@ impl Checker<'_> {
+             }
+             let mut method =
+                 self.select_method_expected(candidates, &all_args, types, expected, offset)?;
++            if let Some((_, expected, _)) = method
++                .kotlin_params
++                .as_ref()
++                .and_then(|params| params.first())
++            {
++                coerced_receiver = Some(self.coerce(receiver.clone(), expected.clone(), offset)?);
++            }
+             if method.instance_dispatch() {
+                 let dispatch = self.imported_singleton_receiver(name, offset)?;
+                 let dispatch_slot = self.allocate_typed_slot(&dispatch.ty, offset)?;
+@@ -1818,7 +1826,7 @@ impl Checker<'_> {
+         self.remap_contract_receiver(offset, slot, &receiver);
+         result.map(|value| {
+             let mut bindings = dispatch_binding.into_iter().collect::<Vec<_>>();
+-            bindings.push((slot, receiver));
++            bindings.push((slot, coerced_receiver.unwrap_or(receiver)));
+             Self::wrap_lets(value, bindings)
+         })
+     }
+@@ -1875,26 +1883,44 @@ impl Checker<'_> {
+             kind: ExprKind::Name(local_name),
+         }];
+         all_args.extend_from_slice(args);
++        let mut coerced_receiver = None;
++        let mut binds_receiver = true;
+         let result = {
+             let binding = Value {
+                 ty: receiver.ty.clone(),
+                 kind: ValueKind::Local(slot),
+             };
+             match self.select_function_types(&source_candidates, &all_args, &[], offset) {
+-                Ok(_) => self.source_extension_call(binding, name, args, &[], false, offset),
++                Ok(id) => (|| {
++                    let (params, _) = self.specialize_source(id, &all_args, &[], offset)?;
++                    if let Some((_, expected)) = params.first() {
++                        coerced_receiver =
++                            Some(self.coerce(receiver.clone(), expected.clone(), offset)?);
++                    }
++                    self.source_extension_call(binding, name, args, &[], false, offset)
++                })(),
+                 Err(error) if error.message.contains("Ambiguous") => Err(error),
+-                Err(_) => self.resolved_extension_call(
+-                    binding,
+-                    name,
+-                    args,
+-                    &[],
+-                    ExtensionKind::MemberFallback(member_error),
+-                    offset,
+-                ),
++                Err(_) => {
++                    binds_receiver = false;
++                    self.resolved_extension_call(
++                        receiver.clone(),
++                        name,
++                        args,
++                        &[],
++                        ExtensionKind::MemberFallback(member_error),
++                        offset,
++                    )
++                }
+             }
+         };
+         self.scopes.pop();
+-        result.map(|value| Self::wrap_lets(value, vec![(slot, receiver)]))
++        result.map(|value| {
++            if binds_receiver {
++                Self::wrap_lets(value, vec![(slot, coerced_receiver.unwrap_or(receiver))])
++            } else {
++                value
++            }
++        })
+     }
+ 
+     pub(super) fn source_extension_call(
+@@ -1942,9 +1968,13 @@ impl Checker<'_> {
+             kind: ExprKind::Name(local_name),
+         }];
+         all_args.extend_from_slice(args);
++        let mut coerced_receiver = None;
+         let checked = (|| {
+             let id = self.select_function_types(&candidates, &all_args, explicit, offset)?;
+             let (params, result) = self.specialize_source(id, &all_args, explicit, offset)?;
++            if let Some((_, expected)) = params.first() {
++                coerced_receiver = Some(self.coerce(receiver.clone(), expected.clone(), offset)?);
++            }
+             let defaults = self
+                 .defaults
+                 .get(id)
+@@ -1965,7 +1995,8 @@ impl Checker<'_> {
+             ))
+         })();
+         self.scopes.pop();
+-        checked.map(|value| Self::wrap_lets(value, vec![(slot, receiver)]))
++        checked
++            .map(|value| Self::wrap_lets(value, vec![(slot, coerced_receiver.unwrap_or(receiver))]))
+     }
+ 
+     pub(super) fn check_infix_call(
+diff --git a/src/classpath.rs b/src/classpath.rs
+index 1007c3c22..d4e7fcc66 100644
+--- a/src/classpath.rs
++++ b/src/classpath.rs
+@@ -10,6 +10,7 @@ mod jdk_modules;
+ pub(crate) mod jvm_builtins;
+ mod metadata;
+ pub(crate) mod nested;
++mod nullability_defaults;
+ mod package_info;
+ mod signature;
+ mod singletons;
+@@ -1224,23 +1225,6 @@ impl Classpath {
+         if !valid_name(internal_name) {
+             return Err(Diagnostic::new(0, "Invalid Java class internal name"));
+         }
+-        let package_info = internal_name
+-            .rsplit_once('/')
+-            .map(|(p, _)| format!("{p}/package-info.class"))
+-            .unwrap_or_else(|| "package-info.class".into());
+-        for path in &self.paths {
+-            if let Some(bytes) = self.read_resource(path, &package_info)?
+-                && !self.passive_package_info(&bytes, &package_info)?
+-            {
+-                return Err(Diagnostic::new(
+-                    0,
+-                    format!(
+-                        "Java package metadata {} is unsupported because it may define nullability defaults",
+-                        path.display()
+-                    ),
+-                ));
+-            }
+-        }
+         for path in &self.paths {
+             if let Some(bytes) = self.read_resource(path, &format!("{internal_name}.class"))? {
+                 let class = self
+@@ -1396,6 +1380,14 @@ impl Classpath {
+             }
+         }
+         self.attach_companion_fields(&mut class, &attrs, &method_attrs, &field_attrs)?;
++        if !attrs
++            .annotations
++            .iter()
++            .any(|annotation| annotation.name == "Lkotlin/Metadata;")
++            && class.access & 0x2000 == 0
++        {
++            self.apply_java_package_defaults(&mut class, &attrs, &method_attrs, &field_attrs)?;
++        }
+         Ok(class)
+     }
+ 
+diff --git a/src/classpath/nullability_defaults.rs b/src/classpath/nullability_defaults.rs
+new file mode 100644
+index 000000000..9b2162105
+--- /dev/null
++++ b/src/classpath/nullability_defaults.rs
+@@ -0,0 +1,402 @@
++use super::*;
++
++#[derive(Clone, Copy, Default)]
++pub(super) struct JavaDefaults {
++    result: Option<bool>,
++    parameter: Option<bool>,
++    field: Option<bool>,
++    nested: Option<bool>,
++}
++
++fn unsupported(message: &str) -> Diagnostic {
++    Diagnostic::new(0, message).with_kind(
++        crate::DiagnosticKind::UnsupportedLanguage,
++        "JAVA_NULLABILITY_DEFAULT_UNSUPPORTED",
++    )
++}
++
++impl JavaDefaults {
++    fn merge(&mut self, other: Self) -> Result<()> {
++        for (old, new) in [
++            (&mut self.result, other.result),
++            (&mut self.parameter, other.parameter),
++            (&mut self.field, other.field),
++            (&mut self.nested, other.nested),
++        ] {
++            if let Some(new) = new {
++                if old.is_some_and(|old| old != new) {
++                    return Err(unsupported("Conflicting Java package nullability defaults"));
++                }
++                *old = Some(new);
++            }
++        }
++        Ok(())
++    }
++
++    fn active(self) -> bool {
++        self.result.is_some() || self.parameter.is_some() || self.field.is_some()
++    }
++}
++
++impl Classpath {
++    fn raw_annotation(&self, annotation: &Annotation) -> Result<Option<Attributes>> {
++        let owner = annotation
++            .name
++            .strip_prefix('L')
++            .and_then(|name| name.strip_suffix(';'))
++            .filter(|name| valid_name(name))
++            .ok_or_else(invalid)?;
++        for path in &self.paths {
++            if let Some(bytes) = self.read_resource(path, &format!("{owner}.class"))? {
++                let (class, attrs, _, _) = parse_details_impl(&bytes, owner, false)?;
++                if class.access & 0x2000 == 0 || attrs.unsupported {
++                    return Err(unsupported("Malformed Java default qualifier annotation"));
++                }
++                return Ok(Some(attrs));
++            }
++        }
++        Ok(None)
++    }
++
++    fn default_polarity(&self, annotation: &Annotation, depth: usize) -> Result<Option<bool>> {
++        if depth > 32 {
++            return Err(unsupported("Recursive Java type qualifier nickname"));
++        }
++        if matches!(annotation.name.as_str(), "Ljavax/annotation/Nonnull;") {
++            if annotation.values.is_empty()
++                || matches!(annotation.values.as_slice(), [(key, AnnotationValue::Enum { descriptor, name })]
++                    if key == "when" && descriptor == "Ljavax/annotation/meta/When;" && name == "ALWAYS")
++            {
++                return Ok(Some(false));
++            }
++            return Err(unsupported(
++                "Java default qualifier uses an unsupported nullness condition",
++            ));
++        }
++        if matches!(annotation.name.as_str(), "Ljavax/annotation/CheckForNull;")
++            && annotation.values.is_empty()
++        {
++            return Ok(Some(true));
++        }
++        let Some(attrs) = self.raw_annotation(annotation)? else {
++            return Ok(None);
++        };
++        if !attrs
++            .annotations
++            .iter()
++            .any(|annotation| annotation.name == "Ljavax/annotation/meta/TypeQualifierNickname;")
++        {
++            if attrs
++                .annotations
++                .iter()
++                .any(|annotation| annotation.name == "Ljavax/annotation/meta/TypeQualifier;")
++            {
++                return Ok(match signature::nullability(Type::String, [annotation]) {
++                    Ok(Type::Nullable(_)) => Some(true),
++                    Ok(Type::String) => Some(false),
++                    _ => None,
++                });
++            }
++            return Ok(None);
++        }
++        let mut result = None;
++        for annotation in &attrs.annotations {
++            if let Some(polarity) = self.default_polarity(annotation, depth + 1)? {
++                if result.is_some_and(|old| old != polarity) {
++                    return Err(unsupported(
++                        "Conflicting Java qualifier nickname nullability",
++                    ));
++                }
++                result = Some(polarity);
++            }
++        }
++        Ok(result)
++    }
++
++    fn resolve_default(&self, annotation: &Annotation) -> Result<Option<JavaDefaults>> {
++        match annotation.name.as_str() {
++            "Lorg/jspecify/annotations/NullMarked;" | "Lorg/jspecify/nullness/NullMarked;"
++                if annotation.values.is_empty() =>
++            {
++                return Err(unsupported(
++                    "JSpecify default bounds and declaration contexts are unsupported",
++                ));
++            }
++            "Lorg/jspecify/annotations/NullUnmarked;" | "Lorg/jspecify/nullness/NullUnmarked;"
++                if annotation.values.is_empty() =>
++            {
++                return Ok(Some(JavaDefaults::default()));
++            }
++            _ => {}
++        }
++        let Some(attrs) = self.raw_annotation(annotation)? else {
++            return Ok(None);
++        };
++        let Some(targets) = attrs
++            .annotations
++            .iter()
++            .find(|annotation| annotation.name == "Ljavax/annotation/meta/TypeQualifierDefault;")
++        else {
++            return Ok(None);
++        };
++        if !annotation.values.is_empty() {
++            return Err(unsupported(
++                "Parameterized Java default qualifier annotations are unsupported",
++            ));
++        }
++        let migration = attrs
++            .annotations
++            .iter()
++            .find(|annotation| annotation.name == "Lkotlin/annotations/jvm/UnderMigration;");
++        let strict = match migration {
++            None => false,
++            Some(annotation) => match annotation.values.as_slice() {
++                [(key, AnnotationValue::Enum { descriptor, name })]
++                    if key == "status"
++                        && descriptor == "Lkotlin/annotations/jvm/MigrationStatus;" =>
++                {
++                    match name.as_str() {
++                        "STRICT" => true,
++                        "WARN" | "IGNORE" => false,
++                        _ => return Err(unsupported("Unknown Java qualifier migration status")),
++                    }
++                }
++                _ => return Err(unsupported("Malformed Java qualifier migration status")),
++            },
++        };
++        let mut polarity = None;
++        for annotation in &attrs.annotations {
++            if let Some(value) = self.default_polarity(annotation, 0)? {
++                if polarity.is_some_and(|old| old != value) {
++                    return Err(unsupported(
++                        "Conflicting Java package nullability qualifiers",
++                    ));
++                }
++                polarity = Some(value);
++            }
++        }
++        let polarity = polarity.ok_or_else(|| {
++            unsupported("Java default annotation lacks a supported nullability qualifier")
++        })?;
++        let [(key, AnnotationValue::Array(targets))] = targets.values.as_slice() else {
++            return Err(unsupported("Malformed Java default qualifier targets"));
++        };
++        if key != "value" || targets.is_empty() {
++            return Err(unsupported("Malformed Java default qualifier targets"));
++        }
++        let mut defaults = JavaDefaults::default();
++        for target in targets {
++            let AnnotationValue::Enum { descriptor, name } = target else {
++                return Err(unsupported("Malformed Java default qualifier target"));
++            };
++            if descriptor != "Ljava/lang/annotation/ElementType;" {
++                return Err(unsupported("Malformed Java default qualifier target type"));
++            }
++            match name.as_str() {
++                "METHOD" => defaults.result = Some(polarity),
++                "PARAMETER" => defaults.parameter = Some(polarity),
++                "FIELD" => defaults.field = Some(polarity),
++                "TYPE_USE" => {
++                    defaults.result = Some(polarity);
++                    defaults.parameter = Some(polarity);
++                    defaults.field = Some(polarity);
++                    defaults.nested = Some(polarity);
++                }
++                _ => return Err(unsupported("Java default qualifier target is unsupported")),
++            }
++        }
++        Ok(Some(if strict {
++            defaults
++        } else {
++            JavaDefaults::default()
++        }))
++    }
++
++    pub(super) fn java_package_defaults(&self, owner: &str) -> Result<JavaDefaults> {
++        let resource = owner
++            .rsplit_once('/')
++            .map(|(package, _)| format!("{package}/package-info.class"))
++            .unwrap_or_else(|| "package-info.class".into());
++        for path in &self.paths {
++            let Some(bytes) = self.read_resource(path, &resource)? else {
++                continue;
++            };
++            if self.passive_package_info(&bytes, &resource)? {
++                return Ok(JavaDefaults::default());
++            }
++            let (class, attrs, _, _) = parse_details_impl(
++                &bytes,
++                resource.strip_suffix(".class").ok_or_else(invalid)?,
++                false,
++            )?;
++            if class.access & 0x200 == 0
++                || !class.fields.is_empty()
++                || !class.methods.is_empty()
++                || attrs.unsupported
++                || !attrs.type_annotation_targets.is_empty()
++            {
++                return Err(unsupported("Unsupported Java package metadata shape"));
++            }
++            let mut defaults = JavaDefaults::default();
++            for annotation in &attrs.annotations {
++                if let Some(selected) = self.resolve_default(annotation)? {
++                    defaults.merge(selected)?;
++                } else if signature::type_semantic_annotation(&annotation.name)
++                    || !self.passive_declaration_annotation(annotation)?
++                {
++                    return Err(unsupported("Unsupported Java package annotation semantics"));
++                }
++            }
++            return Ok(defaults);
++        }
++        Ok(JavaDefaults::default())
++    }
++
++    pub(super) fn apply_java_package_defaults(
++        &self,
++        class: &mut JavaClass,
++        attrs: &Attributes,
++        method_attrs: &[Attributes],
++        field_attrs: &[Attributes],
++    ) -> Result<()> {
++        if class.name.rsplit('/').next() == Some("package-info") {
++            return Ok(());
++        }
++        let defaults = self.java_package_defaults(&class.name)?;
++        if !defaults.active() {
++            return Ok(());
++        }
++        for annotation in &attrs.annotations {
++            if self.resolve_default(annotation)?.is_some() {
++                return Err(unsupported(
++                    "Declaration overrides of Java package defaults are unsupported",
++                ));
++            }
++        }
++        let mut parent = self.lexical_parents.borrow().get(&class.name).cloned();
++        for _ in 0..64 {
++            let Some(owner) = parent else { break };
++            for path in &self.paths {
++                if let Some(bytes) = self.read_resource(path, &format!("{owner}.class"))? {
++                    let (_, attrs, _, _) = parse_details_impl(&bytes, &owner, false)?;
++                    for annotation in &attrs.annotations {
++                        if self.resolve_default(annotation)?.is_some() {
++                            return Err(unsupported(
++                                "Enclosing declaration Java nullability defaults are unsupported",
++                            ));
++                        }
++                    }
++                    break;
++                }
++            }
++            parent = self.lexical_parents.borrow().get(&owner).cloned();
++        }
++        for (method, attributes) in class.methods.iter_mut().zip(method_attrs) {
++            if attributes
++                .annotations
++                .iter()
++                .any(|annotation| !matches!(self.resolve_default(annotation), Ok(None)))
++            {
++                method.unsupported = true;
++            }
++            if method.unsupported {
++                continue;
++            }
++            let converted = (|| -> Result<()> {
++                if let Some(params) = &mut method.kotlin_params {
++                    for (_, ty, _) in params {
++                        *ty = enhance(ty.clone(), defaults.parameter, defaults.nested, false)?;
++                    }
++                }
++                if let Some(ty) = &mut method.kotlin_result {
++                    *ty = enhance(ty.clone(), defaults.result, defaults.nested, false)?;
++                }
++                Ok(())
++            })();
++            if converted.is_err() {
++                method.unsupported = true;
++            }
++        }
++        for (field, attributes) in class.fields.iter_mut().zip(field_attrs) {
++            if attributes
++                .annotations
++                .iter()
++                .any(|annotation| !matches!(self.resolve_default(annotation), Ok(None)))
++            {
++                field.unsupported = true;
++            }
++            if field.unsupported {
++                continue;
++            }
++            let ty = field.java_type.as_deref().cloned().or_else(|| {
++                signature::field(&field.descriptor, &[])
++                    .ok()
++                    .map(|ty| Type::Platform(Box::new(ty)))
++            });
++            if let Some(ty) = ty {
++                match enhance(ty, defaults.field, defaults.nested, false) {
++                    Ok(ty) => field.java_type = Some(Box::new(ty)),
++                    Err(_) => field.unsupported = true,
++                }
++            }
++        }
++        Ok(())
++    }
++}
++
++fn enhance(ty: Type, root: Option<bool>, nested: Option<bool>, implicit: bool) -> Result<Type> {
++    if matches!(ty, Type::Parameter { .. }) && root.is_some() {
++        return Err(unsupported(
++            "Java defaults on type parameters require definitely non-null type support",
++        ));
++    }
++    let ty = match ty {
++        Type::Platform(inner) => {
++            if root.is_some() && matches!(inner.base(), Type::Parameter { .. }) {
++                return Err(unsupported(
++                    "Java defaults on type parameters require definitely non-null type support",
++                ));
++            }
++            let inner = enhance(*inner, None, nested, false)?;
++            return Ok(match root {
++                Some(true) => Type::Nullable(Box::new(inner)),
++                Some(false) => inner,
++                None => Type::Platform(Box::new(inner)),
++            });
++        }
++        Type::Nullable(inner) => {
++            return Ok(Type::Nullable(Box::new(enhance(
++                *inner, None, nested, false,
++            )?)));
++        }
++        Type::Array(inner) => Type::Array(Box::new(enhance(*inner, nested, nested, true)?)),
++        Type::OutArray(inner) => Type::OutArray(Box::new(enhance(*inner, nested, nested, true)?)),
++        Type::StringArray if nested == Some(true) => {
++            Type::Array(Box::new(enhance(Type::String, nested, nested, true)?))
++        }
++        Type::List(inner) => Type::List(Box::new(enhance(*inner, nested, nested, true)?)),
++        Type::MutableList(inner) => {
++            Type::MutableList(Box::new(enhance(*inner, nested, nested, true)?))
++        }
++        Type::FlexibleList(inner) => {
++            Type::FlexibleList(Box::new(enhance(*inner, nested, nested, true)?))
++        }
++        Type::Parameterized {
++            name,
++            mut arguments,
++        } => {
++            for argument in &mut arguments {
++                if let Some(ty) = &mut argument.ty {
++                    *ty = enhance(ty.clone(), nested, nested, true)?;
++                }
++            }
++            Type::Parameterized { name, arguments }
++        }
++        ty => ty,
++    };
++    if implicit && root == Some(true) && ty.is_reference() {
++        Ok(Type::Nullable(Box::new(ty)))
++    } else {
++        Ok(ty)
++    }
++}
+diff --git a/tests/package_nullability.rs b/tests/package_nullability.rs
+new file mode 100644
+index 000000000..8397cb50a
+--- /dev/null
++++ b/tests/package_nullability.rs
+@@ -0,0 +1,137 @@
++use korrust::{DiagnosticKind, SourceInput, compile_batch_with_classpath};
++use std::path::{Path, PathBuf};
++use std::process::Command;
++
++fn run(command: &mut Command) {
++    let result = command.output().unwrap();
++    assert!(
++        result.status.success(),
++        "{command:?}\n{}\n{}",
++        String::from_utf8_lossy(&result.stdout),
++        String::from_utf8_lossy(&result.stderr)
++    );
++}
++
++fn java_files(path: &Path, files: &mut Vec<PathBuf>) {
++    for entry in std::fs::read_dir(path).unwrap() {
++        let path = entry.unwrap().path();
++        if path.is_dir() {
++            java_files(&path, files);
++        } else if path
++            .extension()
++            .is_some_and(|extension| extension == "java")
++        {
++            files.push(path);
++        }
++    }
++}
++
++#[test]
++fn package_qualifiers_enhance_types_and_preserve_java_boundary_checks() {
++    std::thread::Builder::new()
++        .stack_size(32 * 1024 * 1024)
++        .spawn(check)
++        .unwrap()
++        .join()
++        .unwrap();
++}
++
++fn check() {
++    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
++    let fixtures = root.join("tests/package_nullability");
++    let work =
++        std::env::temp_dir().join(format!("korrust-package-defaults-{}", std::process::id()));
++    let dependency = work.join("dependency");
++    let official = work.join("official");
++    let candidate = work.join("candidate");
++    let callers = work.join("callers");
++    let standard = root.join("references/kotlinc/lib/kotlin-stdlib.jar");
++    let mut java = Vec::new();
++    java_files(&fixtures.join("java"), &mut java);
++    java.sort();
++    run(Command::new("javac")
++        .args(["--release", "8", "-d"])
++        .arg(&dependency)
++        .args(java));
++    run(Command::new(root.join("references/kotlinc/bin/kotlinc"))
++        .arg(fixtures.join("KotlinLibrary.kt"))
++        .arg("-cp")
++        .arg(&dependency)
++        .args([
++            "-jvm-target",
++            "1.8",
++            "-module-name",
++            "default_symbols",
++            "-d",
++        ])
++        .arg(&dependency));
++    let paths = [dependency.clone(), standard.clone()];
++    let cp = std::env::join_paths(&paths).unwrap();
++    let input = |name: &str| SourceInput {
++        identity: fixtures.join(format!("{name}.kt")).display().to_string(),
++        file_name: format!("{name}.kt"),
++        source: std::fs::read_to_string(fixtures.join(format!("{name}.kt"))).unwrap(),
++    };
++    run(Command::new(root.join("references/kotlinc/bin/kotlinc"))
++        .arg(fixtures.join("Consumer.kt"))
++        .arg(fixtures.join("Broken.kt"))
++        .arg(fixtures.join("Warnings.kt"))
++        .arg("-cp")
++        .arg(&cp)
++        .args(["-jvm-target", "1.8", "-d"])
++        .arg(&official));
++    for artifact in compile_batch_with_classpath(
++        &[input("Consumer"), input("Broken"), input("Warnings")],
++        &paths,
++        "package_defaults",
++    )
++    .unwrap()
++    {
++        let path = candidate.join(artifact.output.relative_path);
++        std::fs::create_dir_all(path.parent().unwrap()).unwrap();
++        std::fs::write(path, artifact.output.bytes).unwrap();
++    }
++    run(Command::new("javac")
++        .arg("-cp")
++        .arg(std::env::join_paths([&official, &dependency, &standard]).unwrap())
++        .arg("-d")
++        .arg(&callers)
++        .arg(fixtures.join("Calls.java")));
++    for provider in [&official, &candidate] {
++        run(Command::new("java")
++            .args(["-Xverify:all", "-cp"])
++            .arg(std::env::join_paths([&callers, provider, &dependency, &standard]).unwrap())
++            .arg("defaults.consumer.Calls"));
++    }
++    for name in [
++        "NullArgument",
++        "NullableArgument",
++        "ParameterDefault",
++        "NullableResult",
++        "ExplicitRequired",
++        "NestedResult",
++        "NestedArrayResult",
++    ] {
++        let error = compile_batch_with_classpath(&[input(name)], &paths, "negative")
++            .err()
++            .unwrap();
++        assert_eq!(
++            error.kind,
++            DiagnosticKind::InvalidKotlin,
++            "{name}: {}",
++            error.message
++        );
++    }
++    for name in ["GenericBoundary", "ScopeBoundary"] {
++        let error = compile_batch_with_classpath(&[input(name)], &paths, "boundary")
++            .err()
++            .unwrap();
++        assert_eq!(
++            error.kind,
++            DiagnosticKind::UnsupportedLanguage,
++            "{name}: {}",
++            error.message
++        );
++    }
++    std::fs::remove_dir_all(work).unwrap();
++}
+diff --git a/tests/package_nullability/Broken.kt b/tests/package_nullability/Broken.kt
+new file mode 100644
+index 000000000..63025f5a5
+--- /dev/null
++++ b/tests/package_nullability/Broken.kt
+@@ -0,0 +1,43 @@
++package defaults.consumer
++private var effects: Int = 0
++fun brokenRequired(): String = nonnull.Library.broken()
++fun brokenNullable(): String? = nonnull.Library.broken()
++fun brokenInferred(): Int { val value = nonnull.Library.broken(); return if (value == null) 1 else 2 }
++fun brokenElvis(): String = nonnull.Library.broken() ?: "fallback"
++fun brokenSafe(): Int? = nonnull.Library.broken()?.length
++fun brokenDiscarded(): Int { nonnull.Library.broken(); return 3 }
++
++private fun indexEffect(): Int { effects += 1; return 0 }
++fun brokenArrayReceiver(): Int {
++    effects = 0
++    try { nonnull.Library.brokenArray()[indexEffect()] } catch (failure: NullPointerException) { return effects }
++    return -1
++}
++fun requiredField(): String = nonnull.Library().brokenField
++fun nullableFieldContext(): String? = nonnull.Library().brokenField
++
++fun brokenNodeReceiver(): Int {
++    effects = 0
++    try { nonnull.Library.brokenNode().touch(indexEffect()) } catch (failure: NullPointerException) { return effects }
++    return -1
++}
++
++fun brokenListReceiver(): Int {
++    effects = 0
++    try { nonnull.Library.brokenList().get(indexEffect()) } catch (failure: NullPointerException) { return effects }
++    return -1
++}
++
++private fun String.sourceReceiver(value: Int): Int = value
++fun brokenExtensionReceiver(): Int {
++    effects = 0
++    try { nonnull.Library.broken().sourceReceiver(indexEffect()) } catch (failure: NullPointerException) { return effects }
++    return -1
++}
++
++private fun String?.nullableSourceReceiver(value: Int): Int = value
++fun nullableExtensionReceiver(): Int {
++    effects = 0
++    nonnull.Library.broken().nullableSourceReceiver(indexEffect())
++    return effects
++}
+diff --git a/tests/package_nullability/Calls.java b/tests/package_nullability/Calls.java
+new file mode 100644
+index 000000000..10a5ba446
+--- /dev/null
++++ b/tests/package_nullability/Calls.java
+@@ -0,0 +1,14 @@
++package defaults.consumer;
++public class Calls {
++ public static void main(String[] args) {
++  if (!ConsumerKt.nonNull().equals("ok") || ConsumerKt.nullableValue()!=null || ConsumerKt.explicitNullable()!=null || !ConsumerKt.explicitRequired().equals("required") || ConsumerKt.platformResult()!=null || ConsumerKt.values()!=8 || ConsumerKt.fields()!=7 || ConsumerKt.nullableField()!=null || ConsumerKt.nullableElement()!=null || ConsumerKt.nullableArrayElement()!=null || !ConsumerKt.qualifierAlias().equals("alias") || ConsumerKt.kotlinMetadataWins()!=null) throw new AssertionError();
++  try { BrokenKt.brokenRequired(); throw new AssertionError("required return"); } catch (NullPointerException expected) {}
++  try { BrokenKt.brokenInferred(); throw new AssertionError("inferred local"); } catch (NullPointerException expected) {}
++  if (BrokenKt.brokenNullable()!=null || !BrokenKt.brokenElvis().equals("fallback") || BrokenKt.brokenSafe()!=null || BrokenKt.brokenDiscarded()!=3) throw new AssertionError("Java boundary context/evaluation order");
++  try { BrokenKt.requiredField(); throw new AssertionError("required field"); } catch (NullPointerException expected) {}
++  if (BrokenKt.nullableFieldContext()!=null || BrokenKt.brokenArrayReceiver()!=1 || BrokenKt.brokenNodeReceiver()!=1 || BrokenKt.brokenListReceiver()!=1 || BrokenKt.brokenExtensionReceiver()!=0 || BrokenKt.nullableExtensionReceiver()!=1) throw new AssertionError("Java field/array boundary");
++  if (WarningsKt.warningNullable()!=null || WarningsKt.warningInferred()!=1 || WarningsKt.warningGlobal()!=null) throw new AssertionError("warning flexibility");
++  try { WarningsKt.warningRequired(); throw new AssertionError("warning required context"); } catch (NullPointerException expected) {}
++  System.out.println("package-defaults-ok");
++ }
++}
+diff --git a/tests/package_nullability/Consumer.kt b/tests/package_nullability/Consumer.kt
+new file mode 100644
+index 000000000..52727f35d
+--- /dev/null
++++ b/tests/package_nullability/Consumer.kt
+@@ -0,0 +1,14 @@
++package defaults.consumer
++import nonnull.kotlinNullable
++fun nonNull(): String = nonnull.Library.echo("ok")
++fun nullableValue(): String? = nullable.Library.echo(null)
++fun explicitNullable(): String? = nonnull.Library.maybe(null)
++fun explicitRequired(): String = nullable.Library.required("required")
++fun platformResult(): String? = parameters.Library.missing("input")
++fun values(): Int = nonnull.Library.words()[0].length + nonnull.Library.array()[0].length
++fun fields(): Int = nonnull.Library().field.length + (nonnull.Library().maybeField?.length ?: 2)
++fun nullableField(): String? = nullable.Library().field
++fun nullableElement(): String? = deepnullable.Library.words()!![0]
++fun nullableArrayElement(): String? = deepnullable.Library.array()!![0]
++fun qualifierAlias(): String = nickname.Library.read()
++fun kotlinMetadataWins(): String? = kotlinNullable(null)
+diff --git a/tests/package_nullability/ExplicitRequired.kt b/tests/package_nullability/ExplicitRequired.kt
+new file mode 100644
+index 000000000..9aa4f8d04
+--- /dev/null
++++ b/tests/package_nullability/ExplicitRequired.kt
+@@ -0,0 +1 @@
++fun invalid(): String = nullable.Library.required(null)
+diff --git a/tests/package_nullability/GenericBoundary.kt b/tests/package_nullability/GenericBoundary.kt
+new file mode 100644
+index 000000000..7751cdc70
+--- /dev/null
++++ b/tests/package_nullability/GenericBoundary.kt
+@@ -0,0 +1 @@
++fun unsupported(): String = nonnull.Library.identity("value")
+diff --git a/tests/package_nullability/KotlinLibrary.kt b/tests/package_nullability/KotlinLibrary.kt
+new file mode 100644
+index 000000000..8c09eb0f1
+--- /dev/null
++++ b/tests/package_nullability/KotlinLibrary.kt
+@@ -0,0 +1,2 @@
++package nonnull
++fun kotlinNullable(value: String?): String? = value
+diff --git a/tests/package_nullability/MappedReceiver.kt b/tests/package_nullability/MappedReceiver.kt
+new file mode 100644
+index 000000000..8d862b6f1
+--- /dev/null
++++ b/tests/package_nullability/MappedReceiver.kt
+@@ -0,0 +1,8 @@
++package preexisting
++private var effects: Int = 0
++private fun effect(): String { effects += 1; return "unused" }
++fun observed(): Int {
++    effects = 0
++    try { Api.broken().indexOf(effect()) } catch (failure: NullPointerException) { return effects }
++    return -1
++}
+diff --git a/tests/package_nullability/MappedReceiverCalls.java b/tests/package_nullability/MappedReceiverCalls.java
+new file mode 100644
+index 000000000..bdedb4e6c
+--- /dev/null
++++ b/tests/package_nullability/MappedReceiverCalls.java
+@@ -0,0 +1,4 @@
++package preexisting;
++public class MappedReceiverCalls {
++ public static void main(String[] args) { System.out.println(MappedReceiverKt.observed()); }
++}
+diff --git a/tests/package_nullability/NestedArrayResult.kt b/tests/package_nullability/NestedArrayResult.kt
+new file mode 100644
+index 000000000..44f314ae9
+--- /dev/null
++++ b/tests/package_nullability/NestedArrayResult.kt
+@@ -0,0 +1 @@
++fun invalid(): String = deepnullable.Library.array()!![0]
+diff --git a/tests/package_nullability/NestedResult.kt b/tests/package_nullability/NestedResult.kt
+new file mode 100644
+index 000000000..8ae5dfef8
+--- /dev/null
++++ b/tests/package_nullability/NestedResult.kt
+@@ -0,0 +1 @@
++fun invalid(): String = deepnullable.Library.words()!![0]
+diff --git a/tests/package_nullability/NullArgument.kt b/tests/package_nullability/NullArgument.kt
+new file mode 100644
+index 000000000..f1d3a1910
+--- /dev/null
++++ b/tests/package_nullability/NullArgument.kt
+@@ -0,0 +1 @@
++fun invalid(): String = nonnull.Library.echo(null)
+diff --git a/tests/package_nullability/NullableArgument.kt b/tests/package_nullability/NullableArgument.kt
+new file mode 100644
+index 000000000..13fcd4770
+--- /dev/null
++++ b/tests/package_nullability/NullableArgument.kt
+@@ -0,0 +1 @@
++fun invalid(value: String?): String = nonnull.Library.echo(value)
+diff --git a/tests/package_nullability/NullableResult.kt b/tests/package_nullability/NullableResult.kt
+new file mode 100644
+index 000000000..03d58e7ce
+--- /dev/null
++++ b/tests/package_nullability/NullableResult.kt
+@@ -0,0 +1 @@
++fun invalid(): String = nullable.Library.echo(null)
+diff --git a/tests/package_nullability/ParameterDefault.kt b/tests/package_nullability/ParameterDefault.kt
+new file mode 100644
+index 000000000..ae6b95fd8
+--- /dev/null
++++ b/tests/package_nullability/ParameterDefault.kt
+@@ -0,0 +1 @@
++fun invalid(): String? = parameters.Library.echo(null)
+diff --git a/tests/package_nullability/ScopeBoundary.kt b/tests/package_nullability/ScopeBoundary.kt
+new file mode 100644
+index 000000000..0aabfaf8d
+--- /dev/null
++++ b/tests/package_nullability/ScopeBoundary.kt
+@@ -0,0 +1 @@
++fun unsupported(): String = nonnull.Library.localDefault("value")
+diff --git a/tests/package_nullability/ShadowConsumer.kt b/tests/package_nullability/ShadowConsumer.kt
+new file mode 100644
+index 000000000..3583091a8
+--- /dev/null
++++ b/tests/package_nullability/ShadowConsumer.kt
+@@ -0,0 +1,2 @@
++package defaults.consumer
++fun shadowedPackage(): String? = nonnull.Library.echo(null)
+diff --git a/tests/package_nullability/Warnings.kt b/tests/package_nullability/Warnings.kt
+new file mode 100644
+index 000000000..fde633e42
+--- /dev/null
++++ b/tests/package_nullability/Warnings.kt
+@@ -0,0 +1,5 @@
++package defaults.consumer
++fun warningNullable(): String? = warning.Library.echo(null)
++fun warningRequired(): String = warning.Library.echo(null)
++fun warningInferred(): Int { var value = warning.Library.echo("value"); value = null; return if (value == null) 1 else 2 }
++fun warningGlobal(): String? = globalwarning.Library.echo(null)
+diff --git a/tests/package_nullability/java/deepnullable/Library.java b/tests/package_nullability/java/deepnullable/Library.java
+new file mode 100644
+index 000000000..baaa86310
+--- /dev/null
++++ b/tests/package_nullability/java/deepnullable/Library.java
+@@ -0,0 +1,6 @@
++package deepnullable;
++import java.util.*;
++public final class Library {
++ public static List<String> words() { return Arrays.asList((String)null); }
++ public static String[] array() { return new String[]{null}; }
++}
+diff --git a/tests/package_nullability/java/deepnullable/package-info.java b/tests/package_nullability/java/deepnullable/package-info.java
+new file mode 100644
+index 000000000..824dbf126
+--- /dev/null
++++ b/tests/package_nullability/java/deepnullable/package-info.java
+@@ -0,0 +1,2 @@
++@qualifiers.DeepOptional
++package deepnullable;
+diff --git a/tests/package_nullability/java/globalwarning/Library.java b/tests/package_nullability/java/globalwarning/Library.java
+new file mode 100644
+index 000000000..f3c8b07b9
+--- /dev/null
++++ b/tests/package_nullability/java/globalwarning/Library.java
+@@ -0,0 +1,2 @@
++package globalwarning;
++public final class Library { public static String echo(String value) { return value; } }
+diff --git a/tests/package_nullability/java/globalwarning/package-info.java b/tests/package_nullability/java/globalwarning/package-info.java
+new file mode 100644
+index 000000000..1684d2855
+--- /dev/null
++++ b/tests/package_nullability/java/globalwarning/package-info.java
+@@ -0,0 +1,2 @@
++@qualifiers.GlobalWarning
++package globalwarning;
+diff --git a/tests/package_nullability/java/javax/annotation/CheckForNull.java b/tests/package_nullability/java/javax/annotation/CheckForNull.java
+new file mode 100644
+index 000000000..53042f151
+--- /dev/null
++++ b/tests/package_nullability/java/javax/annotation/CheckForNull.java
+@@ -0,0 +1,5 @@
++package javax.annotation;
++import java.lang.annotation.*;
++@Retention(RetentionPolicy.RUNTIME)
++@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE})
++public @interface CheckForNull {}
+diff --git a/tests/package_nullability/java/javax/annotation/Nonnull.java b/tests/package_nullability/java/javax/annotation/Nonnull.java
+new file mode 100644
+index 000000000..7d9f320e0
+--- /dev/null
++++ b/tests/package_nullability/java/javax/annotation/Nonnull.java
+@@ -0,0 +1,5 @@
++package javax.annotation;
++import java.lang.annotation.*;
++@Retention(RetentionPolicy.RUNTIME)
++@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE, ElementType.TYPE_USE})
++public @interface Nonnull {}
+diff --git a/tests/package_nullability/java/javax/annotation/Nullable.java b/tests/package_nullability/java/javax/annotation/Nullable.java
+new file mode 100644
+index 000000000..92ea556f8
+--- /dev/null
++++ b/tests/package_nullability/java/javax/annotation/Nullable.java
+@@ -0,0 +1,5 @@
++package javax.annotation;
++import java.lang.annotation.*;
++@Retention(RetentionPolicy.RUNTIME)
++@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE, ElementType.TYPE_USE})
++public @interface Nullable {}
+diff --git a/tests/package_nullability/java/javax/annotation/meta/TypeQualifierDefault.java b/tests/package_nullability/java/javax/annotation/meta/TypeQualifierDefault.java
+new file mode 100644
+index 000000000..497777de0
+--- /dev/null
++++ b/tests/package_nullability/java/javax/annotation/meta/TypeQualifierDefault.java
+@@ -0,0 +1,5 @@
++package javax.annotation.meta;
++import java.lang.annotation.*;
++@Retention(RetentionPolicy.RUNTIME)
++@Target(ElementType.ANNOTATION_TYPE)
++public @interface TypeQualifierDefault { ElementType[] value(); }
+diff --git a/tests/package_nullability/java/javax/annotation/meta/TypeQualifierNickname.java b/tests/package_nullability/java/javax/annotation/meta/TypeQualifierNickname.java
+new file mode 100644
+index 000000000..46410dd36
+--- /dev/null
++++ b/tests/package_nullability/java/javax/annotation/meta/TypeQualifierNickname.java
+@@ -0,0 +1,5 @@
++package javax.annotation.meta;
++import java.lang.annotation.*;
++@Retention(RetentionPolicy.RUNTIME)
++@Target(ElementType.ANNOTATION_TYPE)
++public @interface TypeQualifierNickname {}
+diff --git a/tests/package_nullability/java/kotlin/annotations/jvm/MigrationStatus.java b/tests/package_nullability/java/kotlin/annotations/jvm/MigrationStatus.java
+new file mode 100644
+index 000000000..aeee49606
+--- /dev/null
++++ b/tests/package_nullability/java/kotlin/annotations/jvm/MigrationStatus.java
+@@ -0,0 +1,2 @@
++package kotlin.annotations.jvm;
++public enum MigrationStatus { STRICT, WARN, IGNORE }
+diff --git a/tests/package_nullability/java/kotlin/annotations/jvm/UnderMigration.java b/tests/package_nullability/java/kotlin/annotations/jvm/UnderMigration.java
+new file mode 100644
+index 000000000..1edf4ea33
+--- /dev/null
++++ b/tests/package_nullability/java/kotlin/annotations/jvm/UnderMigration.java
+@@ -0,0 +1,5 @@
++package kotlin.annotations.jvm;
++import java.lang.annotation.*;
++@Retention(RetentionPolicy.CLASS)
++@Target(ElementType.ANNOTATION_TYPE)
++public @interface UnderMigration { MigrationStatus status(); }
+diff --git a/tests/package_nullability/java/nickname/Library.java b/tests/package_nullability/java/nickname/Library.java
+new file mode 100644
+index 000000000..254f8a13f
+--- /dev/null
++++ b/tests/package_nullability/java/nickname/Library.java
+@@ -0,0 +1,2 @@
++package nickname;
++public final class Library { public static String read() { return "alias"; } }
+diff --git a/tests/package_nullability/java/nickname/package-info.java b/tests/package_nullability/java/nickname/package-info.java
+new file mode 100644
+index 000000000..f9749813e
+--- /dev/null
++++ b/tests/package_nullability/java/nickname/package-info.java
+@@ -0,0 +1,2 @@
++@qualifiers.AliasDefault
++package nickname;
+diff --git a/tests/package_nullability/java/nonnull/Library.java b/tests/package_nullability/java/nonnull/Library.java
+new file mode 100644
+index 000000000..9d9fb643f
+--- /dev/null
++++ b/tests/package_nullability/java/nonnull/Library.java
+@@ -0,0 +1,19 @@
++package nonnull;
++import java.util.*;
++public final class Library {
++    public String field = "field";
++    public String brokenField = null;
++    @javax.annotation.Nullable public String maybeField = null;
++    public static String echo(String value) { return value; }
++    public static String broken() { return null; }
++    public static final class Node { public int touch(int value) { return value; } }
++    public static Node brokenNode() { return null; }
++    public static String[] brokenArray() { return null; }
++    public static List<String> brokenList() { return null; }
++    public static List<String> words() { return Arrays.asList("one", "two"); }
++    public static String[] array() { return new String[]{"three"}; }
++    @javax.annotation.Nullable public static String maybe(@javax.annotation.Nullable String value) { return value; }
++    public static int length(String value) { return value.length(); }
++    public static <T> T identity(T value) { return value; }
++    @qualifiers.Required public static String localDefault(String value) { return value; }
++}
+diff --git a/tests/package_nullability/java/nonnull/package-info.java b/tests/package_nullability/java/nonnull/package-info.java
+new file mode 100644
+index 000000000..7aa706609
+--- /dev/null
++++ b/tests/package_nullability/java/nonnull/package-info.java
+@@ -0,0 +1,2 @@
++@qualifiers.Required
++package nonnull;
+diff --git a/tests/package_nullability/java/nullable/Library.java b/tests/package_nullability/java/nullable/Library.java
+new file mode 100644
+index 000000000..5657274c7
+--- /dev/null
++++ b/tests/package_nullability/java/nullable/Library.java
+@@ -0,0 +1,6 @@
++package nullable;
++public final class Library {
++    public String field = null;
++    public static String echo(String value) { return value; }
++    @javax.annotation.Nonnull public static String required(@javax.annotation.Nonnull String value) { return value; }
++}
+diff --git a/tests/package_nullability/java/nullable/package-info.java b/tests/package_nullability/java/nullable/package-info.java
+new file mode 100644
+index 000000000..b09483585
+--- /dev/null
++++ b/tests/package_nullability/java/nullable/package-info.java
+@@ -0,0 +1,2 @@
++@qualifiers.Optional
++package nullable;
+diff --git a/tests/package_nullability/java/parameters/Library.java b/tests/package_nullability/java/parameters/Library.java
+new file mode 100644
+index 000000000..3ef91a165
+--- /dev/null
++++ b/tests/package_nullability/java/parameters/Library.java
+@@ -0,0 +1,5 @@
++package parameters;
++public final class Library {
++    public static String echo(String value) { return value; }
++    public static String missing(String value) { return null; }
++}
+diff --git a/tests/package_nullability/java/parameters/package-info.java b/tests/package_nullability/java/parameters/package-info.java
+new file mode 100644
+index 000000000..8470c3a87
+--- /dev/null
++++ b/tests/package_nullability/java/parameters/package-info.java
+@@ -0,0 +1,2 @@
++@qualifiers.Inputs
++package parameters;
+diff --git a/tests/package_nullability/java/preexisting/Api.java b/tests/package_nullability/java/preexisting/Api.java
+new file mode 100644
+index 000000000..b7c09d324
+--- /dev/null
++++ b/tests/package_nullability/java/preexisting/Api.java
+@@ -0,0 +1,4 @@
++package preexisting;
++public class Api {
++ @javax.annotation.Nonnull public static String broken() { return null; }
++}
+diff --git a/tests/package_nullability/java/qualifiers/Alias.java b/tests/package_nullability/java/qualifiers/Alias.java
+new file mode 100644
+index 000000000..d6a0b4cfd
+--- /dev/null
++++ b/tests/package_nullability/java/qualifiers/Alias.java
+@@ -0,0 +1,7 @@
++package qualifiers;
++import java.lang.annotation.*;
++@javax.annotation.Nonnull
++@javax.annotation.meta.TypeQualifierNickname
++@Retention(RetentionPolicy.RUNTIME)
++@Target(ElementType.ANNOTATION_TYPE)
++public @interface Alias {}
+diff --git a/tests/package_nullability/java/qualifiers/AliasDefault.java b/tests/package_nullability/java/qualifiers/AliasDefault.java
+new file mode 100644
+index 000000000..297297c80
+--- /dev/null
++++ b/tests/package_nullability/java/qualifiers/AliasDefault.java
+@@ -0,0 +1,8 @@
++package qualifiers;
++import java.lang.annotation.*;
++@Alias
++@javax.annotation.meta.TypeQualifierDefault(ElementType.METHOD)
++@kotlin.annotations.jvm.UnderMigration(status = kotlin.annotations.jvm.MigrationStatus.STRICT)
++@Retention(RetentionPolicy.CLASS)
++@Target(ElementType.PACKAGE)
++public @interface AliasDefault {}
+diff --git a/tests/package_nullability/java/qualifiers/DeepOptional.java b/tests/package_nullability/java/qualifiers/DeepOptional.java
+new file mode 100644
+index 000000000..749f56ae4
+--- /dev/null
++++ b/tests/package_nullability/java/qualifiers/DeepOptional.java
+@@ -0,0 +1,8 @@
++package qualifiers;
++import java.lang.annotation.*;
++@javax.annotation.CheckForNull
++@javax.annotation.meta.TypeQualifierDefault(ElementType.TYPE_USE)
++@kotlin.annotations.jvm.UnderMigration(status = kotlin.annotations.jvm.MigrationStatus.STRICT)
++@Retention(RetentionPolicy.CLASS)
++@Target(ElementType.PACKAGE)
++public @interface DeepOptional {}
+diff --git a/tests/package_nullability/java/qualifiers/GlobalWarning.java b/tests/package_nullability/java/qualifiers/GlobalWarning.java
+new file mode 100644
+index 000000000..34e7dd24e
+--- /dev/null
++++ b/tests/package_nullability/java/qualifiers/GlobalWarning.java
+@@ -0,0 +1,7 @@
++package qualifiers;
++import java.lang.annotation.*;
++@javax.annotation.Nonnull
++@javax.annotation.meta.TypeQualifierDefault({ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})
++@Retention(RetentionPolicy.CLASS)
++@Target(ElementType.PACKAGE)
++public @interface GlobalWarning {}
+diff --git a/tests/package_nullability/java/qualifiers/Inputs.java b/tests/package_nullability/java/qualifiers/Inputs.java
+new file mode 100644
+index 000000000..36ad37fb3
+--- /dev/null
++++ b/tests/package_nullability/java/qualifiers/Inputs.java
+@@ -0,0 +1,8 @@
++package qualifiers;
++import java.lang.annotation.*;
++@javax.annotation.Nonnull
++@javax.annotation.meta.TypeQualifierDefault(ElementType.PARAMETER)
++@kotlin.annotations.jvm.UnderMigration(status = kotlin.annotations.jvm.MigrationStatus.STRICT)
++@Retention(RetentionPolicy.CLASS)
++@Target(ElementType.PACKAGE)
++public @interface Inputs {}
+diff --git a/tests/package_nullability/java/qualifiers/Optional.java b/tests/package_nullability/java/qualifiers/Optional.java
+new file mode 100644
+index 000000000..3eea0575f
+--- /dev/null
++++ b/tests/package_nullability/java/qualifiers/Optional.java
+@@ -0,0 +1,8 @@
++package qualifiers;
++import java.lang.annotation.*;
++@javax.annotation.CheckForNull
++@javax.annotation.meta.TypeQualifierDefault({ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})
++@kotlin.annotations.jvm.UnderMigration(status = kotlin.annotations.jvm.MigrationStatus.STRICT)
++@Retention(RetentionPolicy.CLASS)
++@Target(ElementType.PACKAGE)
++public @interface Optional {}
+diff --git a/tests/package_nullability/java/qualifiers/Required.java b/tests/package_nullability/java/qualifiers/Required.java
+new file mode 100644
+index 000000000..f23bd6011
+--- /dev/null
++++ b/tests/package_nullability/java/qualifiers/Required.java
+@@ -0,0 +1,8 @@
++package qualifiers;
++import java.lang.annotation.*;
++@javax.annotation.Nonnull
++@javax.annotation.meta.TypeQualifierDefault(ElementType.TYPE_USE)
++@kotlin.annotations.jvm.UnderMigration(status = kotlin.annotations.jvm.MigrationStatus.STRICT)
++@Retention(RetentionPolicy.CLASS)
++@Target({ElementType.PACKAGE, ElementType.TYPE, ElementType.METHOD})
++public @interface Required {}
+diff --git a/tests/package_nullability/java/qualifiers/Warning.java b/tests/package_nullability/java/qualifiers/Warning.java
+new file mode 100644
+index 000000000..9e57ed2ed
+--- /dev/null
++++ b/tests/package_nullability/java/qualifiers/Warning.java
+@@ -0,0 +1,8 @@
++package qualifiers;
++import java.lang.annotation.*;
++@javax.annotation.Nonnull
++@javax.annotation.meta.TypeQualifierDefault(ElementType.TYPE_USE)
++@kotlin.annotations.jvm.UnderMigration(status = kotlin.annotations.jvm.MigrationStatus.WARN)
++@Retention(RetentionPolicy.CLASS)
++@Target(ElementType.PACKAGE)
++public @interface Warning {}
+diff --git a/tests/package_nullability/java/warning/Library.java b/tests/package_nullability/java/warning/Library.java
+new file mode 100644
+index 000000000..1112e3c3d
+--- /dev/null
++++ b/tests/package_nullability/java/warning/Library.java
+@@ -0,0 +1,2 @@
++package warning;
++public final class Library { public static String echo(String value) { return value; } }
+diff --git a/tests/package_nullability/java/warning/package-info.java b/tests/package_nullability/java/warning/package-info.java
+new file mode 100644
+index 000000000..3246ba8bb
+--- /dev/null
++++ b/tests/package_nullability/java/warning/package-info.java
+@@ -0,0 +1,2 @@
++@qualifiers.Warning
++package warning;
+diff --git a/tools/check_package_nullability.py b/tools/check_package_nullability.py
+new file mode 100644
+index 000000000..cb20b1cb6
+--- /dev/null
++++ b/tools/check_package_nullability.py
+@@ -0,0 +1,200 @@
++#!/usr/bin/env python3
++import argparse
++from collections import Counter
++from datetime import datetime, timezone
++import hashlib
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import zipfile
++
++from check_androidbible_class_listener import ownership
++from inline_origins import verify_owned_class_origins
++
++ROOT = Path(__file__).resolve().parents[1]
++FIXTURES = ROOT / 'tests/package_nullability'
++
++
++def sha(path):
++    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++
++def label(path):
++    path = Path(path).absolute()
++    return str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)
++
++
++def main():
++    parser = argparse.ArgumentParser()
++    parser.add_argument('--candidate', type=Path, required=True)
++    parser.add_argument('--baseline', type=Path)
++    parser.add_argument('--app-classpath')
++    parser.add_argument('--app-friend-path')
++    parser.add_argument('--output', type=Path)
++    parser.add_argument('--evidence-directory', type=Path)
++    args = parser.parse_args()
++    now = datetime.now(timezone.utc)
++    ident = now.strftime('%Y-%m-%dT%H%M%S%fZ') + '-java-package-defaults'
++    work = (args.output or ROOT / 'target/checks' / ident).absolute()
++    evidence = (args.evidence_directory or ROOT / 'reports/correctness' / ident).absolute()
++    work.mkdir(parents=True, exist_ok=False)
++    evidence.mkdir(parents=True, exist_ok=False)
++    candidate = work / 'korrust-frozen'
++    shutil.copy2(args.candidate.resolve(), candidate)
++    official = ROOT / 'references/kotlinc/bin/kotlinc'
++    standard = ROOT / 'references/kotlinc/lib/kotlin-stdlib.jar'
++    java = Path(os.environ['JAVA_HOME']) / 'bin'
++    options = ['-language-version', '2.3', '-api-version', '2.3', '-jvm-target', '1.8']
++    app = ROOT / 'benchmarks/sources/androidbible/Alkitab/src'
++    app_sources = [app / 'main/java/yuku/alkitab/base/audio/BibleAudioService.kt', app / 'main/java/yuku/alkitab/songs/SongAudioService.kt', app / 'test/java/yuku/alkitab/base/util/DownloadMapperTest.kt'] if args.app_classpath else []
++    inputs = [*sorted((ROOT / 'src').rglob('*.rs')), *sorted(path for path in FIXTURES.rglob('*') if path.is_file()), ROOT / 'tests/package_nullability.rs', Path(__file__), ROOT / 'tools/check_androidbible_class_listener.py', ROOT / 'tools/check_androidbible_survey.py', ROOT / 'tools/inline_origins.py', ROOT / 'Cargo.toml', ROOT / 'Cargo.lock', ROOT / 'references/compiler.json', ROOT / 'references/sources.json', *app_sources]
++    dependencies = [Path(path) for path in args.app_classpath.split(os.pathsep)] if args.app_classpath else []
++    frozen = {label(path): sha(path) for path in [*inputs, *dependencies, candidate, standard, ROOT / 'references/kotlinc/lib/kotlin-compiler.jar', *([args.baseline] if args.baseline else [])]}
++    with zipfile.ZipFile(evidence / 'inputs.zip', 'w', zipfile.ZIP_DEFLATED) as archive:
++        for path in inputs:
++            archive.writestr(label(path), path.read_bytes())
++    report_path = evidence.with_suffix('.json')
++    report = dict(schema_version=1, kind='correctness', created_at=now.isoformat(), status='running',
++        compiler=dict(path=label(candidate), sha256=sha(candidate), source_revision=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()),
++        reference_compiler=json.loads((ROOT / 'references/compiler.json').read_text()), frozen_input_hashes=frozen,
++        input_bundle=dict(path=label(evidence / 'inputs.zip'), sha256=sha(evidence / 'inputs.zip')),
++        scope='Java package qualifier defaults resolved by JSR305 meta-annotations and strict and warning migration contracts; arbitrary qualifier names and nicknames; return, parameter, field and nested type-use enhancement; explicit nullability precedence; non-null Java values checked in required Kotlin contexts; preserved nullable/Elvis/safe/discarded/Java receiver and array evaluation semantics; exact ordered package metadata lookup',
++        limitations=['Declaration default overrides, definitely non-null type parameters and JSpecify default contexts remain explicit unsupported boundaries; warning diagnostics are not emitted', 'Existing nested explicit type annotation, JVM and source language boundaries apply', 'The receiver-temporary regression is checked independently using explicit Java annotations in a package without defaults', 'Unchanged app probes record compilation or exact later rejection only; no Android runtime or full app compatibility claim'],
++        effective_options=dict(language_version='2.3', api_version='2.3', jvm_target='1.8'), cases=[], commands=[],
++        reproduction_command=['python3', label(__file__), '--candidate', label(args.candidate)])
++    for flag, value in [('--baseline', args.baseline), ('--app-classpath', args.app_classpath), ('--app-friend-path', args.app_friend_path)]:
++        if value:
++            report['reproduction_command'].extend([flag, str(value)])
++
++    def save():
++        report['counts'] = dict(Counter(case['outcome'] for case in report['cases']))
++        report_path.write_text(json.dumps(report, indent=2) + '\n')
++
++    def run(title, argv, accepted=(0,)):
++        argv = list(map(str, argv))
++        result = subprocess.run(argv, cwd=ROOT, capture_output=True, text=True, timeout=360)
++        log = evidence / f'{len(report["commands"]):03d}.txt'
++        log.write_text('$ ' + ' '.join(argv) + '\n' + result.stdout + result.stderr)
++        report['commands'].append(dict(label=title, argv=argv, exit_code=result.returncode, log=label(log)))
++        save()
++        assert result.returncode in accepted, title + ': ' + result.stdout + result.stderr
++        return result
++
++    def case(name, action):
++        try:
++            detail = action()
++            outcome = detail.pop('outcome', 'pass') if isinstance(detail, dict) else 'pass'
++            report['cases'].append(dict(id=name, outcome=outcome, detail=detail))
++        except Exception as error:
++            report['cases'].append(dict(id=name, outcome='correctness_failure', detail=str(error)))
++        save()
++
++    dependency = work / 'dependency'
++    run('Java binary dependency', [java / 'javac', '--release', '8', '-d', dependency, *sorted((FIXTURES / 'java').rglob('*.java'))])
++    run('Kotlin metadata overrides Java package defaults', [official, FIXTURES / 'KotlinLibrary.kt', '-cp', dependency, '-module-name', 'default_symbols', '-d', dependency, *options])
++
++    def interop(packed):
++        origin = dependency
++        if packed:
++            origin = work / 'dependency.jar'
++            with zipfile.ZipFile(origin, 'w', zipfile.ZIP_DEFLATED) as archive:
++                for path in sorted(dependency.rglob('*')):
++                    if path.is_file():
++                        archive.write(path, str(path.relative_to(dependency)))
++        cp = os.pathsep.join(map(str, [origin, standard]))
++        folder = work / ('jar' if packed else 'directory')
++        outputs = []
++        for name, compiler in [('official', official), ('candidate', candidate)]:
++            output = folder / name
++            run(name + ' supported defaults', [compiler, FIXTURES / 'Consumer.kt', FIXTURES / 'Broken.kt', FIXTURES / 'Warnings.kt', '-cp', cp, '-d', output, *(options if name == 'official' else [])])
++            outputs.append(output)
++        callers = folder / 'callers'
++        run('fixed Java assertions compiled against official', [java / 'javac', '-cp', os.pathsep.join(map(str, [outputs[0], origin, standard])), '-d', callers, FIXTURES / 'Calls.java'])
++        for name, output in zip(['official', 'candidate'], outputs):
++            result = run(name + ' independent JVM assertions', [java / 'java', '-Xverify:all', '-cp', os.pathsep.join(map(str, [callers, output, origin, standard])), 'defaults.consumer.Calls'])
++            assert result.stdout == 'package-defaults-ok\n', result.stdout
++        signatures = []
++        for name, output in zip(['official', 'candidate'], outputs):
++            listing = run(name + ' public JVM descriptors', [java / 'javap', '-public', '-s', '-classpath', output, 'defaults.consumer.ConsumerKt', 'defaults.consumer.BrokenKt', 'defaults.consumer.WarningsKt'])
++            signatures.append(listing.stdout)
++        assert signatures[0] == signatures[1], signatures
++        return dict(caller_sha256={str(path.relative_to(callers)): sha(path) for path in callers.rglob('*.class')}, assertions='Strict and nullable defaults, explicit overrides, generic/array elements, qualifier nicknames, required/inferred Java null checks, nullable/Elvis/safe/discarded contexts and Java/array receiver evaluation effects')
++
++    for packed in [False, True]:
++        case('directory_oracle_runtime' if not packed else 'jar_oracle_runtime', lambda packed=packed: interop(packed))
++    cp = os.pathsep.join(map(str, [dependency, standard]))
++    for source in ['NullArgument', 'NullableArgument', 'ParameterDefault', 'NullableResult', 'ExplicitRequired', 'NestedResult', 'NestedArrayResult']:
++        def reject(source=source):
++            diagnostic = None
++            for name, compiler in [('official', official), ('candidate', candidate)]:
++                result = run(name + ' reject ' + source, [compiler, FIXTURES / (source + '.kt'), '-cp', cp, '-d', work / (name + source), *(options if name == 'official' else ['--diagnostic-format', 'json'])], accepted=(1,))
++                if name == 'candidate':
++                    diagnostic = json.loads(result.stderr)
++                    assert diagnostic['category'] == 'invalid_kotlin', diagnostic
++            return dict(outcome='invalid_rejected', diagnostic=diagnostic)
++        case('invalid_' + source, reject)
++    for source in ['GenericBoundary', 'ScopeBoundary']:
++        def boundary(source=source):
++            run('official boundary ' + source, [official, FIXTURES / (source + '.kt'), '-cp', cp, '-d', work / ('official' + source), *options])
++            result = run('candidate boundary ' + source, [candidate, FIXTURES / (source + '.kt'), '-cp', cp, '-d', work / ('candidate' + source), '--diagnostic-format', 'json'], accepted=(1,))
++            diagnostic = json.loads(result.stderr)
++            assert diagnostic['category'] == 'unsupported_language', diagnostic
++            return dict(outcome='unsupported_language', diagnostic=diagnostic)
++        case('boundary_' + source, boundary)
++
++    def ordered():
++        shadow = work / 'shadow'
++        package = shadow / 'nonnull/package-info.java'
++        package.parent.mkdir(parents=True)
++        package.write_text('@qualifiers.Optional\npackage nonnull;\n')
++        run('earlier package metadata binary', [java / 'javac', '--release', '8', '-cp', dependency, '-d', shadow, package])
++        ordered_cp = os.pathsep.join(map(str, [shadow, dependency, standard]))
++        for name, compiler in [('official', official), ('candidate', candidate)]:
++            run(name + ' first resolved package metadata', [compiler, FIXTURES / 'ShadowConsumer.kt', '-cp', ordered_cp, '-d', work / ('shadow-' + name), *(options if name == 'official' else [])])
++        return 'Earlier package-info permits null even though the class binary comes from a later entry with strict non-null package metadata'
++    case('first_package_metadata_in_classpath_order', ordered)
++    def mapped_receiver_finding():
++        outputs = []
++        for name, compiler in [('official', official), *([('baseline', args.baseline)] if args.baseline else []), ('candidate', candidate)]:
++            output = work / ('mapped-' + name)
++            run(name + ' separate pre-existing mapped receiver probe', [compiler, FIXTURES / 'MappedReceiver.kt', '-cp', cp, '-d', output, *(options if name == 'official' else [])])
++            outputs.append((name, output))
++        callers = work / 'mapped-callers'
++        run('fixed mapped receiver caller against official', [java / 'javac', '-cp', os.pathsep.join(map(str, [outputs[0][1], dependency, standard])), '-d', callers, FIXTURES / 'MappedReceiverCalls.java'])
++        observed = {}
++        for name, output in outputs:
++            result = run(name + ' mapped receiver observations', [java / 'java', '-Xverify:all', '-cp', os.pathsep.join(map(str, [callers, output, dependency, standard])), 'preexisting.MappedReceiverCalls'])
++            observed[name] = result.stdout.strip()
++        assert observed['official'] == '0' and observed['candidate'] == '0', observed
++        if args.baseline:
++            assert observed['baseline'] == '1', observed
++        return dict(outcome='pass', observed=observed, reason='Both compilers resolve the stdlib extension; required Java receiver checks must run before evaluating arguments, even when the receiver is saved to a synthetic local. The baseline performs the check too late; the candidate preserves oracle evaluation order', caller_sha256={str(path.relative_to(callers)): sha(path) for path in callers.rglob('*.class')})
++    case('java_annotation_receiver_temp_coercion_regression', mapped_receiver_finding)
++    if args.app_classpath:
++        for source in app_sources:
++            def probe(source=source):
++                observations = []
++                for name, compiler in [*([('baseline', args.baseline)] if args.baseline else []), ('candidate', candidate)]:
++                    result = run(name + ' unchanged ' + source.name, [compiler, source, '-cp', args.app_classpath, '-d', work / (name + source.stem), '--diagnostic-format', 'json', *(['--friend-paths', args.app_friend_path] if args.app_friend_path else [])], accepted=(0, 1))
++                    observation = dict(provider=name, exit_code=result.returncode, diagnostic=json.loads(result.stderr) if result.returncode else None)
++                    if result.returncode == 0:
++                        output = work / (name + source.stem)
++                        owned = ownership(output, source)
++                        origins = verify_owned_class_origins(output, source, args.app_classpath.split(os.pathsep), owned)
++                        assert any(path.endswith('.class') for path in owned), owned
++                        observation.update(owned_outputs=owned, inline_origins=origins)
++                    observations.append(observation)
++                return dict(outcome='compiled_unchanged' if observations[-1]['exit_code'] == 0 else 'app_rejected', source=label(source), source_sha256=sha(source), observations=observations)
++            case('app_' + source.stem, probe)
++    changed = [name for name, before in frozen.items() if sha(ROOT / name) != before]
++    report['cases'].append(dict(id='frozen_inputs', outcome='correctness_failure' if changed else 'pass', changed=changed))
++    report['status'] = 'failed' if any(case['outcome'] == 'correctness_failure' for case in report['cases']) else 'complete'
++    save()
++    print(json.dumps(dict(report=label(report_path), status=report['status'], counts=report['counts'])))
++    return report['status'] != 'complete'
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())

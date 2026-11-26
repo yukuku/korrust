@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-26T06:25:54.733762+00:00",
+  "status": "complete",
+  "compiler": {
+    "binary": "/tmp/targets159-variance/debug/korrust",
+    "binary_sha256": "1c01267486bcccb805d459ff48083f05e3596f9fd83745a9cf72ed1e61bcedb4",
+    "source_revision": "57a963ed82e9e463b036ce07680f16ce5d0c078c",
+    "implementation_revision": "c4d7f9103"
+  },
+  "reference_compiler": "Kotlin 2.3.21",
+  "reference_sources": {
+    "references/kotlin/compiler/fir/resolve/src/org/jetbrains/kotlin/fir/resolve/FirSamResolver.kt": "fb903456ff5aa6a4331229c3224caed76bccb38b7346116cf670fdadebc19e15"
+  },
+  "counts": {
+    "pass": 16
+  },
+  "features": [
+    {
+      "name": "Literal conversion for nullable functional interfaces",
+      "status": "supported",
+      "scope": "Nullable Java and Kotlin SAM expected types unwrap for literal lambda checking and retain the nullable invocation type. Generic interface parameters, nullable callback parameters, captures, null arguments and exception propagation are exercised. Explicit return labels survive the existing SAM-to-function checking step.",
+      "evidence": [
+        "reports/correctness/2026-11-26T061931926969Z-nullable-sam.json"
+      ]
+    }
+  ],
+  "validation": {
+    "rust_api_tests": 1,
+    "clippy": "Frozen library, compiler binary and owned test passed with warnings denied.",
+    "format": "Owned source and test passed; full frozen base exposes unrelated existing formatting in classpath.rs and syntax.rs, logged separately.",
+    "report_viewer_tests": 8,
+    "interop": "Fixed Java callers compile against official output and run against both with -Xverify:all; all4 Kotlin provider/consumer combinations pass; callable JVM signatures match."
+  },
+  "androidbible": {
+    "case293": {
+      "outcome": "compiled",
+      "class_count": 17,
+      "source_sha256": "00f479e18b17a872493fcb627b94e94b9ee820864592ec38babe1f1dc27d092a",
+      "receipt": "reports/features/2026-11-26T062554733762Z-nullable-sam/PrereleaseFeedbackSnapshotTest-case293.json"
+    },
+    "case003": "SAM conversion advances a trivial diagnostic callback. Explicit-SAM diagnostic source exposes a separate unsupported nullable receiver .toString() inside the original callback body. Diagnostic copies are labeled and do not establish unchanged003 compilation."
+  },
+  "evidence": [
+    "reports/correctness/2026-11-26T061931926969Z-nullable-sam.json",
+    "reports/correctness/2026-11-26T061441116795Z-nullable-sam.json",
+    "reports/features/2026-11-26T062554733762Z-nullable-sam/AlertDialogActivity-explicit-SAM-diagnostic.json",
+    "reports/features/2026-11-26T062554733762Z-nullable-sam/AlertDialogActivity-explicit-SAM-diagnostic.kt",
+    "reports/features/2026-11-26T062554733762Z-nullable-sam/AlertDialogActivity-string-diagnostic.json",
+    "reports/features/2026-11-26T062554733762Z-nullable-sam/AlertDialogActivity-string-diagnostic.kt",
+    "reports/features/2026-11-26T062554733762Z-nullable-sam/PrereleaseFeedbackSnapshotTest-case293.json",
+    "reports/features/2026-11-26T062554733762Z-nullable-sam/baseline-format.log",
+    "reports/features/2026-11-26T062554733762Z-nullable-sam/build.log",
+    "reports/features/2026-11-26T062554733762Z-nullable-sam/clippy.log",
+    "reports/features/2026-11-26T062554733762Z-nullable-sam/owned-format.log",
+    "reports/features/2026-11-26T062554733762Z-nullable-sam/rust-api.log",
+    "reports/features/2026-11-26T062554733762Z-nullable-sam/viewer-tests.log"
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_nullable_sam.py",
+      "--candidate",
+      "/tmp/targets159-variance/debug/korrust",
+      "--reference-root",
+      "/workspace/korrust",
+      "--source-root",
+      "/workspace/work/nullable-sam003"
+    ]
+  ],
+  "limitations": [
+    "Function-value and callable-reference SAM adaptation retain existing unsupported boundaries.",
+    "The earlier frozen prototype failed the explicit-label positive case; its report remains historical and is excluded from the16 final passed cases.",
+    "Case293 establishes unchanged-source compilation and owned bytecode generation, not Android runtime or full-app compatibility."
+  ]
+}

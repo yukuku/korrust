@@ -1,0 +1,738 @@
+Classfile /workspace/work/targets159/when-joins-freeze2/target/checks/2026-11-26T060557409400Z-when-result-joins/official/whenjoins/JoinsKt.class
+  Last modified Nov 26, 2026; size 2315 bytes
+  SHA-256 checksum cc291db10f87af6c14b4edc627a26f50d5059cf8f68c082ed138aff658c998dd
+  Compiled from "Joins.kt"
+public final class whenjoins.JoinsKt
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // whenjoins/JoinsKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 8, attributes: 2
+Constant pool:
+   #1 = Utf8               whenjoins/JoinsKt
+   #2 = Class              #1             // whenjoins/JoinsKt
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               nullable
+   #6 = Utf8               (I)Lwhenjoins/Base;
+   #7 = Utf8               Lorg/jetbrains/annotations/Nullable;
+   #8 = Utf8               whenjoins/Child
+   #9 = Class              #8             // whenjoins/Child
+  #10 = Utf8               <init>
+  #11 = Utf8               (I)V
+  #12 = NameAndType        #10:#11        // "<init>":(I)V
+  #13 = Methodref          #9.#12         // whenjoins/Child."<init>":(I)V
+  #14 = Utf8               whenjoins/Base
+  #15 = Class              #14            // whenjoins/Base
+  #16 = Methodref          #15.#12        // whenjoins/Base."<init>":(I)V
+  #17 = Utf8               value
+  #18 = Utf8               I
+  #19 = Utf8               nullFirst
+  #20 = Utf8               nullBranch
+  #21 = Utf8               (Z)Ljava/lang/String;
+  #22 = String             #17            // value
+  #23 = Utf8               Z
+  #24 = Utf8               java/lang/String
+  #25 = Class              #24            // java/lang/String
+  #26 = Utf8               exhaustive
+  #27 = Utf8               (Z)Lwhenjoins/Base;
+  #28 = Utf8               kotlin/NoWhenBranchMatchedException
+  #29 = Class              #28            // kotlin/NoWhenBranchMatchedException
+  #30 = Utf8               ()V
+  #31 = NameAndType        #10:#30        // "<init>":()V
+  #32 = Methodref          #29.#31        // kotlin/NoWhenBranchMatchedException."<init>":()V
+  #33 = Utf8               throwing
+  #34 = Utf8               Lorg/jetbrains/annotations/NotNull;
+  #35 = Utf8               normal
+  #36 = String             #35            // normal
+  #37 = Utf8               java/lang/IllegalArgumentException
+  #38 = Class              #37            // java/lang/IllegalArgumentException
+  #39 = Utf8               abrupt
+  #40 = String             #39            // abrupt
+  #41 = Utf8               (Ljava/lang/String;)V
+  #42 = NameAndType        #10:#41        // "<init>":(Ljava/lang/String;)V
+  #43 = Methodref          #38.#42        // java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+  #44 = Utf8               result
+  #45 = Utf8               Ljava/lang/String;
+  #46 = Utf8               returning
+  #47 = Utf8               returned
+  #48 = String             #47            // returned
+  #49 = Utf8               boxed
+  #50 = Utf8               (Z)Ljava/lang/Integer;
+  #51 = Utf8               java/lang/Integer
+  #52 = Class              #51            // java/lang/Integer
+  #53 = Utf8               valueOf
+  #54 = Utf8               (I)Ljava/lang/Integer;
+  #55 = NameAndType        #53:#54        // valueOf:(I)Ljava/lang/Integer;
+  #56 = Methodref          #52.#55        // java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+  #57 = Utf8               wide
+  #58 = Utf8               (Z)Ljava/lang/Long;
+  #59 = Long               4294967298l
+  #61 = Utf8               java/lang/Long
+  #62 = Class              #61            // java/lang/Long
+  #63 = Utf8               (J)Ljava/lang/Long;
+  #64 = NameAndType        #53:#63        // valueOf:(J)Ljava/lang/Long;
+  #65 = Methodref          #62.#64        // java/lang/Long.valueOf:(J)Ljava/lang/Long;
+  #66 = Utf8               Lkotlin/Metadata;
+  #67 = Utf8               mv
+  #68 = Integer            2
+  #69 = Integer            3
+  #70 = Integer            0
+  #71 = Utf8               k
+  #72 = Utf8               xi
+  #73 = Integer            48
+  #74 = Utf8               d1
+  #75 = Utf8               \u0000\"\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0002\u0010\u000b\n\u0002\b\u0006\n\u0002\u0010\t\n\u0000\u001a\u0010\u0010\u0000\u001a\u0004\u0018\u00010\u00012\u0006\u0010\u0002\u001a\u00020\u0003\u001a\u0010\u0010\u0004\u001a\u0004\u0018\u00010\u00012\u0006\u0010\u0002\u001a\u00020\u0003\u001a\u0010\u0010\u0005\u001a\u0004\u0018\u00010\u00062\u0006\u0010\u0002\u001a\u00020\u0007\u001a\u0010\u0010\b\u001a\u0004\u0018\u00010\u00012\u0006\u0010\u0002\u001a\u00020\u0007\u001a\u000e\u0010\t\u001a\u00020\u00062\u0006\u0010\u0002\u001a\u00020\u0007\u001a\u000e\u0010\n\u001a\u00020\u00062\u0006\u0010\u0002\u001a\u00020\u0007\u001a\u0015\u0010\u000b\u001a\u0004\u0018\u00010\u00032\u0006\u0010\u0002\u001a\u00020\u0007¢\u0006\u0002\u0010\f\u001a\u0015\u0010\r\u001a\u0004\u0018\u00010\u000e2\u0006\u0010\u0002\u001a\u00020\u0007¢\u0006\u0002\u0010\u000f
+  #76 = Utf8               d2
+  #77 = Utf8               Lwhenjoins/Base;
+  #78 = Utf8
+  #79 = Utf8               Joins.kt
+  #80 = Utf8               Code
+  #81 = Utf8               StackMapTable
+  #82 = Utf8               LineNumberTable
+  #83 = Utf8               LocalVariableTable
+  #84 = Utf8               RuntimeInvisibleAnnotations
+  #85 = Utf8               SourceFile
+  #86 = Utf8               RuntimeVisibleAnnotations
+{
+  public static final whenjoins.Base nullable(int);
+    descriptor: (I)Lwhenjoins/Base;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: iload_0
+         1: tableswitch   { // 0 to 1
+                       0: 24
+                       1: 39
+                 default: 51
+            }
+        24: new           #9                  // class whenjoins/Child
+        27: dup
+        28: bipush        10
+        30: invokespecial #13                 // Method whenjoins/Child."<init>":(I)V
+        33: checkcast     #15                 // class whenjoins/Base
+        36: goto          52
+        39: new           #15                 // class whenjoins/Base
+        42: dup
+        43: bipush        20
+        45: invokespecial #16                 // Method whenjoins/Base."<init>":(I)V
+        48: goto          52
+        51: aconst_null
+        52: areturn
+      StackMapTable: number_of_entries = 4
+        frame_type = 24 /* same */
+        frame_type = 14 /* same */
+        frame_type = 11 /* same */
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ class whenjoins/Base ]
+      LineNumberTable:
+        line 6: 0
+        line 7: 24
+        line 8: 39
+        line 9: 51
+        line 10: 52
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      53     0 value   I
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.Nullable
+
+  public static final whenjoins.Base nullFirst(int);
+    descriptor: (I)Lwhenjoins/Base;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: iload_0
+         1: tableswitch   { // 0 to 1
+                       0: 24
+                       1: 28
+                 default: 43
+            }
+        24: aconst_null
+        25: goto          52
+        28: new           #9                  // class whenjoins/Child
+        31: dup
+        32: bipush        30
+        34: invokespecial #13                 // Method whenjoins/Child."<init>":(I)V
+        37: checkcast     #15                 // class whenjoins/Base
+        40: goto          52
+        43: new           #15                 // class whenjoins/Base
+        46: dup
+        47: bipush        40
+        49: invokespecial #16                 // Method whenjoins/Base."<init>":(I)V
+        52: areturn
+      StackMapTable: number_of_entries = 4
+        frame_type = 24 /* same */
+        frame_type = 3 /* same */
+        frame_type = 14 /* same */
+        frame_type = 72 /* same_locals_1_stack_item */
+          stack = [ class whenjoins/Base ]
+      LineNumberTable:
+        line 11: 0
+        line 12: 24
+        line 13: 28
+        line 14: 43
+        line 15: 52
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      53     0 value   I
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.Nullable
+
+  public static final java.lang.String nullBranch(boolean);
+    descriptor: (Z)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: iload_0
+         1: iconst_1
+         2: if_icmpne     9
+         5: aconst_null
+         6: goto          11
+         9: ldc           #22                 // String value
+        11: areturn
+      StackMapTable: number_of_entries = 2
+        frame_type = 9 /* same */
+        frame_type = 65 /* same_locals_1_stack_item */
+          stack = [ class java/lang/String ]
+      LineNumberTable:
+        line 16: 0
+        line 17: 1
+        line 18: 9
+        line 19: 11
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      12     0 value   Z
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.Nullable
+
+  public static final whenjoins.Base exhaustive(boolean);
+    descriptor: (Z)Lwhenjoins/Base;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=2, args_size=1
+         0: iload_0
+         1: istore_1
+         2: iload_1
+         3: iconst_1
+         4: if_icmpne     22
+         7: new           #9                  // class whenjoins/Child
+        10: dup
+        11: bipush        50
+        13: invokespecial #13                 // Method whenjoins/Child."<init>":(I)V
+        16: checkcast     #15                 // class whenjoins/Base
+        19: goto          38
+        22: iload_1
+        23: ifne          30
+        26: aconst_null
+        27: goto          38
+        30: new           #29                 // class kotlin/NoWhenBranchMatchedException
+        33: dup
+        34: invokespecial #32                 // Method kotlin/NoWhenBranchMatchedException."<init>":()V
+        37: athrow
+        38: areturn
+      StackMapTable: number_of_entries = 3
+        frame_type = 252 /* append */
+          offset_delta = 22
+          locals = [ int ]
+        frame_type = 7 /* same */
+        frame_type = 71 /* same_locals_1_stack_item */
+          stack = [ class whenjoins/Base ]
+      LineNumberTable:
+        line 20: 0
+        line 21: 2
+        line 22: 22
+        line 20: 30
+        line 23: 38
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      39     0 value   Z
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.Nullable
+
+  public static final java.lang.String throwing(boolean);
+    descriptor: (Z)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=2, args_size=1
+         0: iload_0
+         1: iconst_1
+         2: if_icmpne     10
+         5: ldc           #36                 // String normal
+         7: goto          20
+        10: new           #38                 // class java/lang/IllegalArgumentException
+        13: dup
+        14: ldc           #40                 // String abrupt
+        16: invokespecial #43                 // Method java/lang/IllegalArgumentException."<init>":(Ljava/lang/String;)V
+        19: athrow
+        20: astore_1
+        21: aload_1
+        22: areturn
+      StackMapTable: number_of_entries = 2
+        frame_type = 10 /* same */
+        frame_type = 73 /* same_locals_1_stack_item */
+          stack = [ class java/lang/String ]
+      LineNumberTable:
+        line 25: 0
+        line 26: 1
+        line 27: 10
+        line 25: 20
+        line 29: 21
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           21       2     1 result   Ljava/lang/String;
+            0      23     0 value   Z
+    RuntimeInvisibleAnnotations:
+      0: #34()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String returning(boolean);
+    descriptor: (Z)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=1
+         0: iload_0
+         1: iconst_1
+         2: if_icmpne     10
+         5: ldc           #36                 // String normal
+         7: goto          13
+        10: ldc           #48                 // String returned
+        12: areturn
+        13: astore_1
+        14: aload_1
+        15: areturn
+      StackMapTable: number_of_entries = 2
+        frame_type = 10 /* same */
+        frame_type = 66 /* same_locals_1_stack_item */
+          stack = [ class java/lang/String ]
+      LineNumberTable:
+        line 32: 0
+        line 33: 1
+        line 34: 10
+        line 32: 13
+        line 36: 14
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           14       2     1 result   Ljava/lang/String;
+            0      16     0 value   Z
+    RuntimeInvisibleAnnotations:
+      0: #34()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.lang.Integer boxed(boolean);
+    descriptor: (Z)Ljava/lang/Integer;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: iload_0
+         1: iconst_1
+         2: if_icmpne     13
+         5: bipush        17
+         7: invokestatic  #56                 // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+        10: goto          14
+        13: aconst_null
+        14: areturn
+      StackMapTable: number_of_entries = 2
+        frame_type = 13 /* same */
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ class java/lang/Integer ]
+      LineNumberTable:
+        line 48: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      15     0 value   Z
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.Nullable
+
+  public static final java.lang.Long wide(boolean);
+    descriptor: (Z)Ljava/lang/Long;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: iload_0
+         1: iconst_1
+         2: if_icmpne     14
+         5: ldc2_w        #59                 // long 4294967298l
+         8: invokestatic  #65                 // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+        11: goto          15
+        14: aconst_null
+        15: areturn
+      StackMapTable: number_of_entries = 2
+        frame_type = 14 /* same */
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ class java/lang/Long ]
+      LineNumberTable:
+        line 49: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      16     0 value   Z
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.Nullable
+}
+SourceFile: "Joins.kt"
+RuntimeVisibleAnnotations:
+  0: #66(#67=[I#68,I#69,I#70],#71=I#68,#72=I#73,#74=[s#75],#76=[s#5,s#77,s#17,s#78,s#19,s#20,s#78,s#78,s#26,s#33,s#46,s#49,s#50,s#57,s#78,s#58])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000\"\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0002\u0010\u000b\n\u0002\b\u0006\n\u0002\u0010\t\n\u0000\u001a\u0010\u0010\u0000\u001a\u0004\u0018\u00010\u00012\u0006\u0010\u0002\u001a\u00020\u0003\u001a\u0010\u0010\u0004\u001a\u0004\u0018\u00010\u00012\u0006\u0010\u0002\u001a\u00020\u0003\u001a\u0010\u0010\u0005\u001a\u0004\u0018\u00010\u00062\u0006\u0010\u0002\u001a\u00020\u0007\u001a\u0010\u0010\b\u001a\u0004\u0018\u00010\u00012\u0006\u0010\u0002\u001a\u00020\u0007\u001a\u000e\u0010\t\u001a\u00020\u00062\u0006\u0010\u0002\u001a\u00020\u0007\u001a\u000e\u0010\n\u001a\u00020\u00062\u0006\u0010\u0002\u001a\u00020\u0007\u001a\u0015\u0010\u000b\u001a\u0004\u0018\u00010\u00032\u0006\u0010\u0002\u001a\u00020\u0007¢\u0006\u0002\u0010\f\u001a\u0015\u0010\r\u001a\u0004\u0018\u00010\u000e2\u0006\u0010\u0002\u001a\u00020\u0007¢\u0006\u0002\u0010\u000f"]
+      d2=["nullable","Lwhenjoins/Base;","value","","nullFirst","nullBranch","","","exhaustive","throwing","returning","boxed","(Z)Ljava/lang/Integer;","wide","","(Z)Ljava/lang/Long;"]
+    )
+Classfile /workspace/work/targets159/when-joins-freeze2/target/checks/2026-11-26T060557409400Z-when-result-joins/official/whenjoins/Base.class
+  Last modified Nov 26, 2026; size 631 bytes
+  SHA-256 checksum 24f240177daf6fd7b2b5af494d469945eb717d3a363e85ed8b47d32ae7708995
+  Compiled from "Joins.kt"
+public class whenjoins.Base
+  minor version: 0
+  major version: 52
+  flags: (0x0021) ACC_PUBLIC, ACC_SUPER
+  this_class: #2                          // whenjoins/Base
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 1, methods: 2, attributes: 2
+Constant pool:
+   #1 = Utf8               whenjoins/Base
+   #2 = Class              #1             // whenjoins/Base
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               <init>
+   #6 = Utf8               (I)V
+   #7 = Utf8               ()V
+   #8 = NameAndType        #5:#7          // "<init>":()V
+   #9 = Methodref          #4.#8          // java/lang/Object."<init>":()V
+  #10 = Utf8               code
+  #11 = Utf8               I
+  #12 = NameAndType        #10:#11        // code:I
+  #13 = Fieldref           #2.#12         // whenjoins/Base.code:I
+  #14 = Utf8               this
+  #15 = Utf8               Lwhenjoins/Base;
+  #16 = Utf8               getCode
+  #17 = Utf8               ()I
+  #18 = Utf8               Lkotlin/Metadata;
+  #19 = Utf8               mv
+  #20 = Integer            2
+  #21 = Integer            3
+  #22 = Integer            0
+  #23 = Utf8               k
+  #24 = Integer            1
+  #25 = Utf8               xi
+  #26 = Integer            48
+  #27 = Utf8               d1
+  #28 = Utf8               \u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\b\n\u0002\b\u0004\b\u0016\u0018\u00002\u00020\u0001B\u000f\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0004\u0010\u0005R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0006\u0010\u0007
+  #29 = Utf8               d2
+  #30 = Utf8
+  #31 = Utf8               Joins.kt
+  #32 = Utf8               Code
+  #33 = Utf8               LineNumberTable
+  #34 = Utf8               LocalVariableTable
+  #35 = Utf8               SourceFile
+  #36 = Utf8               RuntimeVisibleAnnotations
+{
+  public whenjoins.Base(int);
+    descriptor: (I)V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload_0
+         1: invokespecial #9                  // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: iload_1
+         6: putfield      #13                 // Field code:I
+         9: return
+      LineNumberTable:
+        line 3: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      10     0  this   Lwhenjoins/Base;
+            0      10     1  code   I
+
+  public final int getCode();
+    descriptor: ()I
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: getfield      #13                 // Field code:I
+         4: ireturn
+      LineNumberTable:
+        line 3: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   Lwhenjoins/Base;
+}
+SourceFile: "Joins.kt"
+RuntimeVisibleAnnotations:
+  0: #18(#19=[I#20,I#21,I#22],#23=I#24,#25=I#26,#27=[s#28],#29=[s#15,s#30,s#10,s#30,s#5,s#6,s#16,s#17])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\b\n\u0002\b\u0004\b\u0016\u0018\u00002\u00020\u0001B\u000f\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0004\u0010\u0005R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0006\u0010\u0007"]
+      d2=["Lwhenjoins/Base;","","code","","<init>","(I)V","getCode","()I"]
+    )
+Classfile /workspace/work/targets159/when-joins-freeze2/target/checks/2026-11-26T060557409400Z-when-result-joins/official/whenjoins/Child.class
+  Last modified Nov 26, 2026; size 515 bytes
+  SHA-256 checksum 3b20d9272fb23493131ca55e9c896755c7a09105fb445b5d67f74d1914bfa7d9
+  Compiled from "Joins.kt"
+public final class whenjoins.Child extends whenjoins.Base
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // whenjoins/Child
+  super_class: #4                         // whenjoins/Base
+  interfaces: 0, fields: 0, methods: 1, attributes: 2
+Constant pool:
+   #1 = Utf8               whenjoins/Child
+   #2 = Class              #1             // whenjoins/Child
+   #3 = Utf8               whenjoins/Base
+   #4 = Class              #3             // whenjoins/Base
+   #5 = Utf8               <init>
+   #6 = Utf8               (I)V
+   #7 = NameAndType        #5:#6          // "<init>":(I)V
+   #8 = Methodref          #4.#7          // whenjoins/Base."<init>":(I)V
+   #9 = Utf8               this
+  #10 = Utf8               Lwhenjoins/Child;
+  #11 = Utf8               code
+  #12 = Utf8               I
+  #13 = Utf8               Lkotlin/Metadata;
+  #14 = Utf8               mv
+  #15 = Integer            2
+  #16 = Integer            3
+  #17 = Integer            0
+  #18 = Utf8               k
+  #19 = Integer            1
+  #20 = Utf8               xi
+  #21 = Integer            48
+  #22 = Utf8               d1
+  #23 = Utf8               \u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\u0018\u00002\u00020\u0001B\u000f\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0004\u0010\u0005
+  #24 = Utf8               d2
+  #25 = Utf8               Lwhenjoins/Base;
+  #26 = Utf8
+  #27 = Utf8               Joins.kt
+  #28 = Utf8               Code
+  #29 = Utf8               LineNumberTable
+  #30 = Utf8               LocalVariableTable
+  #31 = Utf8               SourceFile
+  #32 = Utf8               RuntimeVisibleAnnotations
+{
+  public whenjoins.Child(int);
+    descriptor: (I)V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload_0
+         1: iload_1
+         2: invokespecial #8                  // Method whenjoins/Base."<init>":(I)V
+         5: return
+      LineNumberTable:
+        line 4: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       6     0  this   Lwhenjoins/Child;
+            0       6     1  code   I
+}
+SourceFile: "Joins.kt"
+RuntimeVisibleAnnotations:
+  0: #13(#14=[I#15,I#16,I#17],#18=I#19,#20=I#21,#22=[s#23],#24=[s#10,s#25,s#11,s#26,s#5,s#6])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\u0018\u00002\u00020\u0001B\u000f\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0004\u0010\u0005"]
+      d2=["Lwhenjoins/Child;","Lwhenjoins/Base;","code","","<init>","(I)V"]
+    )
+Classfile /workspace/work/targets159/when-joins-freeze2/target/checks/2026-11-26T060557409400Z-when-result-joins/official/whenjoins/Probe.class
+  Last modified Nov 26, 2026; size 1258 bytes
+  SHA-256 checksum d7dfbbc99760df0f34f82eb2b074ef8597d1152dfbc760e287157f3dfc8e8b9b
+  Compiled from "Joins.kt"
+public final class whenjoins.Probe
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // whenjoins/Probe
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 1, methods: 5, attributes: 2
+Constant pool:
+   #1 = Utf8               whenjoins/Probe
+   #2 = Class              #1             // whenjoins/Probe
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               <init>
+   #6 = Utf8               ()V
+   #7 = NameAndType        #5:#6          // "<init>":()V
+   #8 = Methodref          #4.#7          // java/lang/Object."<init>":()V
+   #9 = Utf8               this
+  #10 = Utf8               Lwhenjoins/Probe;
+  #11 = Utf8               getHits
+  #12 = Utf8               ()I
+  #13 = Utf8               hits
+  #14 = Utf8               I
+  #15 = NameAndType        #13:#14        // hits:I
+  #16 = Fieldref           #2.#15         // whenjoins/Probe.hits:I
+  #17 = Utf8               setHits
+  #18 = Utf8               (I)V
+  #19 = Utf8               <set-?>
+  #20 = Utf8               hit
+  #21 = Utf8               (I)Lwhenjoins/Base;
+  #22 = Utf8               Lorg/jetbrains/annotations/NotNull;
+  #23 = Utf8               whenjoins/Base
+  #24 = Class              #23            // whenjoins/Base
+  #25 = NameAndType        #5:#18         // "<init>":(I)V
+  #26 = Methodref          #24.#25        // whenjoins/Base."<init>":(I)V
+  #27 = Utf8               code
+  #28 = Utf8               select
+  #29 = Utf8               Lorg/jetbrains/annotations/Nullable;
+  #30 = NameAndType        #20:#21        // hit:(I)Lwhenjoins/Base;
+  #31 = Methodref          #2.#30         // whenjoins/Probe.hit:(I)Lwhenjoins/Base;
+  #32 = Utf8               value
+  #33 = Utf8               Lkotlin/Metadata;
+  #34 = Utf8               mv
+  #35 = Integer            2
+  #36 = Integer            3
+  #37 = Integer            0
+  #38 = Utf8               k
+  #39 = Integer            1
+  #40 = Utf8               xi
+  #41 = Integer            48
+  #42 = Utf8               d1
+  #43 = Utf8               \u0000\u001c\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0003\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0003\u0018\u00002\u00020\u0001B\u0007¢\u0006\u0004\b\u0002\u0010\u0003J\u000e\u0010\n\u001a\u00020\u000b2\u0006\u0010\f\u001a\u00020\u0005J\u0010\u0010\r\u001a\u0004\u0018\u00010\u000b2\u0006\u0010\u000e\u001a\u00020\u0005R\u001a\u0010\u0004\u001a\u00020\u0005X\u0086\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0006\u0010\u0007\"\u0004\b\b\u0010\t
+  #44 = Utf8               d2
+  #45 = Utf8
+  #46 = Utf8               Lwhenjoins/Base;
+  #47 = Utf8               Joins.kt
+  #48 = Utf8               Code
+  #49 = Utf8               LineNumberTable
+  #50 = Utf8               LocalVariableTable
+  #51 = Utf8               RuntimeInvisibleAnnotations
+  #52 = Utf8               StackMapTable
+  #53 = Utf8               SourceFile
+  #54 = Utf8               RuntimeVisibleAnnotations
+{
+  public whenjoins.Probe();
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #8                  // Method java/lang/Object."<init>":()V
+         4: return
+      LineNumberTable:
+        line 38: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   Lwhenjoins/Probe;
+
+  public final int getHits();
+    descriptor: ()I
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload_0
+         1: getfield      #16                 // Field hits:I
+         4: ireturn
+      LineNumberTable:
+        line 39: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       5     0  this   Lwhenjoins/Probe;
+
+  public final void setHits(int);
+    descriptor: (I)V
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload_0
+         1: iload_1
+         2: putfield      #16                 // Field hits:I
+         5: return
+      LineNumberTable:
+        line 39: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       6     0  this   Lwhenjoins/Probe;
+            0       6     1 <set-?>   I
+
+  public final whenjoins.Base hit(int);
+    descriptor: (I)Lwhenjoins/Base;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=3, locals=2, args_size=2
+         0: aload_0
+         1: aload_0
+         2: getfield      #16                 // Field hits:I
+         5: iconst_1
+         6: iadd
+         7: putfield      #16                 // Field hits:I
+        10: new           #24                 // class whenjoins/Base
+        13: dup
+        14: iload_1
+        15: invokespecial #26                 // Method whenjoins/Base."<init>":(I)V
+        18: areturn
+      LineNumberTable:
+        line 40: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      19     0  this   Lwhenjoins/Probe;
+            0      19     1  code   I
+    RuntimeInvisibleAnnotations:
+      0: #22()
+        org.jetbrains.annotations.NotNull
+
+  public final whenjoins.Base select(int);
+    descriptor: (I)Lwhenjoins/Base;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=2
+         0: iload_1
+         1: tableswitch   { // 0 to 1
+                       0: 24
+                       1: 33
+                 default: 42
+            }
+        24: aload_0
+        25: bipush        60
+        27: invokevirtual #31                 // Method hit:(I)Lwhenjoins/Base;
+        30: goto          43
+        33: aload_0
+        34: bipush        70
+        36: invokevirtual #31                 // Method hit:(I)Lwhenjoins/Base;
+        39: goto          43
+        42: aconst_null
+        43: areturn
+      StackMapTable: number_of_entries = 4
+        frame_type = 24 /* same */
+        frame_type = 8 /* same */
+        frame_type = 8 /* same */
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ class whenjoins/Base ]
+      LineNumberTable:
+        line 41: 0
+        line 42: 24
+        line 43: 33
+        line 44: 42
+        line 45: 43
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      44     0  this   Lwhenjoins/Probe;
+            0      44     1 value   I
+    RuntimeInvisibleAnnotations:
+      0: #29()
+        org.jetbrains.annotations.Nullable
+}
+SourceFile: "Joins.kt"
+RuntimeVisibleAnnotations:
+  0: #33(#34=[I#35,I#36,I#37],#38=I#39,#40=I#41,#42=[s#43],#44=[s#10,s#45,s#5,s#6,s#13,s#45,s#11,s#12,s#17,s#18,s#20,s#46,s#27,s#28,s#32])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\u001c\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0003\n\u0002\u0010\b\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0003\u0018\u00002\u00020\u0001B\u0007¢\u0006\u0004\b\u0002\u0010\u0003J\u000e\u0010\n\u001a\u00020\u000b2\u0006\u0010\f\u001a\u00020\u0005J\u0010\u0010\r\u001a\u0004\u0018\u00010\u000b2\u0006\u0010\u000e\u001a\u00020\u0005R\u001a\u0010\u0004\u001a\u00020\u0005X\u0086\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0006\u0010\u0007\"\u0004\b\b\u0010\t"]
+      d2=["Lwhenjoins/Probe;","","<init>","()V","hits","","getHits","()I","setHits","(I)V","hit","Lwhenjoins/Base;","code","select","value"]
+    )

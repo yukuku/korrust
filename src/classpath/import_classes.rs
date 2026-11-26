@@ -19,14 +19,20 @@ impl Classpath {
         for _ in 0..64 {
             let class = self.load(&current)?;
             let access = self.java_nested_access(&current).unwrap_or(class.access);
-            if access & 2 != 0 || access & 1 == 0 && package(caller) != package(&current) {
+            let parent = self.lexical_parents.borrow().get(&current).cloned();
+            let inherited_protected = access & 4 != 0
+                && parent
+                    .as_ref()
+                    .is_some_and(|declaring| self.inheritance_scope(caller, declaring));
+            if access & 2 != 0
+                || access & 1 == 0 && package(caller) != package(&current) && !inherited_protected
+            {
                 return Err(Diagnostic::new(
                     offset,
                     format!("Imported Java classifier is inaccessible: {current}"),
                 )
                 .with_kind(crate::DiagnosticKind::InvalidKotlin, "INVISIBLE_REFERENCE"));
             }
-            let parent = self.lexical_parents.borrow().get(&current).cloned();
             let Some(parent) = parent else {
                 return Ok(());
             };

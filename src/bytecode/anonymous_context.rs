@@ -271,6 +271,11 @@ pub(super) fn parameters(ty: &Type, result: &mut HashSet<String>) {
             receiver,
             params,
             result: output,
+        }
+        | Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result: output,
         } => {
             for parameter in params.iter().chain([receiver.as_ref(), output.as_ref()]) {
                 parameters(parameter, result);

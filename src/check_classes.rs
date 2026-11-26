@@ -15,7 +15,7 @@ fn literal_error(offset: usize, message: &str, invalid: bool) -> Diagnostic {
     )
 }
 
-fn source_path(expression: &Expr) -> Option<Vec<String>> {
+pub(super) fn source_path(expression: &Expr) -> Option<Vec<String>> {
     match &expression.kind {
         ExprKind::Name(name) => Some(vec![name.clone()]),
         ExprKind::Property(receiver, name) => {
@@ -149,6 +149,7 @@ fn array_literal_shape(ty: &Type, offset: usize, depth: usize) -> Result<()> {
         | Type::Parameterized { .. }
         | Type::Function { .. }
         | Type::ReceiverFunction { .. }
+        | Type::SuspendReceiverFunction { .. }
         | Type::Parameter { .. } => Err(literal_error(
             offset,
             "Array class literal components must be runtime-available classifiers without generic arguments",
@@ -210,7 +211,9 @@ impl Checker<'_> {
         }
         if matches!(
             expanded,
-            Type::Function { .. } | Type::ReceiverFunction { .. }
+            Type::Function { .. }
+                | Type::ReceiverFunction { .. }
+                | Type::SuspendReceiverFunction { .. }
         ) {
             return Err(literal_error(
                 offset,
@@ -454,6 +457,11 @@ impl Checker<'_> {
                 self.class_literal_value_visibility(result, active, offset, depth + 1)
             }
             Type::ReceiverFunction {
+                receiver,
+                params,
+                result,
+            }
+            | Type::SuspendReceiverFunction {
                 receiver,
                 params,
                 result,
@@ -746,6 +754,7 @@ impl Checker<'_> {
                         | Type::ThreadLocal(_)
                         | Type::Function { .. }
                         | Type::ReceiverFunction { .. }
+                        | Type::SuspendReceiverFunction { .. }
                 )
             }) {
                 return Err(literal_error(

@@ -25,12 +25,13 @@ public class ProtocolCheck {
         boolean parameterChanged;
         int force;
         Function2 restart;
+        final List<Function2> restarts=new ArrayList<>();
         final Object scope;
         Composer composer;
         State(boolean changed, boolean skipping) {
             this.changed=changed; this.skipping=skipping;
             scope=Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{RecomposeScope.class, ScopeUpdateScope.class}, (p,m,a)-> {
-                if (m.getName().equals("updateScope")) { updates++; restart=(Function2)a[0]; return null; }
+                if (m.getName().equals("updateScope")) { updates++; restart=(Function2)a[0]; restarts.add(restart); return null; }
                 if (m.getName().equals("invalidate")) return null;
                 if (m.getName().equals("equals")) return p==a[0];
                 if (m.getName().equals("hashCode")) return System.identityHashCode(p);
@@ -48,6 +49,9 @@ public class ProtocolCheck {
                 case "changed": changes++; return changed;
                 case "shouldExecute": parameterChanged=(Boolean)a[0];force=(Integer)a[1]; return parameterChanged || force!=0 || !skipping;
                 case "skipToGroupEnd": skips++; return null;
+                case "getSkipping": return skipping;
+                case "getDefaultsInvalid": return false;
+                case "startDefaults": case "endDefaults": case "skipCurrentGroup": return null;
                 case "equals": return p==a[0];
                 case "hashCode": return System.identityHashCode(p);
                 case "toString": return "composer";
@@ -145,6 +149,7 @@ public class ProtocolCheck {
         checkBody(registry,41);
         controller.labeled(shadow);
         checkBody(registry,19);
+        BinaryProtocol.check(trace);
         ComposerKt.class.getDeclaredMethod("access$setCompositionTracer$p", CompositionTracer.class).invoke(null,new Object[]{null});
         System.out.println("compose-protocol-ok:"+scenarios);
     }

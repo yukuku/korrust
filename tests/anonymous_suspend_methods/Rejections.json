@@ -1,0 +1,69 @@
+[
+  {
+    "id": "ordinary-overrides-suspend",
+    "source": "import anonymouslibrary.*\nimport receiverlibrary.checkpoint\nfun use(): Single = object : Single { override fun run(value: Int): Int = value }"
+  },
+  {
+    "id": "suspend-overrides-ordinary",
+    "source": "import anonymouslibrary.*\nimport receiverlibrary.checkpoint\nfun use(): Plain = object : Plain { override suspend fun run(value: Int): Int = value }"
+  },
+  {
+    "id": "missing-override",
+    "source": "import anonymouslibrary.*\nimport receiverlibrary.checkpoint\nfun use(): Single = object : Single { suspend fun run(value: Int): Int = value }"
+  },
+  {
+    "id": "ordinary-second-member-suspends",
+    "source": "import anonymouslibrary.*\nimport receiverlibrary.checkpoint\nfun use(): Single = object : Single { override suspend fun run(value: Int): Int = value; fun extra(): Int = checkpoint() }"
+  },
+  {
+    "id": "wrong-result",
+    "source": "import anonymouslibrary.*\nimport receiverlibrary.checkpoint\nfun use(): Single = object : Single { override suspend fun run(value: Int): String = \"bad\" }"
+  },
+  {
+    "id": "missing-member",
+    "source": "import anonymouslibrary.*\nimport receiverlibrary.checkpoint\nfun use(): Single = object : Single {}"
+  },
+  {
+    "id": "own-suspend-member",
+    "source": "import anonymouslibrary.*\nimport receiverlibrary.checkpoint\nfun use(): Plain = object : Plain { override fun run(value: Int): Int = value; suspend fun extra(): Int = 1 }",
+    "unsupported": true
+  },
+  {
+    "id": "generic-suspend-member",
+    "source": "import anonymouslibrary.*\nimport receiverlibrary.checkpoint\nfun use(): GenericMethod = object : GenericMethod { override suspend fun <T> run(value: T): T = value }",
+    "unsupported": true
+  },
+  {
+    "id": "unit-suspend-parameter",
+    "source": "import anonymouslibrary.*\nimport receiverlibrary.checkpoint\nfun use(): UnitSink = object : UnitSink { override suspend fun run(value: Unit): Int = 1 }",
+    "unsupported": true
+  },
+  {
+    "id": "nullable-unit-result",
+    "source": "import anonymouslibrary.*\nimport receiverlibrary.checkpoint\nfun use(): NullableUnit = object : NullableUnit { override suspend fun run(): Unit? = null }",
+    "unsupported": true
+  },
+  {
+    "id": "nullable-inferred-result",
+    "source": "import anonymouslibrary.StrictNames\nfun maybe(): String? = null\nfun use(): StrictNames = object : StrictNames() { override fun name() = maybe() }"
+  },
+  {
+    "id": "unrelated-inferred-result",
+    "source": "import anonymouslibrary.StrictNames\nfun use(): StrictNames = object : StrictNames() { override fun name() = 3 }"
+  },
+  {
+    "id": "different-carrier-covariance",
+    "unsupported": true,
+    "source": "import anonymouslibrary.AnyName\nfun use(): AnyName = object : AnyName() { override fun name() = \"x\" }"
+  },
+  {
+    "id": "lexical-suspend-type-parameters",
+    "unsupported": true,
+    "source": "import anonymouslibrary.Lexical\nfun <T> use(value: T): Lexical<T> = object : Lexical<T> { override suspend fun value(): T = value }"
+  },
+  {
+    "id": "unit-sam-parameter",
+    "unsupported": true,
+    "source": "import anonymouslibrary.UnitSamSink\nfun use(): UnitSamSink = UnitSamSink { 1 }"
+  }
+]

@@ -41,12 +41,20 @@ pub(crate) use variant_signatures::{
 };
 #[path = "check_anonymous.rs"]
 mod anonymous;
+#[path = "check_assignment_flow.rs"]
+mod assignment_flow;
+#[path = "check_binary_defaults.rs"]
+mod binary_defaults;
 #[path = "check_captures.rs"]
 mod captures;
 #[path = "check_classes.rs"]
 mod classes;
+#[path = "check_compose.rs"]
+mod compose;
 #[path = "check_constructor_aliases.rs"]
 mod constructor_aliases;
+#[path = "check_constructor_bridges.rs"]
+mod constructor_bridges;
 #[path = "check_constructor_inference.rs"]
 mod constructor_inference;
 #[path = "check_contracts.rs"]
@@ -55,10 +63,13 @@ mod contracts;
 mod control;
 #[path = "check_functions.rs"]
 mod function_values;
+#[path = "check_initialization.rs"]
+mod initialization;
 #[path = "check_inner_classes.rs"]
 mod inner_classes;
 #[path = "check_ir_walk.rs"]
 pub(crate) mod ir_walk;
+use initialization::InitializationState;
 #[path = "check_java_nullability.rs"]
 mod java_nullability;
 #[path = "check_java_properties.rs"]
@@ -293,6 +304,7 @@ pub struct ClassDecl {
     pub exposed_fields: HashMap<String, u16>,
     pub delegated_properties: Vec<(String, Value)>,
     pub primary_constructor: bool,
+    pub constructor_vararg: bool,
     pub constructor_visibility: u16,
     pub constructor_signature: Option<String>,
     pub constructor_annotations: Vec<DeclarationAnnotation>,
@@ -724,6 +736,8 @@ type CheckedArguments = (Vec<Value>, Vec<(u8, Value)>, u64);
 type CallableParameters = (Vec<(String, Type)>, Vec<bool>);
 #[derive(Clone)]
 struct Checker<'a> {
+    composer: Option<Local>,
+    composable_target: Option<String>,
     composable_body: bool,
     inline_argument_modes: Vec<syntax::InlineParameterMode>,
     inline_analysis: bool,
@@ -736,6 +750,7 @@ struct Checker<'a> {
     captured_cells: HashMap<String, Type>,
     cells: HashMap<u8, String>,
     cell_names: HashSet<String>,
+    changing_cells: HashSet<u8>,
     lambda_owner: String,
     inline_result: Option<Type>,
     nonlocal_result: Option<Type>,
@@ -766,7 +781,7 @@ struct Checker<'a> {
     contract_facts: HashMap<usize, Vec<contracts::Fact>>,
     contract_registration: Option<usize>,
     refinements: HashMap<stable_properties::Subject, Type>,
-    initialized: HashSet<u8>,
+    initialized: InitializationState,
     loop_depth: usize,
     scopes: Vec<HashMap<String, Local>>,
     next: u16,
@@ -1073,7 +1088,7 @@ impl Checker<'_> {
         self.allow_return = false;
         let all = self.initialized.clone();
         let refinements = self.refinements.clone();
-        let mut earlier = HashSet::new();
+        let mut earlier = InitializationState::default();
         let mut values = Vec::new();
         for ((name, ty), expr) in params.iter().zip(defaults) {
             self.refinements = refinements.clone();
@@ -1099,7 +1114,10 @@ impl Checker<'_> {
             if (op == "is" && truth) || (op == "!is" && !truth) {
                 if let ExprKind::Name(name) = &value.kind {
                     if let Some(local) = self.local(name) {
-                        if !local.mutable {
+                        if !local.mutable
+                            || matches!(local.ty, Type::Nullable(ref inner) if inner.is_reference())
+                                && self.refinement_stable(&local)
+                        {
                             if let Ok(target) = self.resolve(target, condition.offset) {
                                 self.refinements.insert(local.slot.into(), target);
                             }
@@ -1129,16 +1147,34 @@ impl Checker<'_> {
                 _ => None,
             };
             if let Some(name) = name {
+                if ((matches!(op.as_str(), "==" | "===") && truth)
+                    || (matches!(op.as_str(), "!=" | "!==") && !truth))
+                    && let Some(local) = self.local(name)
+                    && local.mutable
+                {
+                    self.refinements.remove(&local.slot.into());
+                }
                 if (matches!(op.as_str(), "!=" | "!==") && truth)
                     || (matches!(op.as_str(), "==" | "===") && !truth)
                 {
                     if let Some(local) = self.local(name) {
-                        if !local.mutable {
-                            match local.ty {
-                                Type::Nullable(inner) => {
+                        if !local.mutable
+                            || matches!(local.ty, Type::Nullable(ref inner) if inner.is_reference())
+                                && self.refinement_stable(&local)
+                        {
+                            let known = self
+                                .refinements
+                                .get(&local.slot.into())
+                                .cloned()
+                                .unwrap_or(local.ty);
+                            match known {
+                                Type::Nullable(inner) | Type::Platform(inner) => {
                                     self.refinements.insert(local.slot.into(), *inner);
                                 }
                                 ty @ Type::Parameter { .. } => {
+                                    self.refinements.insert(local.slot.into(), ty);
+                                }
+                                ty if ty.is_reference() => {
                                     self.refinements.insert(local.slot.into(), ty);
                                 }
                                 _ => {}
@@ -1163,6 +1199,7 @@ impl Checker<'_> {
         let before = self.next;
         let refinements = self.refinements.clone();
         let initialized = self.initialized.clone();
+        let changing_cells = self.changing_cells.clone();
         let lambda_count = self.lambdas.borrow().len();
         let mut score = 0;
         let result = (|| {
@@ -1188,6 +1225,7 @@ impl Checker<'_> {
         self.next = before;
         self.refinements = refinements;
         self.initialized = initialized;
+        self.changing_cells = changing_cells;
         result
     }
     fn select_function(
@@ -1334,12 +1372,14 @@ impl Checker<'_> {
             let saved_contract_facts = self.contract_facts.clone();
             let next = self.next;
             let count = self.lambdas.borrow().len();
+            let changing_cells = self.changing_cells.clone();
             let specialized =
                 self.specialize_method_expected(original, normalized, explicit, expected, offset);
             self.contract_facts = saved_contract_facts;
             self.contract_registration = saved_contract_registration;
             self.next = next;
             self.lambdas.borrow_mut().truncate(count);
+            self.changing_cells = changing_cells;
             let method = match specialized {
                 Ok(method) => method,
                 Err(error) => {
@@ -2077,6 +2117,7 @@ impl Checker<'_> {
         );
         self.scopes.push(scope);
         self.refinements.insert(slot.into(), inner);
+        let before_call = self.initialized.clone();
         self.initialized.insert(slot);
         let property = Expr {
             offset,
@@ -2098,6 +2139,7 @@ impl Checker<'_> {
         let result = self.value(&expression);
         self.scopes.pop();
         self.initialized.remove(&slot);
+        self.initialized = before_call.joined(&self.initialized);
         self.refinements.remove(&slot.into());
         let result = result?;
         let result = if result.ty.is_reference() {
@@ -2172,7 +2214,19 @@ impl Checker<'_> {
                 ));
             }
         };
+        let before_right = self.initialized.clone();
         let right = self.value_expected(right, expected.or(Some(&inner)))?;
+        if self.initialized.outer_deferred_writes(&before_right) {
+            return Err(Diagnostic::new(
+                offset,
+                "Deferred val assignments in conditional fallback expressions are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "DEFERRED_VAL_CONDITIONAL_INITIALIZATION_UNSUPPORTED",
+            ));
+        }
+        self.initialized = before_right.joined(&self.initialized);
         let abrupt = matches!(right.kind, ValueKind::Abrupt(_));
         if abrupt {
             if let ExprKind::Name(name) = &source_left.kind {
@@ -2189,6 +2243,12 @@ impl Checker<'_> {
             right.ty.clone()
         } else if right.ty == Type::Null || right.ty == Type::Nullable(Box::new(inner.clone())) {
             Type::Nullable(Box::new(inner.clone()))
+        } else if inner.is_reference() && right.ty.is_reference() && self.subtype(&inner, &right.ty)
+        {
+            right.ty.clone()
+        } else if inner.is_reference() && right.ty.is_reference() && self.subtype(&right.ty, &inner)
+        {
+            inner.clone()
         } else {
             return Err(Diagnostic::new(
                 offset,
@@ -2447,6 +2507,9 @@ impl Checker<'_> {
             let private_allowed = self
                 .classpath
                 .file_private_visible(&self.lambda_owner, &method)
+                || self
+                    .classpath
+                    .private_companion_method_visible(&self.lambda_owner, &method)
                 || method.access & 2 != 0
                     && (self.lambda_owner == method.owner
                         || self.lambda_owner.starts_with(&format!("{}$", method.owner)));
@@ -2573,6 +2636,7 @@ impl Checker<'_> {
             receiver
         };
         values.insert(0, receiver);
+        self.physical_default_values(&method, &mut values, mask, offset)?;
         if mask == 0
             && !self.public_inline_body
             && self.classpath.default_source_accessor(&method).is_some()
@@ -2695,9 +2759,13 @@ impl Checker<'_> {
             }
         } else {
             let method = library::default_argument_method(self.classpath, &method)?;
+            let dispatch = if method.access & 8 == 0 {
+                format!("L{};", method.owner)
+            } else {
+                String::new()
+            };
             let descriptor = format!(
-                "(L{};{}{}Ljava/lang/Object;){}",
-                method.owner,
+                "({dispatch}{}{}Ljava/lang/Object;){}",
                 method.descriptor[1..method.descriptor.find(')').unwrap()].to_owned(),
                 "I".repeat(value_parameters.div_ceil(32)),
                 &method.descriptor[method.descriptor.find(')').unwrap() + 1..]
@@ -2787,6 +2855,20 @@ impl Checker<'_> {
             return Ok(Value {
                 ty: expected,
                 kind: value.kind,
+            });
+        }
+        if expected == Type::Unit
+            && matches!(&value.ty, Type::Java(owner) if owner == "kotlin/Unit")
+        {
+            return Ok(Value {
+                ty: Type::Unit,
+                kind: ValueKind::Block(
+                    vec![Statement::Expression(value)],
+                    Box::new(Value {
+                        ty: Type::Unit,
+                        kind: ValueKind::Unit,
+                    }),
+                ),
             });
         }
         if value.ty == expected {
@@ -3612,6 +3694,11 @@ impl Checker<'_> {
                 receiver,
                 params,
                 result,
+            }
+            | Type::SuspendReceiverFunction {
+                receiver,
+                params,
+                result,
             } => {
                 Self::concrete_java_field_type(receiver)
                     && params.iter().all(Self::concrete_java_field_type)
@@ -3944,6 +4031,7 @@ impl Checker<'_> {
         let mut body = Vec::new();
         let mut returns = false;
         for statement in source {
+            self.invalidate_statement_writes(statement);
             let offset = statement.offset;
             if returns {
                 return Err(Diagnostic::new(
@@ -4036,14 +4124,8 @@ impl Checker<'_> {
                             "Unsupported uninitialized local type",
                         ));
                     }
-                    if !mutable {
-                        return Err(Diagnostic::new(
-                            offset,
-                            "Uninitialized val declarations are not supported",
-                        ));
-                    }
                     let slot = self.declare(name, ty.clone(), *mutable, offset)?;
-                    if self.cell_names.contains(name) {
+                    if *mutable && self.cell_names.contains(name) {
                         let owner = Self::cell_owner(&ty);
                         self.cells.insert(slot, owner.clone());
                         body.push(Statement::Store(
@@ -4059,6 +4141,9 @@ impl Checker<'_> {
                         ));
                     }
                     self.initialized.remove(&slot);
+                    if !mutable {
+                        self.initialized.defer(slot, self.loop_depth);
+                    }
                     continue;
                 }
                 StatementKind::IndexAssign(array, index, value) => self.check_indices_assignment(
@@ -4395,16 +4480,36 @@ impl Checker<'_> {
                             ));
                         }
                     }
-                    if self.cell_is_readonly(name) {
+                    let deferred = self
+                        .local(name)
+                        .filter(|local| self.initialized.is_deferred(local.slot));
+                    if let Some(local) = &deferred {
+                        self.initialized
+                            .check_write(local.slot, self.loop_depth, offset)?;
+                    }
+                    if self.cell_is_readonly(name) && deferred.is_none() {
                         return Err(Diagnostic::new(
                             offset,
                             "Cannot reassign val or function declaration",
                         ));
                     }
                     if let Some((cell, ty)) = self.cell_binding(name) {
-                        let value = self.expected_value(expr, &ty)?;
+                        let (value, actual) = self.assigned_value(expr, &ty)?;
+                        if control::expression_terminates(expr) {
+                            body.push(Statement::Expression(value));
+                            returns = true;
+                            continue;
+                        }
                         if let Some(local) = self.local(name) {
+                            if deferred.is_some() {
+                                self.initialized.check_write(
+                                    local.slot,
+                                    self.loop_depth,
+                                    offset,
+                                )?;
+                            }
                             self.initialized.insert(local.slot);
+                            self.assigned_refinement(local.slot, &actual);
                         }
                         body.push(self.cell_store(cell, ty, value, offset)?);
                         continue;
@@ -4444,23 +4549,33 @@ impl Checker<'_> {
                             Diagnostic::new(offset, format!("Unresolved local: {name}"))
                         }
                     })?;
-                    if !local.mutable {
+                    if !local.mutable && deferred.is_none() {
                         return Err(Diagnostic::new(
                             offset,
                             format!("Cannot reassign val or parameter: {name}"),
                         ));
                     }
-                    let value = self.expected_value(expr, &local.ty)?;
-                    self.initialized.insert(local.slot);
-                    Statement::Store(local.slot, value)
+                    let (value, actual) = self.assigned_value(expr, &local.ty)?;
+                    if control::expression_terminates(expr) {
+                        returns = true;
+                        Statement::Expression(value)
+                    } else {
+                        if deferred.is_some() {
+                            self.initialized
+                                .check_write(local.slot, self.loop_depth, offset)?;
+                        }
+                        self.initialized.insert(local.slot);
+                        self.assigned_refinement(local.slot, &actual);
+                        Statement::Store(local.slot, value)
+                    }
                 }
                 StatementKind::AddAssign(name, expr) => {
                     self.check_compound_assignment(name, "+=", expr, offset)?
                 }
                 StatementKind::When(subject, branches, otherwise) => {
                     let source_subject = subject;
-                    let before_refinements = self.refinements.clone();
                     let subject = self.value(subject)?;
+                    let before_refinements = self.refinements.clone();
                     if subject.ty == Type::Unit {
                         return Err(Diagnostic::new(offset, "Unsupported when subject type"));
                     }
@@ -4482,6 +4597,7 @@ impl Checker<'_> {
                     body.push(Statement::Store(slot, subject));
                     let before = self.initialized.clone();
                     let mut continuing = Vec::new();
+                    let mut continuing_refinements = Vec::new();
                     let mut checked = Vec::new();
                     let mut all_return = otherwise.is_some() || exhaustive;
                     for (conditions, branch) in branches {
@@ -4493,7 +4609,11 @@ impl Checker<'_> {
                                 ty: subject_type.clone(),
                                 kind: ValueKind::Local(slot),
                             };
+                            let before_condition = self.initialized.clone();
                             let equal = self.check_when_condition(left, condition)?;
+                            if self.initialized.outer_deferred_writes(&before_condition) {
+                                return Err(Diagnostic::new(offset, "Deferred val assignments in when conditions require unsupported conditional-effect analysis").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "DEFERRED_VAL_CONDITION_INITIALIZATION_UNSUPPORTED"));
+                            }
                             combined = Some(match combined {
                                 None => equal,
                                 Some(previous) => Value {
@@ -4510,6 +4630,7 @@ impl Checker<'_> {
                         let (branch, branch_returns) = self.block(branch)?;
                         if !branch_returns {
                             continuing.push(self.initialized.clone());
+                            continuing_refinements.push(self.refinements.clone());
                         }
                         all_return &= branch_returns;
                         checked.push((combined.unwrap(), branch));
@@ -4520,6 +4641,7 @@ impl Checker<'_> {
                         let (branch, branch_returns) = self.block(otherwise)?;
                         if !branch_returns {
                             continuing.push(self.initialized.clone());
+                            continuing_refinements.push(self.refinements.clone());
                         }
                         all_return &= branch_returns;
                         branch
@@ -4531,19 +4653,18 @@ impl Checker<'_> {
                         body
                     } else {
                         continuing.push(before.clone());
+                        continuing_refinements.push(before_refinements.clone());
                         Vec::new()
                     };
                     self.initialized = continuing
                         .into_iter()
-                        .reduce(|previous, current| {
-                            previous.intersection(&current).copied().collect()
-                        })
+                        .reduce(|previous, current| previous.joined(&current))
                         .unwrap_or(before);
                     for (condition, branch) in checked.into_iter().rev() {
                         tail = vec![Statement::If(condition, branch, tail)];
                     }
                     body.extend(tail);
-                    self.refinements = before_refinements;
+                    self.refinements = Self::intersect_refinements(&continuing_refinements);
                     returns |= all_return;
                     continue;
                 }
@@ -4584,40 +4705,46 @@ impl Checker<'_> {
                 }
                 StatementKind::Expression(expr) => {
                     returns |= control::expression_terminates(expr);
-                    Statement::Expression(self.value(expr)?)
+                    Statement::Expression(self.discarded_value(expr)?)
                 }
                 StatementKind::If(cond, yes, no) => {
                     let source_condition = cond;
                     let before_refinements = self.refinements.clone();
+                    let before_changing = self.changing_cells.clone();
                     let cond = self.value(cond)?;
                     self.require(&cond, Type::Boolean, offset)?;
                     let before = self.initialized.clone();
                     self.refine(source_condition, true);
                     let (yes, y) = self.block(yes)?;
                     let yes_refinements = self.refinements.clone();
+                    let yes_changing = self.changing_cells.clone();
                     self.refinements = before_refinements.clone();
+                    self.changing_cells = before_changing;
                     self.refine(source_condition, false);
                     let yes_initialized = self.initialized.clone();
                     self.initialized = before;
                     let (no, n) = self.block(no)?;
                     let no_initialized = self.initialized.clone();
                     let no_refinements = self.refinements.clone();
+                    let no_changing = self.changing_cells.clone();
+                    self.changing_cells = match (y, n) {
+                        (true, false) => no_changing,
+                        (false, true) => yes_changing,
+                        _ => yes_changing.union(&no_changing).copied().collect(),
+                    };
                     self.refinements = match (y, n) {
                         (true, false) => no_refinements,
                         (false, true) => yes_refinements,
-                        _ => before_refinements,
+                        (false, false) => {
+                            Self::intersect_refinements(&[yes_refinements, no_refinements])
+                        }
+                        (true, true) => before_refinements,
                     };
                     self.initialized = match (y, n) {
-                        (false, false) => yes_initialized
-                            .intersection(&no_initialized)
-                            .copied()
-                            .collect(),
+                        (false, false) => yes_initialized.joined(&no_initialized),
                         (false, true) => yes_initialized,
                         (true, false) => no_initialized,
-                        (true, true) => yes_initialized
-                            .intersection(&no_initialized)
-                            .copied()
-                            .collect(),
+                        (true, true) => yes_initialized.joined(&no_initialized),
                     };
                     self.exhaustiveness_flow |= y != n;
                     returns |= y && n;
@@ -4626,7 +4753,11 @@ impl Checker<'_> {
                 StatementKind::While(cond, body) => {
                     let source_condition = cond;
                     let refinements = self.refinements.clone();
+                    let before_condition = self.initialized.clone();
                     let cond = self.value(cond)?;
+                    if self.initialized.outer_deferred_writes(&before_condition) {
+                        return Err(Diagnostic::new(offset, "Deferred val initialization in a repeated loop condition is unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "DEFERRED_VAL_LOOP_INITIALIZATION_UNSUPPORTED"));
+                    }
                     self.require(&cond, Type::Boolean, offset)?;
                     let before = self.initialized.clone();
                     self.refine(source_condition, true);
@@ -4657,10 +4788,14 @@ impl Checker<'_> {
         }
         if !matches!(expr.kind, ExprKind::Call(..)) {
             let value = self.value_untracked(expr, expected)?;
+            self.invalidate_expression_writes(expr);
             return self.refined_property_value(expr, value);
         }
         let previous = self.contract_registration.take();
         let result = self.value_untracked(expr, expected);
+        if result.is_ok() {
+            self.invalidate_expression_writes(expr);
+        }
         if result.is_err() || self.contract_registration != Some(expr.offset) {
             self.contract_facts.remove(&expr.offset);
         }
@@ -4832,8 +4967,9 @@ impl Checker<'_> {
             }
             ExprKind::When(subject, branches, otherwise) => {
                 let source_subject = subject;
-                let before_refinements = self.refinements.clone();
                 let subject = self.value(subject)?;
+                let before_refinements = self.refinements.clone();
+                let before_initialized = self.initialized.clone();
                 if subject.ty == Type::Unit {
                     return Err(Diagnostic::new(
                         offset,
@@ -4860,15 +4996,22 @@ impl Checker<'_> {
                 }
                 let slot = self.allocate_typed_slot(&subject.ty, offset)?;
                 let mut checked = Vec::new();
+                let mut continuing_refinements = Vec::new();
+                let mut continuing_initialized = Vec::new();
                 for (conditions, branch) in branches {
                     self.refinements = before_refinements.clone();
+                    self.initialized = before_initialized.clone();
                     let mut combined = None;
                     for condition in conditions {
                         let left = Value {
                             ty: subject.ty.clone(),
                             kind: ValueKind::Local(slot),
                         };
+                        let before_condition = self.initialized.clone();
                         let condition = self.check_when_condition(left, condition)?;
+                        if self.initialized.outer_deferred_writes(&before_condition) {
+                            return Err(Diagnostic::new(offset, "Deferred val assignments in when conditions require unsupported conditional-effect analysis").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "DEFERRED_VAL_CONDITION_INITIALIZATION_UNSUPPORTED"));
+                        }
                         combined = Some(match combined {
                             None => condition,
                             Some(previous) => Value {
@@ -4882,60 +5025,55 @@ impl Checker<'_> {
                         });
                     }
                     self.refine_when_branch(source_subject, conditions);
+                    let value = self.value(branch)?;
+                    if !control::expression_terminates(branch) {
+                        continuing_refinements.push(self.refinements.clone());
+                        continuing_initialized.push(self.initialized.clone());
+                    }
                     checked.push((
                         combined.ok_or_else(|| Diagnostic::new(offset, "Empty when condition"))?,
-                        self.value(branch)?,
+                        value,
                     ));
                 }
                 self.refinements = before_refinements.clone();
-                let mut body = if missing {
-                    let mut result: Option<Type> = None;
-                    for (_, value) in &checked {
-                        if matches!(value.kind, ValueKind::Abrupt(_)) {
-                            continue;
-                        }
-                        result = Some(match result {
-                            None => value.ty.clone(),
-                            Some(previous)
-                                if previous == value.ty || self.subtype(&value.ty, &previous) =>
-                            {
-                                previous
-                            }
-                            Some(previous) if self.subtype(&previous, &value.ty) => {
-                                value.ty.clone()
-                            }
-                            Some(Type::Null) => {
-                                if value.ty.is_nullable() {
-                                    value.ty.clone()
-                                } else {
-                                    Type::Nullable(Box::new(value.ty.clone()))
-                                }
-                            }
-                            Some(previous) if value.ty == Type::Null => {
-                                if previous.is_nullable() {
-                                    previous
-                                } else {
-                                    Type::Nullable(Box::new(previous))
-                                }
-                            }
-                            _ => {
-                                return Err(Diagnostic::new(
-                                    offset,
-                                    "The exhaustive when branch common type is unsupported",
-                                )
-                                .with_kind(
-                                    crate::DiagnosticKind::UnsupportedLanguage,
-                                    "WHEN_RESULT_JOIN_UNSUPPORTED",
-                                ));
-                            }
-                        });
-                    }
-                    let result = result.ok_or_else(|| Diagnostic::new(offset, "Exhaustive when expressions with only abrupt branches require unsupported Nothing inference").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "WHEN_ABRUPT_RESULT_UNSUPPORTED"))?;
-                    self.unmatched_when(result, offset)?
+                self.initialized = before_initialized.clone();
+                let otherwise = if missing {
+                    None
                 } else {
-                    self.value(otherwise)?
+                    let value = self.value(otherwise)?;
+                    if !control::expression_terminates(otherwise) {
+                        continuing_refinements.push(self.refinements.clone());
+                        continuing_initialized.push(self.initialized.clone());
+                    }
+                    Some(value)
                 };
-                self.refinements = before_refinements;
+                let mut result: Option<Type> = None;
+                for value in checked
+                    .iter()
+                    .map(|(_, value)| value)
+                    .chain(otherwise.iter())
+                {
+                    if matches!(value.kind, ValueKind::Abrupt(_)) {
+                        continue;
+                    }
+                    result = Some(match result {
+                        None => value.ty.clone(),
+                        Some(previous) => self.join_when_results(&previous, &value.ty, offset)?,
+                    });
+                }
+                let result = result
+                    .or_else(|| otherwise.as_ref().map(|value| value.ty.clone()))
+                    .ok_or_else(|| Diagnostic::new(offset, "Exhaustive when expressions with only abrupt branches require unsupported Nothing inference").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "WHEN_ABRUPT_RESULT_UNSUPPORTED"))?;
+                let mut body = if let Some(otherwise) = otherwise {
+                    self.coerce(otherwise, result, offset)?
+                } else {
+                    self.unmatched_when(result, offset)?
+                };
+                self.refinements = Self::intersect_refinements(&continuing_refinements);
+                self.initialized = continuing_initialized
+                    .into_iter()
+                    .reduce(|a, b| a.joined(&b))
+                    .unwrap_or(before_initialized);
                 if body.ty == Type::Unit {
                     return Err(Diagnostic::new(
                         offset,
@@ -4961,14 +5099,29 @@ impl Checker<'_> {
             ExprKind::If(condition, yes, no) => {
                 let source_condition = condition;
                 let before_refinements = self.refinements.clone();
+                let before_changing = self.changing_cells.clone();
                 let condition = self.value(condition)?;
                 self.require(&condition, Type::Boolean, offset)?;
+                let before_initialized = self.initialized.clone();
                 self.refine(source_condition, true);
+                let yes_terminates = control::expression_terminates(yes);
+                let no_terminates = control::expression_terminates(no);
                 let mut yes = self.value(yes)?;
+                let yes_initialized = self.initialized.clone();
+                self.initialized = before_initialized.clone();
+                let yes_changing = self.changing_cells.clone();
                 self.refinements = before_refinements.clone();
+                self.changing_cells = before_changing;
                 self.refine(source_condition, false);
                 let mut no = self.value(no)?;
+                self.initialized = match (yes_terminates, no_terminates) {
+                    (false, false) => yes_initialized.joined(&self.initialized),
+                    (false, true) => yes_initialized,
+                    (true, false) => self.initialized.clone(),
+                    (true, true) => before_initialized,
+                };
                 self.refinements = before_refinements;
+                self.changing_cells.extend(yes_changing);
                 if yes.ty == Type::Unit {
                     return Err(Diagnostic::new(
                         offset,
@@ -5157,10 +5310,18 @@ impl Checker<'_> {
                             return Err(Diagnostic::new(
                                 offset,
                                 "Captured variable must be initialized before use",
+                            )
+                            .with_kind(
+                                crate::DiagnosticKind::InvalidKotlin,
+                                "UNINITIALIZED_VARIABLE",
                             ));
                         }
                     }
-                    return Ok(self.cell_read(cell, ty));
+                    let raw = self.cell_read(cell, ty);
+                    return Ok(match self.local(name) {
+                        Some(local) => self.refined_local_read(&local, raw),
+                        None => raw,
+                    });
                 }
                 if let Some((owner, ty)) = self
                     .captured
@@ -5200,25 +5361,17 @@ impl Checker<'_> {
                         return Err(Diagnostic::new(
                             offset,
                             format!("Variable must be initialized before use: {name}"),
+                        )
+                        .with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "UNINITIALIZED_VARIABLE",
                         ));
                     }
-                    if let Some(refined) = self.refinements.get(&local.slot.into()) {
-                        if !local.mutable {
-                            let raw = Value {
-                                ty: local.ty.clone(),
-                                kind: ValueKind::Local(local.slot),
-                            };
-                            return Ok(Value {
-                                ty: refined.clone(),
-                                kind: ValueKind::Cast {
-                                    value: Box::new(raw),
-                                    target: refined.clone(),
-                                    safe: false,
-                                },
-                            });
-                        }
-                    }
-                    (local.ty, ValueKind::Local(local.slot))
+                    let raw = Value {
+                        ty: local.ty.clone(),
+                        kind: ValueKind::Local(local.slot),
+                    };
+                    return Ok(self.refined_local_read(&local, raw));
                 } else if let Some((owner, ty)) = self
                     .object_fields
                     .get(name)
@@ -5420,8 +5573,20 @@ impl Checker<'_> {
                 if op == "&&" || op == "||" {
                     self.refine(source_left, op == "&&");
                 }
+                let before_right = self.initialized.clone();
                 let b = self.value(b)?;
                 if op == "&&" || op == "||" {
+                    if self.initialized.outer_deferred_writes(&before_right) {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Deferred val assignments in short-circuit operands are unsupported",
+                        )
+                        .with_kind(
+                            crate::DiagnosticKind::UnsupportedLanguage,
+                            "DEFERRED_VAL_CONDITIONAL_INITIALIZATION_UNSUPPORTED",
+                        ));
+                    }
+                    self.initialized = before_right.joined(&self.initialized);
                     self.refinements = refinements;
                 }
                 if matches!(op.as_str(), "==" | "!=" | "===" | "!==") {
@@ -5848,6 +6013,16 @@ impl Checker<'_> {
                     let methods = match &target.kind {
                         ExprKind::Name(name) => self.library_call_candidates(name),
                         ExprKind::Property(receiver, name) => {
+                            if let Some(call) = self.qualified_package_call(
+                                receiver,
+                                name,
+                                args,
+                                types,
+                                expected_result,
+                                offset,
+                            )? {
+                                return Ok(call);
+                            }
                             if let ExprKind::Name(alias) = &receiver.kind {
                                 if let Some(owner) = self.imports.get(alias) {
                                     if self.classes.contains_key(owner) {
@@ -5905,6 +6080,7 @@ impl Checker<'_> {
                             Type::Function { .. }
                                 | Type::ReceiverFunction { .. }
                                 | Type::SuspendFunction { .. }
+                                | Type::SuspendReceiverFunction { .. }
                         ) {
                             if let Some(value) =
                                 self.implicit_extension_receiver_call(name, args, &[], offset)?
@@ -6052,6 +6228,15 @@ impl Checker<'_> {
                                     .map(|(i, t)| (format!("p{i}"), java_parameter(t), false))
                                     .collect()
                             });
+                            if let Some(value) = self.binary_marker_constructor(
+                                &class,
+                                &method,
+                                args,
+                                Type::Java(owner.clone()),
+                                offset,
+                            )? {
+                                return Ok(value);
+                            }
                             return self.constructor_call(
                                 owner,
                                 &params
@@ -6168,6 +6353,16 @@ impl Checker<'_> {
                     return self.source_call(name, args, &[], offset);
                 }
                 ExprKind::Property(receiver, name) => {
+                    if let Some(call) = self.qualified_package_call(
+                        receiver,
+                        name,
+                        args,
+                        &[],
+                        expected_result,
+                        offset,
+                    )? {
+                        return Ok(call);
+                    }
                     if self.qualified_java_class(receiver)?.is_none() {
                         let saved_contract_registration = self.contract_registration;
                         let saved_contract_facts = self.contract_facts.clone();
@@ -6227,14 +6422,17 @@ impl Checker<'_> {
                     if let Some(owner) = self.qualified_java_class(receiver)? {
                         return self.java_static(&owner, name, args, offset);
                     }
-                    if self
-                        .local(name)
-                        .is_some_and(|l| matches!(l.ty, Type::ReceiverFunction { .. }))
-                        || self
-                            .captured
-                            .get(name)
-                            .is_some_and(|(_, ty)| matches!(ty, Type::ReceiverFunction { .. }))
-                    {
+                    if self.local(name).is_some_and(|l| {
+                        matches!(
+                            l.ty,
+                            Type::ReceiverFunction { .. } | Type::SuspendReceiverFunction { .. }
+                        )
+                    }) || self.captured.get(name).is_some_and(|(_, ty)| {
+                        matches!(
+                            ty,
+                            Type::ReceiverFunction { .. } | Type::SuspendReceiverFunction { .. }
+                        )
+                    }) {
                         return self.receiver_function_call(receiver, name, args, offset);
                     }
                     if matches!(&receiver.kind,ExprKind::Name(n) if n=="super") {
@@ -6351,7 +6549,10 @@ impl Checker<'_> {
                     if name == "invoke"
                         && matches!(
                             receiver.ty,
-                            Type::Function { .. } | Type::ReceiverFunction { .. }
+                            Type::Function { .. }
+                                | Type::ReceiverFunction { .. }
+                                | Type::SuspendFunction { .. }
+                                | Type::SuspendReceiverFunction { .. }
                         )
                     {
                         return self.function_invoke(receiver, args, offset);
@@ -6728,6 +6929,11 @@ fn nested_type_imports(
             receiver,
             params,
             result,
+        }
+        | Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
         } => {
             for ty in params.iter().chain([receiver.as_ref(), result.as_ref()]) {
                 nested_type_imports(ty, imports, classpath, caller, offset)?;
@@ -6856,6 +7062,18 @@ fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> 
         Type::OutArray(element) => Ok(Type::OutArray(Box::new(resolve_type(
             element, imports, offset,
         )?))),
+        Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => Ok(Type::SuspendReceiverFunction {
+            receiver: Box::new(resolve_type(receiver, imports, offset)?),
+            params: params
+                .iter()
+                .map(|p| resolve_type(p, imports, offset))
+                .collect::<Result<Vec<_>>>()?,
+            result: Box::new(resolve_type(result, imports, offset)?),
+        }),
         Type::ReceiverFunction {
             receiver,
             params,
@@ -7607,6 +7825,11 @@ pub fn check_with_owner(
                 receiver,
                 params,
                 result,
+            }
+            | Type::SuspendReceiverFunction {
+                receiver,
+                params,
+                result,
             } => {
                 collect_type(receiver, names);
                 for ty in params {
@@ -8099,6 +8322,8 @@ pub fn check_with_owner(
     for (id, function) in source.functions.iter().enumerate() {
         let (params, return_type) = signatures[id].clone();
         let mut checker = Checker {
+            composer: None,
+            composable_target: None,
             composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
@@ -8113,6 +8338,7 @@ pub fn check_with_owner(
             captured_cells: HashMap::new(),
             cells: HashMap::new(),
             cell_names: HashSet::new(),
+            changing_cells: HashSet::new(),
             lambda_owner: owner.into(),
             inline_result: None,
             nonlocal_result: None,
@@ -8141,7 +8367,7 @@ pub fn check_with_owner(
             contract_facts: HashMap::new(),
             contract_registration: None,
             refinements: HashMap::new(),
-            initialized: HashSet::new(),
+            initialized: InitializationState::default(),
             loop_depth: 0,
             scopes: vec![HashMap::new()],
             next: 0,

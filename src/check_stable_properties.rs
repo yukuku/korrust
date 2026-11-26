@@ -74,28 +74,44 @@ impl Checker<'_> {
         let ExprKind::Name(name) = &expression.kind else {
             return None;
         };
-        let (ValueKind::JavaCall { method, args } | ValueKind::MemberCall { method, args, .. }) =
-            &value.kind
-        else {
-            return None;
-        };
-        let [
-            Value {
-                kind: ValueKind::Local(slot),
-                ..
-            },
-        ] = args.as_slice()
-        else {
-            return None;
+        let (method, slot) = match &value.kind {
+            ValueKind::JavaCall { method, args } | ValueKind::MemberCall { method, args, .. } => {
+                let [
+                    Value {
+                        kind: ValueKind::Local(slot),
+                        ..
+                    },
+                ] = args.as_slice()
+                else {
+                    return None;
+                };
+                (method.clone(), *slot)
+            }
+            ValueKind::Field(field, receiver) if field == name => {
+                let ValueKind::Local(slot) = receiver.kind else {
+                    return None;
+                };
+                let class = self
+                    .classpath
+                    .load(library::type_owner(&receiver.ty)?)
+                    .ok()?;
+                let getter = class.methods.into_iter().find(|m| {
+                    m.source_property.as_ref() == Some(name)
+                        && m.name == getter_name(name)
+                        && m.descriptor.starts_with("()")
+                })?;
+                (getter, slot)
+            }
+            _ => return None,
         };
         if method.source_property.as_ref() != Some(name)
             || !method.instance_dispatch()
-            || !self.classpath.stable_kotlin_getter(method, name)
+            || !self.classpath.stable_kotlin_getter(&method, name)
         {
             return None;
         }
         Some(Subject::Property(
-            Box::new(Subject::Local(*slot)),
+            Box::new(Subject::Local(slot)),
             method.owner.clone(),
             method.name.clone(),
         ))

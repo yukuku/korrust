@@ -123,6 +123,8 @@ fn legacy_check(
         }
         overloads.push(JavaMethod {
             library: function.infix.then(|| crate::classpath::LibraryMethod {
+                compose: None,
+                stable_result: false,
                 default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),
@@ -246,6 +248,8 @@ fn legacy_check(
         let signatures = Vec::new();
         let extensions = HashSet::new();
         let mut checker = Checker {
+            composer: None,
+            composable_target: None,
             composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
@@ -260,6 +264,7 @@ fn legacy_check(
             captured_cells: HashMap::new(),
             cells: HashMap::new(),
             cell_names: HashSet::new(),
+            changing_cells: HashSet::new(),
             lambda_owner: owner.clone(),
             inline_result: None,
             nonlocal_result: None,
@@ -288,7 +293,7 @@ fn legacy_check(
             contract_facts: HashMap::new(),
             contract_registration: None,
             refinements: HashMap::new(),
-            initialized: HashSet::new(),
+            initialized: InitializationState::default(),
             loop_depth: 0,
             scopes: vec![HashMap::new()],
             next: 0,
@@ -340,6 +345,8 @@ fn legacy_check(
             classes,
         )?;
         let mut checker = Checker {
+            composer: None,
+            composable_target: None,
             composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
@@ -354,6 +361,7 @@ fn legacy_check(
             captured_cells: HashMap::new(),
             cells: HashMap::new(),
             cell_names: HashSet::new(),
+            changing_cells: HashSet::new(),
             lambda_owner: owner.clone(),
             inline_result: None,
             nonlocal_result: None,
@@ -390,7 +398,7 @@ fn legacy_check(
             contract_facts: HashMap::new(),
             contract_registration: None,
             refinements: HashMap::new(),
-            initialized: HashSet::new(),
+            initialized: InitializationState::default(),
             loop_depth: 0,
             scopes: vec![HashMap::new()],
             next: if method.jvm_static { 0 } else { 1 },
@@ -660,6 +668,8 @@ pub(super) fn check(
             kotlin_result: Some(result),
             kotlin_internal: function.internal,
             library: Some(crate::classpath::LibraryMethod {
+                compose: None,
+                stable_result: false,
                 default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),

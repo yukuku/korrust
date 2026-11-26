@@ -1,0 +1,2048 @@
+diff --git a/src/check.rs b/src/check.rs
+index 475c40d8e..aa9a1be13 100644
+--- a/src/check.rs
++++ b/src/check.rs
+@@ -41,12 +41,16 @@ pub(crate) use variant_signatures::{
+ };
+ #[path = "check_anonymous.rs"]
+ mod anonymous;
++#[path = "check_binary_defaults.rs"]
++mod binary_defaults;
+ #[path = "check_captures.rs"]
+ mod captures;
+ #[path = "check_classes.rs"]
+ mod classes;
+ #[path = "check_constructor_aliases.rs"]
+ mod constructor_aliases;
++#[path = "check_constructor_bridges.rs"]
++mod constructor_bridges;
+ #[path = "check_constructor_inference.rs"]
+ mod constructor_inference;
+ #[path = "check_contracts.rs"]
+@@ -59,6 +63,8 @@ mod function_values;
+ mod inner_classes;
+ #[path = "check_ir_walk.rs"]
+ pub(crate) mod ir_walk;
++#[path = "check_java_nullability.rs"]
++mod java_nullability;
+ #[path = "check_java_properties.rs"]
+ mod java_properties;
+ #[path = "check_library.rs"]
+@@ -2563,6 +2569,7 @@ impl Checker<'_> {
+             receiver
+         };
+         values.insert(0, receiver);
++        self.physical_default_values(&method, &mut values, mask, offset)?;
+         if mask == 0
+             && !self.public_inline_body
+             && self.classpath.default_source_accessor(&method).is_some()
+@@ -2685,9 +2692,13 @@ impl Checker<'_> {
+             }
+         } else {
+             let method = library::default_argument_method(self.classpath, &method)?;
++            let dispatch = if method.access & 8 == 0 {
++                format!("L{};", method.owner)
++            } else {
++                String::new()
++            };
+             let descriptor = format!(
+-                "(L{};{}{}Ljava/lang/Object;){}",
+-                method.owner,
++                "({dispatch}{}{}Ljava/lang/Object;){}",
+                 method.descriptor[1..method.descriptor.find(')').unwrap()].to_owned(),
+                 "I".repeat(value_parameters.div_ceil(32)),
+                 &method.descriptor[method.descriptor.find(')').unwrap() + 1..]
+@@ -2764,6 +2775,15 @@ impl Checker<'_> {
+     }
+     #[allow(clippy::only_used_in_recursion)]
+     fn coerce(&self, value: Value, expected: Type, offset: usize) -> Result<Value> {
++        let value = if expected.is_reference()
++            && !expected.is_nullable()
++            && !matches!(expected, Type::Platform(_))
++            && !matches!(&expected, Type::Parameter { upper_bound, .. } if upper_bound.is_nullable())
++        {
++            self.enhanced_java_nonnull(value)
++        } else {
++            value
++        };
+         if matches!(value.kind, ValueKind::Abrupt(_)) {
+             return Ok(Value {
+                 ty: expected,
+@@ -4082,7 +4102,8 @@ impl Checker<'_> {
+                     let mut value = if let Some(ty) = annotation {
+                         self.expected_value(expr, &self.resolve(ty, offset)?)?
+                     } else {
+-                        self.value(expr)?
++                        let value = self.value(expr)?;
++                        self.enhanced_java_nonnull(value)
+                     };
+                     if let Some(ty) = annotation {
+                         if matches!(ty, Type::ThreadLocal(_)) {
+@@ -6021,6 +6042,15 @@ impl Checker<'_> {
+                                     .map(|(i, t)| (format!("p{i}"), java_parameter(t), false))
+                                     .collect()
+                             });
++                            if let Some(value) = self.binary_marker_constructor(
++                                &class,
++                                &method,
++                                args,
++                                Type::Java(owner.clone()),
++                                offset,
++                            )? {
++                                return Ok(value);
++                            }
+                             return self.constructor_call(
+                                 owner,
+                                 &params
+diff --git a/src/check_binary_defaults.rs b/src/check_binary_defaults.rs
+new file mode 100644
+index 000000000..957b7b187
+--- /dev/null
++++ b/src/check_binary_defaults.rs
+@@ -0,0 +1,43 @@
++use super::*;
++
++impl Checker<'_> {
++    pub(super) fn physical_default_values(
++        &self,
++        method: &JavaMethod,
++        values: &mut [Value],
++        mask: u64,
++        offset: usize,
++    ) -> Result<()> {
++        let Some(library) = &method.library else {
++            return Ok(());
++        };
++        if mask == 0 || !library.kotlin_declared || self.classpath.is_source(&method.owner) {
++            return Ok(());
++        }
++        let (mut storage, _) = crate::jvm_descriptor::method_types(&method.descriptor)?;
++        if library.suspend_
++            && storage.last() == Some(&Type::Java("kotlin/coroutines/Continuation".into()))
++        {
++            storage.pop();
++        }
++        let Some(dispatch) = values.len().checked_sub(storage.len()).filter(|n| *n <= 1) else {
++            return Err(Diagnostic::new(
++                offset,
++                "Kotlin default argument storage does not match its JVM declaration",
++            )
++            .with_kind(
++                crate::DiagnosticKind::UnsupportedLanguage,
++                "KOTLIN_DEFAULT_ARGUMENT_ABI_UNSUPPORTED",
++            ));
++        };
++        let reserved =
++            usize::from(library.receiver.is_some()) + usize::from(library.value_dispatch);
++        for (index, storage) in storage.into_iter().enumerate().skip(reserved) {
++            let parameter = index - reserved;
++            if parameter < 64 && mask & (1u64 << parameter) != 0 {
++                values[dispatch + index] = zero_value(&storage);
++            }
++        }
++        Ok(())
++    }
++}
+diff --git a/src/check_constructor_bridges.rs b/src/check_constructor_bridges.rs
+new file mode 100644
+index 000000000..c61b04f25
+--- /dev/null
++++ b/src/check_constructor_bridges.rs
+@@ -0,0 +1,124 @@
++use super::*;
++
++impl Checker<'_> {
++    pub(super) fn binary_marker_constructor(
++        &mut self,
++        class: &JavaClass,
++        method: &JavaMethod,
++        args: &[Expr],
++        result: Type,
++        offset: usize,
++    ) -> Result<Option<Value>> {
++        const MARKER: &str = "Lkotlin/jvm/internal/DefaultConstructorMarker;)V";
++        if self.classpath.is_source(&class.name)
++            || class
++                .library
++                .as_ref()
++                .is_some_and(|library| library.value_class.is_some())
++            || !method
++                .library
++                .as_ref()
++                .is_some_and(|library| library.kotlin_declared)
++        {
++            return Ok(None);
++        }
++        let Some(prefix) = method.descriptor.strip_suffix(MARKER) else {
++            return Ok(None);
++        };
++        let (params, defaults) = Self::method_parameters(method)?;
++        let base_descriptor = format!("{prefix})V");
++        let (storage, _) = crate::jvm_descriptor::method_types(&base_descriptor).map_err(|_| {
++            Diagnostic::new(offset, "Malformed Kotlin constructor bridge descriptor")
++        })?;
++        if storage.len() != params.len() {
++            return Ok(None);
++        }
++        if !self
++            .classpath
++            .constructor_visible(&self.lambda_owner, method)
++        {
++            return Err(
++                Diagnostic::new(offset, "Constructor is inaccessible").with_kind(
++                    crate::DiagnosticKind::InvalidKotlin,
++                    "INACCESSIBLE_CONSTRUCTOR",
++                ),
++            );
++        }
++        if self.public_inline_body && method.kotlin_internal {
++            return Err(Diagnostic::new(
++                offset,
++                "Public inline functions cannot access nonpublic constructors",
++            )
++            .with_kind(
++                crate::DiagnosticKind::InvalidKotlin,
++                "PUBLIC_INLINE_NON_PUBLIC_ACCESS",
++            ));
++        }
++        let (values, lets, mask) = self.arguments_checked(
++            &params,
++            &defaults,
++            args,
++            self.method_named(method),
++            false,
++            offset,
++        )?;
++        let mut values = values
++            .into_iter()
++            .zip(storage)
++            .enumerate()
++            .map(|(index, (value, storage))| {
++                if mask != 0 && index < 64 && mask & (1u64 << index) != 0 {
++                    zero_value(&storage)
++                } else {
++                    value
++                }
++            })
++            .collect::<Vec<_>>();
++        let descriptor = if mask == 0 {
++            method.descriptor.clone()
++        } else {
++            let words = params.len().div_ceil(32);
++            let descriptor = format!("{prefix}{}{MARKER}", "I".repeat(words));
++            let bridge = class
++                .methods
++                .iter()
++                .find(|candidate| {
++                    candidate.name == "<init>"
++                        && candidate.descriptor == descriptor
++                        && candidate.access & 0x1009 == 0x1001
++                })
++                .ok_or_else(|| {
++                    Diagnostic::new(
++                        offset,
++                        "Accessible Kotlin default constructor bridge is unavailable",
++                    )
++                    .with_kind(
++                        crate::DiagnosticKind::UnsupportedLanguage,
++                        "KOTLIN_CONSTRUCTOR_DEFAULT_ABI_UNSUPPORTED",
++                    )
++                })?;
++            for word in 0..words {
++                values.push(Value {
++                    ty: Type::Int,
++                    kind: ValueKind::Int((mask >> (word * 32)) as i32),
++                });
++            }
++            bridge.descriptor.clone()
++        };
++        values.push(Value {
++            ty: Type::Java("kotlin/jvm/internal/DefaultConstructorMarker".into()),
++            kind: ValueKind::Null,
++        });
++        Ok(Some(Self::wrap_lets(
++            Value {
++                ty: result,
++                kind: ValueKind::New {
++                    owner: class.name.clone(),
++                    descriptor,
++                    args: values,
++                },
++            },
++            lets,
++        )))
++    }
++}
+diff --git a/src/check_java_nullability.rs b/src/check_java_nullability.rs
+new file mode 100644
+index 000000000..29fb86904
+--- /dev/null
++++ b/src/check_java_nullability.rs
+@@ -0,0 +1,48 @@
++use super::*;
++
++impl Checker<'_> {
++    fn java_nonnull_message(&self, value: &Value) -> Option<String> {
++        if !value.ty.is_reference()
++            || value.ty.is_nullable()
++            || matches!(value.ty, Type::Platform(_))
++        {
++            return None;
++        }
++        match &value.kind {
++            ValueKind::JavaCall { method, .. } | ValueKind::MemberCall { method, .. }
++                if method
++                    .library
++                    .as_ref()
++                    .is_some_and(|library| !library.kotlin_declared) =>
++            {
++                Some(format!("{}(...)", method.name))
++            }
++            ValueKind::JavaField { owner, name, .. } => self
++                .classpath
++                .field_candidates(owner, name)
++                .ok()?
++                .iter()
++                .find(|field| {
++                    field.kotlin.is_none()
++                        && field.java_type.as_deref().is_some_and(|ty| {
++                            ty.is_reference()
++                                && !ty.is_nullable()
++                                && !matches!(ty, Type::Platform(_))
++                        })
++                })
++                .map(|_| name.clone()),
++            ValueKind::Let { body, .. } => self.java_nonnull_message(body),
++            _ => None,
++        }
++    }
++
++    pub(super) fn enhanced_java_nonnull(&self, value: Value) -> Value {
++        let Some(message) = self.java_nonnull_message(&value) else {
++            return value;
++        };
++        Value {
++            ty: value.ty.clone(),
++            kind: ValueKind::NotNull(Box::new(value), message),
++        }
++    }
++}
+diff --git a/src/check_library.rs b/src/check_library.rs
+index e9ebc9216..40e723be3 100644
+--- a/src/check_library.rs
++++ b/src/check_library.rs
+@@ -906,6 +906,16 @@ impl Checker<'_> {
+         if method.name == "<init>" {
+             let normalized = self.vararg_arguments(&method, args, offset)?;
+             let (params, defaults) = Self::method_parameters(&method)?;
++            let class = self.classpath.load(&method.owner)?;
++            if let Some(value) = self.binary_marker_constructor(
++                &class,
++                &method,
++                &normalized,
++                Type::Java(class.name.clone()),
++                offset,
++            )? {
++                return Ok(value);
++            }
+             return self.constructor_call(
+                 &method.owner,
+                 &params,
+@@ -1074,6 +1084,7 @@ impl Checker<'_> {
+         {
+             mask >>= 1;
+         }
++        self.physical_default_values(&method, &mut values, mask, offset)?;
+         let method = if inline && mask != 0 {
+             let parameters = params.len()
+                 - usize::from(
+@@ -1643,6 +1654,15 @@ impl Checker<'_> {
+         let method = self.select_method(&constructors, args, offset)?;
+         let normalized = self.vararg_arguments(&method, args, offset)?;
+         let (params, defaults) = Self::method_parameters(&method)?;
++        if let Some(value) = self.binary_marker_constructor(
++            &class,
++            &method,
++            &normalized,
++            Type::Java(class.name.clone()),
++            offset,
++        )? {
++            return Ok(Some(value));
++        }
+         self.constructor_call(
+             &class.name,
+             &params,
+@@ -1938,6 +1958,11 @@ impl Checker<'_> {
+         };
+         let normalized = self.vararg_arguments(&method, args, offset)?;
+         let args = normalized.as_slice();
++        if let Some(value) =
++            self.binary_marker_constructor(&class, &method, args, ty.clone(), offset)?
++        {
++            return Ok(Some(value));
++        }
+         let (params, defaults) = Self::method_parameters(&method)?;
+         let (values, lets, mask) = self.arguments_checked(
+             &params,
+@@ -2404,6 +2429,15 @@ impl Checker<'_> {
+         let method = self.select_method(&constructors, args, offset)?;
+         let normalized = self.vararg_arguments(&method, args, offset)?;
+         let (params, defaults) = Self::method_parameters(&method)?;
++        if let Some(value) = self.binary_marker_constructor(
++            &class,
++            &method,
++            &normalized,
++            Type::Java(class.name.clone()),
++            offset,
++        )? {
++            return Ok(Some(value));
++        }
+         self.constructor_call(
+             &class.name,
+             &params,
+diff --git a/src/check_operations.rs b/src/check_operations.rs
+index b5c07f061..761231f3c 100644
+--- a/src/check_operations.rs
++++ b/src/check_operations.rs
+@@ -1646,6 +1646,7 @@ impl Checker<'_> {
+         }];
+         all_args.extend_from_slice(args);
+         let mut dispatch_binding = None;
++        let mut coerced_receiver = None;
+         let result = (|| {
+             let mut applicable_groups = Vec::new();
+             let mut failures = Vec::new();
+@@ -1800,6 +1801,13 @@ impl Checker<'_> {
+             }
+             let mut method =
+                 self.select_method_expected(candidates, &all_args, types, expected, offset)?;
++            if let Some((_, expected, _)) = method
++                .kotlin_params
++                .as_ref()
++                .and_then(|params| params.first())
++            {
++                coerced_receiver = Some(self.coerce(receiver.clone(), expected.clone(), offset)?);
++            }
+             if method.instance_dispatch() {
+                 let dispatch = self.imported_singleton_receiver(name, offset)?;
+                 let dispatch_slot = self.allocate_typed_slot(&dispatch.ty, offset)?;
+@@ -1818,7 +1826,7 @@ impl Checker<'_> {
+         self.remap_contract_receiver(offset, slot, &receiver);
+         result.map(|value| {
+             let mut bindings = dispatch_binding.into_iter().collect::<Vec<_>>();
+-            bindings.push((slot, receiver));
++            bindings.push((slot, coerced_receiver.unwrap_or(receiver)));
+             Self::wrap_lets(value, bindings)
+         })
+     }
+@@ -1875,26 +1883,44 @@ impl Checker<'_> {
+             kind: ExprKind::Name(local_name),
+         }];
+         all_args.extend_from_slice(args);
++        let mut coerced_receiver = None;
++        let mut binds_receiver = true;
+         let result = {
+             let binding = Value {
+                 ty: receiver.ty.clone(),
+                 kind: ValueKind::Local(slot),
+             };
+             match self.select_function_types(&source_candidates, &all_args, &[], offset) {
+-                Ok(_) => self.source_extension_call(binding, name, args, &[], false, offset),
++                Ok(id) => (|| {
++                    let (params, _) = self.specialize_source(id, &all_args, &[], offset)?;
++                    if let Some((_, expected)) = params.first() {
++                        coerced_receiver =
++                            Some(self.coerce(receiver.clone(), expected.clone(), offset)?);
++                    }
++                    self.source_extension_call(binding, name, args, &[], false, offset)
++                })(),
+                 Err(error) if error.message.contains("Ambiguous") => Err(error),
+-                Err(_) => self.resolved_extension_call(
+-                    binding,
+-                    name,
+-                    args,
+-                    &[],
+-                    ExtensionKind::MemberFallback(member_error),
+-                    offset,
+-                ),
++                Err(_) => {
++                    binds_receiver = false;
++                    self.resolved_extension_call(
++                        receiver.clone(),
++                        name,
++                        args,
++                        &[],
++                        ExtensionKind::MemberFallback(member_error),
++                        offset,
++                    )
++                }
+             }
+         };
+         self.scopes.pop();
+-        result.map(|value| Self::wrap_lets(value, vec![(slot, receiver)]))
++        result.map(|value| {
++            if binds_receiver {
++                Self::wrap_lets(value, vec![(slot, coerced_receiver.unwrap_or(receiver))])
++            } else {
++                value
++            }
++        })
+     }
+ 
+     pub(super) fn source_extension_call(
+@@ -1942,9 +1968,13 @@ impl Checker<'_> {
+             kind: ExprKind::Name(local_name),
+         }];
+         all_args.extend_from_slice(args);
++        let mut coerced_receiver = None;
+         let checked = (|| {
+             let id = self.select_function_types(&candidates, &all_args, explicit, offset)?;
+             let (params, result) = self.specialize_source(id, &all_args, explicit, offset)?;
++            if let Some((_, expected)) = params.first() {
++                coerced_receiver = Some(self.coerce(receiver.clone(), expected.clone(), offset)?);
++            }
+             let defaults = self
+                 .defaults
+                 .get(id)
+@@ -1965,7 +1995,8 @@ impl Checker<'_> {
+             ))
+         })();
+         self.scopes.pop();
+-        checked.map(|value| Self::wrap_lets(value, vec![(slot, receiver)]))
++        checked
++            .map(|value| Self::wrap_lets(value, vec![(slot, coerced_receiver.unwrap_or(receiver))]))
+     }
+ 
+     pub(super) fn check_infix_call(
+diff --git a/src/classpath.rs b/src/classpath.rs
+index 1007c3c22..97223ad7b 100644
+--- a/src/classpath.rs
++++ b/src/classpath.rs
+@@ -10,6 +10,7 @@ mod jdk_modules;
+ pub(crate) mod jvm_builtins;
+ mod metadata;
+ pub(crate) mod nested;
++mod nullability_defaults;
+ mod package_info;
+ mod signature;
+ mod singletons;
+@@ -924,6 +925,15 @@ impl Classpath {
+     }
+ 
+     pub(crate) fn constructor_visible(&self, caller: &str, method: &JavaMethod) -> bool {
++        if method
++            .library
++            .as_ref()
++            .is_some_and(|library| library.kotlin_declared && !library.kotlin_public)
++            && !method.kotlin_internal
++            && !self.lexically_within(caller, &method.owner)
++        {
++            return false;
++        }
+         (!method.kotlin_internal || self.internal_visible(&method.owner))
+             && (method.access & 1 != 0
+                 || method.access & 2 != 0 && self.lexically_within(caller, &method.owner))
+@@ -1224,23 +1234,6 @@ impl Classpath {
+         if !valid_name(internal_name) {
+             return Err(Diagnostic::new(0, "Invalid Java class internal name"));
+         }
+-        let package_info = internal_name
+-            .rsplit_once('/')
+-            .map(|(p, _)| format!("{p}/package-info.class"))
+-            .unwrap_or_else(|| "package-info.class".into());
+-        for path in &self.paths {
+-            if let Some(bytes) = self.read_resource(path, &package_info)?
+-                && !self.passive_package_info(&bytes, &package_info)?
+-            {
+-                return Err(Diagnostic::new(
+-                    0,
+-                    format!(
+-                        "Java package metadata {} is unsupported because it may define nullability defaults",
+-                        path.display()
+-                    ),
+-                ));
+-            }
+-        }
+         for path in &self.paths {
+             if let Some(bytes) = self.read_resource(path, &format!("{internal_name}.class"))? {
+                 let class = self
+@@ -1396,6 +1389,14 @@ impl Classpath {
+             }
+         }
+         self.attach_companion_fields(&mut class, &attrs, &method_attrs, &field_attrs)?;
++        if !attrs
++            .annotations
++            .iter()
++            .any(|annotation| annotation.name == "Lkotlin/Metadata;")
++            && class.access & 0x2000 == 0
++        {
++            self.apply_java_package_defaults(&mut class, &attrs, &method_attrs, &field_attrs)?;
++        }
+         Ok(class)
+     }
+ 
+@@ -1508,11 +1509,12 @@ impl Classpath {
+         else {
+             return Ok(());
+         };
+-        if metadata::attach(
++        if metadata::attach_with_values(
+             annotation,
+             &mut companion,
+             &companion_methods,
+             &companion_fields,
++            &self.value_classes(),
+         )
+         .is_err()
+             || companion.unsupported
+diff --git a/src/classpath/metadata.rs b/src/classpath/metadata.rs
+index a04af5657..1354a1e9c 100644
+--- a/src/classpath/metadata.rs
++++ b/src/classpath/metadata.rs
+@@ -979,12 +979,12 @@ pub(super) fn value_abi_dependencies(
+         let _ = context.type_parameters(&root, 5)?;
+     }
+     let mut dependencies = std::collections::BTreeSet::new();
+-    let mut remember = |logical: &Type, physical: &Type| {
++    let mut remember = |logical: &Type, physical: &Type, marker_constructor: bool| {
+         let base = match logical.base() {
+             Type::Nullable(inner) => inner.base(),
+             base => base,
+         };
+-        if logical.descriptor() != physical.descriptor() {
++        if marker_constructor || logical.descriptor() != physical.descriptor() {
+             if let Type::Java(owner) = base {
+                 if owner != &class.name {
+                     dependencies.insert(owner.clone());
+@@ -1027,13 +1027,19 @@ pub(super) fn value_abi_dependencies(
+                             .as_ref()
+                             .is_some_and(|library| library.value_class.is_some()),
+                 );
+-                if physical.len() == logical.len() + skip {
++                let marker_constructor = constructor
++                    && physical.len() == logical.len() + 1
++                    && physical.last()
++                        == Some(&Type::Java(
++                            "kotlin/jvm/internal/DefaultConstructorMarker".into(),
++                        ));
++                if physical.len() == logical.len() + skip || marker_constructor {
+                     for (logical, physical) in logical.iter().zip(&physical[skip..]) {
+-                        remember(logical, physical);
++                        remember(logical, physical, marker_constructor);
+                     }
+                 }
+                 if !constructor {
+-                    remember(&scope.field(&member, 3, 7)?, &result);
++                    remember(&scope.field(&member, 3, 7)?, &result, false);
+                 }
+                 Ok(())
+             })();
+@@ -1052,7 +1058,7 @@ pub(super) fn value_abi_dependencies(
+                         getter.integer(2)?.and_then(|id| names.get(id as usize))
+                     {
+                         let (_, result) = crate::jvm_descriptor::method_types(descriptor)?;
+-                        remember(&logical, &result);
++                        remember(&logical, &result, false);
+                     }
+                 }
+             }
+@@ -1377,6 +1383,18 @@ fn attach_member(
+         }
+         return Err(invalid());
+     };
++    if name == "<init>"
++        && attributes[*index].annotations.iter().any(|annotation| {
++            annotation.name == "Lkotlin/Deprecated;"
++                && annotation.values.iter().any(|(name, value)| {
++                    name == "level"
++                        && matches!(value, AnnotationValue::Enum { descriptor, name }
++                            if descriptor == "Lkotlin/DeprecationLevel;" && name == "HIDDEN")
++                })
++        })
++    {
++        return Err(invalid());
++    }
+     super::compose_abi::validate_member(
+         &params,
+         &result,
+@@ -1418,7 +1436,20 @@ fn attach_member(
+             .collect::<String>(),
+         physical_result.descriptor()
+     );
+-    if jvm_descriptor != descriptor && jvm_descriptor != physical {
++    let constructor_marker = name == "<init>"
++        && own.is_none()
++        && class.enclosing_instance().is_none()
++        && explicit_descriptor
++        && params
++            .iter()
++            .any(|(_, ty, _)| crate::value_abi::value_parameter(ty, &registry))
++        && jvm_descriptor
++            == physical.replace(")V", "Lkotlin/jvm/internal/DefaultConstructorMarker;)V")
++        && class.methods[*index].access & 0x1000 != 0
++        && class.methods.iter().any(|method| {
++            method.name == "<init>" && method.descriptor == physical && method.access & 2 != 0
++        });
++    if jvm_descriptor != descriptor && jvm_descriptor != physical && !constructor_marker {
+         let (logical_parameters, _) = descriptor.split_once(')').ok_or_else(invalid)?;
+         let (physical_parameters, physical_result) =
+             jvm_descriptor.split_once(')').ok_or_else(invalid)?;
+@@ -1472,7 +1503,10 @@ fn attach_member(
+             && class
+                 .enclosing_instance()
+                 .is_some_and(|outer| jvm_descriptor == format!("(L{outer};{}", &erased[1..]));
+-        if erased != jvm_descriptor && !inner_signature {
++        let marker_signature = constructor_marker
++            && jvm_descriptor
++                == erased.replace(")V", "Lkotlin/jvm/internal/DefaultConstructorMarker;)V");
++        if erased != jvm_descriptor && !inner_signature && !marker_signature {
+             return Err(invalid());
+         }
+     }
+@@ -1482,8 +1516,13 @@ fn attach_member(
+             return Err(invalid());
+         }
+         let original = &class.methods[*index];
+-        let closing = descriptor.find(')').ok_or_else(invalid)?;
+-        let parameters = &descriptor[1..closing];
++        let default_descriptor = if name == "<init>" {
++            physical.as_str()
++        } else {
++            jvm_descriptor
++        };
++        let closing = default_descriptor.find(')').ok_or_else(invalid)?;
++        let parameters = &default_descriptor[1..closing];
+         let (bridge_name, bridge_descriptor) = if name == "<init>" {
+             (
+                 "<init>".into(),
+@@ -1503,7 +1542,7 @@ fn attach_member(
+                 format!(
+                     "({dispatch}{parameters}{}Ljava/lang/Object;){}",
+                     "I".repeat(params.len().div_ceil(32)),
+-                    &descriptor[closing + 1..]
++                    &default_descriptor[closing + 1..]
+                 ),
+             )
+         };
+@@ -2202,6 +2241,7 @@ pub(super) fn attach_with_values(
+             }) {
+                 marker.kotlin_params = constructor.kotlin_params;
+                 marker.kotlin_result = constructor.kotlin_result;
++                marker.kotlin_internal = constructor.kotlin_internal;
+                 marker.library = constructor.library;
+                 marker.unsupported = false;
+             }
+diff --git a/src/classpath/nullability_defaults.rs b/src/classpath/nullability_defaults.rs
+new file mode 100644
+index 000000000..9b2162105
+--- /dev/null
++++ b/src/classpath/nullability_defaults.rs
+@@ -0,0 +1,402 @@
++use super::*;
++
++#[derive(Clone, Copy, Default)]
++pub(super) struct JavaDefaults {
++    result: Option<bool>,
++    parameter: Option<bool>,
++    field: Option<bool>,
++    nested: Option<bool>,
++}
++
++fn unsupported(message: &str) -> Diagnostic {
++    Diagnostic::new(0, message).with_kind(
++        crate::DiagnosticKind::UnsupportedLanguage,
++        "JAVA_NULLABILITY_DEFAULT_UNSUPPORTED",
++    )
++}
++
++impl JavaDefaults {
++    fn merge(&mut self, other: Self) -> Result<()> {
++        for (old, new) in [
++            (&mut self.result, other.result),
++            (&mut self.parameter, other.parameter),
++            (&mut self.field, other.field),
++            (&mut self.nested, other.nested),
++        ] {
++            if let Some(new) = new {
++                if old.is_some_and(|old| old != new) {
++                    return Err(unsupported("Conflicting Java package nullability defaults"));
++                }
++                *old = Some(new);
++            }
++        }
++        Ok(())
++    }
++
++    fn active(self) -> bool {
++        self.result.is_some() || self.parameter.is_some() || self.field.is_some()
++    }
++}
++
++impl Classpath {
++    fn raw_annotation(&self, annotation: &Annotation) -> Result<Option<Attributes>> {
++        let owner = annotation
++            .name
++            .strip_prefix('L')
++            .and_then(|name| name.strip_suffix(';'))
++            .filter(|name| valid_name(name))
++            .ok_or_else(invalid)?;
++        for path in &self.paths {
++            if let Some(bytes) = self.read_resource(path, &format!("{owner}.class"))? {
++                let (class, attrs, _, _) = parse_details_impl(&bytes, owner, false)?;
++                if class.access & 0x2000 == 0 || attrs.unsupported {
++                    return Err(unsupported("Malformed Java default qualifier annotation"));
++                }
++                return Ok(Some(attrs));
++            }
++        }
++        Ok(None)
++    }
++
++    fn default_polarity(&self, annotation: &Annotation, depth: usize) -> Result<Option<bool>> {
++        if depth > 32 {
++            return Err(unsupported("Recursive Java type qualifier nickname"));
++        }
++        if matches!(annotation.name.as_str(), "Ljavax/annotation/Nonnull;") {
++            if annotation.values.is_empty()
++                || matches!(annotation.values.as_slice(), [(key, AnnotationValue::Enum { descriptor, name })]
++                    if key == "when" && descriptor == "Ljavax/annotation/meta/When;" && name == "ALWAYS")
++            {
++                return Ok(Some(false));
++            }
++            return Err(unsupported(
++                "Java default qualifier uses an unsupported nullness condition",
++            ));
++        }
++        if matches!(annotation.name.as_str(), "Ljavax/annotation/CheckForNull;")
++            && annotation.values.is_empty()
++        {
++            return Ok(Some(true));
++        }
++        let Some(attrs) = self.raw_annotation(annotation)? else {
++            return Ok(None);
++        };
++        if !attrs
++            .annotations
++            .iter()
++            .any(|annotation| annotation.name == "Ljavax/annotation/meta/TypeQualifierNickname;")
++        {
++            if attrs
++                .annotations
++                .iter()
++                .any(|annotation| annotation.name == "Ljavax/annotation/meta/TypeQualifier;")
++            {
++                return Ok(match signature::nullability(Type::String, [annotation]) {
++                    Ok(Type::Nullable(_)) => Some(true),
++                    Ok(Type::String) => Some(false),
++                    _ => None,
++                });
++            }
++            return Ok(None);
++        }
++        let mut result = None;
++        for annotation in &attrs.annotations {
++            if let Some(polarity) = self.default_polarity(annotation, depth + 1)? {
++                if result.is_some_and(|old| old != polarity) {
++                    return Err(unsupported(
++                        "Conflicting Java qualifier nickname nullability",
++                    ));
++                }
++                result = Some(polarity);
++            }
++        }
++        Ok(result)
++    }
++
++    fn resolve_default(&self, annotation: &Annotation) -> Result<Option<JavaDefaults>> {
++        match annotation.name.as_str() {
++            "Lorg/jspecify/annotations/NullMarked;" | "Lorg/jspecify/nullness/NullMarked;"
++                if annotation.values.is_empty() =>
++            {
++                return Err(unsupported(
++                    "JSpecify default bounds and declaration contexts are unsupported",
++                ));
++            }
++            "Lorg/jspecify/annotations/NullUnmarked;" | "Lorg/jspecify/nullness/NullUnmarked;"
++                if annotation.values.is_empty() =>
++            {
++                return Ok(Some(JavaDefaults::default()));
++            }
++            _ => {}
++        }
++        let Some(attrs) = self.raw_annotation(annotation)? else {
++            return Ok(None);
++        };
++        let Some(targets) = attrs
++            .annotations
++            .iter()
++            .find(|annotation| annotation.name == "Ljavax/annotation/meta/TypeQualifierDefault;")
++        else {
++            return Ok(None);
++        };
++        if !annotation.values.is_empty() {
++            return Err(unsupported(
++                "Parameterized Java default qualifier annotations are unsupported",
++            ));
++        }
++        let migration = attrs
++            .annotations
++            .iter()
++            .find(|annotation| annotation.name == "Lkotlin/annotations/jvm/UnderMigration;");
++        let strict = match migration {
++            None => false,
++            Some(annotation) => match annotation.values.as_slice() {
++                [(key, AnnotationValue::Enum { descriptor, name })]
++                    if key == "status"
++                        && descriptor == "Lkotlin/annotations/jvm/MigrationStatus;" =>
++                {
++                    match name.as_str() {
++                        "STRICT" => true,
++                        "WARN" | "IGNORE" => false,
++                        _ => return Err(unsupported("Unknown Java qualifier migration status")),
++                    }
++                }
++                _ => return Err(unsupported("Malformed Java qualifier migration status")),
++            },
++        };
++        let mut polarity = None;
++        for annotation in &attrs.annotations {
++            if let Some(value) = self.default_polarity(annotation, 0)? {
++                if polarity.is_some_and(|old| old != value) {
++                    return Err(unsupported(
++                        "Conflicting Java package nullability qualifiers",
++                    ));
++                }
++                polarity = Some(value);
++            }
++        }
++        let polarity = polarity.ok_or_else(|| {
++            unsupported("Java default annotation lacks a supported nullability qualifier")
++        })?;
++        let [(key, AnnotationValue::Array(targets))] = targets.values.as_slice() else {
++            return Err(unsupported("Malformed Java default qualifier targets"));
++        };
++        if key != "value" || targets.is_empty() {
++            return Err(unsupported("Malformed Java default qualifier targets"));
++        }
++        let mut defaults = JavaDefaults::default();
++        for target in targets {
++            let AnnotationValue::Enum { descriptor, name } = target else {
++                return Err(unsupported("Malformed Java default qualifier target"));
++            };
++            if descriptor != "Ljava/lang/annotation/ElementType;" {
++                return Err(unsupported("Malformed Java default qualifier target type"));
++            }
++            match name.as_str() {
++                "METHOD" => defaults.result = Some(polarity),
++                "PARAMETER" => defaults.parameter = Some(polarity),
++                "FIELD" => defaults.field = Some(polarity),
++                "TYPE_USE" => {
++                    defaults.result = Some(polarity);
++                    defaults.parameter = Some(polarity);
++                    defaults.field = Some(polarity);
++                    defaults.nested = Some(polarity);
++                }
++                _ => return Err(unsupported("Java default qualifier target is unsupported")),
++            }
++        }
++        Ok(Some(if strict {
++            defaults
++        } else {
++            JavaDefaults::default()
++        }))
++    }
++
++    pub(super) fn java_package_defaults(&self, owner: &str) -> Result<JavaDefaults> {
++        let resource = owner
++            .rsplit_once('/')
++            .map(|(package, _)| format!("{package}/package-info.class"))
++            .unwrap_or_else(|| "package-info.class".into());
++        for path in &self.paths {
++            let Some(bytes) = self.read_resource(path, &resource)? else {
++                continue;
++            };
++            if self.passive_package_info(&bytes, &resource)? {
++                return Ok(JavaDefaults::default());
++            }
++            let (class, attrs, _, _) = parse_details_impl(
++                &bytes,
++                resource.strip_suffix(".class").ok_or_else(invalid)?,
++                false,
++            )?;
++            if class.access & 0x200 == 0
++                || !class.fields.is_empty()
++                || !class.methods.is_empty()
++                || attrs.unsupported
++                || !attrs.type_annotation_targets.is_empty()
++            {
++                return Err(unsupported("Unsupported Java package metadata shape"));
++            }
++            let mut defaults = JavaDefaults::default();
++            for annotation in &attrs.annotations {
++                if let Some(selected) = self.resolve_default(annotation)? {
++                    defaults.merge(selected)?;
++                } else if signature::type_semantic_annotation(&annotation.name)
++                    || !self.passive_declaration_annotation(annotation)?
++                {
++                    return Err(unsupported("Unsupported Java package annotation semantics"));
++                }
++            }
++            return Ok(defaults);
++        }
++        Ok(JavaDefaults::default())
++    }
++
++    pub(super) fn apply_java_package_defaults(
++        &self,
++        class: &mut JavaClass,
++        attrs: &Attributes,
++        method_attrs: &[Attributes],
++        field_attrs: &[Attributes],
++    ) -> Result<()> {
++        if class.name.rsplit('/').next() == Some("package-info") {
++            return Ok(());
++        }
++        let defaults = self.java_package_defaults(&class.name)?;
++        if !defaults.active() {
++            return Ok(());
++        }
++        for annotation in &attrs.annotations {
++            if self.resolve_default(annotation)?.is_some() {
++                return Err(unsupported(
++                    "Declaration overrides of Java package defaults are unsupported",
++                ));
++            }
++        }
++        let mut parent = self.lexical_parents.borrow().get(&class.name).cloned();
++        for _ in 0..64 {
++            let Some(owner) = parent else { break };
++            for path in &self.paths {
++                if let Some(bytes) = self.read_resource(path, &format!("{owner}.class"))? {
++                    let (_, attrs, _, _) = parse_details_impl(&bytes, &owner, false)?;
++                    for annotation in &attrs.annotations {
++                        if self.resolve_default(annotation)?.is_some() {
++                            return Err(unsupported(
++                                "Enclosing declaration Java nullability defaults are unsupported",
++                            ));
++                        }
++                    }
++                    break;
++                }
++            }
++            parent = self.lexical_parents.borrow().get(&owner).cloned();
++        }
++        for (method, attributes) in class.methods.iter_mut().zip(method_attrs) {
++            if attributes
++                .annotations
++                .iter()
++                .any(|annotation| !matches!(self.resolve_default(annotation), Ok(None)))
++            {
++                method.unsupported = true;
++            }
++            if method.unsupported {
++                continue;
++            }
++            let converted = (|| -> Result<()> {
++                if let Some(params) = &mut method.kotlin_params {
++                    for (_, ty, _) in params {
++                        *ty = enhance(ty.clone(), defaults.parameter, defaults.nested, false)?;
++                    }
++                }
++                if let Some(ty) = &mut method.kotlin_result {
++                    *ty = enhance(ty.clone(), defaults.result, defaults.nested, false)?;
++                }
++                Ok(())
++            })();
++            if converted.is_err() {
++                method.unsupported = true;
++            }
++        }
++        for (field, attributes) in class.fields.iter_mut().zip(field_attrs) {
++            if attributes
++                .annotations
++                .iter()
++                .any(|annotation| !matches!(self.resolve_default(annotation), Ok(None)))
++            {
++                field.unsupported = true;
++            }
++            if field.unsupported {
++                continue;
++            }
++            let ty = field.java_type.as_deref().cloned().or_else(|| {
++                signature::field(&field.descriptor, &[])
++                    .ok()
++                    .map(|ty| Type::Platform(Box::new(ty)))
++            });
++            if let Some(ty) = ty {
++                match enhance(ty, defaults.field, defaults.nested, false) {
++                    Ok(ty) => field.java_type = Some(Box::new(ty)),
++                    Err(_) => field.unsupported = true,
++                }
++            }
++        }
++        Ok(())
++    }
++}
++
++fn enhance(ty: Type, root: Option<bool>, nested: Option<bool>, implicit: bool) -> Result<Type> {
++    if matches!(ty, Type::Parameter { .. }) && root.is_some() {
++        return Err(unsupported(
++            "Java defaults on type parameters require definitely non-null type support",
++        ));
++    }
++    let ty = match ty {
++        Type::Platform(inner) => {
++            if root.is_some() && matches!(inner.base(), Type::Parameter { .. }) {
++                return Err(unsupported(
++                    "Java defaults on type parameters require definitely non-null type support",
++                ));
++            }
++            let inner = enhance(*inner, None, nested, false)?;
++            return Ok(match root {
++                Some(true) => Type::Nullable(Box::new(inner)),
++                Some(false) => inner,
++                None => Type::Platform(Box::new(inner)),
++            });
++        }
++        Type::Nullable(inner) => {
++            return Ok(Type::Nullable(Box::new(enhance(
++                *inner, None, nested, false,
++            )?)));
++        }
++        Type::Array(inner) => Type::Array(Box::new(enhance(*inner, nested, nested, true)?)),
++        Type::OutArray(inner) => Type::OutArray(Box::new(enhance(*inner, nested, nested, true)?)),
++        Type::StringArray if nested == Some(true) => {
++            Type::Array(Box::new(enhance(Type::String, nested, nested, true)?))
++        }
++        Type::List(inner) => Type::List(Box::new(enhance(*inner, nested, nested, true)?)),
++        Type::MutableList(inner) => {
++            Type::MutableList(Box::new(enhance(*inner, nested, nested, true)?))
++        }
++        Type::FlexibleList(inner) => {
++            Type::FlexibleList(Box::new(enhance(*inner, nested, nested, true)?))
++        }
++        Type::Parameterized {
++            name,
++            mut arguments,
++        } => {
++            for argument in &mut arguments {
++                if let Some(ty) = &mut argument.ty {
++                    *ty = enhance(ty.clone(), nested, nested, true)?;
++                }
++            }
++            Type::Parameterized { name, arguments }
++        }
++        ty => ty,
++    };
++    if implicit && root == Some(true) && ty.is_reference() {
++        Ok(Type::Nullable(Box::new(ty)))
++    } else {
++        Ok(ty)
++    }
++}
+diff --git a/tests/binary_value_defaults.rs b/tests/binary_value_defaults.rs
+new file mode 100644
+index 000000000..ca1b6c086
+--- /dev/null
++++ b/tests/binary_value_defaults.rs
+@@ -0,0 +1,91 @@
++use korrust::{CompileOptions, DiagnosticKind, SourceInput, compile_batch_with_options};
++use std::path::PathBuf;
++use std::process::Command;
++fn run(command: &mut Command) {
++    let result = command.output().unwrap();
++    assert!(
++        result.status.success(),
++        "{command:?}\n{}\n{}",
++        String::from_utf8_lossy(&result.stdout),
++        String::from_utf8_lossy(&result.stderr)
++    );
++}
++#[test]
++fn compiled_methods_use_physical_default_storage_and_bridges() {
++    std::thread::Builder::new()
++        .stack_size(32 * 1024 * 1024)
++        .spawn(check)
++        .unwrap()
++        .join()
++        .unwrap();
++}
++fn check() {
++    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
++    let fixtures = root.join("tests/binary_value_defaults");
++    let work = std::env::temp_dir().join(format!(
++        "korrust-binary-value-defaults-{}",
++        std::process::id()
++    ));
++    let dependency = work.join("dependency");
++    let official = work.join("official");
++    let candidate = work.join("candidate");
++    let callers = work.join("callers");
++    let standard = root.join("references/kotlinc/lib/kotlin-stdlib.jar");
++    let compiler = root.join("references/kotlinc/bin/kotlinc");
++    run(Command::new(&compiler)
++        .arg(fixtures.join("Library.kt"))
++        .args([
++            "-jvm-target",
++            "1.8",
++            "-module-name",
++            "binary_defaults_library",
++            "-d",
++        ])
++        .arg(&dependency));
++    let paths = [dependency.clone(), standard.clone()];
++    let cp = std::env::join_paths(&paths).unwrap();
++    let input = |name: &str| SourceInput {
++        identity: fixtures.join(format!("{name}.kt")).display().to_string(),
++        file_name: format!("{name}.kt"),
++        source: std::fs::read_to_string(fixtures.join(format!("{name}.kt"))).unwrap(),
++    };
++    let options = CompileOptions {
++        module_name: "binary_defaults_consumer".into(),
++        friend_paths: Vec::new(),
++    };
++    run(Command::new(&compiler)
++        .arg(fixtures.join("Consumer.kt"))
++        .arg("-cp")
++        .arg(&cp)
++        .args(["-jvm-target", "1.8", "-d"])
++        .arg(&official));
++    for artifact in compile_batch_with_options(&[input("Consumer")], &paths, &options).unwrap() {
++        let path = candidate.join(artifact.output.relative_path);
++        std::fs::create_dir_all(path.parent().unwrap()).unwrap();
++        std::fs::write(path, artifact.output.bytes).unwrap();
++    }
++    run(Command::new("javac")
++        .arg("-cp")
++        .arg(std::env::join_paths([&official, &dependency, &standard]).unwrap())
++        .arg("-d")
++        .arg(&callers)
++        .arg(fixtures.join("Calls.java")));
++    for output in [&official, &candidate] {
++        run(Command::new("java")
++            .args(["-Xverify:all", "-cp"])
++            .arg(std::env::join_paths([&callers, output, &dependency, &standard]).unwrap())
++            .arg("binarydefaults.consumer.Calls"));
++    }
++    for name in ["NullArgument", "WrongArgument"] {
++        let error = compile_batch_with_options(&[input(name)], &paths, &options)
++            .err()
++            .unwrap();
++        assert_eq!(
++            error.kind,
++            DiagnosticKind::InvalidKotlin,
++            "{name}: {}",
++            error.message
++        );
++    }
++    std::fs::remove_dir_all(work).unwrap();
++}
+diff --git a/tests/binary_value_defaults/Calls.java b/tests/binary_value_defaults/Calls.java
+new file mode 100644
+index 000000000..de9d4af83
+--- /dev/null
++++ b/tests/binary_value_defaults/Calls.java
+@@ -0,0 +1,17 @@
++package binarydefaults.consumer;
++public final class Calls {
++    public static void main(String[] args) {
++        if (ConsumerKt.topValue() != 54L) throw new AssertionError("static default/explicit values");
++        if (ConsumerKt.memberValue() != 45L) throw new AssertionError("member defaults");
++        if (ConsumerKt.extensionValue() != 42L) throw new AssertionError("extension receiver mask offset");
++        if (ConsumerKt.dispatchValue() != 44L) throw new AssertionError("value dispatch carrier");
++        if (!ConsumerKt.referenceValue().equals("reference")) throw new AssertionError("reference carrier");
++        if (!ConsumerKt.nullableValue()) throw new AssertionError("nullable carrier");
++        if (!ConsumerKt.genericValue().equals("generic")) throw new AssertionError("generic member");
++        if (ConsumerKt.wideValue() != 233L) throw new AssertionError("two mask words");
++        if (!ConsumerKt.order().equals("ab:a:5")) throw new AssertionError("provided argument order");
++        if (!ConsumerKt.defaultOrder().equals("RaK:a:5")) throw new AssertionError("defaults after provided arguments");
++        if (ConsumerKt.nullableExtension() != 7L) throw new AssertionError("nullable extension receiver");
++        System.out.println("binary-value-defaults-ok");
++    }
++}
+diff --git a/tests/binary_value_defaults/ComposeProbe.kt b/tests/binary_value_defaults/ComposeProbe.kt
+new file mode 100644
+index 000000000..d6d800983
+--- /dev/null
++++ b/tests/binary_value_defaults/ComposeProbe.kt
+@@ -0,0 +1,9 @@
++package binarydefaults.compose
++import androidx.compose.ui.text.AnnotatedString
++import androidx.compose.ui.text.TextMeasurer
++import androidx.compose.ui.text.TextStyle
++import androidx.compose.ui.text.TextLayoutResult
++import androidx.compose.ui.unit.Constraints
++fun measure(measurer: TextMeasurer, text: AnnotatedString, style: TextStyle, constraints: Constraints): TextLayoutResult =
++    measurer.measure(text, style, constraints = constraints)
++fun factory(): Constraints = Constraints(maxWidth = 160)
+diff --git a/tests/binary_value_defaults/Consumer.kt b/tests/binary_value_defaults/Consumer.kt
+new file mode 100644
+index 000000000..850d5672c
+--- /dev/null
++++ b/tests/binary_value_defaults/Consumer.kt
+@@ -0,0 +1,35 @@
++package binarydefaults.consumer
++import binarydefaults.library.Key
++import binarydefaults.library.Label
++import binarydefaults.library.readerEvent
++import binarydefaults.library.nullableMix
++import binarydefaults.library.Reader
++import binarydefaults.library.top
++import binarydefaults.library.mix
++import binarydefaults.library.reference
++import binarydefaults.library.nullable
++import binarydefaults.library.wide
++import binarydefaults.library.reset
++import binarydefaults.library.keyEvent
++import binarydefaults.library.textEvent
++fun topValue(): Long = top().raw + top(Key(31L), Label("given")).raw
++fun memberValue(): Long = Reader().read().raw + Reader().read(label = "named").raw
++fun extensionValue(): Long = Key(29L).mix().raw
++fun dispatchValue(): Long = Key(37L).plus().raw
++fun referenceValue(): String = reference().raw
++fun nullableValue(): Boolean = nullable()
++fun genericValue(): String = Reader().generic(item = "generic")
++fun wideValue(): Long = wide(p32 = 99)
++fun order(): String {
++    reset()
++    return Reader().ordered(text = textEvent("a"), key = keyEvent("b"))
++}
++fun defaultOrder(): String {
++    reset()
++    return readerEvent().ordered(text = textEvent("a"))
++}
++
++fun nullableExtension(): Long {
++    val key: Key? = null
++    return key.nullableMix()
++}
+diff --git a/tests/binary_value_defaults/Library.kt b/tests/binary_value_defaults/Library.kt
+new file mode 100644
+index 000000000..f14ceae0b
+--- /dev/null
++++ b/tests/binary_value_defaults/Library.kt
+@@ -0,0 +1,25 @@
++package binarydefaults.library
++@JvmInline value class Key(val raw: Long) {
++    fun plus(other: Key = Key(7L)): Key = Key(raw + other.raw)
++}
++@JvmInline value class Label(val raw: String)
++@JvmInline value class Small(val raw: Int)
++private var events: String = ""
++fun reset() { events = "" }
++fun trace(): String = events
++fun keyEvent(tag: String): Key { events += tag; return Key(5L) }
++fun textEvent(tag: String): String { events += tag; return tag }
++fun top(key: Key = Key(11L), label: Label = Label("default")): Key = Key(key.raw + label.raw.length)
++fun Key.mix(other: Key = Key(13L)): Key = Key(raw + other.raw)
++fun reference(label: Label = Label("reference")): Label = label
++fun nullable(key: Key? = null): Boolean = key == null
++class Reader {
++    fun read(key: Key = Key(17L), label: String = "member"): Key = Key(key.raw + label.length)
++    fun ordered(key: Key = keyEvent("K"), text: String = textEvent("T")): String = trace() + ":" + text + ":" + key.raw
++    fun <T> generic(key: Key = Key(19L), item: T): T = if (key.raw == 19L) item else throw IllegalStateException("wrong default")
++}
++
++fun wide(p0: Key = Key(101L), p1: Int = 1, p2: Int = 2, p3: Int = 3, p4: Int = 4, p5: Int = 5, p6: Int = 6, p7: Int = 7, p8: Int = 8, p9: Int = 9, p10: Int = 10, p11: Int = 11, p12: Int = 12, p13: Int = 13, p14: Int = 14, p15: Int = 15, p16: Int = 16, p17: Int = 17, p18: Int = 18, p19: Int = 19, p20: Int = 20, p21: Int = 21, p22: Int = 22, p23: Int = 23, p24: Int = 24, p25: Int = 25, p26: Int = 26, p27: Int = 27, p28: Int = 28, p29: Int = 29, p30: Int = 30, p31: Int = 31, p32: Int = 32, p33: Small = Small(33)): Long = p0.raw + p32 + p33.raw
++@JvmInline value class OtherKey(val raw: Long)
++fun readerEvent(): Reader { events += "R"; return Reader() }
++fun Key?.nullableMix(other: Key = Key(7L)): Long = (this?.raw ?: 0L) + other.raw
+diff --git a/tests/binary_value_defaults/NullArgument.kt b/tests/binary_value_defaults/NullArgument.kt
+new file mode 100644
+index 000000000..e440656ba
+--- /dev/null
++++ b/tests/binary_value_defaults/NullArgument.kt
+@@ -0,0 +1,4 @@
++package binarydefaults.consumer
++import binarydefaults.library.Key
++import binarydefaults.library.top
++fun invalid(): Key = top(key = null)
+diff --git a/tests/binary_value_defaults/WrongArgument.kt b/tests/binary_value_defaults/WrongArgument.kt
+new file mode 100644
+index 000000000..23005dc99
+--- /dev/null
++++ b/tests/binary_value_defaults/WrongArgument.kt
+@@ -0,0 +1,5 @@
++package binarydefaults.consumer
++import binarydefaults.library.Key
++import binarydefaults.library.OtherKey
++import binarydefaults.library.top
++fun invalid(): Key = top(key = OtherKey(1L))
+diff --git a/tests/companion_value_replay.rs b/tests/companion_value_replay.rs
+new file mode 100644
+index 000000000..74401ec7f
+--- /dev/null
++++ b/tests/companion_value_replay.rs
+@@ -0,0 +1,91 @@
++use korrust::{CompileOptions, DiagnosticKind, SourceInput, compile_batch_with_options};
++use std::path::PathBuf;
++use std::process::Command;
++fn run(command: &mut Command) {
++    let result = command.output().unwrap();
++    assert!(
++        result.status.success(),
++        "{command:?}\n{}\n{}",
++        String::from_utf8_lossy(&result.stdout),
++        String::from_utf8_lossy(&result.stderr)
++    );
++}
++#[test]
++fn companion_field_replay_preserves_value_class_member_metadata() {
++    std::thread::Builder::new()
++        .stack_size(32 * 1024 * 1024)
++        .spawn(check)
++        .unwrap()
++        .join()
++        .unwrap();
++}
++fn check() {
++    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
++    let fixtures = root.join("tests/companion_value_replay");
++    let work = std::env::temp_dir().join(format!(
++        "korrust-companion-value-replay-{}",
++        std::process::id()
++    ));
++    let dependency = work.join("dependency");
++    let official = work.join("official");
++    let candidate = work.join("candidate");
++    let callers = work.join("callers");
++    let standard = root.join("references/kotlinc/lib/kotlin-stdlib.jar");
++    let compiler = root.join("references/kotlinc/bin/kotlinc");
++    run(Command::new(&compiler)
++        .arg(fixtures.join("Library.kt"))
++        .args([
++            "-jvm-target",
++            "1.8",
++            "-module-name",
++            "companion_values_library",
++            "-d",
++        ])
++        .arg(&dependency));
++    let paths = [dependency.clone(), standard.clone()];
++    let cp = std::env::join_paths(&paths).unwrap();
++    let input = |name: &str| SourceInput {
++        identity: fixtures.join(format!("{name}.kt")).display().to_string(),
++        file_name: format!("{name}.kt"),
++        source: std::fs::read_to_string(fixtures.join(format!("{name}.kt"))).unwrap(),
++    };
++    let options = CompileOptions {
++        module_name: "companion_values_consumer".into(),
++        friend_paths: Vec::new(),
++    };
++    run(Command::new(&compiler)
++        .arg(fixtures.join("Consumer.kt"))
++        .arg("-cp")
++        .arg(&cp)
++        .args(["-jvm-target", "1.8", "-d"])
++        .arg(&official));
++    for artifact in compile_batch_with_options(&[input("Consumer")], &paths, &options).unwrap() {
++        let path = candidate.join(artifact.output.relative_path);
++        std::fs::create_dir_all(path.parent().unwrap()).unwrap();
++        std::fs::write(path, artifact.output.bytes).unwrap();
++    }
++    run(Command::new("javac")
++        .arg("-cp")
++        .arg(std::env::join_paths([&official, &dependency, &standard]).unwrap())
++        .arg("-d")
++        .arg(&callers)
++        .arg(fixtures.join("Calls.java")));
++    for output in [&official, &candidate] {
++        run(Command::new("java")
++            .args(["-Xverify:all", "-cp"])
++            .arg(std::env::join_paths([&callers, output, &dependency, &standard]).unwrap())
++            .arg("companionvalues.consumer.Calls"));
++    }
++    for name in ["Private", "WrongSetter"] {
++        let error = compile_batch_with_options(&[input(name)], &paths, &options)
++            .err()
++            .unwrap();
++        assert_eq!(
++            error.kind,
++            DiagnosticKind::InvalidKotlin,
++            "{name}: {}",
++            error.message
++        );
++    }
++    std::fs::remove_dir_all(work).unwrap();
++}
+diff --git a/tests/companion_value_replay/Calls.java b/tests/companion_value_replay/Calls.java
+new file mode 100644
+index 000000000..4a9bb4411
+--- /dev/null
++++ b/tests/companion_value_replay/Calls.java
+@@ -0,0 +1,12 @@
++package companionvalues.consumer;
++public final class Calls {
++    public static void main(String[] args) {
++        if (ConsumerKt.primary() != 47L) throw new AssertionError("value getter");
++        if (!ConsumerKt.name().equals("palette:direct")) throw new AssertionError("reference getter and JVM field");
++        if (ConsumerKt.mutate() != 67L) throw new AssertionError("value setter");
++        if (!ConsumerKt.nullable()) throw new AssertionError("nullable value getter");
++        if (ConsumerKt.version() != 3) throw new AssertionError("constant field");
++        if (ConsumerKt.defaultMethod() != 71L) throw new AssertionError("method default metadata");
++        System.out.println("companion-values-ok");
++    }
++}
+diff --git a/tests/companion_value_replay/ComposeProbe.kt b/tests/companion_value_replay/ComposeProbe.kt
+new file mode 100644
+index 000000000..51f819208
+--- /dev/null
++++ b/tests/companion_value_replay/ComposeProbe.kt
+@@ -0,0 +1,8 @@
++package companionvalues.compose
++import androidx.compose.ui.graphics.Color
++import androidx.compose.ui.text.AnnotatedString
++import androidx.compose.ui.text.SpanStyle
++import androidx.compose.ui.text.buildAnnotatedString
++fun color(): Color = Color.Red
++fun direct(builder: AnnotatedString.Builder) { builder.addStyle(SpanStyle(color = Color.Red), 0, 6) }
++fun implicit(): AnnotatedString = buildAnnotatedString { addStyle(SpanStyle(background = Color.Yellow), 0, 6) }
+diff --git a/tests/companion_value_replay/Consumer.kt b/tests/companion_value_replay/Consumer.kt
+new file mode 100644
+index 000000000..e5ce2b08e
+--- /dev/null
++++ b/tests/companion_value_replay/Consumer.kt
+@@ -0,0 +1,12 @@
++package companionvalues.consumer
++import companionvalues.library.Key
++import companionvalues.library.Palette
++fun primary(): Long = Palette.primary.raw + Key.zero.raw
++fun name(): String = Palette.name.raw + ":" + Palette.javaName
++fun mutate(): Long {
++    Palette.accent = Key(67L)
++    return Palette.accent.raw
++}
++fun nullable(): Boolean = Palette.maybe == null
++fun version(): Int = Palette.version
++fun defaultMethod(): Long = Palette.choose().raw
+diff --git a/tests/companion_value_replay/Library.kt b/tests/companion_value_replay/Library.kt
+new file mode 100644
+index 000000000..b65235647
+--- /dev/null
++++ b/tests/companion_value_replay/Library.kt
+@@ -0,0 +1,18 @@
++package companionvalues.library
++@JvmInline value class Key(val raw: Long) {
++    companion object { val zero: Key = Key(0L) }
++}
++@JvmInline value class Label(val raw: String)
++@JvmInline value class OtherKey(val raw: Long)
++class Palette {
++    companion object {
++        val primary: Key = Key(47L)
++        val name: Label = Label("palette")
++        var accent: Key = Key(5L)
++        val maybe: Key? = null
++        const val version: Int = 3
++        @JvmField val javaName: String = "direct"
++        private val secret: Key = Key(91L)
++        fun choose(key: Key = Key(71L)): Key = key
++    }
++}
+diff --git a/tests/companion_value_replay/Private.kt b/tests/companion_value_replay/Private.kt
+new file mode 100644
+index 000000000..93701934d
+--- /dev/null
++++ b/tests/companion_value_replay/Private.kt
+@@ -0,0 +1,3 @@
++package companionvalues.consumer
++import companionvalues.library.Palette
++fun invalid(): Long = Palette.secret.raw
+diff --git a/tests/companion_value_replay/VerifyApp.java.template b/tests/companion_value_replay/VerifyApp.java.template
+new file mode 100644
+index 000000000..ae8c5fccf
+--- /dev/null
++++ b/tests/companion_value_replay/VerifyApp.java.template
+@@ -0,0 +1,13 @@
++import __APP_CLASS__;
++public final class VerifyApp {
++    public static void main(String[] names) throws Exception {
++        Class<?> root = __APP_CLASS__.class;
++        if (root.getDeclaredMethods().length == 0) throw new AssertionError("missing source methods");
++        for (String name : names) {
++            Class<?> type = Class.forName(name, false, root.getClassLoader());
++            type.getDeclaredMethods();
++            type.getDeclaredConstructors();
++        }
++        System.out.println("app-classes-verified");
++    }
++}
+diff --git a/tests/companion_value_replay/WrongSetter.kt b/tests/companion_value_replay/WrongSetter.kt
+new file mode 100644
+index 000000000..0ab3bf85a
+--- /dev/null
++++ b/tests/companion_value_replay/WrongSetter.kt
+@@ -0,0 +1,4 @@
++package companionvalues.consumer
++import companionvalues.library.Palette
++import companionvalues.library.OtherKey
++fun invalid() { Palette.accent = OtherKey(1L) }
+diff --git a/tests/constructor_markers.rs b/tests/constructor_markers.rs
+new file mode 100644
+index 000000000..82fefc82e
+--- /dev/null
++++ b/tests/constructor_markers.rs
+@@ -0,0 +1,101 @@
++use korrust::{CompileOptions, DiagnosticKind, SourceInput, compile_batch_with_options};
++use std::path::PathBuf;
++use std::process::Command;
++fn run(command: &mut Command) {
++    let result = command.output().unwrap();
++    assert!(
++        result.status.success(),
++        "{command:?}\n{}\n{}",
++        String::from_utf8_lossy(&result.stdout),
++        String::from_utf8_lossy(&result.stderr)
++    );
++}
++#[test]
++fn binary_value_parameter_constructors_use_physical_marker_bridges() {
++    std::thread::Builder::new()
++        .stack_size(32 * 1024 * 1024)
++        .spawn(check)
++        .unwrap()
++        .join()
++        .unwrap();
++}
++fn check() {
++    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
++    let fixtures = root.join("tests/constructor_markers");
++    let work = std::env::temp_dir().join(format!(
++        "korrust-constructor-markers-{}",
++        std::process::id()
++    ));
++    let dependency = work.join("dependency");
++    let official = work.join("official");
++    let candidate = work.join("candidate");
++    let callers = work.join("callers");
++    let standard = root.join("references/kotlinc/lib/kotlin-stdlib.jar");
++    let compiler = root.join("references/kotlinc/bin/kotlinc");
++    run(Command::new(&compiler)
++        .arg(fixtures.join("Library.kt"))
++        .args(["-jvm-target", "1.8", "-module-name", "marker_library", "-d"])
++        .arg(&dependency));
++    let paths = [dependency.clone(), standard.clone()];
++    let cp = std::env::join_paths(&paths).unwrap();
++    let input = |name: &str| SourceInput {
++        identity: fixtures.join(format!("{name}.kt")).display().to_string(),
++        file_name: format!("{name}.kt"),
++        source: std::fs::read_to_string(fixtures.join(format!("{name}.kt"))).unwrap(),
++    };
++    let options = CompileOptions {
++        module_name: "marker_consumer".into(),
++        friend_paths: Vec::new(),
++    };
++    run(Command::new(&compiler)
++        .arg(fixtures.join("Consumer.kt"))
++        .arg("-cp")
++        .arg(&cp)
++        .args(["-jvm-target", "1.8", "-d"])
++        .arg(&official));
++    for artifact in compile_batch_with_options(&[input("Consumer")], &paths, &options).unwrap() {
++        let path = candidate.join(artifact.output.relative_path);
++        std::fs::create_dir_all(path.parent().unwrap()).unwrap();
++        std::fs::write(path, artifact.output.bytes).unwrap();
++    }
++    run(Command::new("javac")
++        .arg("-cp")
++        .arg(std::env::join_paths([&official, &dependency, &standard]).unwrap())
++        .arg("-d")
++        .arg(&callers)
++        .arg(fixtures.join("Calls.java")));
++    for output in [&official, &candidate] {
++        run(Command::new("java")
++            .args(["-Xverify:all", "-cp"])
++            .arg(std::env::join_paths([&callers, output, &dependency, &standard]).unwrap())
++            .arg("markers.consumer.Calls"));
++    }
++    for name in ["Private", "Internal", "HiddenDeprecated"] {
++        let error = compile_batch_with_options(&[input(name)], &paths, &options)
++            .err()
++            .unwrap();
++        assert_eq!(
++            error.kind,
++            DiagnosticKind::InvalidKotlin,
++            "{name}: {}",
++            error.message
++        );
++    }
++    let friend = CompileOptions {
++        friend_paths: vec![dependency],
++        ..options
++    };
++    compile_batch_with_options(&[input("Internal")], &paths, &friend).unwrap();
++    for name in ["Private", "PublicInline"] {
++        let error = compile_batch_with_options(&[input(name)], &paths, &friend)
++            .err()
++            .unwrap();
++        assert_eq!(
++            error.kind,
++            DiagnosticKind::InvalidKotlin,
++            "{name}: {}",
++            error.message
++        );
++    }
++    std::fs::remove_dir_all(work).unwrap();
++}
+diff --git a/tests/constructor_markers/Calls.java b/tests/constructor_markers/Calls.java
+new file mode 100644
+index 000000000..d6b1b9d3c
+--- /dev/null
++++ b/tests/constructor_markers/Calls.java
+@@ -0,0 +1,12 @@
++package markers.consumer;
++public final class Calls {
++    public static void main(String[] args) {
++        if (ConsumerKt.numeric() != 83L) throw new AssertionError("carriers");
++        if (!ConsumerKt.defaults().equals("default:named:generic:qualified")) throw new AssertionError("defaults");
++        if (!ConsumerKt.nullable()) throw new AssertionError("nullable carrier");
++        if (ConsumerKt.wide() != 134L) throw new AssertionError("mask words");
++        if (!ConsumerKt.order().equals("abS:a")) throw new AssertionError("evaluation order");
++        if (!ConsumerKt.evolved().equals("current:59")) throw new AssertionError("hidden overload");
++        System.out.println("constructor-markers-ok");
++    }
++}
+diff --git a/tests/constructor_markers/ComposeProbe.kt b/tests/constructor_markers/ComposeProbe.kt
+new file mode 100644
+index 000000000..007823848
+--- /dev/null
++++ b/tests/constructor_markers/ComposeProbe.kt
+@@ -0,0 +1,5 @@
++package markers.compose
++import androidx.compose.ui.text.SpanStyle
++import androidx.compose.ui.text.TextStyle
++fun span(): SpanStyle = SpanStyle()
++fun text(): TextStyle = TextStyle()
+diff --git a/tests/constructor_markers/Consumer.kt b/tests/constructor_markers/Consumer.kt
+new file mode 100644
+index 000000000..a53afb610
+--- /dev/null
++++ b/tests/constructor_markers/Consumer.kt
+@@ -0,0 +1,30 @@
++package markers.consumer
++import markers.library.Key
++import markers.library.Small
++import markers.library.PairBox
++import markers.library.NullableBox
++import markers.library.reset
++import markers.library.trace
++import markers.library.textEvent
++import markers.library.keyEvent
++import markers.library.GenericBox
++fun defaultBox(): PairBox = PairBox()
++fun explicitBox(): PairBox = PairBox(Key(31L), Small(5), "given")
++fun reordered(): PairBox = PairBox(text = "named", key = Key(41L))
++fun nullableBox(): NullableBox = NullableBox()
++fun genericBox(): GenericBox<String> = GenericBox(item = "generic")
++fun qualified(): PairBox = markers.library.PairBox(text = "qualified")
++
++fun numeric(): Long = defaultBox().key.raw + explicitBox().key.raw + reordered().key.raw
++fun defaults(): String = defaultBox().text + ":" + reordered().text + ":" + genericBox().item + ":" + qualified().text
++fun nullable(): Boolean = nullableBox().key == null
++fun wide(): Long = markers.library.WideBox(p32 = 99).p0.raw + markers.library.WideBox().p33.raw
++fun order(): String {
++    reset()
++    val value = markers.library.Ordered(text = textEvent("a"), key = keyEvent("b"))
++    return trace() + ":" + value.text
++}
++fun evolved(): String {
++    val value = markers.library.Evolved()
++    return value.suffix + ":" + value.key.raw
++}
+diff --git a/tests/constructor_markers/FriendCalls.java b/tests/constructor_markers/FriendCalls.java
+new file mode 100644
+index 000000000..2af240b0a
+--- /dev/null
++++ b/tests/constructor_markers/FriendCalls.java
+@@ -0,0 +1,7 @@
++package markers.consumer;
++public final class FriendCalls {
++    public static void main(String[] args) {
++        if (InternalKt.friendValue() != 19L) throw new AssertionError("friend constructor default");
++        System.out.println("constructor-friend-ok");
++    }
++}
+diff --git a/tests/constructor_markers/HiddenDeprecated.kt b/tests/constructor_markers/HiddenDeprecated.kt
+new file mode 100644
+index 000000000..4a93a3f14
+--- /dev/null
++++ b/tests/constructor_markers/HiddenDeprecated.kt
+@@ -0,0 +1,3 @@
++package markers.consumer
++import markers.library.HiddenApi
++fun hiddenDeprecated(): HiddenApi = HiddenApi()
+diff --git a/tests/constructor_markers/Internal.kt b/tests/constructor_markers/Internal.kt
+new file mode 100644
+index 000000000..46d5b2ea1
+--- /dev/null
++++ b/tests/constructor_markers/Internal.kt
+@@ -0,0 +1,4 @@
++package markers.consumer
++import markers.library.InternalBox
++internal fun friend(): InternalBox = InternalBox()
++internal fun friendValue(): Long = InternalBox().key.raw
+diff --git a/tests/constructor_markers/Library.kt b/tests/constructor_markers/Library.kt
+new file mode 100644
+index 000000000..b410a2074
+--- /dev/null
++++ b/tests/constructor_markers/Library.kt
+@@ -0,0 +1,24 @@
++package markers.library
++@JvmInline value class Key(val raw: Long)
++@JvmInline value class Small(val raw: Int)
++class PairBox(val key: Key = Key(11L), val small: Small = Small(7), val text: String = "default")
++class NullableBox(val key: Key? = null)
++class GenericBox<T>(val key: Key = Key(13L), val item: T)
++class Hidden private constructor(val key: Key) {
++    companion object { fun make(): Hidden = Hidden(Key(1L)) }
++}
++class InternalBox internal constructor(val key: Key = Key(19L))
++
++class WideBox(val p0: Key = Key(101L), val p1: Int = 1, val p2: Int = 2, val p3: Int = 3, val p4: Int = 4, val p5: Int = 5, val p6: Int = 6, val p7: Int = 7, val p8: Int = 8, val p9: Int = 9, val p10: Int = 10, val p11: Int = 11, val p12: Int = 12, val p13: Int = 13, val p14: Int = 14, val p15: Int = 15, val p16: Int = 16, val p17: Int = 17, val p18: Int = 18, val p19: Int = 19, val p20: Int = 20, val p21: Int = 21, val p22: Int = 22, val p23: Int = 23, val p24: Int = 24, val p25: Int = 25, val p26: Int = 26, val p27: Int = 27, val p28: Int = 28, val p29: Int = 29, val p30: Int = 30, val p31: Int = 31, val p32: Int = 32, val p33: Small = Small(33))
++private var events: String = ""
++fun reset() { events = "" }
++fun trace(): String = events
++fun keyEvent(tag: String): Key { events += tag; return Key(1L) }
++fun smallEvent(tag: String): Small { events += tag; return Small(2) }
++fun textEvent(tag: String): String { events += tag; return tag }
++class Ordered(val key: Key = keyEvent("K"), val small: Small = smallEvent("S"), val text: String = textEvent("T"))
++class Evolved(val key: Key = Key(59L), val suffix: String = "current") {
++    @Deprecated("binary compatibility", level = DeprecationLevel.HIDDEN)
++    constructor(key: Key = Key(3L)): this(key, "hidden")
++}
++class HiddenApi @Deprecated("binary compatibility", level = DeprecationLevel.HIDDEN) constructor(val key: Key = Key(1L))
+diff --git a/tests/constructor_markers/Private.kt b/tests/constructor_markers/Private.kt
+new file mode 100644
+index 000000000..f8f9cf000
+--- /dev/null
++++ b/tests/constructor_markers/Private.kt
+@@ -0,0 +1,4 @@
++package markers.consumer
++import markers.library.Hidden
++import markers.library.Key
++fun hidden(): Hidden = Hidden(Key(2L))
+diff --git a/tests/constructor_markers/PublicInline.kt b/tests/constructor_markers/PublicInline.kt
+new file mode 100644
+index 000000000..2dae8a956
+--- /dev/null
++++ b/tests/constructor_markers/PublicInline.kt
+@@ -0,0 +1,3 @@
++package markers.consumer
++import markers.library.InternalBox
++inline fun exposed(): InternalBox = InternalBox()
+diff --git a/tools/check_companion_value_replay.py b/tools/check_companion_value_replay.py
+new file mode 100644
+index 000000000..102e0cf4e
+--- /dev/null
++++ b/tools/check_companion_value_replay.py
+@@ -0,0 +1,210 @@
++#!/usr/bin/env python3
++import argparse
++from collections import Counter
++from datetime import datetime, timezone
++import hashlib
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import zipfile
++
++from check_androidbible_class_listener import ownership
++from inline_origins import parse, resolve_class, verify_owned_class_origins
++
++ROOT = Path(__file__).resolve().parents[1]
++FIXTURES = ROOT / 'tests/companion_value_replay'
++
++
++def sha(path):
++    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++
++def public_contract(output):
++    entries = []
++    declaration = None
++    for line in output.splitlines():
++        line = line.strip()
++        if line.startswith('public ') and '(' in line and line.endswith(';'):
++            declaration = line
++        elif line.startswith('descriptor:') and declaration:
++            entries.append((declaration, line))
++            declaration = None
++    assert entries, output
++    return sorted(entries)
++
++
++def main():
++    parser = argparse.ArgumentParser()
++    parser.add_argument('--candidate', type=Path, required=True)
++    parser.add_argument('--baseline', type=Path)
++    parser.add_argument('--app-classpath')
++    parser.add_argument('--app-friend-path')
++    parser.add_argument('--output', type=Path, required=True)
++    parser.add_argument('--evidence-directory', type=Path, required=True)
++    args = parser.parse_args()
++    work, evidence = args.output.absolute(), args.evidence_directory.absolute()
++    work.mkdir(parents=True, exist_ok=False)
++    evidence.mkdir(parents=True, exist_ok=False)
++    candidate = work / 'korrust-frozen'
++    shutil.copy2(args.candidate.resolve(), candidate)
++    official = ROOT / 'references/kotlinc/bin/kotlinc'
++    standard = ROOT / 'references/kotlinc/lib/kotlin-stdlib.jar'
++    java = Path(os.environ['JAVA_HOME']) / 'bin'
++    options = ['-language-version', '2.3', '-api-version', '2.3', '-jvm-target', '1.8']
++    app = ROOT / 'benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base'
++    sources = [app / 'verses/VerseRubyTest.kt', app / 'verses/VerseTextFlowTest.kt', app / 'widget/VerseRendererComposeCheckedHighlightTest.kt'] if args.app_classpath else []
++    inputs = [*sorted((ROOT / 'src').rglob('*.rs')), *sorted(FIXTURES.glob('*')), ROOT / 'tests/companion_value_replay.rs', Path(__file__), ROOT / 'tools/check_androidbible_class_listener.py', ROOT / 'tools/check_androidbible_survey.py', ROOT / 'tools/inline_origins.py', ROOT / 'Cargo.toml', ROOT / 'Cargo.lock', ROOT / 'references/compiler.json', *sources]
++    def label(path):
++        path = Path(path).absolute()
++        return str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)
++    dependencies = [Path(path) for path in args.app_classpath.split(os.pathsep)] if args.app_classpath else []
++    frozen = {label(path): sha(path) for path in [*inputs, *dependencies, candidate, standard, ROOT / 'references/kotlinc/lib/kotlin-compiler.jar', *([args.baseline] if args.baseline else [])]}
++    with zipfile.ZipFile(evidence / 'inputs.zip', 'w', zipfile.ZIP_DEFLATED) as archive:
++        for path in inputs:
++            archive.writestr(label(path), path.read_bytes())
++    report = dict(schema_version=1, kind='correctness', created_at=datetime.now(timezone.utc).isoformat(), status='running', compiler=dict(path=label(candidate), sha256=sha(candidate), source_revision=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()), reference_compiler=json.loads((ROOT / 'references/compiler.json').read_text()), frozen_input_hashes=frozen, input_bundle=dict(path=label(evidence / 'inputs.zip'), sha256=sha(evidence / 'inputs.zip')), scope='Companion backing-field metadata replay uses the loaded value-class registry, preserving physical getters, setters, method defaults and ordinary constant/JvmField metadata without relaxing source visibility', limitations=['No Android runtime or full Compose compatibility claim from API stub compilation', 'Existing inline, suspend, inner-class and metadata support boundaries remain; defaults are limited to 64 logical parameters'], cases=[], commands=[], reproduction_command=['python3', label(__file__), *sum(([flag, str(value)] for flag, value in vars(args).items() if value is not None for flag in ['--' + flag.replace('_', '-')]), [])])
++    report_path = evidence.with_suffix('.json')
++    def save():
++        report['counts'] = dict(Counter(case['outcome'] for case in report['cases']))
++        report_path.write_text(json.dumps(report, indent=2) + '\n')
++    def run(title, argv, accepted=(0,)):
++        argv = list(map(str, argv))
++        result = subprocess.run(argv, cwd=ROOT, capture_output=True, text=True, timeout=360)
++        log = evidence / f'{len(report["commands"]):03d}.txt'
++        log.write_text('$ ' + ' '.join(argv) + '\n' + result.stdout + result.stderr)
++        report['commands'].append(dict(label=title, argv=argv, exit_code=result.returncode, log=label(log)))
++        save()
++        assert result.returncode in accepted, title + ': ' + result.stdout + result.stderr
++        return result
++    def case(name, action):
++        try:
++            detail = action()
++            outcome = detail.pop('outcome', 'pass')
++            report['cases'].append(dict(id=name, outcome=outcome, detail=detail))
++        except Exception as error:
++            report['cases'].append(dict(id=name, outcome='correctness_failure', detail=str(error)))
++        save()
++    dependency = work / 'dependency'
++    run('official binary Kotlin library', [official, FIXTURES / 'Library.kt', '-module-name', 'companion_values_library', '-d', dependency, *options])
++    run('actual physical method and default ABI', [java / 'javap', '-p', '-s', '-classpath', dependency, 'companionvalues.library.Palette', 'companionvalues.library.Palette$Companion', 'companionvalues.library.Key$Companion'])
++    def runtime(packed):
++        origin = dependency
++        if packed:
++            origin = work / 'dependency.jar'
++            with zipfile.ZipFile(origin, 'w', zipfile.ZIP_DEFLATED) as archive:
++                for path in sorted(dependency.rglob('*')):
++                    if path.is_file():
++                        archive.write(path, str(path.relative_to(dependency)))
++        cp = os.pathsep.join(map(str, [origin, standard]))
++        folder = work / ('jar' if packed else 'directory')
++        outputs = []
++        for name, compiler in [('official', official), ('candidate', candidate)]:
++            output = folder / name
++            run(name + ' physical method default consumers', [compiler, FIXTURES / 'Consumer.kt', '-cp', cp, '-d', output, *(options if name == 'official' else [])])
++            run(name + ' method invocation descriptors', [java / 'javap', '-c', '-p', '-classpath', output, 'companionvalues.consumer.ConsumerKt'])
++            outputs.append(output)
++        callers = folder / 'callers'
++        run('fixed Java caller compiled against official only', [java / 'javac', '-cp', os.pathsep.join(map(str, [outputs[0], origin, standard])), '-d', callers, FIXTURES / 'Calls.java'])
++        for name, output in zip(['official', 'candidate'], outputs):
++            observed = run(name + ' independent assertions with verifier', [java / 'java', '-Xverify:all', '-cp', os.pathsep.join(map(str, [callers, output, origin, standard])), 'companionvalues.consumer.Calls'])
++            assert observed.stdout == 'companion-values-ok\n', observed.stdout
++        signatures = [run(name + ' public descriptors', [java / 'javap', '-public', '-s', '-classpath', output, 'companionvalues.consumer.ConsumerKt']).stdout for name, output in zip(['official', 'candidate'], outputs)]
++        assert public_contract(signatures[0]) == public_contract(signatures[1]), signatures
++        return dict(caller_sha256={str(path.relative_to(callers)): sha(path) for path in callers.rglob('*.class')}, assertions='Primitive/reference/nullable value-class getters, value setter, default method, true JVM fields and constants, value-class-own companion, private property and logically distinct same-carrier setter rejection')
++    for packed in [False, True]:
++        case('jar_runtime' if packed else 'directory_runtime', lambda packed=packed: runtime(packed))
++    cp = os.pathsep.join(map(str, [dependency, standard]))
++    for source in ['Private', 'WrongSetter']:
++        def reject(source=source):
++            diagnostic = None
++            for name, compiler in [('official', official), ('candidate', candidate)]:
++                observed = run(name + ' reject ' + source, [compiler, FIXTURES / (source + '.kt'), '-cp', cp, '-d', work / (name + source), *(options if name == 'official' else ['--diagnostic-format', 'json'])], accepted=(1,))
++                if name == 'candidate':
++                    diagnostic = json.loads(observed.stderr)
++                    assert diagnostic['category'] == 'invalid_kotlin', diagnostic
++            return dict(outcome='invalid_rejected', diagnostic=diagnostic)
++        case('invalid_' + source, reject)
++    if args.baseline:
++        def before():
++            result = run('baseline loses physical companion metadata', [args.baseline, FIXTURES / 'Consumer.kt', '-cp', cp, '-d', work / 'baseline', '--diagnostic-format', 'json'], accepted=(1,))
++            return dict(outcome='baseline_rejected', diagnostic=json.loads(result.stderr), reason='The pinned official and candidate compile and execute this same fixture in the directory and JAR cases')
++        case('baseline_physical_default_boundary', before)
++    if args.app_classpath:
++        def compose():
++            references = []
++            signatures = []
++            for name, compiler in [('official', official), ('candidate', candidate)]:
++                output = work / (name + '-compose')
++                run(name + ' actual ordinary Compose method defaults', [compiler, FIXTURES / 'ComposeProbe.kt', '-cp', args.app_classpath, '-d', output, *(options if name == 'official' else [])])
++                signatures.append(run(name + ' public value-class ABI', [java / 'javap', '-public', '-s', '-classpath', output, 'companionvalues.compose.ComposeProbeKt']).stdout)
++                found = []
++                for path in output.rglob('*.class'):
++                    info = parse(path.read_bytes())
++                    for entry in info['pool']:
++                        if not entry or entry[0] != 10:
++                            continue
++                        owner_index, signature_index = entry[1]
++                        owner = info['class_name'](owner_index)
++                        _, (method_index, descriptor_index) = info['pool'][signature_index]
++                        method, descriptor = info['text'](method_index), info['text'](descriptor_index)
++                        if not ((owner.endswith('$Companion') and method.startswith('get')) or method == 'addStyle') or not owner.startswith('androidx/compose/'):
++                            continue
++                        binary, origin = resolve_class(args.app_classpath.split(os.pathsep), owner)
++                        target = parse(binary)
++                        assert any(candidate['name'] == method and candidate['descriptor'] == descriptor and candidate['access'] & 1 for candidate in target['methods']), (owner, descriptor, origin)
++                        found.append(dict(owner=owner, method=method, descriptor=descriptor, origin=origin, sha256=hashlib.sha256(binary).hexdigest()))
++                found = sorted({(entry['owner'], entry['descriptor'], entry['method']): entry for entry in found}.values(), key=lambda entry: (entry['owner'], entry['method'], entry['descriptor']))
++                assert len(found) == 3, found
++                references.append(found)
++            assert references[0] == references[1], references
++            assert public_contract(signatures[0]) == public_contract(signatures[1]), signatures
++            return dict(physical_member_references=references[-1], assertion='Every selected getter and addStyle reference resolves to an actual public method in the first resolved pinned classpath binary; descriptors and public consumer ABI match the official compiler', limitation='API jars are compilation stubs; no Compose runtime claim')
++        case('actual_compose_companion_and_addstyle_descriptors', compose)
++        for source in sources:
++            def probe(source=source):
++                observations = []
++                for name, compiler in [*([('baseline', args.baseline)] if args.baseline else []), ('candidate', candidate)]:
++                    output = work / (name + source.stem)
++                    result = run(name + ' unchanged ' + source.name, [compiler, source, '-cp', args.app_classpath, '-d', output, '--diagnostic-format', 'json', *(['--friend-paths', args.app_friend_path] if args.app_friend_path else [])], accepted=(0, 1))
++                    observed = dict(provider=name, exit_code=result.returncode, diagnostic=json.loads(result.stderr) if result.returncode else None)
++                    if not result.returncode:
++                        owned = ownership(output, source)
++                        observed.update(owned_outputs=owned, inline_origins=verify_owned_class_origins(output, source, args.app_classpath.split(os.pathsep), owned))
++                        for entry in owned:
++                            if entry.endswith('.class'):
++                                try:
++                                    resolve_class(args.app_classpath.split(os.pathsep), entry[:-6])
++                                except ValueError:
++                                    continue
++                                raise AssertionError('Classpath shadows emitted source class: ' + entry)
++                        official_output = work / ('official-' + source.stem)
++                        run('official unchanged ' + source.name, [official, source, '-cp', args.app_classpath, '-d', official_output, *options, *(['-Xfriend-paths=' + args.app_friend_path] if args.app_friend_path else [])])
++                        main = [entry for entry in owned if entry.endswith('/' + source.stem + '.class')]
++                        assert len(main) == 1, main
++                        binary_name = main[0][:-6].replace('/', '.')
++                        verifier = work / ('verifier-' + source.stem)
++                        verifier.mkdir()
++                        caller_source = verifier / 'VerifyApp.java'
++                        caller_source.write_text((FIXTURES / 'VerifyApp.java.template').read_text().replace('__APP_CLASS__', binary_name))
++                        caller_source_hash = sha(caller_source)
++                        run('fixed symbolic app caller against official only ' + source.name, [java / 'javac', '--release', '8', '-cp', str(official_output) + os.pathsep + args.app_classpath, '-d', verifier, caller_source])
++                        for provider_name, provider in [('official', official_output), ('candidate', output)]:
++                            names = sorted(str(path.relative_to(provider).with_suffix('')).replace('/', '.') for path in provider.rglob('*.class'))
++                            linked = run(provider_name + ' all app classes JVM verification without initialization ' + source.name, [java / 'java', '-Xverify:all', '-cp', str(verifier) + os.pathsep + str(provider) + os.pathsep + args.app_classpath, 'VerifyApp', *names])
++                            assert linked.stdout == 'app-classes-verified\n', linked.stdout
++                        assert sha(caller_source) == caller_source_hash
++                        observed['jvm_link_verification'] = dict(fixed_java_source_sha256=caller_source_hash, fixed_java_class_sha256=sha(verifier / 'VerifyApp.class'), initializes_classes=False, executes_test_bodies=False, assertion='Identical Java caller compiled against official app class symbol verifies all emitted classes against each output; no classpath source shadows')
++                    observations.append(observed)
++                return dict(outcome='compiled_unchanged' if not observations[-1]['exit_code'] else 'app_rejected', source=label(source), source_sha256=sha(source), observations=observations)
++            case('app_' + source.stem, probe)
++    assert all(sha(path) == digest for path, digest in ((ROOT / key if not Path(key).is_absolute() else Path(key), value) for key, value in frozen.items())), 'Frozen inputs changed'
++    report['status'] = 'failed' if any(case['outcome'] == 'correctness_failure' for case in report['cases']) else 'complete'
++    save()
++    print(json.dumps(dict(report=str(report_path), status=report['status'], counts=report['counts'])))
++    return int(report['status'] != 'complete')
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())

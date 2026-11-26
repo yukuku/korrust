@@ -578,6 +578,7 @@ fn attach_with_constructor(
     let mut states = BTreeMap::new();
     let mut queue = VecDeque::new();
     merge(&mut states, 0, initial.clone(), &mut queue)?;
+    let mut entry_is_target = false;
     loop {
         while let Some(offset) = queue.pop_front() {
             let state = states[&offset].clone();
@@ -590,6 +591,7 @@ fn attach_with_constructor(
             }
             let (frame, successors) = transfer(pool, &bytes, offset, states[&offset].clone())?;
             for next in successors {
+                entry_is_target |= next == 0;
                 if next >= length || offsets.binary_search(&next).is_err() {
                     return Err(failure(
                         "Invalid control-flow target during frame generation",
@@ -628,9 +630,10 @@ fn attach_with_constructor(
     }
     method[22..22 + length].copy_from_slice(&bytes);
     let mut table = Vec::new();
-    u2(&mut table, (states.len() - 1) as u16);
+    let frames = states.iter().skip(usize::from(!entry_is_target));
+    u2(&mut table, frames.len() as u16);
     let mut previous: isize = -1;
-    for (offset, frame) in states.iter().skip(1) {
+    for (offset, frame) in frames {
         table.push(255);
         u2(&mut table, (*offset as isize - previous - 1) as u16);
         previous = *offset as isize;

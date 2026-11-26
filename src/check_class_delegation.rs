@@ -51,7 +51,8 @@ pub(super) fn normalize_contract(
             | Type::MutableList(_)
             | Type::FlexibleList(_)
             | Type::Function { .. }
-            | Type::ReceiverFunction { .. } => true,
+            | Type::ReceiverFunction { .. }
+            | Type::SuspendReceiverFunction { .. } => true,
             _ => false,
         }
     }
@@ -149,6 +150,11 @@ fn internal_type(ty: &Type, classpath: &Classpath) -> bool {
             receiver,
             params,
             result,
+        }
+        | Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
         } => {
             internal_type(receiver, classpath)
                 || params.iter().any(|t| internal_type(t, classpath))
@@ -181,6 +187,11 @@ fn nested_type(ty: &Type) -> bool {
         } => nested_type(inner),
         Type::Function { params, result } => params.iter().any(nested_type) || nested_type(result),
         Type::ReceiverFunction {
+            receiver,
+            params,
+            result,
+        }
+        | Type::SuspendReceiverFunction {
             receiver,
             params,
             result,

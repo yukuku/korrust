@@ -36,6 +36,21 @@ pub(super) fn check_class_with_constants(
     lambdas: &Rc<RefCell<Vec<LambdaDecl>>>,
     constants: &HashMap<String, (Type, Expr)>,
 ) -> Result<ClassDecl> {
+    if source.constructor_vararg {
+        if source.data || source.value_ {
+            return Err(Diagnostic::new(
+                source.offset,
+                "Data and value class primary constructors cannot declare vararg parameters",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "PRIMARY_VARARG_CLASS_KIND_INVALID",
+            ));
+        }
+        if let Some((_, array)) = source.params.last() {
+            validate_vararg_array(array, source.offset, classpath, imports, classes)?;
+        }
+    }
     let mut constants = constants.clone();
     if let Some(companion) = &source.companion {
         for constant in &companion.constants {
@@ -634,6 +649,8 @@ pub(super) fn check_class_with_constants(
     }
     let mut mutable_fields: HashSet<_> = source.mutable_params.iter().cloned().collect();
     let mut initializer_checker = Checker {
+        composer: None,
+        composable_target: None,
         composable_body: false,
         inline_argument_modes: Vec::new(),
         inline_analysis: false,
@@ -651,6 +668,7 @@ pub(super) fn check_class_with_constants(
         captured_cells: HashMap::new(),
         cells: HashMap::new(),
         cell_names: HashSet::new(),
+        changing_cells: HashSet::new(),
         lambda_owner: owner.clone(),
         inline_result: None,
         nonlocal_result: None,
@@ -680,7 +698,7 @@ pub(super) fn check_class_with_constants(
         contract_facts: HashMap::new(),
         contract_registration: None,
         refinements: HashMap::new(),
-        initialized: HashSet::new(),
+        initialized: InitializationState::default(),
         loop_depth: 0,
         scopes: vec![HashMap::new()],
         next: 1,
@@ -736,10 +754,11 @@ pub(super) fn check_class_with_constants(
                     .map(|(i, t)| (format!("p{i}"), java_parameter(t)))
                     .collect()
             });
+        let arguments = initializer_checker.vararg_arguments(&method, arguments, source.offset)?;
         let (args, lets, mask) = initializer_checker.arguments(
             &call_params,
             &vec![false; call_params.len()],
-            arguments,
+            &arguments,
             method.kotlin_params.is_some(),
             source.offset,
         )?;
@@ -819,6 +838,8 @@ pub(super) fn check_class_with_constants(
         }
         if let Some(expr) = &property.initializer {
             let mut checker = Checker {
+                composer: None,
+                composable_target: None,
                 composable_body: false,
                 inline_argument_modes: Vec::new(),
                 inline_analysis: false,
@@ -833,6 +854,7 @@ pub(super) fn check_class_with_constants(
                 captured_cells: HashMap::new(),
                 cells: HashMap::new(),
                 cell_names: HashSet::new(),
+                changing_cells: HashSet::new(),
                 lambda_owner: owner.clone(),
                 inline_result: None,
                 nonlocal_result: None,
@@ -865,7 +887,7 @@ pub(super) fn check_class_with_constants(
                 contract_facts: HashMap::new(),
                 contract_registration: None,
                 refinements: HashMap::new(),
-                initialized: HashSet::new(),
+                initialized: InitializationState::default(),
                 loop_depth: 0,
                 scopes: vec![HashMap::new()],
                 next: 1,
@@ -1124,6 +1146,8 @@ pub(super) fn check_class_with_constants(
                     .iter()
                     .find(|m| m.function.offset == *offset && m.function.name == *name)
                     .map(|m| -> Result<_> { Ok(crate::classpath::LibraryMethod {
+                        compose: None,
+                        stable_result: false,
             default_code: None,
             vararg_index: None,
             contracts: Vec::new(),
@@ -1310,6 +1334,8 @@ pub(super) fn check_class_with_constants(
             }
         }
         let mut checker = Checker {
+            composer: None,
+            composable_target: None,
             composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
@@ -1330,6 +1356,7 @@ pub(super) fn check_class_with_constants(
             captured_cells: HashMap::new(),
             cells: HashMap::new(),
             cell_names: HashSet::new(),
+            changing_cells: HashSet::new(),
             lambda_owner: owner.clone(),
             inline_result: None,
             nonlocal_result: None,
@@ -1362,7 +1389,7 @@ pub(super) fn check_class_with_constants(
             contract_facts: HashMap::new(),
             contract_registration: None,
             refinements: HashMap::new(),
-            initialized: HashSet::new(),
+            initialized: InitializationState::default(),
             loop_depth: 0,
             scopes: vec![HashMap::new()],
             next: 1,
@@ -1969,10 +1996,12 @@ pub(super) fn check_class_with_constants(
                 .collect::<String>()
         );
         if !constructor_descriptors.insert(descriptor) {
-            return Err(Diagnostic::new(
-                secondary.offset,
-                "Conflicting constructor signature",
-            ));
+            return Err(
+                Diagnostic::new(secondary.offset, "Conflicting constructor signature").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "CONFLICTING_CONSTRUCTOR_SIGNATURE",
+                ),
+            );
         }
         let delegates_to_this = secondary.delegation == "this";
         let delegation_owner = if delegates_to_this {
@@ -2015,10 +2044,12 @@ pub(super) fn check_class_with_constants(
                     .map(|(i, t)| (format!("p{i}"), java_parameter(t)))
                     .collect()
             });
+        let arguments =
+            checker.vararg_arguments(&selected, &secondary.arguments, secondary.offset)?;
         let (delegation_args, lets, mask) = checker.arguments(
             &call_params,
             &vec![false; call_params.len()],
-            &secondary.arguments,
+            &arguments,
             selected.kotlin_params.is_some(),
             secondary.offset,
         )?;
@@ -2225,6 +2256,7 @@ pub(super) fn check_class_with_constants(
             .collect(),
         delegated_properties,
         primary_constructor: source.primary_constructor,
+        constructor_vararg: source.constructor_vararg,
         constructor_visibility: source.constructor_visibility,
         constructor_signature: None,
         constructor_annotations,
@@ -2299,6 +2331,8 @@ impl<'a> DeclarationContext<'a> {
     }
     pub fn checker(&self, receiver: bool, next: u16, result: Type) -> Checker<'_> {
         Checker {
+            composer: None,
+            composable_target: None,
             composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
@@ -2313,6 +2347,7 @@ impl<'a> DeclarationContext<'a> {
             captured_cells: HashMap::new(),
             cells: HashMap::new(),
             cell_names: HashSet::new(),
+            changing_cells: HashSet::new(),
             lambda_owner: self.owner.clone(),
             inline_result: None,
             nonlocal_result: None,
@@ -2345,7 +2380,7 @@ impl<'a> DeclarationContext<'a> {
             contract_facts: HashMap::new(),
             contract_registration: None,
             refinements: HashMap::new(),
-            initialized: HashSet::new(),
+            initialized: InitializationState::default(),
             loop_depth: 0,
             scopes: vec![HashMap::new()],
             next,
@@ -2711,6 +2746,11 @@ fn infer_source_results_impl(
                 receiver,
                 params,
                 result,
+            }
+            | Type::SuspendReceiverFunction {
+                receiver,
+                params,
+                result,
             } => {
                 type_names(receiver, out);
                 for t in params {
@@ -2835,7 +2875,7 @@ fn infer_source_results_impl(
     }
     for property in &mut source.properties {
         if property.inferred {
-            if let Some(expr) = &property.initializer {
+            if let Some(expr) = property.inference_expression() {
                 let inferred = context.checker(false, 0, Type::Unit).value(expr);
                 if let Err(error) = &inferred {
                     errors.push(error.clone());
@@ -2903,9 +2943,13 @@ fn infer_source_results_impl(
         }
         for property in &mut class.properties {
             if property.inferred {
-                if let Some(expr) = &property.initializer {
+                if let Some(expr) = property.inference_expression() {
                     let mut checker = context.checker(true, 1, Type::Unit);
-                    for (name, ty) in &class.params {
+                    for (name, ty) in class
+                        .params
+                        .iter()
+                        .filter(|_| property.initializer.is_some())
+                    {
                         if let Ok(ty) =
                             resolve_type_checked(ty, &imports, class.offset, classpath, &classes)
                         {
@@ -3218,7 +3262,11 @@ fn infer_function(
             "Cannot infer a supported return type from null",
         ));
     }
-    function.result = value.ty;
+    function.result = if matches!(&value.ty, Type::Java(owner) if owner == "kotlin/Unit") {
+        Type::Unit
+    } else {
+        value.ty
+    };
     function.result_inferred = false;
     Ok(true)
 }
@@ -3747,13 +3795,23 @@ pub(super) fn validate_vararg_type(
     let Some((_, array)) = function.params.last() else {
         return Ok(());
     };
-    let array = resolve_type_checked(array, imports, function.offset, classpath, classes)?;
+    validate_vararg_array(array, function.offset, classpath, imports, classes)
+}
+
+fn validate_vararg_array(
+    array: &Type,
+    offset: usize,
+    classpath: &Classpath,
+    imports: &HashMap<String, String>,
+    classes: &HashMap<String, JavaClass>,
+) -> Result<()> {
+    let array = resolve_type_checked(array, imports, offset, classpath, classes)?;
     let Type::OutArray(element) = array else {
         return Ok(());
     };
     if !element.is_reference() {
         return Err(Diagnostic::new(
-            function.offset,
+            offset,
             "Source Unit varargs and primitive-alias varargs require unsupported carrier lowering",
         )
         .with_kind(
@@ -3767,7 +3825,7 @@ pub(super) fn validate_vararg_type(
     }
     if nominal == &Type::Unit || matches!(nominal, Type::Java(owner) if owner == "kotlin/Unit") {
         return Err(Diagnostic::new(
-            function.offset,
+            offset,
             "Unit varargs require unsupported boxed Unit carriers",
         )
         .with_kind(
@@ -3777,7 +3835,7 @@ pub(super) fn validate_vararg_type(
     }
     if unsigned::owner(nominal).is_some() {
         return Err(Diagnostic::new(
-            function.offset,
+            offset,
             "Unsigned varargs require unsupported unsigned-array carriers",
         )
         .with_kind(
@@ -3793,7 +3851,7 @@ pub(super) fn validate_vararg_type(
             .is_some_and(|library| library.value_class.is_some())
     {
         return Err(Diagnostic::new(
-            function.offset,
+            offset,
             "Value classes cannot be direct vararg element types",
         )
         .with_kind(
@@ -3988,29 +4046,40 @@ pub(super) fn override_generic_signature(
     override_signature(&renamed, params, result)
 }
 
+pub(super) fn override_type_matches(expected: &Type, actual: &Type) -> bool {
+    if expected == actual {
+        return true;
+    }
+    match (expected, actual) {
+        (Type::Platform(inner), Type::Nullable(value) | Type::Platform(value)) => {
+            override_type_matches(inner, value)
+        }
+        (Type::Platform(inner), value) => override_type_matches(inner, value),
+        (
+            Type::FlexibleList(element),
+            Type::MutableList(actual) | Type::List(actual) | Type::FlexibleList(actual),
+        )
+        | (Type::MutableList(element), Type::MutableList(actual))
+        | (Type::List(element), Type::List(actual))
+        | (Type::Nullable(element), Type::Nullable(actual)) => {
+            override_type_matches(element, actual)
+        }
+        _ => false,
+    }
+}
+
 pub(super) fn override_signature(
     method: &JavaMethod,
     params: &[Type],
     result: &Type,
 ) -> Result<bool> {
     let (expected_params, expected_result) = class_method_types(method)?;
-    fn compatible(expected: &Type, actual: &Type) -> bool {
-        if expected == actual {
-            return true;
-        }
-        match expected {
-            Type::Platform(inner) => {
-                inner.as_ref() == actual || matches!(actual,Type::Nullable(actual) if actual==inner)
-            }
-            _ => expected == actual,
-        }
-    }
     Ok(expected_params.len() == params.len()
         && expected_params
             .iter()
             .zip(params)
-            .all(|(e, a)| compatible(e, a))
-        && (compatible(&expected_result, result)
+            .all(|(e, a)| override_type_matches(e, a))
+        && (override_type_matches(&expected_result, result)
             || matches!(&expected_result,Type::Nullable(inner) if inner.as_ref()==result)))
 }
 
@@ -4760,6 +4829,11 @@ pub(super) fn validate_classifier_generics(
                         receiver,
                         params,
                         result,
+                    }
+                    | Type::SuspendReceiverFunction {
+                        receiver,
+                        params,
+                        result,
                     } => dependent(receiver) || params.iter().any(dependent) || dependent(result),
                     _ => false,
                 }
@@ -4780,6 +4854,7 @@ pub(super) fn validate_classifier_generics(
                 Type::Function { .. }
                     | Type::ReceiverFunction { .. }
                     | Type::SuspendFunction { .. }
+                    | Type::SuspendReceiverFunction { .. }
             ) {
                 return Err(Diagnostic::new(
                     offset,
@@ -4904,6 +4979,11 @@ pub(super) fn validate_variance(
             validate_variance(parameters, result, polarity, classpath, imports, offset)?;
         }
         Type::ReceiverFunction {
+            receiver,
+            params,
+            result,
+        }
+        | Type::SuspendReceiverFunction {
             receiver,
             params,
             result,

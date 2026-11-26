@@ -242,6 +242,8 @@ impl Classpath {
                 let mut validation = method.clone();
                 validation.access |= 8;
                 validation.library = Some(LibraryMethod {
+                    compose: None,
+                    stable_result: false,
                     default_code: None,
                     vararg_index: None,
                     contracts: Vec::new(),

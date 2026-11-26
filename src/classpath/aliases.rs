@@ -172,6 +172,15 @@ fn expand_at(
             params: params.iter().map(&mut recurse).collect::<Result<_>>()?,
             result: Box::new(recurse(result)?),
         },
+        Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => Type::SuspendReceiverFunction {
+            receiver: Box::new(recurse(receiver)?),
+            params: params.iter().map(&mut recurse).collect::<Result<_>>()?,
+            result: Box::new(recurse(result)?),
+        },
         Type::ReceiverFunction {
             receiver,
             params,
@@ -259,6 +268,15 @@ fn substitute(ty: &Type, arguments: &HashMap<String, TypeArgument>) -> Result<Ty
             upper_bound: Box::new(recurse(upper_bound)?),
         },
         Type::Function { params, result } => Type::Function {
+            params: params.iter().map(recurse).collect::<Result<_>>()?,
+            result: Box::new(recurse(result)?),
+        },
+        Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => Type::SuspendReceiverFunction {
+            receiver: Box::new(recurse(receiver)?),
             params: params.iter().map(recurse).collect::<Result<_>>()?,
             result: Box::new(recurse(result)?),
         },

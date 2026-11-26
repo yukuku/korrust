@@ -63,6 +63,18 @@ pub(super) fn substitute(ty: &Type, substitutions: &HashMap<String, Type>) -> Ty
                 })
                 .collect(),
         },
+        Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => Type::SuspendReceiverFunction {
+            receiver: Box::new(substitute(receiver, substitutions)),
+            params: params
+                .iter()
+                .map(|ty| substitute(ty, substitutions))
+                .collect(),
+            result: Box::new(substitute(result, substitutions)),
+        },
         Type::ReceiverFunction {
             receiver,
             params,
@@ -270,6 +282,11 @@ fn mentions(ty: &Type, name: &str) -> bool {
             .iter()
             .any(|argument| argument.ty.as_ref().is_some_and(|ty| mentions(ty, name))),
         Type::ReceiverFunction {
+            receiver,
+            params,
+            result,
+        }
+        | Type::SuspendReceiverFunction {
             receiver,
             params,
             result,
@@ -562,6 +579,11 @@ pub(super) fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: 
                 receiver,
                 params,
                 result,
+            }
+            | Type::SuspendReceiverFunction {
+                receiver,
+                params,
+                result,
             } => {
                 let mut all = vec![receiver.as_ref()];
                 all.extend(params.iter());
@@ -570,9 +592,13 @@ pub(super) fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: 
             _ => None,
         }
     }
-    if matches!(actual, Type::SuspendFunction { .. })
-        != matches!(expected, Type::SuspendFunction { .. })
-    {
+    if matches!(
+        actual,
+        Type::SuspendFunction { .. } | Type::SuspendReceiverFunction { .. }
+    ) != matches!(
+        expected,
+        Type::SuspendFunction { .. } | Type::SuspendReceiverFunction { .. }
+    ) {
         return false;
     }
     if let (Some((a, ar)), Some((e, er))) = (function_parts(actual), function_parts(expected)) {
@@ -821,6 +847,11 @@ pub(super) fn validate_type_arguments_with_classes(
                 receiver,
                 params,
                 result,
+            }
+            | Type::SuspendReceiverFunction {
+                receiver,
+                params,
+                result,
             } => {
                 validate(receiver, cp, classes, offset, depth + 1)?;
                 for parameter in params {
@@ -939,8 +970,18 @@ impl Checker<'_> {
                 receiver,
                 params,
                 result,
+            }
+            | Type::SuspendReceiverFunction {
+                receiver,
+                params,
+                result,
             } => {
                 if let Type::ReceiverFunction {
+                    receiver: ar,
+                    params: ap,
+                    result: av,
+                }
+                | Type::SuspendReceiverFunction {
                     receiver: ar,
                     params: ap,
                     result: av,
@@ -1029,10 +1070,39 @@ impl Checker<'_> {
         if let Type::Nullable(inner) = pattern.base()
             && matches!(
                 inner.base(),
-                Type::Function { .. } | Type::ReceiverFunction { .. }
+                Type::Function { .. }
+                    | Type::ReceiverFunction { .. }
+                    | Type::SuspendReceiverFunction { .. }
             )
         {
             return self.infer_lambda_result(inner, expr, substitutions, fixed, parameters, label);
+        }
+        if matches!(expr.kind, ExprKind::CallableReference { .. })
+            && let Type::Function { params, result } = pattern.base()
+            && parameters
+                .iter()
+                .any(|name| mentions(&substitute(result, substitutions), name))
+            && !params.iter().any(|param| {
+                parameters
+                    .iter()
+                    .any(|name| mentions(&substitute(param, substitutions), name))
+            })
+        {
+            let mut probe = self.clone();
+            let count = self.lambdas.borrow().len();
+            let inferred = probe.with_reference_target(expr, pattern, |checker, lambda, _| {
+                checker.infer_lambda_result(
+                    pattern,
+                    lambda,
+                    substitutions,
+                    fixed,
+                    parameters,
+                    label,
+                )
+            });
+            self.lambdas.borrow_mut().truncate(count);
+            inferred?;
+            return Ok(());
         }
         if !matches!(
             expr.kind,
@@ -1041,6 +1111,11 @@ impl Checker<'_> {
             return Ok(());
         }
         if let Type::ReceiverFunction {
+            receiver,
+            params,
+            result,
+        }
+        | Type::SuspendReceiverFunction {
             receiver,
             params,
             result,
@@ -1173,6 +1248,7 @@ impl Checker<'_> {
         let refinements = self.refinements.clone();
         let cells = self.cells.clone();
         let cell_names = self.cell_names.clone();
+        let changing_cells = self.changing_cells.clone();
         let count = self.lambdas.borrow().len();
         let allow_return = self.allow_return;
         self.allow_return = false;
@@ -1211,6 +1287,7 @@ impl Checker<'_> {
         self.refinements = refinements;
         self.cells = cells;
         self.cell_names = cell_names;
+        self.changing_cells = changing_cells;
         self.lambdas.borrow_mut().truncate(count);
         let inferred = inferred?;
         if !self.infer_constraints(result, &inferred, substitutions, fixed, 0) {
@@ -1299,6 +1376,8 @@ impl Checker<'_> {
             ),
             kotlin_result: Some(result.clone()),
             library: Some(crate::classpath::LibraryMethod {
+                compose: None,
+                stable_result: false,
                 default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),
@@ -1611,9 +1690,21 @@ impl Checker<'_> {
                     if projection.variance == Variance::Invariant && projection.ty.is_some() {
                         continue;
                     }
-                    if projection.variance != Variance::Out
-                        || projection.ty.is_none()
+                    let star = projection.ty.is_none();
+                    if (!star && projection.variance != Variance::Out)
                         || fixed.contains(name)
+                        || star
+                            && (patterns
+                                .iter()
+                                .filter(|pattern| {
+                                    pattern.ty.as_ref().is_some_and(|ty| mentions(ty, name))
+                                })
+                                .count()
+                                != 1
+                                || library
+                                    .type_parameters
+                                    .iter()
+                                    .any(|p| p.name == *name && p.reified))
                         || params.iter().skip(1).any(|(_, ty, _)| mentions(ty, name))
                         || captures
                             .get(name)
@@ -1621,6 +1712,12 @@ impl Checker<'_> {
                     {
                         return Err(Diagnostic::new(offset, "Projected extension receiver requires unsupported writable or conflicting capture semantics")
                             .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "PROJECTED_EXTENSION_CAPTURE_UNSUPPORTED"));
+                    }
+                    if star {
+                        substitutions.insert(
+                            name.clone(),
+                            Type::Nullable(Box::new(Type::Java("java/lang/Object".into()))),
+                        );
                     }
                     captures.insert(name.clone(), projection.clone());
                 }
@@ -1749,6 +1846,35 @@ impl Checker<'_> {
             let result_needs_widening =
                 !self.subtype(&substitute(result, &substitutions), expected);
             for (name, ty) in result_constraints {
+                // An expected supertype bounds a bare result variable from above.
+                // Its declared bound can be more specific than that expectation.
+                let ty = if !substitutions.contains_key(&name)
+                    && matches!(pattern.base(), Type::Parameter { name: result_name, .. } if *result_name == name)
+                    && let Some(parameter) = library.type_parameters.iter().find(|p| p.name == name)
+                {
+                    let bounds = parameter
+                        .bounds
+                        .iter()
+                        .map(|bound| substitute(bound, &substitutions))
+                        .collect::<Vec<_>>();
+                    if let Type::Nullable(inner) = &ty
+                        && bounds.iter().any(|bound| !self.subtype(&ty, bound))
+                        && bounds.iter().all(|bound| self.subtype(inner, bound))
+                    {
+                        inner.as_ref().clone()
+                    } else {
+                        bounds
+                            .into_iter()
+                            .find(|bound| {
+                                matches!(bound.base(), Type::Java(_) | Type::String)
+                                    && !self.subtype(&ty, bound)
+                                    && self.subtype(bound, &ty)
+                            })
+                            .unwrap_or(ty)
+                    }
+                } else {
+                    ty
+                };
                 if result_needs_widening
                     && !fixed.contains(&name)
                     && substitutions
@@ -1898,6 +2024,7 @@ impl Checker<'_> {
                         | Type::FlexibleList(_)
                         | Type::Function { .. }
                         | Type::ReceiverFunction { .. }
+                        | Type::SuspendReceiverFunction { .. }
                         | Type::Unit
                         | Type::Null => true,
                         _ => false,
@@ -1995,6 +2122,8 @@ mod tests {
 
     fn with_checker(cp: &Classpath, action: impl FnOnce(&mut Checker<'_>)) {
         let mut checker = Checker {
+            composer: None,
+            composable_target: None,
             composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
@@ -2009,6 +2138,7 @@ mod tests {
             captured_cells: HashMap::new(),
             cells: HashMap::new(),
             cell_names: HashSet::new(),
+            changing_cells: HashSet::new(),
             lambda_owner: "Relations".into(),
             inline_result: None,
             nonlocal_result: None,
@@ -2037,7 +2167,7 @@ mod tests {
             contract_facts: HashMap::new(),
             contract_registration: None,
             refinements: HashMap::new(),
-            initialized: HashSet::new(),
+            initialized: InitializationState::default(),
             loop_depth: 0,
             scopes: vec![HashMap::new()],
             next: 0,

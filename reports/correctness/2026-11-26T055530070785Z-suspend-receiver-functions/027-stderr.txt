@@ -1,0 +1,3 @@
+reports/correctness/2026-11-26T055530070785Z-suspend-receiver-functions/nullable-function.kt:2:91: error: reference has a nullable type '(suspend CoroutineScope.() -> Int)?'. Use explicit '?.invoke' to make a function-like call instead.
+suspend fun bad(scope: CoroutineScope, block: (suspend CoroutineScope.() -> Int)?): Int = block(scope)
+                                                                                          ^^^^^

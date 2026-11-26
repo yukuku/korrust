@@ -285,6 +285,21 @@ impl<'a> Context<'a> {
                             annotation.allowed(&[1])?;
                             composable = true;
                         }
+                        if matches!(
+                            name,
+                            "androidx/compose/runtime/ComposableTarget"
+                                | "androidx/compose/runtime/ComposableOpenTarget"
+                                | "androidx/compose/runtime/ComposableInferredTarget"
+                        ) {
+                            return Err(Diagnostic::new(
+                                0,
+                                "Composable callback target schemes are unsupported",
+                            )
+                            .with_kind(
+                                crate::DiagnosticKind::UnsupportedLanguage,
+                                "COMPOSE_TARGET_TYPE_UNSUPPORTED",
+                            ));
+                        }
                     }
                     if composable {
                         if name != "kotlin/Function0"
@@ -361,8 +376,14 @@ impl<'a> Context<'a> {
             }
         };
         if suspend_function {
-            let Type::Function { mut params, result } = ty else {
-                return Err(invalid());
+            let (mut params, result, receiver) = match ty {
+                Type::Function { params, result } => (params, result, None),
+                Type::ReceiverFunction {
+                    receiver,
+                    params,
+                    result,
+                } => (params, result, Some(receiver)),
+                _ => return Err(invalid()),
             };
             if *result != Type::Nullable(Box::new(Type::Java("java/lang/Object".into()))) {
                 return Err(invalid());
@@ -378,9 +399,17 @@ impl<'a> Context<'a> {
                 .next()
                 .and_then(|argument| argument.ty)
                 .ok_or_else(invalid)?;
-            ty = Type::SuspendFunction {
-                params,
-                result: Box::new(result),
+            ty = if let Some(receiver) = receiver {
+                Type::SuspendReceiverFunction {
+                    receiver,
+                    params,
+                    result: Box::new(result),
+                }
+            } else {
+                Type::SuspendFunction {
+                    params,
+                    result: Box::new(result),
+                }
             };
         }
         if p.integer(3)?.unwrap_or(0) > 1 {
@@ -627,6 +656,63 @@ fn builtin_fragment(bytes: &[u8]) -> Result<(Vec<String>, Vec<String>, Proto<'_>
     Ok((strings, qualified_names, fragment))
 }
 
+pub(super) fn builtin_nullable_to_string(bytes: &[u8]) -> Result<Option<JavaMethod>> {
+    let (strings, qualified_names, fragment) = builtin_fragment(bytes)?;
+    let package = Proto::parse(fragment.bytes(3)?.ok_or_else(invalid)?)?;
+    let mut context = Context::new(&strings, &package)?;
+    context.qualified_names = Some(&qualified_names);
+    let mut found = None;
+    for bytes in package.messages(3)? {
+        let function = Proto::parse(bytes)?;
+        let name = metadata_name(&strings, function.integer(2)?)?;
+        if name != "toString" {
+            continue;
+        }
+        let mut context = context.clone();
+        context.set_table(&function)?;
+        let flags = function.integer(9)?.unwrap_or(6);
+        if flags & !65536 != 6
+            || !function.messages(4)?.is_empty()
+            || !function.messages(6)?.is_empty()
+            || !function.messages(10)?.is_empty()
+            || !numbers(&function, 11)?.is_empty()
+            || !function.messages(13)?.is_empty()
+            || context.field(&function, 5, 8)?
+                != Type::Nullable(Box::new(Type::Java("java/lang/Object".into())))
+            || context.field(&function, 3, 7)? != Type::String
+            || found.is_some()
+        {
+            return Err(
+                Diagnostic::new(0, "Unsupported nullable toString builtin declaration").with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "BUILTIN_DECLARATION_UNSUPPORTED",
+                ),
+            );
+        }
+        found = Some(JavaMethod {
+            owner: "kotlin/<builtins>".into(),
+            name: name.into(),
+            descriptor: "(Ljava/lang/Object;)Ljava/lang/String;".into(),
+            access: 0x09,
+            unsupported: false,
+            source_property: None,
+            kotlin_params: Some(Vec::new()),
+            kotlin_result: Some(Type::String),
+            kotlin_internal: false,
+            library: Some(LibraryMethod {
+                kotlin_declared: true,
+                kotlin_public: true,
+                source_name: name.into(),
+                receiver: Some(Type::Nullable(Box::new(Type::Java(
+                    "java/lang/Object".into(),
+                )))),
+                ..LibraryMethod::default()
+            }),
+        });
+    }
+    Ok(found)
+}
+
 fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
     let (strings, qualified_names, fragment) = builtin_fragment(bytes)?;
     let package = Proto::parse(fragment.bytes(3)?.ok_or_else(invalid)?)?;
@@ -698,6 +784,8 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
             kotlin_result: Some(returned),
             kotlin_internal: false,
             library: Some(LibraryMethod {
+                compose: None,
+                stable_result: false,
                 default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),
@@ -926,6 +1014,8 @@ fn builtin_declarations(
             kotlin_result: Some(returned),
             kotlin_internal: false,
             library: requested_name.map(|_| LibraryMethod {
+                compose: None,
+                stable_result: false,
                 default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),
@@ -979,12 +1069,12 @@ pub(super) fn value_abi_dependencies(
         let _ = context.type_parameters(&root, 5)?;
     }
     let mut dependencies = std::collections::BTreeSet::new();
-    let mut remember = |logical: &Type, physical: &Type| {
+    let mut remember = |logical: &Type, physical: &Type, marker_constructor: bool| {
         let base = match logical.base() {
             Type::Nullable(inner) => inner.base(),
             base => base,
         };
-        if logical.descriptor() != physical.descriptor() {
+        if marker_constructor || logical.descriptor() != physical.descriptor() {
             if let Type::Java(owner) = base {
                 if owner != &class.name {
                     dependencies.insert(owner.clone());
@@ -1027,13 +1117,19 @@ pub(super) fn value_abi_dependencies(
                             .as_ref()
                             .is_some_and(|library| library.value_class.is_some()),
                 );
-                if physical.len() == logical.len() + skip {
+                let marker_constructor = constructor
+                    && physical.len() == logical.len() + 1
+                    && physical.last()
+                        == Some(&Type::Java(
+                            "kotlin/jvm/internal/DefaultConstructorMarker".into(),
+                        ));
+                if physical.len() == logical.len() + skip || marker_constructor {
                     for (logical, physical) in logical.iter().zip(&physical[skip..]) {
-                        remember(logical, physical);
+                        remember(logical, physical, marker_constructor);
                     }
                 }
                 if !constructor {
-                    remember(&scope.field(&member, 3, 7)?, &result);
+                    remember(&scope.field(&member, 3, 7)?, &result, false);
                 }
                 Ok(())
             })();
@@ -1052,7 +1148,7 @@ pub(super) fn value_abi_dependencies(
                         getter.integer(2)?.and_then(|id| names.get(id as usize))
                     {
                         let (_, result) = crate::jvm_descriptor::method_types(descriptor)?;
-                        remember(&logical, &result);
+                        remember(&logical, &result, false);
                     }
                 }
             }
@@ -1377,6 +1473,18 @@ fn attach_member(
         }
         return Err(invalid());
     };
+    if name == "<init>"
+        && attributes[*index].annotations.iter().any(|annotation| {
+            annotation.name == "Lkotlin/Deprecated;"
+                && annotation.values.iter().any(|(name, value)| {
+                    name == "level"
+                        && matches!(value, AnnotationValue::Enum { descriptor, name }
+                            if descriptor == "Lkotlin/DeprecationLevel;" && name == "HIDDEN")
+                })
+        })
+    {
+        return Err(invalid());
+    }
     super::compose_abi::validate_member(
         &params,
         &result,
@@ -1418,7 +1526,55 @@ fn attach_member(
             .collect::<String>(),
         physical_result.descriptor()
     );
-    if jvm_descriptor != descriptor && jvm_descriptor != physical {
+    let constructor_marker = name == "<init>"
+        && own.is_none()
+        && class.enclosing_instance().is_none()
+        && explicit_descriptor
+        && params
+            .iter()
+            .any(|(_, ty, _)| crate::value_abi::value_parameter(ty, &registry))
+        && jvm_descriptor
+            == physical.replace(")V", "Lkotlin/jvm/internal/DefaultConstructorMarker;)V")
+        && class.methods[*index].access & 0x1000 != 0
+        && class.methods.iter().any(|method| {
+            method.name == "<init>" && method.descriptor == physical && method.access & 2 != 0
+        });
+    let compose = super::compose_abi::callable(
+        &attributes[*index],
+        &class.methods[*index],
+        &logical,
+        &result,
+        flags,
+        receiver.is_some()
+            || value_dispatch
+            || !type_parameters.is_empty()
+            || own.is_some()
+            || class
+                .library
+                .as_ref()
+                .is_none_or(|library| library.package.is_none())
+            || vararg_index.is_some(),
+        params.iter().any(|(_, _, default)| *default),
+    );
+    let compose = match compose {
+        Ok(compose) => compose,
+        Err(error) => {
+            let method = &mut class.methods[*index];
+            method.kotlin_params = Some(params.clone());
+            method.kotlin_result = Some(result.clone());
+            method.source_property = property.clone();
+            if let Some(library) = &mut method.library {
+                library.receiver = receiver.clone();
+                library.type_parameters = type_parameters.clone();
+            }
+            return Err(error);
+        }
+    };
+    if compose.is_none()
+        && jvm_descriptor != descriptor
+        && jvm_descriptor != physical
+        && !constructor_marker
+    {
         let (logical_parameters, _) = descriptor.split_once(')').ok_or_else(invalid)?;
         let (physical_parameters, physical_result) =
             jvm_descriptor.split_once(')').ok_or_else(invalid)?;
@@ -1472,18 +1628,26 @@ fn attach_member(
             && class
                 .enclosing_instance()
                 .is_some_and(|outer| jvm_descriptor == format!("(L{outer};{}", &erased[1..]));
-        if erased != jvm_descriptor && !inner_signature {
+        let marker_signature = constructor_marker
+            && jvm_descriptor
+                == erased.replace(")V", "Lkotlin/jvm/internal/DefaultConstructorMarker;)V");
+        if erased != jvm_descriptor && !inner_signature && !marker_signature {
             return Err(invalid());
         }
     }
     let mut default_code = None;
-    if params.iter().any(|(_, _, default)| *default) {
+    if compose.is_none() && params.iter().any(|(_, _, default)| *default) {
         if params.len() > 64 {
             return Err(invalid());
         }
         let original = &class.methods[*index];
-        let closing = descriptor.find(')').ok_or_else(invalid)?;
-        let parameters = &descriptor[1..closing];
+        let default_descriptor = if name == "<init>" {
+            physical.as_str()
+        } else {
+            jvm_descriptor
+        };
+        let closing = default_descriptor.find(')').ok_or_else(invalid)?;
+        let parameters = &default_descriptor[1..closing];
         let (bridge_name, bridge_descriptor) = if name == "<init>" {
             (
                 "<init>".into(),
@@ -1503,7 +1667,7 @@ fn attach_member(
                 format!(
                     "({dispatch}{parameters}{}Ljava/lang/Object;){}",
                     "I".repeat(params.len().div_ceil(32)),
-                    &descriptor[closing + 1..]
+                    &default_descriptor[closing + 1..]
                 ),
             )
         };
@@ -1541,6 +1705,11 @@ fn attach_member(
         parameter_modes.insert(0, crate::syntax::InlineParameterMode::Ordinary);
     }
     method.library = Some(LibraryMethod {
+        compose,
+        stable_result: attributes[*index]
+            .annotations
+            .iter()
+            .any(|annotation| annotation.name == "Landroidx/compose/runtime/Stable;"),
         default_code,
         vararg_index,
         contracts,
@@ -1592,6 +1761,8 @@ fn remember_callable(
             && method.library.is_none()
         {
             method.library = Some(LibraryMethod {
+                compose: None,
+                stable_result: false,
                 default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),
@@ -2202,6 +2373,7 @@ pub(super) fn attach_with_values(
             }) {
                 marker.kotlin_params = constructor.kotlin_params;
                 marker.kotlin_result = constructor.kotlin_result;
+                marker.kotlin_internal = constructor.kotlin_internal;
                 marker.library = constructor.library;
                 marker.unsupported = false;
             }

@@ -5,6 +5,7 @@ mod aliases;
 mod archive;
 pub(crate) mod compose_abi;
 mod import_classes;
+mod inherited_classifiers;
 mod inline_defaults;
 mod jdk_modules;
 pub(crate) mod jvm_builtins;
@@ -122,7 +123,7 @@ pub(crate) enum AnnotationRetention {
 pub(crate) struct AnnotationDefinition {
     pub kotlin_parameters: Option<Vec<String>>,
     pub kotlin_types: Vec<Type>,
-    pub java_class_types: Vec<(String, Type)>,
+    pub class_literal_types: Vec<(String, Type)>,
     pub kotlin_targets: Option<Vec<String>>,
     pub vararg: Option<String>,
     pub retention: AnnotationRetention,
@@ -222,6 +223,8 @@ pub(crate) struct LibraryTypeAlias {
 
 #[derive(Clone, Debug, Default)]
 pub(crate) struct LibraryMethod {
+    pub compose: Option<compose_abi::Call>,
+    pub stable_result: bool,
     pub default_code: Option<JavaCode>,
     pub vararg_index: Option<usize>,
     pub contracts: Vec<ContractEffect>,
@@ -611,7 +614,8 @@ impl Classpath {
         }
         for path in &self.paths {
             if let Some(bytes) = self.read_resource(path, "kotlin/kotlin.kotlin_builtins")? {
-                let methods = metadata::builtin_array_factories(&bytes)?;
+                let mut methods = metadata::builtin_array_factories(&bytes)?;
+                methods.extend(metadata::builtin_nullable_to_string(&bytes)?);
                 let class = JavaClass {
                     sealed_: false,
                     sealed_subclasses: Vec::new(),
@@ -749,6 +753,15 @@ impl Classpath {
 
     pub(crate) fn lexical_parent(&self, owner: &str) -> Option<String> {
         self.lexical_parents.borrow().get(owner).cloned()
+    }
+
+    pub(crate) fn private_companion_method_visible(&self, caller: &str, method: &JavaMethod) -> bool {
+        method.access & 2 != 0 && self.is_source(&method.owner)
+            && method.owner.rsplit_once('$').is_some_and(|(outer, name)| {
+                self.lexically_within(caller, outer) && self.load(outer).is_ok_and(|class| {
+                    class.library.as_ref().and_then(|l| l.companion_name.as_deref()) == Some(name)
+                })
+            })
     }
 
     pub(crate) fn lexically_within(&self, caller: &str, outer: &str) -> bool {
@@ -910,6 +923,11 @@ impl Classpath {
                 receiver,
                 params,
                 result,
+            }
+            | Type::SuspendReceiverFunction {
+                receiver,
+                params,
+                result,
             } => {
                 self.check_type_visibility_policy(caller, receiver, offset, allow_internal)?;
                 for ty in params {
@@ -926,6 +944,15 @@ impl Classpath {
     }
 
     pub(crate) fn constructor_visible(&self, caller: &str, method: &JavaMethod) -> bool {
+        if method
+            .library
+            .as_ref()
+            .is_some_and(|library| library.kotlin_declared && !library.kotlin_public)
+            && !method.kotlin_internal
+            && !self.lexically_within(caller, &method.owner)
+        {
+            return false;
+        }
         (!method.kotlin_internal || self.internal_visible(&method.owner))
             && (method.access & 1 != 0
                 || method.access & 2 != 0 && self.lexically_within(caller, &method.owner)
@@ -1022,8 +1049,12 @@ impl Classpath {
         Ok(())
     }
 
-    pub(crate) fn source_default_imports(&self, module: &mut crate::syntax::Module) -> Result<()> {
-        source::defaults(module, self)?;
+    pub(crate) fn source_default_imports(
+        &self,
+        module: &mut crate::syntax::Module,
+        owner: &str,
+    ) -> Result<()> {
+        source::defaults(module, self, owner)?;
         source::expand_aliases(module, self)
     }
 
@@ -1528,11 +1559,12 @@ impl Classpath {
         else {
             return Ok(());
         };
-        if metadata::attach(
+        if metadata::attach_with_values(
             annotation,
             &mut companion,
             &companion_methods,
             &companion_fields,
+            &self.value_classes(),
         )
         .is_err()
             || companion.unsupported
@@ -1620,11 +1652,11 @@ impl Classpath {
         }))
     }
 
-    pub(crate) fn java_member_class(
+    pub(crate) fn member_class_entry(
         &self,
         owner: &str,
         short: &str,
-    ) -> Result<Option<(JavaClass, u16)>> {
+    ) -> Result<Option<(String, u16)>> {
         if self.is_source(owner) {
             let nested = format!("{owner}${short}");
             if self.is_source(&nested)
@@ -1637,7 +1669,7 @@ impl Classpath {
                 && let Some(class) = self.cache.borrow().get(&nested)
                 && class.kotlin_class
             {
-                return Ok(Some((class.clone(), class.access)));
+                return Ok(Some((class.name.clone(), class.access)));
             }
             return Ok(None);
         }
@@ -1663,9 +1695,19 @@ impl Classpath {
             .collect::<Vec<_>>();
         match entries.as_slice() {
             [] => Ok(None),
-            [(name, _, _, access)] => Ok(Some((self.load(name)?, *access))),
+            [(name, _, _, access)] => Ok(Some((name.to_string(), *access))),
             _ => Err(invalid()),
         }
+    }
+
+    pub(crate) fn java_member_class(
+        &self,
+        owner: &str,
+        short: &str,
+    ) -> Result<Option<(JavaClass, u16)>> {
+        self.member_class_entry(owner, short)?
+            .map(|(name, access)| Ok((self.load(&name)?, access)))
+            .transpose()
     }
 
     pub fn package_classes(&self, package: &str) -> Result<Vec<JavaClass>> {
@@ -3527,7 +3569,7 @@ fn annotation_definition(
         return Ok(None);
     }
     let mut parameters = Vec::new();
-    let mut java_class_types = Vec::new();
+    let mut class_literal_types = Vec::new();
     for (method, attrs) in class.methods.iter().zip(methods) {
         if method.name.starts_with('<') {
             continue;
@@ -3561,16 +3603,16 @@ fn annotation_definition(
             return Ok(None);
         }
         if let Some(signature) = &attrs.signature {
-            fn supported_annotation_signature(ty: &Type, bounded: bool) -> bool {
+            fn supported_annotation_signature(ty: &Type) -> bool {
                 match ty {
                     Type::Parameterized { name, arguments } => {
                         name == "java/lang/Class"
                             && arguments.len() == 1
                             && arguments[0].ty.as_ref().is_none_or(|ty| {
-                                bounded && matches!(ty.base(), Type::Java(_) | Type::String)
+                                matches!(ty.base(), Type::Java(_) | Type::String)
                             })
                     }
-                    Type::Array(inner) => supported_annotation_signature(inner, bounded),
+                    Type::Array(inner) => supported_annotation_signature(inner),
                     _ => true,
                 }
             }
@@ -3578,14 +3620,11 @@ fn annotation_definition(
             if !parameters.is_empty()
                 || !args.is_empty()
                 || signature_result.descriptor() != result
-                || !supported_annotation_signature(&signature_result, kotlin_parameters.is_none())
+                || !supported_annotation_signature(&signature_result)
             {
                 return Ok(None);
             }
-            if kotlin_parameters.is_none() {
-                java_class_types
-                    .push((method.name.clone(), java_annotation_type(signature_result)));
-            }
+            class_literal_types.push((method.name.clone(), java_annotation_type(signature_result)));
         }
         if let Some(payload) = &attrs.annotation_default_payload {
             validate_annotation_default(result, payload, pool)?;
@@ -3625,7 +3664,7 @@ fn annotation_definition(
     Ok(Some(AnnotationDefinition {
         kotlin_parameters,
         kotlin_types,
-        java_class_types,
+        class_literal_types,
         kotlin_targets,
         vararg,
         retention,
@@ -3931,7 +3970,7 @@ fn parse_details_impl(
                     } else {
                         Some(
                             definition
-                                .java_class_types
+                                .class_literal_types
                                 .iter()
                                 .find(|(parameter, _)| parameter == name)
                                 .map(|(_, ty)| ty.clone())

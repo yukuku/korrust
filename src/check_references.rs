@@ -2,6 +2,33 @@ use super::*;
 
 impl Checker<'_> {
     pub(super) fn callable_reference(&mut self, expr: &Expr, expected: &Type) -> Result<Value> {
+        let (value, binding) =
+            self.with_reference_target(expr, expected, |checker, lambda, suspend_| {
+                if suspend_ {
+                    checker.lambda_context(lambda, expected, None, true, None)
+                } else {
+                    checker.lambda(lambda, expected, None)
+                }
+            })?;
+        Ok(Self::wrap_lets(value, binding.into_iter().collect()))
+    }
+
+    pub(super) fn with_reference_target<R>(
+        &mut self,
+        expr: &Expr,
+        expected: &Type,
+        check: impl FnOnce(&mut Self, &Expr, bool) -> Result<R>,
+    ) -> Result<(R, Option<(u8, Value)>)> {
+        if matches!(expected.base(), Type::SuspendReceiverFunction { .. }) {
+            return Err(Diagnostic::new(
+                expr.offset,
+                "Suspend receiver callable references are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "SUSPEND_RECEIVER_REFERENCE_UNSUPPORTED",
+            ));
+        }
         let (params, suspend_) = match expected.base() {
             Type::Function { params, .. } => (params, false),
             Type::SuspendFunction { params, .. } => (params, true),
@@ -198,15 +225,11 @@ impl Checker<'_> {
                 }],
             },
         };
-        let result = if suspend_ {
-            self.lambda_context(&lambda, expected, None, true, None)
-        } else {
-            self.lambda(&lambda, expected, None)
-        };
+        let result = check(self, &lambda, suspend_);
         if bound_scope {
             self.scopes.pop();
         }
-        result.map(|value| Self::wrap_lets(value, binding.into_iter().collect()))
+        result.map(|value| (value, binding))
     }
 }
 

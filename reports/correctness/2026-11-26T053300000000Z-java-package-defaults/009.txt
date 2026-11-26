@@ -1,0 +1,25 @@
+$ /workspace/work/interop159-nullability-final/references/kotlinc/bin/kotlinc /workspace/work/interop159-nullability-final/tests/package_nullability/Consumer.kt /workspace/work/interop159-nullability-final/tests/package_nullability/Broken.kt /workspace/work/interop159-nullability-final/tests/package_nullability/Warnings.kt -cp /workspace/work/interop159-nullability-final-run2/dependency.jar:/workspace/work/interop159-nullability-final/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/interop159-nullability-final-run2/jar/official -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/package_nullability/Broken.kt:5:78: warning: condition is always 'false'.
+fun brokenInferred(): Int { val value = nonnull.Library.broken(); return if (value == null) 1 else 2 }
+                                                                             ^^^^^^^^^^^^^
+tests/package_nullability/Broken.kt:6:54: warning: elvis operator (?:) always returns the left operand of non-nullable type 'String'.
+fun brokenElvis(): String = nonnull.Library.broken() ?: "fallback"
+                                                     ^^^^^^^^^^^^^
+tests/package_nullability/Broken.kt:7:50: warning: unnecessary safe call on a non-null receiver of type 'String'.
+fun brokenSafe(): Int? = nonnull.Library.broken()?.length
+                                                 ^^
+tests/package_nullability/Warnings.kt:2:55: warning: Java type mismatch: inferred type is 'Nothing?', but 'String' was expected.
+fun warningNullable(): String? = warning.Library.echo(null)
+                                                      ^^^^
+tests/package_nullability/Warnings.kt:3:54: warning: Java type mismatch: inferred type is 'Nothing?', but 'String' was expected.
+fun warningRequired(): String = warning.Library.echo(null)
+                                                     ^^^^
+tests/package_nullability/Warnings.kt:4:81: warning: Java type mismatch: inferred type is 'Nothing?', but 'String' was expected.
+fun warningInferred(): Int { var value = warning.Library.echo("value"); value = null; return if (value == null) 1 else 2 }
+                                                                                ^^^^
+tests/package_nullability/Warnings.kt:4:98: warning: condition is always 'true'.
+fun warningInferred(): Int { var value = warning.Library.echo("value"); value = null; return if (value == null) 1 else 2 }
+                                                                                                 ^^^^^^^^^^^^^
+tests/package_nullability/Warnings.kt:5:59: warning: Java type mismatch: inferred type is 'Nothing?', but 'String' was expected.
+fun warningGlobal(): String? = globalwarning.Library.echo(null)
+                                                          ^^^^

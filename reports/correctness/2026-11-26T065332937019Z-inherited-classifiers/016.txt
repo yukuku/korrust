@@ -1,0 +1,7 @@
+$ /workspace/work/targets159/inherited-dev/references/kotlinc/bin/kotlinc -language-version 2.3 -api-version 2.3 -jvm-target 1.8 /workspace/work/targets159/inherited-dev/target/checks/2026-11-26T065332937019Z-inherited-classifiers/protected-import.kt -cp /workspace/work/targets159/inherited-dev/target/checks/2026-11-26T065332937019Z-inherited-classifiers/official:/workspace/work/targets159/inherited-dev/target/checks/2026-11-26T065332937019Z-inherited-classifiers/java:/workspace/work/targets159/inherited-dev/target/checks/2026-11-26T065332937019Z-inherited-classifiers/dependencies:/workspace/work/targets159/inherited-dev/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/targets159/inherited-dev/target/checks/2026-11-26T065332937019Z-inherited-classifiers/invalid-official-protected-import
+target/checks/2026-11-26T065332937019Z-inherited-classifiers/protected-import.kt:2:21: error: cannot access 'class Protected : Any': it is protected in 'inherited.library.JavaTypes.Base'.
+fun bad(): String = Protected.tag()
+                    ^^^^^^^^^
+target/checks/2026-11-26T065332937019Z-inherited-classifiers/protected-import.kt:2:31: error: cannot access 'class Protected : Any': it is protected in 'inherited.library.JavaTypes.Base'.
+fun bad(): String = Protected.tag()
+                              ^^^

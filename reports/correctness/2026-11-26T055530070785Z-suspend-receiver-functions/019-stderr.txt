@@ -1,0 +1,3 @@
+reports/correctness/2026-11-26T055530070785Z-suspend-receiver-functions/function-value-outside-suspend.kt:2:80: error: suspend function 'suspend fun invoke(p1: CoroutineScope): Int' can only be called from a coroutine or another suspend function.
+fun bad(scope: CoroutineScope, block: suspend CoroutineScope.() -> Int): Int = block(scope)
+                                                                               ^^^^^

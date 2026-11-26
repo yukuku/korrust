@@ -1,0 +1,140 @@
+Classfile /workspace/korrust/target/checks/2026-11-26T064156506548Z-nullable-to-string/candidate/membershadow/MemberKt.class
+  Last modified Nov 26, 2026; size 1104 bytes
+  SHA-256 checksum 79c101d9410fe59242c5b3f257a4a6f43c63a596363195f8640a0138e27fa56e
+  Compiled from "Member.kt"
+public final class membershadow.MemberKt
+  minor version: 0
+  major version: 49
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // membershadow/MemberKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 3, attributes: 2
+Constant pool:
+   #1 = Utf8               membershadow/MemberKt
+   #2 = Class              #1             // membershadow/MemberKt
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               SourceFile
+   #6 = Utf8               Member.kt
+   #7 = Utf8               extension
+   #8 = String             #7             // extension
+   #9 = Utf8               toString
+  #10 = Utf8               (Lstringify/Probe;)Ljava/lang/String;
+  #11 = Utf8               Code
+  #12 = Utf8               RuntimeInvisibleAnnotations
+  #13 = Utf8               Lorg/jetbrains/annotations/NotNull;
+  #14 = Utf8               Lorg/jetbrains/annotations/Nullable;
+  #15 = Utf8               RuntimeInvisibleParameterAnnotations
+  #16 = Utf8               value
+  #17 = String             #16            // value
+  #18 = Utf8               kotlin/jvm/internal/Intrinsics
+  #19 = Class              #18            // kotlin/jvm/internal/Intrinsics
+  #20 = Utf8               checkNotNullParameter
+  #21 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+  #22 = NameAndType        #20:#21        // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #23 = Methodref          #19.#22        // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #24 = Utf8               stringify/Probe
+  #25 = Class              #24            // stringify/Probe
+  #26 = Utf8               ()Ljava/lang/String;
+  #27 = NameAndType        #9:#26         // toString:()Ljava/lang/String;
+  #28 = Methodref          #25.#27        // stringify/Probe.toString:()Ljava/lang/String;
+  #29 = Utf8               toString(...)
+  #30 = String             #29            // toString(...)
+  #31 = Utf8               checkNotNullExpressionValue
+  #32 = NameAndType        #31:#21        // checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+  #33 = Methodref          #19.#32        // kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+  #34 = Utf8               member
+  #35 = NameAndType        #9:#10         // toString:(Lstringify/Probe;)Ljava/lang/String;
+  #36 = Methodref          #2.#35         // membershadow/MemberKt.toString:(Lstringify/Probe;)Ljava/lang/String;
+  #37 = Utf8               nullableMember
+  #38 = Utf8               Lkotlin/Metadata;
+  #39 = Utf8               mv
+  #40 = Integer            2
+  #41 = Integer            3
+  #42 = Integer            0
+  #43 = Utf8               k
+  #44 = Utf8               xi
+  #45 = Integer            48
+  #46 = Utf8               d1
+  #47 = Utf8               \u0000\b\n\u0002\b\u0007\n\u0002\b\u0001\u001a\u0015H\u0006\u0010\u0000\u001a\u00020\u0001*\u00040\u0002\u0018\u0001¢\u0006\u0004\b\u0000\u0010\u0003\u001a\u0017H\u0006\u0010\u0004\u001a\u00020\u00012\u0006\u0010\u0005\u001a\u00020\u0002¢\u0006\u0004\b\u0004\u0010\u0003\u001a\u0019H\u0006\u0010\u0006\u001a\u00020\u00012\b\u0010\u0005\u001a\u00040\u0002\u0018\u0001¢\u0006\u0004\b\u0006\u0010\u0003¨\u0006\u0007
+  #48 = Utf8               d2
+  #49 = Utf8               kotlin/String
+  #50 = Utf8               nullable_to_string
+  #51 = Utf8               RuntimeVisibleAnnotations
+{
+  public static final java.lang.String toString(stringify.Probe);
+    descriptor: (Lstringify/Probe;)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: ldc_w         #8                  // String extension
+         3: areturn
+         4: aconst_null
+         5: athrow
+    RuntimeInvisibleAnnotations:
+      0: #13()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #14()
+          org.jetbrains.annotations.Nullable
+
+  public static final java.lang.String member(stringify.Probe);
+    descriptor: (Lstringify/Probe;)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=4, locals=1, args_size=1
+         0: aload         0
+         2: ldc_w         #17                 // String value
+         5: invokestatic  #23                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         0
+        10: checkcast     #25                 // class stringify/Probe
+        13: invokevirtual #28                 // Method stringify/Probe.toString:()Ljava/lang/String;
+        16: dup
+        17: ldc_w         #30                 // String toString(...)
+        20: invokestatic  #33                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+        23: areturn
+        24: aconst_null
+        25: athrow
+    RuntimeInvisibleAnnotations:
+      0: #13()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #13()
+          org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String nullableMember(stringify.Probe);
+    descriptor: (Lstringify/Probe;)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=3, args_size=1
+         0: aload         0
+         2: checkcast     #25                 // class stringify/Probe
+         5: astore        1
+         7: aload         1
+         9: checkcast     #25                 // class stringify/Probe
+        12: astore        2
+        14: aload         2
+        16: invokestatic  #36                 // Method toString:(Lstringify/Probe;)Ljava/lang/String;
+        19: areturn
+        20: aconst_null
+        21: athrow
+    RuntimeInvisibleAnnotations:
+      0: #13()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #14()
+          org.jetbrains.annotations.Nullable
+}
+SourceFile: "Member.kt"
+RuntimeVisibleAnnotations:
+  0: #38(#39=[I#40,I#41,I#42],#43=I#40,#44=I#45,#46=[s#47],#48=[s#9,s#49,s#24,s#10,s#34,s#16,s#37,s#50])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u0007\n\u0002\b\u0001\u001a\u0015H\u0006\u0010\u0000\u001a\u00020\u0001*\u00040\u0002\u0018\u0001¢\u0006\u0004\b\u0000\u0010\u0003\u001a\u0017H\u0006\u0010\u0004\u001a\u00020\u00012\u0006\u0010\u0005\u001a\u00020\u0002¢\u0006\u0004\b\u0004\u0010\u0003\u001a\u0019H\u0006\u0010\u0006\u001a\u00020\u00012\b\u0010\u0005\u001a\u00040\u0002\u0018\u0001¢\u0006\u0004\b\u0006\u0010\u0003¨\u0006\u0007"]
+      d2=["toString","kotlin/String","stringify/Probe","(Lstringify/Probe;)Ljava/lang/String;","member","value","nullableMember","nullable_to_string"]
+    )
