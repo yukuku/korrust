@@ -3828,6 +3828,10 @@ impl Checker<'_> {
                                 return Err(Diagnostic::new(
                                     offset,
                                     "Cannot reassign val backing field",
+                                )
+                                .with_kind(
+                                    crate::DiagnosticKind::InvalidKotlin,
+                                    "VAL_BACKING_FIELD_REASSIGNMENT",
                                 ));
                             }
                             if let Some((owner, ty)) = self.object_fields.get(&name) {
@@ -3891,6 +3895,15 @@ impl Checker<'_> {
                             };
                             body.push(Statement::Expression(value));
                             continue;
+                        }
+                        if self.members.contains_key(&format!("#get:{name}"))
+                            && !self.fields.contains_key(name)
+                        {
+                            return Err(Diagnostic::new(offset, "Cannot reassign val property")
+                                .with_kind(
+                                    crate::DiagnosticKind::InvalidKotlin,
+                                    "VAL_PROPERTY_REASSIGNMENT",
+                                ));
                         }
                         if !self.fields.contains_key(name)
                             && !self.object_fields.contains_key(name)
