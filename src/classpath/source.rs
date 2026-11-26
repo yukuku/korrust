@@ -106,6 +106,15 @@ pub(super) fn resolve(ty: &Type, module: &Module, cp: &Classpath) -> Type {
             params: params.iter().map(|t| resolve(t, module, cp)).collect(),
             result: Box::new(resolve(result, module, cp)),
         },
+        Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => Type::SuspendReceiverFunction {
+            receiver: Box::new(resolve(receiver, module, cp)),
+            params: params.iter().map(|t| resolve(t, module, cp)).collect(),
+            result: Box::new(resolve(result, module, cp)),
+        },
         Type::ReceiverFunction {
             receiver,
             params,
@@ -1310,6 +1319,11 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) -> Result<()> {
                 ty(result, names);
             }
             Type::ReceiverFunction {
+                receiver,
+                params,
+                result,
+            }
+            | Type::SuspendReceiverFunction {
                 receiver,
                 params,
                 result,

@@ -118,6 +118,15 @@ fn nullability_annotation(ty: &Type) -> Option<&'static str> {
 fn generic_type(ty: &Type) -> String {
     match ty {
         Type::Parameter { name, .. } => format!("T{name};"),
+        Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => {
+            let mut all = vec![receiver.as_ref().clone()];
+            all.extend(params.clone());
+            generic_type(&Type::suspend_runtime(&all, result))
+        }
         Type::ReceiverFunction {
             receiver,
             params,
@@ -238,6 +247,15 @@ fn generic_parameter(ty: &Type) -> String {
         Type::List(inner) if covariant_parameter_type(inner) => {
             format!("Ljava/util/List<+{}>;", generic_parameter(inner))
         }
+        Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => {
+            let mut all = vec![receiver.as_ref().clone()];
+            all.extend(params.clone());
+            generic_parameter(&Type::suspend_runtime(&all, result))
+        }
         Type::ReceiverFunction {
             receiver,
             params,
@@ -282,6 +300,7 @@ fn covariant_parameter_type(ty: &Type) -> bool {
         | Type::FlexibleList(_)
         | Type::Function { .. }
         | Type::ReceiverFunction { .. }
+        | Type::SuspendReceiverFunction { .. }
         | Type::Parameter { .. } => true,
         _ => false,
     }
@@ -335,6 +354,15 @@ fn erase_generic_variables(ty: &Type) -> Type {
             params: params.iter().map(erase_generic_variables).collect(),
             result: Box::new(erase_generic_variables(result)),
         },
+        Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => Type::SuspendReceiverFunction {
+            receiver: Box::new(erase_generic_variables(receiver)),
+            params: params.iter().map(erase_generic_variables).collect(),
+            result: Box::new(erase_generic_variables(result)),
+        },
         Type::ReceiverFunction {
             receiver,
             params,
@@ -380,6 +408,15 @@ fn generic_function(function: &crate::check::Function) -> Option<String> {
         match ty {
             Type::Array(inner) | Type::OutArray(inner) => {
                 format!("[{}", scoped(inner, names, true))
+            }
+            Type::SuspendReceiverFunction {
+                receiver,
+                params,
+                result,
+            } => {
+                let mut all = vec![receiver.as_ref().clone()];
+                all.extend(params.clone());
+                scoped(&Type::suspend_runtime(&all, result), names, argument)
             }
             Type::ReceiverFunction {
                 receiver,
@@ -463,6 +500,15 @@ fn generic_function(function: &crate::check::Function) -> Option<String> {
         match ty {
             Type::List(inner) if covariant_parameter_type(inner) => {
                 format!("Ljava/util/List<+{}>;", parameter(inner, names))
+            }
+            Type::SuspendReceiverFunction {
+                receiver,
+                params,
+                result,
+            } => {
+                let mut all = vec![receiver.as_ref().clone()];
+                all.extend(params.clone());
+                parameter(&Type::suspend_runtime(&all, result), names)
             }
             Type::ReceiverFunction {
                 receiver,

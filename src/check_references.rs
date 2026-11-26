@@ -2,6 +2,16 @@ use super::*;
 
 impl Checker<'_> {
     pub(super) fn callable_reference(&mut self, expr: &Expr, expected: &Type) -> Result<Value> {
+        if matches!(expected.base(), Type::SuspendReceiverFunction { .. }) {
+            return Err(Diagnostic::new(
+                expr.offset,
+                "Suspend receiver callable references are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "SUSPEND_RECEIVER_REFERENCE_UNSUPPORTED",
+            ));
+        }
         let (params, suspend_) = match expected.base() {
             Type::Function { params, .. } => (params, false),
             Type::SuspendFunction { params, .. } => (params, true),

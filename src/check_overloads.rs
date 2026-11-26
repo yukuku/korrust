@@ -24,6 +24,18 @@ fn upper_bounds(ty: &Type, depth: usize) -> Type {
                 })
                 .collect(),
         },
+        Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => Type::SuspendReceiverFunction {
+            receiver: Box::new(upper_bounds(receiver, depth + 1)),
+            params: params
+                .iter()
+                .map(|ty| upper_bounds(ty, depth + 1))
+                .collect(),
+            result: Box::new(upper_bounds(result, depth + 1)),
+        },
         Type::ReceiverFunction {
             receiver,
             params,

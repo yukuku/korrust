@@ -378,9 +378,17 @@ impl<'a> Context<'a> {
                 .next()
                 .and_then(|argument| argument.ty)
                 .ok_or_else(invalid)?;
-            ty = Type::SuspendFunction {
-                params,
-                result: Box::new(result),
+            ty = if let Some(receiver) = receiver {
+                Type::SuspendReceiverFunction {
+                    receiver,
+                    params,
+                    result: Box::new(result),
+                }
+            } else {
+                Type::SuspendFunction {
+                    params,
+                    result: Box::new(result),
+                }
             };
         }
         if p.integer(3)?.unwrap_or(0) > 1 {

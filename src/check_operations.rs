@@ -2681,9 +2681,9 @@ impl Checker<'_> {
                 let loop_depth = self.loop_depth;
                 let count = self.lambdas.borrow().len();
                 let inferred = self.value(initializer).and_then(|value| match value.ty {
-                    Type::Function { result, .. } | Type::ReceiverFunction { result, .. } => {
-                        Ok(*result)
-                    }
+                    Type::Function { result, .. }
+                    | Type::ReceiverFunction { result, .. }
+                    | Type::SuspendReceiverFunction { result, .. } => Ok(*result),
                     _ => Err(Diagnostic::new(
                         offset,
                         "Array initializer must be a function",
@@ -2842,11 +2842,16 @@ impl Checker<'_> {
             offset,
             kind: ExprKind::Name(name.into()),
         })?;
-        let Type::ReceiverFunction {
+        let (Type::ReceiverFunction {
             receiver,
             params,
             result,
-        } = function.ty.base()
+        }
+        | Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
+        }) = function.ty.base()
         else {
             return Err(Diagnostic::new(
                 offset,

@@ -128,6 +128,7 @@ impl Checker<'_> {
                     Type::Function { .. }
                         | Type::ReceiverFunction { .. }
                         | Type::SuspendFunction { .. }
+                        | Type::SuspendReceiverFunction { .. }
                 )
             })
         {

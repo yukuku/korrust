@@ -3613,6 +3613,11 @@ impl Checker<'_> {
                 receiver,
                 params,
                 result,
+            }
+            | Type::SuspendReceiverFunction {
+                receiver,
+                params,
+                result,
             } => {
                 Self::concrete_java_field_type(receiver)
                     && params.iter().all(Self::concrete_java_field_type)
@@ -5895,6 +5900,7 @@ impl Checker<'_> {
                             Type::Function { .. }
                                 | Type::ReceiverFunction { .. }
                                 | Type::SuspendFunction { .. }
+                                | Type::SuspendReceiverFunction { .. }
                         ) {
                             if let Some(value) =
                                 self.implicit_extension_receiver_call(name, args, &[], offset)?
@@ -6217,14 +6223,17 @@ impl Checker<'_> {
                     if let Some(owner) = self.qualified_java_class(receiver)? {
                         return self.java_static(&owner, name, args, offset);
                     }
-                    if self
-                        .local(name)
-                        .is_some_and(|l| matches!(l.ty, Type::ReceiverFunction { .. }))
-                        || self
-                            .captured
-                            .get(name)
-                            .is_some_and(|(_, ty)| matches!(ty, Type::ReceiverFunction { .. }))
-                    {
+                    if self.local(name).is_some_and(|l| {
+                        matches!(
+                            l.ty,
+                            Type::ReceiverFunction { .. } | Type::SuspendReceiverFunction { .. }
+                        )
+                    }) || self.captured.get(name).is_some_and(|(_, ty)| {
+                        matches!(
+                            ty,
+                            Type::ReceiverFunction { .. } | Type::SuspendReceiverFunction { .. }
+                        )
+                    }) {
                         return self.receiver_function_call(receiver, name, args, offset);
                     }
                     if matches!(&receiver.kind,ExprKind::Name(n) if n=="super") {
@@ -6341,7 +6350,10 @@ impl Checker<'_> {
                     if name == "invoke"
                         && matches!(
                             receiver.ty,
-                            Type::Function { .. } | Type::ReceiverFunction { .. }
+                            Type::Function { .. }
+                                | Type::ReceiverFunction { .. }
+                                | Type::SuspendFunction { .. }
+                                | Type::SuspendReceiverFunction { .. }
                         )
                     {
                         return self.function_invoke(receiver, args, offset);
@@ -6718,6 +6730,11 @@ fn nested_type_imports(
             receiver,
             params,
             result,
+        }
+        | Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
         } => {
             for ty in params.iter().chain([receiver.as_ref(), result.as_ref()]) {
                 nested_type_imports(ty, imports, classpath, caller, offset)?;
@@ -6846,6 +6863,18 @@ fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> 
         Type::OutArray(element) => Ok(Type::OutArray(Box::new(resolve_type(
             element, imports, offset,
         )?))),
+        Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => Ok(Type::SuspendReceiverFunction {
+            receiver: Box::new(resolve_type(receiver, imports, offset)?),
+            params: params
+                .iter()
+                .map(|p| resolve_type(p, imports, offset))
+                .collect::<Result<Vec<_>>>()?,
+            result: Box::new(resolve_type(result, imports, offset)?),
+        }),
         Type::ReceiverFunction {
             receiver,
             params,
@@ -7594,6 +7623,11 @@ pub fn check_with_owner(
                 collect_type(result, names);
             }
             Type::ReceiverFunction {
+                receiver,
+                params,
+                result,
+            }
+            | Type::SuspendReceiverFunction {
                 receiver,
                 params,
                 result,

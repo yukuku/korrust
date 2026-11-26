@@ -63,6 +63,18 @@ pub(super) fn substitute(ty: &Type, substitutions: &HashMap<String, Type>) -> Ty
                 })
                 .collect(),
         },
+        Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => Type::SuspendReceiverFunction {
+            receiver: Box::new(substitute(receiver, substitutions)),
+            params: params
+                .iter()
+                .map(|ty| substitute(ty, substitutions))
+                .collect(),
+            result: Box::new(substitute(result, substitutions)),
+        },
         Type::ReceiverFunction {
             receiver,
             params,
@@ -270,6 +282,11 @@ fn mentions(ty: &Type, name: &str) -> bool {
             .iter()
             .any(|argument| argument.ty.as_ref().is_some_and(|ty| mentions(ty, name))),
         Type::ReceiverFunction {
+            receiver,
+            params,
+            result,
+        }
+        | Type::SuspendReceiverFunction {
             receiver,
             params,
             result,
@@ -562,6 +579,11 @@ pub(super) fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: 
                 receiver,
                 params,
                 result,
+            }
+            | Type::SuspendReceiverFunction {
+                receiver,
+                params,
+                result,
             } => {
                 let mut all = vec![receiver.as_ref()];
                 all.extend(params.iter());
@@ -570,9 +592,13 @@ pub(super) fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: 
             _ => None,
         }
     }
-    if matches!(actual, Type::SuspendFunction { .. })
-        != matches!(expected, Type::SuspendFunction { .. })
-    {
+    if matches!(
+        actual,
+        Type::SuspendFunction { .. } | Type::SuspendReceiverFunction { .. }
+    ) != matches!(
+        expected,
+        Type::SuspendFunction { .. } | Type::SuspendReceiverFunction { .. }
+    ) {
         return false;
     }
     if let (Some((a, ar)), Some((e, er))) = (function_parts(actual), function_parts(expected)) {
@@ -821,6 +847,11 @@ pub(super) fn validate_type_arguments_with_classes(
                 receiver,
                 params,
                 result,
+            }
+            | Type::SuspendReceiverFunction {
+                receiver,
+                params,
+                result,
             } => {
                 validate(receiver, cp, classes, offset, depth + 1)?;
                 for parameter in params {
@@ -939,8 +970,18 @@ impl Checker<'_> {
                 receiver,
                 params,
                 result,
+            }
+            | Type::SuspendReceiverFunction {
+                receiver,
+                params,
+                result,
             } => {
                 if let Type::ReceiverFunction {
+                    receiver: ar,
+                    params: ap,
+                    result: av,
+                }
+                | Type::SuspendReceiverFunction {
                     receiver: ar,
                     params: ap,
                     result: av,
@@ -1029,7 +1070,9 @@ impl Checker<'_> {
         if let Type::Nullable(inner) = pattern.base()
             && matches!(
                 inner.base(),
-                Type::Function { .. } | Type::ReceiverFunction { .. }
+                Type::Function { .. }
+                    | Type::ReceiverFunction { .. }
+                    | Type::SuspendReceiverFunction { .. }
             )
         {
             return self.infer_lambda_result(inner, expr, substitutions, fixed, parameters, label);
@@ -1041,6 +1084,11 @@ impl Checker<'_> {
             return Ok(());
         }
         if let Type::ReceiverFunction {
+            receiver,
+            params,
+            result,
+        }
+        | Type::SuspendReceiverFunction {
             receiver,
             params,
             result,
@@ -1898,6 +1946,7 @@ impl Checker<'_> {
                         | Type::FlexibleList(_)
                         | Type::Function { .. }
                         | Type::ReceiverFunction { .. }
+                        | Type::SuspendReceiverFunction { .. }
                         | Type::Unit
                         | Type::Null => true,
                         _ => false,

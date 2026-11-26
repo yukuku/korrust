@@ -39,6 +39,11 @@ pub(super) fn check_exposed_types(source: &syntax::Module, classpath: &Classpath
                 receiver,
                 params,
                 result,
+            }
+            | Type::SuspendReceiverFunction {
+                receiver,
+                params,
+                result,
             } => params
                 .iter()
                 .chain([receiver.as_ref(), result.as_ref()])

@@ -2711,6 +2711,11 @@ fn infer_source_results_impl(
                 receiver,
                 params,
                 result,
+            }
+            | Type::SuspendReceiverFunction {
+                receiver,
+                params,
+                result,
             } => {
                 type_names(receiver, out);
                 for t in params {
@@ -4775,6 +4780,11 @@ pub(super) fn validate_classifier_generics(
                         receiver,
                         params,
                         result,
+                    }
+                    | Type::SuspendReceiverFunction {
+                        receiver,
+                        params,
+                        result,
                     } => dependent(receiver) || params.iter().any(dependent) || dependent(result),
                     _ => false,
                 }
@@ -4795,6 +4805,7 @@ pub(super) fn validate_classifier_generics(
                 Type::Function { .. }
                     | Type::ReceiverFunction { .. }
                     | Type::SuspendFunction { .. }
+                    | Type::SuspendReceiverFunction { .. }
             ) {
                 return Err(Diagnostic::new(
                     offset,
@@ -4919,6 +4930,11 @@ pub(super) fn validate_variance(
             validate_variance(parameters, result, polarity, classpath, imports, offset)?;
         }
         Type::ReceiverFunction {
+            receiver,
+            params,
+            result,
+        }
+        | Type::SuspendReceiverFunction {
             receiver,
             params,
             result,

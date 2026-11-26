@@ -41,7 +41,10 @@ pub(super) fn suspension(value: &Value, functions: &[crate::check::Function]) ->
             .as_ref()
             .is_some_and(|method| method.suspend_),
         ValueKind::FunctionInvoke { function, .. } => {
-            matches!(function.ty.base(), Type::SuspendFunction { .. })
+            matches!(
+                function.ty.base(),
+                Type::SuspendFunction { .. } | Type::SuspendReceiverFunction { .. }
+            )
         }
         _ => false,
     }
@@ -321,6 +324,18 @@ fn unsupported_unit_type(ty: &Type) -> bool {
             .iter()
             .filter_map(|argument| argument.ty.as_ref())
             .any(unsupported_unit_type),
+        Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => {
+            receiver.as_ref() == &Type::Unit
+                || unsupported_unit_type(receiver)
+                || params
+                    .iter()
+                    .any(|ty| ty == &Type::Unit || unsupported_unit_type(ty))
+                || unsupported_unit_type(result)
+        }
         Type::SuspendFunction { params, result } => {
             params
                 .iter()
@@ -368,6 +383,11 @@ fn forbidden_type(ty: &Type, owners: &std::collections::BTreeSet<String>) -> boo
             params.iter().any(|ty| forbidden_type(ty, owners)) || forbidden_type(result, owners)
         }
         Type::ReceiverFunction {
+            receiver,
+            params,
+            result,
+        }
+        | Type::SuspendReceiverFunction {
             receiver,
             params,
             result,

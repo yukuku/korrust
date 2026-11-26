@@ -1515,6 +1515,11 @@ pub(super) fn default_type_imports(
                 receiver,
                 params,
                 result,
+            }
+            | Type::SuspendReceiverFunction {
+                receiver,
+                params,
+                result,
             } => {
                 visit(receiver, imports, classpath);
                 for param in params {

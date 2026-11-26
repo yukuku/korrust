@@ -919,6 +919,11 @@ impl Classpath {
                 receiver,
                 params,
                 result,
+            }
+            | Type::SuspendReceiverFunction {
+                receiver,
+                params,
+                result,
             } => {
                 self.check_type_visibility_policy(caller, receiver, offset, allow_internal)?;
                 for ty in params {

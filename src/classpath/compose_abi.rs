@@ -25,6 +25,11 @@ pub(crate) fn contains(ty: &Type) -> bool {
             receiver,
             params,
             result,
+        }
+        | Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
         } => contains(receiver) || params.iter().any(contains) || contains(result),
         _ => false,
     }

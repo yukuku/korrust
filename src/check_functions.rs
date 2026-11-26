@@ -56,6 +56,7 @@ impl Checker<'_> {
                     Type::Function { .. }
                         | Type::ReceiverFunction { .. }
                         | Type::SuspendFunction { .. }
+                        | Type::SuspendReceiverFunction { .. }
                 )
             {
                 let value = self.expected_value(expr, inner)?;
@@ -223,12 +224,13 @@ impl Checker<'_> {
             }
         }
         let mut value = self.value_expected(expr, Some(expected))?;
-        if matches!(expected.base(), Type::SuspendFunction { .. })
-            && matches!(
-                value.ty.base(),
-                Type::Function { .. } | Type::ReceiverFunction { .. }
-            )
-        {
+        if matches!(
+            expected.base(),
+            Type::SuspendFunction { .. } | Type::SuspendReceiverFunction { .. }
+        ) && matches!(
+            value.ty.base(),
+            Type::Function { .. } | Type::ReceiverFunction { .. }
+        ) {
             return Err(Diagnostic::new(
                 expr.offset,
                 "Ordinary-to-suspend function value adaptation is unsupported",
@@ -329,6 +331,11 @@ impl Checker<'_> {
                 (params, result, None)
             }
             Type::ReceiverFunction {
+                receiver,
+                params,
+                result,
+            }
+            | Type::SuspendReceiverFunction {
                 receiver,
                 params,
                 result,
@@ -591,7 +598,19 @@ impl Checker<'_> {
                 }
             }
         }
-        let suspend_ = matches!(expected.base(), Type::SuspendFunction { .. });
+        if composable {
+            function_params.insert(
+                0,
+                (
+                    "<composer>".into(),
+                    Type::Java(crate::classpath::compose_abi::COMPOSER.into()),
+                ),
+            );
+        }
+        let suspend_ = matches!(
+            expected.base(),
+            Type::SuspendFunction { .. } | Type::SuspendReceiverFunction { .. }
+        );
         if suspend_ {
             checker.next += 1;
         }
@@ -883,6 +902,7 @@ impl Checker<'_> {
                 Type::Function { .. }
                     | Type::ReceiverFunction { .. }
                     | Type::SuspendFunction { .. }
+                    | Type::SuspendReceiverFunction { .. }
                     | Type::Nullable(_)
             ) {
                 return Err(
@@ -924,6 +944,11 @@ impl Checker<'_> {
                 (params.clone(), result.as_ref().clone())
             }
             Type::ReceiverFunction {
+                receiver,
+                params,
+                result,
+            }
+            | Type::SuspendReceiverFunction {
                 receiver,
                 params,
                 result,

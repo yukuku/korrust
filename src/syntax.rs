@@ -7,6 +7,11 @@ pub enum Type {
         params: Vec<Type>,
         result: Box<Type>,
     },
+    SuspendReceiverFunction {
+        receiver: Box<Type>,
+        params: Vec<Type>,
+        result: Box<Type>,
+    },
     Int,
     Long,
     Byte,
@@ -188,6 +193,7 @@ impl Type {
                 | Self::Array(_)
                 | Self::OutArray(_)
                 | Self::ReceiverFunction { .. }
+                | Self::SuspendReceiverFunction { .. }
                 | Self::String
                 | Self::Java(_)
                 | Self::Parameterized { .. }
@@ -245,6 +251,9 @@ impl Type {
                     Self::Nullable(element.clone())
                 };
                 format!("[{}", boxed.descriptor())
+            }
+            Self::SuspendReceiverFunction { params, .. } => {
+                format!("Lkotlin/jvm/functions/Function{};", params.len() + 2)
             }
             Self::ReceiverFunction { params, .. } => {
                 format!("Lkotlin/jvm/functions/Function{};", params.len() + 1)
@@ -2068,6 +2077,20 @@ impl Parser {
                     if params.len() < 22 && params.iter().all(|ty| ty != &Type::Unit) =>
                 {
                     Ok(Type::SuspendFunction { params, result })
+                }
+                Type::ReceiverFunction {
+                    receiver,
+                    params,
+                    result,
+                } if params.len() < 21
+                    && *receiver != Type::Unit
+                    && params.iter().all(|ty| ty != &Type::Unit) =>
+                {
+                    Ok(Type::SuspendReceiverFunction {
+                        receiver,
+                        params,
+                        result,
+                    })
                 }
                 _ => Err(self
                     .error("Suspend function types require at most 21 ordinary parameters")
@@ -5523,6 +5546,19 @@ impl Parser {
                     ),
                     ty => matches!(ty, Type::Function { .. } | Type::ReceiverFunction { .. }),
                 };
+                if mode != InlineParameterMode::Ordinary
+                    && matches!(
+                        ty.base(),
+                        Type::SuspendFunction { .. } | Type::SuspendReceiverFunction { .. }
+                    )
+                {
+                    return Err(self
+                        .error("Suspend function parameter inline modifiers are unsupported")
+                        .with_kind(
+                            DiagnosticKind::UnsupportedLanguage,
+                            "SUSPEND_INLINE_PARAMETER_UNSUPPORTED",
+                        ));
+                }
                 if mode != InlineParameterMode::Ordinary && !function_type {
                     return Err(self
                         .error("Inline parameter modifiers require a function type")

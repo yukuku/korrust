@@ -751,6 +751,24 @@ fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<
             );
             return Ok(proto);
         }
+        Type::SuspendReceiverFunction {
+            receiver,
+            params,
+            result,
+        } => {
+            let mut arguments = params.clone();
+            arguments.push(Type::continuation(result, Variance::Invariant));
+            let runtime = Type::ReceiverFunction {
+                receiver: receiver.clone(),
+                params: arguments,
+                result: Box::new(Type::Nullable(Box::new(Type::Java(
+                    "java/lang/Object".into(),
+                )))),
+            };
+            let mut proto = type_proto(&runtime, imports, strings)?;
+            proto.number(1, 1);
+            return Ok(proto);
+        }
         Type::SuspendFunction { params, result } => {
             let mut arguments = params.clone();
             arguments.push(Type::continuation(result, Variance::Invariant));
