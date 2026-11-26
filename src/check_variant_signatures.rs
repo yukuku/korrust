@@ -499,9 +499,11 @@ fn exposed_field(ty: &Type, cp: &Classpath) -> Result<()> {
 }
 fn classifier_context(ty: &Type, cp: &Classpath, bound: bool, offset: usize) -> Result<()> {
     match ty.base() {
-        Type::Nullable(t) | Type::Array(t) | Type::MutableList(t) | Type::ThreadLocal(t) => {
-            classifier_context(t, cp, true, offset)?
-        }
+        Type::Nullable(t)
+        | Type::Array(t)
+        | Type::OutArray(t)
+        | Type::MutableList(t)
+        | Type::ThreadLocal(t) => classifier_context(t, cp, true, offset)?,
         Type::List(t) => {
             if bound {
                 return Err(classifier_boundary(offset));

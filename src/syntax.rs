@@ -2183,6 +2183,14 @@ impl Parser {
             if conflict {
                 return Err(self.error("Type projection conflicts with declaration-site variance"));
             }
+            if name == "Array" && arguments.len() == 1 && arguments[0].variance == Variance::Out {
+                if let Some(element) = &arguments[0].ty {
+                    if *element == Type::Unit {
+                        return Err(self.error("Array<Unit> element operations are unsupported"));
+                    }
+                    return Ok(Type::OutArray(Box::new(element.clone())));
+                }
+            }
             if arguments.len() == 1 && arguments[0].variance == Variance::Invariant {
                 if let Some(element) = &arguments[0].ty {
                     match name.as_str() {
@@ -5450,11 +5458,16 @@ impl Parser {
                 }
                 let parameter_vararg = self.take("vararg");
                 if vararg {
-                    return Err(self.error(if parameter_vararg {
-                        "Repeated vararg parameters are unsupported"
+                    return Err(if parameter_vararg {
+                        self.error("A function cannot have multiple vararg parameters")
+                            .with_kind(DiagnosticKind::InvalidKotlin, "REPEATED_VARARG_INVALID")
                     } else {
-                        "A vararg parameter must be the last parameter in this subset"
-                    }));
+                        self.error("A source vararg parameter must be last in the supported subset")
+                            .with_kind(
+                                DiagnosticKind::UnsupportedLanguage,
+                                "SOURCE_NONFINAL_VARARG_UNSUPPORTED",
+                            )
+                    });
                 }
                 vararg = parameter_vararg;
                 annotations.extend(self.annotations()?);
@@ -5463,7 +5476,7 @@ impl Parser {
                 self.lines();
                 let ty = self.ty()?;
                 let ty = if parameter_vararg {
-                    Type::primitive_array_for(&ty).unwrap_or_else(|| Type::Array(Box::new(ty)))
+                    Type::primitive_array_for(&ty).unwrap_or_else(|| Type::OutArray(Box::new(ty)))
                 } else {
                     ty
                 };
@@ -5488,9 +5501,12 @@ impl Parser {
                 self.lines();
                 defaults.push(if self.take("=") {
                     if parameter_vararg {
-                        return Err(
-                            self.error("Vararg parameters with default values are unsupported")
-                        );
+                        return Err(self
+                            .error("Vararg parameters with default values are unsupported")
+                            .with_kind(
+                                DiagnosticKind::UnsupportedLanguage,
+                                "VARARG_DEFAULT_UNSUPPORTED",
+                            ));
                     }
                     self.lines();
                     Some(self.expr(0)?)
@@ -8694,10 +8710,10 @@ fun h(): String = target(prefix = "named") label@{ return@label "tail" }"#,
             ("Boolean", Type::BooleanArray),
             ("Float", Type::FloatArray),
             ("Double", Type::DoubleArray),
-            ("String", Type::Array(Box::new(Type::String))),
+            ("String", Type::OutArray(Box::new(Type::String))),
             (
                 "String?",
-                Type::Array(Box::new(Type::Nullable(Box::new(Type::String)))),
+                Type::OutArray(Box::new(Type::Nullable(Box::new(Type::String)))),
             ),
         ] {
             let module = parse(&format!(

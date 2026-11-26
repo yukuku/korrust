@@ -2368,6 +2368,13 @@ impl Checker<'_> {
                         Type::Array(Box::new(Type::Java("java/lang/Class".into()))),
                     ))
                 }
+                ("()[Ljava/lang/Class;", Type::OutArray(inner)) if matches!(inner.base(), Type::Parameterized { name, .. } if name == "kotlin/reflect/KClass") => {
+                    Some((
+                        "getOrCreateKotlinClasses",
+                        "([Ljava/lang/Class;)[Lkotlin/reflect/KClass;",
+                        Type::OutArray(Box::new(Type::Java("java/lang/Class".into()))),
+                    ))
+                }
                 _ => None,
             }
         } else {
@@ -6024,6 +6031,11 @@ impl Checker<'_> {
                         && self.object_methods.contains_key(name)
                     {
                         return self.object_call(name, args, Some(receiver), offset);
+                    }
+                    if let Some(value) =
+                        self.array_member_call(receiver.clone(), name, args, offset)?
+                    {
+                        return Ok(value);
                     }
                     if matches!(receiver.ty.base(), Type::List(_) | Type::MutableList(_)) {
                         return self.list_call(receiver, name, args, offset);

@@ -1,0 +1,17 @@
+[
+  {"id":"indexed-write", "source":"fun bad(vararg values: String) { values[0] = \"wrong\" }"},
+  {"id":"alias-write", "source":"fun bad(vararg values: String) { val alias = values; alias[0] = \"wrong\" }"},
+  {"id":"setter-call", "source":"fun bad(vararg values: String) { values.set(0, \"wrong\") }"},
+  {"id":"nullable-write", "source":"fun bad(vararg values: String?) { values[0] = null }"},
+  {"id":"invariant-escape", "source":"fun bad(vararg values: String): Array<String> = values"},
+  {"id":"mutable-argument", "source":"fun mutate(values: Array<String>) { values[0] = \"wrong\" }; fun bad(vararg values: String) { mutate(values) }"},
+  {"id":"array-without-spread", "source":"fun f(vararg values: String) {}; fun bad() { f(arrayOf(\"wrong\")) }"},
+  {"id":"spread-type", "source":"fun f(vararg values: String) {}; fun bad() { f(*intArrayOf(1)) }"},
+  {"id":"wrong-element", "source":"fun f(vararg values: String) {}; fun bad() { f(1) }"},
+  {"id":"variance", "source":"class Bad<out T> { fun take(vararg values: T): Int = values.size }"},
+  {"id":"local-vararg", "source":"fun limited(): Int { fun local(vararg values: String): Int = values.size; return local(\"x\") }", "unsupported":true},
+  {"id":"nonfinal", "source":"fun limited(vararg values: String, last: Int): Int = values.size + last", "unsupported":true},
+  {"id":"default", "source":"fun limited(vararg values: String = arrayOf(\"default\")): Int = values.size", "unsupported":true},
+  {"id":"unit", "source":"fun limited(vararg values: Unit): Int = values.size", "unsupported":true},
+  {"id":"primitive-alias", "source":"typealias Number = Int\nfun limited(vararg values: Number): Int = values.size", "unsupported":true}
+]

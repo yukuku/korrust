@@ -1797,7 +1797,8 @@ pub(crate) fn for_checked_class(
             (Type::Nullable(a), Type::Nullable(b))
             | (Type::List(a), Type::List(b))
             | (Type::MutableList(a), Type::MutableList(b))
-            | (Type::Array(a), Type::Array(b)) => bind(a, b, bindings),
+            | (Type::Array(a), Type::Array(b))
+            | (Type::OutArray(a), Type::OutArray(b)) => bind(a, b, bindings),
             _ => {}
         }
     }
@@ -2880,7 +2881,8 @@ pub(crate) fn for_checked_package(
             | (Type::List(a), Type::List(b))
             | (Type::MutableList(a), Type::MutableList(b))
             | (Type::ThreadLocal(a), Type::ThreadLocal(b))
-            | (Type::Array(a), Type::Array(b)) => bind(a, b, bindings),
+            | (Type::Array(a), Type::Array(b))
+            | (Type::OutArray(a), Type::OutArray(b)) => bind(a, b, bindings),
             _ => {}
         }
     }

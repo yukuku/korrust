@@ -24,7 +24,8 @@ pub(super) fn check_exposed_types(source: &syntax::Module, classpath: &Classpath
             | Type::List(inner)
             | Type::MutableList(inner)
             | Type::ThreadLocal(inner)
-            | Type::Array(inner) => contains_anonymous(inner, classpath),
+            | Type::Array(inner)
+            | Type::OutArray(inner) => contains_anonymous(inner, classpath),
             Type::Parameterized { arguments, .. } => arguments
                 .iter()
                 .filter_map(|arg| arg.ty.as_ref())

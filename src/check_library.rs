@@ -1322,6 +1322,7 @@ pub(super) fn default_type_imports(
                 }
             }
             Type::Array(inner)
+            | Type::OutArray(inner)
             | Type::Nullable(inner)
             | Type::Platform(inner)
             | Type::List(inner)

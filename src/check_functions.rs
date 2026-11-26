@@ -1104,6 +1104,16 @@ impl Checker<'_> {
         &mut self,
         function: &syntax::Function,
     ) -> Result<(Vec<Statement>, bool)> {
+        if function.vararg {
+            return Err(Diagnostic::new(
+                function.offset,
+                "Local vararg function call adaptation is unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "LOCAL_VARARG_UNSUPPORTED",
+            ));
+        }
         if function.suspend_
             && (!function.type_params.is_empty()
                 || function.receiver.is_some()

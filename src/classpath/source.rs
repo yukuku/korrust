@@ -1246,6 +1246,7 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) -> Result<()> {
                 }
             }
             Type::Array(value)
+            | Type::OutArray(value)
             | Type::Nullable(value)
             | Type::Platform(value)
             | Type::List(value)

@@ -240,8 +240,11 @@ impl<'a> Context<'a> {
                 "kotlin/DoubleArray" => Type::DoubleArray,
 
                 "kotlin/Array" if arguments.len() == 1 && arguments[0].ty.is_some() => {
-                    let inner = arguments.remove(0).ty.ok_or_else(invalid)?;
-                    if inner == Type::String {
+                    let argument = arguments.remove(0);
+                    let inner = argument.ty.ok_or_else(invalid)?;
+                    if argument.variance == Variance::Out {
+                        Type::OutArray(Box::new(inner))
+                    } else if inner == Type::String {
                         Type::StringArray
                     } else {
                         Type::Array(Box::new(inner))
@@ -2187,7 +2190,12 @@ pub(super) fn annotation_parameters(
             }
             vararg = Some(name.clone());
         }
-        types.push(context.field(&value, 3, 5)?);
+        let ty = context.field(&value, 3, 5)?;
+        types.push(match ty {
+            Type::OutArray(inner) if inner.as_ref() == &Type::String => Type::StringArray,
+            Type::OutArray(inner) => Type::Array(inner),
+            ty => ty,
+        });
         parameters.push(name);
     }
     Ok((parameters, types, vararg))
