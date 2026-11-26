@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T06:28:00.743991+00:00",
+  "status": "passed",
+  "compiler": {
+    "binary": "/tmp/targets159-suspend-committed/debug/korrust",
+    "binary_sha256": "90ea6f46d86f6cc79815089325cbadcb0531c2195c94bbebf984ac17cad04994",
+    "source_revision": "ed81c188ad8582cadbf1e6a418c5b11ff1a02013",
+    "source_root": "/workspace/work/suspend-operands159-committed",
+    "frozen_source_evidence": "reports/correctness/2026-11-26T062326331756Z-suspend-call-operands.json"
+  },
+  "reference_compiler": {
+    "pin": {
+      "schema_version": 1,
+      "installed_at": "2026-10-23T02:43:55.924832+00:00",
+      "version": "2.3.21",
+      "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+      "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+      "path": "references/kotlinc",
+      "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+    },
+    "mode": "Existing official Gradle outputs captured by the resolved classpath model"
+  },
+  "method": "Compile the pinned unchanged source after removing original owned classes and Kotlin package parts from sibling providers; verify all owned output hashes; run the same five original Robolectric JUnit tests against official and replacement providers with Java21 -Xverify:all, SDK34, merged manifest and resources. Constructor allocation operands are independently official-valid and explicitly unsupported by the candidate.",
+  "application_attribution": "Randy Sugianto (Yuku), GitHub yukuku",
+  "inputs": {
+    "source_sha256": {
+      "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/AlkitabGptIntegrationTest.kt": "8f73cc41bd1144c69c1cabb03840016527b45cb22548a1024367f42deff8f63b"
+    },
+    "reference_owned_classes_sha256": {
+      "yuku/alkitab/base/util/AlkitabGptIntegrationTest$isChatPopupAvailable is false when Alkitab GPT is not installed$1.class": "6937e3e4f4d4612e52d2bbf66188a3a5995ef830aabbcf6cf220b9e0fa2c6123",
+      "yuku/alkitab/base/util/AlkitabGptIntegrationTest$isChatPopupAvailable is false when only the launcher activity is present, so a build too old for the popup never shows the menu item$1.class": "4713e04477888f6a1a979e6549e065bc8314c4083324f94b177ac0c940fa7dc3",
+      "yuku/alkitab/base/util/AlkitabGptIntegrationTest$isChatPopupAvailable is true once Alkitab GPT declares the chat-popup action$1.class": "e4a7d38eb4205a6cd18490bd9c8c0cb645d4e8e26defb4ced354ce4785ade379",
+      "yuku/alkitab/base/util/AlkitabGptIntegrationTest.class": "e3c1da7c43d8bb1940d5595b91df1a7fb68e6da6ad4c5db962a535eceb94729d"
+    },
+    "receipt_sha256": {
+      "/workspace/korrust/benchmarks/source-files.sha256.json": "48e5d343ebfb4b24c87485a754bdfb237164a1c574b7c40cce7cbc8fc0357a4c",
+      "/workspace/korrust/references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "/workspace/work/all400-nov25/dependencies-sha256.json": "5edd0c421b881a5a7e5e8a960beee1cdf23362453f75ebc7b41a0f6d9559f20d",
+      "/workspace/work/deps33/test-runtime-receipt.json": "77f2969c7ff246e74c932905680d3c11ff125f7613529a41da2e37f05ec8eebf"
+    },
+    "evidence_sha256": {
+      "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/compilation.json": "76b0523fe21df28f0c4a52a56e109baaff11c833bda2bc6b87fe620f98705498",
+      "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/junit.json": "fbee127431f81d4493e39e4ba0c4aa58cb235c21cf40ebd97d338a0f93ea023e",
+      "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/324-kotlin.log": "08e68eac7ab126243f984e33f9ad132941dfbcbef2f3171f4b256345e7393ac7",
+      "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/324-korrust.log": "18618ff92429ae7848fba12636a40de36ffa754bcf688c230cc5ff6af27eb740",
+      "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/compile-original.py": "7275e23b7bfd2e3f86d520bc988383da0b3ef51d9e250469ef8aa075b5d2b4b7",
+      "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/verify-robolectric.py": "0d2d48ef607db0a02e854466152a04c03a7aab52a615b5bd7a2dad2012ddeac2",
+      "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/boundary.json": "fc73ae1fdfb14eb7a184616f3bd8ff5e0794cfc0062391a0bd8ad570cb15c2a2",
+      "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/Boundary.kt": "57d84714742f7e4c4c3f3551c06a87105ee90a007b5bd51f6b14108d385bdcb6",
+      "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/boundary-official-stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/boundary-official-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/boundary-candidate-stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/boundary-candidate-stderr.log": "89dce2c114fde9488bf5910f7beb815bdd2b2a1acb11094436e7645d5fb3a88b",
+      "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/verify-boundary.py": "814541764292c62c7d94adc5faab020dde40b722b69e84153783a47c5d0a5c01",
+      "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/captured-models/AlkitabIo.json": "65882cf422b74e0b60150fea655d8575ccbdf7009bdbe92030e8af5ff7778e9f",
+      "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/captured-models/AlkitabYes2.json": "b951e491852b8b62c5f9d44138190270448c40d2af233cb5733779201073b345",
+      "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/captured-models/AlkitabModel.json": "a1469aa837e68a079d43973c51da225218e0c14198bcb269f28bbbee68082218",
+      "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/captured-models/Alkitab.json": "dcf546e0f16c08942ffa74e7b545d552893129e79278841c31be196fe22a23f6"
+    }
+  },
+  "cases": [
+    {
+      "id": "unchanged-324-owned-source",
+      "outcome": "pass",
+      "path": "Alkitab/src/test/java/yuku/alkitab/base/util/AlkitabGptIntegrationTest.kt",
+      "source_sha256": "8f73cc41bd1144c69c1cabb03840016527b45cb22548a1024367f42deff8f63b",
+      "class_count": 9,
+      "owned_outputs": {
+        "yuku/alkitab/base/util/AlkitabGptIntegrationTest$lambda$1098$0$suspend$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/AlkitabGptIntegrationTest.kt",
+          "sha256": "03b58dc38f8e9f44095d2392053b6c81bc077390ae930aecbc04f81ffdd8be69"
+        },
+        "yuku/alkitab/base/util/AlkitabGptIntegrationTest$lambda$1098$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/AlkitabGptIntegrationTest.kt",
+          "sha256": "717bba8795c78619bb719de8cc58a4efdc6efbe1b3059e090416f3f1edb2e451"
+        },
+        "yuku/alkitab/base/util/AlkitabGptIntegrationTest$lambda$1349$1$suspend$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/AlkitabGptIntegrationTest.kt",
+          "sha256": "8ba996308c680bc1f64584233059b4a6d7598c3e7ed082f386e8e660938ca6f0"
+        },
+        "yuku/alkitab/base/util/AlkitabGptIntegrationTest$lambda$1349$1.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/AlkitabGptIntegrationTest.kt",
+          "sha256": "1f677fa7012c2c72321760428e44c144d8e19b7170ff61022bc34ce500bea633"
+        },
+        "yuku/alkitab/base/util/AlkitabGptIntegrationTest$lambda$1430$1.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/AlkitabGptIntegrationTest.kt",
+          "sha256": "2bb957a9bc0bdd26e74faedc687449c187b6a231f0920f77b9139fd3f65e2dfa"
+        },
+        "yuku/alkitab/base/util/AlkitabGptIntegrationTest$lambda$1736$3$suspend$0.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/AlkitabGptIntegrationTest.kt",
+          "sha256": "6272841529a8b27671a599d118015f79e4a7b0274366ad0a63756592c3518843"
+        },
+        "yuku/alkitab/base/util/AlkitabGptIntegrationTest$lambda$1736$3.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/AlkitabGptIntegrationTest.kt",
+          "sha256": "44a2b3998beaed52226b144fcdd735b3072aaf829ed6cc1fb10fede4d7e24368"
+        },
+        "yuku/alkitab/base/util/AlkitabGptIntegrationTest$lambda$3088$4.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/AlkitabGptIntegrationTest.kt",
+          "sha256": "1e2e21876a9349b68eba902ff9c21793f7f2a30a7a5cef749840263024222bb0"
+        },
+        "yuku/alkitab/base/util/AlkitabGptIntegrationTest.class": {
+          "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/util/AlkitabGptIntegrationTest.kt",
+          "sha256": "552b97b7f9febfafd5659ca8c82f531e029ea621b2dc0e23069aed6b56f9368b"
+        }
+      }
+    },
+    {
+      "id": "original-junit/kotlin",
+      "outcome": "pass",
+      "passed_tests": 5,
+      "exit_code": 0
+    },
+    {
+      "id": "original-junit/korrust",
+      "outcome": "pass",
+      "passed_tests": 5,
+      "exit_code": 0
+    },
+    {
+      "id": "constructor-operand-boundary",
+      "outcome": "unsupported_language",
+      "oracle_exit_code": 0,
+      "candidate_exit_code": 1,
+      "rejection_check": "pass",
+      "diagnostic": [
+        {
+          "source_identity": "/workspace/work/targets159/suspend-constructor-final/Boundary.kt",
+          "offset": 0,
+          "category": "unsupported_language",
+          "code": "SUSPEND_STATE_MACHINE_SHAPE_UNSUPPORTED",
+          "message": "Suspension inside expression operands is unsupported",
+          "path": "/workspace/work/targets159/suspend-constructor-final/Boundary.kt",
+          "line": 1,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "counts": {
+    "pass": 3,
+    "unsupported_language": 1
+  },
+  "evidence": [
+    "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/compilation.json",
+    "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/junit.json",
+    "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/324-kotlin.log",
+    "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/324-korrust.log",
+    "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/compile-original.py",
+    "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/verify-robolectric.py",
+    "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/boundary.json",
+    "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/Boundary.kt",
+    "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/boundary-official-stdout.log",
+    "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/boundary-official-stderr.log",
+    "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/boundary-candidate-stdout.log",
+    "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/boundary-candidate-stderr.log",
+    "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/verify-boundary.py",
+    "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/captured-models/AlkitabIo.json",
+    "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/captured-models/AlkitabYes2.json",
+    "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/captured-models/AlkitabModel.json",
+    "reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/captured-models/Alkitab.json"
+  ],
+  "commands": [
+    {
+      "argv": [
+        "python3",
+        "/workspace/korrust/reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/compile-original.py",
+        "/tmp/targets159-suspend-committed/debug/korrust",
+        "tests"
+      ],
+      "environment": {
+        "RECHECK_IDS": "324",
+        "RECHECK_ROOT": "/workspace/work/targets159/suspend-operands-final-probe",
+        "RECHECK_TIMEOUT": "900"
+      }
+    },
+    {
+      "argv": [
+        "python3",
+        "/workspace/korrust/reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/verify-robolectric.py",
+        "/workspace/work/targets159/suspend-operands-final-probe",
+        "/workspace/korrust/reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/captured-models",
+        "/workspace/work/targets159/suspend-operands-final-probe/junit"
+      ]
+    },
+    {
+      "argv": [
+        "python3",
+        "/workspace/korrust/reports/correctness/2026-11-26T062800743991Z-suspension-operands-application/verify-boundary.py"
+      ]
+    }
+  ],
+  "limitations": [
+    "Bounded replacement-provider JVM/Robolectric result using captured original Gradle dependencies and resources. No whole-application or performance result. Constructor operands that suspend remain unsupported."
+  ]
+}
