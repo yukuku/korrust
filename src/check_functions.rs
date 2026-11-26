@@ -872,17 +872,19 @@ impl Checker<'_> {
                         library::specialize_receiver(method, &receiver.ty, class, self.classpath);
                     return self.member_call(method, receiver, &[], offset).map(Some);
                 }
-                if self
-                    .classpath
-                    .field_candidates(&owner, name)?
-                    .iter()
-                    .any(|field| {
-                        field.access & 1 != 0
-                            || self
-                                .classpath
-                                .package_field_visible(&self.lambda_owner, field)
-                    })
+                let fields = self.classpath.field_candidates(&owner, name)?;
+                if !fields.is_empty()
+                    && fields.iter().all(|field| field.access & 8 != 0)
+                    && let Some(value) = enums::property(self, &receiver, name, offset)?
                 {
+                    return Ok(Some(value));
+                }
+                if fields.iter().any(|field| {
+                    field.access & 1 != 0
+                        || self
+                            .classpath
+                            .package_field_visible(&self.lambda_owner, field)
+                }) {
                     return self
                         .java_field(&owner.clone(), name, Some(receiver), offset)
                         .map(Some);
