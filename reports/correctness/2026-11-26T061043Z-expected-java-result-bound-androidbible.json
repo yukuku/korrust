@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T06:10:43.006983+00:00",
+  "status": "complete",
+  "selection": "Java result inference constrained by the declared type parameter bound",
+  "compiler": {
+    "feature_commit": "f18d985aa5a1567ccaf5f5445bd48c3e7ad76ebf",
+    "binary_sha256": "575b0969589ac754f7ed813d8611b5bccf5d3d91ab015fbdd0aa062bef8f3b1d"
+  },
+  "cases": [
+    {
+      "path": "Alkitab/src/test/java/yuku/alkitab/base/verses/VersesControllerFactoryTest.kt",
+      "group": "Alkitab/test",
+      "source_sha256": "d879ff09690a81bcae800d8cea023163fae884340088c87d020158fd764d9541",
+      "attempts": [
+        {
+          "configuration": "resolved",
+          "exit_code": 0,
+          "diagnostic": "",
+          "outcome": "compiled",
+          "class_count": 2,
+          "owned_outputs": {
+            "yuku/alkitab/base/verses/VersesControllerFactoryTest$lambda$1558$0.class": {
+              "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VersesControllerFactoryTest.kt",
+              "sha256": "73847e1eb88a3ddae0ffce4a124356d98d66fc5c1c5b468cc9287571bd3849f9"
+            },
+            "yuku/alkitab/base/verses/VersesControllerFactoryTest.class": {
+              "source": "benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VersesControllerFactoryTest.kt",
+              "sha256": "f1742cb12406c155c566ba9daad9afe2d2eed0141fe0225ecd209db3cf62c613"
+            }
+          }
+        }
+      ],
+      "excluded_classes": [
+        "yuku/alkitab/base/verses/VersesControllerFactoryTest.class"
+      ],
+      "junit": {
+        "source": "Alkitab/src/test/java/yuku/alkitab/base/verses/VersesControllerFactoryTest.kt",
+        "source_sha256": "d879ff09690a81bcae800d8cea023163fae884340088c87d020158fd764d9541",
+        "class": "yuku.alkitab.base.verses.VersesControllerFactoryTest",
+        "kotlin": {
+          "exit_code": 0,
+          "passed_tests": 5
+        },
+        "korrust": {
+          "exit_code": 0,
+          "passed_tests": 5
+        }
+      }
+    }
+  ],
+  "junit_tests_per_compiler": 5,
+  "evidence": [
+    "reports/correctness/2026-11-26T061043Z-expected-java-result-bound-androidbible/364-korrust.log",
+    "reports/correctness/2026-11-26T061043Z-expected-java-result-bound-androidbible/364-kotlin.log",
+    "reports/correctness/2026-11-26T061043Z-expected-java-result-bound-androidbible/differential.log",
+    "reports/correctness/2026-11-26T061043Z-expected-java-result-bound-androidbible/verify.py"
+  ]
+}
