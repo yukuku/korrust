@@ -656,6 +656,63 @@ fn builtin_fragment(bytes: &[u8]) -> Result<(Vec<String>, Vec<String>, Proto<'_>
     Ok((strings, qualified_names, fragment))
 }
 
+pub(super) fn builtin_nullable_to_string(bytes: &[u8]) -> Result<Option<JavaMethod>> {
+    let (strings, qualified_names, fragment) = builtin_fragment(bytes)?;
+    let package = Proto::parse(fragment.bytes(3)?.ok_or_else(invalid)?)?;
+    let mut context = Context::new(&strings, &package)?;
+    context.qualified_names = Some(&qualified_names);
+    let mut found = None;
+    for bytes in package.messages(3)? {
+        let function = Proto::parse(bytes)?;
+        let name = metadata_name(&strings, function.integer(2)?)?;
+        if name != "toString" {
+            continue;
+        }
+        let mut context = context.clone();
+        context.set_table(&function)?;
+        let flags = function.integer(9)?.unwrap_or(6);
+        if flags & !65536 != 6
+            || !function.messages(4)?.is_empty()
+            || !function.messages(6)?.is_empty()
+            || !function.messages(10)?.is_empty()
+            || !numbers(&function, 11)?.is_empty()
+            || !function.messages(13)?.is_empty()
+            || context.field(&function, 5, 8)?
+                != Type::Nullable(Box::new(Type::Java("java/lang/Object".into())))
+            || context.field(&function, 3, 7)? != Type::String
+            || found.is_some()
+        {
+            return Err(
+                Diagnostic::new(0, "Unsupported nullable toString builtin declaration").with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "BUILTIN_DECLARATION_UNSUPPORTED",
+                ),
+            );
+        }
+        found = Some(JavaMethod {
+            owner: "kotlin/<builtins>".into(),
+            name: name.into(),
+            descriptor: "(Ljava/lang/Object;)Ljava/lang/String;".into(),
+            access: 0x09,
+            unsupported: false,
+            source_property: None,
+            kotlin_params: Some(Vec::new()),
+            kotlin_result: Some(Type::String),
+            kotlin_internal: false,
+            library: Some(LibraryMethod {
+                kotlin_declared: true,
+                kotlin_public: true,
+                source_name: name.into(),
+                receiver: Some(Type::Nullable(Box::new(Type::Java(
+                    "java/lang/Object".into(),
+                )))),
+                ..LibraryMethod::default()
+            }),
+        });
+    }
+    Ok(found)
+}
+
 fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
     let (strings, qualified_names, fragment) = builtin_fragment(bytes)?;
     let package = Proto::parse(fragment.bytes(3)?.ok_or_else(invalid)?)?;

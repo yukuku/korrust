@@ -1153,6 +1153,50 @@ impl Checker<'_> {
             }
             return Ok(Self::wrap_lets(value, lets));
         }
+        if method.owner == "kotlin/<builtins>" {
+            if method.name != "toString"
+                || method.descriptor != "(Ljava/lang/Object;)Ljava/lang/String;"
+                || mask != 0
+                || values.len() != 1
+                || result != Type::String
+            {
+                return Err(
+                    Diagnostic::new(offset, "Unsupported Kotlin builtin invocation").with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "BUILTIN_DECLARATION_UNSUPPORTED",
+                    ),
+                );
+            }
+            let target = self
+                .classpath
+                .load("java/lang/String")?
+                .methods
+                .into_iter()
+                .find(|target| {
+                    target.name == "valueOf"
+                        && target.descriptor == method.descriptor
+                        && target.access & 9 == 9
+                        && !target.unsupported
+                })
+                .ok_or_else(|| {
+                    Diagnostic::new(offset, "Missing JVM nullable toString target").with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "BUILTIN_JVM_TARGET_UNSUPPORTED",
+                    )
+                })?;
+            return Ok(Self::wrap_lets(
+                Value {
+                    ty: result,
+                    kind: ValueKind::StaticCall {
+                        owner: target.owner,
+                        name: target.name,
+                        descriptor: target.descriptor,
+                        args: values,
+                    },
+                },
+                lets,
+            ));
+        }
         if method.access & 1 == 0
             && !self.classpath.java_package_member_visible(
                 &self.lambda_owner,

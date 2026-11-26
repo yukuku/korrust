@@ -614,13 +614,15 @@ impl Classpath {
         }
         for path in &self.paths {
             if let Some(bytes) = self.read_resource(path, "kotlin/kotlin.kotlin_builtins")? {
-                let methods = metadata::builtin_array_factories(&bytes)?;
+                let mut methods = metadata::builtin_array_factories(&bytes)?;
+                methods.extend(metadata::builtin_nullable_to_string(&bytes)?);
                 let class = JavaClass {
                     sealed_: false,
                     sealed_subclasses: Vec::new(),
                     annotation_definition: None,
                     kotlin_fun_interface: false,
                     library: Some(LibraryClass {
+                        compose_plain_interface: false,
                         value_class: None,
                         companion_name: None,
                         kotlin_visibility: None,
