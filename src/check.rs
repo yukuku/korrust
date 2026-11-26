@@ -5149,8 +5149,10 @@ impl Checker<'_> {
                 }
                 let source_left = a;
                 let a = self.value(a)?;
-                if matches!(a.ty.base(), Type::Java(_) | Type::Parameterized { .. })
-                    && !matches!(op.as_str(), "==" | "!=" | "===" | "!==" | "&&" | "||")
+                if matches!(
+                    a.ty.base(),
+                    Type::Java(_) | Type::Parameterized { .. } | Type::List(_) | Type::MutableList(_)
+                ) && !matches!(op.as_str(), "==" | "!=" | "===" | "!==" | "&&" | "||")
                 {
                     return self.nominal_binary(op, a, b, offset);
                 }
