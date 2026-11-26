@@ -622,7 +622,6 @@ impl Classpath {
                     annotation_definition: None,
                     kotlin_fun_interface: false,
                     library: Some(LibraryClass {
-                        compose_plain_interface: false,
                         value_class: None,
                         companion_name: None,
                         kotlin_visibility: None,
