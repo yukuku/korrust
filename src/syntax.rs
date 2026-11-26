@@ -272,6 +272,7 @@ impl Type {
                 Self::Boolean => "Ljava/lang/Boolean;".into(),
                 Self::Float => "Ljava/lang/Float;".into(),
                 Self::Double => "Ljava/lang/Double;".into(),
+                Self::Unit => "Lkotlin/Unit;".into(),
                 _ => inner.descriptor(),
             },
             Self::Platform(_) => unreachable!(),
@@ -366,7 +367,7 @@ pub struct SecondaryConstructor {
 }
 #[derive(Clone, Debug)]
 pub struct CatchClause {
-    pub name: String,
+    pub name: Option<String>,
     pub ty: Type,
     pub body: Vec<Statement>,
 }
@@ -946,6 +947,8 @@ pub enum ExprKind {
     AnonymousObject {
         supertypes: Vec<(Type, Option<Vec<Expr>>)>,
         methods: Vec<Function>,
+        own_methods: Vec<Function>,
+        properties: Vec<PropertyDecl>,
     },
     AnnotationConstant {
         value: Box<Expr>,
@@ -1027,13 +1030,25 @@ fn shift_expression_offsets(expression: &mut Expr, offset: usize) {
             ExprKind::AnonymousObject {
                 supertypes,
                 methods,
+                own_methods,
+                properties,
             } => {
                 for (_, args) in supertypes {
                     if let Some(args) = args {
                         pending.extend(args);
                     }
                 }
-                for method in methods {
+                for property in properties {
+                    property.offset += offset;
+                    if let Some(initializer) = &mut property.initializer {
+                        pending.push(initializer);
+                    }
+                    shift_statement_offsets(&mut property.body, offset);
+                    if let Some((_, body)) = &mut property.setter {
+                        shift_statement_offsets(body, offset);
+                    }
+                }
+                for method in methods.iter_mut().chain(own_methods) {
                     method.offset += offset;
                     shift_statement_offsets(&mut method.body, offset);
                 }
@@ -1906,12 +1921,6 @@ impl Parser {
         }
         let ty = self.nonnullable_ty()?;
         let ty = if self.take("?") {
-            if ty == Type::Unit {
-                return Err(self.error("Nullable Unit is not supported").with_kind(
-                    DiagnosticKind::UnsupportedLanguage,
-                    "NULLABLE_UNIT_UNSUPPORTED",
-                ));
-            }
             Type::Nullable(Box::new(ty))
         } else {
             ty
@@ -6101,6 +6110,13 @@ impl Parser {
         Ok(result)
     }
     fn prefix(&mut self) -> Result<Expr> {
+        if self.at("break") || self.at("continue") {
+            let jump = self.statement()?;
+            return Ok(Expr {
+                offset: jump.offset,
+                kind: ExprKind::Block(vec![jump]),
+            });
+        }
         if self.take("object") {
             let offset = self.tokens[self.pos - 1].offset;
             self.lines();
@@ -6132,30 +6148,57 @@ impl Parser {
             self.expect("{")?;
             self.separators();
             let mut methods = Vec::new();
+            let mut own_methods = Vec::new();
+            let mut properties = Vec::new();
+            let mut names = std::collections::HashSet::new();
             while !self.take("}") {
-                let public = self.take("public");
-                if !self.take("override") {
-                    return Err(self
-                        .error("Anonymous objects support only override methods")
-                        .with_kind(
-                            DiagnosticKind::UnsupportedLanguage,
-                            "ANONYMOUS_OBJECT_MEMBER_UNSUPPORTED",
-                        ));
-                }
-                self.lines();
-                if !public {
-                    self.take("public");
+                let member_offset = self.token().offset;
+                let mut private = false;
+                let mut visibility = None;
+                let mut is_override = false;
+                loop {
+                    if self.take("override") {
+                        if is_override {
+                            return Err(self.error("Repeated override modifier"));
+                        }
+                        is_override = true;
+                    } else if self.at("private") || self.at("public") {
+                        if visibility.is_some() {
+                            return Err(self.error("Conflicting anonymous member visibility"));
+                        }
+                        private = self.take("private");
+                        if !private {
+                            self.expect("public")?;
+                        }
+                        visibility = Some(private);
+                    } else {
+                        break;
+                    }
                     self.lines();
                 }
-                if !self.at("fun") {
+                if self.at("val") || self.at("var") {
+                    let property =
+                        self.property(member_offset, private, is_override, false, false)?;
+                    if !names.insert(property.name.clone()) {
+                        return Err(self.error("Duplicate anonymous property"));
+                    }
+                    properties.push(property);
+                } else if self.at("fun") || self.at("suspend") {
+                    let mut function = self.function()?;
+                    function.private = private;
+                    if is_override {
+                        methods.push(function);
+                    } else {
+                        own_methods.push(function);
+                    }
+                } else {
                     return Err(self
-                        .error("Anonymous object properties and modifiers are unsupported")
+                        .error("Anonymous member declaration is unsupported")
                         .with_kind(
                             DiagnosticKind::UnsupportedLanguage,
                             "ANONYMOUS_OBJECT_MEMBER_UNSUPPORTED",
                         ));
                 }
-                methods.push(self.function()?);
                 self.end()?;
                 self.separators();
             }
@@ -6164,6 +6207,8 @@ impl Parser {
                 kind: ExprKind::AnonymousObject {
                     supertypes,
                     methods,
+                    own_methods,
+                    properties,
                 },
             });
         }
@@ -6247,15 +6292,11 @@ impl Parser {
                 self.lines();
                 if self.take("catch") {
                     self.expect("(")?;
-                    if self.at("_") {
-                        return Err(self
-                            .error("Discarded catch bindings are unsupported")
-                            .with_kind(
-                                DiagnosticKind::UnsupportedLanguage,
-                                "DISCARD_CATCH_BINDING_UNSUPPORTED",
-                            ));
-                    }
-                    let name = self.declaration_name()?;
+                    let name = if self.take("_") {
+                        None
+                    } else {
+                        Some(self.declaration_name()?)
+                    };
                     self.expect(":")?;
                     self.lines();
                     let ty = self.ty()?;
@@ -9017,10 +9058,15 @@ fun h(): String = target(prefix = "named") label@{ return@label "tail" }"#,
     fn new_class_forms_preserve_unsupported_boundaries() {
         for text in [
             "class C { companion object Named {} }",
-            "fun f(x: Unit?): Unit {}",
+            "fun f(x: Unit?): Unit = ",
         ] {
             assert!(parse(text).is_err(), "unexpected acceptance: {text}");
         }
+        let module = parse("fun f(x: Unit?): Unit {}").unwrap();
+        assert_eq!(
+            module.functions[0].params[0].1,
+            Type::Nullable(Box::new(Type::Unit))
+        );
         let deep = format!(
             "fun f(x: {}Int{}): Unit {{}}",
             "List<".repeat(129),

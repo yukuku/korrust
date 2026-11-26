@@ -155,7 +155,15 @@ fn instruction_len(op: u8) -> Result<usize> {
         | 0xc6
         | 0xc7 => 3,
         0xb9 => 5,
-        0x00..=0x0f | 0x1a..=0x35 | 0x3b..=0x83 | 0x85..=0x98 | 0xac..=0xb1 | 0xbe | 0xbf => 1,
+        0x00..=0x0f
+        | 0x1a..=0x35
+        | 0x3b..=0x83
+        | 0x85..=0x98
+        | 0xac..=0xb1
+        | 0xbe
+        | 0xbf
+        | 0xc2
+        | 0xc3 => 1,
         _ => return Err(failure("Unsupported instruction during frame generation")),
     })
 }
@@ -381,6 +389,9 @@ fn transfer(
             pop(&mut frame)?;
             frame.stack.push(Verification::Int);
         }
+        0xc2 | 0xc3 => {
+            pop(&mut frame)?;
+        }
         0xc0 => {
             pop(&mut frame)?;
             frame
@@ -411,6 +422,81 @@ fn write_type(pool: &mut Pool, bytes: &mut Vec<u8>, ty: &Verification) -> Result
     }
     Ok(())
 }
+// A loop jump in an expression can abandon earlier call arguments or arithmetic
+// operands. Preserve the stack present on entry to the destination loop.
+pub(super) fn clean_jump_stacks(
+    pool: &Pool,
+    code: &mut SimpleCode,
+    descriptor: &str,
+    is_static: bool,
+) -> Result<()> {
+    let mut initial = Frame {
+        locals: vec![Verification::Top; usize::from(code.locals)],
+        stack: Vec::new(),
+    };
+    let mut slot = 0;
+    if !is_static {
+        initial.locals[0] = Verification::Object("java/lang/Object".into());
+        slot = 1;
+    }
+    let mut cursor = 1;
+    while descriptor.as_bytes().get(cursor) != Some(&b')') {
+        let ty = descriptor_type(descriptor.as_bytes(), &mut cursor)?
+            .ok_or_else(|| failure("Invalid method parameter"))?;
+        let wide = matches!(ty, Verification::Double | Verification::Long);
+        initial.locals[slot] = ty;
+        slot += if wide { 2 } else { 1 };
+    }
+    let mut states = BTreeMap::new();
+    let mut queue = VecDeque::new();
+    merge(&mut states, 0, initial, &mut queue)?;
+    while let Some(offset) = queue.pop_front() {
+        let state = states[&offset].clone();
+        if let Some(cleanup) = code
+            .jump_cleanups
+            .iter()
+            .find(|cleanup| cleanup.start == offset)
+        {
+            let depth = states
+                .get(&cleanup.loop_entry)
+                .ok_or_else(|| failure("Missing loop entry stack"))?
+                .stack
+                .len();
+            let mut frame = state;
+            let discarded = frame
+                .stack
+                .get(depth..)
+                .ok_or_else(|| failure("Incompatible loop jump stack"))?;
+            if discarded.len() > cleanup.end - cleanup.start {
+                return Err(failure("Loop jump exceeds reserved operand stack space"));
+            }
+            for (index, ty) in discarded.iter().rev().enumerate() {
+                code.bytes[offset + index] =
+                    if matches!(ty, Verification::Long | Verification::Double) {
+                        0x58
+                    } else {
+                        0x57
+                    };
+            }
+            frame.stack.truncate(depth);
+            merge(&mut states, cleanup.end, frame, &mut queue)?;
+            continue;
+        }
+        for handler in &code.exceptions {
+            if (handler.start..handler.end).contains(&offset) {
+                let mut exceptional = state.clone();
+                exceptional.stack = vec![Verification::Object("java/lang/Throwable".into())];
+                merge(&mut states, handler.handler, exceptional, &mut queue)?;
+            }
+        }
+        let (frame, successors) = transfer(pool, &code.bytes, offset, state)?;
+        for next in successors {
+            merge(&mut states, next, frame.clone(), &mut queue)?;
+        }
+    }
+    Ok(())
+}
+
 pub(super) fn attach(
     pool: &mut Pool,
     method: &mut Vec<u8>,

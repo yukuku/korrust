@@ -2604,11 +2604,24 @@ fn infer_source_results_impl(
             }
         }
         if alias == "*" {
-            for class in classpath.package_classes(path.trim_end_matches("/*"))? {
-                imports.insert(
-                    class.name.rsplit('/').next().unwrap().into(),
-                    class.name.clone(),
-                );
+            let owner = path.trim_end_matches("/*");
+            if let Some(class) = classpath.static_wildcard_owner(owner, *import_offset)? {
+                imports.insert(format!("*::{owner}"), owner.into());
+                classes.insert(owner.into(), class);
+                continue;
+            }
+            for class in classpath.package_classes(owner)? {
+                if class
+                    .library
+                    .as_ref()
+                    .is_some_and(|library| library.package.is_some())
+                {
+                    imports.insert(format!("*::{}", class.name), class.name.clone());
+                } else {
+                    imports
+                        .entry(class.name.rsplit('/').next().unwrap().into())
+                        .or_insert_with(|| class.name.clone());
+                }
                 classes.insert(class.name.clone(), class);
             }
             continue;
@@ -2836,6 +2849,16 @@ fn infer_source_results_impl(
         }
     }
     if let Some(class) = &mut source.class_decl {
+        context
+            .mutable_fields
+            .extend(class.mutable_params.iter().cloned());
+        context.mutable_fields.extend(
+            class
+                .properties
+                .iter()
+                .filter(|property| property.mutable)
+                .map(|property| property.name.clone()),
+        );
         for (name, ty) in &class.params {
             if class.param_properties.contains(name) {
                 if let Ok(ty) =
@@ -4375,7 +4398,7 @@ fn constructor_read(
             for catch in catches {
                 let mut block = state.clone();
                 let mut locals = locals.clone();
-                locals.insert(catch.name.clone());
+                locals.extend(catch.name.iter().cloned());
                 constructor_assignment_block(&catch.body, fields, &locals, &mut block, false)?;
             }
             let mut block = state.clone();

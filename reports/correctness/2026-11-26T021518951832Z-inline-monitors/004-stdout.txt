@@ -1,0 +1,517 @@
+Classfile /workspace/korrust/target/checks/2026-11-26T021518951832Z-inline-monitors/official/MonitorKt.class
+  Last modified Nov 26, 2026; size 3338 bytes
+  SHA-256 checksum 77a8db939457b25bb5d6b971213d70f4a4a14d02ef1fe441d683fd719d47c084
+  Compiled from "Monitor.kt"
+public final class MonitorKt
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // MonitorKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 6, attributes: 4
+Constant pool:
+   #1 = Utf8               MonitorKt
+   #2 = Class              #1             // MonitorKt
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               critical
+   #6 = Utf8               (Ljava/lang/Object;)Z
+   #7 = Utf8               Lorg/jetbrains/annotations/NotNull;
+   #8 = Utf8               lock
+   #9 = String             #8             // lock
+  #10 = Utf8               kotlin/jvm/internal/Intrinsics
+  #11 = Class              #10            // kotlin/jvm/internal/Intrinsics
+  #12 = Utf8               checkNotNullParameter
+  #13 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+  #14 = NameAndType        #12:#13        // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #15 = Methodref          #11.#14        // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #16 = Utf8               java/lang/Thread
+  #17 = Class              #16            // java/lang/Thread
+  #18 = Utf8               holdsLock
+  #19 = NameAndType        #18:#6         // holdsLock:(Ljava/lang/Object;)Z
+  #20 = Methodref          #17.#19        // java/lang/Thread.holdsLock:(Ljava/lang/Object;)Z
+  #21 = Utf8               $i$a$-synchronized-MonitorKt$critical$1
+  #22 = Utf8               I
+  #23 = Utf8               Ljava/lang/Object;
+  #24 = Utf8               java/lang/Throwable
+  #25 = Class              #24            // java/lang/Throwable
+  #26 = Utf8               call
+  #27 = Utf8               (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;)I
+  #28 = Utf8               (Ljava/lang/Object;Lkotlin/jvm/functions/Function0<Ljava/lang/Integer;>;)I
+  #29 = Utf8               action
+  #30 = String             #29            // action
+  #31 = Utf8               kotlin/jvm/functions/Function0
+  #32 = Class              #31            // kotlin/jvm/functions/Function0
+  #33 = Utf8               invoke
+  #34 = Utf8               ()Ljava/lang/Object;
+  #35 = NameAndType        #33:#34        // invoke:()Ljava/lang/Object;
+  #36 = InterfaceMethodref #32.#35        // kotlin/jvm/functions/Function0.invoke:()Ljava/lang/Object;
+  #37 = Utf8               java/lang/Number
+  #38 = Class              #37            // java/lang/Number
+  #39 = Utf8               intValue
+  #40 = Utf8               ()I
+  #41 = NameAndType        #39:#40        // intValue:()I
+  #42 = Methodref          #38.#41        // java/lang/Number.intValue:()I
+  #43 = Utf8               $i$a$-synchronized-MonitorKt$call$1
+  #44 = Utf8               Lkotlin/jvm/functions/Function0;
+  #45 = Utf8               abrupt
+  #46 = Utf8               (Ljava/lang/Object;)I
+  #47 = Utf8               java/lang/IllegalStateException
+  #48 = Class              #47            // java/lang/IllegalStateException
+  #49 = Utf8               failure
+  #50 = String             #49            // failure
+  #51 = Utf8               <init>
+  #52 = Utf8               (Ljava/lang/String;)V
+  #53 = NameAndType        #51:#52        // "<init>":(Ljava/lang/String;)V
+  #54 = Methodref          #48.#53        // java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+  #55 = Utf8               $i$a$-synchronized-MonitorKt$abrupt$1
+  #56 = Utf8               early
+  #57 = Utf8               $i$a$-synchronized-MonitorKt$early$1
+  #58 = Utf8               nested
+  #59 = Utf8               (Ljava/lang/Object;Ljava/lang/Object;)Z
+  #60 = Utf8               outer
+  #61 = String             #60            // outer
+  #62 = Utf8               inner
+  #63 = String             #62            // inner
+  #64 = Utf8               $i$a$-synchronized-MonitorKt$nested$1$1
+  #65 = Utf8               $i$a$-synchronized-MonitorKt$nested$1
+  #66 = Utf8               tryOutside
+  #67 = NameAndType        #45:#46        // abrupt:(Ljava/lang/Object;)I
+  #68 = Methodref          #2.#67         // MonitorKt.abrupt:(Ljava/lang/Object;)I
+  #69 = Utf8               Ljava/lang/IllegalStateException;
+  #70 = Utf8               Lkotlin/Metadata;
+  #71 = Utf8               mv
+  #72 = Integer            2
+  #73 = Integer            3
+  #74 = Integer            0
+  #75 = Utf8               k
+  #76 = Utf8               xi
+  #77 = Integer            48
+  #78 = Utf8               d1
+  #79 = Utf8               \u0000\u001c\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0007\u001a\u000e\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u0003\u001a\u001c\u0010\u0004\u001a\u00020\u00052\u0006\u0010\u0002\u001a\u00020\u00032\f\u0010\u0006\u001a\b\u0012\u0004\u0012\u00020\u00050\u0007\u001a\u000e\u0010\b\u001a\u00020\u00052\u0006\u0010\u0002\u001a\u00020\u0003\u001a\u000e\u0010\t\u001a\u00020\u00052\u0006\u0010\u0002\u001a\u00020\u0003\u001a\u0016\u0010\n\u001a\u00020\u00012\u0006\u0010\u000b\u001a\u00020\u00032\u0006\u0010\f\u001a\u00020\u0003\u001a\u000e\u0010\r\u001a\u00020\u00052\u0006\u0010\u0002\u001a\u00020\u0003¨\u0006\u000e
+  #80 = Utf8               d2
+  #81 = Utf8
+  #82 = Utf8               Lkotlin/Function0;
+  #83 = Utf8               inline_monitors
+  #84 = Utf8               Monitor.kt
+  #85 = Utf8               Lkotlin/jvm/internal/SourceDebugExtension;
+  #86 = Utf8               value
+  #87 = Utf8               SMAP\nMonitor.kt\nKotlin\n*S Kotlin\n*F\n+ 1 Monitor.kt\nMonitorKt\n+ 2 fake.kt\nkotlin/jvm/internal/FakeKt\n*L\n1#1,14:1\n1#2:15\n*E\n
+  #88 = Utf8               Code
+  #89 = Utf8               StackMapTable
+  #90 = Utf8               LineNumberTable
+  #91 = Utf8               LocalVariableTable
+  #92 = Utf8               RuntimeInvisibleParameterAnnotations
+  #93 = Utf8               Signature
+  #94 = Utf8               SourceFile
+  #95 = Utf8               SourceDebugExtension
+  #96 = Utf8               RuntimeVisibleAnnotations
+  #97 = Utf8               RuntimeInvisibleAnnotations
+{
+  public static final boolean critical(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)Z
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=4, args_size=1
+         0: aload_0
+         1: ldc           #9                  // String lock
+         3: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: astore_1
+         8: aload_1
+         9: monitorenter
+        10: nop
+        11: iconst_0
+        12: istore_2
+        13: aload_0
+        14: invokestatic  #20                 // Method java/lang/Thread.holdsLock:(Ljava/lang/Object;)Z
+        17: istore_2
+        18: aload_1
+        19: monitorexit
+        20: iload_2
+        21: goto          29
+        24: astore_3
+        25: aload_1
+        26: monitorexit
+        27: aload_3
+        28: athrow
+        29: ireturn
+      Exception table:
+         from    to  target type
+            10    18    24   any
+            24    25    24   any
+      StackMapTable: number_of_entries = 2
+        frame_type = 255 /* full_frame */
+          offset_delta = 24
+          locals = [ class java/lang/Object, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 4
+          locals = [ class java/lang/Object, class java/lang/Object, int ]
+          stack = [ int ]
+      LineNumberTable:
+        line 1: 6
+        line 15: 11
+        line 1: 13
+        line 1: 17
+        line 1: 29
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           13       4     2 $i$a$-synchronized-MonitorKt$critical$1   I
+            0      30     0  lock   Ljava/lang/Object;
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+
+  public static final int call(java.lang.Object, kotlin.jvm.functions.Function0<java.lang.Integer>);
+    descriptor: (Ljava/lang/Object;Lkotlin/jvm/functions/Function0;)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=5, args_size=2
+         0: aload_0
+         1: ldc           #9                  // String lock
+         3: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_1
+         7: ldc           #30                 // String action
+         9: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+        12: aload_0
+        13: astore_2
+        14: aload_2
+        15: monitorenter
+        16: nop
+        17: iconst_0
+        18: istore_3
+        19: aload_1
+        20: invokeinterface #36,  1           // InterfaceMethod kotlin/jvm/functions/Function0.invoke:()Ljava/lang/Object;
+        25: checkcast     #38                 // class java/lang/Number
+        28: invokevirtual #42                 // Method java/lang/Number.intValue:()I
+        31: istore_3
+        32: aload_2
+        33: monitorexit
+        34: iload_3
+        35: goto          45
+        38: astore        4
+        40: aload_2
+        41: monitorexit
+        42: aload         4
+        44: athrow
+        45: ireturn
+      Exception table:
+         from    to  target type
+            16    32    38   any
+            38    40    38   any
+      StackMapTable: number_of_entries = 2
+        frame_type = 255 /* full_frame */
+          offset_delta = 38
+          locals = [ class java/lang/Object, class kotlin/jvm/functions/Function0, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 6
+          locals = [ class java/lang/Object, class kotlin/jvm/functions/Function0, class java/lang/Object, int ]
+          stack = [ int ]
+      LineNumberTable:
+        line 2: 12
+        line 15: 17
+        line 2: 19
+        line 2: 31
+        line 2: 45
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           19      12     3 $i$a$-synchronized-MonitorKt$call$1   I
+            0      46     0  lock   Ljava/lang/Object;
+            0      46     1 action   Lkotlin/jvm/functions/Function0;
+    Signature: #28                          // (Ljava/lang/Object;Lkotlin/jvm/functions/Function0<Ljava/lang/Integer;>;)I
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+      parameter 1:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+
+  public static final int abrupt(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=4, args_size=1
+         0: aload_0
+         1: ldc           #9                  // String lock
+         3: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: astore_1
+         8: aload_1
+         9: monitorenter
+        10: nop
+        11: iconst_0
+        12: istore_2
+        13: new           #48                 // class java/lang/IllegalStateException
+        16: dup
+        17: ldc           #50                 // String failure
+        19: invokespecial #54                 // Method java/lang/IllegalStateException."<init>":(Ljava/lang/String;)V
+        22: athrow
+        23: astore_3
+        24: aload_1
+        25: monitorexit
+        26: aload_3
+        27: athrow
+      Exception table:
+         from    to  target type
+            10    23    23   any
+            23    24    23   any
+      StackMapTable: number_of_entries = 1
+        frame_type = 255 /* full_frame */
+          offset_delta = 23
+          locals = [ class java/lang/Object, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+      LineNumberTable:
+        line 3: 6
+        line 15: 11
+        line 3: 13
+        line 3: 0
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           13      10     2 $i$a$-synchronized-MonitorKt$abrupt$1   I
+            0      28     0  lock   Ljava/lang/Object;
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+
+  public static final int early(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=5, args_size=1
+         0: aload_0
+         1: ldc           #9                  // String lock
+         3: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: astore_1
+         8: aload_1
+         9: monitorenter
+        10: nop
+        11: iconst_0
+        12: istore_2
+        13: aload_0
+        14: invokestatic  #20                 // Method java/lang/Thread.holdsLock:(Ljava/lang/Object;)Z
+        17: ifeq          29
+        20: bipush        7
+        22: istore        4
+        24: aload_1
+        25: monitorexit
+        26: iload         4
+        28: ireturn
+        29: iconst_0
+        30: istore_2
+        31: aload_1
+        32: monitorexit
+        33: goto          41
+        36: astore_3
+        37: aload_1
+        38: monitorexit
+        39: aload_3
+        40: athrow
+        41: iconst_0
+        42: ireturn
+      Exception table:
+         from    to  target type
+            10    24    36   any
+            29    31    36   any
+            36    37    36   any
+      StackMapTable: number_of_entries = 3
+        frame_type = 253 /* append */
+          offset_delta = 29
+          locals = [ class java/lang/Object, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 6
+          locals = [ class java/lang/Object, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 252 /* append */
+          offset_delta = 4
+          locals = [ int ]
+      LineNumberTable:
+        line 5: 6
+        line 15: 11
+        line 5: 13
+        line 5: 30
+        line 6: 41
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           13       9     2 $i$a$-synchronized-MonitorKt$early$1   I
+           29       1     2 $i$a$-synchronized-MonitorKt$early$1   I
+            0      43     0  lock   Ljava/lang/Object;
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+
+  public static final boolean nested(java.lang.Object, java.lang.Object);
+    descriptor: (Ljava/lang/Object;Ljava/lang/Object;)Z
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=7, args_size=2
+         0: aload_0
+         1: ldc           #61                 // String outer
+         3: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_1
+         7: ldc           #63                 // String inner
+         9: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+        12: aload_0
+        13: astore_2
+        14: aload_2
+        15: monitorenter
+        16: nop
+        17: iconst_0
+        18: istore_3
+        19: aload_1
+        20: astore        4
+        22: aload         4
+        24: monitorenter
+        25: nop
+        26: iconst_0
+        27: istore        5
+        29: aload_0
+        30: invokestatic  #20                 // Method java/lang/Thread.holdsLock:(Ljava/lang/Object;)Z
+        33: ifeq          47
+        36: aload_1
+        37: invokestatic  #20                 // Method java/lang/Thread.holdsLock:(Ljava/lang/Object;)Z
+        40: ifeq          47
+        43: iconst_1
+        44: goto          48
+        47: iconst_0
+        48: istore        5
+        50: aload         4
+        52: monitorexit
+        53: iload         5
+        55: goto          66
+        58: astore        6
+        60: aload         4
+        62: monitorexit
+        63: aload         6
+        65: athrow
+        66: nop
+        67: istore_3
+        68: aload_2
+        69: monitorexit
+        70: iload_3
+        71: goto          81
+        74: astore        4
+        76: aload_2
+        77: monitorexit
+        78: aload         4
+        80: athrow
+        81: ireturn
+      Exception table:
+         from    to  target type
+            25    50    58   any
+            58    60    58   any
+            16    68    74   any
+            74    76    74   any
+      StackMapTable: number_of_entries = 6
+        frame_type = 255 /* full_frame */
+          offset_delta = 47
+          locals = [ class java/lang/Object, class java/lang/Object, class java/lang/Object, int, class java/lang/Object, int ]
+          stack = []
+        frame_type = 64 /* same_locals_1_stack_item */
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 9
+          locals = [ class java/lang/Object, class java/lang/Object, class java/lang/Object, int, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 7
+          locals = [ class java/lang/Object, class java/lang/Object, class java/lang/Object, int, class java/lang/Object, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 7
+          locals = [ class java/lang/Object, class java/lang/Object, class java/lang/Object ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 6
+          locals = [ class java/lang/Object, class java/lang/Object, class java/lang/Object, int, class java/lang/Object, int ]
+          stack = [ int ]
+      LineNumberTable:
+        line 8: 12
+        line 9: 19
+        line 15: 26
+        line 9: 29
+        line 9: 48
+        line 9: 66
+        line 8: 67
+        line 10: 81
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           29      19     5 $i$a$-synchronized-MonitorKt$nested$1$1   I
+           19      48     3 $i$a$-synchronized-MonitorKt$nested$1   I
+            0      82     0 outer   Ljava/lang/Object;
+            0      82     1 inner   Ljava/lang/Object;
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+      parameter 1:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+
+  public static final int tryOutside(java.lang.Object);
+    descriptor: (Ljava/lang/Object;)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=1
+         0: aload_0
+         1: ldc           #9                  // String lock
+         3: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: nop
+         7: aload_0
+         8: invokestatic  #68                 // Method abrupt:(Ljava/lang/Object;)I
+        11: ireturn
+        12: astore_1
+        13: bipush        9
+        15: ireturn
+      Exception table:
+         from    to  target type
+             6    12    12   Class java/lang/IllegalStateException
+      StackMapTable: number_of_entries = 1
+        frame_type = 76 /* same_locals_1_stack_item */
+          stack = [ class java/lang/IllegalStateException ]
+      LineNumberTable:
+        line 12: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           13       3     1 failure   Ljava/lang/IllegalStateException;
+            0      16     0  lock   Ljava/lang/Object;
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+}
+SourceFile: "Monitor.kt"
+SourceDebugExtension:
+  SMAP
+  Monitor.kt
+  Kotlin
+  *S Kotlin
+  *F
+  + 1 Monitor.kt
+  MonitorKt
+  + 2 fake.kt
+  kotlin/jvm/internal/FakeKt
+  *L
+  1#1,14:1
+  1#2:15
+  *E
+RuntimeVisibleAnnotations:
+  0: #70(#71=[I#72,I#73,I#74],#75=I#72,#76=I#77,#78=[s#79],#80=[s#5,s#81,s#8,s#81,s#26,s#81,s#29,s#82,s#45,s#56,s#58,s#60,s#62,s#66,s#83])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000\u001c\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0007\u001a\u000e\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u0003\u001a\u001c\u0010\u0004\u001a\u00020\u00052\u0006\u0010\u0002\u001a\u00020\u00032\f\u0010\u0006\u001a\b\u0012\u0004\u0012\u00020\u00050\u0007\u001a\u000e\u0010\b\u001a\u00020\u00052\u0006\u0010\u0002\u001a\u00020\u0003\u001a\u000e\u0010\t\u001a\u00020\u00052\u0006\u0010\u0002\u001a\u00020\u0003\u001a\u0016\u0010\n\u001a\u00020\u00012\u0006\u0010\u000b\u001a\u00020\u00032\u0006\u0010\f\u001a\u00020\u0003\u001a\u000e\u0010\r\u001a\u00020\u00052\u0006\u0010\u0002\u001a\u00020\u0003¨\u0006\u000e"]
+      d2=["critical","","lock","","call","","action","Lkotlin/Function0;","abrupt","early","nested","outer","inner","tryOutside","inline_monitors"]
+    )
+RuntimeInvisibleAnnotations:
+  0: #85(#86=[s#87])
+    kotlin.jvm.internal.SourceDebugExtension(
+      value=["SMAP\nMonitor.kt\nKotlin\n*S Kotlin\n*F\n+ 1 Monitor.kt\nMonitorKt\n+ 2 fake.kt\nkotlin/jvm/internal/FakeKt\n*L\n1#1,14:1\n1#2:15\n*E\n"]
+    )

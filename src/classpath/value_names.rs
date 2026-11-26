@@ -157,18 +157,36 @@ impl Classpath {
                     }
                 }
                 let (package, member) = path.rsplit_once('/').unwrap_or(("", &path));
-                if priority <= import_priority {
+                if priority <= import_priority || priority == import_priority + 2 {
                     if let Ok(class) = self.load(package) {
                         if class.access & 1 != 0 && !class.unsupported {
-                            for field in self.field_candidates(package, member)? {
+                            if let Some((nested, access)) =
+                                self.java_member_class(package, member)?
+                            {
+                                if access & 9 == 9
+                                    && !nested.unsupported
+                                    && self.classifier_visible(caller, &nested.name)
+                                {
+                                    symbols.insert(
+                                        format!("class:{}", nested.name),
+                                        ValueSymbol::Classifier(Box::new(nested)),
+                                    );
+                                }
+                            }
+                            for mut field in self.field_candidates(package, member)? {
                                 if field.access & 8 != 0
                                     && !field.unsupported
                                     && self.kotlin_field_visible(caller, &field)
                                 {
-                                    symbols.insert(
-                                        format!("field:{}:{}", field.owner, field.name),
-                                        ValueSymbol::Field(field),
-                                    );
+                                    let identity = format!("field:{}:{}", field.owner, field.name);
+                                    if !class.kotlin_class
+                                        && self
+                                            .load(&field.owner)
+                                            .is_ok_and(|declaring| declaring.access & 1 == 0)
+                                    {
+                                        field.owner = class.name.clone();
+                                    }
+                                    symbols.insert(identity, ValueSymbol::Field(field));
                                 }
                             }
                         }

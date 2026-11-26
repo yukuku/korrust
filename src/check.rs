@@ -109,6 +109,7 @@ pub struct DeclarationAnnotation {
 
 pub struct AnonymousSuper {
     pub supertypes: Vec<Type>,
+    pub property_fields: Vec<(String, Type)>,
     pub bridges: Vec<GenericBridge>,
     pub owner: String,
     pub descriptor: String,
@@ -1144,6 +1145,10 @@ impl Checker<'_> {
             return Err(Diagnostic::new(
                 offset,
                 "No applicable function overload or wrong argument count",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "NO_APPLICABLE_OVERLOAD",
             ));
         }
         let parameters = applicable
@@ -1341,7 +1346,12 @@ impl Checker<'_> {
                     ),
                 );
             }
-            return Err(Diagnostic::new(offset, "No applicable member overload"));
+            return Err(
+                Diagnostic::new(offset, "No applicable member overload").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "NO_APPLICABLE_OVERLOAD",
+                ),
+            );
         }
         if applicable
             .iter()
@@ -1913,12 +1923,6 @@ impl Checker<'_> {
         self.initialized.remove(&slot);
         self.refinements.remove(&slot.into());
         let result = result?;
-        if result.ty == Type::Unit {
-            return Err(Diagnostic::new(
-                offset,
-                "Safe calls returning Unit are not supported",
-            ));
-        }
         let result = if result.ty.is_reference() {
             result
         } else {
@@ -3824,6 +3828,10 @@ impl Checker<'_> {
                                 return Err(Diagnostic::new(
                                     offset,
                                     "Cannot reassign val backing field",
+                                )
+                                .with_kind(
+                                    crate::DiagnosticKind::InvalidKotlin,
+                                    "VAL_BACKING_FIELD_REASSIGNMENT",
                                 ));
                             }
                             if let Some((owner, ty)) = self.object_fields.get(&name) {
@@ -3888,16 +3896,37 @@ impl Checker<'_> {
                             body.push(Statement::Expression(value));
                             continue;
                         }
+                        if self.members.contains_key(&format!("#get:{name}"))
+                            && !self.fields.contains_key(name)
+                        {
+                            return Err(Diagnostic::new(offset, "Cannot reassign val property")
+                                .with_kind(
+                                    crate::DiagnosticKind::InvalidKotlin,
+                                    "VAL_PROPERTY_REASSIGNMENT",
+                                ));
+                        }
                         if !self.fields.contains_key(name)
+                            && !self.object_fields.contains_key(name)
+                            && !self.companion_fields.contains_key(name)
                             && !self.captured.contains_key(name)
                             && !self.constants.contains_key(name)
                         {
-                            if let Some((owner, member)) = self
-                                .imports
-                                .get(name)
-                                .and_then(|binding| binding.rsplit_once("::"))
-                                .map(|(owner, member)| (owner.to_owned(), member.to_owned()))
-                            {
+                            let imported_field = match self.classpath.value_symbol(
+                                &self.lambda_owner,
+                                name,
+                                offset,
+                            )? {
+                                Some(crate::classpath::ValueSymbol::Field(field)) => {
+                                    Some((field.owner, field.name))
+                                }
+                                _ => None,
+                            };
+                            if let Some((owner, member)) = imported_field.or_else(|| {
+                                self.imports
+                                    .get(name)
+                                    .and_then(|binding| binding.rsplit_once("::"))
+                                    .map(|(owner, member)| (owner.to_owned(), member.to_owned()))
+                            }) {
                                 if self
                                     .classpath
                                     .field_candidates(&owner, &member)?
@@ -4414,8 +4443,10 @@ impl Checker<'_> {
             ExprKind::AnonymousObject {
                 supertypes,
                 methods,
+                own_methods,
+                properties,
             } => {
-                return self.anonymous_object(supertypes, methods, offset);
+                return self.anonymous_object(supertypes, methods, own_methods, properties, offset);
             }
             ExprKind::Lambda(_)
             | ExprKind::LambdaWithParams { .. }
@@ -5592,7 +5623,7 @@ impl Checker<'_> {
                         }
                     }
                     if let Some(owner) = self.imports.get(name) {
-                        if let Some(class) = self.classes.get(owner) {
+                        if let Some(class) = self.classes.get(owner).cloned() {
                             if class.access & 0x2000 != 0 {
                                 return Err(Diagnostic::new(
                                     offset,
@@ -5603,7 +5634,15 @@ impl Checker<'_> {
                                     "ANNOTATION_INSTANCE_CONSTRUCTION_UNSUPPORTED",
                                 ));
                             }
-                            if class.access & (0x200 | 0x400) != 0 && !class.kotlin_fun_interface {
+                            if let Some(value) = self.sam_constructor(
+                                &class,
+                                Type::Java(owner.clone()),
+                                args,
+                                offset,
+                            )? {
+                                return Ok(value);
+                            }
+                            if class.access & (0x200 | 0x400) != 0 {
                                 return Err(Diagnostic::new(
                                     offset,
                                     "Abstract classes and interfaces cannot be constructed",
@@ -5618,15 +5657,6 @@ impl Checker<'_> {
                                     offset,
                                     "Enum constructors can only be called by enum entry initialization",
                                 ));
-                            }
-                            if class.kotlin_fun_interface {
-                                if args.len() != 1 {
-                                    return Err(Diagnostic::new(
-                                        offset,
-                                        "Functional interface construction requires one function argument",
-                                    ));
-                                }
-                                return self.expected_value(&args[0], &Type::Java(owner.clone()));
                             }
                             if class
                                 .library
@@ -6470,7 +6500,7 @@ fn resolve_type(ty: &Type, imports: &HashMap<String, String>, offset: usize) -> 
         }
         Type::Nullable(inner) => {
             let inner = resolve_type(inner, imports, offset)?;
-            if inner == Type::Unit || inner.is_nullable() {
+            if inner.is_nullable() {
                 return Err(Diagnostic::new(offset, "Unsupported nullable type"));
             }
             Ok(Type::Nullable(Box::new(inner)))
@@ -6589,6 +6619,8 @@ fn call_names(expr: &Expr, names: &mut HashSet<String>) {
         ExprKind::AnonymousObject {
             supertypes,
             methods,
+            own_methods,
+            properties,
         } => {
             for (_, arguments) in supertypes {
                 if let Some(arguments) = arguments {
@@ -6597,7 +6629,16 @@ fn call_names(expr: &Expr, names: &mut HashSet<String>) {
                     }
                 }
             }
-            for method in methods {
+            for property in properties {
+                if let Some(value) = &property.initializer {
+                    call_names(value, names);
+                }
+                body_call_names(&property.body, names);
+                if let Some((_, body)) = &property.setter {
+                    body_call_names(body, names);
+                }
+            }
+            for method in methods.iter().chain(own_methods) {
                 body_call_names(&method.body, names);
             }
         }
@@ -6892,6 +6933,11 @@ pub fn check_with_owner(
         }
         if alias == "*" {
             let package = name.trim_end_matches("/*");
+            if let Some(class) = classpath.static_wildcard_owner(package, *offset)? {
+                imports.insert(format!("*::{package}"), package.into());
+                classes.insert(package.into(), class);
+                continue;
+            }
             let package_classes = classpath.package_classes(package)?;
             if package_classes.is_empty() {
                 return Err(Diagnostic::new(
@@ -6901,21 +6947,7 @@ pub fn check_with_owner(
             }
             for class in package_classes {
                 if class.library.as_ref().is_some_and(|l| l.package.is_some()) {
-                    for method in &class.methods {
-                        if method.access & 9 == 9 {
-                            let source_name = method
-                                .source_property
-                                .as_deref()
-                                .or_else(|| method.library.as_ref().map(|l| l.source_name.as_str()))
-                                .unwrap_or(&method.name);
-                            if renamed_imports.contains(&format!("{package}/{source_name}")) {
-                                continue;
-                            }
-                            imports
-                                .entry(source_name.into())
-                                .or_insert_with(|| format!("{}::{source_name}", class.name));
-                        }
-                    }
+                    imports.insert(format!("*::{}", class.name), class.name.clone());
                 } else {
                     if class.access & 1 == 0 || class.unsupported {
                         continue;
@@ -7958,4 +7990,8 @@ fn java_parameter(ty: Type) -> Type {
     } else {
         ty
     }
+}
+
+pub(crate) fn annotation_class_subtype(cp: &Classpath, actual: &Type, expected: &Type) -> bool {
+    relations::subtype_at(cp, actual, expected, 0)
 }

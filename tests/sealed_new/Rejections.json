@@ -78,12 +78,6 @@
     "code": "DATA_OBJECT_UNSUPPORTED"
   },
   {
-    "id": "discard_catch",
-    "source": "fun f(): Int = try { 1 } catch (_: Exception) { 2 }",
-    "official": "accept",
-    "code": "DISCARD_CATCH_BINDING_UNSUPPORTED"
-  },
-  {
     "id": "mixed_result",
     "source": "sealed interface S\nclass A:S\nclass B:S\nfun f(v:S):Any = when(v) { is A -> 1; is B -> \"s\" }",
     "official": "accept",

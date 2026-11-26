@@ -493,7 +493,7 @@ fn substitute_method(mut method: JavaMethod, substitutions: &HashMap<String, Typ
     method
 }
 
-fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: usize) -> bool {
+pub(super) fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: usize) -> bool {
     if depth > 64 {
         return false;
     }
@@ -532,7 +532,12 @@ fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: usize) -> b
         return false;
     }
     if matches!(expected, Type::Java(name) if name == "java/lang/Object") {
-        return actual != &Type::Unit;
+        return true;
+    }
+    if actual.array_element().is_some()
+        && matches!(expected, Type::Java(name) if matches!(name.as_str(), "java/lang/Cloneable" | "java/io/Serializable"))
+    {
+        return true;
     }
     if matches!((actual, expected), (Type::StringArray, Type::Array(element)) | (Type::Array(element), Type::StringArray) if element.as_ref() == &Type::String)
     {

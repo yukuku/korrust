@@ -37,20 +37,25 @@ fn anonymous_objects_emit_lexical_classes_and_shared_cells() {
 }
 
 #[test]
-fn unsupported_anonymous_shapes_reject_explicitly() {
+fn anonymous_properties_and_extra_members_compile() {
     for source in [
         include_str!("anonymous_objects/boundaries/Property.kt"),
         include_str!("anonymous_objects/boundaries/ExtraMember.kt"),
     ] {
-        let error = compile(source)
-            .err()
-            .expect("Unsupported anonymous shape must reject");
-        assert_eq!(
-            error.kind,
-            DiagnosticKind::UnsupportedLanguage,
-            "{}",
-            error.message
-        );
+        compile(source).unwrap();
+    }
+}
+
+#[test]
+fn invalid_anonymous_property_contracts_reject() {
+    for source in [
+        include_str!("anonymous_objects/boundaries/PropertyWithoutOverride.kt"),
+        include_str!("anonymous_objects/boundaries/PrivatePropertyOverride.kt"),
+        include_str!("anonymous_objects/boundaries/PropertyValWrite.kt"),
+        include_str!("anonymous_objects/boundaries/PropertyValBackingWrite.kt"),
+        include_str!("anonymous_objects/boundaries/MissingPropertySetter.kt"),
+    ] {
+        assert!(compile(source).is_err());
     }
 }
 

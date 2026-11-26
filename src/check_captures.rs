@@ -5,6 +5,8 @@ pub(super) fn expression_names(expr: &Expr, names: &mut HashSet<String>) {
         ExprKind::AnonymousObject {
             supertypes,
             methods,
+            own_methods,
+            properties,
         } => {
             for (_, args) in supertypes {
                 if let Some(args) = args {
@@ -13,7 +15,19 @@ pub(super) fn expression_names(expr: &Expr, names: &mut HashSet<String>) {
                     }
                 }
             }
-            for method in methods {
+            for property in properties {
+                if let Some(value) = &property.initializer {
+                    expression_names(value, names);
+                }
+                names.extend(free_names(&property.body, &["this".into(), "field".into()]));
+                if let Some((name, body)) = &property.setter {
+                    names.extend(free_names(
+                        body,
+                        &[name.clone(), "this".into(), "field".into()],
+                    ));
+                }
+            }
+            for method in methods.iter().chain(own_methods) {
                 names.extend(free_names(
                     &method.body,
                     &method
@@ -417,6 +431,8 @@ pub(super) fn free_names(
             ExprKind::AnonymousObject {
                 supertypes,
                 methods,
+                own_methods,
+                properties,
             } => {
                 for (_, args) in supertypes {
                     if let Some(args) = args {
@@ -425,7 +441,21 @@ pub(super) fn free_names(
                         }
                     }
                 }
-                for method in methods {
+                let mut bound = bound.clone();
+                bound.extend(properties.iter().map(|p| p.name.clone()));
+                for property in properties {
+                    if let Some(value) = &property.initializer {
+                        expression(value, &bound, free);
+                    }
+                    let mut accessor_bound = bound.clone();
+                    accessor_bound.extend(["this".into(), "field".into()]);
+                    body_names(&property.body, &mut accessor_bound.clone(), free);
+                    if let Some((name, body)) = &property.setter {
+                        accessor_bound.insert(name.clone());
+                        body_names(body, &mut accessor_bound, free);
+                    }
+                }
+                for method in methods.iter().chain(own_methods) {
                     let mut bound = bound.clone();
                     bound.insert("this".into());
                     bound.extend(method.params.iter().map(|p| p.0.clone()));
@@ -458,7 +488,7 @@ pub(super) fn free_names(
                 body_names(body, &mut bound.clone(), free);
                 for catch in catches {
                     let mut bound = bound.clone();
-                    bound.insert(catch.name.clone());
+                    bound.extend(catch.name.iter().cloned());
                     body_names(&catch.body, &mut bound, free);
                 }
                 body_names(finally, &mut bound.clone(), free);

@@ -1,0 +1,645 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T02:21:59.952950+00:00",
+  "status": "passed",
+  "compiler": {
+    "binary": "/tmp/targets159-production/debug/korrust",
+    "binary_sha256": "524fe69a5adaa7d886b97c8708162751b59301bc34b738159f36fa06972be1ee",
+    "source_revision": "380dfb2ff25a2101822f5191c3327ac9f42090f9"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "inputs": {
+    "files_sha256": {
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "tests/volatile_fields/Calls.java": "db1d21aec100a16711b83fd0e0b6d4f60a357e230a4569120ff0962a2c8743b4",
+      "tests/volatile_fields/ConsumeCalls.java": "961b8a9ca6579141eb8bcba75f2a2e833253f14eef553ec442f460cdca1fc416",
+      "tests/volatile_fields/Consumer.kt": "72272d218d119b74428aaf5a058833911a3964621f8b079da9ab7b18aec4d34d",
+      "tests/volatile_fields/Fields.kt": "ecc6594c6ce475673a4f4a25f3691d40ef5bd5a41992cfedbe4a34283b208fd0",
+      "tests/volatile_fields/Rejections.json": "5d6a9ed1910a20c3e29b7f25d14781492ff39b32c2d33b35663a1fe57173e0af",
+      "tests/volatile_fields.rs": "3178f803e1a905449b16b9b2c3479addbad7a0701c4b70b970e296f0dc69ffbb",
+      "tools/check_nov21_generics.py": "70fed499f3652d9181c2aabc3baf4e9a7327c436eec67c83d6fe4e4f539e4f86",
+      "tools/check_volatile_fields.py": "60e6090ec5a2864500817b29d74e96164b43f781996c3f6a3f49bcf097d6431d",
+      "/workspace/work/production159-freeze/Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "/workspace/work/production159-freeze/Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "/workspace/work/production159-freeze/src/annotation_declarations.rs": "9f9c44425fec7867daf244b76c9dc2794224d03e5e87f7eeea968016d27d8844",
+      "/workspace/work/production159-freeze/src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "/workspace/work/production159-freeze/src/bytecode/annotation_files.rs": "0fe8ebba7bbd2c80fcdd6fda797b448ca8cd63945b100781361bf1e3ace02eaa",
+      "/workspace/work/production159-freeze/src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "/workspace/work/production159-freeze/src/bytecode/anonymous_context.rs": "e48d7aba57745c9e3ecb0a2317ea627f3b6d9b2d86805563bae680d79a301910",
+      "/workspace/work/production159-freeze/src/bytecode/class_companion.rs": "7463d1e739919160b82ed1137a195ebc3a36037ed8b5419a26c1f38889b533a7",
+      "/workspace/work/production159-freeze/src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+      "/workspace/work/production159-freeze/src/bytecode/defaults.rs": "d092d8a420cfb719f92dbb9a3bcc58f7c644d67bf9b3c611c72949122c22e827",
+      "/workspace/work/production159-freeze/src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "/workspace/work/production159-freeze/src/bytecode/frames.rs": "1659d0401bfa59f751e3b6db250a2395a827ccad13c156f19f62c76773983b48",
+      "/workspace/work/production159-freeze/src/bytecode/inline.rs": "ca8a4f4da8f11e405a3cdcbcf87c3bfde49635e331f9712fb7b2f4aca0f84d25",
+      "/workspace/work/production159-freeze/src/bytecode/interfaces.rs": "5456ea3de3402ee3ead9920bb2cb0e7c0baab4f6eb7b211e481a16bf9ad3207b",
+      "/workspace/work/production159-freeze/src/bytecode/lambdas.rs": "80d29fe68d378de0b0458e601dec4cc6daaa539a64ce137a7d9f3c10e19f2d98",
+      "/workspace/work/production159-freeze/src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+      "/workspace/work/production159-freeze/src/bytecode/suspend.rs": "dfac0ad895edaf45c25655df1fad6c1828fe3fc767fd936dabe6e45357dd96d7",
+      "/workspace/work/production159-freeze/src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+      "/workspace/work/production159-freeze/src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+      "/workspace/work/production159-freeze/src/bytecode.rs": "4a64af005a11fd9a87467750b5acf485aa9e6e1057a4249fa52258e41b76d712",
+      "/workspace/work/production159-freeze/src/check.rs": "825f6d320678f9e756c5f3b177a4df52a9e2379758d062069afe4fcde27fdef6",
+      "/workspace/work/production159-freeze/src/check_annotation_placements.rs": "027e77c6a6db60f98262fbaf0f44be170c53b58b03d64ae6e8cc43cdb2dc1579",
+      "/workspace/work/production159-freeze/src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "/workspace/work/production159-freeze/src/check_anonymous.rs": "25817090ac3a19aef8fd11a5374a77049d19b85cc14d20958768ddacf649310e",
+      "/workspace/work/production159-freeze/src/check_captures.rs": "f752d88bb81c26576caad658160a332fa21946e7275e6faf331bfd73f6a84479",
+      "/workspace/work/production159-freeze/src/check_class_delegation.rs": "171fec70b3ce6632bbbd704ea92e040f1ef841fbebd02659388fe88ba97135f2",
+      "/workspace/work/production159-freeze/src/check_classes.rs": "eaa5547ca75d6f4bef4f21d200a050bb8a47362c9c7ea3e4f47b3a66e1cca4b3",
+      "/workspace/work/production159-freeze/src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+      "/workspace/work/production159-freeze/src/check_control.rs": "23bcd78c9f4a12b2665110ed5565c4cfe63c0c00f148463ef28c608336fa38b9",
+      "/workspace/work/production159-freeze/src/check_declarations.rs": "a88c52c905ebbdf834af9ce0b3220f950e27303cd75df634b725051de4f67c68",
+      "/workspace/work/production159-freeze/src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+      "/workspace/work/production159-freeze/src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "/workspace/work/production159-freeze/src/check_functions.rs": "209f4c7fd09fd44341e19b58e7791fa122e4a069e593822b463f2296684ff091",
+      "/workspace/work/production159-freeze/src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+      "/workspace/work/production159-freeze/src/check_interfaces.rs": "f7411289c4a4595b5ecca8c0788a688c3161014cce5b0631f2222b882d7e209a",
+      "/workspace/work/production159-freeze/src/check_ir_walk.rs": "caaeeea794075c7e23b17fc9e2d06ace5a02d366c9abffbdc9393d3c8a1a2e96",
+      "/workspace/work/production159-freeze/src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+      "/workspace/work/production159-freeze/src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+      "/workspace/work/production159-freeze/src/check_library.rs": "657b65be0e461e241be387807384d7b020250395e1a6eca9aa93def57f6083ec",
+      "/workspace/work/production159-freeze/src/check_member_extensions.rs": "66a4cfa55e05e5699d510113566c91fd54fa79e1257f769df334338c0f7201e5",
+      "/workspace/work/production159-freeze/src/check_objects.rs": "149bbaa4c8a9cab9cf634edc131bd17a37b8411493c77235311ae860a65c1766",
+      "/workspace/work/production159-freeze/src/check_operations.rs": "5a0b0b380559259c1d11e8a2ec109a3955e1ad85f62c1b655df8632ac5362c8f",
+      "/workspace/work/production159-freeze/src/check_overloads.rs": "03618a927df2d30db9bc245df9a57e99001e9a525a49c089968cd22cb1f0671e",
+      "/workspace/work/production159-freeze/src/check_references.rs": "61a780d0816443007725e52f992c717eeab828f7b971749ed3242318a8d80077",
+      "/workspace/work/production159-freeze/src/check_relations.rs": "7299487f3f673615e98603bd2e01a1979b45629e804c4ad311a3c3583b8d3f67",
+      "/workspace/work/production159-freeze/src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "/workspace/work/production159-freeze/src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+      "/workspace/work/production159-freeze/src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+      "/workspace/work/production159-freeze/src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "/workspace/work/production159-freeze/src/check_varargs.rs": "9928a6be54a33a83360cec67726e8beffba6ed00366a7f3d378f030f1055f90d",
+      "/workspace/work/production159-freeze/src/check_variant_signatures.rs": "ea8be16effafa3af58d46e0e732d196feeca4ef1468d4b373c2e1c29ee984ed3",
+      "/workspace/work/production159-freeze/src/classpath/aliases.rs": "2ad31713a22f8eb0607ed96d838aa96fecedf7a6b261f07473aef66b8bdb8827",
+      "/workspace/work/production159-freeze/src/classpath/archive.rs": "058bf434ca9c8a58db2f026cefaed85f64c9c3e274130af0f18db4fbefff5162",
+      "/workspace/work/production159-freeze/src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+      "/workspace/work/production159-freeze/src/classpath/metadata.rs": "abfa728c467ea8f5fe57f60282c0f74fa696e67c9e2da6e545540348dd73ce65",
+      "/workspace/work/production159-freeze/src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+      "/workspace/work/production159-freeze/src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "/workspace/work/production159-freeze/src/classpath/signature.rs": "11e1e7c67cfe84b56892cddf6b6fa85daa19dfec4f34846a215a18605dfb3bec",
+      "/workspace/work/production159-freeze/src/classpath/source.rs": "b4c5edcf8cb847ed86e3dcfa82f00a601a565d39fc3c643127a82fb439e3dc2a",
+      "/workspace/work/production159-freeze/src/classpath/source_enums.rs": "3ae8bea81669d8feec40a16fae21a80f4a9d8006acd23c3f4f68d5d177f79be3",
+      "/workspace/work/production159-freeze/src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+      "/workspace/work/production159-freeze/src/classpath/value_names.rs": "a0798cfa02230410ee554e39dc09057bc9a41bf1a366f9159b73604270f83728",
+      "/workspace/work/production159-freeze/src/classpath.rs": "1cbe4496b0d8105d5584d546d3834f4fc7b04eeb68b4292d64f737a5aafeafe5",
+      "/workspace/work/production159-freeze/src/compiled_inline.rs": "694e4535cb5da5254818eea8ca6818a5ad919dd4f6556d890b36a40e613d489e",
+      "/workspace/work/production159-freeze/src/const_eval.rs": "bc6a053823a41c822bcc5af603023019a6ace1895c9fae75bf0372f02381dacf",
+      "/workspace/work/production159-freeze/src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "/workspace/work/production159-freeze/src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "/workspace/work/production159-freeze/src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+      "/workspace/work/production159-freeze/src/lib.rs": "0d5fafb7ae492d9d287650e2ab5bed999cf448e816c87f7febbe0ee0d2a3100d",
+      "/workspace/work/production159-freeze/src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "/workspace/work/production159-freeze/src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "/workspace/work/production159-freeze/src/metadata.rs": "b3579828d0fcecc950ffa5a01bb3c34e710f52127185036c46055e18caafce34",
+      "/workspace/work/production159-freeze/src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "/workspace/work/production159-freeze/src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "/workspace/work/production159-freeze/src/source_inline.rs": "50bee0804aaea9cd3e2b8c8e0f162784e0e0e0b16b9e0770dd8c27fca764add2",
+      "/workspace/work/production159-freeze/src/syntax.rs": "36d50b22b549d443c1104f04a3f0cdd299ccb099ef048208c4d38a12379dbe61",
+      "/workspace/work/production159-freeze/src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "/workspace/work/production159-freeze/src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525"
+    },
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "commands": [
+    {
+      "label": "compile official Fields.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/volatile_fields/Fields.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "volatile_fields",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/000-stderr.txt"
+    },
+    {
+      "label": "compile candidate Fields.kt",
+      "argv": [
+        "/tmp/targets159-production/debug/korrust",
+        "/workspace/korrust/tests/volatile_fields/Fields.kt",
+        "--module-name",
+        "volatile_fields",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/001-stderr.txt"
+    },
+    {
+      "label": "compile fixed Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/java",
+        "/workspace/korrust/tests/volatile_fields/Calls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/002-stderr.txt"
+    },
+    {
+      "label": "verified fixed Java caller official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/java:/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/003-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/official",
+        "Storage"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/004-stderr.txt"
+    },
+    {
+      "label": "compile official Consumer.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/volatile_fields/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "volatile_fields",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/official-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/005-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/official:/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/official-official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/official-official-runner",
+        "/workspace/korrust/tests/volatile_fields/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/006-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer official/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/official-official-runner:/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/official-official:/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/007-stderr.txt"
+    },
+    {
+      "label": "compile candidate Consumer.kt",
+      "argv": [
+        "/tmp/targets159-production/debug/korrust",
+        "/workspace/korrust/tests/volatile_fields/Consumer.kt",
+        "--module-name",
+        "volatile_fields",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/official-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/008-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/official:/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/official-candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/official-candidate-runner",
+        "/workspace/korrust/tests/volatile_fields/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/009-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer official/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/official-candidate-runner:/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/official-candidate:/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/010-stderr.txt"
+    },
+    {
+      "label": "verified fixed Java caller candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/java:/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/011-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/candidate",
+        "Storage"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/012-stderr.txt"
+    },
+    {
+      "label": "compile official Consumer.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/volatile_fields/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "volatile_fields",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/candidate-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/013-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/candidate:/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/candidate-official:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/candidate-official-runner",
+        "/workspace/korrust/tests/volatile_fields/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/014-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer candidate/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/candidate-official-runner:/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/candidate-official:/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/015-stderr.txt"
+    },
+    {
+      "label": "compile candidate Consumer.kt",
+      "argv": [
+        "/tmp/targets159-production/debug/korrust",
+        "/workspace/korrust/tests/volatile_fields/Consumer.kt",
+        "--module-name",
+        "volatile_fields",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/candidate-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/016-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/candidate:/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/candidate-candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/candidate-candidate-runner",
+        "/workspace/korrust/tests/volatile_fields/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/017-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer candidate/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/candidate-candidate-runner:/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/candidate-candidate:/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/candidate:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/018-stderr.txt"
+    },
+    {
+      "label": "negative official/immutable",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/immutable.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/019-stderr.txt"
+    },
+    {
+      "label": "negative candidate/immutable",
+      "argv": [
+        "/tmp/targets159-production/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/immutable.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/020-stderr.txt"
+    },
+    {
+      "label": "negative official/companion_immutable",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/companion_immutable.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/021-stderr.txt"
+    },
+    {
+      "label": "negative candidate/companion_immutable",
+      "argv": [
+        "/tmp/targets159-production/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/companion_immutable.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/022-stderr.txt"
+    },
+    {
+      "label": "negative official/computed",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/computed.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/023-stderr.txt"
+    },
+    {
+      "label": "negative candidate/computed",
+      "argv": [
+        "/tmp/targets159-production/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/computed.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/024-stderr.txt"
+    },
+    {
+      "label": "negative official/accessor_target",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/accessor_target.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/025-stderr.txt"
+    },
+    {
+      "label": "negative candidate/accessor_target",
+      "argv": [
+        "/tmp/targets159-production/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/accessor_target.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/026-stderr.txt"
+    },
+    {
+      "label": "negative official/repeated",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/repeated.kt",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/027-stderr.txt"
+    },
+    {
+      "label": "negative candidate/repeated",
+      "argv": [
+        "/tmp/targets159-production/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/repeated.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T022159952950Z-volatile-fields/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/028-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022159952950Z-volatile-fields/028-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "fixed-java/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/official/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/official/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "fixed-java/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/candidate/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/candidate/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "JVM-public-callable-signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/immutable",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/immutable",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/companion_immutable",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/companion_immutable",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/computed",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/computed",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/accessor_target",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/accessor_target",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/repeated",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/repeated",
+      "outcome": "pass"
+    },
+    {
+      "id": "frozen-inputs",
+      "outcome": "pass"
+    }
+  ],
+  "evidence": [],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_volatile_fields.py",
+      "--candidate",
+      "/tmp/targets159-production/debug/korrust",
+      "--reference-root",
+      "/workspace/korrust",
+      "--source-root",
+      "/workspace/work/production159-freeze"
+    ]
+  ],
+  "limitations": [
+    "Tests check supported backing-field Volatile flags, canonical JVM markers and import aliases, companion field ownership, retained annotation absence, independent runtime values and Kotlin consumers. JvmField combinations and other companion annotation splitting remain bounded. No Android runtime or full-app claim."
+  ],
+  "counts": {
+    "pass": 18
+  }
+}

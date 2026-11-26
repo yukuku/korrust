@@ -1,0 +1,647 @@
+Classfile /workspace/korrust/target/checks/2026-11-26T022535054979Z-inferred-mutations/candidate/InferredCounter.class
+  Last modified Nov 26, 2026; size 2730 bytes
+  SHA-256 checksum 3844972d2c6e407f61156582ba721bb73e84ffacbd36cdac324488b5aa0fe63c
+  Compiled from "Counter.kt"
+public final class InferredCounter
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // InferredCounter
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 3, methods: 8, attributes: 2
+Constant pool:
+   #1 = Utf8               InferredCounter
+   #2 = Class              #1             // InferredCounter
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               current
+   #6 = Utf8               I
+   #7 = Utf8               setterCalls
+   #8 = Utf8               stored
+   #9 = Utf8               Z
+  #10 = Utf8               <init>
+  #11 = Utf8               ()V
+  #12 = NameAndType        #10:#11        // "<init>":()V
+  #13 = Methodref          #4.#12         // java/lang/Object."<init>":()V
+  #14 = NameAndType        #5:#6          // current:I
+  #15 = Fieldref           #2.#14         // InferredCounter.current:I
+  #16 = NameAndType        #7:#6          // setterCalls:I
+  #17 = Fieldref           #2.#16         // InferredCounter.setterCalls:I
+  #18 = NameAndType        #8:#9          // stored:Z
+  #19 = Fieldref           #2.#18         // InferredCounter.stored:Z
+  #20 = Utf8               (I)V
+  #21 = Utf8               Code
+  #22 = Utf8               java/lang/Throwable
+  #23 = Class              #22            // java/lang/Throwable
+  #24 = Utf8               StackMapTable
+  #25 = Utf8               setStored
+  #26 = Utf8               (Z)V
+  #27 = NameAndType        #25:#26        // setStored:(Z)V
+  #28 = Methodref          #2.#27         // InferredCounter.setStored:(Z)V
+  #29 = Utf8               update
+  #30 = Utf8               (Z)I
+  #31 = Utf8               isStored
+  #32 = Utf8               ()Z
+  #33 = Utf8               getCurrent
+  #34 = Utf8               ()I
+  #35 = Utf8               setCurrent
+  #36 = Utf8               getSetterCalls
+  #37 = Utf8               setSetterCalls
+  #38 = Utf8               SourceFile
+  #39 = Utf8               Counter.kt
+  #40 = Utf8               Lkotlin/Metadata;
+  #41 = Utf8               mv
+  #42 = Integer            2
+  #43 = Integer            3
+  #44 = Integer            0
+  #45 = Utf8               k
+  #46 = Integer            1
+  #47 = Utf8               xi
+  #48 = Integer            48
+  #49 = Utf8               d1
+  #50 = Utf8               \u0000\b\n\u0002\b\u0016\n\u0002\b\u0001\b\u0006\u0018\u00002\u00020\u0001B\u0011\b\u0006\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0004\u0010\u0005J\u0017H\u0006\u0010\u0006\u001a\u00020\u00032\u0006\u0010\u0007\u001a\u00020\b¢\u0006\u0004\b\u0006\u0010\tJ\u000fH\u0006\u0010\n\u001a\u00020\b¢\u0006\u0004\b\n\u0010\u000bR\u001eX\u0086\u000e\u0010\u0002\u001a\u00020\u0003¢\u0006\u0012\n\u0004\b\u0002\u0010\f\u001a\u0004\b\r\u0010\u000e\"\u0004\b\u000f\u0010\u0005R\u001eX\u0086\u000e\u0010\u0010\u001a\u00020\u0003¢\u0006\u0012\n\u0004\b\u0010\u0010\f\u001a\u0004\b\u0011\u0010\u000e\"\u0004\b\u0012\u0010\u0005R\u001cX\u0082\u000e\u0010\u0013\u001a\u00020\b@B2\u0006\u0010\u0015\u001a\u00020\b¢\u0006\u0006\n\u0004\b\u0013\u0010\u0014¨\u0006\u0016
+  #51 = Utf8               d2
+  #52 = Utf8               kotlin/Any
+  #53 = Utf8               kotlin/Int
+  #54 = Utf8               flag
+  #55 = Utf8               kotlin/Boolean
+  #56 = Utf8               value
+  #57 = Utf8               inferred_mutations
+  #58 = Utf8               RuntimeVisibleAnnotations
+{
+  private int current;
+    descriptor: I
+    flags: (0x0002) ACC_PRIVATE
+
+  private int setterCalls;
+    descriptor: I
+    flags: (0x0002) ACC_PRIVATE
+
+  private boolean stored;
+    descriptor: Z
+    flags: (0x0002) ACC_PRIVATE
+
+  public InferredCounter(int);
+    descriptor: (I)V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=6, locals=2, args_size=2
+         0: aload_0
+         1: invokespecial #13                 // Method java/lang/Object."<init>":()V
+         4: aload_0
+         5: iload         1
+         7: putfield      #15                 // Field current:I
+        10: aload         0
+        12: iconst_0
+        13: putfield      #17                 // Field setterCalls:I
+        16: aload         0
+        18: iconst_0
+        19: putfield      #19                 // Field stored:Z
+        22: return
+        23: nop
+        24: athrow
+      StackMapTable: number_of_entries = 13
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this, int ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int ]
+          stack = [ class InferredCounter, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int ]
+          stack = [ class InferredCounter, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int ]
+          stack = [ class InferredCounter, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int ]
+          stack = [ class java/lang/Throwable ]
+
+  private final void setStored(boolean);
+    descriptor: (Z)V
+    flags: (0x0012) ACC_PRIVATE, ACC_FINAL
+    Code:
+      stack=256, locals=5, args_size=2
+         0: aload         0
+         2: iload         1
+         4: putfield      #19                 // Field stored:Z
+         7: aload         0
+         9: getfield      #17                 // Field setterCalls:I
+        12: istore        2
+        14: iload         2
+        16: iconst_1
+        17: iadd
+        18: istore        3
+        20: iload         3
+        22: istore        4
+        24: aload         0
+        26: iload         4
+        28: putfield      #17                 // Field setterCalls:I
+        31: iload         2
+        33: pop
+        34: return
+        35: nop
+        36: athrow
+      StackMapTable: number_of_entries = 19
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int ]
+          stack = [ class InferredCounter, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int, int ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int, int, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int, int, int ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int, int, int ]
+          stack = [ class InferredCounter, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int, int, int, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int, int, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int, int, int, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int, int, int, int ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int, int, int, int ]
+          stack = [ class java/lang/Throwable ]
+
+  public final int update(boolean);
+    descriptor: (Z)I
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=258, locals=7, args_size=2
+         0: iconst_1
+         1: istore        2
+         3: iload         2
+         5: iload         1
+         7: if_icmpeq     14
+        10: iconst_0
+        11: goto          15
+        14: iconst_1
+        15: ifeq          55
+        18: aload         0
+        20: checkcast     #2                  // class InferredCounter
+        23: iconst_1
+        24: invokevirtual #28                 // Method setStored:(Z)V
+        27: aload         0
+        29: getfield      #15                 // Field current:I
+        32: istore        3
+        34: iload         3
+        36: iconst_2
+        37: iadd
+        38: istore        4
+        40: aload         0
+        42: iload         4
+        44: putfield      #15                 // Field current:I
+        47: aload         0
+        49: getfield      #15                 // Field current:I
+        52: goto          89
+        55: aload         0
+        57: checkcast     #2                  // class InferredCounter
+        60: iconst_0
+        61: invokevirtual #28                 // Method setStored:(Z)V
+        64: aload         0
+        66: getfield      #15                 // Field current:I
+        69: istore        5
+        71: iload         5
+        73: iconst_1
+        74: isub
+        75: istore        6
+        77: aload         0
+        79: iload         6
+        81: putfield      #15                 // Field current:I
+        84: aload         0
+        86: getfield      #15                 // Field current:I
+        89: ireturn
+        90: nop
+        91: athrow
+      StackMapTable: number_of_entries = 44
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int, int ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int, int ]
+          stack = [ class InferredCounter, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int, int, int ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int, int, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int, int, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int, int, int ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int, int, int ]
+          stack = [ class InferredCounter, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int, int, int, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int, int, int ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int, int, int, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int, int ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int, int ]
+          stack = [ class InferredCounter, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int, top, top, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int, top, top, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int, int, top, top, int ]
+          stack = [ int, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int, int, top, top, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int, top, top, int, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int, top, top, int, int ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int, top, top, int, int ]
+          stack = [ class InferredCounter, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int, int, top, top, int, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int, int, top, top, int, int ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int, int ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int, int ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int, int ]
+          stack = [ class java/lang/Throwable ]
+
+  public final boolean isStored();
+    descriptor: ()Z
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #19                 // Field stored:Z
+         5: ireturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter ]
+          stack = [ class java/lang/Throwable ]
+
+  public final int getCurrent();
+    descriptor: ()I
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #15                 // Field current:I
+         5: ireturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter ]
+          stack = [ class java/lang/Throwable ]
+
+  public final void setCurrent(int);
+    descriptor: (I)V
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=2, args_size=2
+         0: aload         0
+         2: iload         1
+         4: putfield      #15                 // Field current:I
+         7: return
+         8: nop
+         9: athrow
+      StackMapTable: number_of_entries = 5
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int ]
+          stack = [ class InferredCounter, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int ]
+          stack = [ class java/lang/Throwable ]
+
+  public final int getSetterCalls();
+    descriptor: ()I
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #17                 // Field setterCalls:I
+         5: ireturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter ]
+          stack = [ class java/lang/Throwable ]
+
+  public final void setSetterCalls(int);
+    descriptor: (I)V
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=2, args_size=2
+         0: aload         0
+         2: iload         1
+         4: putfield      #17                 // Field setterCalls:I
+         7: return
+         8: nop
+         9: athrow
+      StackMapTable: number_of_entries = 5
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int ]
+          stack = [ class InferredCounter ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class InferredCounter, int ]
+          stack = [ class InferredCounter, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class InferredCounter, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class InferredCounter, int ]
+          stack = [ class java/lang/Throwable ]
+}
+SourceFile: "Counter.kt"
+RuntimeVisibleAnnotations:
+  0: #40(#41=[I#42,I#43,I#44],#45=I#46,#47=I#48,#49=[s#50],#51=[s#1,s#52,s#5,s#53,s#10,s#20,s#29,s#54,s#55,s#30,s#31,s#32,s#6,s#33,s#34,s#35,s#7,s#36,s#37,s#8,s#9,s#56,s#57])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u0016\n\u0002\b\u0001\b\u0006\u0018\u00002\u00020\u0001B\u0011\b\u0006\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0004\b\u0004\u0010\u0005J\u0017H\u0006\u0010\u0006\u001a\u00020\u00032\u0006\u0010\u0007\u001a\u00020\b¢\u0006\u0004\b\u0006\u0010\tJ\u000fH\u0006\u0010\n\u001a\u00020\b¢\u0006\u0004\b\n\u0010\u000bR\u001eX\u0086\u000e\u0010\u0002\u001a\u00020\u0003¢\u0006\u0012\n\u0004\b\u0002\u0010\f\u001a\u0004\b\r\u0010\u000e\"\u0004\b\u000f\u0010\u0005R\u001eX\u0086\u000e\u0010\u0010\u001a\u00020\u0003¢\u0006\u0012\n\u0004\b\u0010\u0010\f\u001a\u0004\b\u0011\u0010\u000e\"\u0004\b\u0012\u0010\u0005R\u001cX\u0082\u000e\u0010\u0013\u001a\u00020\b@B2\u0006\u0010\u0015\u001a\u00020\b¢\u0006\u0006\n\u0004\b\u0013\u0010\u0014¨\u0006\u0016"]
+      d2=["InferredCounter","kotlin/Any","current","kotlin/Int","<init>","(I)V","update","flag","kotlin/Boolean","(Z)I","isStored","()Z","I","getCurrent","()I","setCurrent","setterCalls","getSetterCalls","setSetterCalls","stored","Z","value","inferred_mutations"]
+    )

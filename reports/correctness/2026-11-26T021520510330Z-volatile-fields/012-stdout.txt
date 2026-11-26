@@ -1,0 +1,443 @@
+Classfile /workspace/korrust/target/checks/2026-11-26T021520510330Z-volatile-fields/candidate/Storage.class
+  Last modified Nov 26, 2026; size 2364 bytes
+  SHA-256 checksum 8c9f6b517ac1834e0720bf696c031b0a75bf9c2534cd0549110611943515d62d
+  Compiled from "Fields.kt"
+public final class Storage
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // Storage
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 5, methods: 11, attributes: 3
+Constant pool:
+   #1 = Utf8               Storage
+   #2 = Class              #1             // Storage
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               count
+   #6 = Utf8               I
+   #7 = Utf8               text
+   #8 = Utf8               Ljava/lang/String;
+   #9 = Utf8               RuntimeInvisibleAnnotations
+  #10 = Utf8               Lorg/jetbrains/annotations/Nullable;
+  #11 = Utf8               <init>
+  #12 = Utf8               ()V
+  #13 = NameAndType        #11:#12        // "<init>":()V
+  #14 = Methodref          #4.#13         // java/lang/Object."<init>":()V
+  #15 = NameAndType        #5:#6          // count:I
+  #16 = Fieldref           #2.#15         // Storage.count:I
+  #17 = NameAndType        #7:#8          // text:Ljava/lang/String;
+  #18 = Fieldref           #2.#17         // Storage.text:Ljava/lang/String;
+  #19 = Utf8               Code
+  #20 = Utf8               java/lang/Throwable
+  #21 = Class              #20            // java/lang/Throwable
+  #22 = Utf8               StackMapTable
+  #23 = Utf8               getCount
+  #24 = Utf8               ()I
+  #25 = Utf8               setCount
+  #26 = Utf8               (I)V
+  #27 = Utf8               getText
+  #28 = Utf8               ()Ljava/lang/String;
+  #29 = Utf8               RuntimeVisibleAnnotations
+  #30 = Utf8               java/lang/String
+  #31 = Class              #30            // java/lang/String
+  #32 = Utf8               setText
+  #33 = Utf8               (Ljava/lang/String;)V
+  #34 = Utf8               RuntimeInvisibleParameterAnnotations
+  #35 = Utf8               Companion
+  #36 = Utf8               LStorage$Companion;
+  #37 = Utf8               Lorg/jetbrains/annotations/NotNull;
+  #38 = Utf8               instance
+  #39 = Utf8               LStorage;
+  #40 = NameAndType        #38:#39        // instance:LStorage;
+  #41 = Fieldref           #2.#40         // Storage.instance:LStorage;
+  #42 = Utf8               access$getInstance$cp
+  #43 = Utf8               ()LStorage;
+  #44 = Utf8               access$setInstance$cp
+  #45 = Utf8               (LStorage;)V
+  #46 = Utf8               published
+  #47 = Utf8               J
+  #48 = NameAndType        #46:#47        // published:J
+  #49 = Fieldref           #2.#48         // Storage.published:J
+  #50 = Utf8               access$getPublished$cp
+  #51 = Utf8               ()J
+  #52 = Utf8               access$setPublished$cp
+  #53 = Utf8               (J)V
+  #54 = NameAndType        #35:#36        // Companion:LStorage$Companion;
+  #55 = Fieldref           #2.#54         // Storage.Companion:LStorage$Companion;
+  #56 = Utf8               Storage$Companion
+  #57 = Class              #56            // Storage$Companion
+  #58 = Utf8               exchange
+  #59 = Utf8               (LStorage;)LStorage;
+  #60 = NameAndType        #58:#59        // exchange:(LStorage;)LStorage;
+  #61 = Methodref          #57.#60        // Storage$Companion.exchange:(LStorage;)LStorage;
+  #62 = Utf8               Lkotlin/jvm/JvmStatic;
+  #63 = Utf8               (Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+  #64 = NameAndType        #11:#63        // "<init>":(Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+  #65 = Methodref          #57.#64        // Storage$Companion."<init>":(Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+  #66 = Utf8               <clinit>
+  #67 = Utf8               InnerClasses
+  #68 = Utf8               SourceFile
+  #69 = Utf8               Fields.kt
+  #70 = Utf8               Lkotlin/Metadata;
+  #71 = Utf8               mv
+  #72 = Integer            2
+  #73 = Integer            3
+  #74 = Integer            0
+  #75 = Utf8               k
+  #76 = Integer            1
+  #77 = Utf8               xi
+  #78 = Integer            48
+  #79 = Utf8               d1
+  #80 = Utf8               \u0000\b\n\u0002\b\u0013\n\u0002\b\u0001\b\u0006\u0018\u00002\u00020\u0001 \u00028\u0002B\t\b\u0006¢\u0006\u0004\b\u0003\u0010\u0004R\u001eX\u0086\u000e\u0010\u0005\u001a\u00020\u0006¢\u0006\u0012\n\u0004\b\u0005\u0010\u0007\u001a\u0004\b\b\u0010\t\"\u0004\b\n\u0010\u000bR X\u0086\u000e\u0010\f\u001a\u00040\r\u0018\u0001¢\u0006\u0012\n\u0004\b\f\u0010\u000e\u001a\u0004\b\u000f\u0010\u0010\"\u0004\b\u0011\u0010\u0012¨\u0006\u0013
+  #81 = Utf8               d2
+  #82 = Utf8               kotlin/Any
+  #83 = Utf8               kotlin/Int
+  #84 = Utf8               kotlin/String
+  #85 = Utf8               volatile_fields
+{
+  private volatile int count;
+    descriptor: I
+    flags: (0x0042) ACC_PRIVATE, ACC_VOLATILE
+
+  private volatile java.lang.String text;
+    descriptor: Ljava/lang/String;
+    flags: (0x0042) ACC_PRIVATE, ACC_VOLATILE
+    RuntimeInvisibleAnnotations:
+      0: #10()
+        org.jetbrains.annotations.Nullable
+
+  public static final Storage$Companion Companion;
+    descriptor: LStorage$Companion;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    RuntimeInvisibleAnnotations:
+      0: #37()
+        org.jetbrains.annotations.NotNull
+
+  private static volatile Storage instance;
+    descriptor: LStorage;
+    flags: (0x004a) ACC_PRIVATE, ACC_STATIC, ACC_VOLATILE
+    RuntimeInvisibleAnnotations:
+      0: #10()
+        org.jetbrains.annotations.Nullable
+
+  private static volatile long published;
+    descriptor: J
+    flags: (0x004a) ACC_PRIVATE, ACC_STATIC, ACC_VOLATILE
+
+  public Storage();
+    descriptor: ()V
+    flags: (0x0001) ACC_PUBLIC
+    Code:
+      stack=6, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #14                 // Method java/lang/Object."<init>":()V
+         4: aload         0
+         6: iconst_1
+         7: putfield      #16                 // Field count:I
+        10: aload         0
+        12: aconst_null
+        13: putfield      #18                 // Field text:Ljava/lang/String;
+        16: return
+        17: nop
+        18: athrow
+      StackMapTable: number_of_entries = 10
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ this ]
+          stack = [ this ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class Storage ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class Storage ]
+          stack = [ class Storage ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class Storage ]
+          stack = [ class Storage, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class Storage ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class Storage ]
+          stack = [ class Storage ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class Storage ]
+          stack = [ class Storage, null ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class Storage ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class Storage ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class Storage ]
+          stack = [ class java/lang/Throwable ]
+
+  public final int getCount();
+    descriptor: ()I
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #16                 // Field count:I
+         5: ireturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class Storage ]
+          stack = [ class Storage ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class Storage ]
+          stack = [ int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class Storage ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class Storage ]
+          stack = [ class java/lang/Throwable ]
+
+  public final void setCount(int);
+    descriptor: (I)V
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=2, args_size=2
+         0: aload         0
+         2: iload         1
+         4: putfield      #16                 // Field count:I
+         7: return
+         8: nop
+         9: athrow
+      StackMapTable: number_of_entries = 5
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class Storage, int ]
+          stack = [ class Storage ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class Storage, int ]
+          stack = [ class Storage, int ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class Storage, int ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class Storage, int ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class Storage, int ]
+          stack = [ class java/lang/Throwable ]
+
+  public final java.lang.String getText();
+    descriptor: ()Ljava/lang/String;
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=1, args_size=1
+         0: aload         0
+         2: getfield      #18                 // Field text:Ljava/lang/String;
+         5: areturn
+         6: nop
+         7: athrow
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class Storage ]
+          stack = [ class Storage ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class Storage ]
+          stack = [ class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class Storage ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class Storage ]
+          stack = [ class java/lang/Throwable ]
+    RuntimeInvisibleAnnotations:
+      0: #10()
+        org.jetbrains.annotations.Nullable
+
+  public final void setText(java.lang.String);
+    descriptor: (Ljava/lang/String;)V
+    flags: (0x0011) ACC_PUBLIC, ACC_FINAL
+    Code:
+      stack=6, locals=2, args_size=2
+         0: aload         0
+         2: aload         1
+         4: putfield      #18                 // Field text:Ljava/lang/String;
+         7: return
+         8: nop
+         9: athrow
+      StackMapTable: number_of_entries = 5
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class Storage, class java/lang/String ]
+          stack = [ class Storage ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 1
+          locals = [ class Storage, class java/lang/String ]
+          stack = [ class Storage, class java/lang/String ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = [ class Storage, class java/lang/String ]
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class Storage, class java/lang/String ]
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = [ class Storage, class java/lang/String ]
+          stack = [ class java/lang/Throwable ]
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #10()
+          org.jetbrains.annotations.Nullable
+
+  public static final Storage access$getInstance$cp();
+    descriptor: ()LStorage;
+    flags: (0x1019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC
+    Code:
+      stack=1, locals=0, args_size=0
+         0: getstatic     #41                 // Field instance:LStorage;
+         3: areturn
+
+  public static final void access$setInstance$cp(Storage);
+    descriptor: (LStorage;)V
+    flags: (0x1019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC
+    Code:
+      stack=1, locals=1, args_size=1
+         0: aload         0
+         2: putstatic     #41                 // Field instance:LStorage;
+         5: return
+
+  public static final long access$getPublished$cp();
+    descriptor: ()J
+    flags: (0x1019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC
+    Code:
+      stack=2, locals=0, args_size=0
+         0: getstatic     #49                 // Field published:J
+         3: lreturn
+
+  public static final void access$setPublished$cp(long);
+    descriptor: (J)V
+    flags: (0x1019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC
+    Code:
+      stack=2, locals=2, args_size=1
+         0: lload         0
+         2: putstatic     #49                 // Field published:J
+         5: return
+
+  public static final Storage exchange(Storage);
+    descriptor: (LStorage;)LStorage;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: getstatic     #55                 // Field Companion:LStorage$Companion;
+         3: aload         0
+         5: invokevirtual #61                 // Method Storage$Companion.exchange:(LStorage;)LStorage;
+         8: areturn
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #10()
+          org.jetbrains.annotations.Nullable
+    RuntimeVisibleAnnotations:
+      0: #62()
+        kotlin.jvm.JvmStatic
+    RuntimeInvisibleAnnotations:
+      0: #10()
+        org.jetbrains.annotations.Nullable
+
+  static {};
+    descriptor: ()V
+    flags: (0x0008) ACC_STATIC
+    Code:
+      stack=3, locals=0, args_size=0
+         0: new           #57                 // class Storage$Companion
+         3: dup
+         4: aconst_null
+         5: invokespecial #65                 // Method Storage$Companion."<init>":(Lkotlin/jvm/internal/DefaultConstructorMarker;)V
+         8: putstatic     #55                 // Field Companion:LStorage$Companion;
+        11: aconst_null
+        12: putstatic     #41                 // Field instance:LStorage;
+        15: lconst_0
+        16: putstatic     #49                 // Field published:J
+        19: return
+        20: nop
+        21: athrow
+      StackMapTable: number_of_entries = 11
+        frame_type = 255 /* full_frame */
+          offset_delta = 3
+          locals = []
+          stack = [ uninitialized 0 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ uninitialized 0, uninitialized 0 ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ uninitialized 0, uninitialized 0, null ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = [ class Storage$Companion ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ null ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ long ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 2
+          locals = []
+          stack = []
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ class java/lang/Throwable ]
+        frame_type = 255 /* full_frame */
+          offset_delta = 0
+          locals = []
+          stack = [ class java/lang/Throwable ]
+}
+InnerClasses:
+  public static final #35= #57 of #2;     // Companion=class Storage$Companion of class Storage
+SourceFile: "Fields.kt"
+RuntimeVisibleAnnotations:
+  0: #70(#71=[I#72,I#73,I#74],#75=I#76,#77=I#78,#79=[s#80],#81=[s#1,s#82,s#35,s#11,s#12,s#5,s#83,s#6,s#23,s#24,s#25,s#26,s#7,s#84,s#8,s#27,s#28,s#32,s#33,s#85])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=1
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u0013\n\u0002\b\u0001\b\u0006\u0018\u00002\u00020\u0001 \u00028\u0002B\t\b\u0006¢\u0006\u0004\b\u0003\u0010\u0004R\u001eX\u0086\u000e\u0010\u0005\u001a\u00020\u0006¢\u0006\u0012\n\u0004\b\u0005\u0010\u0007\u001a\u0004\b\b\u0010\t\"\u0004\b\n\u0010\u000bR X\u0086\u000e\u0010\f\u001a\u00040\r\u0018\u0001¢\u0006\u0012\n\u0004\b\f\u0010\u000e\u001a\u0004\b\u000f\u0010\u0010\"\u0004\b\u0011\u0010\u0012¨\u0006\u0013"]
+      d2=["Storage","kotlin/Any","Companion","<init>","()V","count","kotlin/Int","I","getCount","()I","setCount","(I)V","text","kotlin/String","Ljava/lang/String;","getText","()Ljava/lang/String;","setText","(Ljava/lang/String;)V","volatile_fields"]
+    )

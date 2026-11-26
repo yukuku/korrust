@@ -556,7 +556,44 @@ impl Checker<'_> {
     }
 
     pub(super) fn library_call_candidates(&self, name: &str) -> Vec<JavaMethod> {
-        self.library_candidates_with_members(name, false)
+        let mut methods = self.library_candidates_with_members(name, false);
+        if methods.is_empty() {
+            return methods;
+        }
+        if let Some(class) = self
+            .imports
+            .get(name)
+            .filter(|binding| !binding.contains("::"))
+            .and_then(|owner| self.classes.get(owner))
+            .filter(|class| {
+                class.kotlin_class
+                    && class.access & (0x200 | 0x400 | 0x2000) == 0
+                    && class
+                        .library
+                        .as_ref()
+                        .is_none_or(|library| library.type_parameters.is_empty())
+            })
+        {
+            methods.extend(
+                class
+                    .methods
+                    .iter()
+                    .filter(|method| {
+                        method.name == "<init>"
+                            && !method.unsupported
+                            && method.kotlin_params.is_some()
+                            && self
+                                .classpath
+                                .constructor_visible(&self.lambda_owner, method)
+                    })
+                    .cloned()
+                    .map(|mut method| {
+                        method.kotlin_result = Some(Type::Java(class.name.clone()));
+                        method
+                    }),
+            );
+        }
+        methods
     }
 
     fn library_candidates_with_members(&self, name: &str, shadow_members: bool) -> Vec<JavaMethod> {
@@ -614,8 +651,7 @@ impl Checker<'_> {
             {
                 return Vec::new();
             }
-            if self.callable_name_was_renamed(name)
-                || self.functions.contains_key(name)
+            if self.functions.contains_key(name)
                 || shadow_members
                     && self.object_methods.get(name).is_some_and(|methods| {
                         methods
@@ -631,7 +667,85 @@ impl Checker<'_> {
             {
                 return Vec::new();
             }
-            let mut methods = Vec::new();
+            let visible = |method: &JavaMethod| {
+                method.access & 8 != 0
+                    && (method.access & 1 != 0
+                        || self
+                            .classpath
+                            .file_private_visible(&self.lambda_owner, method))
+                    && (!method.kotlin_internal || self.classpath.internal_visible(&method.owner))
+                    && (method.source_name() == name
+                        || method.source_property.as_deref() == Some(name))
+            };
+            let package = self.lambda_owner.rsplit_once('/').map_or("", |(p, _)| p);
+            let package_methods = self
+                .classpath
+                .package_methods(package, name)
+                .unwrap_or_default();
+            let mut methods = package_methods
+                .into_iter()
+                .filter(visible)
+                .collect::<Vec<_>>();
+            if methods.is_empty() {
+                let mut declarations = HashSet::new();
+                for (_, owner) in self
+                    .imports
+                    .iter()
+                    .filter(|(key, _)| key.starts_with("*::"))
+                {
+                    if let Some(class) = self.classes.get(owner) {
+                        let imported = if class
+                            .library
+                            .as_ref()
+                            .is_some_and(|library| library.package.is_some())
+                        {
+                            None
+                        } else {
+                            self.classpath
+                                .static_wildcard_owner(owner, 0)
+                                .ok()
+                                .flatten()
+                        };
+                        let class = imported.as_ref().unwrap_or(class);
+                        let originals = self.classpath.methods(owner).unwrap_or_default();
+                        for method in class.methods.iter().filter(|method| {
+                            visible(method)
+                                && !self.imports.iter().any(|(alias, binding)| {
+                                    alias != name
+                                        && !alias.starts_with("*::")
+                                        && binding == &format!("{owner}::{name}")
+                                })
+                        }) {
+                            let declaring = originals
+                                .iter()
+                                .find(|original| {
+                                    original.name == method.name
+                                        && original.descriptor == method.descriptor
+                                })
+                                .map_or(method.owner.as_str(), |original| original.owner.as_str());
+                            if declarations.insert((
+                                declaring.to_owned(),
+                                method.name.clone(),
+                                method.descriptor.clone(),
+                            )) {
+                                methods.push(method.clone());
+                            }
+                        }
+                    }
+                }
+            }
+            if !methods.is_empty() {
+                methods.sort_by(|a, b| {
+                    (&a.owner, &a.name, &a.descriptor).cmp(&(&b.owner, &b.name, &b.descriptor))
+                });
+                methods.dedup_by(|a, b| {
+                    a.owner == b.owner && a.name == b.name && a.descriptor == b.descriptor
+                });
+                return methods;
+            }
+            if self.callable_name_was_renamed(name) {
+                return Vec::new();
+            }
             for package in DEFAULT_PACKAGES {
                 if let Ok(package_methods) = self.classpath.package_methods(package, name) {
                     methods.extend(package_methods.into_iter().filter(|method| {
@@ -661,7 +775,34 @@ impl Checker<'_> {
             return methods;
         };
         let Some((owner, source_name)) = binding.rsplit_once("::") else {
-            return Vec::new();
+            let (package, source_name) = binding.rsplit_once('/').unwrap_or(("", binding.as_str()));
+            if self.classes.get(binding).is_some_and(|class| {
+                !class.kotlin_class
+                    || class.access & (0x200 | 0x400) == 0
+                        && class
+                            .library
+                            .as_ref()
+                            .is_some_and(|library| !library.type_parameters.is_empty())
+            }) {
+                return Vec::new();
+            }
+            return self
+                .classpath
+                .package_methods(package, source_name)
+                .unwrap_or_default()
+                .into_iter()
+                .filter(|method| {
+                    method.access & 8 != 0
+                        && (method.access & 1 != 0
+                            || self
+                                .classpath
+                                .file_private_visible(&self.lambda_owner, method))
+                        && (!method.kotlin_internal
+                            || self.classpath.internal_visible(&method.owner))
+                        && (method.source_name() == source_name
+                            || method.source_property.as_deref() == Some(source_name))
+                })
+                .collect();
         };
         let package = self
             .classes
@@ -696,6 +837,18 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Value> {
+        if method.name == "<init>" {
+            let normalized = self.vararg_arguments(&method, args, offset)?;
+            let (params, defaults) = Self::method_parameters(&method)?;
+            return self.constructor_call(
+                &method.owner,
+                &params,
+                &defaults,
+                &normalized,
+                self.method_named(&method),
+                offset,
+            );
+        }
         if method
             .library
             .as_ref()
@@ -1234,6 +1387,11 @@ impl Checker<'_> {
                 )
             })?;
             Some(self.classpath.load(owner)?)
+        } else if let Some(crate::classpath::ValueSymbol::Classifier(class)) = self
+            .classpath
+            .value_symbol(&self.lambda_owner, name, offset)?
+        {
+            Some(*class)
         } else {
             self.classpath
                 .load(&source_name)
@@ -1263,6 +1421,11 @@ impl Checker<'_> {
                     "INACCESSIBLE_CONSTRUCTOR",
                 ),
             );
+        }
+        if let Some(value) =
+            self.sam_constructor(&class, Type::Java(class.name.clone()), args, offset)?
+        {
+            return Ok(Some(value));
         }
         if class.access & (0x200 | 0x400) != 0 {
             return Err(Diagnostic::new(
@@ -1423,6 +1586,9 @@ impl Checker<'_> {
                 ),
             );
         }
+        if !self.library_call_candidates(name).is_empty() {
+            return Ok(None);
+        }
         let ty = if alias {
             self.resolve(&expanded, offset)?
         } else {
@@ -1464,6 +1630,9 @@ impl Checker<'_> {
                 crate::DiagnosticKind::UnsupportedLanguage,
                 "ANNOTATION_INSTANCE_CONSTRUCTION_UNSUPPORTED",
             ));
+        }
+        if let Some(value) = self.sam_constructor(&class, ty.clone(), args, offset)? {
+            return Ok(Some(value));
         }
         if class.access & (0x200 | 0x400) != 0 {
             return Err(Diagnostic::new(
@@ -1882,6 +2051,11 @@ impl Checker<'_> {
                 crate::DiagnosticKind::UnsupportedLanguage,
                 "ANNOTATION_INSTANCE_CONSTRUCTION_UNSUPPORTED",
             ));
+        }
+        if let Some(value) =
+            self.sam_constructor(&class, Type::Java(class.name.clone()), args, offset)?
+        {
+            return Ok(Some(value));
         }
         if class.access & (0x200 | 0x400) != 0 {
             return Err(Diagnostic::new(

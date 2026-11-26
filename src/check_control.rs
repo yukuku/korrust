@@ -183,7 +183,10 @@ impl Checker<'_> {
                         return Err(Diagnostic::new(offset, "Catch type must inherit Throwable"));
                     }
                     self.scopes.push(HashMap::new());
-                    let slot = self.declare(&catch.name, ty, false, offset)?;
+                    let slot = match &catch.name {
+                        Some(name) => self.declare(name, ty, false, offset)?,
+                        None => self.allocate_slot(offset)?,
+                    };
                     let (catch_body, catch_result) =
                         self.result_block(&catch.body, offset, expected)?;
                     self.scopes.pop();
@@ -546,7 +549,12 @@ pub(super) fn expression_terminates(expr: &Expr) -> bool {
 
 fn statements_terminate(body: &[syntax::Statement]) -> bool {
     body.last().is_some_and(|statement| match &statement.kind {
-        StatementKind::Return(_) | StatementKind::Throw(_) => true,
+        StatementKind::Return(_)
+        | StatementKind::Throw(_)
+        | StatementKind::Break
+        | StatementKind::Continue
+        | StatementKind::BreakLabel(_)
+        | StatementKind::ContinueLabel(_) => true,
         StatementKind::Expression(expr) => expression_terminates(expr),
         StatementKind::Block(body) => statements_terminate(body),
         StatementKind::If(_, yes, no) => statements_terminate(yes) && statements_terminate(no),

@@ -182,6 +182,7 @@ fn boxed_owner(ty: &Type) -> &'static str {
         Type::Short => "java/lang/Short",
         Type::Char => "java/lang/Character",
         Type::Boolean => "java/lang/Boolean",
+        Type::Unit => "kotlin/Unit",
         _ => "java/lang/Object",
     }
 }
@@ -195,6 +196,7 @@ fn boxed_descriptor(ty: &Type) -> &'static str {
         Type::Short => "Ljava/lang/Short;",
         Type::Char => "Ljava/lang/Character;",
         Type::Boolean => "Ljava/lang/Boolean;",
+        Type::Unit => "Lkotlin/Unit;",
         _ => "Ljava/lang/Object;",
     }
 }
@@ -818,7 +820,7 @@ struct Code<'a> {
     bytes: Vec<u8>,
     labels: Vec<Option<usize>>,
     branches: Vec<(usize, usize)>,
-    loops: Vec<(usize, usize)>,
+    loops: Vec<(usize, usize, usize)>,
     loop_finally_depths: Vec<usize>,
     loop_names: Vec<Option<String>>,
     pending_loop_name: Option<String>,
@@ -826,6 +828,7 @@ struct Code<'a> {
     exceptions: Vec<ExceptionHandler>,
     temporary_count: u16,
     temporary_patches: Vec<(usize, u16)>,
+    jump_cleanups: Vec<JumpCleanup>,
     max_stack: usize,
     lambdas: &'a [crate::check::LambdaDecl],
     inline_local_maps: Vec<Vec<u16>>,
@@ -838,7 +841,7 @@ struct FinallyFrame {
     exclusions: Rc<RefCell<Vec<(usize, usize)>>>,
     local_maps: Vec<Vec<u16>>,
     inline_returns: Vec<(usize, usize)>,
-    loops: Vec<(usize, usize)>,
+    loops: Vec<(usize, usize, usize)>,
     loop_depths: Vec<usize>,
     loop_names: Vec<Option<String>>,
 }
@@ -970,7 +973,7 @@ impl Code<'_> {
         Ok(())
     }
     fn push_loop(&mut self, next: usize, end: usize, name: Option<String>) {
-        self.loops.push((next, end));
+        self.loops.push((next, end, self.bytes.len()));
         self.loop_finally_depths.push(self.finalizers.len());
         self.loop_names.push(name);
     }
@@ -1038,7 +1041,27 @@ impl Code<'_> {
         self.max_stack += 2;
         Ok(())
     }
-    fn loop_exit(&mut self, label: Option<&str>, is_continue: bool) -> Result<()> {
+    fn abrupt_value(&mut self, body: &[Statement]) -> Result<()> {
+        let Some((jump, prefix)) = body.split_last() else {
+            return Ok(());
+        };
+        let (label, is_continue) = match jump {
+            Statement::Break => (None, false),
+            Statement::Continue => (None, true),
+            Statement::BreakLabel(label) => (Some(label.as_str()), false),
+            Statement::ContinueLabel(label) => (Some(label.as_str()), true),
+            _ => return self.block(body),
+        };
+        self.block(prefix)?;
+        self.loop_exit(label, is_continue, true)
+    }
+
+    fn loop_exit(
+        &mut self,
+        label: Option<&str>,
+        is_continue: bool,
+        expression: bool,
+    ) -> Result<()> {
         let index = if let Some(label) = label {
             self.loop_names
                 .iter()
@@ -1047,6 +1070,16 @@ impl Code<'_> {
             self.loops.len().checked_sub(1)
         }
         .ok_or_else(|| failure("Loop control requires an enclosing matching loop"))?;
+        if expression {
+            let start = self.bytes.len();
+            let end = start + self.max_stack.max(1);
+            self.bytes.resize(end, 0);
+            self.jump_cleanups.push(JumpCleanup {
+                start,
+                end,
+                loop_entry: self.loops[index].2,
+            });
+        }
         self.emit_finalizers(self.loop_finally_depths[index])?;
         self.branch(
             0xa7,
@@ -1226,10 +1259,10 @@ impl Code<'_> {
         Ok(())
     }
     fn box_value(&mut self, ty: &Type) -> Result<()> {
+        if ty.base() == &Type::Unit {
+            return self.field_reference(0xb2, "kotlin/Unit", "INSTANCE", "Lkotlin/Unit;");
+        }
         if self.coroutine {
-            if ty == &Type::Unit {
-                return self.field_reference(0xb2, "kotlin/Unit", "INSTANCE", "Lkotlin/Unit;");
-            }
             let suffix = match ty.base() {
                 Type::Int => "Int",
                 Type::Long => "Long",
@@ -1256,6 +1289,10 @@ impl Code<'_> {
         )
     }
     fn unbox_value(&mut self, ty: &Type) -> Result<()> {
+        if ty.base() == &Type::Unit {
+            self.bytes.push(0x57);
+            return Ok(());
+        }
         let name = match ty {
             Type::Int => "intValue",
             Type::Long => "longValue",
@@ -1446,7 +1483,7 @@ impl Code<'_> {
                     .extend([store_opcode(&initializer.ty), self.local_slot(*slot)?]);
                 return self.boxed_value(body);
             }
-            ValueKind::Abrupt(body) => return self.block(body),
+            ValueKind::Abrupt(body) => return self.abrupt_value(body),
             ValueKind::Unbox(asserted) => {
                 if let ValueKind::RequireNotNull(operand) = &asserted.kind {
                     if self.erased_generic_value(operand)? {
@@ -1926,7 +1963,7 @@ impl Code<'_> {
                     )?;
                 }
             }
-            ValueKind::Abrupt(body) => self.block(body)?,
+            ValueKind::Abrupt(body) => self.abrupt_value(body)?,
             ValueKind::DefaultCall(id, args, mask) => {
                 self.max_stack = self
                     .max_stack
@@ -2755,10 +2792,10 @@ impl Code<'_> {
                     }
                     self.bytes.push(array_store_opcode(&array.ty)?);
                 }
-                Statement::Break => self.loop_exit(None, false)?,
-                Statement::Continue => self.loop_exit(None, true)?,
-                Statement::BreakLabel(label) => self.loop_exit(Some(label), false)?,
-                Statement::ContinueLabel(label) => self.loop_exit(Some(label), true)?,
+                Statement::Break => self.loop_exit(None, false, false)?,
+                Statement::Continue => self.loop_exit(None, true, false)?,
+                Statement::BreakLabel(label) => self.loop_exit(Some(label), false, false)?,
+                Statement::ContinueLabel(label) => self.loop_exit(Some(label), true, false)?,
                 Statement::Labeled { label, body } => {
                     let previous = self.pending_loop_name.replace(label.clone());
                     self.block(body)?;
@@ -2982,7 +3019,9 @@ impl Code<'_> {
             .checked_add(self.temporary_count)
             .ok_or_else(|| failure("JVM local limit exceeded"))?;
         let exceptions = std::mem::take(&mut self.exceptions);
+        let jump_cleanups = std::mem::take(&mut self.jump_cleanups);
         Ok(SimpleCode {
+            jump_cleanups,
             bytes: self.finish()?,
             exceptions,
             locals,
@@ -3060,6 +3099,7 @@ pub(crate) fn emit_with_bridges(
             exceptions: Vec::new(),
             temporary_count: 0,
             temporary_patches: Vec::new(),
+            jump_cleanups: Vec::new(),
             lambdas: &module.lambdas,
             inline_local_maps: Vec::new(),
             inline_returns: Vec::new(),
@@ -3172,6 +3212,7 @@ pub(crate) fn emit_with_bridges(
             exceptions: Vec::new(),
             temporary_count: 0,
             temporary_patches: Vec::new(),
+            jump_cleanups: Vec::new(),
             lambdas: &module.lambdas,
             inline_local_maps: Vec::new(),
             inline_returns: Vec::new(),
@@ -3220,7 +3261,14 @@ pub(crate) fn emit_with_bridges(
     Ok(out)
 }
 
+struct JumpCleanup {
+    start: usize,
+    end: usize,
+    loop_entry: usize,
+}
+
 struct SimpleCode {
+    jump_cleanups: Vec<JumpCleanup>,
     bytes: Vec<u8>,
     exceptions: Vec<ExceptionHandler>,
     max_stack: u16,
@@ -3230,6 +3278,7 @@ struct SimpleCode {
 impl SimpleCode {
     fn new(max_stack: u16, locals: u16) -> Self {
         Self {
+            jump_cleanups: Vec::new(),
             bytes: Vec::new(),
             exceptions: Vec::new(),
             max_stack,
@@ -3262,10 +3311,13 @@ fn simple_method(
     flags: u16,
     name: &str,
     descriptor: &str,
-    code: SimpleCode,
+    mut code: SimpleCode,
     signature: Option<&str>,
     not_null: bool,
 ) -> Result<Vec<u8>> {
+    if !code.jump_cleanups.is_empty() {
+        frames::clean_jump_stacks(pool, &mut code, descriptor, flags & 8 != 0)?;
+    }
     if code.bytes.len() > 65535 {
         return Err(failure("JVM method code size limit exceeded"));
     }
@@ -3352,6 +3404,7 @@ fn checked_method(
         exceptions: Vec::new(),
         temporary_count: 0,
         temporary_patches: Vec::new(),
+        jump_cleanups: Vec::new(),
         lambdas,
         inline_local_maps: Vec::new(),
         inline_returns: Vec::new(),
@@ -3641,6 +3694,7 @@ fn interface_default_function(
         exceptions: Vec::new(),
         temporary_count: 0,
         temporary_patches: Vec::new(),
+        jump_cleanups: Vec::new(),
         lambdas,
         inline_local_maps: Vec::new(),
         inline_returns: Vec::new(),
@@ -4541,6 +4595,7 @@ fn emit_class_with(
             exceptions: Vec::new(),
             temporary_count: 0,
             temporary_patches: Vec::new(),
+            jump_cleanups: Vec::new(),
             lambdas,
             inline_local_maps: Vec::new(),
             inline_returns: Vec::new(),
@@ -4767,6 +4822,7 @@ fn emit_class_with(
             exceptions: Vec::new(),
             temporary_count: 0,
             temporary_patches: Vec::new(),
+            jump_cleanups: Vec::new(),
             lambdas,
             inline_local_maps: Vec::new(),
             inline_returns: Vec::new(),
@@ -4959,6 +5015,7 @@ fn emit_class_with(
             exceptions: Vec::new(),
             temporary_count: 0,
             temporary_patches: Vec::new(),
+            jump_cleanups: Vec::new(),
             lambdas,
             inline_local_maps: Vec::new(),
             inline_returns: Vec::new(),
@@ -5110,6 +5167,7 @@ fn emit_class_with(
             exceptions: Vec::new(),
             temporary_count: 0,
             temporary_patches: Vec::new(),
+            jump_cleanups: Vec::new(),
             lambdas,
             inline_local_maps: Vec::new(),
             inline_returns: Vec::new(),

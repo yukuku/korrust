@@ -133,13 +133,13 @@ class Check:
         declared=[Path(p) for p in task['compile_classpath']]
         available=[p for p in declared if p.exists()]
         self.report['app_prerequisites']={'report':str(self.args.app_prerequisites),'report_sha256':sha(self.args.app_prerequisites),'status':self.app_prerequisites['status'],'capture':str(self.app_capture_path),'capture_sha256':sha(self.app_capture_path),'actual_compiler_options':task['compiler_options'],'actual_plugin_classpath':task['compiler_plugin_classpath'],'declared_classpath':list(map(str,declared)),'unavailable_empty_or_optional_classpath':list(map(str,[p for p in declared if not p.exists()])),'existing_classpath_files_sha256':{str(p):sha(p) for p in available if p.is_file()},'assessment_scope':'Candidate parser-stage first blocker only; original complete production Kotlin+Java compilation is established in the linked report. Captured JVM21+plugins are separate from the JVM1.8 family fixture profile.'}
-        for source,code in zip(APPS,['DISCARD_CATCH_BINDING_UNSUPPORTED','DATA_OBJECT_UNSUPPORTED']):
+        for source in APPS:
             snapshot_key=str(source).split('/benchmarks/sources/androidbible/',1)[1]
             recorded=self.app_prerequisites['inputs']['source_files_sha256'][snapshot_key]
             if sha(source)!=recorded: raise AssertionError('App prerequisite source mismatch '+str(source))
             actual=self.run('Actual unchanged AndroidBible parser probe with real captured dependencies '+source.name,[self.compiler,source,'--diagnostic-format','json','-cp',cp(*available),'-d',self.work/('app-'+source.stem)],accepted=(0,1))
             diagnostics=[json.loads(line) for line in actual.stderr.splitlines() if line.startswith('{')]
-            self.report['cases'].append({'id':'app/'+source.stem,'outcome':'unsupported_language' if actual.returncode and diagnostics and diagnostics[0].get('category')=='unsupported_language' and diagnostics[0].get('code')==code else 'unclassified_compilation_failure','acceptance_scope':'external_app_assessment','original':relative(source),'source_sha256':sha(source),'diagnostics':diagnostics,'oracle_scope':'Pinned production source verified separately by captured actual Android build; standalone candidate parser stops before dependency resolution. No wholefile pass claimed.'})
+            self.report['cases'].append({'id':'app/'+source.stem,'outcome':'passed' if actual.returncode==0 else diagnostics[0].get('category','unclassified_compilation_failure') if diagnostics else 'unclassified_compilation_failure','acceptance_scope':'external_app_assessment','original':relative(source),'source_sha256':sha(source),'diagnostics':diagnostics,'oracle_scope':'Pinned production source verified separately by captured actual Android build; this probe records the standalone compiler result.'})
 
     def finish(self):
         changed=[path for path,checksum in self.frozen.items() if sha(ROOT/path)!=checksum]

@@ -48,7 +48,18 @@ pub(super) fn check_exposed_types(source: &syntax::Module, classpath: &Classpath
         if private || !contains_anonymous(ty, classpath) {
             return Ok(());
         }
-        if matches!(ty, Type::Java(_)) {
+        if let Type::Java(owner) = ty {
+            if classpath
+                .load(owner)
+                .ok()
+                .and_then(|class| class.library)
+                .is_some_and(|class| class.supertypes.len() == 1)
+            {
+                return Err(unsupported(
+                    offset,
+                    "Public anonymous objects with own members require an explicit result type in the supported subset",
+                ));
+            }
             Err(Diagnostic::new(
                 offset,
                 "Public anonymous objects with multiple supertypes require an explicit result type",
@@ -128,6 +139,8 @@ impl Checker<'_> {
         &mut self,
         supertypes: &[(Type, Option<Vec<Expr>>)],
         methods: &[syntax::Function],
+        own_methods: &[syntax::Function],
+        properties: &[syntax::PropertyDecl],
         offset: usize,
     ) -> Result<Value> {
         let owner = format!("{}$object${offset}", self.lambda_owner);
@@ -324,15 +337,14 @@ impl Checker<'_> {
         }
         if inherited.iter().any(|method| {
             method.access & 0x0400 != 0
-                && (method.source_property.is_some()
-                    || method
-                        .library
-                        .as_ref()
-                        .is_some_and(|library| !library.type_parameters.is_empty()))
+                && method
+                    .library
+                    .as_ref()
+                    .is_some_and(|library| !library.type_parameters.is_empty())
         }) {
             return Err(unsupported(
                 offset,
-                "Anonymous inherited properties and generic methods are unsupported",
+                "Anonymous inherited generic methods are unsupported",
             ));
         }
         self.classpath.register_source(crate::classpath::JavaClass {
@@ -363,9 +375,150 @@ impl Checker<'_> {
         self.classpath
             .register_lexical_parent(&owner, &self.lambda_owner);
         let interface = primary.unwrap();
+        let mut property_fields = HashMap::new();
+        let mut sources = methods
+            .iter()
+            .cloned()
+            .map(|source| (source, true, None))
+            .chain(
+                own_methods
+                    .iter()
+                    .cloned()
+                    .map(|source| (source, false, None)),
+            )
+            .collect::<Vec<_>>();
+        let mut initializer_body = Vec::new();
+        for property in properties {
+            if property.receiver.is_some()
+                || property.delegate.is_some()
+                || property.lateinit
+                || property.new_visibility()
+                || property.protected
+                || !property.annotations.is_empty()
+            {
+                return Err(unsupported(
+                    property.offset,
+                    "Anonymous property delegates, annotations, and accessor visibility are unsupported",
+                ));
+            }
+            let ty = if !property.inferred {
+                self.resolve(&property.ty, property.offset)?
+            } else if let Some(inherited) = inherited.iter().find(|method| {
+                method.source_property.as_deref() == Some(&property.name)
+                    && class_method_types(method).is_ok_and(|(params, _)| params.is_empty())
+            }) {
+                class_method_types(inherited)?.1
+            } else if let Some(value) = &property.initializer {
+                let count = self.lambdas.borrow().len();
+                let result = self.clone().value(value);
+                self.lambdas.borrow_mut().truncate(count);
+                result?.ty
+            } else {
+                return Err(unsupported(
+                    property.offset,
+                    "Anonymous computed property inference is unsupported",
+                ));
+            };
+            if ty == Type::Unit {
+                return Err(unsupported(
+                    property.offset,
+                    "Anonymous Unit properties are unsupported",
+                ));
+            }
+            let backing = format!("$property${}", property.name);
+            if let Some(value) = &property.initializer {
+                property_fields.insert(backing.clone(), ty.clone());
+                initializer_body.push(syntax::Statement {
+                    offset: property.offset,
+                    kind: StatementKind::Assign(backing.clone(), value.clone()),
+                });
+            }
+            for setter in [false, true]
+                .into_iter()
+                .filter(|setter| !*setter || property.mutable)
+            {
+                let params = if setter {
+                    vec![(
+                        property
+                            .setter
+                            .as_ref()
+                            .map_or("value", |(name, _)| name)
+                            .to_string(),
+                        ty.clone(),
+                    )]
+                } else {
+                    Vec::new()
+                };
+                let body = if setter {
+                    property
+                        .setter
+                        .as_ref()
+                        .map(|(_, body)| body.clone())
+                        .unwrap_or_else(|| {
+                            vec![syntax::Statement {
+                                offset: property.offset,
+                                kind: StatementKind::Assign(
+                                    backing.clone(),
+                                    Expr {
+                                        offset: property.offset,
+                                        kind: ExprKind::Name("value".into()),
+                                    },
+                                ),
+                            }]
+                        })
+                } else if !property.body.is_empty() {
+                    property.body.clone()
+                } else {
+                    vec![syntax::Statement {
+                        offset: property.offset,
+                        kind: StatementKind::Return(Some(Expr {
+                            offset: property.offset,
+                            kind: ExprKind::Name(backing.clone()),
+                        })),
+                    }]
+                };
+                let name = if setter {
+                    setter_name(&property.name)
+                } else {
+                    getter_name(&property.name)
+                };
+                let is_override = property.is_override
+                    && (!setter
+                        || inherited.iter().any(|method| {
+                            method.source_property.as_deref() == Some(&property.name)
+                                && method.name == name
+                        }));
+                sources.push((
+                    anonymous_function(
+                        name,
+                        params,
+                        if setter { Type::Unit } else { ty.clone() },
+                        body,
+                        property.offset,
+                        property.private,
+                    ),
+                    is_override,
+                    Some(property.name.clone()),
+                ));
+            }
+        }
+        if !initializer_body.is_empty() {
+            sources.push((
+                anonymous_function(
+                    "$initProperties".into(),
+                    Vec::new(),
+                    Type::Unit,
+                    initializer_body,
+                    offset,
+                    true,
+                ),
+                false,
+                None,
+            ));
+        }
         let mut selected = Vec::new();
         let mut seen = HashSet::new();
-        for source in methods {
+        for (source, is_override, property) in &sources {
             if source.suspend_
                 || source.inline
                 || source.vararg
@@ -407,6 +560,59 @@ impl Checker<'_> {
                     })
                 })
                 .collect::<Vec<_>>();
+            if !*is_override {
+                if !candidates.is_empty() {
+                    return Err(Diagnostic::new(
+                        source.offset,
+                        "Anonymous member hides an inherited member without override",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "ANONYMOUS_OVERRIDE_REQUIRED",
+                    ));
+                }
+                if source.result_inferred {
+                    return Err(unsupported(
+                        source.offset,
+                        "Own anonymous method result inference is unsupported",
+                    ));
+                }
+                let result = self.resolve(&source.result, source.offset)?;
+                let method = JavaMethod {
+                    owner: owner.clone(),
+                    name: source.name.clone(),
+                    descriptor: format!(
+                        "({}){}",
+                        params.iter().map(|p| p.1.descriptor()).collect::<String>(),
+                        result.descriptor()
+                    ),
+                    access: if source.private { 2 } else { 1 },
+                    unsupported: false,
+                    source_property: property.clone(),
+                    kotlin_params: Some(
+                        params
+                            .iter()
+                            .map(|(name, ty)| (name.clone(), ty.clone(), false))
+                            .collect(),
+                    ),
+                    kotlin_result: Some(result.clone()),
+                    kotlin_internal: false,
+                    library: None,
+                };
+                if !seen.insert((method.name.clone(), method.descriptor.clone())) {
+                    return Err(Diagnostic::new(source.offset, "Duplicate anonymous member"));
+                }
+                selected.push((
+                    source,
+                    params,
+                    result,
+                    method,
+                    Vec::new(),
+                    property.clone(),
+                    false,
+                ));
+                continue;
+            }
             if candidates.is_empty()
                 || candidates.iter().any(|method| {
                     method.name != candidates[0].name
@@ -433,6 +639,16 @@ impl Checker<'_> {
                 .with_kind(
                     crate::DiagnosticKind::InvalidKotlin,
                     "ANONYMOUS_OVERRIDE_MISMATCH",
+                ));
+            }
+            if source.private {
+                return Err(Diagnostic::new(
+                    source.offset,
+                    "Anonymous overrides cannot weaken member visibility",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "ANONYMOUS_OVERRIDE_VISIBILITY_INVALID",
                 ));
             }
             let method = candidates[0].clone();
@@ -503,8 +719,28 @@ impl Checker<'_> {
                     "Anonymous generic Unit results require unsupported boxed Unit overrides",
                 ));
             }
-            selected.push((source, params, result, method, overrides));
+            selected.push((
+                source,
+                params,
+                result,
+                method,
+                overrides,
+                property.clone(),
+                true,
+            ));
         }
+        let mut anonymous_class = self.classpath.load(&owner)?;
+        anonymous_class.methods = selected
+            .iter()
+            .map(|(_, _, _, method, _, property, _)| {
+                let mut method = method.clone();
+                method.owner = owner.clone();
+                method.access = (method.access & !0x0400) | 0x0010;
+                method.source_property = property.clone();
+                method
+            })
+            .collect();
+        self.classpath.register_source(anonymous_class);
         if conflicts.iter().any(|signature| !seen.contains(signature)) {
             return Err(unsupported(
                 offset,
@@ -529,7 +765,7 @@ impl Checker<'_> {
             }
         }
         let mut names = HashSet::new();
-        for source in methods {
+        for (source, _, _) in &sources {
             let parameters = source
                 .params
                 .iter()
@@ -549,7 +785,9 @@ impl Checker<'_> {
             ));
         }
         names.retain(|name| {
-            !name.starts_with("this@")
+            !properties.iter().any(|property| property.name == *name)
+                && !own_methods.iter().any(|method| method.name == *name)
+                && !name.starts_with("this@")
                 && (self.local(name).is_some() || self.captured.contains_key(name))
         });
         let mut names = names.into_iter().collect::<Vec<_>>();
@@ -651,9 +889,36 @@ impl Checker<'_> {
         }
         let mut implementations = Vec::new();
         let mut bridges = Vec::new();
-        let anonymous_fields = HashMap::new();
-        let anonymous_members = HashMap::new();
-        for (source, params, result, method, overrides) in selected {
+        let anonymous_fields = property_fields.clone();
+        let anonymous_initialization_fields =
+            property_fields.keys().cloned().collect::<HashSet<_>>();
+        let anonymous_mutable_fields = properties
+            .iter()
+            .filter(|property| property.mutable)
+            .map(|property| format!("$property${}", property.name))
+            .collect::<HashSet<_>>();
+        let mut anonymous_members = HashMap::new();
+        for method in self.classpath.load(&owner)?.methods.iter() {
+            anonymous_members.insert(
+                format!("{}{}", method.name, method.descriptor),
+                method.clone(),
+            );
+            if let Some(property) = &method.source_property {
+                let prefix = if class_method_types(method)?.0.is_empty() {
+                    "#get:"
+                } else {
+                    "#set:"
+                };
+                anonymous_members.insert(format!("{prefix}{property}"), method.clone());
+            }
+        }
+        for (source, params, result, method, overrides, property, is_override) in selected {
+            let mut method_members = anonymous_members.clone();
+            if let Some(property) = &property {
+                let mut backing = method.clone();
+                backing.name = format!("$property${property}");
+                method_members.insert("#backing".into(), backing);
+            }
             let mut checker = Checker {
                 inline_argument_modes: Vec::new(),
                 inline_analysis: false,
@@ -680,7 +945,11 @@ impl Checker<'_> {
                 constructor: self.constructor,
                 defaults: self.defaults,
                 function_names: self.function_names,
-                mutable_fields: self.mutable_fields,
+                mutable_fields: if source.name == "$initProperties" {
+                    &anonymous_initialization_fields
+                } else {
+                    &anonymous_mutable_fields
+                },
                 extensions: self.extensions,
                 classes: self.classes,
                 imports: self.imports,
@@ -688,25 +957,13 @@ impl Checker<'_> {
                 source_type_params: self.source_type_params,
                 source_infix: self.source_infix,
                 source_operator: self.source_operator,
-                dispatch_receiver: if parent != "java/lang/Object" {
-                    Some(Local {
-                        slot: 0,
-                        ty: Type::Java(owner.clone()),
-                        mutable: false,
-                    })
-                } else {
-                    None
-                },
-                fields: if parent == "java/lang/Object" {
-                    self.fields
-                } else {
-                    &anonymous_fields
-                },
-                members: if parent == "java/lang/Object" {
-                    self.members
-                } else {
-                    &anonymous_members
-                },
+                dispatch_receiver: Some(Local {
+                    slot: 0,
+                    ty: Type::Java(owner.clone()),
+                    mutable: false,
+                }),
+                fields: &anonymous_fields,
+                members: &method_members,
                 companion_fields: self.companion_fields,
                 functions: self.functions,
                 object_methods: self.object_methods,
@@ -736,7 +993,7 @@ impl Checker<'_> {
                 checker.declare(name, ty.clone(), false, source.offset)?;
             }
             let mut setup = Vec::new();
-            for (dispatch, name, ty, labels) in &receiver_fields {
+            for (_, name, ty, labels) in &receiver_fields {
                 let slot = checker.allocate_typed_slot(ty, offset)?;
                 checker.initialized.insert(slot);
                 let local = Local {
@@ -744,11 +1001,7 @@ impl Checker<'_> {
                     ty: ty.clone(),
                     mutable: false,
                 };
-                if *dispatch && parent == "java/lang/Object" {
-                    checker.dispatch_receiver = Some(local.clone());
-                } else {
-                    checker.extension_receivers.push(local.clone());
-                }
+                checker.extension_receivers.push(local.clone());
                 for label in labels {
                     checker.receiver_labels.insert(label.clone(), local.clone());
                 }
@@ -880,8 +1133,8 @@ impl Checker<'_> {
                 type_params: Vec::new(),
                 defaults: params.iter().map(|_| None).collect(),
                 name: source.name.clone(),
-                private: false,
-                is_override: true,
+                private: source.private,
+                is_override,
                 params,
                 result,
                 locals: checker.next,
@@ -919,10 +1172,13 @@ impl Checker<'_> {
                         .is_some_and(|library| !library.abstract_)
             })
             .collect();
+        let mut property_fields = property_fields.into_iter().collect::<Vec<_>>();
+        property_fields.sort_by(|a, b| a.0.cmp(&b.0));
         self.lambdas.borrow_mut().push(LambdaDecl {
             anonymous_methods: Some(implementations),
             anonymous_super: Some(AnonymousSuper {
                 supertypes: resolved_supertypes,
+                property_fields,
                 bridges,
                 owner: parent,
                 descriptor: super_descriptor,
@@ -936,7 +1192,7 @@ impl Checker<'_> {
             interface: None,
         });
         Ok(Value {
-            ty: if supertypes.len() == 1 {
+            ty: if supertypes.len() == 1 && properties.is_empty() && own_methods.is_empty() {
                 interface
             } else {
                 Type::Java(owner.clone())
@@ -946,5 +1202,38 @@ impl Checker<'_> {
                 captures: values,
             },
         })
+    }
+}
+
+fn anonymous_function(
+    name: String,
+    params: Vec<(String, Type)>,
+    result: Type,
+    body: Vec<syntax::Statement>,
+    offset: usize,
+    private: bool,
+) -> syntax::Function {
+    syntax::Function {
+        suspend_: false,
+        inline: false,
+        parameter_modes: Vec::new(),
+        extension_property: None,
+        param_annotations: vec![Vec::new(); params.len()],
+        annotations: Vec::new(),
+        name,
+        offset,
+        private,
+        protected: false,
+        internal: false,
+        infix: false,
+        operator: false,
+        vararg: false,
+        receiver: None,
+        type_params: Vec::new(),
+        defaults: vec![None; params.len()],
+        params,
+        result,
+        result_inferred: false,
+        body,
     }
 }

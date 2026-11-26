@@ -1,0 +1,63 @@
+$ /workspace/korrust-setup/jdk-21/bin/javap -public -s -v -classpath /workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate star.consumer.DuplicateKt
+Classfile /workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate/star/consumer/DuplicateKt.class
+  Last modified Nov 26, 2026; size 415 bytes
+  SHA-256 checksum c2f9d0ab84fd73903c64749f6c92dde62cefdb12f03d5c385a9cbaf543274d99
+  Compiled from "Duplicate.kt"
+public final class star.consumer.DuplicateKt
+  minor version: 0
+  major version: 49
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // star/consumer/DuplicateKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 1, attributes: 2
+Constant pool:
+   #1 = Utf8               star/consumer/DuplicateKt
+   #2 = Class              #1             // star/consumer/DuplicateKt
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               SourceFile
+   #6 = Utf8               Duplicate.kt
+   #7 = Utf8               star/library/First
+   #8 = Class              #7             // star/library/First
+   #9 = Utf8               choose
+  #10 = Utf8               (I)I
+  #11 = NameAndType        #9:#10         // choose:(I)I
+  #12 = Methodref          #8.#11         // star/library/First.choose:(I)I
+  #13 = Utf8               duplicate
+  #14 = Utf8               ()I
+  #15 = Utf8               Code
+  #16 = Utf8               Lkotlin/Metadata;
+  #17 = Utf8               mv
+  #18 = Integer            2
+  #19 = Integer            3
+  #20 = Integer            0
+  #21 = Utf8               k
+  #22 = Utf8               xi
+  #23 = Integer            48
+  #24 = Utf8               d1
+  #25 = Utf8               \u0000\u0004\n\u0002\b\u0003\u001a\u000fH\u0006\u0010\u0000\u001a\u00020\u0001¢\u0006\u0004\b\u0000\u0010\u0002
+  #26 = Utf8               d2
+  #27 = Utf8               kotlin/Int
+  #28 = Utf8               RuntimeVisibleAnnotations
+{
+  public static final int duplicate();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: bipush        13
+         2: invokestatic  #12                 // Method star/library/First.choose:(I)I
+         5: ireturn
+         6: aconst_null
+         7: athrow
+}
+SourceFile: "Duplicate.kt"
+RuntimeVisibleAnnotations:
+  0: #16(#17=[I#18,I#19,I#20],#21=I#18,#22=I#23,#24=[s#25],#26=[s#13,s#27,s#14])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000\u0004\n\u0002\b\u0003\u001a\u000fH\u0006\u0010\u0000\u001a\u00020\u0001¢\u0006\u0004\b\u0000\u0010\u0002"]
+      d2=["duplicate","kotlin/Int","()I"]
+    )

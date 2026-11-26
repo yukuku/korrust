@@ -147,7 +147,8 @@ impl Checker<'_> {
             _ => Err(Diagnostic::new(
                 offset,
                 "Ambiguous overload: no unique most specific declaration",
-            )),
+            )
+            .with_kind(crate::DiagnosticKind::InvalidKotlin, "AMBIGUOUS_OVERLOAD")),
         }
     }
 }

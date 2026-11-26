@@ -1,0 +1,102 @@
+$ /workspace/korrust-setup/jdk-21/bin/javap -public -s -v -classpath /workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate star.consumer.OverloadsKt
+Classfile /workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate/star/consumer/OverloadsKt.class
+  Last modified Nov 26, 2026; size 639 bytes
+  SHA-256 checksum 4cbe99d814450fd8e8de0c01c4f5a40736aaa3f5bde6f76dec07e3c7b16a997e
+  Compiled from "Overloads.kt"
+public final class star.consumer.OverloadsKt
+  minor version: 0
+  major version: 49
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // star/consumer/OverloadsKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 3, attributes: 2
+Constant pool:
+   #1 = Utf8               star/consumer/OverloadsKt
+   #2 = Class              #1             // star/consumer/OverloadsKt
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               SourceFile
+   #6 = Utf8               Overloads.kt
+   #7 = Utf8               star/library/First
+   #8 = Class              #7             // star/library/First
+   #9 = Utf8               choose
+  #10 = Utf8               (I)I
+  #11 = NameAndType        #9:#10         // choose:(I)I
+  #12 = Methodref          #8.#11         // star/library/First.choose:(I)I
+  #13 = Utf8               fromFirst
+  #14 = Utf8               ()I
+  #15 = Utf8               Code
+  #16 = Long               5l
+  #18 = Utf8               star/library/Second
+  #19 = Class              #18            // star/library/Second
+  #20 = Utf8               (J)I
+  #21 = NameAndType        #9:#20         // choose:(J)I
+  #22 = Methodref          #19.#21        // star/library/Second.choose:(J)I
+  #23 = Utf8               fromSecond
+  #24 = Utf8               left
+  #25 = NameAndType        #24:#10        // left:(I)I
+  #26 = Methodref          #8.#25         // star/library/First.left:(I)I
+  #27 = Utf8               right
+  #28 = NameAndType        #27:#10        // right:(I)I
+  #29 = Methodref          #19.#28        // star/library/Second.right:(I)I
+  #30 = Utf8               separate
+  #31 = Utf8               Lkotlin/Metadata;
+  #32 = Utf8               mv
+  #33 = Integer            2
+  #34 = Integer            3
+  #35 = Integer            0
+  #36 = Utf8               k
+  #37 = Utf8               xi
+  #38 = Integer            48
+  #39 = Utf8               d1
+  #40 = Utf8               \u0000\u0004\n\u0002\b\u0005\u001a\u000fH\u0006\u0010\u0000\u001a\u00020\u0001¢\u0006\u0004\b\u0000\u0010\u0002\u001a\u000fH\u0006\u0010\u0003\u001a\u00020\u0001¢\u0006\u0004\b\u0003\u0010\u0002\u001a\u000fH\u0006\u0010\u0004\u001a\u00020\u0001¢\u0006\u0004\b\u0004\u0010\u0002
+  #41 = Utf8               d2
+  #42 = Utf8               kotlin/Int
+  #43 = Utf8               RuntimeVisibleAnnotations
+{
+  public static final int fromFirst();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: iconst_5
+         1: invokestatic  #12                 // Method star/library/First.choose:(I)I
+         4: ireturn
+         5: aconst_null
+         6: athrow
+
+  public static final int fromSecond();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=4, locals=0, args_size=0
+         0: ldc2_w        #16                 // long 5l
+         3: invokestatic  #22                 // Method star/library/Second.choose:(J)I
+         6: ireturn
+         7: aconst_null
+         8: athrow
+
+  public static final int separate();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: iconst_1
+         1: invokestatic  #26                 // Method star/library/First.left:(I)I
+         4: iconst_2
+         5: invokestatic  #29                 // Method star/library/Second.right:(I)I
+         8: iadd
+         9: ireturn
+        10: aconst_null
+        11: athrow
+}
+SourceFile: "Overloads.kt"
+RuntimeVisibleAnnotations:
+  0: #31(#32=[I#33,I#34,I#35],#36=I#33,#37=I#38,#39=[s#40],#41=[s#13,s#42,s#14,s#23,s#30])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000\u0004\n\u0002\b\u0005\u001a\u000fH\u0006\u0010\u0000\u001a\u00020\u0001¢\u0006\u0004\b\u0000\u0010\u0002\u001a\u000fH\u0006\u0010\u0003\u001a\u00020\u0001¢\u0006\u0004\b\u0003\u0010\u0002\u001a\u000fH\u0006\u0010\u0004\u001a\u00020\u0001¢\u0006\u0004\b\u0004\u0010\u0002"]
+      d2=["fromFirst","kotlin/Int","()I","fromSecond","separate"]
+    )
