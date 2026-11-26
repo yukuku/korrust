@@ -1191,6 +1191,7 @@ impl Checker<'_> {
         {
             mask >>= 1;
         }
+        self.physical_default_values(&method, &mut values, mask, offset)?;
         let method = if inline && mask != 0 {
             let parameters = params.len()
                 - usize::from(

@@ -1585,9 +1585,9 @@ fn attach_member(
         }
         let original = &class.methods[*index];
         let default_descriptor = if name == "<init>" {
-            &physical
+            physical.as_str()
         } else {
-            &descriptor
+            jvm_descriptor
         };
         let closing = default_descriptor.find(')').ok_or_else(invalid)?;
         let parameters = &default_descriptor[1..closing];
@@ -1610,7 +1610,7 @@ fn attach_member(
                 format!(
                     "({dispatch}{parameters}{}Ljava/lang/Object;){}",
                     "I".repeat(params.len().div_ceil(32)),
-                    &descriptor[closing + 1..]
+                    &default_descriptor[closing + 1..]
                 ),
             )
         };

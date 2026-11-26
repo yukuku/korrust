@@ -43,6 +43,8 @@ pub(crate) use variant_signatures::{
 mod anonymous;
 #[path = "check_assignment_flow.rs"]
 mod assignment_flow;
+#[path = "check_binary_defaults.rs"]
+mod binary_defaults;
 #[path = "check_captures.rs"]
 mod captures;
 #[path = "check_classes.rs"]
@@ -2627,6 +2629,7 @@ impl Checker<'_> {
             receiver
         };
         values.insert(0, receiver);
+        self.physical_default_values(&method, &mut values, mask, offset)?;
         if mask == 0
             && !self.public_inline_body
             && self.classpath.default_source_accessor(&method).is_some()
@@ -2749,9 +2752,13 @@ impl Checker<'_> {
             }
         } else {
             let method = library::default_argument_method(self.classpath, &method)?;
+            let dispatch = if method.access & 8 == 0 {
+                format!("L{};", method.owner)
+            } else {
+                String::new()
+            };
             let descriptor = format!(
-                "(L{};{}{}Ljava/lang/Object;){}",
-                method.owner,
+                "({dispatch}{}{}Ljava/lang/Object;){}",
                 method.descriptor[1..method.descriptor.find(')').unwrap()].to_owned(),
                 "I".repeat(value_parameters.div_ceil(32)),
                 &method.descriptor[method.descriptor.find(')').unwrap() + 1..]
