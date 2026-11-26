@@ -1,0 +1,40 @@
+$ /workspace/korrust-setup/jdk-21/bin/javap -public -s -classpath /workspace/work/interop159-internal-final-run/2.3.0-directory/candidate:/workspace/work/interop159-internal-final-run/2.3.0-directory/candidate-public:/workspace/work/interop159-internal-final-run/2.3.0-directory/dependency:/workspace/work/interop159-internal-proof/references/kotlinc/lib/kotlin-stdlib.jar friends.consumer.ConsumerKt friends.consumer.ExplicitKt friends.library.SamePackageKt friends.consumer.PublicCounter friends.consumer.PublicInheritanceKt friends.library.ShadowKt
+Compiled from "Consumer.kt"
+public final class friends.consumer.ConsumerKt {
+  public static final int total();
+    descriptor: ()I
+}
+Compiled from "Explicit.kt"
+public final class friends.consumer.ExplicitKt {
+  public static final int explicit();
+    descriptor: ()I
+}
+Compiled from "SamePackage.kt"
+public final class friends.library.SamePackageKt {
+  public static final int samePackage();
+    descriptor: ()I
+}
+Compiled from "SuperInterface.kt"
+public final class friends.consumer.PublicCounter implements friends.library.Counter {
+  public friends.consumer.PublicCounter();
+    descriptor: ()V
+
+  public int value();
+    descriptor: ()I
+
+  public int base();
+    descriptor: ()I
+}
+Compiled from "PublicInheritance.kt"
+public final class friends.consumer.PublicInheritanceKt {
+  public static final int readPublic(friends.library.PublicImplementation);
+    descriptor: (Lfriends/library/PublicImplementation;)I
+
+  public static final int publicInheritance();
+    descriptor: ()I
+}
+Compiled from "Shadow.kt"
+public final class friends.library.ShadowKt {
+  public static final int shadow();
+    descriptor: ()I
+}

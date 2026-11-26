@@ -1,0 +1,23 @@
+   Compiling korrust v0.1.0 (/workspace/work/interop159-internal-proof)
+    Finished `test` profile [unoptimized] target(s) in 1m 28s
+     Running tests/compiled_internal_classifiers.rs (/tmp/interop159-internal-proof-build/debug/deps/compiled_internal_classifiers-af272dc4b38805c0)
+
+running 1 test
+test compiled_internal_classifier_visibility_follows_friend_origins ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 57.60s
+
+     Running tests/private_nested.rs (/tmp/interop159-internal-proof-build/debug/deps/private_nested-bf5f00b6cb5509a7)
+
+running 6 tests
+test generic_outer_and_dollar_classifier_boundaries_remain_explicit ... ok
+test private_member_signatures_within_owning_scope_are_accepted ... ok
+test unsupported_private_shapes_remain_explicit ... ok
+test private_classifier_exposure_rejects_inferred_and_explicit_signatures ... ok
+
+thread 'private_nested_classes_preserve_owned_outputs_and_lexical_access' has overflowed its stack
+fatal runtime error: stack overflow, aborting
+error: test failed, to rerun pass `--test private_nested`
+
+Caused by:
+  process didn't exit successfully: `/tmp/interop159-internal-proof-build/debug/deps/private_nested-bf5f00b6cb5509a7` (signal: 6, SIGABRT: process abort signal)

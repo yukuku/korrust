@@ -1,0 +1,7 @@
+$ /workspace/work/interop159-internal-proof/references/kotlinc/bin/kotlinc /workspace/work/interop159-internal-proof/tests/compiled_internal_classifiers/PrivateFriend.kt -cp /workspace/work/interop159-internal-final-run/2.3.0-directory/dependency:/workspace/work/interop159-internal-proof/references/kotlinc/lib/kotlin-stdlib.jar -module-name friends_production -d /workspace/work/interop159-internal-final-run/official-PrivateFriend -Xfriend-paths=/workspace/work/interop159-internal-final-run/2.3.0-directory/dependency -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/compiled_internal_classifiers/PrivateFriend.kt:2:24: error: cannot access 'class FileHidden : Any': it is private in file.
+import friends.library.FileHidden
+                       ^^^^^^^^^^
+tests/compiled_internal_classifiers/PrivateFriend.kt:3:28: error: cannot access 'class FileHidden : Any': it is private in file.
+private fun invalid(value: FileHidden): Unit = Unit
+                           ^^^^^^^^^^

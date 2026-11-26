@@ -1,0 +1,7 @@
+$ /workspace/work/interop159-internal-proof/references/kotlinc/bin/kotlinc /workspace/work/interop159-internal-proof/tests/compiled_internal_classifiers/ExposedArray.kt -cp /workspace/work/interop159-internal-final-run/2.3.0-directory/dependency:/workspace/work/interop159-internal-proof/references/kotlinc/lib/kotlin-stdlib.jar -module-name friends_production -d /workspace/work/interop159-internal-final-run/official-ExposedArray -Xfriend-paths=/workspace/work/interop159-internal-final-run/2.3.0-directory/dependency -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/compiled_internal_classifiers/ExposedArray.kt:3:5: error: 'public' function exposes its 'internal' return type argument 'Plain'.
+fun exposed(value: Array<Plain>): Array<Plain> = value
+    ^^^^^^^
+tests/compiled_internal_classifiers/ExposedArray.kt:3:13: error: 'public' function exposes its 'internal' parameter type argument 'Plain'.
+fun exposed(value: Array<Plain>): Array<Plain> = value
+            ^^^^^^^^^^^^^^^^^^^
