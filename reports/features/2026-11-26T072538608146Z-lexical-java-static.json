@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-26T07:25:38.608146+00:00",
+  "status": "complete",
+  "compiler": {
+    "binary": "/tmp/targets159-variance/debug/korrust",
+    "binary_sha256": "260ee3aa9a63bb96b9f6d8ff7fa70ba9b67c3a2654a14a23cbcf6f8a563161b3",
+    "source_revision": "8d10893fecf82e6ceafdcf89613b083136d35234",
+    "implementation_revision": "4727e0a93"
+  },
+  "reference_compiler": "Kotlin 2.3.21",
+  "counts": {
+    "pass": 18
+  },
+  "features": [
+    {
+      "name": "Lexical Java superclass static field reads",
+      "status": "supported",
+      "scope": "Unqualified public Java static field reads search the lexical dispatch class superclass chain. Kotlin properties, locals, own companions and JvmField declarations keep precedence; inherited Java fields beat explicit imports and package constants/properties. Java interface constants are excluded from unqualified inheritance, and Kotlin synthetic INSTANCE is hidden. Ordinary function and Java SAM captures are tested. Existing field typing and visibility checks are reused.",
+      "evidence": [
+        "reports/correctness/2026-11-26T071915198474Z-lexical-java-static.json"
+      ]
+    }
+  ],
+  "validation": {
+    "rust_api_tests": 1,
+    "lib_tests": {
+      "passed": 295,
+      "failed": 0,
+      "stack_bytes": 33554432,
+      "test_threads": 2
+    },
+    "clippy": "Frozen library, binary and owned test passed with warnings denied.",
+    "format": "Owned source and integration test passed.",
+    "report_viewer_tests": 8,
+    "interop": "Fixed Java caller compiled against official output verifies both providers with -Xverify:all; all4 Kotlin provider/consumer pairs and public callable JVM signatures match.",
+    "boundaries": "Both compilers reject instance-qualified static fields, implicit Java-interface constants, private fields, wrong result types and synthetic Kotlin INSTANCE."
+  },
+  "androidbible": {
+    "case003": {
+      "outcome": "compiled",
+      "class_count": 5,
+      "source_sha256": "76c4be98cecdf24961044fb5111c05d1fd403c781f562346872b6b2a2808fcb7",
+      "receipt": "reports/features/2026-11-26T072538608146Z-lexical-java-static/AlertDialogActivity-case003.json"
+    }
+  },
+  "evidence": [
+    "reports/correctness/2026-11-26T071915198474Z-lexical-java-static.json",
+    "reports/correctness/2026-11-26T065842817926Z-lexical-java-static.json",
+    "reports/correctness/2026-11-26T070556261878Z-lexical-java-static.json",
+    "reports/correctness/2026-11-26T070744747212Z-lexical-java-static.json",
+    "reports/features/2026-11-26T072538608146Z-lexical-java-static/AlertDialogActivity-case003.json",
+    "reports/features/2026-11-26T072538608146Z-lexical-java-static/build.log",
+    "reports/features/2026-11-26T072538608146Z-lexical-java-static/candidate-inherited-property.txt",
+    "reports/features/2026-11-26T072538608146Z-lexical-java-static/clippy.log",
+    "reports/features/2026-11-26T072538608146Z-lexical-java-static/lib-tests.log",
+    "reports/features/2026-11-26T072538608146Z-lexical-java-static/official-instance-boundary.txt",
+    "reports/features/2026-11-26T072538608146Z-lexical-java-static/official-interface-boundary.txt",
+    "reports/features/2026-11-26T072538608146Z-lexical-java-static/official-package-precedence.txt",
+    "reports/features/2026-11-26T072538608146Z-lexical-java-static/owned-format.log",
+    "reports/features/2026-11-26T072538608146Z-lexical-java-static/rust-api.log",
+    "reports/features/2026-11-26T072538608146Z-lexical-java-static/viewer-tests.log"
+  ],
+  "historical_reports_note": "Earlier exploration reports and archives remain unchanged. Two runs failed the frozen-input check while semantics/fixtures were expanded; a prior18-pass core report excludes later package-precedence fixtures. Only the final18 cases count here.",
+  "limitations": [
+    "This adds public inherited-static reads through the lexical dispatch class; protected/package fields, inherited-static writes and broader implicit-extension/enclosing-class lookup retain existing bounded support.",
+    "Combined branch verification is separate from this exact frozen source. No Android runtime or full-app claim."
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_lexical_java_static.py",
+      "--candidate",
+      "/tmp/targets159-variance/debug/korrust",
+      "--reference-root",
+      "/workspace/korrust",
+      "--source-root",
+      "/workspace/work/lexical-static003"
+    ]
+  ]
+}

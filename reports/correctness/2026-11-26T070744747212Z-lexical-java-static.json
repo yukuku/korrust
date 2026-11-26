@@ -1,0 +1,965 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T07:07:44.747212+00:00",
+  "status": "failed",
+  "compiler": {
+    "binary": "/tmp/targets159-variance/debug/korrust",
+    "binary_sha256": "fd36d55790efdc1781bd8ad152a8e270e57fe9e9f01e9c6402af1c58bd5ea58b",
+    "source_revision": "8d10893fecf82e6ceafdcf89613b083136d35234"
+  },
+  "source_archive": {
+    "path": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/frozen-inputs.zip",
+    "sha256": "831d9831ff14b9cb913b69887b606c7981a3b8625695a6d19cfbeb19f94a9c3d"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "inputs": {
+    "files_sha256": {
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "tests/lexical_java_static/Calls.java": "c1018baaaacf92f312cd89a4a39bf311d74286a8e66cf5fcc6505dc9021b9e0f",
+      "tests/lexical_java_static/ConsumeCalls.java": "8edd591ff146da61b78dd3b5e477ee13b3f4ca30ae9cd0284194e8f2b63baa13",
+      "tests/lexical_java_static/Consumer.kt": "8fa7b8641eef64fc7f0e6f9b7dd085ecee85030fb98d8d87d7f93cb2913f4a38",
+      "tests/lexical_java_static/ConsumerRejections.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "tests/lexical_java_static/Effects.kt": "1ccf89a99dd5fe34fa0e121e7928ed876808dfd5c886443a2b885afd45ebe05e",
+      "tests/lexical_java_static/Imported.kt": "f6183a12454a662eacaa9ac878d98609d8a34d8ab597754b0755a20b70c5dc05",
+      "tests/lexical_java_static/Interface.kt": "905e783ac02b8353ba9aae7fbb034e22a7d3e318ba387dd88750e6830437596e",
+      "tests/lexical_java_static/Rejections.json": "6451de308d77efbf92a04cf2f0191f4975f1a639ab6b237917e215dd3674057e",
+      "tests/lexical_java_static/java/fields/Base.java": "9a04f46416a7632f2b3791bf97698ac5f62520ab5814bcb05a1b92739742a5a7",
+      "tests/lexical_java_static/java/fields/Marks.java": "27751608db1a27096a8e8b1f5d3887c57638a06f81198b08c3bc7b35148a33d3",
+      "tests/lexical_java_static/java/fields/Other.java": "cf5af7b55a32d156c32dc14504a48393f254fac85e2bd59cc83be8140593355a",
+      "tests/lexical_java_static.rs": "a1a4698b32d70066abb51c8da226f4614045fe92fbbcba350ee7aaf2a95cc363",
+      "tools/check_lexical_java_static.py": "229144e764b4d9a4ce9f83a78e182e164215bc7e45a2202d3520562e3cf0a52a",
+      "tools/check_nov21_generics.py": "70fed499f3652d9181c2aabc3baf4e9a7327c436eec67c83d6fe4e4f539e4f86",
+      "/workspace/work/lexical-static003/Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "/workspace/work/lexical-static003/Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "/workspace/work/lexical-static003/src/annotation_declarations.rs": "76f1f3bafa4fa1ba3ced3768936d822c11803bf2aa6f877857574403c604070d",
+      "/workspace/work/lexical-static003/src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "/workspace/work/lexical-static003/src/bytecode/annotation_files.rs": "0fe8ebba7bbd2c80fcdd6fda797b448ca8cd63945b100781361bf1e3ace02eaa",
+      "/workspace/work/lexical-static003/src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "/workspace/work/lexical-static003/src/bytecode/anonymous_context.rs": "0864951c7a7e94772ee8e410c49175fed879358204aff745a1f7a315fc1b0283",
+      "/workspace/work/lexical-static003/src/bytecode/class_companion.rs": "b5c6f75d8c24b3edbe1ae2583693c31b511e4d456734b160d2904b7c6072a62c",
+      "/workspace/work/lexical-static003/src/bytecode/compose_lambdas.rs": "6355b1593355bb5aeacfbc0dcdfdcb0bc157d1ce995f9129dad742466f328f0d",
+      "/workspace/work/lexical-static003/src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+      "/workspace/work/lexical-static003/src/bytecode/defaults.rs": "8a1776d35697d05a53ffe6eef7556770ab03f027bcd4275b1b8f372605de6f32",
+      "/workspace/work/lexical-static003/src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "/workspace/work/lexical-static003/src/bytecode/frames.rs": "b2e346435d7cb21fbcbf0ec248c8c54fa77273198f1321fb58d84c741e77caff",
+      "/workspace/work/lexical-static003/src/bytecode/inline.rs": "d1dbc06ea0c65d833333adb752ce2cdf05c5cc1678a99a6478440041d437aaea",
+      "/workspace/work/lexical-static003/src/bytecode/interfaces.rs": "e283e506529e64a83d7408f6dbd52d44336cc3a5d1e768428df46670cafd4c2b",
+      "/workspace/work/lexical-static003/src/bytecode/lambdas.rs": "1cacc1ea9acb473c0079dd302e50933e919826e8791370d1f4c19e4abdf48d6c",
+      "/workspace/work/lexical-static003/src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+      "/workspace/work/lexical-static003/src/bytecode/suspend.rs": "df9416ead45864e78a8543c5f17dc1b010befbdf878c4160d978840b374b583a",
+      "/workspace/work/lexical-static003/src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+      "/workspace/work/lexical-static003/src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+      "/workspace/work/lexical-static003/src/bytecode.rs": "3895e77fe81cd0eb210b20465c132e6a7f7c85e4b55ec25e96203c29cbdaa0db",
+      "/workspace/work/lexical-static003/src/check.rs": "5fcc11481d70f9afc873772c5d7cf032e87acf8c4a8dae0e9c55cd90b69fc587",
+      "/workspace/work/lexical-static003/src/check_annotation_placements.rs": "027e77c6a6db60f98262fbaf0f44be170c53b58b03d64ae6e8cc43cdb2dc1579",
+      "/workspace/work/lexical-static003/src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "/workspace/work/lexical-static003/src/check_anonymous.rs": "b0293e5ab506dff2a976529a0653f6e0a82a484e089e050cd7c1eb8edefe8b22",
+      "/workspace/work/lexical-static003/src/check_assignment_flow.rs": "be4520c694043891aa0f72f26e3f8cf73cd902c314660b9f1381c1e48f049a5e",
+      "/workspace/work/lexical-static003/src/check_binary_defaults.rs": "c01af9b25cad391997da8de4c7798c48709ac8081c3db6df31ef52082a3d7654",
+      "/workspace/work/lexical-static003/src/check_captures.rs": "fb33dcee574506b574ca15013bbe102990e6c15dba3744128c72761d361b90ba",
+      "/workspace/work/lexical-static003/src/check_class_delegation.rs": "1089bac71516daad07ec7245aa8594956feca30ecf926e19ff82c895caba7364",
+      "/workspace/work/lexical-static003/src/check_classes.rs": "a2c5cdd6f739971b0d96b04cd98080b5a1507a427f2cd10221ff65824fd03450",
+      "/workspace/work/lexical-static003/src/check_companion_properties.rs": "c974d1059e7cb92644cd1a186492200828341f64b7e95d0ae4c052356537edba",
+      "/workspace/work/lexical-static003/src/check_compose.rs": "e87478af92dadfc67e7ee0a0412ba8417dc84ebfceb2e54bc37a9b840077bb5a",
+      "/workspace/work/lexical-static003/src/check_constructor_aliases.rs": "a64e341da62e7b292607926f34f5ad2a570f103f3a2141c40be6ff9bf1a94527",
+      "/workspace/work/lexical-static003/src/check_constructor_bridges.rs": "193f110cee019766603fe7d9798178e2f253d468c262f35994c939cd87377a29",
+      "/workspace/work/lexical-static003/src/check_constructor_inference.rs": "dd3d94a733c0acaea93af34f1e130c4338fc11127cbb7cba08f452d7c94d0d1e",
+      "/workspace/work/lexical-static003/src/check_contracts.rs": "06434fc5c0999ff69dfb902c50e7bc3b3d4802ae5d3592fbcf0496e9c3bb491d",
+      "/workspace/work/lexical-static003/src/check_control.rs": "6333d7c8a5465154b5e2e519a7598f576c38f7b6a9f6dd2b5b2f5ed60811f532",
+      "/workspace/work/lexical-static003/src/check_declarations.rs": "93aa240f4e333af3e56d25081870ced5a43cdb400ba6a34d4853f47950a021bd",
+      "/workspace/work/lexical-static003/src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+      "/workspace/work/lexical-static003/src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "/workspace/work/lexical-static003/src/check_functions.rs": "e7fcfd767236a97be1a94903bd5c508aa854b9995d52edae97648a02f8398479",
+      "/workspace/work/lexical-static003/src/check_initialization.rs": "9c56c8abd1eb964ad4e51ac03cdf7a40d73414a4c9984ae6e6525a37f6b5bdee",
+      "/workspace/work/lexical-static003/src/check_inner_classes.rs": "b799a4df016e056d127610e359ec06951e05e22e4778a7ffa31934e892cd6e05",
+      "/workspace/work/lexical-static003/src/check_interfaces.rs": "5514963c52b03da1442a9aec1c8bc3a6daeb10326011c9602509a5ca29d32606",
+      "/workspace/work/lexical-static003/src/check_ir_walk.rs": "262c923e6aea04830f95f2f1f1eca8124b328401fdc5ce1890f027fda2d58e71",
+      "/workspace/work/lexical-static003/src/check_java_nullability.rs": "40e1e816200bc92d6d7e5ab5fa57b4e3e351967072da160996e5a888b3acb923",
+      "/workspace/work/lexical-static003/src/check_java_properties.rs": "f3da739960dcbcee99a9b205e29afd330defef89e1089e9a152d5d0efd0c51fd",
+      "/workspace/work/lexical-static003/src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+      "/workspace/work/lexical-static003/src/check_library.rs": "78a7b02401fc178662ea9bb923f39f43b8f070c8ee7706a02e1acb9e4d2ae58b",
+      "/workspace/work/lexical-static003/src/check_local_annotations.rs": "ad5d937aae27ec3bed4528322c068a39eca915a49c449b68b2c4453f87f1a770",
+      "/workspace/work/lexical-static003/src/check_member_extensions.rs": "943af7b1c7b65c2a495dd628e42b105f44f41f6f19b736fa8e57a0cfd255a81f",
+      "/workspace/work/lexical-static003/src/check_objects.rs": "8bfab29b600a5b9197c1ef9778db52f85546ae3dcb9dbdcbce0a180866a99d19",
+      "/workspace/work/lexical-static003/src/check_operations.rs": "60bc44e4d46b4a98a28774f10f74eb84b6cbe3c42931e0eeaf205a83eb9339c0",
+      "/workspace/work/lexical-static003/src/check_overloads.rs": "a1a5066cd8bf1dd196ce49975678360f043fc2d48f1c1dcf7ce607f57e00bb43",
+      "/workspace/work/lexical-static003/src/check_references.rs": "1b416efc0ba31fd0214f3399ca9b265e4d5bd2c47f683986ebee5244a555a421",
+      "/workspace/work/lexical-static003/src/check_relations.rs": "a41e1b76514b535b96d9e0e1303793d3571d6013ed986410a51728ddff570f11",
+      "/workspace/work/lexical-static003/src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "/workspace/work/lexical-static003/src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+      "/workspace/work/lexical-static003/src/check_stable_properties.rs": "4b7b32b83094336d920362641e85e917979f09878cef431f51b023f1b6348873",
+      "/workspace/work/lexical-static003/src/check_unsigned.rs": "7c60ab78a2f2162d0beffbc79d41976a06bc6fb446c1cc9f91de10fc6072e606",
+      "/workspace/work/lexical-static003/src/check_varargs.rs": "2ffd61f3fa3cb298ae76ac73925f3a19c6f2ef3c608fdb0b15869b34965ab64c",
+      "/workspace/work/lexical-static003/src/check_variant_signatures.rs": "e63bc47c0b4db3d5a07c0e4a2239283f0a8592c1716f0923ca69c2f0ea351bd8",
+      "/workspace/work/lexical-static003/src/classpath/aliases.rs": "714b195f4716ea32d5dc8985048e282efb1fb3a1508490dcab5d49753534b80c",
+      "/workspace/work/lexical-static003/src/classpath/archive.rs": "835e4a79bbbc5c7328ce6a540ed1a2ca975fc526278fe7c31fd9433e08cc56d5",
+      "/workspace/work/lexical-static003/src/classpath/compose_abi.rs": "367c394423ec42e212233a82e484e16a144c827a4d7e3295a3647b665feb6d0f",
+      "/workspace/work/lexical-static003/src/classpath/import_classes.rs": "2835a7c9b72fd326d5881d0fbe41655b57f6d1b26b2e8b1bde6f71eaada580c1",
+      "/workspace/work/lexical-static003/src/classpath/inherited_classifiers.rs": "0566fcd4eb53479558d9f2ff2555424701a2906f16edf78acf7e108f7c78df02",
+      "/workspace/work/lexical-static003/src/classpath/inline_defaults.rs": "ad6ff8bb40c0b01eee78e30a70f15f2a912ab73307a3836840ce882bc597e8cb",
+      "/workspace/work/lexical-static003/src/classpath/jdk_modules.rs": "cd1a350e7f8e03cda618a1d919d4e6ee49aba7e9a26728178ebad5f73c4bd8f8",
+      "/workspace/work/lexical-static003/src/classpath/jvm_builtins.rs": "b8c6e4789a998c1b3737da4879a15d74eb453170c4b03542d4c8ae13f6e40e86",
+      "/workspace/work/lexical-static003/src/classpath/metadata.rs": "f1b60160edda6f28389848afdae18168f0ccf8d965ab1d6c2b6cc17711eb98ed",
+      "/workspace/work/lexical-static003/src/classpath/nested.rs": "764dd9eaf0188f91ba018707557e72df76b9c44b0120c8d69574044c8f5e78e9",
+      "/workspace/work/lexical-static003/src/classpath/nullability_defaults.rs": "8edf9187cd6214380a936c0484c280c7b3f3a973212d3f830c5316feedd4724b",
+      "/workspace/work/lexical-static003/src/classpath/package_info.rs": "f3bd436a8c64d48216bae3a55a2a3e82a903d354a42b629928fe1af95197061a",
+      "/workspace/work/lexical-static003/src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "/workspace/work/lexical-static003/src/classpath/signature.rs": "3e6bf3db6b06af97ddb6ec0db28a22cd6f1c6dcb08c6009c8614a0585a624a8b",
+      "/workspace/work/lexical-static003/src/classpath/singletons.rs": "836fe172f37cc9282e259ba446688b3d2d6bf34fde25ddc3973c1800f29c71a5",
+      "/workspace/work/lexical-static003/src/classpath/source.rs": "2515aebeb67ebad42a7b5e0719053fad8ab1861d3edaeca0dc110b402e1885e8",
+      "/workspace/work/lexical-static003/src/classpath/source_enums.rs": "37f3e3995b1e46a8a10215e0b995f56e3019c93c478c89682d18d312eb20d3c2",
+      "/workspace/work/lexical-static003/src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+      "/workspace/work/lexical-static003/src/classpath/value_names.rs": "1bd48bbe3a45019357c7d2167eec70eaaf02579bf1672122b6ec5a6cc13cdf99",
+      "/workspace/work/lexical-static003/src/classpath.rs": "af3525a0463523f521e20b949b4f2b93a803c7de3459032e1d451ce8a4951fff",
+      "/workspace/work/lexical-static003/src/compiled_inline/defaults.rs": "89d95d8b98e4af043bc3c592ba7588bffb7924bc86bdae57d457c0b420cbde37",
+      "/workspace/work/lexical-static003/src/compiled_inline.rs": "e83e7b8a60ae06b204d943123cc4c0aceaad9f8640f8fa078dc5314c0bd00f3e",
+      "/workspace/work/lexical-static003/src/const_eval.rs": "24319c4a5076f678ed53cbeeff7c52c4bdcf081c9f78485514326e92078e10fd",
+      "/workspace/work/lexical-static003/src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "/workspace/work/lexical-static003/src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "/workspace/work/lexical-static003/src/jvm_descriptor.rs": "3946ec2e66e89185c9d3e284f9d114e29e5e88d0a3eba52ec39fba2200d07ad2",
+      "/workspace/work/lexical-static003/src/lib.rs": "b32ce1eb31da5bfc99f9a60f5cdf12534db2c86f112f09304b66ab4b582c5fad",
+      "/workspace/work/lexical-static003/src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "/workspace/work/lexical-static003/src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "/workspace/work/lexical-static003/src/metadata.rs": "8cda8255ef2d8b33ec3a0d8b048aec86371f789c65f4e2eae1e13cc56b6557c0",
+      "/workspace/work/lexical-static003/src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "/workspace/work/lexical-static003/src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "/workspace/work/lexical-static003/src/source_inline.rs": "d59ecaba2b32264cc4190594c19e5ec7e99e6cbb5db28b33c1eaca7c7aa404e5",
+      "/workspace/work/lexical-static003/src/syntax.rs": "821a531d420542fd65d21531e468281d73c3a664e3cb5922dbcee0f4315c9c2e",
+      "/workspace/work/lexical-static003/src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "/workspace/work/lexical-static003/src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525"
+    },
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "commands": [
+    {
+      "label": "compile Java override provider",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies",
+        "/workspace/korrust/tests/lexical_java_static/java/fields/Base.java",
+        "/workspace/korrust/tests/lexical_java_static/java/fields/Marks.java",
+        "/workspace/korrust/tests/lexical_java_static/java/fields/Other.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/000-stderr.txt"
+    },
+    {
+      "label": "compile official Effects.kt/Imported.kt/Interface.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/lexical_java_static/Effects.kt",
+        "/workspace/korrust/tests/lexical_java_static/Imported.kt",
+        "/workspace/korrust/tests/lexical_java_static/Interface.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "lexical_java_static",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/001-stderr.txt"
+    },
+    {
+      "label": "compile candidate Effects.kt/Imported.kt/Interface.kt",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/tests/lexical_java_static/Effects.kt",
+        "/workspace/korrust/tests/lexical_java_static/Imported.kt",
+        "/workspace/korrust/tests/lexical_java_static/Interface.kt",
+        "--module-name",
+        "lexical_java_static",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/002-stderr.txt"
+    },
+    {
+      "label": "compile fixed Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/java",
+        "/workspace/korrust/tests/lexical_java_static/Calls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/003-stderr.txt"
+    },
+    {
+      "label": "verified fixed Java caller official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/java:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/004-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official/fieldsuse.Child",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official",
+        "fieldsuse.Child"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/005-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official/fieldsuse.Own",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official",
+        "fieldsuse.Own"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/006-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official/fieldsuse.Middle",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official",
+        "fieldsuse.Middle"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/007-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official/fieldsuse.Grand",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official",
+        "fieldsuse.Grand"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/008-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official/fieldsuse.GetterBase",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official",
+        "fieldsuse.GetterBase"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/009-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official/fieldsuse.GetterChild",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official",
+        "fieldsuse.GetterChild"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/010-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official/fieldsuse.StoredBase",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official",
+        "fieldsuse.StoredBase"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/011-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official/fieldsuse.StoredChild",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official",
+        "fieldsuse.StoredChild"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/012-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official/importedfield.Imported",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official",
+        "importedfield.Imported"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/013-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official/interfacestatic.InterfaceKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official",
+        "interfacestatic.InterfaceKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/014-stderr.txt"
+    },
+    {
+      "label": "compile official Consumer.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/lexical_java_static/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "lexical_java_static",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/015-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official-official:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official-official-runner",
+        "/workspace/korrust/tests/lexical_java_static/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/016-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer official/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official-official-runner:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official-official:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/017-stderr.txt"
+    },
+    {
+      "label": "compile candidate Consumer.kt",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/tests/lexical_java_static/Consumer.kt",
+        "--module-name",
+        "lexical_java_static",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/018-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official-candidate:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official-candidate-runner",
+        "/workspace/korrust/tests/lexical_java_static/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/019-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer official/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official-candidate-runner:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official-candidate:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/official:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/020-stderr.txt"
+    },
+    {
+      "label": "verified fixed Java caller candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/java:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/021-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate/fieldsuse.Child",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate",
+        "fieldsuse.Child"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/022-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate/fieldsuse.Own",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate",
+        "fieldsuse.Own"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/023-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate/fieldsuse.Middle",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate",
+        "fieldsuse.Middle"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/024-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate/fieldsuse.Grand",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate",
+        "fieldsuse.Grand"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/025-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate/fieldsuse.GetterBase",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate",
+        "fieldsuse.GetterBase"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/026-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate/fieldsuse.GetterChild",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate",
+        "fieldsuse.GetterChild"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/027-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate/fieldsuse.StoredBase",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate",
+        "fieldsuse.StoredBase"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/028-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/028-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate/fieldsuse.StoredChild",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate",
+        "fieldsuse.StoredChild"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/029-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/029-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate/importedfield.Imported",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate",
+        "importedfield.Imported"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/030-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/030-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate/interfacestatic.InterfaceKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate",
+        "interfacestatic.InterfaceKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/031-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/031-stderr.txt"
+    },
+    {
+      "label": "compile official Consumer.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/lexical_java_static/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "lexical_java_static",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/032-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/032-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate-official:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate-official-runner",
+        "/workspace/korrust/tests/lexical_java_static/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/033-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/033-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer candidate/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate-official-runner:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate-official:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/034-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/034-stderr.txt"
+    },
+    {
+      "label": "compile candidate Consumer.kt",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/tests/lexical_java_static/Consumer.kt",
+        "--module-name",
+        "lexical_java_static",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/035-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/035-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate-candidate:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate-candidate-runner",
+        "/workspace/korrust/tests/lexical_java_static/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/036-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/036-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer candidate/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate-candidate-runner:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate-candidate:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/candidate:/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/037-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/037-stderr.txt"
+    },
+    {
+      "label": "negative official/explicit-instance",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/explicit-instance.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/038-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/038-stderr.txt"
+    },
+    {
+      "label": "negative candidate/explicit-instance",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/explicit-instance.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/039-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/039-stderr.txt"
+    },
+    {
+      "label": "negative official/interface-inheritance",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/interface-inheritance.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/040-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/040-stderr.txt"
+    },
+    {
+      "label": "negative candidate/interface-inheritance",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/interface-inheritance.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/041-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/041-stderr.txt"
+    },
+    {
+      "label": "negative official/private-field",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/private-field.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/042-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/042-stderr.txt"
+    },
+    {
+      "label": "negative candidate/private-field",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/private-field.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/043-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/043-stderr.txt"
+    },
+    {
+      "label": "negative official/wrong-type",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/wrong-type.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/044-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/044-stderr.txt"
+    },
+    {
+      "label": "negative candidate/wrong-type",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/wrong-type.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/045-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/045-stderr.txt"
+    },
+    {
+      "label": "negative official/synthetic-kotlin-instance",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/synthetic-kotlin-instance.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/046-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/046-stderr.txt"
+    },
+    {
+      "label": "negative candidate/synthetic-kotlin-instance",
+      "argv": [
+        "/tmp/targets159-variance/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/synthetic-kotlin-instance.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T070744747212Z-lexical-java-static/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/047-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T070744747212Z-lexical-java-static/047-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "fixed-java/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/official/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/official/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "fixed-java/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/candidate/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/candidate/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "JVM-public-callable-signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/explicit-instance",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/explicit-instance",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/interface-inheritance",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/interface-inheritance",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/private-field",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/private-field",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/wrong-type",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/wrong-type",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/synthetic-kotlin-instance",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/synthetic-kotlin-instance",
+      "outcome": "pass"
+    },
+    {
+      "id": "frozen-inputs",
+      "outcome": "correctness_failure"
+    }
+  ],
+  "evidence": [],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_lexical_java_static.py",
+      "--candidate",
+      "/tmp/targets159-variance/debug/korrust",
+      "--reference-root",
+      "/workspace/korrust",
+      "--source-root",
+      "/workspace/work/lexical-static003"
+    ]
+  ],
+  "limitations": [
+    "Unqualified public Java static field reads search the lexical dispatch class superclass chain, excluding interface inheritance. Existing field typing, visibility and generic-static boundaries remain enforced. Locals, source properties and inherited fields retain precedence over imports. Explicit instance-qualified static reads remain rejected. No Android runtime or full-app claim."
+  ],
+  "error": "frozen-inputs",
+  "counts": {
+    "pass": 17,
+    "correctness_failure": 1
+  }
+}
