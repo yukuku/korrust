@@ -374,9 +374,8 @@ fn plan(function: &crate::check::Function, functions: &[crate::check::Function])
         error: None,
         suspend_: function.suspend_,
         counts: Vec::new(),
-        locals: function.locals,
+        locals,
     };
-    let mut body = function.body.clone();
     crate::check::ir_walk::statements(&mut body, "", &mut planner);
     if let Some(error) = planner.error {
         return Err(error);
