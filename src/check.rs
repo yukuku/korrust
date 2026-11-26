@@ -53,12 +53,16 @@ mod constructor_inference;
 mod contracts;
 #[path = "check_control.rs"]
 mod control;
+#[path = "check_compose.rs"]
+mod compose;
 #[path = "check_functions.rs"]
 mod function_values;
 #[path = "check_inner_classes.rs"]
 mod inner_classes;
 #[path = "check_ir_walk.rs"]
 pub(crate) mod ir_walk;
+#[path = "check_java_nullability.rs"]
+mod java_nullability;
 #[path = "check_java_properties.rs"]
 mod java_properties;
 #[path = "check_library.rs"]
@@ -2772,6 +2776,15 @@ impl Checker<'_> {
     }
     #[allow(clippy::only_used_in_recursion)]
     fn coerce(&self, value: Value, expected: Type, offset: usize) -> Result<Value> {
+        let value = if expected.is_reference()
+            && !expected.is_nullable()
+            && !matches!(expected, Type::Platform(_))
+            && !matches!(&expected, Type::Parameter { upper_bound, .. } if upper_bound.is_nullable())
+        {
+            self.enhanced_java_nonnull(value)
+        } else {
+            value
+        };
         if matches!(value.kind, ValueKind::Abrupt(_)) {
             return Ok(Value {
                 ty: expected,
@@ -4101,7 +4114,8 @@ impl Checker<'_> {
                     let mut value = if let Some(ty) = annotation {
                         self.expected_value(expr, &self.resolve(ty, offset)?)?
                     } else {
-                        self.value(expr)?
+                        let value = self.value(expr)?;
+                        self.enhanced_java_nonnull(value)
                     };
                     if let Some(ty) = annotation {
                         if matches!(ty, Type::ThreadLocal(_)) {

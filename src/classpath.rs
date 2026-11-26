@@ -10,6 +10,7 @@ mod jdk_modules;
 pub(crate) mod jvm_builtins;
 mod metadata;
 pub(crate) mod nested;
+mod nullability_defaults;
 mod package_info;
 mod signature;
 mod singletons;
@@ -1252,23 +1253,6 @@ impl Classpath {
         if !valid_name(internal_name) {
             return Err(Diagnostic::new(0, "Invalid Java class internal name"));
         }
-        let package_info = internal_name
-            .rsplit_once('/')
-            .map(|(p, _)| format!("{p}/package-info.class"))
-            .unwrap_or_else(|| "package-info.class".into());
-        for path in &self.paths {
-            if let Some(bytes) = self.read_resource(path, &package_info)?
-                && !self.passive_package_info(&bytes, &package_info)?
-            {
-                return Err(Diagnostic::new(
-                    0,
-                    format!(
-                        "Java package metadata {} is unsupported because it may define nullability defaults",
-                        path.display()
-                    ),
-                ));
-            }
-        }
         for path in &self.paths {
             if let Some(bytes) = self.read_resource(path, &format!("{internal_name}.class"))? {
                 let class = self
@@ -1424,6 +1408,14 @@ impl Classpath {
             }
         }
         self.attach_companion_fields(&mut class, &attrs, &method_attrs, &field_attrs)?;
+        if !attrs
+            .annotations
+            .iter()
+            .any(|annotation| annotation.name == "Lkotlin/Metadata;")
+            && class.access & 0x2000 == 0
+        {
+            self.apply_java_package_defaults(&mut class, &attrs, &method_attrs, &field_attrs)?;
+        }
         Ok(class)
     }
 

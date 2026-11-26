@@ -1646,6 +1646,7 @@ impl Checker<'_> {
         }];
         all_args.extend_from_slice(args);
         let mut dispatch_binding = None;
+        let mut coerced_receiver = None;
         let result = (|| {
             let mut applicable_groups = Vec::new();
             let mut failures = Vec::new();
@@ -1800,6 +1801,13 @@ impl Checker<'_> {
             }
             let mut method =
                 self.select_method_expected(candidates, &all_args, types, expected, offset)?;
+            if let Some((_, expected, _)) = method
+                .kotlin_params
+                .as_ref()
+                .and_then(|params| params.first())
+            {
+                coerced_receiver = Some(self.coerce(receiver.clone(), expected.clone(), offset)?);
+            }
             if method.instance_dispatch() {
                 let dispatch = self.imported_singleton_receiver(name, offset)?;
                 let dispatch_slot = self.allocate_typed_slot(&dispatch.ty, offset)?;
@@ -1818,7 +1826,7 @@ impl Checker<'_> {
         self.remap_contract_receiver(offset, slot, &receiver);
         result.map(|value| {
             let mut bindings = dispatch_binding.into_iter().collect::<Vec<_>>();
-            bindings.push((slot, receiver));
+            bindings.push((slot, coerced_receiver.unwrap_or(receiver)));
             Self::wrap_lets(value, bindings)
         })
     }
@@ -1875,26 +1883,44 @@ impl Checker<'_> {
             kind: ExprKind::Name(local_name),
         }];
         all_args.extend_from_slice(args);
+        let mut coerced_receiver = None;
+        let mut binds_receiver = true;
         let result = {
             let binding = Value {
                 ty: receiver.ty.clone(),
                 kind: ValueKind::Local(slot),
             };
             match self.select_function_types(&source_candidates, &all_args, &[], offset) {
-                Ok(_) => self.source_extension_call(binding, name, args, &[], false, offset),
+                Ok(id) => (|| {
+                    let (params, _) = self.specialize_source(id, &all_args, &[], offset)?;
+                    if let Some((_, expected)) = params.first() {
+                        coerced_receiver =
+                            Some(self.coerce(receiver.clone(), expected.clone(), offset)?);
+                    }
+                    self.source_extension_call(binding, name, args, &[], false, offset)
+                })(),
                 Err(error) if error.message.contains("Ambiguous") => Err(error),
-                Err(_) => self.resolved_extension_call(
-                    binding,
-                    name,
-                    args,
-                    &[],
-                    ExtensionKind::MemberFallback(member_error),
-                    offset,
-                ),
+                Err(_) => {
+                    binds_receiver = false;
+                    self.resolved_extension_call(
+                        receiver.clone(),
+                        name,
+                        args,
+                        &[],
+                        ExtensionKind::MemberFallback(member_error),
+                        offset,
+                    )
+                }
             }
         };
         self.scopes.pop();
-        result.map(|value| Self::wrap_lets(value, vec![(slot, receiver)]))
+        result.map(|value| {
+            if binds_receiver {
+                Self::wrap_lets(value, vec![(slot, coerced_receiver.unwrap_or(receiver))])
+            } else {
+                value
+            }
+        })
     }
 
     pub(super) fn source_extension_call(
@@ -1942,9 +1968,13 @@ impl Checker<'_> {
             kind: ExprKind::Name(local_name),
         }];
         all_args.extend_from_slice(args);
+        let mut coerced_receiver = None;
         let checked = (|| {
             let id = self.select_function_types(&candidates, &all_args, explicit, offset)?;
             let (params, result) = self.specialize_source(id, &all_args, explicit, offset)?;
+            if let Some((_, expected)) = params.first() {
+                coerced_receiver = Some(self.coerce(receiver.clone(), expected.clone(), offset)?);
+            }
             let defaults = self
                 .defaults
                 .get(id)
@@ -1965,7 +1995,8 @@ impl Checker<'_> {
             ))
         })();
         self.scopes.pop();
-        checked.map(|value| Self::wrap_lets(value, vec![(slot, receiver)]))
+        checked
+            .map(|value| Self::wrap_lets(value, vec![(slot, coerced_receiver.unwrap_or(receiver))]))
     }
 
     pub(super) fn check_infix_call(
