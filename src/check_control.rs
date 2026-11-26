@@ -258,6 +258,9 @@ impl Checker<'_> {
                 let before = self.initialized.clone();
                 let refinements = self.refinements.clone();
                 let (body, mut result) = self.result_block(body, offset, mode)?;
+                if self.initialized.outer_deferred_writes(&before) {
+                    return Err(Diagnostic::new(offset, "Deferred val assignment across try exits requires unsupported exception-flow analysis").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "DEFERRED_VAL_TRY_INITIALIZATION_UNSUPPORTED"));
+                }
                 let mut initialized = if matches!(result.kind, ValueKind::Abrupt(_)) {
                     None
                 } else {
@@ -283,12 +286,13 @@ impl Checker<'_> {
                     };
                     let (catch_body, catch_result) =
                         self.result_block(&catch.body, offset, mode)?;
+                    if self.initialized.outer_deferred_writes(&before) {
+                        return Err(Diagnostic::new(offset, "Deferred val assignment across catch exits requires unsupported exception-flow analysis").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "DEFERRED_VAL_TRY_INITIALIZATION_UNSUPPORTED"));
+                    }
                     self.scopes.pop();
                     if !matches!(catch_result.kind, ValueKind::Abrupt(_)) {
                         initialized = Some(match initialized {
-                            Some(previous) => {
-                                previous.intersection(&self.initialized).copied().collect()
-                            }
+                            Some(previous) => previous.joined(&self.initialized),
                             None => self.initialized.clone(),
                         });
                     }
@@ -330,6 +334,9 @@ impl Checker<'_> {
                 self.initialized = before.clone();
                 self.refinements = refinements;
                 let (finally, _) = self.block(finally)?;
+                if self.initialized.outer_deferred_writes(&before) {
+                    return Err(Diagnostic::new(offset, "Deferred val assignment in finally requires unsupported exception-flow analysis").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "DEFERRED_VAL_TRY_INITIALIZATION_UNSUPPORTED"));
+                }
                 if let Some(initialized) = initialized {
                     self.initialized.extend(initialized);
                 }

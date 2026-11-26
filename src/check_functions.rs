@@ -436,7 +436,8 @@ impl Checker<'_> {
                 return Err(Diagnostic::new(
                     expr.offset,
                     format!("Variable {name} must be initialized before capture"),
-                ));
+                )
+                .with_kind(crate::DiagnosticKind::InvalidKotlin, "UNINITIALIZED_VARIABLE"));
             }
             let value = if let Some((cell, ty)) = self.cell_binding(&name) {
                 if self.cell_is_readonly(&name) {
@@ -543,7 +544,7 @@ impl Checker<'_> {
             contract_facts: HashMap::new(),
             contract_registration: None,
             refinements: HashMap::new(),
-            initialized: HashSet::new(),
+            initialized: InitializationState::default(),
             loop_depth: 0,
             scopes: vec![HashMap::new()],
             next: 1,
@@ -1330,7 +1331,7 @@ mod shadowing_tests {
             contract_facts: HashMap::new(),
             contract_registration: None,
             refinements: HashMap::new(),
-            initialized: HashSet::new(),
+            initialized: InitializationState::default(),
             loop_depth: 0,
             scopes: vec![HashMap::new()],
             next: 0,

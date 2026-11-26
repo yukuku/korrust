@@ -2104,7 +2104,7 @@ mod tests {
             contract_facts: HashMap::new(),
             contract_registration: None,
             refinements: HashMap::new(),
-            initialized: HashSet::new(),
+            initialized: InitializationState::default(),
             loop_depth: 0,
             scopes: vec![HashMap::new()],
             next: 0,

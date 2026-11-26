@@ -55,10 +55,13 @@ mod contracts;
 mod control;
 #[path = "check_functions.rs"]
 mod function_values;
+#[path = "check_initialization.rs"]
+mod initialization;
 #[path = "check_inner_classes.rs"]
 mod inner_classes;
 #[path = "check_ir_walk.rs"]
 pub(crate) mod ir_walk;
+use initialization::InitializationState;
 #[path = "check_java_nullability.rs"]
 mod java_nullability;
 #[path = "check_java_properties.rs"]
@@ -766,7 +769,7 @@ struct Checker<'a> {
     contract_facts: HashMap<usize, Vec<contracts::Fact>>,
     contract_registration: Option<usize>,
     refinements: HashMap<stable_properties::Subject, Type>,
-    initialized: HashSet<u8>,
+    initialized: InitializationState,
     loop_depth: usize,
     scopes: Vec<HashMap<String, Local>>,
     next: u16,
@@ -1073,7 +1076,7 @@ impl Checker<'_> {
         self.allow_return = false;
         let all = self.initialized.clone();
         let refinements = self.refinements.clone();
-        let mut earlier = HashSet::new();
+        let mut earlier = InitializationState::default();
         let mut values = Vec::new();
         for ((name, ty), expr) in params.iter().zip(defaults) {
             self.refinements = refinements.clone();
@@ -2077,6 +2080,7 @@ impl Checker<'_> {
         );
         self.scopes.push(scope);
         self.refinements.insert(slot.into(), inner);
+        let before_call = self.initialized.clone();
         self.initialized.insert(slot);
         let property = Expr {
             offset,
@@ -2098,6 +2102,7 @@ impl Checker<'_> {
         let result = self.value(&expression);
         self.scopes.pop();
         self.initialized.remove(&slot);
+        self.initialized = before_call.joined(&self.initialized);
         self.refinements.remove(&slot.into());
         let result = result?;
         let result = if result.ty.is_reference() {
@@ -2172,7 +2177,19 @@ impl Checker<'_> {
                 ));
             }
         };
+        let before_right = self.initialized.clone();
         let right = self.value_expected(right, expected.or(Some(&inner)))?;
+        if self.initialized.outer_deferred_writes(&before_right) {
+            return Err(Diagnostic::new(
+                offset,
+                "Deferred val assignments in conditional fallback expressions are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "DEFERRED_VAL_CONDITIONAL_INITIALIZATION_UNSUPPORTED",
+            ));
+        }
+        self.initialized = before_right.joined(&self.initialized);
         let abrupt = matches!(right.kind, ValueKind::Abrupt(_));
         if abrupt {
             if let ExprKind::Name(name) = &source_left.kind {
@@ -4056,14 +4073,8 @@ impl Checker<'_> {
                             "Unsupported uninitialized local type",
                         ));
                     }
-                    if !mutable {
-                        return Err(Diagnostic::new(
-                            offset,
-                            "Uninitialized val declarations are not supported",
-                        ));
-                    }
                     let slot = self.declare(name, ty.clone(), *mutable, offset)?;
-                    if self.cell_names.contains(name) {
+                    if *mutable && self.cell_names.contains(name) {
                         let owner = Self::cell_owner(&ty);
                         self.cells.insert(slot, owner.clone());
                         body.push(Statement::Store(
@@ -4079,6 +4090,9 @@ impl Checker<'_> {
                         ));
                     }
                     self.initialized.remove(&slot);
+                    if !mutable {
+                        self.initialized.defer(slot, self.loop_depth);
+                    }
                     continue;
                 }
                 StatementKind::IndexAssign(array, index, value) => self.check_indices_assignment(
@@ -4415,7 +4429,14 @@ impl Checker<'_> {
                             ));
                         }
                     }
-                    if self.cell_is_readonly(name) {
+                    let deferred = self
+                        .local(name)
+                        .filter(|local| self.initialized.is_deferred(local.slot));
+                    if let Some(local) = &deferred {
+                        self.initialized
+                            .check_write(local.slot, self.loop_depth, offset)?;
+                    }
+                    if self.cell_is_readonly(name) && deferred.is_none() {
                         return Err(Diagnostic::new(
                             offset,
                             "Cannot reassign val or function declaration",
@@ -4423,7 +4444,19 @@ impl Checker<'_> {
                     }
                     if let Some((cell, ty)) = self.cell_binding(name) {
                         let value = self.expected_value(expr, &ty)?;
+                        if control::expression_terminates(expr) {
+                            body.push(Statement::Expression(value));
+                            returns = true;
+                            continue;
+                        }
                         if let Some(local) = self.local(name) {
+                            if deferred.is_some() {
+                                self.initialized.check_write(
+                                    local.slot,
+                                    self.loop_depth,
+                                    offset,
+                                )?;
+                            }
                             self.initialized.insert(local.slot);
                         }
                         body.push(self.cell_store(cell, ty, value, offset)?);
@@ -4464,23 +4497,32 @@ impl Checker<'_> {
                             Diagnostic::new(offset, format!("Unresolved local: {name}"))
                         }
                     })?;
-                    if !local.mutable {
+                    if !local.mutable && deferred.is_none() {
                         return Err(Diagnostic::new(
                             offset,
                             format!("Cannot reassign val or parameter: {name}"),
                         ));
                     }
                     let value = self.expected_value(expr, &local.ty)?;
-                    self.initialized.insert(local.slot);
-                    Statement::Store(local.slot, value)
+                    if control::expression_terminates(expr) {
+                        returns = true;
+                        Statement::Expression(value)
+                    } else {
+                        if deferred.is_some() {
+                            self.initialized
+                                .check_write(local.slot, self.loop_depth, offset)?;
+                        }
+                        self.initialized.insert(local.slot);
+                        Statement::Store(local.slot, value)
+                    }
                 }
                 StatementKind::AddAssign(name, expr) => {
                     self.check_compound_assignment(name, "+=", expr, offset)?
                 }
                 StatementKind::When(subject, branches, otherwise) => {
                     let source_subject = subject;
-                    let before_refinements = self.refinements.clone();
                     let subject = self.value(subject)?;
+                    let before_refinements = self.refinements.clone();
                     if subject.ty == Type::Unit {
                         return Err(Diagnostic::new(offset, "Unsupported when subject type"));
                     }
@@ -4502,6 +4544,7 @@ impl Checker<'_> {
                     body.push(Statement::Store(slot, subject));
                     let before = self.initialized.clone();
                     let mut continuing = Vec::new();
+                    let mut continuing_refinements = Vec::new();
                     let mut checked = Vec::new();
                     let mut all_return = otherwise.is_some() || exhaustive;
                     for (conditions, branch) in branches {
@@ -4513,7 +4556,11 @@ impl Checker<'_> {
                                 ty: subject_type.clone(),
                                 kind: ValueKind::Local(slot),
                             };
+                            let before_condition = self.initialized.clone();
                             let equal = self.check_when_condition(left, condition)?;
+                            if self.initialized.outer_deferred_writes(&before_condition) {
+                                return Err(Diagnostic::new(offset, "Deferred val assignments in when conditions require unsupported conditional-effect analysis").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "DEFERRED_VAL_CONDITION_INITIALIZATION_UNSUPPORTED"));
+                            }
                             combined = Some(match combined {
                                 None => equal,
                                 Some(previous) => Value {
@@ -4530,6 +4577,7 @@ impl Checker<'_> {
                         let (branch, branch_returns) = self.block(branch)?;
                         if !branch_returns {
                             continuing.push(self.initialized.clone());
+                            continuing_refinements.push(self.refinements.clone());
                         }
                         all_return &= branch_returns;
                         checked.push((combined.unwrap(), branch));
@@ -4540,6 +4588,7 @@ impl Checker<'_> {
                         let (branch, branch_returns) = self.block(otherwise)?;
                         if !branch_returns {
                             continuing.push(self.initialized.clone());
+                            continuing_refinements.push(self.refinements.clone());
                         }
                         all_return &= branch_returns;
                         branch
@@ -4551,19 +4600,18 @@ impl Checker<'_> {
                         body
                     } else {
                         continuing.push(before.clone());
+                        continuing_refinements.push(before_refinements.clone());
                         Vec::new()
                     };
                     self.initialized = continuing
                         .into_iter()
-                        .reduce(|previous, current| {
-                            previous.intersection(&current).copied().collect()
-                        })
+                        .reduce(|previous, current| previous.joined(&current))
                         .unwrap_or(before);
                     for (condition, branch) in checked.into_iter().rev() {
                         tail = vec![Statement::If(condition, branch, tail)];
                     }
                     body.extend(tail);
-                    self.refinements = before_refinements;
+                    self.refinements = Self::intersect_refinements(&continuing_refinements);
                     returns |= all_return;
                     continue;
                 }
@@ -4628,16 +4676,10 @@ impl Checker<'_> {
                         _ => before_refinements,
                     };
                     self.initialized = match (y, n) {
-                        (false, false) => yes_initialized
-                            .intersection(&no_initialized)
-                            .copied()
-                            .collect(),
+                        (false, false) => yes_initialized.joined(&no_initialized),
                         (false, true) => yes_initialized,
                         (true, false) => no_initialized,
-                        (true, true) => yes_initialized
-                            .intersection(&no_initialized)
-                            .copied()
-                            .collect(),
+                        (true, true) => yes_initialized.joined(&no_initialized),
                     };
                     self.exhaustiveness_flow |= y != n;
                     returns |= y && n;
@@ -4646,7 +4688,11 @@ impl Checker<'_> {
                 StatementKind::While(cond, body) => {
                     let source_condition = cond;
                     let refinements = self.refinements.clone();
+                    let before_condition = self.initialized.clone();
                     let cond = self.value(cond)?;
+                    if self.initialized.outer_deferred_writes(&before_condition) {
+                        return Err(Diagnostic::new(offset, "Deferred val initialization in a repeated loop condition is unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "DEFERRED_VAL_LOOP_INITIALIZATION_UNSUPPORTED"));
+                    }
                     self.require(&cond, Type::Boolean, offset)?;
                     let before = self.initialized.clone();
                     self.refine(source_condition, true);
@@ -4852,8 +4898,9 @@ impl Checker<'_> {
             }
             ExprKind::When(subject, branches, otherwise) => {
                 let source_subject = subject;
-                let before_refinements = self.refinements.clone();
                 let subject = self.value(subject)?;
+                let before_refinements = self.refinements.clone();
+                let before_initialized = self.initialized.clone();
                 if subject.ty == Type::Unit {
                     return Err(Diagnostic::new(
                         offset,
@@ -4881,15 +4928,21 @@ impl Checker<'_> {
                 let slot = self.allocate_typed_slot(&subject.ty, offset)?;
                 let mut checked = Vec::new();
                 let mut continuing_refinements = Vec::new();
+                let mut continuing_initialized = Vec::new();
                 for (conditions, branch) in branches {
                     self.refinements = before_refinements.clone();
+                    self.initialized = before_initialized.clone();
                     let mut combined = None;
                     for condition in conditions {
                         let left = Value {
                             ty: subject.ty.clone(),
                             kind: ValueKind::Local(slot),
                         };
+                        let before_condition = self.initialized.clone();
                         let condition = self.check_when_condition(left, condition)?;
+                        if self.initialized.outer_deferred_writes(&before_condition) {
+                            return Err(Diagnostic::new(offset, "Deferred val assignments in when conditions require unsupported conditional-effect analysis").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "DEFERRED_VAL_CONDITION_INITIALIZATION_UNSUPPORTED"));
+                        }
                         combined = Some(match combined {
                             None => condition,
                             Some(previous) => Value {
@@ -4906,6 +4959,7 @@ impl Checker<'_> {
                     let value = self.value(branch)?;
                     if !control::expression_terminates(branch) {
                         continuing_refinements.push(self.refinements.clone());
+                        continuing_initialized.push(self.initialized.clone());
                     }
                     checked.push((
                         combined.ok_or_else(|| Diagnostic::new(offset, "Empty when condition"))?,
@@ -4913,12 +4967,14 @@ impl Checker<'_> {
                     ));
                 }
                 self.refinements = before_refinements.clone();
+                self.initialized = before_initialized.clone();
                 let otherwise = if missing {
                     None
                 } else {
                     let value = self.value(otherwise)?;
                     if !control::expression_terminates(otherwise) {
                         continuing_refinements.push(self.refinements.clone());
+                        continuing_initialized.push(self.initialized.clone());
                     }
                     Some(value)
                 };
@@ -4945,6 +5001,10 @@ impl Checker<'_> {
                     self.unmatched_when(result, offset)?
                 };
                 self.refinements = Self::intersect_refinements(&continuing_refinements);
+                self.initialized = continuing_initialized
+                    .into_iter()
+                    .reduce(|a, b| a.joined(&b))
+                    .unwrap_or(before_initialized);
                 if body.ty == Type::Unit {
                     return Err(Diagnostic::new(
                         offset,
@@ -4972,11 +5032,22 @@ impl Checker<'_> {
                 let before_refinements = self.refinements.clone();
                 let condition = self.value(condition)?;
                 self.require(&condition, Type::Boolean, offset)?;
+                let before_initialized = self.initialized.clone();
                 self.refine(source_condition, true);
+                let yes_terminates = control::expression_terminates(yes);
+                let no_terminates = control::expression_terminates(no);
                 let mut yes = self.value(yes)?;
+                let yes_initialized = self.initialized.clone();
+                self.initialized = before_initialized.clone();
                 self.refinements = before_refinements.clone();
                 self.refine(source_condition, false);
                 let mut no = self.value(no)?;
+                self.initialized = match (yes_terminates, no_terminates) {
+                    (false, false) => yes_initialized.joined(&self.initialized),
+                    (false, true) => yes_initialized,
+                    (true, false) => self.initialized.clone(),
+                    (true, true) => before_initialized,
+                };
                 self.refinements = before_refinements;
                 if yes.ty == Type::Unit {
                     return Err(Diagnostic::new(
@@ -5166,6 +5237,10 @@ impl Checker<'_> {
                             return Err(Diagnostic::new(
                                 offset,
                                 "Captured variable must be initialized before use",
+                            )
+                            .with_kind(
+                                crate::DiagnosticKind::InvalidKotlin,
+                                "UNINITIALIZED_VARIABLE",
                             ));
                         }
                     }
@@ -5209,6 +5284,10 @@ impl Checker<'_> {
                         return Err(Diagnostic::new(
                             offset,
                             format!("Variable must be initialized before use: {name}"),
+                        )
+                        .with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "UNINITIALIZED_VARIABLE",
                         ));
                     }
                     if let Some(refined) = self.refinements.get(&local.slot.into()) {
@@ -5429,8 +5508,20 @@ impl Checker<'_> {
                 if op == "&&" || op == "||" {
                     self.refine(source_left, op == "&&");
                 }
+                let before_right = self.initialized.clone();
                 let b = self.value(b)?;
                 if op == "&&" || op == "||" {
+                    if self.initialized.outer_deferred_writes(&before_right) {
+                        return Err(Diagnostic::new(
+                            offset,
+                            "Deferred val assignments in short-circuit operands are unsupported",
+                        )
+                        .with_kind(
+                            crate::DiagnosticKind::UnsupportedLanguage,
+                            "DEFERRED_VAL_CONDITIONAL_INITIALIZATION_UNSUPPORTED",
+                        ));
+                    }
+                    self.initialized = before_right.joined(&self.initialized);
                     self.refinements = refinements;
                 }
                 if matches!(op.as_str(), "==" | "!=" | "===" | "!==") {
@@ -8179,7 +8270,7 @@ pub fn check_with_owner(
             contract_facts: HashMap::new(),
             contract_registration: None,
             refinements: HashMap::new(),
-            initialized: HashSet::new(),
+            initialized: InitializationState::default(),
             loop_depth: 0,
             scopes: vec![HashMap::new()],
             next: 0,

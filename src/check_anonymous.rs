@@ -1003,7 +1003,7 @@ impl Checker<'_> {
                 contract_facts: HashMap::new(),
                 contract_registration: None,
                 refinements: HashMap::new(),
-                initialized: HashSet::from([0]),
+                initialized: InitializationState::from_slots([0]),
                 loop_depth: 0,
                 scopes: vec![HashMap::new()],
                 next: 1,
