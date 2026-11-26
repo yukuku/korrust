@@ -1,0 +1,51 @@
+[
+  {
+    "id": "missing-constraints",
+    "source": "import aliases.consumer.Default\nfun bad() = Default()"
+  },
+  {
+    "id": "wrong-expected",
+    "source": "import aliases.consumer.Local\nfun bad(): Local<Int> = Local(\"bad\")"
+  },
+  {
+    "id": "fixed-argument",
+    "source": "import aliases.consumer.Fixed\nfun bad() = Fixed(7, \"value\")"
+  },
+  {
+    "id": "projected-expansion",
+    "source": "import aliases.consumer.Projected\nfun bad() = Projected(\"value\")"
+  },
+  {
+    "id": "explicit-projection",
+    "source": "import aliases.consumer.Projected\nfun bad() = Projected<String>(\"value\")"
+  },
+  {
+    "id": "unused-parameter",
+    "source": "import aliases.consumer.Unused\nfun bad() = Unused(\"value\")"
+  },
+  {
+    "id": "private-alias",
+    "source": "import aliases.library.Hidden\nfun bad() = Hidden(\"value\")"
+  },
+  {
+    "id": "private-constructor",
+    "source": "import aliases.library.ClosedAlias\nfun bad() = ClosedAlias(\"value\")"
+  },
+  {
+    "id": "explicit-arity",
+    "source": "import aliases.consumer.Local\nfun bad() = Local<String, Int>(\"value\")"
+  },
+  {
+    "id": "java-named",
+    "source": "import aliases.consumer.Swap\nfun bad() = Swap(first = 7, second = \"value\")"
+  },
+  {
+    "id": "class-bound",
+    "source": "import aliases.consumer.Bound\nfun bad() = Bound(7)"
+  },
+  {
+    "id": "generic-constructor-alias",
+    "source": "import aliases.library.JavaTypes.Shadow as Underlying\ntypealias Different<X> = Underlying<X>\nfun probe(): Underlying<Int> = Different(\"valid-string\")",
+    "unsupported": true
+  }
+]

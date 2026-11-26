@@ -82,6 +82,17 @@ impl Checker<'_> {
         expected: Option<&Type>,
         offset: usize,
     ) -> Result<JavaMethod> {
+        self.infer_constructor_template(class, None, args, expected, offset)
+    }
+
+    pub(super) fn infer_constructor_template(
+        &mut self,
+        class: &JavaClass,
+        result_template: Option<&Type>,
+        args: &[Expr],
+        expected: Option<&Type>,
+        offset: usize,
+    ) -> Result<JavaMethod> {
         let class_parameters = &class.library.as_ref().unwrap().type_parameters;
         let mut constructors = Vec::new();
         for (method_index, original) in class.methods.iter().enumerate().filter(|(_, method)| {
@@ -143,7 +154,11 @@ impl Checker<'_> {
                     .collect();
             }
             member_substitutions.extend(renaming(&original_method_parameters, &own_parameters));
-            let result = declarations::classifier_type(&class.name, &parameters);
+            let result = if let Some(template) = result_template {
+                relations::substitute(template, &substitutions)
+            } else {
+                declarations::classifier_type(&class.name, &parameters)
+            };
             let (params, defaults) = Self::method_parameters(&method)?;
             method.kotlin_params = Some(
                 params

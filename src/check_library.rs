@@ -1586,12 +1586,29 @@ impl Checker<'_> {
         {
             return Ok(None);
         }
-        let class = match self
+        let alias = self
             .classpath
-            .value_symbol(&self.lambda_owner, name, offset)?
-        {
-            Some(crate::classpath::ValueSymbol::Classifier(class)) => *class,
-            _ => return Ok(None),
+            .constructor_type_alias(name, self.imports, DEFAULT_PACKAGES)?;
+        let class = if let Some((_, expanded)) = &alias {
+            let mut expanded = expanded;
+            while let Type::Nullable(inner) = expanded {
+                expanded = inner;
+            }
+            let owner = library::type_owner(expanded).ok_or_else(|| {
+                Diagnostic::new(
+                    offset,
+                    "Type alias does not expand to a constructor classifier",
+                )
+            })?;
+            self.classpath.load(owner)?
+        } else {
+            match self
+                .classpath
+                .value_symbol(&self.lambda_owner, name, offset)?
+            {
+                Some(crate::classpath::ValueSymbol::Classifier(class)) => *class,
+                _ => return Ok(None),
+            }
         };
         if class
             .library
@@ -1642,9 +1659,18 @@ impl Checker<'_> {
                 })
                 .collect::<Result<Vec<_>>>()?,
         };
-        let mut expanded =
+        let alias_template = if types.is_empty() {
             self.classpath
-                .expand_type_alias(&requested, self.imports, DEFAULT_PACKAGES)?;
+                .constructor_type_alias(name, self.imports, DEFAULT_PACKAGES)?
+        } else {
+            None
+        };
+        let mut expanded = if let Some((_, expanded)) = &alias_template {
+            expanded.clone()
+        } else {
+            self.classpath
+                .expand_type_alias(&requested, self.imports, DEFAULT_PACKAGES)?
+        };
         let alias = expanded != requested;
         while let Type::Nullable(inner) = expanded {
             expanded = *inner;
@@ -1690,36 +1716,46 @@ impl Checker<'_> {
         if !self.library_call_candidates(name).is_empty() {
             return Ok(None);
         }
-        let inferred = if types.is_empty() && !alias {
-            Some(
-                self.infer_constructor_method(&class, args, expected, offset)
-                    .map_err(|mut error| {
-                        for (index, parameter) in class
-                            .library
-                            .as_ref()
-                            .unwrap()
-                            .type_parameters
-                            .iter()
-                            .enumerate()
-                        {
-                            error.message = error
-                                .message
-                                .replace(&format!("<constructor-class-{index}>"), &parameter.name);
-                        }
-                        for (method_index, method) in class.methods.iter().enumerate() {
-                            if let Some(library) = &method.library {
-                                for (index, parameter) in library.type_parameters.iter().enumerate()
-                                {
-                                    error.message = error.message.replace(
-                                        &format!("<constructor-method-{method_index}-{index}>"),
-                                        &parameter.name,
-                                    );
-                                }
-                            }
-                        }
-                        error
-                    })?,
+        if alias
+            && matches!(&expanded, Type::Parameterized { arguments, .. } if arguments.iter().any(|argument| argument.variance != syntax::Variance::Invariant || argument.ty.is_none()))
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Projected type alias expansions cannot be constructed",
             )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "TYPE_ALIAS_CONSTRUCTOR_PROJECTION",
+            ));
+        }
+        let inferred = if types.is_empty() && (!alias || alias_template.is_some()) {
+            let method = if let Some((declaration, expanded)) = &alias_template {
+                self.infer_constructor_alias(&class, declaration, expanded, args, expected, offset)
+            } else {
+                self.infer_constructor_method(&class, args, expected, offset)
+            };
+            Some(method.map_err(|mut error| {
+                let parameters = alias_template
+                    .as_ref()
+                    .map(|(declaration, _)| declaration.type_parameters.as_slice())
+                    .unwrap_or_else(|| class.library.as_ref().unwrap().type_parameters.as_slice());
+                for (index, parameter) in parameters.iter().enumerate() {
+                    error.message = error
+                        .message
+                        .replace(&format!("<constructor-class-{index}>"), &parameter.name);
+                }
+                for (method_index, method) in class.methods.iter().enumerate() {
+                    if let Some(library) = &method.library {
+                        for (index, parameter) in library.type_parameters.iter().enumerate() {
+                            error.message = error.message.replace(
+                                &format!("<constructor-method-{method_index}-{index}>"),
+                                &parameter.name,
+                            );
+                        }
+                    }
+                }
+                error
+            })?)
         } else {
             None
         };

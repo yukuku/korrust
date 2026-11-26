@@ -464,6 +464,15 @@ impl Classpath {
         aliases::expand(self, ty, imports, packages)
     }
 
+    pub(crate) fn constructor_type_alias(
+        &self,
+        name: &str,
+        imports: &std::collections::HashMap<String, String>,
+        packages: &[&str],
+    ) -> Result<Option<(LibraryTypeAlias, Type)>> {
+        aliases::constructor_template(self, name, imports, packages)
+    }
+
     pub(crate) fn builtin_class_declarations(&self, classifier: &str) -> Result<Vec<JavaMethod>> {
         metadata::builtin_class_declarations(&self.builtin_class_resource(classifier)?, classifier)
     }

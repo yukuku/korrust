@@ -1534,7 +1534,7 @@ impl Checker<'_> {
                 .map(|(name, ty)| (name.clone(), ty.clone()))
                 .collect::<HashMap<_, _>>();
             let expected_argument = substitute(&params[*index].1, &fixed_types);
-            let value = if (!fixed.is_empty() || method.name == "<init>" && expected.is_some())
+            let value = if (!fixed.is_empty() || method.name == "<init>")
                 && !library.type_parameters.iter().any(|parameter| {
                     !fixed.contains(&parameter.name)
                         && mentions(&expected_argument, &parameter.name)

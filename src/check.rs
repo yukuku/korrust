@@ -45,6 +45,8 @@ mod anonymous;
 mod captures;
 #[path = "check_classes.rs"]
 mod classes;
+#[path = "check_constructor_aliases.rs"]
+mod constructor_aliases;
 #[path = "check_constructor_inference.rs"]
 mod constructor_inference;
 #[path = "check_contracts.rs"]
