@@ -681,6 +681,10 @@ pub fn compile_batch_with_options(
             .source_header(unit, owner)
             .map_err(|error| locate(error, owner))?;
     }
+    for (owner, unit) in &units {
+        check::preflight_local_annotations(unit, &classpath, owner)
+            .map_err(|error| locate(error, owner))?;
+    }
     for (index, module) in modules.iter().enumerate() {
         check::file_annotations(module, &classpath, None)
             .map_err(|error| error.for_source(&sources[index].identity))?;
@@ -1265,6 +1269,7 @@ fn declaration_units(
         );
     }
     let mut unit = syntax::Module {
+        local_annotations: context.local_annotations.clone(),
         file_annotations: Vec::new(),
         annotation_decl: None,
         type_locations: context.type_locations.clone(),

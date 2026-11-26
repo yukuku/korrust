@@ -283,6 +283,7 @@ impl Type {
 #[derive(Clone, Debug)]
 pub struct Module {
     pub file_annotations: Vec<AnnotationUse>,
+    pub local_annotations: Vec<(Vec<AnnotationUse>, &'static str)>,
     pub annotation_decl: Option<AnnotationDecl>,
     pub type_locations: Vec<(String, usize)>,
     pub type_aliases: Vec<TypeAliasDecl>,
@@ -1452,6 +1453,7 @@ fn string_parts_depth(
                     token.offset += expression_start;
                 }
                 let mut parser = Parser {
+                    local_annotations: Vec::new(),
                     in_delegation_expression: false,
                     annotation_context: false,
                     tokens,
@@ -1462,6 +1464,14 @@ fn string_parts_depth(
                 };
                 parser.lines();
                 let expression = parser.expr(0)?;
+                if !parser.local_annotations.is_empty() {
+                    return Err(parser
+                        .error("Annotations inside braced string templates are unsupported")
+                        .with_kind(
+                            DiagnosticKind::UnsupportedLanguage,
+                            "TEMPLATE_ANNOTATION_UNSUPPORTED",
+                        ));
+                }
                 parser.lines();
                 if !parser.at("<eof>") {
                     return Err(
@@ -1818,6 +1828,7 @@ struct ClassHeader {
 }
 
 struct Parser {
+    local_annotations: Vec<(Vec<AnnotationUse>, &'static str)>,
     in_delegation_expression: bool,
     annotation_context: bool,
     tokens: Vec<Token>,
@@ -5590,6 +5601,18 @@ impl Parser {
             return Err(self.error("Nesting exceeds the current limit"));
         }
         let offset = self.token().offset;
+        if self.at("@") && !self.starts_declaration("fun") {
+            let annotations = self.annotations()?;
+            let target = if self.at("val") || self.at("var") {
+                "LOCAL_VARIABLE"
+            } else {
+                "EXPRESSION"
+            };
+            self.local_annotations.push((annotations, target));
+            let statement = self.statement()?;
+            self.depth -= 1;
+            return Ok(statement);
+        }
         let kind = if self
             .tokens
             .get(self.pos + 1)
@@ -5614,7 +5637,11 @@ impl Parser {
                     "LOCAL_CLASS_UNSUPPORTED",
                 ));
         } else if self.starts_declaration("fun") {
-            let function = self.function()?;
+            let mut function = self.function()?;
+            if !function.annotations.is_empty() {
+                self.local_annotations
+                    .push((std::mem::take(&mut function.annotations), "METHOD"));
+            }
             StatementKind::LocalFunction(Box::new(function))
         } else if self.at("val") || self.at("var") {
             let mutable = self.take("var");
@@ -6110,6 +6137,11 @@ impl Parser {
         Ok(result)
     }
     fn prefix(&mut self) -> Result<Expr> {
+        if self.at("@") && !self.annotation_context {
+            let annotations = self.annotations()?;
+            self.local_annotations.push((annotations, "EXPRESSION"));
+            return self.prefix();
+        }
         if self.at("break") || self.at("continue") {
             let jump = self.statement()?;
             return Ok(Expr {
@@ -7586,6 +7618,7 @@ fn precedence(op: &str) -> Option<u8> {
 }
 pub fn parse(source: &str) -> Result<Module> {
     let mut p = Parser {
+        local_annotations: Vec::new(),
         in_delegation_expression: false,
         tokens: lex(source)?,
         pos: 0,
@@ -7743,6 +7776,7 @@ pub fn parse(source: &str) -> Result<Module> {
         return Err(p.error("Expected at least one function, enum class, object, or class"));
     }
     Ok(Module {
+        local_annotations: p.local_annotations,
         file_annotations,
         annotation_decl,
         type_locations: p.type_locations,

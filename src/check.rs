@@ -2,7 +2,10 @@
 mod annotation_placements;
 #[path = "check_jvm_fields.rs"]
 mod jvm_fields;
+#[path = "check_local_annotations.rs"]
+mod local_annotations;
 pub(crate) use jvm_fields::has_jvm_field;
+pub(crate) use local_annotations::validate as preflight_local_annotations;
 #[path = "check_class_delegation.rs"]
 mod class_delegation;
 #[path = "check_sealed.rs"]
@@ -6883,6 +6886,7 @@ pub fn check_with_owner(
 ) -> Result<Module> {
     let lexical_owner = owner;
     classpath.register_value_scope(owner, source, Vec::new());
+    local_annotations::validate(source, classpath, owner)?;
     annotation_placements::preflight_property_visibility(source, classpath)?;
     jvm_fields::preflight(source, classpath)?;
     if source.object_decl.as_ref().is_some_and(|object| {
