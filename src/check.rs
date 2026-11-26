@@ -2242,6 +2242,12 @@ impl Checker<'_> {
             right.ty.clone()
         } else if right.ty == Type::Null || right.ty == Type::Nullable(Box::new(inner.clone())) {
             Type::Nullable(Box::new(inner.clone()))
+        } else if inner.is_reference() && right.ty.is_reference() && self.subtype(&inner, &right.ty)
+        {
+            right.ty.clone()
+        } else if inner.is_reference() && right.ty.is_reference() && self.subtype(&right.ty, &inner)
+        {
+            inner.clone()
         } else {
             return Err(Diagnostic::new(
                 offset,
