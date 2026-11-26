@@ -6,3 +6,6 @@ import dep.lastValue
 fun inferred(a: Entry<String, Long>, b: Entry<String, Long>): Long = lastValue(a, b)
 fun spread(a: Entry<Int, String>, rest: Array<Entry<Int, String>>): String = lastValue(a, *rest)
 fun words(): Map<String, String> = mapOf("a" to "one", "b" to "two")
+
+fun optional(): Map<String, List<String>?> = mapOf("a" to listOf("one"), "b" to listOf("two"))
+fun emptyValue(): Map<String, String?> = mapOf("none" to null)

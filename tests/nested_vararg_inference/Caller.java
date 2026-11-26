@@ -9,5 +9,7 @@ public class Caller {
         Entry<Integer, String>[] rest = new Entry[]{new Entry<>(2, "last")};
         if (!ConsumerKt.spread(new Entry<>(1, "first"), rest).equals("last")) throw new AssertionError();
         if (!ConsumerKt.words().equals(Map.of("a", "one", "b", "two"))) throw new AssertionError();
+        if (!ConsumerKt.optional().get("a").equals(java.util.List.of("one"))) throw new AssertionError();
+        if (!ConsumerKt.emptyValue().containsKey("none") || ConsumerKt.emptyValue().get("none") != null) throw new AssertionError();
     }
 }

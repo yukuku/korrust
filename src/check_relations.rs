@@ -1587,8 +1587,19 @@ impl Checker<'_> {
                     "Conflicting expected generic result type",
                 ));
             }
+            let result_needs_widening =
+                !self.subtype(&substitute(result, &substitutions), expected);
             for (name, ty) in result_constraints {
-                substitutions.entry(name).or_insert(ty);
+                if result_needs_widening
+                    && !fixed.contains(&name)
+                    && substitutions
+                        .get(&name)
+                        .is_some_and(|input| self.subtype(input, &ty))
+                {
+                    substitutions.insert(name, ty);
+                } else {
+                    substitutions.entry(name).or_insert(ty);
+                }
             }
         }
         for _ in 0..library.type_parameters.len() {
