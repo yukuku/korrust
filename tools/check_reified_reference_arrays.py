@@ -52,6 +52,11 @@ def main():
     inputs.update({name: sha(ROOT / name) for name in ['Cargo.toml', 'Cargo.lock', 'tests/reified_reference_arrays.rs', 'tools/check_reified_reference_arrays.py']})
     inputs.update({name: sha(ROOT / name) for name in ['references/kotlin/compiler/backend/src/org/jetbrains/kotlin/codegen/inline/ReifiedTypeInliner.kt', 'references/kotlin-spec/docs/src/md/kotlin.core/rtti.md']})
     report = {'schema_version': 1, 'kind': 'correctness', 'created_at': created.isoformat(), 'status': 'running', 'selection': 'Erased parameterized reference classifiers for allocation-only reified uses and metadata-validated builtin array factories; Class<T>, Class<*>, Box<String>, List<String> and nested nonreified Class<U>; runtime component types and array stores; generic is/mixed-operation boundaries. Fixed official Java caller executed against both outputs with JVM verification.', 'compiler': {'binary_sha256': sha(binary)}, 'reference_compiler': {'pin': json.loads((ROOT / 'references/compiler.json').read_text())}, 'inputs': {'files_sha256': inputs}, 'dependencies': {str(stdlib): sha(stdlib), str(annotations): sha(annotations)}, 'commands': [], 'cases': []}
+    report['reference_interpretation'] = {
+        'specification': 'The RTTI section describes raw generic classifiers as runtime available and notes that classifier generics are partially runtime available.',
+        'pinned_jvm_evidence': 'ReifiedTypeInliner.processNewArray substitutes the ASM classifier name; the pinned compiler accepts the parameterized allocation substitutions exercised here.',
+        'scope': 'Allocation uses classifier erasure while source generic arguments remain checked. No generic-argument RTTI is introduced; generic is/mixed-operation cases remain explicitly unsupported.',
+    }
 
     def cp(*paths):
         return os.pathsep.join(map(str, paths))
