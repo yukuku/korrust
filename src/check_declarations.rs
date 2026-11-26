@@ -1331,7 +1331,12 @@ pub(super) fn check_class_with_constants(
                     && !method.function.internal
             }),
             constructor_bridge_context: false,
-            reified_parameters: Vec::new(),
+            reified_parameters: source
+                .methods
+                .iter()
+                .find(|method| method.function.name == name && method.function.offset == offset)
+                .map(|method| method.function.type_params.clone())
+                .unwrap_or_default(),
             exhaustiveness_flow: false,
             extension_receivers: Vec::new(),
             receiver_labels: HashMap::new(),

@@ -5,6 +5,7 @@ public class JavaTypes {
             private final String value;
             public Result(String value) { this.value = value; }
             public String tag() { return value; }
+            public static <T> String generic(T value) { return "generic:" + value; }
             public static Result make(String value) { return new Result(value); }
         }
         public static class Token<T> {

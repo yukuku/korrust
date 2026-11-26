@@ -34,7 +34,10 @@ class OwnOpaque: OpaqueBase() {
     fun make(): Opaque = Opaque("shadow-opaque")
 }
 class TypeParameter<Result>: Base() { fun identity(value: Result): Result = value }
-class FunctionParameter: Base() { fun <Result> identity(value: Result): Result = value }
+class FunctionParameter: Base() {
+    fun <Result> identity(value: Result): Result = value
+    fun <Result> valueShadow(Result: Base.Result): String = Result.tag()
+}
 class BuiltinShadow: Base() { fun name(): String = ArrayList.tag() }
 fun ordinaryList(): java.util.ArrayList<String> = ArrayList(listOf("ordinary"))
 

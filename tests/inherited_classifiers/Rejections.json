@@ -42,5 +42,13 @@
   {
     "id": "private-kotlin",
     "source": "import inherited.library.KotlinBase\nclass Bad: KotlinBase() { fun bad(value: KHidden): KHidden = value }"
+  },
+  {
+    "id": "class-parameter-constructor",
+    "source": "import inherited.library.JavaTypes.Base\nclass Bad<Result>: Base() { fun bad(): Any = Result(\"x\") }"
+  },
+  {
+    "id": "method-parameter-generic-static",
+    "source": "import inherited.library.JavaTypes.Base\nclass Bad: Base() { fun <Result> bad(): String = Result.generic<String>(\"x\") }"
   }
 ]

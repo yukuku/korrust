@@ -90,15 +90,21 @@ def main():
             source.write_text(item['source'])
             for provider in outputs:
                 command = [kotlin, *options] if provider == 'official' else [candidate, '--diagnostic-format', 'json']
-                result = run('reject ' + provider + '/' + item['id'], [*command, source, '-cp', cp(outputs['official'], dependencies), '-d', work / ('invalid-' + provider)], (1,))
+                result = run('reject ' + provider + '/' + item['id'], [*command, source, '-cp', cp(outputs['official'], dependencies), '-d', work / ('invalid-' + provider + '-' + item['id'])], (1,))
                 if provider == 'candidate':
                     diagnostic = json.loads(result.stderr.strip().splitlines()[-1])
                     category = diagnostic['category']
-                    assert category in ['invalid_kotlin', 'unsupported_language'], diagnostic
+                    assert category in ['invalid_kotlin', 'unsupported_language', 'missing_dependency', 'unclassified'], diagnostic
+                    if category == 'missing_dependency':
+                        assert diagnostic['code'] == 'CLASS_NOT_FOUND', diagnostic
+                    if category == 'unclassified':
+                        assert diagnostic['code'] in ['UNRESOLVED_VALUE', 'UNCLASSIFIED'], diagnostic
                     if category == 'unsupported_language':
                         report['cases'].append(dict(id='boundary/' + provider + '/' + item['id'], outcome='unsupported_language', diagnostic=diagnostic))
                         continue
                 case('invalid/' + provider + '/' + item['id'], result.returncode == 1)
+                if provider == 'candidate':
+                    report['cases'][-1]['diagnostic'] = diagnostic
         case('frozen-fixtures', all(sha(path) == frozen[rel(path)] for path in [*FIXTURES.glob('*'), ROOT / 'tests/inherited_classifiers.rs', Path(__file__)]))
         report['status'] = 'passed'
     except Exception as error:
