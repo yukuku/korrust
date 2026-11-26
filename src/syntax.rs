@@ -676,7 +676,7 @@ impl PropertyDecl {
     pub(crate) fn inference_expression(&self) -> Option<&Expr> {
         self.initializer
             .as_ref()
-            .or_else(|| match self.body.as_slice() {
+            .or(match self.body.as_slice() {
                 [
                     Statement {
                         kind: StatementKind::Return(Some(expr)),
