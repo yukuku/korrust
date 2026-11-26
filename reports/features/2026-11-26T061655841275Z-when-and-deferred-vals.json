@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-26T06:16:55.841275+00:00",
+  "status": "passed",
+  "compiler": {
+    "binary_sha256": "8d855da94f631f3966ce81bcc0582b8b6dc124dba8497b4e770f9cbc0c3ac955",
+    "source_revision": "2064738a6"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "evidence": [
+    "reports/correctness/2026-11-26T060557409400Z-when-result-joins.json",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals.json"
+  ],
+  "features": [
+    {
+      "name": "When result joins include explicit else and abrupt entries",
+      "status": "partial",
+      "scope": "Supported subtype relationships and nullable carriers join across every normally continuing when entry, including explicit else. Return and throw branches retain abrupt flow. Fixed official Java and Kotlin consumers execute on both providers with verification; declared public/protected API matches.",
+      "restrictions": [
+        "Unrelated reference and mixed numeric common-supertype inference remains explicitly unsupported. Existing Unit and all-abrupt exhaustive result boundaries remain."
+      ],
+      "evidence_report": "reports/correctness/2026-11-26T060557409400Z-when-result-joins.json"
+    },
+    {
+      "name": "Deferred local val initialization across if and when",
+      "status": "partial",
+      "scope": "Definite assignment intersects normal exits and possible prior assignment unions them. All-path branch initialization, early returns, expression branches, repeating-loop-local declarations, shadowing, reference/wide locals and initialized immutable captures execute correctly on both JVM outputs. Uninitialized reads and repeated, possible repeated, nested or captured writes are rejected in agreement with the pinned compiler.",
+      "restrictions": [
+        "Outer deferred val assignments across repeating loop boundaries, exception edges and conditional short-circuit effects remain explicitly unsupported. Ordinary all-path if/when assignments, loop-local vals and initialized immutable captures are covered."
+      ],
+      "evidence_report": "reports/correctness/2026-11-26T060908051705Z-deferred-vals.json"
+    },
+    {
+      "name": "Unchanged Provider070 compilation and JVM verification",
+      "status": "supported",
+      "scope": "Original AndroidBible Provider.kt compiles unchanged against its resolved Gradle classpath to four owned classes. All four classes link and expose their declared members under-Xverify:all with initialization disabled.",
+      "restrictions": [
+        "Provider Android behavior was not executed. This establishes source compilation and JVM linking, not full-application or Android runtime compatibility."
+      ],
+      "evidence_report": "reports/correctness/2026-11-26T060908051705Z-deferred-vals.json"
+    }
+  ],
+  "validation": {
+    "when_counts": {
+      "pass": 13,
+      "unsupported_language": 2
+    },
+    "deferred_counts": {
+      "pass": 13,
+      "invalid_rejected": 7,
+      "unsupported_language": 3
+    },
+    "deferred_integration": "pass",
+    "clippy": "pass for both frozen fixtures",
+    "full_library": "Frozen2064738a6:294 pass; one stale predecessor suspend-receiver assertion corrected separately infacdc39dd with a positive parsed-shape and descriptor test.",
+    "format": "Frozen format differences recorded, including the subsequently corrected capture diagnostic format",
+    "report_generator_tests": "8 pass"
+  },
+  "inputs": {
+    "evidence_sha256": {
+      "reports/correctness/2026-11-26T060557409400Z-when-result-joins.json": "5a4c9fa2ea4d4b3dfff0df39d1daae81413d5d78cbadabb71d16985365ba7017",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals.json": "acb12e24002cb529d39e00f122242dfd2d027227c0ad790264a622a8ed62a2fe"
+    }
+  }
+}

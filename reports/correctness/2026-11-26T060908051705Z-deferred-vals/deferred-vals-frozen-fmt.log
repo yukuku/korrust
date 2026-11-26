@@ -1,0 +1,139 @@
+Diff in /workspace/work/targets159/deferred-vals-freeze/src/bytecode.rs:2239:
+                 }
+                 if (self.in_lambda
+                     || self.owner != method.owner
+-                        && (method.access & 8 == 0 || self.owner.starts_with(&format!("{}$", method.owner))))
++                        && (method.access & 8 == 0
++                            || self.owner.starts_with(&format!("{}$", method.owner))))
+                     && method.access & 2 != 0
+                 {
+                     self.method_reference(
+Diff in /workspace/work/targets159/deferred-vals-freeze/src/bytecode.rs:2547:
+                             .map_err(|_| failure("Too many interface call arguments"))?,
+                         0,
+                     ]);
+-                } else if (self.in_lambda || self.owner != method.owner) && method.access & 2 != 0
+-                {
++                } else if (self.in_lambda || self.owner != method.owner) && method.access & 2 != 0 {
+                     self.method_reference(
+                         0xb8,
+                         &method.owner,
+Diff in /workspace/work/targets159/deferred-vals-freeze/src/check.rs:2464:
+             let private_allowed = self
+                 .classpath
+                 .file_private_visible(&self.lambda_owner, &method)
+-                || self.classpath.private_companion_method_visible(&self.lambda_owner, &method)
++                || self
++                    .classpath
++                    .private_companion_method_visible(&self.lambda_owner, &method)
+                 || method.access & 2 != 0
+                     && (self.lambda_owner == method.owner
+                         || self.lambda_owner.starts_with(&format!("{}$", method.owner)));
+Diff in /workspace/work/targets159/deferred-vals-freeze/src/check_functions.rs:437:
+                     expr.offset,
+                     format!("Variable {name} must be initialized before capture"),
+                 )
+-                .with_kind(crate::DiagnosticKind::InvalidKotlin, "UNINITIALIZED_VARIABLE"));
++                .with_kind(
++                    crate::DiagnosticKind::InvalidKotlin,
++                    "UNINITIALIZED_VARIABLE",
++                ));
+             }
+             let value = if let Some((cell, ty)) = self.cell_binding(&name) {
+                 if self.cell_is_readonly(&name) {
+Diff in /workspace/work/targets159/deferred-vals-freeze/src/check_library.rs:431:
+                     &method.owner,
+                     method.access,
+                 )
+-                || self.classpath.private_companion_method_visible(&self.lambda_owner, method)
++                || self
++                    .classpath
++                    .private_companion_method_visible(&self.lambda_owner, method)
+                 || method.access & 2 != 0
+                     && (self.lambda_owner == method.owner
+                         || self.lambda_owner.starts_with(&format!("{}$", method.owner)))
+Diff in /workspace/work/targets159/deferred-vals-freeze/src/check_library.rs:563:
+             let mut seen_scopes = HashSet::new();
+             while let Some(owner) = scope {
+                 if !seen_scopes.insert(owner.clone()) {
+-                    return Err(Diagnostic::new(offset, "Cyclic lexical classifier hierarchy"));
++                    return Err(Diagnostic::new(
++                        offset,
++                        "Cyclic lexical classifier hierarchy",
++                    ));
+                 }
+                 scope = self.classpath.lexical_parent(&owner);
+                 let Ok(class) = self.classpath.load(&owner) else {
+Diff in /workspace/work/targets159/deferred-vals-freeze/src/classpath.rs:751:
+         self.lexical_parents.borrow().get(owner).cloned()
+     }
+
+-    pub(crate) fn private_companion_method_visible(&self, caller: &str, method: &JavaMethod) -> bool {
+-        method.access & 2 != 0 && self.is_source(&method.owner)
++    pub(crate) fn private_companion_method_visible(
++        &self,
++        caller: &str,
++        method: &JavaMethod,
++    ) -> bool {
++        method.access & 2 != 0
++            && self.is_source(&method.owner)
+             && method.owner.rsplit_once('$').is_some_and(|(outer, name)| {
+-                self.lexically_within(caller, outer) && self.load(outer).is_ok_and(|class| {
+-                    class.library.as_ref().and_then(|l| l.companion_name.as_deref()) == Some(name)
+-                })
++                self.lexically_within(caller, outer)
++                    && self.load(outer).is_ok_and(|class| {
++                        class
++                            .library
++                            .as_ref()
++                            .and_then(|l| l.companion_name.as_deref())
++                            == Some(name)
++                    })
+             })
+     }
+
+Diff in /workspace/work/targets159/deferred-vals-freeze/src/syntax.rs:674:
+ }
+ impl PropertyDecl {
+     pub(crate) fn inference_expression(&self) -> Option<&Expr> {
+-        self.initializer
+-            .as_ref()
+-            .or(match self.body.as_slice() {
+-                [
+-                    Statement {
+-                        kind: StatementKind::Return(Some(expr)),
+-                        ..
+-                    },
+-                ] => Some(expr),
+-                _ => None,
+-            })
++        self.initializer.as_ref().or(match self.body.as_slice() {
++            [
++                Statement {
++                    kind: StatementKind::Return(Some(expr)),
++                    ..
++                },
++            ] => Some(expr),
++            _ => None,
++        })
+     }
+
+     pub fn visibility(&self) -> PropertyVisibility {
+Diff in /workspace/work/targets159/deferred-vals-freeze/src/syntax.rs:3775:
+                     "CLASS_VISIBILITY_UNSUPPORTED",
+                 ));
+         }
+-        if visibility.as_deref() == Some("private")
+-            && (value_ || sealed_ || open || abstract_)
+-        {
+-            return Err(self.error("Private nested value, sealed, open and abstract classes are unsupported").with_kind(DiagnosticKind::UnsupportedLanguage, "PRIVATE_NESTED_SHAPE_UNSUPPORTED"));
++        if visibility.as_deref() == Some("private") && (value_ || sealed_ || open || abstract_) {
++            return Err(self
++                .error("Private nested value, sealed, open and abstract classes are unsupported")
++                .with_kind(
++                    DiagnosticKind::UnsupportedLanguage,
++                    "PRIVATE_NESTED_SHAPE_UNSUPPORTED",
++                ));
+         }
+         if !self.take("class") {
+             return Err(self.error("Only ordinary final classes are supported"));

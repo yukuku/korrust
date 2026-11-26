@@ -1,0 +1,1796 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T06:09:08.051705+00:00",
+  "status": "pass",
+  "selection": "Deferred local val initialization tracks normal exits and possible prior assignments across if and when, with loop-local declarations, shadowing, wide and reference values, abrupt assignment RHS and immutable capture. Fixed official Java caller and pinned Kotlin consumers run against both outputs with verification.",
+  "compiler": {
+    "binary_sha256": "8d855da94f631f3966ce81bcc0582b8b6dc124dba8497b4e770f9cbc0c3ac955",
+    "source_revision": "2064738a6"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "inputs": {
+    "files_sha256": {
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/annotation_declarations.rs": "baaecfc70c577f5bfd2da8556ccac3716f888b409883cd80829b8c798918c782",
+      "src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525",
+      "src/check_interfaces.rs": "ad86cd683d63c726370ebc62402ab9514671fe3decd263d652e5b218f5da6524",
+      "src/check_java_properties.rs": "f3da739960dcbcee99a9b205e29afd330defef89e1089e9a152d5d0efd0c51fd",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/bytecode.rs": "7d29689a9bcc5a3fe37a68cf6e5cb213635ab524fba925ecacd61cfa836df74c",
+      "src/check_local_annotations.rs": "ad5d937aae27ec3bed4528322c068a39eca915a49c449b68b2c4453f87f1a770",
+      "src/check_inner_classes.rs": "b799a4df016e056d127610e359ec06951e05e22e4778a7ffa31934e892cd6e05",
+      "src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+      "src/check_classes.rs": "730d30f5c5047eb9f1c7aaa55fda19e3e2117a954c1cbda4bbc62d52d2acdf53",
+      "src/jvm_descriptor.rs": "3946ec2e66e89185c9d3e284f9d114e29e5e88d0a3eba52ec39fba2200d07ad2",
+      "src/check_unsigned.rs": "7c60ab78a2f2162d0beffbc79d41976a06bc6fb446c1cc9f91de10fc6072e606",
+      "src/check_class_delegation.rs": "1089bac71516daad07ec7245aa8594956feca30ecf926e19ff82c895caba7364",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/metadata.rs": "fdf4fcfe25ef5174651d65aa1e0a83daa03fc87d8cf610066c45beeea2ea46ae",
+      "src/check_member_extensions.rs": "943af7b1c7b65c2a495dd628e42b105f44f41f6f19b736fa8e57a0cfd255a81f",
+      "src/check_varargs.rs": "461fe197ed8507a21ab7aa60cede390d70fd1fce9867015561b1d43738d7d14b",
+      "src/classpath.rs": "e4aec48fee1cf31e61480b16ac5a3ae3d1fd4fec4c0002743221055b0db7bc02",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/check_references.rs": "1b416efc0ba31fd0214f3399ca9b265e4d5bd2c47f683986ebee5244a555a421",
+      "src/check_functions.rs": "70da81e22b908369ddeecf1aecb0b0a712cbc87d7b45ff3b0aad42efe3780fca",
+      "src/check_companion_properties.rs": "c974d1059e7cb92644cd1a186492200828341f64b7e95d0ae4c052356537edba",
+      "src/check.rs": "ae10eb4a5e0a2eb020ce32f20329f167262d9b235ef73d06c30e4963446e21f8",
+      "src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+      "src/lib.rs": "db0338e838d0b0ee095d2fec4f37fc73f96955fd868231743f9b3dfb3182d712",
+      "src/check_java_nullability.rs": "40e1e816200bc92d6d7e5ab5fa57b4e3e351967072da160996e5a888b3acb923",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/check_operations.rs": "cc85ce35431dfeaefbcf5822966c58aaf8cc3465108252f383a40eb928f85b0f",
+      "src/check_library.rs": "0b73897d4fb87d5f587137a69f03133525b5bf5ef5ec6db8375ac4a16660c3c7",
+      "src/check_relations.rs": "a22adb8d3f6cd81328dd2c3a9260ff4b43c599fb6f2540d11999e6b928eeb4b3",
+      "src/check_declarations.rs": "c551b42b09b1f34b7a6a0f0d0631c4a5dfd1c7d150ea854a2547a2dfdc7ac88f",
+      "src/check_overloads.rs": "a1a5066cd8bf1dd196ce49975678360f043fc2d48f1c1dcf7ce607f57e00bb43",
+      "src/check_captures.rs": "f752d88bb81c26576caad658160a332fa21946e7275e6faf331bfd73f6a84479",
+      "src/check_stable_properties.rs": "ab5802177db74c4652aa8643124bd93b5acb7fff925e6c0ad6c990c877dc80fe",
+      "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+      "src/check_ir_walk.rs": "6a7c435002dee1142b592d2c42551b845d9dbe3a6416ba9cd3f04c2d70c1c38a",
+      "src/check_variant_signatures.rs": "e63bc47c0b4db3d5a07c0e4a2239283f0a8592c1716f0923ca69c2f0ea351bd8",
+      "src/check_annotation_placements.rs": "027e77c6a6db60f98262fbaf0f44be170c53b58b03d64ae6e8cc43cdb2dc1579",
+      "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "src/check_control.rs": "6333d7c8a5465154b5e2e519a7598f576c38f7b6a9f6dd2b5b2f5ed60811f532",
+      "src/check_constructor_inference.rs": "dd3d94a733c0acaea93af34f1e130c4338fc11127cbb7cba08f452d7c94d0d1e",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/const_eval.rs": "24319c4a5076f678ed53cbeeff7c52c4bdcf081c9f78485514326e92078e10fd",
+      "src/compiled_inline.rs": "8ea572f28116c44057b1341b02a9869a2690c0d3cd6b38a086ce063675791ed1",
+      "src/check_constructor_aliases.rs": "a64e341da62e7b292607926f34f5ad2a570f103f3a2141c40be6ff9bf1a94527",
+      "src/check_initialization.rs": "9c56c8abd1eb964ad4e51ac03cdf7a40d73414a4c9984ae6e6525a37f6b5bdee",
+      "src/check_objects.rs": "8da2bd88d0708d7ecf0415e72a67bae6645d204216c3e3e7b7217dceff8580b4",
+      "src/check_contracts.rs": "06434fc5c0999ff69dfb902c50e7bc3b3d4802ae5d3592fbcf0496e9c3bb491d",
+      "src/source_inline.rs": "d59ecaba2b32264cc4190594c19e5ec7e99e6cbb5db28b33c1eaca7c7aa404e5",
+      "src/check_anonymous.rs": "bdda3b304625e713a46c112ea557448646c40113d391d9c4073fe52e12da836d",
+      "src/syntax.rs": "6296bb50080dcc8df7e2e352e1cfc85b17f6ec0384aa41aa48336721b38a4b2d",
+      "src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+      "src/classpath/value_names.rs": "3987b5b3c7bda875d213bda719a1a7a5b44797b3f1f3b49170108200bb4348ce",
+      "src/classpath/jdk_modules.rs": "cd1a350e7f8e03cda618a1d919d4e6ee49aba7e9a26728178ebad5f73c4bd8f8",
+      "src/classpath/signature.rs": "acac544bc6e8b57d298f203413f302e209792a3e57cfe455c0965deb53a438d8",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/nullability_defaults.rs": "8edf9187cd6214380a936c0484c280c7b3f3a973212d3f830c5316feedd4724b",
+      "src/classpath/metadata.rs": "7cc0054676dba5cc649cec0b113612a2a9471c810fa40ef651ac7985d11165e0",
+      "src/classpath/source_enums.rs": "1b6719565931913df35f26994fb0077985f1f5c89614fb1b5d4009e63957933d",
+      "src/classpath/singletons.rs": "836fe172f37cc9282e259ba446688b3d2d6bf34fde25ddc3973c1800f29c71a5",
+      "src/classpath/nested.rs": "764dd9eaf0188f91ba018707557e72df76b9c44b0120c8d69574044c8f5e78e9",
+      "src/classpath/package_info.rs": "f3bd436a8c64d48216bae3a55a2a3e82a903d354a42b629928fe1af95197061a",
+      "src/classpath/inline_defaults.rs": "dadace0ef70c2e788fa6c7ffb49bb53119a74be6221435c6c124c1abc8391c5b",
+      "src/classpath/aliases.rs": "714b195f4716ea32d5dc8985048e282efb1fb3a1508490dcab5d49753534b80c",
+      "src/classpath/archive.rs": "835e4a79bbbc5c7328ce6a540ed1a2ca975fc526278fe7c31fd9433e08cc56d5",
+      "src/classpath/compose_abi.rs": "3d143c364e3cf818c12cd15593be34edc45ec8a3f70a12403a99174bb912e4f7",
+      "src/classpath/source.rs": "c45629824c6d436700a34414910c8d8791afa3837f5aaca4a3cb68a45b359db4",
+      "src/classpath/jvm_builtins.rs": "b8c6e4789a998c1b3737da4879a15d74eb453170c4b03542d4c8ae13f6e40e86",
+      "src/classpath/import_classes.rs": "65a1563c6df2772ac3d71602a54e7fd1b64bab1ab51d6053e74bdb65b2bf5f4e",
+      "src/bytecode/frames.rs": "b2e346435d7cb21fbcbf0ec248c8c54fa77273198f1321fb58d84c741e77caff",
+      "src/bytecode/annotation_files.rs": "0fe8ebba7bbd2c80fcdd6fda797b448ca8cd63945b100781361bf1e3ace02eaa",
+      "src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+      "src/bytecode/lambdas.rs": "1cacc1ea9acb473c0079dd302e50933e919826e8791370d1f4c19e4abdf48d6c",
+      "src/bytecode/inline.rs": "d1dbc06ea0c65d833333adb752ce2cdf05c5cc1678a99a6478440041d437aaea",
+      "src/bytecode/anonymous_context.rs": "0864951c7a7e94772ee8e410c49175fed879358204aff745a1f7a315fc1b0283",
+      "src/bytecode/class_companion.rs": "b5c6f75d8c24b3edbe1ae2583693c31b511e4d456734b160d2904b7c6072a62c",
+      "src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+      "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+      "src/bytecode/compose_lambdas.rs": "9c74c11d3e2deaaf5846bbe294614c440c0c1d0ad9881ae662caaf48ea1574ef",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/suspend.rs": "12d14af2ae28e70681d318341540ec257892ac65b0afb1604465bc3ce9658979",
+      "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "src/bytecode/interfaces.rs": "e283e506529e64a83d7408f6dbd52d44336cc3a5d1e768428df46670cafd4c2b",
+      "src/bytecode/defaults.rs": "d092d8a420cfb719f92dbb9a3bcc58f7c644d67bf9b3c611c72949122c22e827",
+      "src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/compiled_inline/defaults.rs": "89d95d8b98e4af043bc3c592ba7588bffb7924bc86bdae57d457c0b420cbde37",
+      "tests/deferred_vals/Values.kt": "530abf3d3929f49e1fa4d67428a766daff014c128b8d14253bd38b750d9e405e",
+      "tests/deferred_vals/InvalidCaptureWrite.kt": "105586f54ded178b75bb0cbb1677c6d29edd5078a074ddf256c6b0d31297803d",
+      "tests/deferred_vals/InvalidNestedWrite.kt": "81f506cff38a3782470ea0e63da5aa2882a4a8aad8084091ce6c2acbcbcfe61a",
+      "tests/deferred_vals/InvalidCaptureBefore.kt": "6f6aad1f89df4f397541d6091c96f82bbed83326b22ce0ff741e7ed698051d1d",
+      "tests/deferred_vals/UnsupportedConditional.kt": "512a24151117cfc6b6d14d82dd80c6a54e0408f03e5809f710ad4f976f5ba807",
+      "tests/deferred_vals/InvalidMaybeWrite.kt": "bc1249a5a9880bf8f9399a13ccff5b354fb887cdedabbf4dcc5f289f12f5abaf",
+      "tests/deferred_vals/InvalidBranchRead.kt": "2dd8915a9044f8141a100a860dfe44a64369f4768c86760c18930cd00b88c3c8",
+      "tests/deferred_vals/InvalidRead.kt": "eb96e034fd7f7cf2f871cb223edbef17e4b82765d69477bbcc1913536e32af01",
+      "tests/deferred_vals/Calls.java": "257f7107bd39ce02c76dc308fa757fe5bac091b546a8054c77de6a373a0876f7",
+      "tests/deferred_vals/UnsupportedTry.kt": "56b07f66bc057c0091623d4bd38e34596f27b1eb0db475496291ee8228388457",
+      "tests/deferred_vals/InvalidDouble.kt": "df724cd0165a7fb3f2faf99abeacf603b7b450ab5cb42dbc166bd991fc8a760b",
+      "tests/deferred_vals/Consumer.kt": "961dc395c3b9e91277415456ef03ad9f6a3123fa626a5dde5936a9495b79f7e6",
+      "tests/deferred_vals/UnsupportedLoop.kt": "6a5d6603059b526584c6d90e7a77b5f4fa5fd1f1d3c8b0b8f87030cf8dec07e6",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "tests/deferred_vals.rs": "be25210e3206ca55223d18a9b2c58fbca26abeeffece7df7ef0b4e77037d103e",
+      "tools/check_deferred_vals.py": "a32e9735b97fbe7eacf57890faee2789aefb2e4992621bc8298f4e5127144c1b"
+    },
+    "evidence_sha256": {
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/000-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/000-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/001-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/001-stdout.txt": "52d68ed5b8b2766289dd70f0ce1652b1b1465a82199f046e218206e1b7dae82a",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/002-stderr.txt": "312e9bd919c699a2f8409f70240177012720c94095f0f4374d44152defc50f7e",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/002-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/003-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/003-stdout.txt": "4a8347c1188e5448a3684813dff21524fccf64065a54fbade3575a19547676ff",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/004-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/004-stdout.txt": "971f74a233f90847d925f85cc6da47768ed92fea5ca3318f93e0cd67cdc50ebe",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/005-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/005-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/006-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/006-stdout.txt": "d6781fb53952896821b5ae09e8d2e5825670b2312db1adc0b5efa47613947e09",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/007-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/007-stdout.txt": "4a8347c1188e5448a3684813dff21524fccf64065a54fbade3575a19547676ff",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/008-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/008-stdout.txt": "f9c8d55a6d6f2b2eba20286b8525dee06df14c614f74ba379275083939994b96",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/009-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/009-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/010-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/010-stdout.txt": "d6781fb53952896821b5ae09e8d2e5825670b2312db1adc0b5efa47613947e09",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/011-stderr.txt": "b627b6099e549d90b50fbe6b8e2d0a549107a13c2e51f23062052d2e382cee23",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/011-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/012-stderr.txt": "5ae23eeaadb7a4a792c9241339bf633c825f227f284701659c98621199670136",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/012-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/013-stderr.txt": "9daf1dd47fc2e8aee0c305d4284ae1a92abc8953876c4d12978118c39e58cf6b",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/013-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/014-stderr.txt": "9b919292fc2881d6ca6a619b50b0892e30901e85129eb6f4e06c99c784d3696c",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/014-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/015-stderr.txt": "5bfadc76e71710d9c2bc8ff8af02c242de3cb40c1f7797c5f25a01b4c8a726b7",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/015-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/016-stderr.txt": "6209efac7b92102985e810d30c0817d1f40101d6110d55de974214f76d1309d4",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/016-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/017-stderr.txt": "98ff9040e47e16d87096d7485b06748d5d8392d818609aff7cf14823c732f810",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/017-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/018-stderr.txt": "c4075da697ae976173e87361cba7915826ff479769f939189ebf8425885285cf",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/018-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/019-stderr.txt": "0445c32a8fc5f579e4c3fec0b9d809e4e59bcde15eb4547f3fb6fbfe07ea20f1",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/019-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/020-stderr.txt": "f7019f6449700aa1a11113869d2c5c3583ca4d04a4c0ccb49648e6777b58470d",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/020-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/021-stderr.txt": "bc1574ddf936078e4f3840f4902bb5c56559292782e899c97105c404da5d2080",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/021-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/022-stderr.txt": "f9c11ff78fc07fa0295a9a9ca3b7447a2e9a2a0d1c9a2c4405d8ab94a191e95f",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/022-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/023-stderr.txt": "0a70397616fdc42eccb99b390b126fefb06ba2c87125861dfd083a3a17ce471b",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/023-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/024-stderr.txt": "48ee4b86a01400347381ae8d78390de64f64d3c96166954a8b6e9a955921e614",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/024-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/025-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/025-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/026-stderr.txt": "46af8f78f4486bafb5d27910f0f187f5e736f27b864f7c7cc4eecaa214cfbd43",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/026-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/027-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/027-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/028-stderr.txt": "97b01f13d197dfec6d690a016956c682be80a2e8477ddeb8bc51a0656185583a",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/028-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/029-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/029-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/030-stderr.txt": "730a6c65b47c5f1391c6dd495f6ae0d57174247b0ba0926be221f65b0306791e",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/030-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application-0-stderr.txt": "312e9bd919c699a2f8409f70240177012720c94095f0f4374d44152defc50f7e",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application-0-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application-1-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application-1-stdout.txt": "f598b681a7ee768cb342ffb428af11622e8e64a1f9add29e97f052a01b0226b0",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application-VerifyProvider.java": "5dfd7b26e2126e6d56e6578ceffa801f9b98626fe89459e7ccae13fdcc0ba289",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application-classpath-model.json": "f035d74ab94f14b25bf425150a508bede2e083895a58aeb01167f7f9551118e5",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application-reproducer.py": "ad03bd68fbd2000cd76e3994593df4bbc5572a28b58a95ef8ca6b3864b9077de",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application070.json": "71622024a9054a7439a2ad89a72ef36cb75a10a3f90496cb026d824256f36aca",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/deferred-vals-frozen-build.log": "2d777fbe385fa3244ed2196a16c091e806eb19f96ef9250714711ead39ce078f",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/deferred-vals-frozen-clippy.log": "0aaf3d7b48f9aa08fa0f0b0bcefc06b7372a77ea722263436bea8d19ef226a42",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/deferred-vals-frozen-fmt.log": "483bf1907ec72ca9fda3da1ba60b5d948e795822b6119be639ee9f4f3e3107ea",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/deferred-vals-frozen-integration.log": "5a845efe144b8cc60a2cb89e5e31b298ceb70e3bd758bb78b5ea626d116f213a",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/deferred-vals-frozen-test.log": "4be4717c2fff2cdf078529ee68c0d3f51757bf85ce93eaefd39e1fd50b5cc2e9",
+      "reports/correctness/2026-11-26T060908051705Z-deferred-vals/when-deferred-report-tests.log": "90daeb2e188fc5ab059c3c4f6304dea6a79c000516affd252b4979ab15d0e64d"
+    }
+  },
+  "dependencies": {
+    "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "commands": [
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/Values.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/000-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/korrust-frozen",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/Values.kt",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "deferred_vals",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/001-stderr.txt"
+    },
+    {
+      "id": "fixed-java-caller",
+      "argv": [
+        "javac",
+        "--release",
+        "8",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/official:/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/caller",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/Calls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/002-stderr.txt"
+    },
+    {
+      "id": "official/runtime",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/caller:/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/official:/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "deferredvalscheck.Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/003-stderr.txt"
+    },
+    {
+      "id": "official/signatures",
+      "argv": [
+        "javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/official",
+        "deferredvals.ValuesKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/004-stderr.txt"
+    },
+    {
+      "id": "official/official-consumer",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/official:/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/official-consumer"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/005-stderr.txt"
+    },
+    {
+      "id": "official/kotlin-consumer-runtime",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/official-consumer:/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/official:/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "deferredvalsconsumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/006-stderr.txt"
+    },
+    {
+      "id": "candidate/runtime",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/caller:/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/candidate:/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "deferredvalscheck.Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/007-stderr.txt"
+    },
+    {
+      "id": "candidate/signatures",
+      "argv": [
+        "javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/candidate",
+        "deferredvals.ValuesKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/008-stderr.txt"
+    },
+    {
+      "id": "official/candidate-consumer",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/candidate:/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/candidate-consumer"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/009-stderr.txt"
+    },
+    {
+      "id": "candidate/kotlin-consumer-runtime",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/candidate-consumer:/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/candidate:/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "deferredvalsconsumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/010-stderr.txt"
+    },
+    {
+      "id": "official/InvalidBranchRead-official",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidBranchRead.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/InvalidBranchRead-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/011-stderr.txt"
+    },
+    {
+      "id": "candidate/InvalidBranchRead-candidate",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/korrust-frozen",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidBranchRead.kt",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "deferred_vals",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/InvalidBranchRead-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/012-stderr.txt"
+    },
+    {
+      "id": "official/InvalidCaptureBefore-official",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidCaptureBefore.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/InvalidCaptureBefore-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/013-stderr.txt"
+    },
+    {
+      "id": "candidate/InvalidCaptureBefore-candidate",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/korrust-frozen",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidCaptureBefore.kt",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "deferred_vals",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/InvalidCaptureBefore-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/014-stderr.txt"
+    },
+    {
+      "id": "official/InvalidCaptureWrite-official",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidCaptureWrite.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/InvalidCaptureWrite-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/015-stderr.txt"
+    },
+    {
+      "id": "candidate/InvalidCaptureWrite-candidate",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/korrust-frozen",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidCaptureWrite.kt",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "deferred_vals",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/InvalidCaptureWrite-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/016-stderr.txt"
+    },
+    {
+      "id": "official/InvalidDouble-official",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidDouble.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/InvalidDouble-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/017-stderr.txt"
+    },
+    {
+      "id": "candidate/InvalidDouble-candidate",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/korrust-frozen",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidDouble.kt",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "deferred_vals",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/InvalidDouble-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/018-stderr.txt"
+    },
+    {
+      "id": "official/InvalidMaybeWrite-official",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidMaybeWrite.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/InvalidMaybeWrite-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/019-stderr.txt"
+    },
+    {
+      "id": "candidate/InvalidMaybeWrite-candidate",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/korrust-frozen",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidMaybeWrite.kt",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "deferred_vals",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/InvalidMaybeWrite-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/020-stderr.txt"
+    },
+    {
+      "id": "official/InvalidNestedWrite-official",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidNestedWrite.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/InvalidNestedWrite-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/021-stderr.txt"
+    },
+    {
+      "id": "candidate/InvalidNestedWrite-candidate",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/korrust-frozen",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidNestedWrite.kt",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "deferred_vals",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/InvalidNestedWrite-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/022-stderr.txt"
+    },
+    {
+      "id": "official/InvalidRead-official",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidRead.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/InvalidRead-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/023-stderr.txt"
+    },
+    {
+      "id": "candidate/InvalidRead-candidate",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/korrust-frozen",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidRead.kt",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "deferred_vals",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/InvalidRead-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/024-stderr.txt"
+    },
+    {
+      "id": "official/UnsupportedConditional-official",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/UnsupportedConditional.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/UnsupportedConditional-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/025-stderr.txt"
+    },
+    {
+      "id": "candidate/UnsupportedConditional-candidate",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/korrust-frozen",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/UnsupportedConditional.kt",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "deferred_vals",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/UnsupportedConditional-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/026-stderr.txt"
+    },
+    {
+      "id": "official/UnsupportedLoop-official",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/UnsupportedLoop.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/UnsupportedLoop-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/027-stderr.txt"
+    },
+    {
+      "id": "candidate/UnsupportedLoop-candidate",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/korrust-frozen",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/UnsupportedLoop.kt",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "deferred_vals",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/UnsupportedLoop-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/028-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/028-stderr.txt"
+    },
+    {
+      "id": "official/UnsupportedTry-official",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/UnsupportedTry.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/UnsupportedTry-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/029-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/029-stderr.txt"
+    },
+    {
+      "id": "candidate/UnsupportedTry-candidate",
+      "argv": [
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/korrust-frozen",
+        "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/UnsupportedTry.kt",
+        "-cp",
+        "/workspace/work/targets159/deferred-vals-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "deferred_vals",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/UnsupportedTry-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/030-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/030-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "official/compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "caller/compile-official",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/runtime",
+      "outcome": "pass",
+      "observed": "deferred-vals-ok"
+    },
+    {
+      "id": "official/signatures-read",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/kotlin-consumer-compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/kotlin-consumer-runtime",
+      "outcome": "pass",
+      "observed": "deferred-consumer-ok"
+    },
+    {
+      "id": "candidate/runtime",
+      "outcome": "pass",
+      "observed": "deferred-vals-ok"
+    },
+    {
+      "id": "candidate/signatures-read",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/kotlin-consumer-compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/kotlin-consumer-runtime",
+      "outcome": "pass",
+      "observed": "deferred-consumer-ok"
+    },
+    {
+      "id": "InvalidBranchRead",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidBranchRead.kt",
+          "offset": 114,
+          "category": "invalid_kotlin",
+          "code": "UNINITIALIZED_VARIABLE",
+          "message": "Variable must be initialized before use: answer",
+          "path": "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidBranchRead.kt",
+          "line": 4,
+          "column": 40
+        }
+      ]
+    },
+    {
+      "id": "InvalidCaptureBefore",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidCaptureBefore.kt",
+          "offset": 88,
+          "category": "invalid_kotlin",
+          "code": "UNINITIALIZED_VARIABLE",
+          "message": "Variable answer must be initialized before capture",
+          "path": "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidCaptureBefore.kt",
+          "line": 4,
+          "column": 29
+        }
+      ]
+    },
+    {
+      "id": "InvalidCaptureWrite",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidCaptureWrite.kt",
+          "offset": 109,
+          "category": "invalid_kotlin",
+          "code": "IMMUTABLE_CAPTURE_ASSIGNMENT",
+          "message": "Cannot reassign an immutable lexical capture",
+          "path": "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidCaptureWrite.kt",
+          "line": 5,
+          "column": 32
+        }
+      ]
+    },
+    {
+      "id": "InvalidDouble",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidDouble.kt",
+          "offset": 82,
+          "category": "invalid_kotlin",
+          "code": "VAL_REASSIGNMENT",
+          "message": "Cannot reassign an already or possibly initialized val",
+          "path": "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidDouble.kt",
+          "line": 5,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "id": "InvalidMaybeWrite",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidMaybeWrite.kt",
+          "offset": 105,
+          "category": "invalid_kotlin",
+          "code": "VAL_REASSIGNMENT",
+          "message": "Cannot reassign an already or possibly initialized val",
+          "path": "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidMaybeWrite.kt",
+          "line": 5,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "id": "InvalidNestedWrite",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidNestedWrite.kt",
+          "offset": 83,
+          "category": "invalid_kotlin",
+          "code": "VAL_REASSIGNMENT",
+          "message": "Cannot reassign an already or possibly initialized val",
+          "path": "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidNestedWrite.kt",
+          "line": 4,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "id": "InvalidRead",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidRead.kt",
+          "offset": 111,
+          "category": "invalid_kotlin",
+          "code": "UNINITIALIZED_VARIABLE",
+          "message": "Variable must be initialized before use: answer",
+          "path": "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/InvalidRead.kt",
+          "line": 5,
+          "column": 12
+        }
+      ]
+    },
+    {
+      "id": "UnsupportedConditional",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/UnsupportedConditional.kt",
+          "offset": 76,
+          "category": "unsupported_language",
+          "code": "DEFERRED_VAL_CONDITIONAL_INITIALIZATION_UNSUPPORTED",
+          "message": "Deferred val assignments in short-circuit operands are unsupported",
+          "path": "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/UnsupportedConditional.kt",
+          "line": 4,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "id": "UnsupportedLoop",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/UnsupportedLoop.kt",
+          "offset": 78,
+          "category": "unsupported_language",
+          "code": "DEFERRED_VAL_LOOP_INITIALIZATION_UNSUPPORTED",
+          "message": "Deferred val initialization across a repeating loop boundary is unsupported",
+          "path": "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/UnsupportedLoop.kt",
+          "line": 4,
+          "column": 20
+        }
+      ]
+    },
+    {
+      "id": "UnsupportedTry",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/UnsupportedTry.kt",
+          "offset": 63,
+          "category": "unsupported_language",
+          "code": "DEFERRED_VAL_TRY_INITIALIZATION_UNSUPPORTED",
+          "message": "Deferred val assignment across try exits requires unsupported exception-flow analysis",
+          "path": "/workspace/work/targets159/deferred-vals-freeze/tests/deferred_vals/UnsupportedTry.kt",
+          "line": 4,
+          "column": 5
+        }
+      ]
+    },
+    {
+      "id": "declared-api/match",
+      "outcome": "pass"
+    },
+    {
+      "id": "inputs/unchanged",
+      "outcome": "pass"
+    }
+  ],
+  "fixed_java_caller_sha256": {
+    "deferredvalscheck/Calls.class": "33ed814543061cf2dcae87697b1fdaa0dc6f2463148e49a959010bf0965b80ef"
+  },
+  "official_signatures": "Classfile /workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/official/deferredvals/ValuesKt.class\n  Last modified Nov 26, 2026; size 3083 bytes\n  SHA-256 checksum c6db2793e5aafb841131b654efc2af84c318705467a01c688cca99d26c81a420\n  Compiled from \"Values.kt\"\npublic final class deferredvals.ValuesKt\n  minor version: 0\n  major version: 52\n  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER\n  this_class: #2                          // deferredvals/ValuesKt\n  super_class: #4                         // java/lang/Object\n  interfaces: 0, fields: 0, methods: 12, attributes: 3\nConstant pool:\n   #1 = Utf8               deferredvals/ValuesKt\n   #2 = Class              #1             // deferredvals/ValuesKt\n   #3 = Utf8               java/lang/Object\n   #4 = Class              #3             // java/lang/Object\n   #5 = Utf8               choose\n   #6 = Utf8               (Z)I\n   #7 = Utf8               answer\n   #8 = Utf8               I\n   #9 = Utf8               flag\n  #10 = Utf8               Z\n  #11 = Utf8               continuing\n  #12 = Utf8               expression\n  #13 = Utf8               a\n  #14 = String             #13            // a\n  #15 = Utf8               b\n  #16 = String             #15            // b\n  #17 = Utf8               java/lang/String\n  #18 = Class              #17            // java/lang/String\n  #19 = Utf8               length\n  #20 = Utf8               ()I\n  #21 = NameAndType        #19:#20        // length:()I\n  #22 = Methodref          #18.#21        // java/lang/String.length:()I\n  #23 = Utf8               text\n  #24 = Utf8               Ljava/lang/String;\n  #25 = Utf8               selected\n  #26 = Utf8               (I)I\n  #27 = Utf8               value\n  #28 = Utf8               selectedExpression\n  #29 = Utf8               add\n  #30 = Utf8               nested\n  #31 = Utf8               start\n  #32 = Utf8               end\n  #33 = Utf8               index\n  #34 = Utf8               sum\n  #35 = Utf8               limit\n  #36 = Utf8               shadow\n  #37 = Utf8               total\n  #38 = Utf8               reference\n  #39 = Utf8               (Z)Ljava/lang/String;\n  #40 = Utf8               Lorg/jetbrains/annotations/NotNull;\n  #41 = Utf8               left\n  #42 = String             #41            // left\n  #43 = Utf8               right\n  #44 = String             #43            // right\n  #45 = Utf8               wide\n  #46 = Utf8               (Z)J\n  #47 = Long               4294967298l\n  #49 = Long               4294967299l\n  #51 = Utf8               J\n  #52 = Utf8               terminal\n  #53 = Utf8               capture\n  #54 = Utf8               (Z)Lkotlin/jvm/functions/Function0;\n  #55 = Utf8               (Z)Lkotlin/jvm/functions/Function0<Ljava/lang/Integer;>;\n  #56 = Utf8               ()Ljava/lang/Object;\n  #57 = MethodType         #56            //  ()Ljava/lang/Object;\n  #58 = Utf8               capture$lambda$0\n  #59 = NameAndType        #58:#26        // capture$lambda$0:(I)I\n  #60 = Methodref          #2.#59         // deferredvals/ValuesKt.capture$lambda$0:(I)I\n  #61 = MethodHandle       6:#60          // REF_invokeStatic deferredvals/ValuesKt.capture$lambda$0:(I)I\n  #62 = Utf8               ()Ljava/lang/Integer;\n  #63 = MethodType         #62            //  ()Ljava/lang/Integer;\n  #64 = Utf8               java/lang/invoke/LambdaMetafactory\n  #65 = Class              #64            // java/lang/invoke/LambdaMetafactory\n  #66 = Utf8               metafactory\n  #67 = Utf8               (Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;\n  #68 = NameAndType        #66:#67        // metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;\n  #69 = Methodref          #65.#68        // java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;\n  #70 = MethodHandle       6:#69          // REF_invokeStatic java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;\n  #71 = Utf8               invoke\n  #72 = Utf8               (I)Lkotlin/jvm/functions/Function0;\n  #73 = NameAndType        #71:#72        // invoke:(I)Lkotlin/jvm/functions/Function0;\n  #74 = InvokeDynamic      #0:#73         // #0:invoke:(I)Lkotlin/jvm/functions/Function0;\n  #75 = Utf8               $answer\n  #76 = Utf8               Lkotlin/Metadata;\n  #77 = Utf8               mv\n  #78 = Integer            2\n  #79 = Integer            3\n  #80 = Integer            0\n  #81 = Utf8               k\n  #82 = Utf8               xi\n  #83 = Integer            48\n  #84 = Utf8               d1\n  #85 = Utf8               \\u0000\\\"\\n\\u0000\\n\\u0002\\u0010\\b\\n\\u0000\\n\\u0002\\u0010\\u000b\\n\\u0002\\b\\t\\n\\u0002\\u0010\\u000e\\n\\u0000\\n\\u0002\\u0010\\t\\n\\u0002\\b\\u0002\\n\\u0002\\u0018\\u0002\\u001a\\u000e\\u0010\\u0000\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\\u001a\\u000e\\u0010\\u0004\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\\u001a\\u000e\\u0010\\u0005\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\\u001a\\u000e\\u0010\\u0006\\u001a\\u00020\\u00012\\u0006\\u0010\\u0007\\u001a\\u00020\\u0001\\u001a\\u000e\\u0010\\b\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\\u001a\\u000e\\u0010\\t\\u001a\\u00020\\u00012\\u0006\\u0010\\n\\u001a\\u00020\\u0001\\u001a\\u000e\\u0010\\u000b\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\\u001a\\u000e\\u0010\\f\\u001a\\u00020\\r2\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\\u001a\\u000e\\u0010\\u000e\\u001a\\u00020\\u000f2\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\\u001a\\u000e\\u0010\\u0010\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\\u001a\\u0014\\u0010\\u0011\\u001a\\b\\u0012\\u0004\\u0012\\u00020\\u00010\\u00122\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\n  #86 = Utf8               d2\n  #87 = Utf8\n  #88 = Utf8               Lkotlin/Function0;\n  #89 = Utf8               Values.kt\n  #90 = Utf8               Code\n  #91 = Utf8               StackMapTable\n  #92 = Utf8               LineNumberTable\n  #93 = Utf8               LocalVariableTable\n  #94 = Utf8               RuntimeInvisibleAnnotations\n  #95 = Utf8               Signature\n  #96 = Utf8               SourceFile\n  #97 = Utf8               RuntimeVisibleAnnotations\n  #98 = Utf8               BootstrapMethods\n{\n  public static final int choose(boolean);\n    descriptor: (Z)I\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=1, locals=2, args_size=1\n         0: iconst_0\n         1: istore_1\n         2: iload_0\n         3: ifeq          11\n         6: iconst_3\n         7: istore_1\n         8: goto          13\n        11: iconst_4\n        12: istore_1\n        13: iload_1\n        14: ireturn\n      StackMapTable: number_of_entries = 2\n        frame_type = 252 /* append */\n          offset_delta = 11\n          locals = [ int ]\n        frame_type = 1 /* same */\n      LineNumberTable:\n        line 4: 0\n        line 5: 2\n        line 6: 13\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            2      13     1 answer   I\n            0      15     0  flag   Z\n\n  public static final int continuing(boolean);\n    descriptor: (Z)I\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=1, locals=2, args_size=1\n         0: iconst_0\n         1: istore_1\n         2: iload_0\n         3: ifeq          10\n         6: iconst_5\n         7: istore_1\n         8: iload_1\n         9: ireturn\n        10: bipush        8\n        12: istore_1\n        13: iload_1\n        14: ireturn\n      StackMapTable: number_of_entries = 1\n        frame_type = 252 /* append */\n          offset_delta = 10\n          locals = [ int ]\n      LineNumberTable:\n        line 9: 0\n        line 10: 2\n        line 11: 10\n        line 12: 13\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            2      13     1 answer   I\n            0      15     0  flag   Z\n\n  public static final int expression(boolean);\n    descriptor: (Z)I\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=2, locals=3, args_size=1\n         0: iconst_0\n         1: istore_1\n         2: iload_0\n         3: ifeq          13\n         6: iconst_5\n         7: istore_1\n         8: ldc           #14                 // String a\n        10: goto          18\n        13: bipush        6\n        15: istore_1\n        16: ldc           #16                 // String b\n        18: astore_2\n        19: iload_1\n        20: aload_2\n        21: invokevirtual #22                 // Method java/lang/String.length:()I\n        24: iadd\n        25: ireturn\n      StackMapTable: number_of_entries = 2\n        frame_type = 252 /* append */\n          offset_delta = 13\n          locals = [ int ]\n        frame_type = 68 /* same_locals_1_stack_item */\n          stack = [ class java/lang/String ]\n      LineNumberTable:\n        line 15: 0\n        line 16: 2\n        line 17: 19\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            2      24     1 answer   I\n           19       7     2  text   Ljava/lang/String;\n            0      26     0  flag   Z\n\n  public static final int selected(int);\n    descriptor: (I)I\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=1, locals=2, args_size=1\n         0: iconst_0\n         1: istore_1\n         2: iload_0\n         3: tableswitch   { // 0 to 1\n                       0: 24\n                       1: 30\n                 default: 36\n            }\n        24: bipush        10\n        26: istore_1\n        27: goto          39\n        30: bipush        20\n        32: istore_1\n        33: goto          39\n        36: bipush        30\n        38: istore_1\n        39: iload_1\n        40: ireturn\n      StackMapTable: number_of_entries = 4\n        frame_type = 252 /* append */\n          offset_delta = 24\n          locals = [ int ]\n        frame_type = 5 /* same */\n        frame_type = 5 /* same */\n        frame_type = 2 /* same */\n      LineNumberTable:\n        line 20: 0\n        line 21: 2\n        line 22: 39\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            2      39     1 answer   I\n            0      41     0 value   I\n\n  public static final int selectedExpression(boolean);\n    descriptor: (Z)I\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=2, locals=3, args_size=1\n         0: iconst_0\n         1: istore_1\n         2: iload_0\n         3: iconst_1\n         4: if_icmpne     14\n         7: bipush        11\n         9: istore_1\n        10: iconst_1\n        11: goto          18\n        14: bipush        22\n        16: istore_1\n        17: iconst_2\n        18: istore_2\n        19: iload_1\n        20: iload_2\n        21: iadd\n        22: ireturn\n      StackMapTable: number_of_entries = 2\n        frame_type = 252 /* append */\n          offset_delta = 14\n          locals = [ int ]\n        frame_type = 67 /* same_locals_1_stack_item */\n          stack = [ int ]\n      LineNumberTable:\n        line 25: 0\n        line 26: 2\n        line 27: 19\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            2      21     1 answer   I\n           19       4     2   add   I\n            0      23     0  flag   Z\n\n  public static final int nested(int);\n    descriptor: (I)I\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=2, locals=5, args_size=1\n         0: iconst_0\n         1: istore_1\n         2: iconst_0\n         3: istore_2\n         4: iload_2\n         5: iload_0\n         6: if_icmpge     52\n         9: iconst_0\n        10: istore_3\n        11: iconst_0\n        12: istore        4\n        14: iload_2\n        15: iconst_2\n        16: irem\n        17: ifne          30\n        20: iload_2\n        21: istore_3\n        22: iload_2\n        23: iconst_1\n        24: iadd\n        25: istore        4\n        27: goto          39\n        30: iload_2\n        31: iconst_2\n        32: iadd\n        33: istore_3\n        34: iload_3\n        35: iconst_1\n        36: iadd\n        37: istore        4\n        39: iload_1\n        40: iload_3\n        41: iadd\n        42: iload         4\n        44: iadd\n        45: istore_1\n        46: iinc          2, 1\n        49: goto          4\n        52: iload_1\n        53: ireturn\n      StackMapTable: number_of_entries = 4\n        frame_type = 253 /* append */\n          offset_delta = 4\n          locals = [ int, int ]\n        frame_type = 253 /* append */\n          offset_delta = 25\n          locals = [ int, int ]\n        frame_type = 8 /* same */\n        frame_type = 249 /* chop */\n          offset_delta = 12\n      LineNumberTable:\n        line 30: 0\n        line 31: 2\n        line 32: 9\n        line 33: 11\n        line 34: 14\n        line 35: 30\n        line 36: 39\n        line 31: 46\n        line 38: 52\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n           11      35     3 start   I\n           14      32     4   end   I\n            4      48     2 index   I\n            2      52     1   sum   I\n            0      54     0 limit   I\n\n  public static final int shadow(boolean);\n    descriptor: (Z)I\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=2, locals=4, args_size=1\n         0: iconst_0\n         1: istore_1\n         2: iconst_0\n         3: istore_2\n         4: iload_0\n         5: ifeq          12\n         8: iconst_3\n         9: istore_3\n        10: iload_3\n        11: istore_2\n        12: bipush        9\n        14: istore_1\n        15: iload_1\n        16: iload_2\n        17: iadd\n        18: ireturn\n      StackMapTable: number_of_entries = 1\n        frame_type = 253 /* append */\n          offset_delta = 12\n          locals = [ int, int ]\n      LineNumberTable:\n        line 41: 0\n        line 42: 2\n        line 43: 4\n        line 44: 12\n        line 45: 15\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n           10       2     3 answer   I\n            2      17     1 answer   I\n            4      15     2 total   I\n            0      19     0  flag   Z\n\n  public static final java.lang.String reference(boolean);\n    descriptor: (Z)Ljava/lang/String;\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=1, locals=2, args_size=1\n         0: aconst_null\n         1: astore_1\n         2: iload_0\n         3: ifeq          12\n         6: ldc           #42                 // String left\n         8: astore_1\n         9: goto          15\n        12: ldc           #44                 // String right\n        14: astore_1\n        15: aload_1\n        16: areturn\n      StackMapTable: number_of_entries = 2\n        frame_type = 252 /* append */\n          offset_delta = 12\n          locals = [ null ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ int, class java/lang/String ]\n          stack = []\n      LineNumberTable:\n        line 48: 0\n        line 49: 2\n        line 50: 15\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            2      15     1 answer   Ljava/lang/String;\n            0      17     0  flag   Z\n    RuntimeInvisibleAnnotations:\n      0: #40()\n        org.jetbrains.annotations.NotNull\n\n  public static final long wide(boolean);\n    descriptor: (Z)J\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=2, locals=3, args_size=1\n         0: lconst_0\n         1: lstore_1\n         2: iload_0\n         3: ifeq          13\n         6: ldc2_w        #47                 // long 4294967298l\n         9: lstore_1\n        10: goto          17\n        13: ldc2_w        #49                 // long 4294967299l\n        16: lstore_1\n        17: lload_1\n        18: lreturn\n      StackMapTable: number_of_entries = 2\n        frame_type = 252 /* append */\n          offset_delta = 13\n          locals = [ long ]\n        frame_type = 3 /* same */\n      LineNumberTable:\n        line 53: 0\n        line 54: 2\n        line 55: 17\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            2      17     1 answer   J\n            0      19     0  flag   Z\n\n  public static final int terminal(boolean);\n    descriptor: (Z)I\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=1, locals=2, args_size=1\n         0: iconst_0\n         1: istore_1\n         2: iload_0\n         3: ifeq          9\n         6: bipush        7\n         8: ireturn\n         9: bipush        8\n        11: istore_1\n        12: iload_1\n        13: ireturn\n      StackMapTable: number_of_entries = 1\n        frame_type = 252 /* append */\n          offset_delta = 9\n          locals = [ int ]\n      LineNumberTable:\n        line 58: 0\n        line 59: 2\n        line 60: 12\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            2      12     1 answer   I\n            0      14     0  flag   Z\n\n  public static final kotlin.jvm.functions.Function0<java.lang.Integer> capture(boolean);\n    descriptor: (Z)Lkotlin/jvm/functions/Function0;\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=1, locals=2, args_size=1\n         0: iconst_0\n         1: istore_1\n         2: iload_0\n         3: ifeq          12\n         6: bipush        9\n         8: istore_1\n         9: goto          15\n        12: bipush        10\n        14: istore_1\n        15: iload_1\n        16: invokedynamic #74,  0             // InvokeDynamic #0:invoke:(I)Lkotlin/jvm/functions/Function0;\n        21: areturn\n      StackMapTable: number_of_entries = 2\n        frame_type = 252 /* append */\n          offset_delta = 12\n          locals = [ int ]\n        frame_type = 2 /* same */\n      LineNumberTable:\n        line 63: 0\n        line 64: 2\n        line 65: 15\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            2      20     1 answer   I\n            0      22     0  flag   Z\n    Signature: #55                          // (Z)Lkotlin/jvm/functions/Function0<Ljava/lang/Integer;>;\n    RuntimeInvisibleAnnotations:\n      0: #40()\n        org.jetbrains.annotations.NotNull\n}\nSourceFile: \"Values.kt\"\nRuntimeVisibleAnnotations:\n  0: #76(#77=[I#78,I#79,I#80],#81=I#78,#82=I#83,#84=[s#85],#86=[s#5,s#87,s#9,s#87,s#11,s#12,s#25,s#27,s#28,s#30,s#35,s#36,s#38,s#87,s#45,s#87,s#52,s#53,s#88])\n    kotlin.Metadata(\n      mv=[2,3,0]\n      k=2\n      xi=48\n      d1=[\"\\u0000\\\"\\n\\u0000\\n\\u0002\\u0010\\b\\n\\u0000\\n\\u0002\\u0010\\u000b\\n\\u0002\\b\\t\\n\\u0002\\u0010\\u000e\\n\\u0000\\n\\u0002\\u0010\\t\\n\\u0002\\b\\u0002\\n\\u0002\\u0018\\u0002\\u001a\\u000e\\u0010\\u0000\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\\u001a\\u000e\\u0010\\u0004\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\\u001a\\u000e\\u0010\\u0005\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\\u001a\\u000e\\u0010\\u0006\\u001a\\u00020\\u00012\\u0006\\u0010\\u0007\\u001a\\u00020\\u0001\\u001a\\u000e\\u0010\\b\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\\u001a\\u000e\\u0010\\t\\u001a\\u00020\\u00012\\u0006\\u0010\\n\\u001a\\u00020\\u0001\\u001a\\u000e\\u0010\\u000b\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\\u001a\\u000e\\u0010\\f\\u001a\\u00020\\r2\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\\u001a\\u000e\\u0010\\u000e\\u001a\\u00020\\u000f2\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\\u001a\\u000e\\u0010\\u0010\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\\u001a\\u0014\\u0010\\u0011\\u001a\\b\\u0012\\u0004\\u0012\\u00020\\u00010\\u00122\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\"]\n      d2=[\"choose\",\"\",\"flag\",\"\",\"continuing\",\"expression\",\"selected\",\"value\",\"selectedExpression\",\"nested\",\"limit\",\"shadow\",\"reference\",\"\",\"wide\",\"\",\"terminal\",\"capture\",\"Lkotlin/Function0;\"]\n    )\nBootstrapMethods:\n  0: #70 REF_invokeStatic java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;\n    Method arguments:\n      #57 ()Ljava/lang/Object;\n      #61 REF_invokeStatic deferredvals/ValuesKt.capture$lambda$0:(I)I\n      #63 ()Ljava/lang/Integer;\n",
+  "candidate_signatures": "Classfile /workspace/work/targets159/deferred-vals-freeze/target/checks/2026-11-26T060908051705Z-deferred-vals/candidate/deferredvals/ValuesKt.class\n  Last modified Nov 26, 2026; size 2002 bytes\n  SHA-256 checksum 79e05ca4a353a4832c9747652e301a4a5c186272c92dd5f9a81c7ae28ef67adb\n  Compiled from \"Values.kt\"\npublic final class deferredvals.ValuesKt\n  minor version: 0\n  major version: 49\n  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER\n  this_class: #2                          // deferredvals/ValuesKt\n  super_class: #4                         // java/lang/Object\n  interfaces: 0, fields: 0, methods: 11, attributes: 2\nConstant pool:\n   #1 = Utf8               deferredvals/ValuesKt\n   #2 = Class              #1             // deferredvals/ValuesKt\n   #3 = Utf8               java/lang/Object\n   #4 = Class              #3             // java/lang/Object\n   #5 = Utf8               SourceFile\n   #6 = Utf8               Values.kt\n   #7 = Utf8               choose\n   #8 = Utf8               (Z)I\n   #9 = Utf8               Code\n  #10 = Utf8               continuing\n  #11 = Utf8               a\n  #12 = String             #11            // a\n  #13 = Utf8               b\n  #14 = String             #13            // b\n  #15 = Utf8               java/lang/String\n  #16 = Class              #15            // java/lang/String\n  #17 = Utf8               java/lang/CharSequence\n  #18 = Class              #17            // java/lang/CharSequence\n  #19 = Utf8               length\n  #20 = Utf8               ()I\n  #21 = NameAndType        #19:#20        // length:()I\n  #22 = InterfaceMethodref #18.#21        // java/lang/CharSequence.length:()I\n  #23 = Utf8               expression\n  #24 = Utf8               selected\n  #25 = Utf8               (I)I\n  #26 = Utf8               selectedExpression\n  #27 = Utf8               nested\n  #28 = Utf8               shadow\n  #29 = Utf8               left\n  #30 = String             #29            // left\n  #31 = Utf8               right\n  #32 = String             #31            // right\n  #33 = Utf8               reference\n  #34 = Utf8               (Z)Ljava/lang/String;\n  #35 = Utf8               RuntimeInvisibleAnnotations\n  #36 = Utf8               Lorg/jetbrains/annotations/NotNull;\n  #37 = Long               4294967298l\n  #39 = Long               4294967299l\n  #41 = Utf8               wide\n  #42 = Utf8               (Z)J\n  #43 = Utf8               terminal\n  #44 = Utf8               deferredvals/ValuesKt$lambda$1720$0\n  #45 = Class              #44            // deferredvals/ValuesKt$lambda$1720$0\n  #46 = Utf8               <init>\n  #47 = Utf8               (I)V\n  #48 = NameAndType        #46:#47        // \"<init>\":(I)V\n  #49 = Methodref          #45.#48        // deferredvals/ValuesKt$lambda$1720$0.\"<init>\":(I)V\n  #50 = Utf8               capture\n  #51 = Utf8               (Z)Lkotlin/jvm/functions/Function0;\n  #52 = Utf8               Signature\n  #53 = Utf8               (Z)Lkotlin/jvm/functions/Function0<Ljava/lang/Integer;>;\n  #54 = Utf8               Lkotlin/Metadata;\n  #55 = Utf8               mv\n  #56 = Integer            2\n  #57 = Integer            3\n  #58 = Integer            0\n  #59 = Utf8               k\n  #60 = Utf8               xi\n  #61 = Integer            48\n  #62 = Utf8               d1\n  #63 = Utf8               \\u0000\\b\\n\\u0002\\b\\u0018\\n\\u0002\\b\\u0001\\u001a\\u0017H\\u0006\\u0010\\u0000\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\u00a2\\u0006\\u0004\\b\\u0000\\u0010\\u0004\\u001a\\u0017H\\u0006\\u0010\\u0005\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\u00a2\\u0006\\u0004\\b\\u0005\\u0010\\u0004\\u001a\\u0017H\\u0006\\u0010\\u0006\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\u00a2\\u0006\\u0004\\b\\u0006\\u0010\\u0004\\u001a\\u0017H\\u0006\\u0010\\u0007\\u001a\\u00020\\u00012\\u0006\\u0010\\b\\u001a\\u00020\\u0001\u00a2\\u0006\\u0004\\b\\u0007\\u0010\\t\\u001a\\u0017H\\u0006\\u0010\\n\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\u00a2\\u0006\\u0004\\b\\n\\u0010\\u0004\\u001a\\u0017H\\u0006\\u0010\\u000b\\u001a\\u00020\\u00012\\u0006\\u0010\\f\\u001a\\u00020\\u0001\u00a2\\u0006\\u0004\\b\\u000b\\u0010\\t\\u001a\\u0017H\\u0006\\u0010\\r\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\u00a2\\u0006\\u0004\\b\\r\\u0010\\u0004\\u001a\\u0017H\\u0006\\u0010\\u000e\\u001a\\u00020\\u000f2\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\u00a2\\u0006\\u0004\\b\\u000e\\u0010\\u0010\\u001a\\u0017H\\u0006\\u0010\\u0011\\u001a\\u00020\\u00122\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\u00a2\\u0006\\u0004\\b\\u0011\\u0010\\u0013\\u001a\\u0017H\\u0006\\u0010\\u0014\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\u00a2\\u0006\\u0004\\b\\u0014\\u0010\\u0004\\u001a\\u001dH\\u0006\\u0010\\u0015\\u001a\\b\\u0012\\u0004\\u0012\\u00020\\u00010\\u00162\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\u00a2\\u0006\\u0004\\b\\u0015\\u0010\\u0017\u00a8\\u0006\\u0018\n  #64 = Utf8               d2\n  #65 = Utf8               kotlin/Int\n  #66 = Utf8               flag\n  #67 = Utf8               kotlin/Boolean\n  #68 = Utf8               value\n  #69 = Utf8               limit\n  #70 = Utf8               kotlin/String\n  #71 = Utf8               kotlin/Long\n  #72 = Utf8               kotlin/Function0\n  #73 = Utf8               deferred_vals\n  #74 = Utf8               RuntimeVisibleAnnotations\n{\n  public static final int choose(boolean);\n    descriptor: (Z)I\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=2, locals=2, args_size=1\n         0: iload         0\n         2: ifeq          11\n         5: iconst_3\n         6: istore        1\n         8: goto          14\n        11: iconst_4\n        12: istore        1\n        14: iload         1\n        16: ireturn\n        17: aconst_null\n        18: athrow\n\n  public static final int continuing(boolean);\n    descriptor: (Z)I\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=2, locals=2, args_size=1\n         0: iload         0\n         2: ifeq          11\n         5: iconst_5\n         6: istore        1\n         8: iload         1\n        10: ireturn\n        11: bipush        8\n        13: istore        1\n        15: iload         1\n        17: ireturn\n        18: aconst_null\n        19: athrow\n\n  public static final int expression(boolean);\n    descriptor: (Z)I\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=257, locals=3, args_size=1\n         0: iload         0\n         2: ifeq          14\n         5: iconst_5\n         6: istore        1\n         8: ldc_w         #12                 // String a\n        11: goto          21\n        14: bipush        6\n        16: istore        1\n        18: ldc_w         #14                 // String b\n        21: checkcast     #16                 // class java/lang/String\n        24: astore        2\n        26: iload         1\n        28: aload         2\n        30: checkcast     #16                 // class java/lang/String\n        33: invokeinterface #22,  1           // InterfaceMethod java/lang/CharSequence.length:()I\n        38: iadd\n        39: ireturn\n        40: aconst_null\n        41: athrow\n\n  public static final int selected(int);\n    descriptor: (I)I\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=2, locals=3, args_size=1\n         0: iload         0\n         2: istore        2\n         4: iload         2\n         6: iconst_0\n         7: if_icmpeq     14\n        10: iconst_0\n        11: goto          15\n        14: iconst_1\n        15: ifeq          25\n        18: bipush        10\n        20: istore        1\n        22: goto          50\n        25: iload         2\n        27: iconst_1\n        28: if_icmpeq     35\n        31: iconst_0\n        32: goto          36\n        35: iconst_1\n        36: ifeq          46\n        39: bipush        20\n        41: istore        1\n        43: goto          50\n        46: bipush        30\n        48: istore        1\n        50: iload         1\n        52: ireturn\n        53: aconst_null\n        54: athrow\n\n  public static final int selectedExpression(boolean);\n    descriptor: (Z)I\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=256, locals=4, args_size=1\n         0: iload         0\n         2: istore        2\n         4: iload         2\n         6: iconst_1\n         7: if_icmpeq     14\n        10: iconst_0\n        11: goto          15\n        14: iconst_1\n        15: ifeq          26\n        18: bipush        11\n        20: istore        1\n        22: iconst_1\n        23: goto          31\n        26: bipush        22\n        28: istore        1\n        30: iconst_2\n        31: istore        3\n        33: iload         1\n        35: iload         3\n        37: iadd\n        38: ireturn\n        39: aconst_null\n        40: athrow\n\n  public static final int nested(int);\n    descriptor: (I)I\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=2, locals=6, args_size=1\n         0: iconst_0\n         1: istore        1\n         3: iconst_0\n         4: istore        2\n         6: iload         0\n         8: istore        3\n        10: iload         2\n        12: iload         3\n        14: if_icmpge     74\n        17: iload         2\n        19: iconst_2\n        20: irem\n        21: iconst_0\n        22: if_icmpeq     29\n        25: iconst_0\n        26: goto          30\n        29: iconst_1\n        30: ifeq          46\n        33: iload         2\n        35: istore        4\n        37: iload         2\n        39: iconst_1\n        40: iadd\n        41: istore        5\n        43: goto          58\n        46: iload         2\n        48: iconst_2\n        49: iadd\n        50: istore        4\n        52: iload         4\n        54: iconst_1\n        55: iadd\n        56: istore        5\n        58: iload         1\n        60: iload         4\n        62: iadd\n        63: iload         5\n        65: iadd\n        66: istore        1\n        68: iinc          2, 1\n        71: goto          10\n        74: iload         1\n        76: ireturn\n        77: aconst_null\n        78: athrow\n\n  public static final int shadow(boolean);\n    descriptor: (Z)I\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=2, locals=4, args_size=1\n         0: iconst_0\n         1: istore        2\n         3: iload         0\n         5: ifeq          18\n         8: iconst_3\n         9: istore        3\n        11: iload         3\n        13: istore        2\n        15: goto          18\n        18: bipush        9\n        20: istore        1\n        22: iload         1\n        24: iload         2\n        26: iadd\n        27: ireturn\n        28: aconst_null\n        29: athrow\n\n  public static final java.lang.String reference(boolean);\n    descriptor: (Z)Ljava/lang/String;\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=2, locals=2, args_size=1\n         0: iload         0\n         2: ifeq          16\n         5: ldc_w         #30                 // String left\n         8: checkcast     #16                 // class java/lang/String\n        11: astore        1\n        13: goto          24\n        16: ldc_w         #32                 // String right\n        19: checkcast     #16                 // class java/lang/String\n        22: astore        1\n        24: aload         1\n        26: areturn\n        27: aconst_null\n        28: athrow\n    RuntimeInvisibleAnnotations:\n      0: #36()\n        org.jetbrains.annotations.NotNull\n\n  public static final long wide(boolean);\n    descriptor: (Z)J\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=2, locals=3, args_size=1\n         0: iload         0\n         2: ifeq          13\n         5: ldc2_w        #37                 // long 4294967298l\n         8: lstore        1\n        10: goto          18\n        13: ldc2_w        #39                 // long 4294967299l\n        16: lstore        1\n        18: lload         1\n        20: lreturn\n        21: aconst_null\n        22: athrow\n\n  public static final int terminal(boolean);\n    descriptor: (Z)I\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=256, locals=2, args_size=1\n         0: iload         0\n         2: ifeq          8\n         5: bipush        7\n         7: ireturn\n         8: bipush        8\n        10: istore        1\n        12: iload         1\n        14: ireturn\n        15: aconst_null\n        16: athrow\n\n  public static final kotlin.jvm.functions.Function0<java.lang.Integer> capture(boolean);\n    descriptor: (Z)Lkotlin/jvm/functions/Function0;\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    Code:\n      stack=3, locals=2, args_size=1\n         0: iload         0\n         2: ifeq          12\n         5: bipush        9\n         7: istore        1\n         9: goto          16\n        12: bipush        10\n        14: istore        1\n        16: new           #45                 // class deferredvals/ValuesKt$lambda$1720$0\n        19: dup\n        20: iload         1\n        22: invokespecial #49                 // Method deferredvals/ValuesKt$lambda$1720$0.\"<init>\":(I)V\n        25: areturn\n        26: aconst_null\n        27: athrow\n    Signature: #53                          // (Z)Lkotlin/jvm/functions/Function0<Ljava/lang/Integer;>;\n    RuntimeInvisibleAnnotations:\n      0: #36()\n        org.jetbrains.annotations.NotNull\n}\nSourceFile: \"Values.kt\"\nRuntimeVisibleAnnotations:\n  0: #54(#55=[I#56,I#57,I#58],#59=I#56,#60=I#61,#62=[s#63],#64=[s#7,s#65,s#66,s#67,s#8,s#10,s#23,s#24,s#68,s#25,s#26,s#27,s#69,s#28,s#33,s#70,s#34,s#41,s#71,s#42,s#43,s#50,s#72,s#51,s#73])\n    kotlin.Metadata(\n      mv=[2,3,0]\n      k=2\n      xi=48\n      d1=[\"\\u0000\\b\\n\\u0002\\b\\u0018\\n\\u0002\\b\\u0001\\u001a\\u0017H\\u0006\\u0010\\u0000\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\u00a2\\u0006\\u0004\\b\\u0000\\u0010\\u0004\\u001a\\u0017H\\u0006\\u0010\\u0005\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\u00a2\\u0006\\u0004\\b\\u0005\\u0010\\u0004\\u001a\\u0017H\\u0006\\u0010\\u0006\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\u00a2\\u0006\\u0004\\b\\u0006\\u0010\\u0004\\u001a\\u0017H\\u0006\\u0010\\u0007\\u001a\\u00020\\u00012\\u0006\\u0010\\b\\u001a\\u00020\\u0001\u00a2\\u0006\\u0004\\b\\u0007\\u0010\\t\\u001a\\u0017H\\u0006\\u0010\\n\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\u00a2\\u0006\\u0004\\b\\n\\u0010\\u0004\\u001a\\u0017H\\u0006\\u0010\\u000b\\u001a\\u00020\\u00012\\u0006\\u0010\\f\\u001a\\u00020\\u0001\u00a2\\u0006\\u0004\\b\\u000b\\u0010\\t\\u001a\\u0017H\\u0006\\u0010\\r\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\u00a2\\u0006\\u0004\\b\\r\\u0010\\u0004\\u001a\\u0017H\\u0006\\u0010\\u000e\\u001a\\u00020\\u000f2\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\u00a2\\u0006\\u0004\\b\\u000e\\u0010\\u0010\\u001a\\u0017H\\u0006\\u0010\\u0011\\u001a\\u00020\\u00122\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\u00a2\\u0006\\u0004\\b\\u0011\\u0010\\u0013\\u001a\\u0017H\\u0006\\u0010\\u0014\\u001a\\u00020\\u00012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\u00a2\\u0006\\u0004\\b\\u0014\\u0010\\u0004\\u001a\\u001dH\\u0006\\u0010\\u0015\\u001a\\b\\u0012\\u0004\\u0012\\u00020\\u00010\\u00162\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\u00a2\\u0006\\u0004\\b\\u0015\\u0010\\u0017\u00a8\\u0006\\u0018\"]\n      d2=[\"choose\",\"kotlin/Int\",\"flag\",\"kotlin/Boolean\",\"(Z)I\",\"continuing\",\"expression\",\"selected\",\"value\",\"(I)I\",\"selectedExpression\",\"nested\",\"limit\",\"shadow\",\"reference\",\"kotlin/String\",\"(Z)Ljava/lang/String;\",\"wide\",\"kotlin/Long\",\"(Z)J\",\"terminal\",\"capture\",\"kotlin/Function0\",\"(Z)Lkotlin/jvm/functions/Function0;\",\"deferred_vals\"]\n    )\n",
+  "declared_api": {
+    "official": {
+      "public final class deferredvals.ValuesKt": [
+        [
+          "public static final int choose(boolean);",
+          "descriptor: (Z)I"
+        ],
+        [
+          "public static final int continuing(boolean);",
+          "descriptor: (Z)I"
+        ],
+        [
+          "public static final int expression(boolean);",
+          "descriptor: (Z)I"
+        ],
+        [
+          "public static final int nested(int);",
+          "descriptor: (I)I"
+        ],
+        [
+          "public static final int selected(int);",
+          "descriptor: (I)I"
+        ],
+        [
+          "public static final int selectedExpression(boolean);",
+          "descriptor: (Z)I"
+        ],
+        [
+          "public static final int shadow(boolean);",
+          "descriptor: (Z)I"
+        ],
+        [
+          "public static final int terminal(boolean);",
+          "descriptor: (Z)I"
+        ],
+        [
+          "public static final java.lang.String reference(boolean);",
+          "descriptor: (Z)Ljava/lang/String;"
+        ],
+        [
+          "public static final kotlin.jvm.functions.Function0<java.lang.Integer> capture(boolean);",
+          "descriptor: (Z)Lkotlin/jvm/functions/Function0;"
+        ],
+        [
+          "public static final long wide(boolean);",
+          "descriptor: (Z)J"
+        ]
+      ]
+    },
+    "candidate": {
+      "public final class deferredvals.ValuesKt": [
+        [
+          "public static final int choose(boolean);",
+          "descriptor: (Z)I"
+        ],
+        [
+          "public static final int continuing(boolean);",
+          "descriptor: (Z)I"
+        ],
+        [
+          "public static final int expression(boolean);",
+          "descriptor: (Z)I"
+        ],
+        [
+          "public static final int nested(int);",
+          "descriptor: (I)I"
+        ],
+        [
+          "public static final int selected(int);",
+          "descriptor: (I)I"
+        ],
+        [
+          "public static final int selectedExpression(boolean);",
+          "descriptor: (Z)I"
+        ],
+        [
+          "public static final int shadow(boolean);",
+          "descriptor: (Z)I"
+        ],
+        [
+          "public static final int terminal(boolean);",
+          "descriptor: (Z)I"
+        ],
+        [
+          "public static final java.lang.String reference(boolean);",
+          "descriptor: (Z)Ljava/lang/String;"
+        ],
+        [
+          "public static final kotlin.jvm.functions.Function0<java.lang.Integer> capture(boolean);",
+          "descriptor: (Z)Lkotlin/jvm/functions/Function0;"
+        ],
+        [
+          "public static final long wide(boolean);",
+          "descriptor: (Z)J"
+        ]
+      ]
+    }
+  },
+  "synthetic_members": {
+    "official": {
+      "public final class deferredvals.ValuesKt": []
+    },
+    "candidate": {
+      "public final class deferredvals.ValuesKt": []
+    }
+  },
+  "jvm_contract_interpretation": "Declared public/protected API is compared. ACC_SYNTHETIC members are recorded separately: class-based lambdas may require extra private-field access bridges compared with invokedynamic lambdas. Fixed Java and Kotlin consumers check the external contracts.",
+  "counts": {
+    "pass": 13,
+    "invalid_rejected": 7,
+    "unsupported_language": 3
+  },
+  "limitations": [
+    "Outer deferred val assignments across repeating loop boundaries, exception edges and conditional short-circuit effects remain explicitly unsupported. Ordinary all-path if/when assignments, loop-local vals and initialized immutable captures are covered."
+  ],
+  "input_integrity": {
+    "status": "unchanged"
+  },
+  "evidence": [
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/000-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/000-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/001-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/001-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/002-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/002-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/003-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/003-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/004-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/004-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/005-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/005-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/006-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/006-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/007-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/007-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/008-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/008-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/009-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/009-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/010-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/010-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/011-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/011-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/012-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/012-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/013-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/013-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/014-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/014-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/015-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/015-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/016-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/016-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/017-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/017-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/018-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/018-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/019-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/019-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/020-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/020-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/021-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/021-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/022-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/022-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/023-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/023-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/024-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/024-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/025-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/025-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/026-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/026-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/027-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/027-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/028-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/028-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/029-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/029-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/030-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/030-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application-0-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application-0-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application-1-stderr.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application-1-stdout.txt",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application-VerifyProvider.java",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application-classpath-model.json",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application-reproducer.py",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application070.json",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/deferred-vals-frozen-build.log",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/deferred-vals-frozen-clippy.log",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/deferred-vals-frozen-fmt.log",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/deferred-vals-frozen-integration.log",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/deferred-vals-frozen-test.log",
+    "reports/correctness/2026-11-26T060908051705Z-deferred-vals/when-deferred-report-tests.log"
+  ],
+  "supplementary_checks": {
+    "build": {
+      "status": "pass",
+      "evidence": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/deferred-vals-frozen-build.log"
+    },
+    "integration": {
+      "status": "pass",
+      "evidence": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/deferred-vals-frozen-integration.log"
+    },
+    "full_library": {
+      "status": "predecessor_test_regression",
+      "evidence": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/deferred-vals-frozen-test.log",
+      "observed": "294 pass; one stale syntax rejection assertion for suspend String.() -> Unit, newly supported by119b4eff4. The suspend owner confirmed the obsolete test and is adding a positive parsed-shape assertion separately. Existing tests were not changed in this frozen source.",
+      "correction_revision": "facdc39dd",
+      "correction": "The suspend owner replaced only the obsolete negative row with exact SuspendReceiverFunction shape and Function2 descriptor positive assertions. The original frozen suite and failure remain recorded."
+    },
+    "clippy": {
+      "status": "pass",
+      "evidence": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/deferred-vals-frozen-clippy.log"
+    },
+    "format": {
+      "status": "format_differences",
+      "evidence": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/deferred-vals-frozen-fmt.log",
+      "observed": "Frozen full format check reports predecessor formatting in bytecode/check/check_library/classpath/syntax and the new capture diagnostic. The capture diagnostic formatting was corrected without semantic changes in45b11eea7; historical frozen source remains unchanged."
+    },
+    "report_generator_tests": {
+      "status": "pass",
+      "evidence": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/when-deferred-report-tests.log"
+    }
+  },
+  "harness_revision": "2064738a6",
+  "source_snapshot": "/workspace/work/targets159/deferred-vals-freeze",
+  "reference_interpretation": {
+    "specification": {
+      "path": "references/kotlin-spec/docs/src/md/kotlin.core/cdfa.md",
+      "sha256": "a846a135d8b019d77aff0a57663957d763f043aa89c2a198fed5f769e07edfeb",
+      "rule": "Variable initialization analysis requires a property to be assigned before use, and read-only property assignments require an unassigned state. Normal-flow joins intersect definite assignments and union possible assignments."
+    },
+    "bounded_rule": "Deferred local vals initialize on every normally continuing syntactic if/when path, remain immutable when captured, and may be declared independently within repeating loop bodies. Outer assignments across loop, conditional-effect and exception boundaries are explicitly unsupported."
+  },
+  "testing_environment": {
+    "RUST_MIN_STACK": "33554432",
+    "CARGO_INCREMENTAL": "0",
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_TEST_DEBUG": "0"
+  },
+  "application_observations": [
+    {
+      "id": "070",
+      "source": "Alkitab/src/main/java/yuku/alkitab/base/cp/Provider.kt",
+      "source_sha256": "407d9e748304afb37248e88d3acbaa07d332dd2063c3abcb2b9fd69623c0ea06",
+      "compiler_source_revision": "2064738a6",
+      "outcome": "compiled",
+      "class_count": 4,
+      "evidence": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application070.json",
+      "jvm_verification": {
+        "outcome": "pass",
+        "scope": "All four candidate classes are linked and reflected with-Xverify:all, without initialization. This checks JVM validity and type resolution; it does not execute Provider Android behavior.",
+        "commands": [
+          {
+            "argv": [
+              "javac",
+              "--release",
+              "8",
+              "-d",
+              "/workspace/work/targets159/deferred-vals-application-frozen/verify",
+              "/workspace/work/targets159/deferred-vals-application-frozen/verify/VerifyProvider.java"
+            ],
+            "exit_code": 0,
+            "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application-0-stdout.txt",
+            "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application-0-stderr.txt"
+          },
+          {
+            "argv": [
+              "java",
+              "-Xverify:all",
+              "-cp",
+              "/workspace/work/targets159/deferred-vals-application-frozen/production/measured-output/70/resolved:/workspace/work/targets159/deferred-vals-application-frozen/verify:/workspace/work/deps33/project/Alkitab/build/intermediates/built_in_kotlinc/plainDebug/compilePlainDebugKotlin/classes:/workspace/work/deps33/project/Alkitab/build/intermediates/javac/plainDebug/compilePlainDebugJavaWithJavac/classes:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar:/workspace/work/deps33/project/Alkitab/build/intermediates/compile_r_class_jar/plainDebug/generatePlainDebugRFile/R.jar:/workspace/work/deps33/project/AlkitabIntegration/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar:/workspace/work/deps33/project/AlkitabIo/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar:/workspace/work/deps33/project/AlkitabModel/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar:/workspace/work/deps33/project/AlkitabYes2/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar:/workspace/work/deps33/project/Bintex/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/a9ed68492ca585fc10cc3f9876aeee22/transformed/preference-ktx-1.2.1-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/edf0b359b0872023c4bf841c6fc1b072/transformed/material-1.13.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/ea32da85060e63b612cb8501bd1d3b70/transformed/appcompat-resources-1.7.1-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/46ffc9f5fd0faeb48c77d2579ac0b344/transformed/preference-1.2.1-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/ed68d937b65ed8bc7608ba0e0e1d6648/transformed/appcompat-1.7.1-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/7dab49e3729134bd0eb1048476d9da39/transformed/viewpager2-1.0.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3564239ded549fc983cfce2838ff19df/transformed/firebase-crashlytics-20.0.1-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/f59ead5bee89ae59c395cf82ba9560d4/transformed/firebase-messaging-25.0.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/0090133f3c89ce380c09766c4c256d54/transformed/firebase-sessions-3.0.1-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/e30facc6a648da6aae92a7067d277d6e/transformed/firebase-installations-19.0.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/b42b9b137999b3ec457d1a80aec590c3/transformed/firebase-installations-interop-17.2.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/00e1522f16ab693eeb98f2a25878d40a/transformed/firebase-iid-interop-17.1.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/c1ab6272e1e3cc54a9f4ab96045c33d0/transformed/firebase-common-22.0.0-api.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.room/room-common-jvm/2.7.0/46a9845444d0b849131baeb85bfe4051828261ad/room-common-jvm-2.7.0.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/892e545d2aa2914687d616e4bbed3487/transformed/room-runtime-release-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/aad6e4bf2856cc09fd5e4bf37bec4c68/transformed/room-ktx-2.7.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/0645bfcd96e7d2bd0c09ac58aac600e3/transformed/work-runtime-ktx-2.10.4-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/9156cdbb1f234c88470dd450386a6efb/transformed/work-runtime-2.10.4-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/e4f97e2c091b625b838cfe5db8b4bcd4/transformed/coil-2.7.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/05e9858c90aefb541a499cd2999f38db/transformed/coil-base-2.7.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/5c03fff715078af0eb7f9746f802419f/transformed/material3-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/af76055845755772c58a69b5efa238a3/transformed/animation-core-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/0d0fbe27da544673d615f993a646207f/transformed/animation-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/6c99ab36c49eb52cf604a8575773cbdb/transformed/foundation-layout-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/08b49689b988d8ac692addee2b2d663b/transformed/material-ripple-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/55356a5ba4677d2d89a930a54470f7a7/transformed/foundation-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/75f9eaa88e02368d048e40abc6bbe91e/transformed/ui-tooling-data-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/c00a11f77155c75d0dd8a0f48c02bdf1/transformed/ui-util-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/ec5d9e2846467c20d248fa245996adfb/transformed/ui-unit-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/ff583e8ce42e52285e0309cbc87342d6/transformed/ui-geometry-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/ee70e136249d39e8cce6af5b62d5b9e6/transformed/ui-text-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/591448e7ed8f86467452b8c5717b6eb1/transformed/ui-tooling-preview-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/96f9cdd6d19ca5252879e1dce38f0509/transformed/ui-graphics-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3ec19c357184c94232be732c284c9724/transformed/material-icons-extended-release-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3fa78f071fe33050fb02d4f9c7c936f0/transformed/material-icons-core-release-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/6e0889122490d072c87bb5689f928caa/transformed/activity-1.13.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3174bb428a2dc373db6ea9e8fe5d9679/transformed/loader-1.0.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/2b5dcd62c469c3fc7df70ca5d45e554e/transformed/media3-session-1.10.1-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/b7d7a807bfa31df95520656fa4446aa1/transformed/percentlayout-1.0.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/28cd8eb79b1fa54fe416fb142ec092c6/transformed/recyclerview-1.4.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/7f7cd57a3d224b57bf8489fbf2689064/transformed/swiperefreshlayout-1.1.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/dd5e4f6448c5675a81701e29e42d994a/transformed/lifecycle-runtime-ktx-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/dd28c008482e07f4dd8c5abbaffd9055/transformed/lifecycle-runtime-compose-release-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/df28c65a127826e8fccbb67e82c10249/transformed/lifecycle-runtime-release-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3103f3748bfbe10539bff45555b1988f/transformed/lifecycle-viewmodel-savedstate-release-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/cc0165ce2585cdff5362f425ef7fde51/transformed/core-ktx-1.18.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/f68a179d39ebe551aa5901b0dc39bb81/transformed/drawerlayout-1.1.1-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/adaf93e511adc7cd785ba16ebf908764/transformed/coordinatorlayout-1.1.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/88bf78ded7849b0b74d6edbd0cab0626/transformed/dynamicanimation-1.1.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/d3dfd8cdda745f1b8cf67beba77b836b/transformed/transition-1.5.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/2ea812b5d9f555497b803a6a3e621f3a/transformed/vectordrawable-animated-1.1.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/0cc20a8b797074538c42451a746ca638/transformed/vectordrawable-1.1.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/7cfe2b8d59d1aa7374ae0919f4871611/transformed/viewpager-1.1.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/631f89cb9fba3b0742d26635d2424eaf/transformed/slidingpanelayout-1.2.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/2acec95fd498348ebdc905b2e9265b39/transformed/customview-1.1.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/623dc510c8a8b524e50df4f30c15baf9/transformed/core-1.18.0-api.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-common-jvm/2.9.4/ab739bccdb3541983385af169565c7c035d897e7/lifecycle-common-jvm-2.9.4.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/af354d8ca6ce3e5fdc097cce7de8663a/transformed/lifecycle-viewmodel-ktx-2.9.4-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3992b8bdde160d8844a4c8dface67db9/transformed/lifecycle-service-2.9.4-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/f2bf963aff4a8feea1e275a642a022f4/transformed/lifecycle-livedata-core-ktx-2.9.4-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/0c56473f457124aec0b979f83252973e/transformed/lifecycle-livedata-core-2.9.4-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/38c07936870f6c26ef578c5c692fd56c/transformed/lifecycle-livedata-2.9.4-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3ef2958d3810d2b691b0769d3a7bb4c2/transformed/lifecycle-viewmodel-2.9.4-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/c1733171cfd9347725571079b5b21b9a/transformed/lifecycle-viewmodel-release-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/5e7ba575d327c1c51f83465e5ca5cb2e/transformed/lifecycle-viewmodel-compose-release-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/54e93c26190f1f80d3346c7f724c42fd/transformed/ui-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/f8772389ac6124f5ea7e9f09d6ee47d4/transformed/ui-tooling-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/cf5ba46bd19e035dd3fbd114c3129118/transformed/navigationevent-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/18108d505677a9296cafbbd8f7e3eefd/transformed/navigationevent-compose-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3b89c8140c6795188ac2f8d128d1286a/transformed/runtime-retain-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/ef64ffdc4dbf2810f4da14b9c7501c2e/transformed/runtime-annotation-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/777f8873815ac7ab8e2258270dd71644/transformed/runtime-saveable-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/7b4981831f6235e9c2abd519791faa01/transformed/savedstate-release-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/da27e6fa37c3e81e66919be32910eb24/transformed/savedstate-ktx-1.3.2-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/4bf6719ecd7915d00cc1e56cbd35cade/transformed/savedstate-compose-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/29ef014947a3b2b649a061e7ed9e2905/transformed/runtime-api.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-android/1.9.0/6cf3b8df5a2ce8c6b0dffe55657a827c405ee2fe/kotlinx-coroutines-android-1.9.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.9.0/9beade4c1c1569e4f36cbd2c37e02e3e41502601/kotlinx-coroutines-core-jvm-1.9.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-play-services/1.9.0/9d715295c29dddf8c381565c513fb2d9923f9f41/kotlinx-coroutines-play-services-1.9.0.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/b440518a4e460e85d50558c710a925a6/transformed/play-services-tasks-18.1.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3a458da4c83d7d701f3904192eec4b92/transformed/firebase-measurement-connector-20.0.1-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/8f882bfee3a753db9ef9af08f8aae306/transformed/play-services-basement-18.3.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/f1341e0039585558025be5d145e64d36/transformed/fragment-1.8.9-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/64fb97c9f2f4649b2d91d07332ca47f2/transformed/fragment-ktx-1.8.9-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/5723e22997d06277a3ad3848480fcfcb/transformed/activity-ktx-1.13.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/9a0539f2561e189bf7489d93b6ff3c16/transformed/activity-compose-1.13.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/7755c2451e35d17a05052ba38d24d5e1/transformed/core-splashscreen-1.2.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/c9e6c15e097b54d15ded3b21703a74c8/transformed/media3-exoplayer-midi-1.10.1-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/df135483f10b29895829224260cce9ea/transformed/media3-exoplayer-1.10.1-api.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-parcelize-runtime/2.3.21/5eeb7fbd98f9b6a762d45a93636b87f31fc6dd17/kotlin-parcelize-runtime-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/8ba9ddb7176d6122092c37c935898f2f/transformed/leakcanary-android-2.14-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/e3a37dd53632c77ed15c7e35b8227183/transformed/leakcanary-object-watcher-android-2.14-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3a5b2c602c8a779314ddb16c74348652/transformed/media3-datasource-okhttp-1.10.1-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/eb9468ad9e44baa970438c43b4949ec9/transformed/okhttp-release-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/c766b83d0bcfb02aaa10495cc1172be3/transformed/core-viewtree-1.0.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/35b9dac2582c58c34436a908bfe9d5de/transformed/media3-extractor-1.10.1-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/5afaa7ccd06472e5b024ce6531bb2274/transformed/media3-container-1.10.1-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/89e99dc47c6888b4609e89c55e23afa4/transformed/media3-datasource-1.10.1-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/51da9df0b620fa34c77cb731ef7e2aa1/transformed/media3-decoder-1.10.1-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/0b3df73ebbb63f2b4928217a98deaa3a/transformed/media3-database-1.10.1-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/d134777f6e8ff6dfe66b352e54ae9b7d/transformed/media3-common-1.10.1-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/c7c5676f4101ca3766fdbecf9bfa42f7/transformed/annotation-experimental-1.4.1-api.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.15.0/cb3c285187640f543150fcac1ae012bdd778c0e1/okio-jvm-3.15.0.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/70ddf1be339f5356eb32b6690e326227/transformed/versionedparcelable-1.1.1-api.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.collection/collection-ktx/1.5.0/27c78a926a16a1bf792b2285cf2834e8caae4a07/collection-ktx-1.5.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.collection/collection-jvm/1.5.0/7ba2c69414d46ebc2dd76598bdd0a75c54281a57/collection-jvm-1.5.0.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/6203c1c04698ffa88eb6296e2ae5c063/transformed/cursoradapter-1.0.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/f03f78e0833a1a50dd3362f07598f7d8/transformed/interpolator-1.0.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/353f57181bab40e0e9904504bb8a17d1/transformed/cardview-1.0.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/d891afb4156966970623df3be1ddde1a/transformed/firebase-config-interop-16.0.1-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/99da32edda83f0a8b286d55b7cc47881/transformed/firebase-datatransport-18.2.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/d1b1fedecfdd258d0ff63fb8dc350634/transformed/transport-backend-cct-3.1.9-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/86125809f9cf44985b7fc0a4916ab89f/transformed/firebase-encoders-json-18.0.1-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/deaef11fb710996de94bce7c0a7bbf77/transformed/transport-runtime-3.1.9-api.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.google.firebase/firebase-encoders-proto/16.0.0/a42d5fd83b96ae7b73a8617d29c94703e18c9992/firebase-encoders-proto-16.0.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.google.firebase/firebase-encoders/17.0.0/26f52dc549c42575b155f8c720e84059ee600a85/firebase-encoders-17.0.0.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/f9faf517679aac55e925ba8fd20f1b0e/transformed/sqlite-framework-release-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/57feac86df3b957150f118d70b1dff4c/transformed/sqlite-release-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/f1fe02a9cc0f616a469a9f014037a4f8/transformed/transport-api-3.0.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/4ea0cd1c405a9e097163ea404346c3fc/transformed/core-runtime-2.2.0-api.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.arch.core/core-common/2.2.0/5e1b8b81dfd5f52c56a8d53b18ca759c19a301f3/core-common-2.2.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.9.1/b17951747e38bf3986a24431b9ba0d039958aa5f/annotation-jvm-1.9.1.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.8.0/ed04f49e186a116753ad70d34f0ac2925d1d8020/kotlin-stdlib-jdk8-1.8.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.8.0/3c91271347f678c239607abb676d4032a7898427/kotlin-stdlib-jdk7-1.8.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-json-jvm/1.7.3/6701e8c68d9e82387ce72ee96e8ddf058208d58f/kotlinx-serialization-json-jvm-1.7.3.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-core-jvm/1.7.3/1f226780b845ff9206474c05159245d861556249/kotlinx-serialization-core-jvm-1.7.3.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/d8db848666c32ca4cb2b585c617e687d/transformed/constraintlayout-2.2.1-api.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.google.code.gson/gson/2.12.1/4e773a317740b83b43cfc3d652962856041697cb/gson-2.12.1.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/c32d87dc0f4bed9cb89732751ceceffb/transformed/library-1.3.0-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/574747cbefbefaed326fab998bd4dc10/transformed/FancyShowCaseView-1.4.0-api.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/16ebcf8a81c437a1a5f30af5e7cb84fc/transformed/leakcanary-android-core-2.14-api.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.resourceinspection/resourceinspection-annotation/1.0.1/8c21f8ff5d96d5d52c948707f7e4d6ca6773feef/resourceinspection-annotation-1.0.1.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.36.0/227d4d4957ccc3dc5761bd897e3a0ee587e750a7/error_prone_annotations-2.36.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-android/2.14/6fb0b4ab27c085678a3d26ce2b9350fb77c32407/shark-android-2.14.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/0e904cbd2566cb658ab936fd429c0023/transformed/leakcanary-object-watcher-android-androidx-2.14-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/9a41bde09e2f0c9b6d39e5dd918086dc/transformed/leakcanary-object-watcher-android-support-fragments-2.14-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/7abfc44fd274b2ec61dee42981f6a2b5/transformed/leakcanary-object-watcher-android-core-2.14-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/388cd814d28282086642b1d9bb0b69d7/transformed/startup-runtime-1.1.1-api.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.google.guava/guava/33.3.1-android/36162b3b4e9df67dae90db62a2c54616ca42c1bd/guava-33.3.1-android.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3a5a55f609d1cbad2f3e765b09564458/transformed/graphics-shapes-release-api.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/7f0838d27a7b16f6a062b5d1cf423bba/transformed/firebase-components-19.0.0-api.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.google.firebase/firebase-annotations/17.0.0/fd04a6accd970e0fcf9baf2424abe2926e00d0e2/firebase-annotations-17.0.0.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.squareup.leakcanary/shark/2.14/768be00911a64d2314345115687fe0d14924bd87/shark-2.14.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.squareup.leakcanary/leakcanary-object-watcher/2.14/4e9e9ea14da4e86321b1369c7aea6528f0ef2/leakcanary-object-watcher-2.14.jar:/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/6f86fd3bfea59b45aa267dc023f0ff9c/transformed/leakcanary-android-utils-2.14-api.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.2/c4a06a64e650562f30b7bf9aaec1bfed43aca12b/failureaccess-1.0.2.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-graph/2.14/ed8d34d03693373e1e9e1bcdcd52e2a63391e6d9/shark-graph-2.14.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-hprof/2.14/561aba011e38279be7e068f6760f816baab0ccb9/shark-hprof-2.14.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-log/2.14/25574b6474a61c3d0a5df80272ecfa51c560bd7e/shark-log-2.14.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/javax.inject/javax.inject/1/6975da39a7040257bd51d21a231b76c915872d38/javax.inject-1.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+              "VerifyProvider",
+              "yuku.alkitab.base.cp.Provider$Companion",
+              "yuku.alkitab.base.cp.Provider$lambda$1520$0",
+              "yuku.alkitab.base.cp.Provider$lambda$3493$1",
+              "yuku.alkitab.base.cp.Provider"
+            ],
+            "exit_code": 0,
+            "stdout": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application-1-stdout.txt",
+            "stderr": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application-1-stderr.txt"
+          }
+        ],
+        "fixed_java_caller_sha256": "9c83c17d733abd2f505696c2273ee19728d39ebb40f0e6300b5e23288b9055db"
+      },
+      "reproduction": {
+        "argv": [
+          "python",
+          "/workspace/work/targets159/recheck-resume.py",
+          "/tmp/targets159-deferred/debug/korrust",
+          "production"
+        ],
+        "environment": {
+          "RECHECK_ROOT": "/workspace/work/targets159/deferred-vals-application-frozen",
+          "RECHECK_IDS": "70"
+        },
+        "classpath_model": "reports/correctness/2026-11-26T060908051705Z-deferred-vals/application-classpath-model.json"
+      },
+      "resolved_dependency_inputs": {
+        "/workspace/work/deps33/sdk/platforms/android-36/android.jar": {
+          "sha256": "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a"
+        },
+        "/workspace/work/deps33/sdk/build-tools/36.0.0/core-lambda-stubs.jar": {
+          "sha256": "2feb8df434cae3218ed9ffe9bae01ddec101d1dc5e12824c4209f61e283e0d3d"
+        },
+        "/workspace/work/deps33/project/Alkitab/build/intermediates/compile_r_class_jar/plainDebug/generatePlainDebugRFile/R.jar": {
+          "sha256": "0d3883aeac179561d8d1aba99eaa431294c5d85ff2a780f95d577f3c51f5cbf7"
+        },
+        "/workspace/work/deps33/project/AlkitabIntegration/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar": {
+          "sha256": "324eeb3708d04824f4c87b068b96036645b12a65ef07dc97e0426a3e4407075b"
+        },
+        "/workspace/work/deps33/project/AlkitabIo/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar": {
+          "sha256": "e650ffd1598119db77f3358dd4b78b6ec8a3fbb51f6d0ace23cb534bcd1242a8"
+        },
+        "/workspace/work/deps33/project/AlkitabModel/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar": {
+          "sha256": "1c4441f5cea6e05d7e3ded0a5e920c528b742fb9280a641f05fd80dcb4c22df4"
+        },
+        "/workspace/work/deps33/project/AlkitabYes2/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar": {
+          "sha256": "e512860f54e47e1f1ec41f7004734b65fdaaabd5f0f2950aec95856379deb8b5"
+        },
+        "/workspace/work/deps33/project/Bintex/build/intermediates/compile_library_classes_jar/debug/bundleLibCompileToJarDebug/classes.jar": {
+          "sha256": "a94964515b553bdccbc6ff68c46416384c3214584d2e898ab78821e0a1327c06"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/a9ed68492ca585fc10cc3f9876aeee22/transformed/preference-ktx-1.2.1-api.jar": {
+          "sha256": "093d3cc7923bf4c5420b2b9d7cb23c512e44079c8c76c71883afaf49325fee3c"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/edf0b359b0872023c4bf841c6fc1b072/transformed/material-1.13.0-api.jar": {
+          "sha256": "b81b187114ca4b56ed810e4123a66140f213aca93e17bd199d2fa2f25778c852"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/ea32da85060e63b612cb8501bd1d3b70/transformed/appcompat-resources-1.7.1-api.jar": {
+          "sha256": "70f3a24f10ceee3f514f594e1dde463753805fb2f4c76b9143564b5e4bedc3fb"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/46ffc9f5fd0faeb48c77d2579ac0b344/transformed/preference-1.2.1-api.jar": {
+          "sha256": "ac65fc505f78004d79136fd919be7cd540eb438976406fe66f31d47c9cf6b58b"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/ed68d937b65ed8bc7608ba0e0e1d6648/transformed/appcompat-1.7.1-api.jar": {
+          "sha256": "94f9deedb60d99dcfbdbe5d07d4b4a69ee7bbb4ec4270ad925277fdcb5482cdd"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/7dab49e3729134bd0eb1048476d9da39/transformed/viewpager2-1.0.0-api.jar": {
+          "sha256": "60c8a5105f3620a75812373197451a0d2074e3a1165d13dbd9594eaa9b34d503"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3564239ded549fc983cfce2838ff19df/transformed/firebase-crashlytics-20.0.1-api.jar": {
+          "sha256": "2b267851e47cf5a1d9f6f720519859b1495b63235a2c0d324f098954d9be0b89"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/f59ead5bee89ae59c395cf82ba9560d4/transformed/firebase-messaging-25.0.0-api.jar": {
+          "sha256": "b68acac86d9c8931dffeb932748b0d449269692c3f8b51ed0b59a5182229a627"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/0090133f3c89ce380c09766c4c256d54/transformed/firebase-sessions-3.0.1-api.jar": {
+          "sha256": "9379cb9aa11c517eafc1ebba09aa9e3d577acf56cb46c1294091aff49cc8f7cb"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/e30facc6a648da6aae92a7067d277d6e/transformed/firebase-installations-19.0.0-api.jar": {
+          "sha256": "e27d14ca3a6b3558905e9bb1c9d191d88a11a0d4fe595e4d3cb2d0a95591a27d"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/b42b9b137999b3ec457d1a80aec590c3/transformed/firebase-installations-interop-17.2.0-api.jar": {
+          "sha256": "a58906ff9b02bdb24091e266f52a4a61447667c6753beab9c17868237a5b655f"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/00e1522f16ab693eeb98f2a25878d40a/transformed/firebase-iid-interop-17.1.0-api.jar": {
+          "sha256": "04ab55dbd90d79a8bdd545881a5caadae891185e0e1f91a0c96d2ad44229ae86"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/c1ab6272e1e3cc54a9f4ab96045c33d0/transformed/firebase-common-22.0.0-api.jar": {
+          "sha256": "257ffae02b71f1c3cd91b62f472525020f4e858417f0177ff1975e0b21c0260b"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.room/room-common-jvm/2.7.0/46a9845444d0b849131baeb85bfe4051828261ad/room-common-jvm-2.7.0.jar": {
+          "sha256": "b2a00b88c8b8d810d07ecbdf92fdff47db7f0ea884efe5c31cda7a526c9b1ae5"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/892e545d2aa2914687d616e4bbed3487/transformed/room-runtime-release-api.jar": {
+          "sha256": "90d262b1678b094f7593dba2f44bc60ea975b4dc7c5279b29138ca000f8c4a54"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/aad6e4bf2856cc09fd5e4bf37bec4c68/transformed/room-ktx-2.7.0-api.jar": {
+          "sha256": "57ef57577608e30569869f27268d282355cdb94725e7f90d736d2351b257ea75"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/0645bfcd96e7d2bd0c09ac58aac600e3/transformed/work-runtime-ktx-2.10.4-api.jar": {
+          "sha256": "38aa01dff711ab800128564173c7d1ab327b030f527521e6c5275cdf814de77b"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/9156cdbb1f234c88470dd450386a6efb/transformed/work-runtime-2.10.4-api.jar": {
+          "sha256": "bfd123b72a1c188ce80c1fd4d1f6ea643d602d10cd1ce22fa62e13ea7a4b43b9"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/e4f97e2c091b625b838cfe5db8b4bcd4/transformed/coil-2.7.0-api.jar": {
+          "sha256": "69c4d7168ecdc7df351e3796c3c83073a24f2c8c7bdf2eba548b43f0309e765f"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/05e9858c90aefb541a499cd2999f38db/transformed/coil-base-2.7.0-api.jar": {
+          "sha256": "29ee6046279ad7d0a02aa690fd4245f265d3fa6ccacad1c98dd42a09dc62d10a"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/5c03fff715078af0eb7f9746f802419f/transformed/material3-api.jar": {
+          "sha256": "c3f879d944bcaced24d4d9d389839bf6cdeccd7d1bf7fca7ff4d9fd7feb830ad"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/af76055845755772c58a69b5efa238a3/transformed/animation-core-api.jar": {
+          "sha256": "b8d0667af5404421ba7db77dab40ae155d88469356d2c013114f6391c699d097"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/0d0fbe27da544673d615f993a646207f/transformed/animation-api.jar": {
+          "sha256": "36b9299a9169c6dec7ba351f85c9ff59301d8dd223d2d60926134fd73f5261d8"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/6c99ab36c49eb52cf604a8575773cbdb/transformed/foundation-layout-api.jar": {
+          "sha256": "6a4f2fa6be95a36c6d2049462128200ec92cfa4b84a80632cae4491be610e345"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/08b49689b988d8ac692addee2b2d663b/transformed/material-ripple-api.jar": {
+          "sha256": "da3e4edb81f0add80ede47b53af59acaa26c2f02e65d753ef7af9dc97ec7b98d"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/55356a5ba4677d2d89a930a54470f7a7/transformed/foundation-api.jar": {
+          "sha256": "d180718b984c60bb8de277e7cfcd12252d615e4f036ad28e806a4e450681efc6"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/75f9eaa88e02368d048e40abc6bbe91e/transformed/ui-tooling-data-api.jar": {
+          "sha256": "5ea0b4e2f2e0313dc118cfe68a077aee5b7d70f50972885938b0c8e768f33956"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/c00a11f77155c75d0dd8a0f48c02bdf1/transformed/ui-util-api.jar": {
+          "sha256": "112f196a366273cd0e0e28e3002da67326962b929592c40b86156cdb23b07f2f"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/ec5d9e2846467c20d248fa245996adfb/transformed/ui-unit-api.jar": {
+          "sha256": "d3be324943d98e6a3c5b74fb0cebc7e5b62946303ee315fc4ffdd685ddbdcd25"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/ff583e8ce42e52285e0309cbc87342d6/transformed/ui-geometry-api.jar": {
+          "sha256": "026ee7401e347b43a8e3aae4cf06929f583f245f8024867e14fbfe4092f19c05"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/ee70e136249d39e8cce6af5b62d5b9e6/transformed/ui-text-api.jar": {
+          "sha256": "76eae4814d73a23df6772dea19e8b1ee87abb52246038891b2d47685667b0ca2"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/591448e7ed8f86467452b8c5717b6eb1/transformed/ui-tooling-preview-api.jar": {
+          "sha256": "c871eabe897198831b0db5bc24d0aa6f41a4afd40d4f8c5c8a3ba00e3a9a20c7"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/96f9cdd6d19ca5252879e1dce38f0509/transformed/ui-graphics-api.jar": {
+          "sha256": "0c5d0a6ca0a488827f2e822de823bd64957c26cae062fa9ccf1830f93a7fdf81"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3ec19c357184c94232be732c284c9724/transformed/material-icons-extended-release-api.jar": {
+          "sha256": "f02b1ce6d69dd020669993145a14ab0abd55843a4cd502eb8afc4e85ae60b2d1"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3fa78f071fe33050fb02d4f9c7c936f0/transformed/material-icons-core-release-api.jar": {
+          "sha256": "288bc21645a7f1b05dd88bb8bbf8b0f7f8d8afdcd2476bdfc140f3b4acee85ff"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/6e0889122490d072c87bb5689f928caa/transformed/activity-1.13.0-api.jar": {
+          "sha256": "45742fb8e6141eaa35b9a6dbf0474913a47c6c615d718b5ed4518834ad801993"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3174bb428a2dc373db6ea9e8fe5d9679/transformed/loader-1.0.0-api.jar": {
+          "sha256": "7b8d130a2134503e4153a9fcf0d6ce4ca7e995c57bafbb12e5f85cd796f2e31e"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/2b5dcd62c469c3fc7df70ca5d45e554e/transformed/media3-session-1.10.1-api.jar": {
+          "sha256": "c99933c0306e798238b25d5f404b90f6f79388882f2d8f64d191ee07686e4702"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/b7d7a807bfa31df95520656fa4446aa1/transformed/percentlayout-1.0.0-api.jar": {
+          "sha256": "ceec6837f0372868565398ca4ed699efbe4013072247ba294c674bf2afb73305"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/28cd8eb79b1fa54fe416fb142ec092c6/transformed/recyclerview-1.4.0-api.jar": {
+          "sha256": "45fa8879627a04a9a3d5e901af808f35391af94d3e58a5069026ee1e8e094a3f"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/7f7cd57a3d224b57bf8489fbf2689064/transformed/swiperefreshlayout-1.1.0-api.jar": {
+          "sha256": "efb99ef17234d1ab84527541d52189a672b5cd5c3efff322f8fca9d54468f7cd"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/dd5e4f6448c5675a81701e29e42d994a/transformed/lifecycle-runtime-ktx-api.jar": {
+          "sha256": "e52c14aead36b8c3bb89e4ca23b21b7fade8426437db554f0a5a9fa43aa45f2c"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/dd28c008482e07f4dd8c5abbaffd9055/transformed/lifecycle-runtime-compose-release-api.jar": {
+          "sha256": "0528efaf8aeeee6d7565317f71e4e9f686866ed6341c6ba13ea24d61cd0e369f"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/df28c65a127826e8fccbb67e82c10249/transformed/lifecycle-runtime-release-api.jar": {
+          "sha256": "145375e2d95077bc2bd8ab69dd2cb99a6188b2882186df63584c31130df5cdd4"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3103f3748bfbe10539bff45555b1988f/transformed/lifecycle-viewmodel-savedstate-release-api.jar": {
+          "sha256": "17c7560e1153e2aa87e68dd815dd6b39efc182aeaa897cf8bfc463ea6e9824d0"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/cc0165ce2585cdff5362f425ef7fde51/transformed/core-ktx-1.18.0-api.jar": {
+          "sha256": "29b3d8980608ec3910338c0da3335cc32af13b59c61fe3de4e0d229f50ddf895"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/f68a179d39ebe551aa5901b0dc39bb81/transformed/drawerlayout-1.1.1-api.jar": {
+          "sha256": "e528985a7fc2b89b5e47ddab09a76d59cef4a5736a14cd5dce19baf609be1c85"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/adaf93e511adc7cd785ba16ebf908764/transformed/coordinatorlayout-1.1.0-api.jar": {
+          "sha256": "3bc1e5825071f4ff5a8c6b78e2bcc37a704bafdcd26080418bbe90c9482c8e19"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/88bf78ded7849b0b74d6edbd0cab0626/transformed/dynamicanimation-1.1.0-api.jar": {
+          "sha256": "4a6cf21f6209a86518a8567c48b9f11880a3c4e500e629f33ae602ea96259f5b"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/d3dfd8cdda745f1b8cf67beba77b836b/transformed/transition-1.5.0-api.jar": {
+          "sha256": "346a6b76c1c712552634c63a28f2582306eb386c7e45b9910a065084221a1899"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/2ea812b5d9f555497b803a6a3e621f3a/transformed/vectordrawable-animated-1.1.0-api.jar": {
+          "sha256": "7fb48b12b5cfefd6cab0972eaf5b358a9edd2ed68322e37bbb5ed9dc9f86d3a4"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/0cc20a8b797074538c42451a746ca638/transformed/vectordrawable-1.1.0-api.jar": {
+          "sha256": "d4ab4b9fc7a598dd2e8cf60e8517a6234e5cc9b6a0515565dc338885d7564c01"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/7cfe2b8d59d1aa7374ae0919f4871611/transformed/viewpager-1.1.0-api.jar": {
+          "sha256": "fc60c1262e78803becf4c10ead82b9a07193c1d1ce3f61958b43549c7471962b"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/631f89cb9fba3b0742d26635d2424eaf/transformed/slidingpanelayout-1.2.0-api.jar": {
+          "sha256": "e169bafcb71e8627ff11b5d9bb2b732e711956e2a10f826c06c29c44adeed53b"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/2acec95fd498348ebdc905b2e9265b39/transformed/customview-1.1.0-api.jar": {
+          "sha256": "72d31f12c192c189087dc9e3c8e720055479ed125ee1193a12fc35d5c9bea0c5"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/623dc510c8a8b524e50df4f30c15baf9/transformed/core-1.18.0-api.jar": {
+          "sha256": "e40dc80e32472b7b615052e79a5372c8e553d2d76edadab64f36c03ea8ffd7dc"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-common-jvm/2.9.4/ab739bccdb3541983385af169565c7c035d897e7/lifecycle-common-jvm-2.9.4.jar": {
+          "sha256": "37d89b2101f074ac6c260917dabb185607645ee200aa3018c7c5bde70edcf184"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/af354d8ca6ce3e5fdc097cce7de8663a/transformed/lifecycle-viewmodel-ktx-2.9.4-api.jar": {
+          "sha256": "1ade561b240bda93eefeb24e2fd1c5e783e078f3216f205d2fa29c51cc3126f9"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3992b8bdde160d8844a4c8dface67db9/transformed/lifecycle-service-2.9.4-api.jar": {
+          "sha256": "dbbe3f9fc3defd9b18d2e5f511ec288d451a15bf272714f33b710410bd8e1b0b"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/f2bf963aff4a8feea1e275a642a022f4/transformed/lifecycle-livedata-core-ktx-2.9.4-api.jar": {
+          "sha256": "a18c22c55a9b43e3d19f10059dcb6883e4908147d858ec318f9f56d9b15c9507"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/0c56473f457124aec0b979f83252973e/transformed/lifecycle-livedata-core-2.9.4-api.jar": {
+          "sha256": "3777f6a0364b8bf64f86a300fa5817f432189bdb06d6db1d3fa2357eae8694ca"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/38c07936870f6c26ef578c5c692fd56c/transformed/lifecycle-livedata-2.9.4-api.jar": {
+          "sha256": "84aa103467d6e986553f04cb38bb1b1f1234eeb63c7b1b93ed0a50962dbec475"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3ef2958d3810d2b691b0769d3a7bb4c2/transformed/lifecycle-viewmodel-2.9.4-api.jar": {
+          "sha256": "8739c76e681f900923b900c9df0ef75cf421d39cabb54650c4b9ad19b6a76d85"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/c1733171cfd9347725571079b5b21b9a/transformed/lifecycle-viewmodel-release-api.jar": {
+          "sha256": "df3d89010ce3b970954fca798a18ea98c9c3bbf5c490c039b28a749ac8b542f3"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/5e7ba575d327c1c51f83465e5ca5cb2e/transformed/lifecycle-viewmodel-compose-release-api.jar": {
+          "sha256": "a51f9a9e64c7a6e79db3255bf4ef41252aa01068fdc16ec8cf11ad79aef4c344"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/54e93c26190f1f80d3346c7f724c42fd/transformed/ui-api.jar": {
+          "sha256": "3a2d709dad4cc82f60772ddb690c4a07f944b52e84fe646f83600f7e01e881c1"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/f8772389ac6124f5ea7e9f09d6ee47d4/transformed/ui-tooling-api.jar": {
+          "sha256": "db76faf23efa1af62db1ba25e6b6f99750767a4133e628ac9b7202cd5293a252"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/cf5ba46bd19e035dd3fbd114c3129118/transformed/navigationevent-api.jar": {
+          "sha256": "8860e665522d9564703bdaf4ecc105e02e73f3a1e9919e50984d1b162c97cc1c"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/18108d505677a9296cafbbd8f7e3eefd/transformed/navigationevent-compose-api.jar": {
+          "sha256": "b1f2e8d9316d754feeb92d08b4ad0a510fca2a2fd995881a2672ea12fdfede22"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3b89c8140c6795188ac2f8d128d1286a/transformed/runtime-retain-api.jar": {
+          "sha256": "18b2068db1dc7ab579b269b461f978fa56e36f0b1278150039ae370ca6c145cf"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/ef64ffdc4dbf2810f4da14b9c7501c2e/transformed/runtime-annotation-api.jar": {
+          "sha256": "170c4da3a8d2afadf0ed5174849278a6216f9fb7f15a8aec9fa7b5528d8f8657"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/777f8873815ac7ab8e2258270dd71644/transformed/runtime-saveable-api.jar": {
+          "sha256": "fcc32296db17879df4ca694fb5714c1f2a73f093b99c1d54fe1d6e3c9c684520"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/7b4981831f6235e9c2abd519791faa01/transformed/savedstate-release-api.jar": {
+          "sha256": "ebfa68e340ae7cda489eb168623a8a268f279a0ec146ca9262af3fe47b892cdd"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/da27e6fa37c3e81e66919be32910eb24/transformed/savedstate-ktx-1.3.2-api.jar": {
+          "sha256": "8882edfda27e22bc67405aa458bb03aadf1ca0e008d108f5e56270f6530f07c6"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/4bf6719ecd7915d00cc1e56cbd35cade/transformed/savedstate-compose-api.jar": {
+          "sha256": "224573f5835b062436f15f8e98003b3fa5c8a3f4b4788ac7cb8adb8f377d7bce"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/29ef014947a3b2b649a061e7ed9e2905/transformed/runtime-api.jar": {
+          "sha256": "ae6caa9675046526701e8d10bb82bfc095a9b9f3c99ca2e7b9a71828c816b2b3"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-android/1.9.0/6cf3b8df5a2ce8c6b0dffe55657a827c405ee2fe/kotlinx-coroutines-android-1.9.0.jar": {
+          "sha256": "bd783acd2f9738845d58380f46f45b5cde95d0cb03027d56725338b26bfc4d72"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.9.0/9beade4c1c1569e4f36cbd2c37e02e3e41502601/kotlinx-coroutines-core-jvm-1.9.0.jar": {
+          "sha256": "ad89c2892235e670f222d819cb3d81188143cb19a05b59df9889ae4269f5c70a"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-play-services/1.9.0/9d715295c29dddf8c381565c513fb2d9923f9f41/kotlinx-coroutines-play-services-1.9.0.jar": {
+          "sha256": "4cb6b6321df1664b99fee756de63f6af65ccb4f68936f26cf76c211dea1b23ae"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/b440518a4e460e85d50558c710a925a6/transformed/play-services-tasks-18.1.0-api.jar": {
+          "sha256": "17fa1cb4bb77361de553da1b1ccf2e5eb18dd3ac1a0f072054b272fbc23b16b1"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3a458da4c83d7d701f3904192eec4b92/transformed/firebase-measurement-connector-20.0.1-api.jar": {
+          "sha256": "0462dc4dd21104d9493994afec19df0569901b5f69fd5484bedf7b1584296019"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/8f882bfee3a753db9ef9af08f8aae306/transformed/play-services-basement-18.3.0-api.jar": {
+          "sha256": "8f67ed0820acf42ea3e88e907a40ec0a16d9341f6dc68da0bd294266f082e21d"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/f1341e0039585558025be5d145e64d36/transformed/fragment-1.8.9-api.jar": {
+          "sha256": "e449e2594ec40a3944ce7b80569eab1be85457211373e04d5e4404d76ff48257"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/64fb97c9f2f4649b2d91d07332ca47f2/transformed/fragment-ktx-1.8.9-api.jar": {
+          "sha256": "5ab11881a22e91a7863e713d7c4e1739ee712bfdbf14249f308f15ddee4d90bc"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/5723e22997d06277a3ad3848480fcfcb/transformed/activity-ktx-1.13.0-api.jar": {
+          "sha256": "f3af72458a483c151f25e5f132728b6370c2fc48c99988d75672005a5ac24d99"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/9a0539f2561e189bf7489d93b6ff3c16/transformed/activity-compose-1.13.0-api.jar": {
+          "sha256": "ecf64116e2b8e5747fabca04b757d394738bc02201dcef095c6ce6f396a11b0c"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/7755c2451e35d17a05052ba38d24d5e1/transformed/core-splashscreen-1.2.0-api.jar": {
+          "sha256": "4767f0cca684ea881b72075d8fdd91df079007911daf57f403aaa462570b4b1f"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/c9e6c15e097b54d15ded3b21703a74c8/transformed/media3-exoplayer-midi-1.10.1-api.jar": {
+          "sha256": "617888caf5d6c1be131baf90e3fa2e319aa1eb0f9ed3cb8a7166418dd2cd5ff7"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/df135483f10b29895829224260cce9ea/transformed/media3-exoplayer-1.10.1-api.jar": {
+          "sha256": "f744ad900c8d1c7b0f5c7ad613a0fdebf1825132d6dfe4e7d8fe0a5ff51a9c5b"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-parcelize-runtime/2.3.21/5eeb7fbd98f9b6a762d45a93636b87f31fc6dd17/kotlin-parcelize-runtime-2.3.21.jar": {
+          "sha256": "a21d5f85475efb27f17dd97d1a289d64874f2ddfdb508ea484477a4cf1afe969"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/8ba9ddb7176d6122092c37c935898f2f/transformed/leakcanary-android-2.14-api.jar": {
+          "sha256": "0511a469f4cd606bc45b53a3ea4c2e8ef91741cf8e358fd1ac1a8d665fe3e651"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/e3a37dd53632c77ed15c7e35b8227183/transformed/leakcanary-object-watcher-android-2.14-api.jar": {
+          "sha256": "97224ed08c6621eb64d3a1586cc348aa3a09b65a7559be0a5b3dce36cdafcac7"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3a5b2c602c8a779314ddb16c74348652/transformed/media3-datasource-okhttp-1.10.1-api.jar": {
+          "sha256": "566c58fbc0f03147aabdacb98be3993d2a63181dff7ff9b7c995c48b83eea6d5"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/eb9468ad9e44baa970438c43b4949ec9/transformed/okhttp-release-api.jar": {
+          "sha256": "cd30f982342dbeb6e3b34a680501e3c095f35c47dbf32a26cb963c80efe28bed"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/c766b83d0bcfb02aaa10495cc1172be3/transformed/core-viewtree-1.0.0-api.jar": {
+          "sha256": "edb97285f289307f89297649222fcf647bd091b32ebc764edd6ba5afaeef6b2a"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/35b9dac2582c58c34436a908bfe9d5de/transformed/media3-extractor-1.10.1-api.jar": {
+          "sha256": "f9ee5c20605b361694f1edc64ca134d67523a8d7913e5040d81060befb6ec16d"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/5afaa7ccd06472e5b024ce6531bb2274/transformed/media3-container-1.10.1-api.jar": {
+          "sha256": "3bc7caf92070c75136faf7a6986ab3fe94d014003e196cb61baa2123a2c4560f"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/89e99dc47c6888b4609e89c55e23afa4/transformed/media3-datasource-1.10.1-api.jar": {
+          "sha256": "b0d2c6b68550806ef40edf107e025adf79d8622538ba3837734eb1efc59f1642"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/51da9df0b620fa34c77cb731ef7e2aa1/transformed/media3-decoder-1.10.1-api.jar": {
+          "sha256": "30b42528521206d2d357d0233cf673d9651d7ca6384862820bc093303c5f5a55"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/0b3df73ebbb63f2b4928217a98deaa3a/transformed/media3-database-1.10.1-api.jar": {
+          "sha256": "a7020ba4b8e7d59d20bcc4a8f236429be902682f9de8a50f71c55ebe7d9330f0"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/d134777f6e8ff6dfe66b352e54ae9b7d/transformed/media3-common-1.10.1-api.jar": {
+          "sha256": "9845b9955bcc3678b2462610dbefe9a1dbdb8f2c0dc17987e6a8a606bd4ab5cd"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/c7c5676f4101ca3766fdbecf9bfa42f7/transformed/annotation-experimental-1.4.1-api.jar": {
+          "sha256": "bf4cbf3c5951f25298ca8e02436bd8ae88aa5ab161d2718f297691ce552adb0f"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.squareup.okio/okio-jvm/3.15.0/cb3c285187640f543150fcac1ae012bdd778c0e1/okio-jvm-3.15.0.jar": {
+          "sha256": "483dc383b1049d220892322a0d6a4308425f09bb05b48c43d4eaa9ff82b1cd16"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/70ddf1be339f5356eb32b6690e326227/transformed/versionedparcelable-1.1.1-api.jar": {
+          "sha256": "ffa7b07e41fa6e83e9f6f7dedd7b3a7f084e33420fa2b0f61599a3da816d170c"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.collection/collection-ktx/1.5.0/27c78a926a16a1bf792b2285cf2834e8caae4a07/collection-ktx-1.5.0.jar": {
+          "sha256": "939b4a8697640e77d83e4e8b4c4a9d18f8130198c5961194af8dd9db9dc7c353"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.collection/collection-jvm/1.5.0/7ba2c69414d46ebc2dd76598bdd0a75c54281a57/collection-jvm-1.5.0.jar": {
+          "sha256": "70b35924e4babcdffa37d0e575ee039c56a2d97123342624c48b603233704341"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/6203c1c04698ffa88eb6296e2ae5c063/transformed/cursoradapter-1.0.0-api.jar": {
+          "sha256": "cd51036ac1b49da0613a4766e8c870b43da6b61802151449cd7c65663ce497a5"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/f03f78e0833a1a50dd3362f07598f7d8/transformed/interpolator-1.0.0-api.jar": {
+          "sha256": "41afedcf53756d2b0c05cc3479263a2d00bb981e1a4691be8649855919a199d1"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/353f57181bab40e0e9904504bb8a17d1/transformed/cardview-1.0.0-api.jar": {
+          "sha256": "fce09f3efb3ba739aabe7a7e63f317a5d28530209f789ea10fa998d8b98a4331"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/d891afb4156966970623df3be1ddde1a/transformed/firebase-config-interop-16.0.1-api.jar": {
+          "sha256": "6d3f2777e92bb980475ab4b789e45374405bfad69abb3bcaead1e2537fd670d1"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/99da32edda83f0a8b286d55b7cc47881/transformed/firebase-datatransport-18.2.0-api.jar": {
+          "sha256": "2c2167e9b6cd95aad274dfca342056fcdde1eb686bfae52583626db8e2e04874"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/d1b1fedecfdd258d0ff63fb8dc350634/transformed/transport-backend-cct-3.1.9-api.jar": {
+          "sha256": "836be2e1d57ed7ee0f5760b2588c07ded2e8bc4b71efaaf3a371bc3cfef6a869"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/86125809f9cf44985b7fc0a4916ab89f/transformed/firebase-encoders-json-18.0.1-api.jar": {
+          "sha256": "763db3973210d939c35889b4f7cb51d3a52ad15a70f37025c149eb1f8aaac84d"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/deaef11fb710996de94bce7c0a7bbf77/transformed/transport-runtime-3.1.9-api.jar": {
+          "sha256": "af72190b9ec204642624560ff154b4d4fb4f0c3e149bf19df4a4cdfbfb242bde"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.google.firebase/firebase-encoders-proto/16.0.0/a42d5fd83b96ae7b73a8617d29c94703e18c9992/firebase-encoders-proto-16.0.0.jar": {
+          "sha256": "293db96a0d1d43f033167881b638d8fde844e4e5495f5101cf52295765295e0e"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.google.firebase/firebase-encoders/17.0.0/26f52dc549c42575b155f8c720e84059ee600a85/firebase-encoders-17.0.0.jar": {
+          "sha256": "282a5a703f9b7eb56508dde97ea918e95d73318b157050f457f7a86dca750150"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/f9faf517679aac55e925ba8fd20f1b0e/transformed/sqlite-framework-release-api.jar": {
+          "sha256": "1655755be96e7773eae2665a4aa279ba6b9f3f21bf9db598f56dbe07c0c88c34"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/57feac86df3b957150f118d70b1dff4c/transformed/sqlite-release-api.jar": {
+          "sha256": "27828d6bca8afe8f8527bd12030acaa37e6f61da1224b08a3337d4ea97903c45"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/f1fe02a9cc0f616a469a9f014037a4f8/transformed/transport-api-3.0.0-api.jar": {
+          "sha256": "869115ad7657e39b116742b853bc1660183d7b345e450a17bfe607f40feab5b8"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/4ea0cd1c405a9e097163ea404346c3fc/transformed/core-runtime-2.2.0-api.jar": {
+          "sha256": "e7800bf258bd590b9e25455391535b9f3a692035c11dc7699611be747abb0387"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.arch.core/core-common/2.2.0/5e1b8b81dfd5f52c56a8d53b18ca759c19a301f3/core-common-2.2.0.jar": {
+          "sha256": "65308a06b1c00ee186cb9e19321383f043b993813f1522c47f4a3e3303bdba41"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.9.1/b17951747e38bf3986a24431b9ba0d039958aa5f/annotation-jvm-1.9.1.jar": {
+          "sha256": "1e343917ebf27ba96fe4dc52b1cad7fd32b738fbc6355bb6cd5b3b305d7212d0"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk8/1.8.0/ed04f49e186a116753ad70d34f0ac2925d1d8020/kotlin-stdlib-jdk8-1.8.0.jar": {
+          "sha256": "05b62804441b0c9a1920b6b7d5cf7329a4e24b6258478e32b1f046ca01900946"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.8.0/3c91271347f678c239607abb676d4032a7898427/kotlin-stdlib-jdk7-1.8.0.jar": {
+          "sha256": "4c889d1d9803f5f2eb6c1592a6b7e62369ac7660c9eee15aba16fec059163666"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-json-jvm/1.7.3/6701e8c68d9e82387ce72ee96e8ddf058208d58f/kotlinx-serialization-json-jvm-1.7.3.jar": {
+          "sha256": "b1e9138499ed8d20375edda3f2b1c95f3103a258eff6af9edc5ea07100f2b29c"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-core-jvm/1.7.3/1f226780b845ff9206474c05159245d861556249/kotlinx-serialization-core-jvm-1.7.3.jar": {
+          "sha256": "f0adde45864144475385cf4aa7e0b7feb27f61fcf9472665ed98cc971b06b1eb"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.3.21/a2ee2c4e220fee522f0451b723bab2a43f3481a7/kotlin-stdlib-2.3.21.jar": {
+          "sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/d8db848666c32ca4cb2b585c617e687d/transformed/constraintlayout-2.2.1-api.jar": {
+          "sha256": "6e88a00c750df359599665063fb4fcce89099b26eaf37f8c8cec5b806d192993"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.google.code.gson/gson/2.12.1/4e773a317740b83b43cfc3d652962856041697cb/gson-2.12.1.jar": {
+          "sha256": "ebee13d5fb7477cd7f1cc010e0c356df8ca80709715248da97f79e35ccb4fbec"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/c32d87dc0f4bed9cb89732751ceceffb/transformed/library-1.3.0-api.jar": {
+          "sha256": "44629a1ba7c44e0c497402cc3e6935090ff508debf978edac40d282b407c6f1b"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/574747cbefbefaed326fab998bd4dc10/transformed/FancyShowCaseView-1.4.0-api.jar": {
+          "sha256": "7ef0dd6b01622ad424f98fe9a260232941a53a7025e85545e0137127d0872662"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar": {
+          "sha256": "7b0f19724082cbfcbc66e5abea2b9bc92cf08a1ea11e191933ed43801eb3cd05"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/16ebcf8a81c437a1a5f30af5e7cb84fc/transformed/leakcanary-android-core-2.14-api.jar": {
+          "sha256": "274bd3010cbd7202eb48c3cc67c68f0fa6e863de6771c7397c0b9723736356b4"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/androidx.resourceinspection/resourceinspection-annotation/1.0.1/8c21f8ff5d96d5d52c948707f7e4d6ca6773feef/resourceinspection-annotation-1.0.1.jar": {
+          "sha256": "8cff870ec6fb31db48a52f4a792335b4bf8de07e03bd37823181526433ccd5cb"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.36.0/227d4d4957ccc3dc5761bd897e3a0ee587e750a7/error_prone_annotations-2.36.0.jar": {
+          "sha256": "77440e270b0bc9a249903c5a076c36a722c4886ca4f42675f2903a1c53ed61a5"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-android/2.14/6fb0b4ab27c085678a3d26ce2b9350fb77c32407/shark-android-2.14.jar": {
+          "sha256": "b79dfb05903e69018d598bb4da4f41e0f7732a585cb66a0a5ffb5b89d2076c72"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/0e904cbd2566cb658ab936fd429c0023/transformed/leakcanary-object-watcher-android-androidx-2.14-api.jar": {
+          "sha256": "ec3f7ccfa3f0436f76632db209a3a240210c8723808de2d5b646d57f4c88c99e"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/9a41bde09e2f0c9b6d39e5dd918086dc/transformed/leakcanary-object-watcher-android-support-fragments-2.14-api.jar": {
+          "sha256": "9d5739411df6d44c75bd8368ccefbe02f03533a17713d36023a5f8d0ab72ca37"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/7abfc44fd274b2ec61dee42981f6a2b5/transformed/leakcanary-object-watcher-android-core-2.14-api.jar": {
+          "sha256": "74e1c4357f1379193429e737da13d22b5a3c1e85807976d2af924dac2f7910cf"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/388cd814d28282086642b1d9bb0b69d7/transformed/startup-runtime-1.1.1-api.jar": {
+          "sha256": "a3c09dd3aa31c2366e5a7890444f20db2dcb78394c2a2a7622ce13c1f1762460"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.google.guava/guava/33.3.1-android/36162b3b4e9df67dae90db62a2c54616ca42c1bd/guava-33.3.1-android.jar": {
+          "sha256": "2c3e41d1b380f2044d257947a3aa82dabf3ae4b978622745254aa18b6cf89ab0"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.google.guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/b421526c5f297295adef1c886e5246c39d4ac629/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar": {
+          "sha256": "b372a037d4230aa57fbeffdef30fd6123f9c0c2db85d0aced00c91b974f33f99"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jspecify/jspecify/1.0.0/7425a601c1c7ec76645a78d22b8c6a627edee507/jspecify-1.0.0.jar": {
+          "sha256": "1fad6e6be7557781e4d33729d49ae1cdc8fdda6fe477bb0cc68ce351eafdfbab"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/3a5a55f609d1cbad2f3e765b09564458/transformed/graphics-shapes-release-api.jar": {
+          "sha256": "c2d441cdddf6dab0f38ea9f32ba00615ab8177ada776b9b85d0e5c501bcb9aa9"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/7f0838d27a7b16f6a062b5d1cf423bba/transformed/firebase-components-19.0.0-api.jar": {
+          "sha256": "cab1bab028bb16716dc070a8c9db625d7cecf376d4978fd5ef522751f1b3d11f"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.google.firebase/firebase-annotations/17.0.0/fd04a6accd970e0fcf9baf2424abe2926e00d0e2/firebase-annotations-17.0.0.jar": {
+          "sha256": "f80305e6f7b5d111278d4df9504f51f7230e06c6457a0fa7c16e236c7613cc71"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.squareup.leakcanary/shark/2.14/768be00911a64d2314345115687fe0d14924bd87/shark-2.14.jar": {
+          "sha256": "ffadb874b3a4d4d0033afd302e37b26ade2b63d6e23f9bcd568f727304845f01"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.squareup.leakcanary/leakcanary-object-watcher/2.14/4e9e9ea14da4e86321b1369c7aea6528f0ef2/leakcanary-object-watcher-2.14.jar": {
+          "sha256": "575a046bcc362916fa6f106373f393bacf5578f13640419a464b4c81d89e646e"
+        },
+        "/workspace/work/deps33/gradle-home/caches/9.7.1/transforms/6f86fd3bfea59b45aa267dc023f0ff9c/transformed/leakcanary-android-utils-2.14-api.jar": {
+          "sha256": "82bc7e35c0cc00ffc41291d57dcc15061e1a4a46e49827f9483f38ca3e0d2a4f"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.google.guava/failureaccess/1.0.2/c4a06a64e650562f30b7bf9aaec1bfed43aca12b/failureaccess-1.0.2.jar": {
+          "sha256": "8a8f81cf9b359e3f6dfa691a1e776985c061ef2f223c9b2c80753e1b458e8064"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-graph/2.14/ed8d34d03693373e1e9e1bcdcd52e2a63391e6d9/shark-graph-2.14.jar": {
+          "sha256": "7596fc9caea47e95f6001f57098b66c64beaa968c1354ab6c0aa98dee901681b"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-hprof/2.14/561aba011e38279be7e068f6760f816baab0ccb9/shark-hprof-2.14.jar": {
+          "sha256": "8f19f11585b0fb34fb8cac021504208ed1c73dfe8cb1f69b2bdb0437bb1191fa"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/com.squareup.leakcanary/shark-log/2.14/25574b6474a61c3d0a5df80272ecfa51c560bd7e/shark-log-2.14.jar": {
+          "sha256": "ba1011ae450664f7e8e37c5b6e5e01660b11456ddca8960b5cbe6df0e3f99926"
+        },
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/javax.inject/javax.inject/1/6975da39a7040257bd51d21a231b76c915872d38/javax.inject-1.jar": {
+          "sha256": "91c77044a50c481636c32d916fd89c9118a72195390452c81065080f957de7ff"
+        },
+        "/workspace/work/deps33/project/Alkitab/build/intermediates/built_in_kotlinc/plainDebug/compilePlainDebugKotlin/classes": {
+          "files": 1008,
+          "relative_file_hashes_sha256": "66fec8d8b71a290e55b4b75dbec9b5c8781f615e793952f164c3830c8499cca6"
+        },
+        "/workspace/work/deps33/project/Alkitab/build/intermediates/javac/plainDebug/compilePlainDebugJavaWithJavac/classes": {
+          "files": 293,
+          "relative_file_hashes_sha256": "d8a708cd3d3f14b34ca201c5657d94e0c0d05d2a19b603ce7962acb144866227"
+        }
+      }
+    }
+  ],
+  "supplementary_dependencies": {
+    "junit-4.13.2.jar": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3"
+  },
+  "evidence_text_normalization": "Copied text logs omit trailing empty lines; copied format diff context lines have trailing whitespace removed."
+}
