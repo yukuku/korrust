@@ -2073,7 +2073,7 @@ impl Parser {
                 while self.tokens.get(end).is_some_and(|token| token.text == "\n") {
                     end += 1;
                 }
-                if !arrow && !self.tokens.get(end).is_some_and(|token| token.text == "->") {
+                if !arrow && self.tokens.get(end).is_none_or(|token| token.text != "->") {
                     arguments = self
                         .arguments()?
                         .into_iter()
