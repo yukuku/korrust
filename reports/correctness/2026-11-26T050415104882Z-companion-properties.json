@@ -1,0 +1,1090 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T05:04:15.104882+00:00",
+  "status": "pass",
+  "selection": "Unqualified mutable class companion properties in outer methods, constructors and lambdas; default private accessors, public custom setters, JVM exposed fields, local and instance shadowing. Fixed official Java caller and pinned Kotlin consumers run against both providers with verification.",
+  "compiler": {
+    "binary_sha256": "24df4e60ddd7f65437083abbc840874fcb44372d1648c2d07ba68f7a2c7d4606",
+    "source_revision": "e9b7aee28"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "inputs": {
+    "files_sha256": {
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/annotation_declarations.rs": "baaecfc70c577f5bfd2da8556ccac3716f888b409883cd80829b8c798918c782",
+      "src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525",
+      "src/check_interfaces.rs": "5ac2f3e28ad58c1901788b0204eb626a6fb04ad4aad3ceb14f606c613d04d3a5",
+      "src/check_java_properties.rs": "f3da739960dcbcee99a9b205e29afd330defef89e1089e9a152d5d0efd0c51fd",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/bytecode.rs": "5105c7c44ffd41442b269f26305e4d1582ad5feea9c3b7650bb5483992bf10c6",
+      "src/check_local_annotations.rs": "ad5d937aae27ec3bed4528322c068a39eca915a49c449b68b2c4453f87f1a770",
+      "src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+      "src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+      "src/check_classes.rs": "6f8ef44983d86b3e918cfad4bab9f6ac2aabd953563cefd59eb4d9ab5fb8e347",
+      "src/jvm_descriptor.rs": "3946ec2e66e89185c9d3e284f9d114e29e5e88d0a3eba52ec39fba2200d07ad2",
+      "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "src/check_class_delegation.rs": "972c573827d747f7d12aa92254c71a9206a4679516047d305b83a89cddf5ba9c",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/metadata.rs": "26d66b0b8eecb9b49a59f2758e45de66c546faa306baae2890b4d059994ceec0",
+      "src/check_member_extensions.rs": "943af7b1c7b65c2a495dd628e42b105f44f41f6f19b736fa8e57a0cfd255a81f",
+      "src/check_varargs.rs": "461fe197ed8507a21ab7aa60cede390d70fd1fce9867015561b1d43738d7d14b",
+      "src/classpath.rs": "a18defd9589f4e5fb284b788160a649c61b4bdbd5ea974e49faf559703d4cd78",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/check_references.rs": "61a780d0816443007725e52f992c717eeab828f7b971749ed3242318a8d80077",
+      "src/check_functions.rs": "ea9778adcd349ee6cee8e19e65c42a9d5672155b40b986df046dd46a0dd743a3",
+      "src/check_companion_properties.rs": "c974d1059e7cb92644cd1a186492200828341f64b7e95d0ae4c052356537edba",
+      "src/check.rs": "94aeab8177f0d789115c17548c47862192fd6461c2465e8a1752c5a659bbca72",
+      "src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+      "src/lib.rs": "141681c8d6b70686dfabed94b4abccf2d5442f2415c697901ce218242f794ac6",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/check_operations.rs": "648637bb672227c18a3183d965559cfdb1f30119ff949aad7dfe2a50668cc702",
+      "src/check_library.rs": "52281401ed9d8cad73d40dd0c00a5e65aa7b9c80507376725ea329899b03a10a",
+      "src/check_relations.rs": "efc8f52740173ed2ab21c4f7d7b414041b7a3eafd847255000b71682484e43e7",
+      "src/check_declarations.rs": "828869638801dc9b7fc6ea83969b1bf87d5432311909408f49086bc7b4472f26",
+      "src/check_overloads.rs": "1e330b4b4ec9e0c72e78bfab1dcbb6c8187e8361af76ee353d2fad9055aa2d4d",
+      "src/check_captures.rs": "f752d88bb81c26576caad658160a332fa21946e7275e6faf331bfd73f6a84479",
+      "src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+      "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+      "src/check_ir_walk.rs": "6a7c435002dee1142b592d2c42551b845d9dbe3a6416ba9cd3f04c2d70c1c38a",
+      "src/check_variant_signatures.rs": "11de1f1c614227ef47a5e7e11ddbf0606cc50fadffe3eb4a3057175b475c53df",
+      "src/check_annotation_placements.rs": "027e77c6a6db60f98262fbaf0f44be170c53b58b03d64ae6e8cc43cdb2dc1579",
+      "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "src/check_control.rs": "990a9a7bb9c384759c32eecda07ffcd38b2ed737edb6d254c1639e9f738a966f",
+      "src/check_constructor_inference.rs": "dd3d94a733c0acaea93af34f1e130c4338fc11127cbb7cba08f452d7c94d0d1e",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/const_eval.rs": "24319c4a5076f678ed53cbeeff7c52c4bdcf081c9f78485514326e92078e10fd",
+      "src/compiled_inline.rs": "8ea572f28116c44057b1341b02a9869a2690c0d3cd6b38a086ce063675791ed1",
+      "src/check_constructor_aliases.rs": "a64e341da62e7b292607926f34f5ad2a570f103f3a2141c40be6ff9bf1a94527",
+      "src/check_objects.rs": "a0e2252e86da5e9d1b834204e9963eeecca068b0e9095d604ae1223762fab008",
+      "src/check_contracts.rs": "06434fc5c0999ff69dfb902c50e7bc3b3d4802ae5d3592fbcf0496e9c3bb491d",
+      "src/source_inline.rs": "d59ecaba2b32264cc4190594c19e5ec7e99e6cbb5db28b33c1eaca7c7aa404e5",
+      "src/check_anonymous.rs": "87282edf3ebc0d5bf3e4b45aac402fe412e6517f452da4238f65c6f20f182908",
+      "src/syntax.rs": "ad852447ed66c9f1f14be4c45accdbab765cf6832e97e9e83ec3a75e58b4d9c2",
+      "src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+      "src/classpath/value_names.rs": "1608313d7b6cacab7221d79cddd02e891850f772389a0216316cd99eabd91b47",
+      "src/classpath/jdk_modules.rs": "cd1a350e7f8e03cda618a1d919d4e6ee49aba7e9a26728178ebad5f73c4bd8f8",
+      "src/classpath/signature.rs": "2960cad64832081e0624db384c886fc22f59e4670de17d069e175483c694de09",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/metadata.rs": "1ffad0e349624967c7fa49f17940f7ccb90a9c5d011f1b8f3edc2e23babc17b5",
+      "src/classpath/source_enums.rs": "1b6719565931913df35f26994fb0077985f1f5c89614fb1b5d4009e63957933d",
+      "src/classpath/singletons.rs": "836fe172f37cc9282e259ba446688b3d2d6bf34fde25ddc3973c1800f29c71a5",
+      "src/classpath/nested.rs": "764dd9eaf0188f91ba018707557e72df76b9c44b0120c8d69574044c8f5e78e9",
+      "src/classpath/package_info.rs": "f3bd436a8c64d48216bae3a55a2a3e82a903d354a42b629928fe1af95197061a",
+      "src/classpath/inline_defaults.rs": "dadace0ef70c2e788fa6c7ffb49bb53119a74be6221435c6c124c1abc8391c5b",
+      "src/classpath/aliases.rs": "48acaa4ab1ffc92873abc6c43f57064c9cef2893bb6a5f46234be64ff8211f9e",
+      "src/classpath/archive.rs": "835e4a79bbbc5c7328ce6a540ed1a2ca975fc526278fe7c31fd9433e08cc56d5",
+      "src/classpath/compose_abi.rs": "cbfbcfaba7037e7cd3972e69a5a52fa45f6cdd0982f553e9e5c3a190fa66312f",
+      "src/classpath/source.rs": "5b6c7b15f334c8782f7461ecb491738e0d230c78e5860a16470230b046f7c183",
+      "src/classpath/jvm_builtins.rs": "b8c6e4789a998c1b3737da4879a15d74eb453170c4b03542d4c8ae13f6e40e86",
+      "src/classpath/import_classes.rs": "65a1563c6df2772ac3d71602a54e7fd1b64bab1ab51d6053e74bdb65b2bf5f4e",
+      "src/bytecode/frames.rs": "1659d0401bfa59f751e3b6db250a2395a827ccad13c156f19f62c76773983b48",
+      "src/bytecode/annotation_files.rs": "0fe8ebba7bbd2c80fcdd6fda797b448ca8cd63945b100781361bf1e3ace02eaa",
+      "src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+      "src/bytecode/lambdas.rs": "1cacc1ea9acb473c0079dd302e50933e919826e8791370d1f4c19e4abdf48d6c",
+      "src/bytecode/inline.rs": "d0560f1021e0452e18171ce27a84a68c7ca92469d601350a6d3de13f8d4da5e2",
+      "src/bytecode/anonymous_context.rs": "e48d7aba57745c9e3ecb0a2317ea627f3b6d9b2d86805563bae680d79a301910",
+      "src/bytecode/class_companion.rs": "2a2b93f25889e7e3c8022dc795dfdcc8548a82c4813fce273b0de5cf8b0e8e55",
+      "src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+      "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+      "src/bytecode/compose_lambdas.rs": "9c74c11d3e2deaaf5846bbe294614c440c0c1d0ad9881ae662caaf48ea1574ef",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/suspend.rs": "dfac0ad895edaf45c25655df1fad6c1828fe3fc767fd936dabe6e45357dd96d7",
+      "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "src/bytecode/interfaces.rs": "5456ea3de3402ee3ead9920bb2cb0e7c0baab4f6eb7b211e481a16bf9ad3207b",
+      "src/bytecode/defaults.rs": "d092d8a420cfb719f92dbb9a3bcc58f7c644d67bf9b3c611c72949122c22e827",
+      "src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/compiled_inline/defaults.rs": "89d95d8b98e4af043bc3c592ba7588bffb7924bc86bdae57d457c0b420cbde37",
+      "tests/companion_properties/UnsupportedPrivateCustom.kt": "29d80d37ce2cc5801d61da1d81356562f1cb661c9f44aa6187417d63a01cfc1e",
+      "tests/companion_properties/InvalidType.kt": "368a8437e534db8a38543093d8bb500cb99b1cf5657d09cd73139a561552c037",
+      "tests/companion_properties/UnsupportedPrivateCapture.kt": "1869c036e4c945b5018fb1f2adb6f66d3bcaf1aced8a39c275da5b8df1fec36b",
+      "tests/companion_properties/InvalidVal.kt": "5516cb446aa5b458788e88622baecdb7738f9dd3f7441a5f8939d97259f2e293",
+      "tests/companion_properties/State.kt": "98d8d8135e47d2b7e638c36a3c1242ff642c886bcfad88ef56b8444031a12bdf",
+      "tests/companion_properties/UnsupportedFieldCollision.kt": "b3fe86ccb92d746d30c00e24cdb0659d7bf86fd4ea27710b0acce75b489e7a0a",
+      "tests/companion_properties/Calls.java": "82ead8f5418ca0cd464d099c91909e3aec1c514b164d0e53aaaa46e39812fecf",
+      "tests/companion_properties/Consumer.kt": "3255511cbb05fa0bcd9c079011857ca44b0352d8f70abcb02aadf493e37aab85",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "tests/companion_properties.rs": "fa87c34cd6999c90a85a316ad9772ffbaa9facf0627d38d6a831b5a8b769b5ad",
+      "tools/check_companion_properties.py": "9b3f6aaf909e48cf40b6415124ed34f2bc52a1847e29b0223086e4414cce8c20"
+    },
+    "evidence_sha256": {
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/000-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/000-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/001-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/001-stdout.txt": "5122058f0f935e7e0ecea9c2b4f37a780fb7fc80e533b1eca8bd1b5fcd2c2035",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/002-stderr.txt": "312e9bd919c699a2f8409f70240177012720c94095f0f4374d44152defc50f7e",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/002-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/003-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/003-stdout.txt": "138a89eb1dbf5f5acadf918ba8832449ee082af83e5ab6e9462976576c8beaaa",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/004-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/004-stdout.txt": "634ef42b4c08362764c37bb41f35d0d26c5d9c406b917b507015fd5b717dbea1",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/005-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/005-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/006-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/006-stdout.txt": "0b5e6df48c255ed44b870cfe9b578a2d72eb509535d396f849817ca21c2f4a3f",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/007-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/007-stdout.txt": "138a89eb1dbf5f5acadf918ba8832449ee082af83e5ab6e9462976576c8beaaa",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/008-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/008-stdout.txt": "b92700e55271f7d89d2122df35df69b5707285879efe6f534c7481c227c0fd8b",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/009-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/009-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/010-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/010-stdout.txt": "0b5e6df48c255ed44b870cfe9b578a2d72eb509535d396f849817ca21c2f4a3f",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/011-stderr.txt": "c5bdc2f9671d1137beaf2ac14ee01d0f46b2cbc0bd0e6d2b00f24b00502ec915",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/011-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/012-stderr.txt": "92fb9ff9157503c1ebbdaf4f875e3c2e5094bc3e1f0e527c61221ce11f4d6d24",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/012-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/013-stderr.txt": "d17c46c933cc2f1eb96151f0dd564c0b34023870b80727e652be68fb64a26694",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/013-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/014-stderr.txt": "acf1eef2e714c70d27496e3b493a89f590c037702fa2a2e708425b471cd156ef",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/014-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/015-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/015-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/016-stderr.txt": "80b346790b5bdd27bef212e991411c80edb90ac6efd0bdc1f6ee59856d91f73e",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/016-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/017-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/017-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/018-stderr.txt": "6de17dfc6247e48a50c7237011d42e782635f53878e67529bd7d0e4ab8f013df",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/018-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/019-stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/019-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/020-stderr.txt": "405178f81e3b3fd739f9ea19e46f612f30cae0e493c256b430e0b9b09a722a92",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/020-stdout.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/application-070.json": "7866c7c6c40f3359ef29cf9e5d21a491e807b0e70acff6aee00b0a4abbdb7b43",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/application-352.json": "a337521c7013e471b2ef8e7c91d41702abc23a3417fb3594751845cd0b9e1a51",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/companion-interface-full-lib.log": "12d783a931d337edaae3909e038498a72d6a8fd20a2eab88bab08bc8cb4c73e6",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/companion-interface-full-lib32.log": "469fdf2f212e07e39632f10c8979f4705b9cebd2efd047672ce4a5e26a76b896",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/companion-interface-targeted.log": "46129fe32666b5caf666dc418c908aee096b6b74180eafa634945f2021278ae6",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/companion-properties-frozen3-clippy.log": "39959e0741c7e49b2903ca99d5fcd10676b58dbd7dd29e7ed43afa25d82cc090",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/companion-properties-frozen3-fmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/correctness/2026-11-26T050415104882Z-companion-properties/companion-properties-frozen3-test.log": "8c16b87a4e4b9142a2eb271345708fe19307791da244bb036ad7ccaa1a998bfb"
+    }
+  },
+  "dependencies": {
+    "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "commands": [
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/State.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/000-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/korrust-frozen",
+        "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/State.kt",
+        "-cp",
+        "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "companion_properties",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/001-stderr.txt"
+    },
+    {
+      "id": "fixed-java-caller",
+      "argv": [
+        "javac",
+        "--release",
+        "8",
+        "-cp",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/official:/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/caller",
+        "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/Calls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/002-stderr.txt"
+    },
+    {
+      "id": "official/runtime",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/caller:/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/official:/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "companionstatecheck.Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/003-stderr.txt"
+    },
+    {
+      "id": "official/signatures",
+      "argv": [
+        "javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/official",
+        "companionstate.Store",
+        "companionstate.Store$Companion",
+        "companionstate.Shadow",
+        "companionstate.Shadow$Companion"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/004-stderr.txt"
+    },
+    {
+      "id": "official/official-consumer",
+      "argv": [
+        "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/official:/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/official-consumer"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/005-stderr.txt"
+    },
+    {
+      "id": "official/kotlin-consumer-runtime",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/official-consumer:/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/official:/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "companionstateconsumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/006-stderr.txt"
+    },
+    {
+      "id": "candidate/runtime",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/caller:/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/candidate:/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "companionstatecheck.Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/007-stderr.txt"
+    },
+    {
+      "id": "candidate/signatures",
+      "argv": [
+        "javap",
+        "-protected",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/candidate",
+        "companionstate.Store",
+        "companionstate.Store$Companion",
+        "companionstate.Shadow",
+        "companionstate.Shadow$Companion"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/008-stderr.txt"
+    },
+    {
+      "id": "official/candidate-consumer",
+      "argv": [
+        "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/candidate:/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/candidate-consumer"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/009-stderr.txt"
+    },
+    {
+      "id": "candidate/kotlin-consumer-runtime",
+      "argv": [
+        "java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/candidate-consumer:/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/candidate:/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "companionstateconsumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/010-stderr.txt"
+    },
+    {
+      "id": "official/InvalidType-official",
+      "argv": [
+        "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/InvalidType.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/InvalidType-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/011-stderr.txt"
+    },
+    {
+      "id": "candidate/InvalidType-candidate",
+      "argv": [
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/korrust-frozen",
+        "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/InvalidType.kt",
+        "-cp",
+        "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "companion_properties",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/InvalidType-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/012-stderr.txt"
+    },
+    {
+      "id": "official/InvalidVal-official",
+      "argv": [
+        "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/InvalidVal.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/InvalidVal-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/013-stderr.txt"
+    },
+    {
+      "id": "candidate/InvalidVal-candidate",
+      "argv": [
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/korrust-frozen",
+        "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/InvalidVal.kt",
+        "-cp",
+        "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "companion_properties",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/InvalidVal-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/014-stderr.txt"
+    },
+    {
+      "id": "official/UnsupportedFieldCollision-official",
+      "argv": [
+        "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/UnsupportedFieldCollision.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/UnsupportedFieldCollision-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/015-stderr.txt"
+    },
+    {
+      "id": "candidate/UnsupportedFieldCollision-candidate",
+      "argv": [
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/korrust-frozen",
+        "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/UnsupportedFieldCollision.kt",
+        "-cp",
+        "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "companion_properties",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/UnsupportedFieldCollision-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/016-stderr.txt"
+    },
+    {
+      "id": "official/UnsupportedPrivateCapture-official",
+      "argv": [
+        "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/UnsupportedPrivateCapture.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/UnsupportedPrivateCapture-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/017-stderr.txt"
+    },
+    {
+      "id": "candidate/UnsupportedPrivateCapture-candidate",
+      "argv": [
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/korrust-frozen",
+        "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/UnsupportedPrivateCapture.kt",
+        "-cp",
+        "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "companion_properties",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/UnsupportedPrivateCapture-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/018-stderr.txt"
+    },
+    {
+      "id": "official/UnsupportedPrivateCustom-official",
+      "argv": [
+        "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/UnsupportedPrivateCustom.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-cp",
+        "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/UnsupportedPrivateCustom-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/019-stderr.txt"
+    },
+    {
+      "id": "candidate/UnsupportedPrivateCustom-candidate",
+      "argv": [
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/korrust-frozen",
+        "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/UnsupportedPrivateCustom.kt",
+        "-cp",
+        "/workspace/work/targets159/companion-properties-freeze3/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "companion_properties",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/UnsupportedPrivateCustom-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T050415104882Z-companion-properties/020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T050415104882Z-companion-properties/020-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "official/compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "caller/compile-official",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/runtime",
+      "outcome": "pass",
+      "observed": "companion-properties-ok"
+    },
+    {
+      "id": "official/signatures-read",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/kotlin-consumer-compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/kotlin-consumer-runtime",
+      "outcome": "pass",
+      "observed": "companion-consumer-ok"
+    },
+    {
+      "id": "candidate/runtime",
+      "outcome": "pass",
+      "observed": "companion-properties-ok"
+    },
+    {
+      "id": "candidate/signatures-read",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/kotlin-consumer-compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/kotlin-consumer-runtime",
+      "outcome": "pass",
+      "observed": "companion-consumer-ok"
+    },
+    {
+      "id": "InvalidType",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/InvalidType.kt",
+          "offset": 68,
+          "category": "invalid_kotlin",
+          "code": "TYPE_MISMATCH",
+          "message": "Type mismatch: expected String, found Int",
+          "path": "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/InvalidType.kt",
+          "line": 3,
+          "column": 28
+        }
+      ]
+    },
+    {
+      "id": "InvalidVal",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/InvalidVal.kt",
+          "offset": 60,
+          "category": "invalid_kotlin",
+          "code": "VAL_PROPERTY_REASSIGNMENT",
+          "message": "Cannot reassign val companion property",
+          "path": "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/InvalidVal.kt",
+          "line": 3,
+          "column": 21
+        }
+      ]
+    },
+    {
+      "id": "UnsupportedFieldCollision",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/UnsupportedFieldCollision.kt",
+          "offset": 23,
+          "category": "unsupported_language",
+          "code": "COMPANION_BACKING_FIELD_COLLISION_UNSUPPORTED",
+          "message": "Companion and instance properties sharing a JVM field name and descriptor require unsupported backing-field renaming",
+          "path": "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/UnsupportedFieldCollision.kt",
+          "line": 2,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "id": "UnsupportedPrivateCapture",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/UnsupportedPrivateCapture.kt",
+          "offset": 80,
+          "category": "unsupported_language",
+          "code": "PRIVATE_COMPANION_CAPTURE_UNSUPPORTED",
+          "message": "Private companion singleton captures require unsupported lexical bridges",
+          "path": "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/UnsupportedPrivateCapture.kt",
+          "line": 3,
+          "column": 35
+        }
+      ]
+    },
+    {
+      "id": "UnsupportedPrivateCustom",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/UnsupportedPrivateCustom.kt",
+          "offset": 64,
+          "category": "unsupported_language",
+          "code": "PRIVATE_COMPANION_ACCESSOR_SCOPE_UNSUPPORTED",
+          "message": "Private companion custom accessors from enclosing declarations require unsupported lexical bridges",
+          "path": "/workspace/work/targets159/companion-properties-freeze3/tests/companion_properties/UnsupportedPrivateCustom.kt",
+          "line": 3,
+          "column": 20
+        }
+      ]
+    },
+    {
+      "id": "declared-api/match",
+      "outcome": "pass"
+    },
+    {
+      "id": "inputs/unchanged",
+      "outcome": "pass"
+    }
+  ],
+  "fixed_java_caller_sha256": {
+    "companionstatecheck/Calls.class": "d007b1208f6ac89f331e53959414afa8310f5a14f08b2ef510d816faa3f62bad"
+  },
+  "official_signatures": "Classfile /workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/official/companionstate/Store.class\n  Last modified Nov 26, 2026; size 2531 bytes\n  SHA-256 checksum 329a8df1b4e397d68bb545faa3bdaf8a3d48d76aeadf60274394069d08d13d43\n  Compiled from \"State.kt\"\npublic final class companionstate.Store\n  minor version: 0\n  major version: 52\n  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER\n  this_class: #2                          // companionstate/Store\n  super_class: #4                         // java/lang/Object\n  interfaces: 0, fields: 5, methods: 10, attributes: 4\nConstant pool:\n    #1 = Utf8               companionstate/Store\n    #2 = Class              #1            // companionstate/Store\n    #3 = Utf8               java/lang/Object\n    #4 = Class              #3            // java/lang/Object\n    #5 = Utf8               <init>\n    #6 = Utf8               (I)V\n    #7 = Utf8               ()V\n    #8 = NameAndType        #5:#7         // \"<init>\":()V\n    #9 = Methodref          #4.#8         // java/lang/Object.\"<init>\":()V\n   #10 = Utf8               hidden\n   #11 = Utf8               I\n   #12 = NameAndType        #10:#11       // hidden:I\n   #13 = Fieldref           #2.#12        // companionstate/Store.hidden:I\n   #14 = Utf8               Companion\n   #15 = Utf8               Lcompanionstate/Store$Companion;\n   #16 = NameAndType        #14:#15       // Companion:Lcompanionstate/Store$Companion;\n   #17 = Fieldref           #2.#16        // companionstate/Store.Companion:Lcompanionstate/Store$Companion;\n   #18 = Utf8               companionstate/Store$Companion\n   #19 = Class              #18           // companionstate/Store$Companion\n   #20 = Utf8               setCustom\n   #21 = NameAndType        #20:#6        // setCustom:(I)V\n   #22 = Methodref          #19.#21       // companionstate/Store$Companion.setCustom:(I)V\n   #23 = Utf8               init\n   #24 = String             #23           // init\n   #25 = Utf8               raw\n   #26 = Utf8               Ljava/lang/String;\n   #27 = NameAndType        #25:#26       // raw:Ljava/lang/String;\n   #28 = Fieldref           #2.#27        // companionstate/Store.raw:Ljava/lang/String;\n   #29 = Utf8               this\n   #30 = Utf8               Lcompanionstate/Store;\n   #31 = Utf8               seed\n   #32 = Utf8               assign\n   #33 = Utf8               (I)I\n   #34 = String             #32           // assign\n   #35 = Utf8               custom\n   #36 = NameAndType        #35:#11       // custom:I\n   #37 = Fieldref           #2.#36        // companionstate/Store.custom:I\n   #38 = Utf8               next\n   #39 = Utf8               delayed\n   #40 = Utf8               (I)Lkotlin/jvm/functions/Function0;\n   #41 = Utf8               (I)Lkotlin/jvm/functions/Function0<Ljava/lang/Integer;>;\n   #42 = Utf8               Lorg/jetbrains/annotations/NotNull;\n   #43 = Utf8               ()Ljava/lang/Object;\n   #44 = MethodType         #43           //  ()Ljava/lang/Object;\n   #45 = Utf8               delayed$lambda$0\n   #46 = NameAndType        #45:#33       // delayed$lambda$0:(I)I\n   #47 = Methodref          #2.#46        // companionstate/Store.delayed$lambda$0:(I)I\n   #48 = MethodHandle       6:#47         // REF_invokeStatic companionstate/Store.delayed$lambda$0:(I)I\n   #49 = Utf8               ()Ljava/lang/Integer;\n   #50 = MethodType         #49           //  ()Ljava/lang/Integer;\n   #51 = Utf8               java/lang/invoke/LambdaMetafactory\n   #52 = Class              #51           // java/lang/invoke/LambdaMetafactory\n   #53 = Utf8               metafactory\n   #54 = Utf8               (Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;\n   #55 = NameAndType        #53:#54       // metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;\n   #56 = Methodref          #52.#55       // java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;\n   #57 = MethodHandle       6:#56         // REF_invokeStatic java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;\n   #58 = Utf8               invoke\n   #59 = NameAndType        #58:#40       // invoke:(I)Lkotlin/jvm/functions/Function0;\n   #60 = InvokeDynamic      #0:#59        // #0:invoke:(I)Lkotlin/jvm/functions/Function0;\n   #61 = Utf8               local\n   #62 = Utf8               initial\n   #63 = Utf8               read\n   #64 = Utf8               ()I\n   #65 = Utf8               lambda\n   #66 = String             #65           // lambda\n   #67 = Utf8               $next\n   #68 = Utf8               access$getCustom$cp\n   #69 = Utf8               access$setCustom$cp\n   #70 = Utf8               <set-?>\n   #71 = Utf8               access$getFixed$cp\n   #72 = Utf8               fixed\n   #73 = NameAndType        #72:#11       // fixed:I\n   #74 = Fieldref           #2.#73        // companionstate/Store.fixed:I\n   #75 = Utf8               <clinit>\n   #76 = Utf8               (Lkotlin/jvm/internal/DefaultConstructorMarker;)V\n   #77 = NameAndType        #5:#76        // \"<init>\":(Lkotlin/jvm/internal/DefaultConstructorMarker;)V\n   #78 = Methodref          #19.#77       // companionstate/Store$Companion.\"<init>\":(Lkotlin/jvm/internal/DefaultConstructorMarker;)V\n   #79 = Utf8               Lkotlin/jvm/JvmField;\n   #80 = Utf8               Lorg/jetbrains/annotations/Nullable;\n   #81 = Utf8               Lkotlin/Metadata;\n   #82 = Utf8               mv\n   #83 = Integer            2\n   #84 = Integer            3\n   #85 = Integer            0\n   #86 = Utf8               k\n   #87 = Integer            1\n   #88 = Utf8               xi\n   #89 = Integer            48\n   #90 = Utf8               d1\n   #91 = Utf8               \\u0000\\u001a\\n\\u0002\\u0018\\u0002\\n\\u0002\\u0010\\u0000\\n\\u0000\\n\\u0002\\u0010\\b\\n\\u0002\\b\\u0005\\n\\u0002\\u0018\\u0002\\n\\u0002\\b\\u0004\\u0018\\u0000 \\r2\\u00020\\u0001:\\u0001\\rB\\u000f\\u0012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\u00a2\\u0006\\u0004\\b\\u0004\\u0010\\u0005J\\u000e\\u0010\\u0006\\u001a\\u00020\\u00032\\u0006\\u0010\\u0007\\u001a\\u00020\\u0003J\\u0014\\u0010\\b\\u001a\\b\\u0012\\u0004\\u0012\\u00020\\u00030\\t2\\u0006\\u0010\\u0007\\u001a\\u00020\\u0003J\\u000e\\u0010\\n\\u001a\\u00020\\u00032\\u0006\\u0010\\u000b\\u001a\\u00020\\u0003J\\u0006\\u0010\\f\\u001a\\u00020\\u0003\n   #92 = Utf8               d2\n   #93 = Utf8\n   #94 = Utf8               Lkotlin/Function0;\n   #95 = Utf8               State.kt\n   #96 = Utf8               RuntimeInvisibleAnnotations\n   #97 = Utf8               Code\n   #98 = Utf8               LineNumberTable\n   #99 = Utf8               LocalVariableTable\n  #100 = Utf8               Signature\n  #101 = Utf8               InnerClasses\n  #102 = Utf8               SourceFile\n  #103 = Utf8               RuntimeVisibleAnnotations\n  #104 = Utf8               BootstrapMethods\n{\n  public static final companionstate.Store$Companion Companion;\n    descriptor: Lcompanionstate/Store$Companion;\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    RuntimeInvisibleAnnotations:\n      0: #42()\n        org.jetbrains.annotations.NotNull\n\n  public static java.lang.String raw;\n    descriptor: Ljava/lang/String;\n    flags: (0x0009) ACC_PUBLIC, ACC_STATIC\n    RuntimeInvisibleAnnotations:\n      0: #79()\n        kotlin.jvm.JvmField\n      1: #80()\n        org.jetbrains.annotations.Nullable\n\n  public companionstate.Store(int);\n    descriptor: (I)V\n    flags: (0x0001) ACC_PUBLIC\n    Code:\n      stack=2, locals=2, args_size=2\n         0: aload_0\n         1: invokespecial #9                  // Method java/lang/Object.\"<init>\":()V\n         4: nop\n         5: iload_1\n         6: putstatic     #13                 // Field hidden:I\n         9: getstatic     #17                 // Field Companion:Lcompanionstate/Store$Companion;\n        12: iload_1\n        13: invokevirtual #22                 // Method companionstate/Store$Companion.setCustom:(I)V\n        16: ldc           #24                 // String init\n        18: putstatic     #28                 // Field raw:Ljava/lang/String;\n        21: nop\n        22: return\n      LineNumberTable:\n        line 3: 0\n        line 4: 4\n        line 5: 5\n        line 6: 9\n        line 7: 16\n        line 8: 21\n        line 3: 22\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0      23     0  this   Lcompanionstate/Store;\n            0      23     1  seed   I\n\n  public final int assign(int);\n    descriptor: (I)I\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=2, locals=2, args_size=2\n         0: iload_1\n         1: putstatic     #13                 // Field hidden:I\n         4: getstatic     #17                 // Field Companion:Lcompanionstate/Store$Companion;\n         7: iload_1\n         8: invokevirtual #22                 // Method companionstate/Store$Companion.setCustom:(I)V\n        11: ldc           #34                 // String assign\n        13: putstatic     #28                 // Field raw:Ljava/lang/String;\n        16: getstatic     #13                 // Field hidden:I\n        19: getstatic     #37                 // Field custom:I\n        22: iadd\n        23: ireturn\n      LineNumberTable:\n        line 10: 0\n        line 11: 4\n        line 12: 11\n        line 13: 16\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0      24     0  this   Lcompanionstate/Store;\n            0      24     1  next   I\n\n  public final kotlin.jvm.functions.Function0<java.lang.Integer> delayed(int);\n    descriptor: (I)Lkotlin/jvm/functions/Function0;\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=1, locals=2, args_size=2\n         0: iload_1\n         1: invokedynamic #60,  0             // InvokeDynamic #0:invoke:(I)Lkotlin/jvm/functions/Function0;\n         6: areturn\n      LineNumberTable:\n        line 15: 0\n        line 20: 6\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0       7     0  this   Lcompanionstate/Store;\n            0       7     1  next   I\n    Signature: #41                          // (I)Lkotlin/jvm/functions/Function0<Ljava/lang/Integer;>;\n    RuntimeInvisibleAnnotations:\n      0: #42()\n        org.jetbrains.annotations.NotNull\n\n  public final int local(int);\n    descriptor: (I)I\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=1, locals=3, args_size=2\n         0: iload_1\n         1: istore_2\n         2: iinc          2, 1\n         5: iload_2\n         6: ireturn\n      LineNumberTable:\n        line 22: 0\n        line 23: 2\n        line 24: 5\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            2       5     2 custom   I\n            0       7     0  this   Lcompanionstate/Store;\n            0       7     1 initial   I\n\n  public final int read();\n    descriptor: ()I\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=2, locals=1, args_size=1\n         0: getstatic     #13                 // Field hidden:I\n         3: getstatic     #37                 // Field custom:I\n         6: iadd\n         7: ireturn\n      LineNumberTable:\n        line 26: 0\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0       8     0  this   Lcompanionstate/Store;\n\n  public static final int access$getCustom$cp();\n    descriptor: ()I\n    flags: (0x1019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC\n    Code:\n      stack=1, locals=0, args_size=0\n         0: getstatic     #37                 // Field custom:I\n         3: ireturn\n      LineNumberTable:\n        line 3: 0\n\n  public static final void access$setCustom$cp(int);\n    descriptor: (I)V\n    flags: (0x1019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC\n    Code:\n      stack=1, locals=1, args_size=1\n         0: iload_0\n         1: putstatic     #37                 // Field custom:I\n         4: return\n      LineNumberTable:\n        line 3: 0\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0       5     0 <set-?>   I\n\n  public static final int access$getFixed$cp();\n    descriptor: ()I\n    flags: (0x1019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC\n    Code:\n      stack=1, locals=0, args_size=0\n         0: getstatic     #74                 // Field fixed:I\n         3: ireturn\n      LineNumberTable:\n        line 3: 0\n}\nInnerClasses:\n  public static final #14= #19 of #2;     // Companion=class companionstate/Store$Companion of class companionstate/Store\nSourceFile: \"State.kt\"\nRuntimeVisibleAnnotations:\n  0: #81(#82=[I#83,I#84,I#85],#86=I#87,#88=I#89,#90=[s#91],#92=[s#30,s#93,s#31,s#93,s#5,s#6,s#32,s#38,s#39,s#94,s#61,s#62,s#63,s#14])\n    kotlin.Metadata(\n      mv=[2,3,0]\n      k=1\n      xi=48\n      d1=[\"\\u0000\\u001a\\n\\u0002\\u0018\\u0002\\n\\u0002\\u0010\\u0000\\n\\u0000\\n\\u0002\\u0010\\b\\n\\u0002\\b\\u0005\\n\\u0002\\u0018\\u0002\\n\\u0002\\b\\u0004\\u0018\\u0000 \\r2\\u00020\\u0001:\\u0001\\rB\\u000f\\u0012\\u0006\\u0010\\u0002\\u001a\\u00020\\u0003\u00a2\\u0006\\u0004\\b\\u0004\\u0010\\u0005J\\u000e\\u0010\\u0006\\u001a\\u00020\\u00032\\u0006\\u0010\\u0007\\u001a\\u00020\\u0003J\\u0014\\u0010\\b\\u001a\\b\\u0012\\u0004\\u0012\\u00020\\u00030\\t2\\u0006\\u0010\\u0007\\u001a\\u00020\\u0003J\\u000e\\u0010\\n\\u001a\\u00020\\u00032\\u0006\\u0010\\u000b\\u001a\\u00020\\u0003J\\u0006\\u0010\\f\\u001a\\u00020\\u0003\"]\n      d2=[\"Lcompanionstate/Store;\",\"\",\"seed\",\"\",\"<init>\",\"(I)V\",\"assign\",\"next\",\"delayed\",\"Lkotlin/Function0;\",\"local\",\"initial\",\"read\",\"Companion\"]\n    )\nBootstrapMethods:\n  0: #57 REF_invokeStatic java/lang/invoke/LambdaMetafactory.metafactory:(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;\n    Method arguments:\n      #44 ()Ljava/lang/Object;\n      #48 REF_invokeStatic companionstate/Store.delayed$lambda$0:(I)I\n      #50 ()Ljava/lang/Integer;\nClassfile /workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/official/companionstate/Store$Companion.class\n  Last modified Nov 26, 2026; size 1289 bytes\n  SHA-256 checksum af1bbf2bad54ac6ef6c21bd540a425aebf58aa41e433c334021a214236852c80\n  Compiled from \"State.kt\"\npublic final class companionstate.Store$Companion\n  minor version: 0\n  major version: 52\n  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER\n  this_class: #2                          // companionstate/Store$Companion\n  super_class: #4                         // java/lang/Object\n  interfaces: 0, fields: 0, methods: 5, attributes: 3\nConstant pool:\n   #1 = Utf8               companionstate/Store$Companion\n   #2 = Class              #1             // companionstate/Store$Companion\n   #3 = Utf8               java/lang/Object\n   #4 = Class              #3             // java/lang/Object\n   #5 = Utf8               <init>\n   #6 = Utf8               ()V\n   #7 = NameAndType        #5:#6          // \"<init>\":()V\n   #8 = Methodref          #4.#7          // java/lang/Object.\"<init>\":()V\n   #9 = Utf8               this\n  #10 = Utf8               Lcompanionstate/Store$Companion;\n  #11 = Utf8               getCustom\n  #12 = Utf8               ()I\n  #13 = Utf8               companionstate/Store\n  #14 = Class              #13            // companionstate/Store\n  #15 = Utf8               access$getCustom$cp\n  #16 = NameAndType        #15:#12        // access$getCustom$cp:()I\n  #17 = Methodref          #14.#16        // companionstate/Store.access$getCustom$cp:()I\n  #18 = Utf8               setCustom\n  #19 = Utf8               (I)V\n  #20 = Utf8               access$setCustom$cp\n  #21 = NameAndType        #20:#19        // access$setCustom$cp:(I)V\n  #22 = Methodref          #14.#21        // companionstate/Store.access$setCustom$cp:(I)V\n  #23 = Utf8               value\n  #24 = Utf8               I\n  #25 = Utf8               getFixed\n  #26 = Utf8               access$getFixed$cp\n  #27 = NameAndType        #26:#12        // access$getFixed$cp:()I\n  #28 = Methodref          #14.#27        // companionstate/Store.access$getFixed$cp:()I\n  #29 = Utf8               (Lkotlin/jvm/internal/DefaultConstructorMarker;)V\n  #30 = Methodref          #2.#7          // companionstate/Store$Companion.\"<init>\":()V\n  #31 = Utf8               $constructor_marker\n  #32 = Utf8               Lkotlin/jvm/internal/DefaultConstructorMarker;\n  #33 = Utf8               Lkotlin/Metadata;\n  #34 = Utf8               mv\n  #35 = Integer            2\n  #36 = Integer            3\n  #37 = Integer            0\n  #38 = Utf8               k\n  #39 = Integer            1\n  #40 = Utf8               xi\n  #41 = Integer            48\n  #42 = Utf8               d1\n  #43 = Utf8               \\u0000\\u001c\\n\\u0002\\u0018\\u0002\\n\\u0002\\u0010\\u0000\\n\\u0002\\b\\u0003\\n\\u0002\\u0010\\b\\n\\u0002\\b\\u0007\\n\\u0002\\u0010\\u000e\\n\\u0002\\b\\u0002\\b\\u0086\\u0003\\u0018\\u00002\\u00020\\u0001B\\t\\b\\u0002\u00a2\\u0006\\u0004\\b\\u0002\\u0010\\u0003R\\u000e\\u0010\\u0004\\u001a\\u00020\\u0005X\\u0082\\u000e\u00a2\\u0006\\u0002\\n\\u0000R$\\u0010\\u0007\\u001a\\u00020\\u00052\\u0006\\u0010\\u0006\\u001a\\u00020\\u0005@FX\\u0086\\u000e\u00a2\\u0006\\u000e\\n\\u0000\\u001a\\u0004\\b\\b\\u0010\\t\\\"\\u0004\\b\\n\\u0010\\u000bR\\u0014\\u0010\\f\\u001a\\u0004\\u0018\\u00010\\r8\\u0006@\\u0006X\\u0087\\u000e\u00a2\\u0006\\u0002\\n\\u0000R\\u0014\\u0010\\u000e\\u001a\\u00020\\u0005X\\u0086D\u00a2\\u0006\\b\\n\\u0000\\u001a\\u0004\\b\\u000f\\u0010\\t\n  #44 = Utf8               d2\n  #45 = Utf8\n  #46 = Utf8               hidden\n  #47 = Utf8               custom\n  #48 = Utf8               raw\n  #49 = Utf8               fixed\n  #50 = Utf8               Companion\n  #51 = Utf8               State.kt\n  #52 = Utf8               Code\n  #53 = Utf8               LineNumberTable\n  #54 = Utf8               LocalVariableTable\n  #55 = Utf8               InnerClasses\n  #56 = Utf8               SourceFile\n  #57 = Utf8               RuntimeVisibleAnnotations\n{\n  public final int getCustom();\n    descriptor: ()I\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=1, locals=1, args_size=1\n         0: invokestatic  #17                 // Method companionstate/Store.access$getCustom$cp:()I\n         3: ireturn\n      LineNumberTable:\n        line 29: 0\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0       4     0  this   Lcompanionstate/Store$Companion;\n\n  public final void setCustom(int);\n    descriptor: (I)V\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=2, locals=2, args_size=2\n         0: iload_1\n         1: iconst_2\n         2: imul\n         3: invokestatic  #22                 // Method companionstate/Store.access$setCustom$cp:(I)V\n         6: return\n      LineNumberTable:\n        line 30: 0\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0       7     0  this   Lcompanionstate/Store$Companion;\n            0       7     1 value   I\n\n  public final int getFixed();\n    descriptor: ()I\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=1, locals=1, args_size=1\n         0: invokestatic  #28                 // Method companionstate/Store.access$getFixed$cp:()I\n         3: ireturn\n      LineNumberTable:\n        line 32: 0\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0       4     0  this   Lcompanionstate/Store$Companion;\n\n  public companionstate.Store$Companion(kotlin.jvm.internal.DefaultConstructorMarker);\n    descriptor: (Lkotlin/jvm/internal/DefaultConstructorMarker;)V\n    flags: (0x1001) ACC_PUBLIC, ACC_SYNTHETIC\n    Code:\n      stack=1, locals=2, args_size=2\n         0: aload_0\n         1: invokespecial #30                 // Method \"<init>\":()V\n         4: return\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0       5     0  this   Lcompanionstate/Store$Companion;\n            0       5     1 $constructor_marker   Lkotlin/jvm/internal/DefaultConstructorMarker;\n}\nInnerClasses:\n  public static final #50= #2 of #14;     // Companion=class companionstate/Store$Companion of class companionstate/Store\nSourceFile: \"State.kt\"\nRuntimeVisibleAnnotations:\n  0: #33(#34=[I#35,I#36,I#37],#38=I#39,#40=I#41,#42=[s#43],#44=[s#10,s#45,s#5,s#6,s#46,s#45,s#23,s#47,s#11,s#12,s#18,s#19,s#48,s#45,s#49,s#25])\n    kotlin.Metadata(\n      mv=[2,3,0]\n      k=1\n      xi=48\n      d1=[\"\\u0000\\u001c\\n\\u0002\\u0018\\u0002\\n\\u0002\\u0010\\u0000\\n\\u0002\\b\\u0003\\n\\u0002\\u0010\\b\\n\\u0002\\b\\u0007\\n\\u0002\\u0010\\u000e\\n\\u0002\\b\\u0002\\b\\u0086\\u0003\\u0018\\u00002\\u00020\\u0001B\\t\\b\\u0002\u00a2\\u0006\\u0004\\b\\u0002\\u0010\\u0003R\\u000e\\u0010\\u0004\\u001a\\u00020\\u0005X\\u0082\\u000e\u00a2\\u0006\\u0002\\n\\u0000R$\\u0010\\u0007\\u001a\\u00020\\u00052\\u0006\\u0010\\u0006\\u001a\\u00020\\u0005@FX\\u0086\\u000e\u00a2\\u0006\\u000e\\n\\u0000\\u001a\\u0004\\b\\b\\u0010\\t\\\"\\u0004\\b\\n\\u0010\\u000bR\\u0014\\u0010\\f\\u001a\\u0004\\u0018\\u00010\\r8\\u0006@\\u0006X\\u0087\\u000e\u00a2\\u0006\\u0002\\n\\u0000R\\u0014\\u0010\\u000e\\u001a\\u00020\\u0005X\\u0086D\u00a2\\u0006\\b\\n\\u0000\\u001a\\u0004\\b\\u000f\\u0010\\t\"]\n      d2=[\"Lcompanionstate/Store$Companion;\",\"\",\"<init>\",\"()V\",\"hidden\",\"\",\"value\",\"custom\",\"getCustom\",\"()I\",\"setCustom\",\"(I)V\",\"raw\",\"\",\"fixed\",\"getFixed\"]\n    )\nClassfile /workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/official/companionstate/Shadow.class\n  Last modified Nov 26, 2026; size 1745 bytes\n  SHA-256 checksum f45d3319c2aed2cdb83533f4baaadcd7960705c2e566f6138e087b2b662090dd\n  Compiled from \"State.kt\"\npublic final class companionstate.Shadow\n  minor version: 0\n  major version: 52\n  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER\n  this_class: #2                          // companionstate/Shadow\n  super_class: #4                         // java/lang/Object\n  interfaces: 0, fields: 3, methods: 7, attributes: 3\nConstant pool:\n   #1 = Utf8               companionstate/Shadow\n   #2 = Class              #1             // companionstate/Shadow\n   #3 = Utf8               java/lang/Object\n   #4 = Class              #3             // java/lang/Object\n   #5 = Utf8               <init>\n   #6 = Utf8               ()V\n   #7 = NameAndType        #5:#6          // \"<init>\":()V\n   #8 = Methodref          #4.#7          // java/lang/Object.\"<init>\":()V\n   #9 = Utf8               instance\n  #10 = String             #9             // instance\n  #11 = Utf8               count$1\n  #12 = Utf8               Ljava/lang/String;\n  #13 = NameAndType        #11:#12        // count$1:Ljava/lang/String;\n  #14 = Fieldref           #2.#13         // companionstate/Shadow.count$1:Ljava/lang/String;\n  #15 = Utf8               this\n  #16 = Utf8               Lcompanionstate/Shadow;\n  #17 = Utf8               getCount\n  #18 = Utf8               ()Ljava/lang/String;\n  #19 = Utf8               Lorg/jetbrains/annotations/NotNull;\n  #20 = Utf8               setCount\n  #21 = Utf8               (Ljava/lang/String;)V\n  #22 = Utf8               <set-?>\n  #23 = String             #22            // <set-?>\n  #24 = Utf8               kotlin/jvm/internal/Intrinsics\n  #25 = Class              #24            // kotlin/jvm/internal/Intrinsics\n  #26 = Utf8               checkNotNullParameter\n  #27 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V\n  #28 = NameAndType        #26:#27        // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n  #29 = Methodref          #25.#28        // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n  #30 = Utf8               change\n  #31 = Utf8               (Ljava/lang/String;)Ljava/lang/String;\n  #32 = Utf8               next\n  #33 = String             #32            // next\n  #34 = Utf8               access$getCount$cp\n  #35 = Utf8               ()I\n  #36 = Utf8               count\n  #37 = Utf8               I\n  #38 = NameAndType        #36:#37        // count:I\n  #39 = Fieldref           #2.#38         // companionstate/Shadow.count:I\n  #40 = Utf8               access$setCount$cp\n  #41 = Utf8               (I)V\n  #42 = Utf8               <clinit>\n  #43 = Utf8               companionstate/Shadow$Companion\n  #44 = Class              #43            // companionstate/Shadow$Companion\n  #45 = Utf8               (Lkotlin/jvm/internal/DefaultConstructorMarker;)V\n  #46 = NameAndType        #5:#45         // \"<init>\":(Lkotlin/jvm/internal/DefaultConstructorMarker;)V\n  #47 = Methodref          #44.#46        // companionstate/Shadow$Companion.\"<init>\":(Lkotlin/jvm/internal/DefaultConstructorMarker;)V\n  #48 = Utf8               Companion\n  #49 = Utf8               Lcompanionstate/Shadow$Companion;\n  #50 = NameAndType        #48:#49        // Companion:Lcompanionstate/Shadow$Companion;\n  #51 = Fieldref           #2.#50         // companionstate/Shadow.Companion:Lcompanionstate/Shadow$Companion;\n  #52 = Utf8               Lkotlin/Metadata;\n  #53 = Utf8               mv\n  #54 = Integer            2\n  #55 = Integer            3\n  #56 = Integer            0\n  #57 = Utf8               k\n  #58 = Integer            1\n  #59 = Utf8               xi\n  #60 = Integer            48\n  #61 = Utf8               d1\n  #62 = Utf8               \\u0000\\u0014\\n\\u0002\\u0018\\u0002\\n\\u0002\\u0010\\u0000\\n\\u0002\\b\\u0003\\n\\u0002\\u0010\\u000e\\n\\u0002\\b\\b\\u0018\\u0000 \\r2\\u00020\\u0001:\\u0001\\rB\\u0007\u00a2\\u0006\\u0004\\b\\u0002\\u0010\\u0003J\\u000e\\u0010\\u000b\\u001a\\u00020\\u00052\\u0006\\u0010\\f\\u001a\\u00020\\u0005R\\u001c\\u0010\\u0004\\u001a\\u00020\\u0005X\\u0086\\u000e\u00a2\\u0006\\u0010\\n\\u0002\\b\\n\\u001a\\u0004\\b\\u0006\\u0010\\u0007\\\"\\u0004\\b\\b\\u0010\\t\n  #63 = Utf8               d2\n  #64 = Utf8\n  #65 = Utf8               State.kt\n  #66 = Utf8               RuntimeInvisibleAnnotations\n  #67 = Utf8               Code\n  #68 = Utf8               LineNumberTable\n  #69 = Utf8               LocalVariableTable\n  #70 = Utf8               RuntimeInvisibleParameterAnnotations\n  #71 = Utf8               InnerClasses\n  #72 = Utf8               SourceFile\n  #73 = Utf8               RuntimeVisibleAnnotations\n{\n  public static final companionstate.Shadow$Companion Companion;\n    descriptor: Lcompanionstate/Shadow$Companion;\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    RuntimeInvisibleAnnotations:\n      0: #19()\n        org.jetbrains.annotations.NotNull\n\n  public companionstate.Shadow();\n    descriptor: ()V\n    flags: (0x0001) ACC_PUBLIC\n    Code:\n      stack=2, locals=1, args_size=1\n         0: aload_0\n         1: invokespecial #8                  // Method java/lang/Object.\"<init>\":()V\n         4: aload_0\n         5: ldc           #10                 // String instance\n         7: putfield      #14                 // Field count$1:Ljava/lang/String;\n        10: return\n      LineNumberTable:\n        line 36: 0\n        line 37: 4\n        line 36: 10\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0      11     0  this   Lcompanionstate/Shadow;\n\n  public final java.lang.String getCount();\n    descriptor: ()Ljava/lang/String;\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=1, locals=1, args_size=1\n         0: aload_0\n         1: getfield      #14                 // Field count$1:Ljava/lang/String;\n         4: areturn\n      LineNumberTable:\n        line 37: 0\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0       5     0  this   Lcompanionstate/Shadow;\n    RuntimeInvisibleAnnotations:\n      0: #19()\n        org.jetbrains.annotations.NotNull\n\n  public final void setCount(java.lang.String);\n    descriptor: (Ljava/lang/String;)V\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=2, locals=2, args_size=2\n         0: aload_1\n         1: ldc           #23                 // String <set-?>\n         3: invokestatic  #29                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n         6: aload_0\n         7: aload_1\n         8: putfield      #14                 // Field count$1:Ljava/lang/String;\n        11: return\n      LineNumberTable:\n        line 37: 6\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0      12     0  this   Lcompanionstate/Shadow;\n            0      12     1 <set-?>   Ljava/lang/String;\n    RuntimeInvisibleParameterAnnotations:\n      parameter 0:\n        0: #19()\n          org.jetbrains.annotations.NotNull\n\n  public final java.lang.String change(java.lang.String);\n    descriptor: (Ljava/lang/String;)Ljava/lang/String;\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=2, locals=2, args_size=2\n         0: aload_1\n         1: ldc           #33                 // String next\n         3: invokestatic  #29                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n         6: aload_0\n         7: aload_1\n         8: putfield      #14                 // Field count$1:Ljava/lang/String;\n        11: aload_0\n        12: getfield      #14                 // Field count$1:Ljava/lang/String;\n        15: areturn\n      LineNumberTable:\n        line 39: 6\n        line 40: 11\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0      16     0  this   Lcompanionstate/Shadow;\n            0      16     1  next   Ljava/lang/String;\n    RuntimeInvisibleAnnotations:\n      0: #19()\n        org.jetbrains.annotations.NotNull\n    RuntimeInvisibleParameterAnnotations:\n      parameter 0:\n        0: #19()\n          org.jetbrains.annotations.NotNull\n\n  public static final int access$getCount$cp();\n    descriptor: ()I\n    flags: (0x1019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC\n    Code:\n      stack=1, locals=0, args_size=0\n         0: getstatic     #39                 // Field count:I\n         3: ireturn\n      LineNumberTable:\n        line 36: 0\n\n  public static final void access$setCount$cp(int);\n    descriptor: (I)V\n    flags: (0x1019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC\n    Code:\n      stack=1, locals=1, args_size=1\n         0: iload_0\n         1: putstatic     #39                 // Field count:I\n         4: return\n      LineNumberTable:\n        line 36: 0\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0       5     0 <set-?>   I\n}\nInnerClasses:\n  public static final #48= #44 of #2;     // Companion=class companionstate/Shadow$Companion of class companionstate/Shadow\nSourceFile: \"State.kt\"\nRuntimeVisibleAnnotations:\n  0: #52(#53=[I#54,I#55,I#56],#57=I#58,#59=I#60,#61=[s#62],#63=[s#16,s#64,s#5,s#6,s#36,s#64,s#17,s#18,s#20,s#21,s#11,s#30,s#32,s#48])\n    kotlin.Metadata(\n      mv=[2,3,0]\n      k=1\n      xi=48\n      d1=[\"\\u0000\\u0014\\n\\u0002\\u0018\\u0002\\n\\u0002\\u0010\\u0000\\n\\u0002\\b\\u0003\\n\\u0002\\u0010\\u000e\\n\\u0002\\b\\b\\u0018\\u0000 \\r2\\u00020\\u0001:\\u0001\\rB\\u0007\u00a2\\u0006\\u0004\\b\\u0002\\u0010\\u0003J\\u000e\\u0010\\u000b\\u001a\\u00020\\u00052\\u0006\\u0010\\f\\u001a\\u00020\\u0005R\\u001c\\u0010\\u0004\\u001a\\u00020\\u0005X\\u0086\\u000e\u00a2\\u0006\\u0010\\n\\u0002\\b\\n\\u001a\\u0004\\b\\u0006\\u0010\\u0007\\\"\\u0004\\b\\b\\u0010\\t\"]\n      d2=[\"Lcompanionstate/Shadow;\",\"\",\"<init>\",\"()V\",\"count\",\"\",\"getCount\",\"()Ljava/lang/String;\",\"setCount\",\"(Ljava/lang/String;)V\",\"count$1\",\"change\",\"next\",\"Companion\"]\n    )\nClassfile /workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/official/companionstate/Shadow$Companion.class\n  Last modified Nov 26, 2026; size 1057 bytes\n  SHA-256 checksum 0f82b0946d2f071b93a3bb0d9889b437afbdf88946d16e117459a09e3f9ab5b4\n  Compiled from \"State.kt\"\npublic final class companionstate.Shadow$Companion\n  minor version: 0\n  major version: 52\n  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER\n  this_class: #2                          // companionstate/Shadow$Companion\n  super_class: #4                         // java/lang/Object\n  interfaces: 0, fields: 0, methods: 4, attributes: 3\nConstant pool:\n   #1 = Utf8               companionstate/Shadow$Companion\n   #2 = Class              #1             // companionstate/Shadow$Companion\n   #3 = Utf8               java/lang/Object\n   #4 = Class              #3             // java/lang/Object\n   #5 = Utf8               <init>\n   #6 = Utf8               ()V\n   #7 = NameAndType        #5:#6          // \"<init>\":()V\n   #8 = Methodref          #4.#7          // java/lang/Object.\"<init>\":()V\n   #9 = Utf8               this\n  #10 = Utf8               Lcompanionstate/Shadow$Companion;\n  #11 = Utf8               getCount\n  #12 = Utf8               ()I\n  #13 = Utf8               companionstate/Shadow\n  #14 = Class              #13            // companionstate/Shadow\n  #15 = Utf8               access$getCount$cp\n  #16 = NameAndType        #15:#12        // access$getCount$cp:()I\n  #17 = Methodref          #14.#16        // companionstate/Shadow.access$getCount$cp:()I\n  #18 = Utf8               setCount\n  #19 = Utf8               (I)V\n  #20 = Utf8               access$setCount$cp\n  #21 = NameAndType        #20:#19        // access$setCount$cp:(I)V\n  #22 = Methodref          #14.#21        // companionstate/Shadow.access$setCount$cp:(I)V\n  #23 = Utf8               <set-?>\n  #24 = Utf8               I\n  #25 = Utf8               (Lkotlin/jvm/internal/DefaultConstructorMarker;)V\n  #26 = Methodref          #2.#7          // companionstate/Shadow$Companion.\"<init>\":()V\n  #27 = Utf8               $constructor_marker\n  #28 = Utf8               Lkotlin/jvm/internal/DefaultConstructorMarker;\n  #29 = Utf8               Lkotlin/Metadata;\n  #30 = Utf8               mv\n  #31 = Integer            2\n  #32 = Integer            3\n  #33 = Integer            0\n  #34 = Utf8               k\n  #35 = Integer            1\n  #36 = Utf8               xi\n  #37 = Integer            48\n  #38 = Utf8               d1\n  #39 = Utf8               \\u0000\\u0014\\n\\u0002\\u0018\\u0002\\n\\u0002\\u0010\\u0000\\n\\u0002\\b\\u0003\\n\\u0002\\u0010\\b\\n\\u0002\\b\\u0004\\b\\u0086\\u0003\\u0018\\u00002\\u00020\\u0001B\\t\\b\\u0002\u00a2\\u0006\\u0004\\b\\u0002\\u0010\\u0003R\\u001a\\u0010\\u0004\\u001a\\u00020\\u0005X\\u0086\\u000e\u00a2\\u0006\\u000e\\n\\u0000\\u001a\\u0004\\b\\u0006\\u0010\\u0007\\\"\\u0004\\b\\b\\u0010\\t\n  #40 = Utf8               d2\n  #41 = Utf8\n  #42 = Utf8               count\n  #43 = Utf8               Companion\n  #44 = Utf8               State.kt\n  #45 = Utf8               Code\n  #46 = Utf8               LineNumberTable\n  #47 = Utf8               LocalVariableTable\n  #48 = Utf8               InnerClasses\n  #49 = Utf8               SourceFile\n  #50 = Utf8               RuntimeVisibleAnnotations\n{\n  public final int getCount();\n    descriptor: ()I\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=1, locals=1, args_size=1\n         0: invokestatic  #17                 // Method companionstate/Shadow.access$getCount$cp:()I\n         3: ireturn\n      LineNumberTable:\n        line 42: 0\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0       4     0  this   Lcompanionstate/Shadow$Companion;\n\n  public final void setCount(int);\n    descriptor: (I)V\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=1, locals=2, args_size=2\n         0: iload_1\n         1: invokestatic  #22                 // Method companionstate/Shadow.access$setCount$cp:(I)V\n         4: return\n      LineNumberTable:\n        line 42: 0\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0       5     0  this   Lcompanionstate/Shadow$Companion;\n            0       5     1 <set-?>   I\n\n  public companionstate.Shadow$Companion(kotlin.jvm.internal.DefaultConstructorMarker);\n    descriptor: (Lkotlin/jvm/internal/DefaultConstructorMarker;)V\n    flags: (0x1001) ACC_PUBLIC, ACC_SYNTHETIC\n    Code:\n      stack=1, locals=2, args_size=2\n         0: aload_0\n         1: invokespecial #26                 // Method \"<init>\":()V\n         4: return\n      LocalVariableTable:\n        Start  Length  Slot  Name   Signature\n            0       5     0  this   Lcompanionstate/Shadow$Companion;\n            0       5     1 $constructor_marker   Lkotlin/jvm/internal/DefaultConstructorMarker;\n}\nInnerClasses:\n  public static final #43= #2 of #14;     // Companion=class companionstate/Shadow$Companion of class companionstate/Shadow\nSourceFile: \"State.kt\"\nRuntimeVisibleAnnotations:\n  0: #29(#30=[I#31,I#32,I#33],#34=I#35,#36=I#37,#38=[s#39],#40=[s#10,s#41,s#5,s#6,s#42,s#41,s#11,s#12,s#18,s#19])\n    kotlin.Metadata(\n      mv=[2,3,0]\n      k=1\n      xi=48\n      d1=[\"\\u0000\\u0014\\n\\u0002\\u0018\\u0002\\n\\u0002\\u0010\\u0000\\n\\u0002\\b\\u0003\\n\\u0002\\u0010\\b\\n\\u0002\\b\\u0004\\b\\u0086\\u0003\\u0018\\u00002\\u00020\\u0001B\\t\\b\\u0002\u00a2\\u0006\\u0004\\b\\u0002\\u0010\\u0003R\\u001a\\u0010\\u0004\\u001a\\u00020\\u0005X\\u0086\\u000e\u00a2\\u0006\\u000e\\n\\u0000\\u001a\\u0004\\b\\u0006\\u0010\\u0007\\\"\\u0004\\b\\b\\u0010\\t\"]\n      d2=[\"Lcompanionstate/Shadow$Companion;\",\"\",\"<init>\",\"()V\",\"count\",\"\",\"getCount\",\"()I\",\"setCount\",\"(I)V\"]\n    )\n",
+  "candidate_signatures": "Classfile /workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/candidate/companionstate/Store.class\n  Last modified Nov 26, 2026; size 3263 bytes\n  SHA-256 checksum 38c41702ec77d317284ec73e7f1511bab2a69b4983fe58b935f42f4769408943\n  Compiled from \"State.kt\"\npublic final class companionstate.Store\n  minor version: 0\n  major version: 52\n  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER\n  this_class: #2                          // companionstate/Store\n  super_class: #4                         // java/lang/Object\n  interfaces: 0, fields: 5, methods: 16, attributes: 3\nConstant pool:\n    #1 = Utf8               companionstate/Store\n    #2 = Class              #1            // companionstate/Store\n    #3 = Utf8               java/lang/Object\n    #4 = Class              #3            // java/lang/Object\n    #5 = Utf8               <init>\n    #6 = Utf8               ()V\n    #7 = NameAndType        #5:#6         // \"<init>\":()V\n    #8 = Methodref          #4.#7         // java/lang/Object.\"<init>\":()V\n    #9 = Utf8               Companion\n   #10 = Utf8               Lcompanionstate/Store$Companion;\n   #11 = NameAndType        #9:#10        // Companion:Lcompanionstate/Store$Companion;\n   #12 = Fieldref           #2.#11        // companionstate/Store.Companion:Lcompanionstate/Store$Companion;\n   #13 = Utf8               access$setHidden$cp\n   #14 = Utf8               (I)V\n   #15 = NameAndType        #13:#14       // access$setHidden$cp:(I)V\n   #16 = Methodref          #2.#15        // companionstate/Store.access$setHidden$cp:(I)V\n   #17 = Utf8               companionstate/Store$Companion\n   #18 = Class              #17           // companionstate/Store$Companion\n   #19 = Utf8               setCustom\n   #20 = NameAndType        #19:#14       // setCustom:(I)V\n   #21 = Methodref          #18.#20       // companionstate/Store$Companion.setCustom:(I)V\n   #22 = Utf8               init\n   #23 = String             #22           // init\n   #24 = Utf8               raw\n   #25 = Utf8               Ljava/lang/String;\n   #26 = NameAndType        #24:#25       // raw:Ljava/lang/String;\n   #27 = Fieldref           #2.#26        // companionstate/Store.raw:Ljava/lang/String;\n   #28 = Utf8               Code\n   #29 = Utf8               java/lang/String\n   #30 = Class              #29           // java/lang/String\n   #31 = Utf8               java/lang/Throwable\n   #32 = Class              #31           // java/lang/Throwable\n   #33 = Utf8               StackMapTable\n   #34 = Utf8               assign\n   #35 = String             #34           // assign\n   #36 = Utf8               access$getHidden$cp\n   #37 = Utf8               ()I\n   #38 = NameAndType        #36:#37       // access$getHidden$cp:()I\n   #39 = Methodref          #2.#38        // companionstate/Store.access$getHidden$cp:()I\n   #40 = Utf8               getCustom\n   #41 = NameAndType        #40:#37       // getCustom:()I\n   #42 = Methodref          #18.#41       // companionstate/Store$Companion.getCustom:()I\n   #43 = Utf8               (I)I\n   #44 = Utf8               companionstate/Store$lambda$308$0\n   #45 = Class              #44           // companionstate/Store$lambda$308$0\n   #46 = Utf8               (ILcompanionstate/Store;)V\n   #47 = NameAndType        #5:#46        // \"<init>\":(ILcompanionstate/Store;)V\n   #48 = Methodref          #45.#47       // companionstate/Store$lambda$308$0.\"<init>\":(ILcompanionstate/Store;)V\n   #49 = Utf8               delayed\n   #50 = Utf8               (I)Lkotlin/jvm/functions/Function0;\n   #51 = Utf8               Signature\n   #52 = Utf8               (I)Lkotlin/jvm/functions/Function0<Ljava/lang/Integer;>;\n   #53 = Utf8               RuntimeInvisibleAnnotations\n   #54 = Utf8               Lorg/jetbrains/annotations/NotNull;\n   #55 = Utf8               local\n   #56 = Utf8               read\n   #57 = Utf8               hidden\n   #58 = Utf8               I\n   #59 = NameAndType        #57:#58       // hidden:I\n   #60 = Fieldref           #2.#59        // companionstate/Store.hidden:I\n   #61 = Utf8               access$get$hidden$p\n   #62 = Utf8               access$set$hidden$p\n   #63 = Utf8               custom\n   #64 = NameAndType        #63:#58       // custom:I\n   #65 = Fieldref           #2.#64        // companionstate/Store.custom:I\n   #66 = Utf8               access$get$custom$p\n   #67 = Utf8               access$set$custom$p\n   #68 = Utf8               access$getCustom$cp\n   #69 = Utf8               access$setCustom$cp\n   #70 = Utf8               Lorg/jetbrains/annotations/Nullable;\n   #71 = Utf8               fixed\n   #72 = NameAndType        #71:#58       // fixed:I\n   #73 = Fieldref           #2.#72        // companionstate/Store.fixed:I\n   #74 = Utf8               access$get$fixed$p\n   #75 = Utf8               access$getFixed$cp\n   #76 = Utf8               (Lkotlin/jvm/internal/DefaultConstructorMarker;)V\n   #77 = NameAndType        #5:#76        // \"<init>\":(Lkotlin/jvm/internal/DefaultConstructorMarker;)V\n   #78 = Methodref          #18.#77       // companionstate/Store$Companion.\"<init>\":(Lkotlin/jvm/internal/DefaultConstructorMarker;)V\n   #79 = Utf8               <clinit>\n   #80 = Utf8               InnerClasses\n   #81 = Utf8               SourceFile\n   #82 = Utf8               State.kt\n   #83 = Utf8               Lkotlin/Metadata;\n   #84 = Utf8               mv\n   #85 = Integer            2\n   #86 = Integer            3\n   #87 = Integer            0\n   #88 = Utf8               k\n   #89 = Integer            1\n   #90 = Utf8               xi\n   #91 = Integer            48\n   #92 = Utf8               d1\n   #93 = Utf8               \\u0000\\b\\n\\u0002\\b\\u0011\\n\\u0002\\b\\u0001\\b\\u0006\\u0018\\u00002\\u00020\\u0001 \\u00028\\u0002B\\u0011\\b\\u0006\\u0012\\u0006\\u0010\\u0003\\u001a\\u00020\\u0004\u00a2\\u0006\\u0004\\b\\u0005\\u0010\\u0006J\\u0017H\\u0006\\u0010\\u0007\\u001a\\u00020\\u00042\\u0006\\u0010\\b\\u001a\\u00020\\u0004\u00a2\\u0006\\u0004\\b\\u0007\\u0010\\tJ\\u001dH\\u0006\\u0010\\n\\u001a\\b\\u0012\\u0004\\u0012\\u00020\\u00040\\u000b2\\u0006\\u0010\\b\\u001a\\u00020\\u0004\u00a2\\u0006\\u0004\\b\\n\\u0010\\fJ\\u0017H\\u0006\\u0010\\r\\u001a\\u00020\\u00042\\u0006\\u0010\\u000e\\u001a\\u00020\\u0004\u00a2\\u0006\\u0004\\b\\r\\u0010\\tJ\\u000fH\\u0006\\u0010\\u000f\\u001a\\u00020\\u0004\u00a2\\u0006\\u0004\\b\\u000f\\u0010\\u0010\u00a8\\u0006\\u0011\n   #94 = Utf8               d2\n   #95 = Utf8               kotlin/Any\n   #96 = Utf8               seed\n   #97 = Utf8               kotlin/Int\n   #98 = Utf8               next\n   #99 = Utf8               kotlin/Function0\n  #100 = Utf8               initial\n  #101 = Utf8               companion_properties\n  #102 = Utf8               RuntimeVisibleAnnotations\n  #103 = Utf8               Lkotlin/jvm/JvmField;\n{\n  public static final companionstate.Store$Companion Companion;\n    descriptor: Lcompanionstate/Store$Companion;\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    RuntimeInvisibleAnnotations:\n      0: #54()\n        org.jetbrains.annotations.NotNull\n\n  public static java.lang.String raw;\n    descriptor: Ljava/lang/String;\n    flags: (0x0009) ACC_PUBLIC, ACC_STATIC\n    RuntimeInvisibleAnnotations:\n      0: #70()\n        org.jetbrains.annotations.Nullable\n      1: #103()\n        kotlin.jvm.JvmField\n\n  public companionstate.Store(int);\n    descriptor: (I)V\n    flags: (0x0001) ACC_PUBLIC\n    Code:\n      stack=257, locals=2, args_size=2\n         0: aload_0\n         1: invokespecial #8                  // Method java/lang/Object.\"<init>\":()V\n         4: getstatic     #12                 // Field Companion:Lcompanionstate/Store$Companion;\n         7: pop\n         8: iload         1\n        10: invokestatic  #16                 // Method access$setHidden$cp:(I)V\n        13: getstatic     #12                 // Field Companion:Lcompanionstate/Store$Companion;\n        16: checkcast     #18                 // class companionstate/Store$Companion\n        19: iload         1\n        21: invokevirtual #21                 // Method companionstate/Store$Companion.setCustom:(I)V\n        24: ldc_w         #23                 // String init\n        27: putstatic     #27                 // Field raw:Ljava/lang/String;\n        30: return\n        31: nop\n        32: athrow\n      StackMapTable: number_of_entries = 14\n        frame_type = 255 /* full_frame */\n          offset_delta = 1\n          locals = [ this, int ]\n          stack = [ this ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = [ class companionstate/Store$Companion ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store, int ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 1\n          locals = [ class companionstate/Store, int ]\n          stack = [ int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = [ class companionstate/Store$Companion ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = [ class companionstate/Store$Companion ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 1\n          locals = [ class companionstate/Store, int ]\n          stack = [ class companionstate/Store$Companion, int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = [ class java/lang/String ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store, int ]\n          stack = [ class java/lang/Throwable ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store, int ]\n          stack = [ class java/lang/Throwable ]\n\n  public final int assign(int);\n    descriptor: (I)I\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=258, locals=2, args_size=2\n         0: getstatic     #12                 // Field Companion:Lcompanionstate/Store$Companion;\n         3: pop\n         4: iload         1\n         6: invokestatic  #16                 // Method access$setHidden$cp:(I)V\n         9: getstatic     #12                 // Field Companion:Lcompanionstate/Store$Companion;\n        12: checkcast     #18                 // class companionstate/Store$Companion\n        15: iload         1\n        17: invokevirtual #21                 // Method companionstate/Store$Companion.setCustom:(I)V\n        20: ldc_w         #35                 // String assign\n        23: putstatic     #27                 // Field raw:Ljava/lang/String;\n        26: getstatic     #12                 // Field Companion:Lcompanionstate/Store$Companion;\n        29: pop\n        30: invokestatic  #39                 // Method access$getHidden$cp:()I\n        33: getstatic     #12                 // Field Companion:Lcompanionstate/Store$Companion;\n        36: checkcast     #18                 // class companionstate/Store$Companion\n        39: invokevirtual #42                 // Method companionstate/Store$Companion.getCustom:()I\n        42: iadd\n        43: ireturn\n        44: nop\n        45: athrow\n      StackMapTable: number_of_entries = 19\n        frame_type = 255 /* full_frame */\n          offset_delta = 3\n          locals = [ class companionstate/Store, int ]\n          stack = [ class companionstate/Store$Companion ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store, int ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 1\n          locals = [ class companionstate/Store, int ]\n          stack = [ int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = [ class companionstate/Store$Companion ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = [ class companionstate/Store$Companion ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 1\n          locals = [ class companionstate/Store, int ]\n          stack = [ class companionstate/Store$Companion, int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = [ class java/lang/String ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = [ class companionstate/Store$Companion ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store, int ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = [ int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = [ int, class companionstate/Store$Companion ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = [ int, class companionstate/Store$Companion ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = [ int, int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store, int ]\n          stack = [ int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store, int ]\n          stack = [ class java/lang/Throwable ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store, int ]\n          stack = [ class java/lang/Throwable ]\n\n  public final kotlin.jvm.functions.Function0<java.lang.Integer> delayed(int);\n    descriptor: (I)Lkotlin/jvm/functions/Function0;\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=4, locals=2, args_size=2\n         0: new           #45                 // class companionstate/Store$lambda$308$0\n         3: dup\n         4: iload         1\n         6: aload         0\n         8: invokespecial #48                 // Method companionstate/Store$lambda$308$0.\"<init>\":(ILcompanionstate/Store;)V\n        11: areturn\n        12: nop\n        13: athrow\n      StackMapTable: number_of_entries = 7\n        frame_type = 255 /* full_frame */\n          offset_delta = 3\n          locals = [ class companionstate/Store, int ]\n          stack = [ uninitialized 0 ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store, int ]\n          stack = [ uninitialized 0, uninitialized 0 ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 1\n          locals = [ class companionstate/Store, int ]\n          stack = [ uninitialized 0, uninitialized 0, int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 1\n          locals = [ class companionstate/Store, int ]\n          stack = [ uninitialized 0, uninitialized 0, int, class companionstate/Store ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = [ class companionstate/Store$lambda$308$0 ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store, int ]\n          stack = [ class java/lang/Throwable ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store, int ]\n          stack = [ class java/lang/Throwable ]\n    Signature: #52                          // (I)Lkotlin/jvm/functions/Function0<Ljava/lang/Integer;>;\n    RuntimeInvisibleAnnotations:\n      0: #54()\n        org.jetbrains.annotations.NotNull\n\n  public final int local(int);\n    descriptor: (I)I\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=2, locals=3, args_size=2\n         0: iload         1\n         2: istore        2\n         4: iload         2\n         6: iconst_1\n         7: iadd\n         8: istore        2\n        10: iload         2\n        12: ireturn\n        13: nop\n        14: athrow\n      StackMapTable: number_of_entries = 9\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store, int ]\n          stack = [ int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 1\n          locals = [ class companionstate/Store, int, int ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 1\n          locals = [ class companionstate/Store, int, int ]\n          stack = [ int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store, int, int ]\n          stack = [ int, int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store, int, int ]\n          stack = [ int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 1\n          locals = [ class companionstate/Store, int, int ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 1\n          locals = [ class companionstate/Store, int, int ]\n          stack = [ int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store, int, int ]\n          stack = [ class java/lang/Throwable ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store, int, int ]\n          stack = [ class java/lang/Throwable ]\n\n  public final int read();\n    descriptor: ()I\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=257, locals=1, args_size=1\n         0: getstatic     #12                 // Field Companion:Lcompanionstate/Store$Companion;\n         3: pop\n         4: invokestatic  #39                 // Method access$getHidden$cp:()I\n         7: getstatic     #12                 // Field Companion:Lcompanionstate/Store$Companion;\n        10: checkcast     #18                 // class companionstate/Store$Companion\n        13: invokevirtual #42                 // Method companionstate/Store$Companion.getCustom:()I\n        16: iadd\n        17: ireturn\n        18: nop\n        19: athrow\n      StackMapTable: number_of_entries = 9\n        frame_type = 255 /* full_frame */\n          offset_delta = 3\n          locals = [ class companionstate/Store ]\n          stack = [ class companionstate/Store$Companion ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store ]\n          stack = [ int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store ]\n          stack = [ int, class companionstate/Store$Companion ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store ]\n          stack = [ int, class companionstate/Store$Companion ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store ]\n          stack = [ int, int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store ]\n          stack = [ int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store ]\n          stack = [ class java/lang/Throwable ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store ]\n          stack = [ class java/lang/Throwable ]\n\n  public static final int access$getHidden$cp();\n    descriptor: ()I\n    flags: (0x1019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC\n    Code:\n      stack=1, locals=0, args_size=0\n         0: getstatic     #60                 // Field hidden:I\n         3: ireturn\n\n  public static final void access$setHidden$cp(int);\n    descriptor: (I)V\n    flags: (0x1019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC\n    Code:\n      stack=1, locals=1, args_size=1\n         0: iload         0\n         2: putstatic     #60                 // Field hidden:I\n         5: return\n\n  public static final int access$getCustom$cp();\n    descriptor: ()I\n    flags: (0x1019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC\n    Code:\n      stack=1, locals=0, args_size=0\n         0: getstatic     #65                 // Field custom:I\n         3: ireturn\n\n  public static final void access$setCustom$cp(int);\n    descriptor: (I)V\n    flags: (0x1019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC\n    Code:\n      stack=1, locals=1, args_size=1\n         0: iload         0\n         2: putstatic     #65                 // Field custom:I\n         5: return\n\n  public static final int access$getFixed$cp();\n    descriptor: ()I\n    flags: (0x1019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC\n    Code:\n      stack=1, locals=0, args_size=0\n         0: getstatic     #73                 // Field fixed:I\n         3: ireturn\n}\nInnerClasses:\n  public static final #9= #18 of #2;      // Companion=class companionstate/Store$Companion of class companionstate/Store\nSourceFile: \"State.kt\"\nRuntimeVisibleAnnotations:\n  0: #83(#84=[I#85,I#86,I#87],#88=I#89,#90=I#91,#92=[s#93],#94=[s#1,s#95,s#9,s#96,s#97,s#5,s#14,s#34,s#98,s#43,s#49,s#99,s#50,s#55,s#100,s#56,s#37,s#101])\n    kotlin.Metadata(\n      mv=[2,3,0]\n      k=1\n      xi=48\n      d1=[\"\\u0000\\b\\n\\u0002\\b\\u0011\\n\\u0002\\b\\u0001\\b\\u0006\\u0018\\u00002\\u00020\\u0001 \\u00028\\u0002B\\u0011\\b\\u0006\\u0012\\u0006\\u0010\\u0003\\u001a\\u00020\\u0004\u00a2\\u0006\\u0004\\b\\u0005\\u0010\\u0006J\\u0017H\\u0006\\u0010\\u0007\\u001a\\u00020\\u00042\\u0006\\u0010\\b\\u001a\\u00020\\u0004\u00a2\\u0006\\u0004\\b\\u0007\\u0010\\tJ\\u001dH\\u0006\\u0010\\n\\u001a\\b\\u0012\\u0004\\u0012\\u00020\\u00040\\u000b2\\u0006\\u0010\\b\\u001a\\u00020\\u0004\u00a2\\u0006\\u0004\\b\\n\\u0010\\fJ\\u0017H\\u0006\\u0010\\r\\u001a\\u00020\\u00042\\u0006\\u0010\\u000e\\u001a\\u00020\\u0004\u00a2\\u0006\\u0004\\b\\r\\u0010\\tJ\\u000fH\\u0006\\u0010\\u000f\\u001a\\u00020\\u0004\u00a2\\u0006\\u0004\\b\\u000f\\u0010\\u0010\u00a8\\u0006\\u0011\"]\n      d2=[\"companionstate/Store\",\"kotlin/Any\",\"Companion\",\"seed\",\"kotlin/Int\",\"<init>\",\"(I)V\",\"assign\",\"next\",\"(I)I\",\"delayed\",\"kotlin/Function0\",\"(I)Lkotlin/jvm/functions/Function0;\",\"local\",\"initial\",\"read\",\"()I\",\"companion_properties\"]\n    )\nClassfile /workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/candidate/companionstate/Store$Companion.class\n  Last modified Nov 26, 2026; size 1536 bytes\n  SHA-256 checksum 202f2cb1d2c4f741ed3750cbd063051c94a5bcc5a4c3e9869a6bed0f0ab6d466\n  Compiled from \"State.kt\"\npublic final class companionstate.Store$Companion\n  minor version: 0\n  major version: 52\n  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER\n  this_class: #2                          // companionstate/Store$Companion\n  super_class: #4                         // java/lang/Object\n  interfaces: 0, fields: 0, methods: 7, attributes: 3\nConstant pool:\n   #1 = Utf8               companionstate/Store$Companion\n   #2 = Class              #1             // companionstate/Store$Companion\n   #3 = Utf8               java/lang/Object\n   #4 = Class              #3             // java/lang/Object\n   #5 = Utf8               <init>\n   #6 = Utf8               ()V\n   #7 = NameAndType        #5:#6          // \"<init>\":()V\n   #8 = Methodref          #4.#7          // java/lang/Object.\"<init>\":()V\n   #9 = Utf8               Code\n  #10 = Utf8               getHidden\n  #11 = Utf8               ()I\n  #12 = NameAndType        #10:#11        // getHidden:()I\n  #13 = Methodref          #2.#12         // companionstate/Store$Companion.getHidden:()I\n  #14 = Utf8               access$getHidden\n  #15 = Utf8               (Lcompanionstate/Store$Companion;)I\n  #16 = Utf8               companionstate/Store\n  #17 = Class              #16            // companionstate/Store\n  #18 = Utf8               access$getHidden$cp\n  #19 = NameAndType        #18:#11        // access$getHidden$cp:()I\n  #20 = Methodref          #17.#19        // companionstate/Store.access$getHidden$cp:()I\n  #21 = Utf8               java/lang/Throwable\n  #22 = Class              #21            // java/lang/Throwable\n  #23 = Utf8               StackMapTable\n  #24 = Utf8               access$getCustom$cp\n  #25 = NameAndType        #24:#11        // access$getCustom$cp:()I\n  #26 = Methodref          #17.#25        // companionstate/Store.access$getCustom$cp:()I\n  #27 = Utf8               getCustom\n  #28 = Utf8               access$setCustom$cp\n  #29 = Utf8               (I)V\n  #30 = NameAndType        #28:#29        // access$setCustom$cp:(I)V\n  #31 = Methodref          #17.#30        // companionstate/Store.access$setCustom$cp:(I)V\n  #32 = Utf8               setCustom\n  #33 = Utf8               access$getFixed$cp\n  #34 = NameAndType        #33:#11        // access$getFixed$cp:()I\n  #35 = Methodref          #17.#34        // companionstate/Store.access$getFixed$cp:()I\n  #36 = Utf8               getFixed\n  #37 = Methodref          #2.#7          // companionstate/Store$Companion.\"<init>\":()V\n  #38 = Utf8               (Lkotlin/jvm/internal/DefaultConstructorMarker;)V\n  #39 = Utf8               InnerClasses\n  #40 = Utf8               Companion\n  #41 = Utf8               SourceFile\n  #42 = Utf8               State.kt\n  #43 = Utf8               Lkotlin/Metadata;\n  #44 = Utf8               mv\n  #45 = Integer            2\n  #46 = Integer            3\n  #47 = Integer            0\n  #48 = Utf8               k\n  #49 = Integer            1\n  #50 = Utf8               xi\n  #51 = Integer            48\n  #52 = Utf8               d1\n  #53 = Utf8               \\u0000\\b\\n\\u0002\\b\\u0012\\n\\u0002\\b\\u0001\\b\\u0086\\u0003\\u0018\\u00002\\u00020\\u0001B\\t\\b\\u0002\u00a2\\u0006\\u0004\\b\\u0002\\u0010\\u0003R\\u0012X\\u0082\\u000e\\u0010\\u0004\\u001a\\u00020\\u0005\u00a2\\u0006\\u0006\\n\\u0004\\b\\u0004\\u0010\\u0006R(X\\u0086\\u000e\\u0010\\u0007\\u001a\\u00020\\u0005@F2\\u0006\\u0010\\f\\u001a\\u00020\\u0005\u00a2\\u0006\\u0012\\n\\u0004\\b\\u0007\\u0010\\u0006\\u001a\\u0004\\b\\b\\u0010\\t\\\"\\u0004\\b\\n\\u0010\\u000bR\\u0014X\\u0087\\u0002\\u0010\\r\\u001a\\u00040\\u000e\\u0018\\u0001\u00a2\\u0006\\u0006\\n\\u0004\\b\\r\\u0010\\u000fR\\u0018X\\u0086D\\u0010\\u0010\\u001a\\u00020\\u0005\u00a2\\u0006\\f\\n\\u0004\\b\\u0010\\u0010\\u0006\\u001a\\u0004\\b\\u0011\\u0010\\t\u00a8\\u0006\\u0012\n  #54 = Utf8               d2\n  #55 = Utf8               companionstate/Store.Companion\n  #56 = Utf8               kotlin/Any\n  #57 = Utf8               hidden\n  #58 = Utf8               kotlin/Int\n  #59 = Utf8               I\n  #60 = Utf8               custom\n  #61 = Utf8               value\n  #62 = Utf8               raw\n  #63 = Utf8               kotlin/String\n  #64 = Utf8               Ljava/lang/String;\n  #65 = Utf8               fixed\n  #66 = Utf8               companion_properties\n  #67 = Utf8               RuntimeVisibleAnnotations\n{\n  public final int getCustom();\n    descriptor: ()I\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=2, locals=1, args_size=1\n         0: invokestatic  #26                 // Method companionstate/Store.access$getCustom$cp:()I\n         3: ireturn\n         4: nop\n         5: athrow\n      StackMapTable: number_of_entries = 3\n        frame_type = 255 /* full_frame */\n          offset_delta = 3\n          locals = [ class companionstate/Store$Companion ]\n          stack = [ int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store$Companion ]\n          stack = [ class java/lang/Throwable ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store$Companion ]\n          stack = [ class java/lang/Throwable ]\n\n  public final void setCustom(int);\n    descriptor: (I)V\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=4, locals=2, args_size=2\n         0: iload         1\n         2: iconst_2\n         3: imul\n         4: invokestatic  #31                 // Method companionstate/Store.access$setCustom$cp:(I)V\n         7: return\n         8: nop\n         9: athrow\n      StackMapTable: number_of_entries = 6\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store$Companion, int ]\n          stack = [ int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store$Companion, int ]\n          stack = [ int, int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store$Companion, int ]\n          stack = [ int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Store$Companion, int ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store$Companion, int ]\n          stack = [ class java/lang/Throwable ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store$Companion, int ]\n          stack = [ class java/lang/Throwable ]\n\n  public final int getFixed();\n    descriptor: ()I\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=2, locals=1, args_size=1\n         0: invokestatic  #35                 // Method companionstate/Store.access$getFixed$cp:()I\n         3: ireturn\n         4: nop\n         5: athrow\n      StackMapTable: number_of_entries = 3\n        frame_type = 255 /* full_frame */\n          offset_delta = 3\n          locals = [ class companionstate/Store$Companion ]\n          stack = [ int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store$Companion ]\n          stack = [ class java/lang/Throwable ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Store$Companion ]\n          stack = [ class java/lang/Throwable ]\n\n  public companionstate.Store$Companion(kotlin.jvm.internal.DefaultConstructorMarker);\n    descriptor: (Lkotlin/jvm/internal/DefaultConstructorMarker;)V\n    flags: (0x1001) ACC_PUBLIC, ACC_SYNTHETIC\n    Code:\n      stack=1, locals=2, args_size=2\n         0: aload_0\n         1: invokespecial #37                 // Method \"<init>\":()V\n         4: return\n}\nInnerClasses:\n  public static final #40= #2 of #17;     // Companion=class companionstate/Store$Companion of class companionstate/Store\nSourceFile: \"State.kt\"\nRuntimeVisibleAnnotations:\n  0: #43(#44=[I#45,I#46,I#47],#48=I#49,#50=I#51,#52=[s#53],#54=[s#55,s#56,s#5,s#6,s#57,s#58,s#59,s#60,s#27,s#11,s#32,s#29,s#61,s#62,s#63,s#64,s#65,s#36,s#66])\n    kotlin.Metadata(\n      mv=[2,3,0]\n      k=1\n      xi=48\n      d1=[\"\\u0000\\b\\n\\u0002\\b\\u0012\\n\\u0002\\b\\u0001\\b\\u0086\\u0003\\u0018\\u00002\\u00020\\u0001B\\t\\b\\u0002\u00a2\\u0006\\u0004\\b\\u0002\\u0010\\u0003R\\u0012X\\u0082\\u000e\\u0010\\u0004\\u001a\\u00020\\u0005\u00a2\\u0006\\u0006\\n\\u0004\\b\\u0004\\u0010\\u0006R(X\\u0086\\u000e\\u0010\\u0007\\u001a\\u00020\\u0005@F2\\u0006\\u0010\\f\\u001a\\u00020\\u0005\u00a2\\u0006\\u0012\\n\\u0004\\b\\u0007\\u0010\\u0006\\u001a\\u0004\\b\\b\\u0010\\t\\\"\\u0004\\b\\n\\u0010\\u000bR\\u0014X\\u0087\\u0002\\u0010\\r\\u001a\\u00040\\u000e\\u0018\\u0001\u00a2\\u0006\\u0006\\n\\u0004\\b\\r\\u0010\\u000fR\\u0018X\\u0086D\\u0010\\u0010\\u001a\\u00020\\u0005\u00a2\\u0006\\f\\n\\u0004\\b\\u0010\\u0010\\u0006\\u001a\\u0004\\b\\u0011\\u0010\\t\u00a8\\u0006\\u0012\"]\n      d2=[\"companionstate/Store.Companion\",\"kotlin/Any\",\"<init>\",\"()V\",\"hidden\",\"kotlin/Int\",\"I\",\"custom\",\"getCustom\",\"()I\",\"setCustom\",\"(I)V\",\"value\",\"raw\",\"kotlin/String\",\"Ljava/lang/String;\",\"fixed\",\"getFixed\",\"companion_properties\"]\n    )\nClassfile /workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/candidate/companionstate/Shadow.class\n  Last modified Nov 26, 2026; size 2157 bytes\n  SHA-256 checksum 31f3ffe5a14e43858c5abbca151e20ed4178bc41b7d4c23474b57d095b7d02f1\n  Compiled from \"State.kt\"\npublic final class companionstate.Shadow\n  minor version: 0\n  major version: 52\n  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER\n  this_class: #2                          // companionstate/Shadow\n  super_class: #4                         // java/lang/Object\n  interfaces: 0, fields: 3, methods: 7, attributes: 3\nConstant pool:\n   #1 = Utf8               companionstate/Shadow\n   #2 = Class              #1             // companionstate/Shadow\n   #3 = Utf8               java/lang/Object\n   #4 = Class              #3             // java/lang/Object\n   #5 = Utf8               count\n   #6 = Utf8               Ljava/lang/String;\n   #7 = Utf8               RuntimeInvisibleAnnotations\n   #8 = Utf8               Lorg/jetbrains/annotations/NotNull;\n   #9 = Utf8               <init>\n  #10 = Utf8               ()V\n  #11 = NameAndType        #9:#10         // \"<init>\":()V\n  #12 = Methodref          #4.#11         // java/lang/Object.\"<init>\":()V\n  #13 = Utf8               instance\n  #14 = String             #13            // instance\n  #15 = NameAndType        #5:#6          // count:Ljava/lang/String;\n  #16 = Fieldref           #2.#15         // companionstate/Shadow.count:Ljava/lang/String;\n  #17 = Utf8               Code\n  #18 = Utf8               java/lang/String\n  #19 = Class              #18            // java/lang/String\n  #20 = Utf8               java/lang/Throwable\n  #21 = Class              #20            // java/lang/Throwable\n  #22 = Utf8               StackMapTable\n  #23 = Utf8               next\n  #24 = String             #23            // next\n  #25 = Utf8               kotlin/jvm/internal/Intrinsics\n  #26 = Class              #25            // kotlin/jvm/internal/Intrinsics\n  #27 = Utf8               checkNotNullParameter\n  #28 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V\n  #29 = NameAndType        #27:#28        // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n  #30 = Methodref          #26.#29        // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n  #31 = Utf8               change\n  #32 = Utf8               (Ljava/lang/String;)Ljava/lang/String;\n  #33 = Utf8               RuntimeInvisibleParameterAnnotations\n  #34 = Utf8               getCount\n  #35 = Utf8               ()Ljava/lang/String;\n  #36 = Utf8               <set-?>\n  #37 = String             #36            // <set-?>\n  #38 = Utf8               setCount\n  #39 = Utf8               (Ljava/lang/String;)V\n  #40 = Utf8               Companion\n  #41 = Utf8               Lcompanionstate/Shadow$Companion;\n  #42 = Utf8               I\n  #43 = NameAndType        #5:#42         // count:I\n  #44 = Fieldref           #2.#43         // companionstate/Shadow.count:I\n  #45 = Utf8               access$getCount$cp\n  #46 = Utf8               ()I\n  #47 = Utf8               access$setCount$cp\n  #48 = Utf8               (I)V\n  #49 = Utf8               companionstate/Shadow$Companion\n  #50 = Class              #49            // companionstate/Shadow$Companion\n  #51 = Utf8               (Lkotlin/jvm/internal/DefaultConstructorMarker;)V\n  #52 = NameAndType        #9:#51         // \"<init>\":(Lkotlin/jvm/internal/DefaultConstructorMarker;)V\n  #53 = Methodref          #50.#52        // companionstate/Shadow$Companion.\"<init>\":(Lkotlin/jvm/internal/DefaultConstructorMarker;)V\n  #54 = NameAndType        #40:#41        // Companion:Lcompanionstate/Shadow$Companion;\n  #55 = Fieldref           #2.#54         // companionstate/Shadow.Companion:Lcompanionstate/Shadow$Companion;\n  #56 = Utf8               <clinit>\n  #57 = Utf8               InnerClasses\n  #58 = Utf8               SourceFile\n  #59 = Utf8               State.kt\n  #60 = Utf8               Lkotlin/Metadata;\n  #61 = Utf8               mv\n  #62 = Integer            2\n  #63 = Integer            3\n  #64 = Integer            0\n  #65 = Utf8               k\n  #66 = Integer            1\n  #67 = Utf8               xi\n  #68 = Integer            48\n  #69 = Utf8               d1\n  #70 = Utf8               \\u0000\\b\\n\\u0002\\b\\u000f\\n\\u0002\\b\\u0001\\b\\u0006\\u0018\\u00002\\u00020\\u0001 \\u00028\\u0002B\\t\\b\\u0006\u00a2\\u0006\\u0004\\b\\u0003\\u0010\\u0004J\\u0017H\\u0006\\u0010\\u0005\\u001a\\u00020\\u00062\\u0006\\u0010\\u0007\\u001a\\u00020\\u0006\u00a2\\u0006\\u0004\\b\\u0005\\u0010\\bR\\u001eX\\u0086\\u000e\\u0010\\t\\u001a\\u00020\\u0006\u00a2\\u0006\\u0012\\n\\u0004\\b\\t\\u0010\\n\\u001a\\u0004\\b\\u000b\\u0010\\f\\\"\\u0004\\b\\r\\u0010\\u000e\u00a8\\u0006\\u000f\n  #71 = Utf8               d2\n  #72 = Utf8               kotlin/Any\n  #73 = Utf8               kotlin/String\n  #74 = Utf8               companion_properties\n  #75 = Utf8               RuntimeVisibleAnnotations\n{\n  public static final companionstate.Shadow$Companion Companion;\n    descriptor: Lcompanionstate/Shadow$Companion;\n    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL\n    RuntimeInvisibleAnnotations:\n      0: #8()\n        org.jetbrains.annotations.NotNull\n\n  public companionstate.Shadow();\n    descriptor: ()V\n    flags: (0x0001) ACC_PUBLIC\n    Code:\n      stack=6, locals=1, args_size=1\n         0: aload_0\n         1: invokespecial #12                 // Method java/lang/Object.\"<init>\":()V\n         4: aload         0\n         6: ldc_w         #14                 // String instance\n         9: putfield      #16                 // Field count:Ljava/lang/String;\n        12: return\n        13: nop\n        14: athrow\n      StackMapTable: number_of_entries = 7\n        frame_type = 255 /* full_frame */\n          offset_delta = 1\n          locals = [ this ]\n          stack = [ this ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Shadow ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 1\n          locals = [ class companionstate/Shadow ]\n          stack = [ class companionstate/Shadow ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Shadow ]\n          stack = [ class companionstate/Shadow, class java/lang/String ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Shadow ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Shadow ]\n          stack = [ class java/lang/Throwable ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Shadow ]\n          stack = [ class java/lang/Throwable ]\n\n  public final java.lang.String change(java.lang.String);\n    descriptor: (Ljava/lang/String;)Ljava/lang/String;\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=6, locals=2, args_size=2\n         0: aload         1\n         2: ldc_w         #24                 // String next\n         5: invokestatic  #30                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n         8: aload         0\n        10: aload         1\n        12: putfield      #16                 // Field count:Ljava/lang/String;\n        15: aload         0\n        17: getfield      #16                 // Field count:Ljava/lang/String;\n        20: areturn\n        21: nop\n        22: athrow\n      StackMapTable: number_of_entries = 10\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Shadow, class java/lang/String ]\n          stack = [ class java/lang/String ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Shadow, class java/lang/String ]\n          stack = [ class java/lang/String, class java/lang/String ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Shadow, class java/lang/String ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 1\n          locals = [ class companionstate/Shadow, class java/lang/String ]\n          stack = [ class companionstate/Shadow ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 1\n          locals = [ class companionstate/Shadow, class java/lang/String ]\n          stack = [ class companionstate/Shadow, class java/lang/String ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Shadow, class java/lang/String ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 1\n          locals = [ class companionstate/Shadow, class java/lang/String ]\n          stack = [ class companionstate/Shadow ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Shadow, class java/lang/String ]\n          stack = [ class java/lang/String ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Shadow, class java/lang/String ]\n          stack = [ class java/lang/Throwable ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Shadow, class java/lang/String ]\n          stack = [ class java/lang/Throwable ]\n    RuntimeInvisibleAnnotations:\n      0: #8()\n        org.jetbrains.annotations.NotNull\n    RuntimeInvisibleParameterAnnotations:\n      parameter 0:\n        0: #8()\n          org.jetbrains.annotations.NotNull\n\n  public final java.lang.String getCount();\n    descriptor: ()Ljava/lang/String;\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=6, locals=1, args_size=1\n         0: aload         0\n         2: getfield      #16                 // Field count:Ljava/lang/String;\n         5: areturn\n         6: nop\n         7: athrow\n      StackMapTable: number_of_entries = 4\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Shadow ]\n          stack = [ class companionstate/Shadow ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Shadow ]\n          stack = [ class java/lang/String ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Shadow ]\n          stack = [ class java/lang/Throwable ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Shadow ]\n          stack = [ class java/lang/Throwable ]\n    RuntimeInvisibleAnnotations:\n      0: #8()\n        org.jetbrains.annotations.NotNull\n\n  public final void setCount(java.lang.String);\n    descriptor: (Ljava/lang/String;)V\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=6, locals=2, args_size=2\n         0: aload         1\n         2: ldc_w         #37                 // String <set-?>\n         5: invokestatic  #30                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V\n         8: aload         0\n        10: aload         1\n        12: putfield      #16                 // Field count:Ljava/lang/String;\n        15: return\n        16: nop\n        17: athrow\n      StackMapTable: number_of_entries = 8\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Shadow, class java/lang/String ]\n          stack = [ class java/lang/String ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Shadow, class java/lang/String ]\n          stack = [ class java/lang/String, class java/lang/String ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Shadow, class java/lang/String ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 1\n          locals = [ class companionstate/Shadow, class java/lang/String ]\n          stack = [ class companionstate/Shadow ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 1\n          locals = [ class companionstate/Shadow, class java/lang/String ]\n          stack = [ class companionstate/Shadow, class java/lang/String ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Shadow, class java/lang/String ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Shadow, class java/lang/String ]\n          stack = [ class java/lang/Throwable ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Shadow, class java/lang/String ]\n          stack = [ class java/lang/Throwable ]\n    RuntimeInvisibleParameterAnnotations:\n      parameter 0:\n        0: #8()\n          org.jetbrains.annotations.NotNull\n\n  public static final int access$getCount$cp();\n    descriptor: ()I\n    flags: (0x1019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC\n    Code:\n      stack=1, locals=0, args_size=0\n         0: getstatic     #44                 // Field count:I\n         3: ireturn\n\n  public static final void access$setCount$cp(int);\n    descriptor: (I)V\n    flags: (0x1019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL, ACC_SYNTHETIC\n    Code:\n      stack=1, locals=1, args_size=1\n         0: iload         0\n         2: putstatic     #44                 // Field count:I\n         5: return\n}\nInnerClasses:\n  public static final #40= #50 of #2;     // Companion=class companionstate/Shadow$Companion of class companionstate/Shadow\nSourceFile: \"State.kt\"\nRuntimeVisibleAnnotations:\n  0: #60(#61=[I#62,I#63,I#64],#65=I#66,#67=I#68,#69=[s#70],#71=[s#1,s#72,s#40,s#9,s#10,s#31,s#73,s#23,s#32,s#5,s#6,s#34,s#35,s#38,s#39,s#74])\n    kotlin.Metadata(\n      mv=[2,3,0]\n      k=1\n      xi=48\n      d1=[\"\\u0000\\b\\n\\u0002\\b\\u000f\\n\\u0002\\b\\u0001\\b\\u0006\\u0018\\u00002\\u00020\\u0001 \\u00028\\u0002B\\t\\b\\u0006\u00a2\\u0006\\u0004\\b\\u0003\\u0010\\u0004J\\u0017H\\u0006\\u0010\\u0005\\u001a\\u00020\\u00062\\u0006\\u0010\\u0007\\u001a\\u00020\\u0006\u00a2\\u0006\\u0004\\b\\u0005\\u0010\\bR\\u001eX\\u0086\\u000e\\u0010\\t\\u001a\\u00020\\u0006\u00a2\\u0006\\u0012\\n\\u0004\\b\\t\\u0010\\n\\u001a\\u0004\\b\\u000b\\u0010\\f\\\"\\u0004\\b\\r\\u0010\\u000e\u00a8\\u0006\\u000f\"]\n      d2=[\"companionstate/Shadow\",\"kotlin/Any\",\"Companion\",\"<init>\",\"()V\",\"change\",\"kotlin/String\",\"next\",\"(Ljava/lang/String;)Ljava/lang/String;\",\"count\",\"Ljava/lang/String;\",\"getCount\",\"()Ljava/lang/String;\",\"setCount\",\"(Ljava/lang/String;)V\",\"companion_properties\"]\n    )\nClassfile /workspace/work/targets159/companion-properties-freeze3/target/checks/2026-11-26T050415104882Z-companion-properties/candidate/companionstate/Shadow$Companion.class\n  Last modified Nov 26, 2026; size 996 bytes\n  SHA-256 checksum c02220a228f79e348b6887006a0ee79f04ad23455d117e0ad3225caff2741743\n  Compiled from \"State.kt\"\npublic final class companionstate.Shadow$Companion\n  minor version: 0\n  major version: 52\n  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER\n  this_class: #2                          // companionstate/Shadow$Companion\n  super_class: #4                         // java/lang/Object\n  interfaces: 0, fields: 0, methods: 4, attributes: 3\nConstant pool:\n   #1 = Utf8               companionstate/Shadow$Companion\n   #2 = Class              #1             // companionstate/Shadow$Companion\n   #3 = Utf8               java/lang/Object\n   #4 = Class              #3             // java/lang/Object\n   #5 = Utf8               <init>\n   #6 = Utf8               ()V\n   #7 = NameAndType        #5:#6          // \"<init>\":()V\n   #8 = Methodref          #4.#7          // java/lang/Object.\"<init>\":()V\n   #9 = Utf8               Code\n  #10 = Utf8               companionstate/Shadow\n  #11 = Class              #10            // companionstate/Shadow\n  #12 = Utf8               access$getCount$cp\n  #13 = Utf8               ()I\n  #14 = NameAndType        #12:#13        // access$getCount$cp:()I\n  #15 = Methodref          #11.#14        // companionstate/Shadow.access$getCount$cp:()I\n  #16 = Utf8               getCount\n  #17 = Utf8               java/lang/Throwable\n  #18 = Class              #17            // java/lang/Throwable\n  #19 = Utf8               StackMapTable\n  #20 = Utf8               access$setCount$cp\n  #21 = Utf8               (I)V\n  #22 = NameAndType        #20:#21        // access$setCount$cp:(I)V\n  #23 = Methodref          #11.#22        // companionstate/Shadow.access$setCount$cp:(I)V\n  #24 = Utf8               setCount\n  #25 = Methodref          #2.#7          // companionstate/Shadow$Companion.\"<init>\":()V\n  #26 = Utf8               (Lkotlin/jvm/internal/DefaultConstructorMarker;)V\n  #27 = Utf8               InnerClasses\n  #28 = Utf8               Companion\n  #29 = Utf8               SourceFile\n  #30 = Utf8               State.kt\n  #31 = Utf8               Lkotlin/Metadata;\n  #32 = Utf8               mv\n  #33 = Integer            2\n  #34 = Integer            3\n  #35 = Integer            0\n  #36 = Utf8               k\n  #37 = Integer            1\n  #38 = Utf8               xi\n  #39 = Integer            48\n  #40 = Utf8               d1\n  #41 = Utf8               \\u0000\\b\\n\\u0002\\b\\u000b\\n\\u0002\\b\\u0001\\b\\u0086\\u0003\\u0018\\u00002\\u00020\\u0001B\\t\\b\\u0002\u00a2\\u0006\\u0004\\b\\u0002\\u0010\\u0003R\\u001eX\\u0086\\u000e\\u0010\\u0004\\u001a\\u00020\\u0005\u00a2\\u0006\\u0012\\n\\u0004\\b\\u0004\\u0010\\u0006\\u001a\\u0004\\b\\u0007\\u0010\\b\\\"\\u0004\\b\\t\\u0010\\n\u00a8\\u0006\\u000b\n  #42 = Utf8               d2\n  #43 = Utf8               companionstate/Shadow.Companion\n  #44 = Utf8               kotlin/Any\n  #45 = Utf8               count\n  #46 = Utf8               kotlin/Int\n  #47 = Utf8               I\n  #48 = Utf8               companion_properties\n  #49 = Utf8               RuntimeVisibleAnnotations\n{\n  public final int getCount();\n    descriptor: ()I\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=2, locals=1, args_size=1\n         0: invokestatic  #15                 // Method companionstate/Shadow.access$getCount$cp:()I\n         3: ireturn\n         4: nop\n         5: athrow\n      StackMapTable: number_of_entries = 3\n        frame_type = 255 /* full_frame */\n          offset_delta = 3\n          locals = [ class companionstate/Shadow$Companion ]\n          stack = [ int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Shadow$Companion ]\n          stack = [ class java/lang/Throwable ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Shadow$Companion ]\n          stack = [ class java/lang/Throwable ]\n\n  public final void setCount(int);\n    descriptor: (I)V\n    flags: (0x0011) ACC_PUBLIC, ACC_FINAL\n    Code:\n      stack=3, locals=2, args_size=2\n         0: iload         1\n         2: invokestatic  #23                 // Method companionstate/Shadow.access$setCount$cp:(I)V\n         5: return\n         6: nop\n         7: athrow\n      StackMapTable: number_of_entries = 4\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Shadow$Companion, int ]\n          stack = [ int ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 2\n          locals = [ class companionstate/Shadow$Companion, int ]\n          stack = []\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Shadow$Companion, int ]\n          stack = [ class java/lang/Throwable ]\n        frame_type = 255 /* full_frame */\n          offset_delta = 0\n          locals = [ class companionstate/Shadow$Companion, int ]\n          stack = [ class java/lang/Throwable ]\n\n  public companionstate.Shadow$Companion(kotlin.jvm.internal.DefaultConstructorMarker);\n    descriptor: (Lkotlin/jvm/internal/DefaultConstructorMarker;)V\n    flags: (0x1001) ACC_PUBLIC, ACC_SYNTHETIC\n    Code:\n      stack=1, locals=2, args_size=2\n         0: aload_0\n         1: invokespecial #25                 // Method \"<init>\":()V\n         4: return\n}\nInnerClasses:\n  public static final #28= #2 of #11;     // Companion=class companionstate/Shadow$Companion of class companionstate/Shadow\nSourceFile: \"State.kt\"\nRuntimeVisibleAnnotations:\n  0: #31(#32=[I#33,I#34,I#35],#36=I#37,#38=I#39,#40=[s#41],#42=[s#43,s#44,s#5,s#6,s#45,s#46,s#47,s#16,s#13,s#24,s#21,s#48])\n    kotlin.Metadata(\n      mv=[2,3,0]\n      k=1\n      xi=48\n      d1=[\"\\u0000\\b\\n\\u0002\\b\\u000b\\n\\u0002\\b\\u0001\\b\\u0086\\u0003\\u0018\\u00002\\u00020\\u0001B\\t\\b\\u0002\u00a2\\u0006\\u0004\\b\\u0002\\u0010\\u0003R\\u001eX\\u0086\\u000e\\u0010\\u0004\\u001a\\u00020\\u0005\u00a2\\u0006\\u0012\\n\\u0004\\b\\u0004\\u0010\\u0006\\u001a\\u0004\\b\\u0007\\u0010\\b\\\"\\u0004\\b\\t\\u0010\\n\u00a8\\u0006\\u000b\"]\n      d2=[\"companionstate/Shadow.Companion\",\"kotlin/Any\",\"<init>\",\"()V\",\"count\",\"kotlin/Int\",\"I\",\"getCount\",\"()I\",\"setCount\",\"(I)V\",\"companion_properties\"]\n    )\n",
+  "declared_api": {
+    "official": {
+      "public final class companionstate.Store": [
+        [
+          "public companionstate.Store(int);",
+          "descriptor: (I)V"
+        ],
+        [
+          "public final int assign(int);",
+          "descriptor: (I)I"
+        ],
+        [
+          "public final int local(int);",
+          "descriptor: (I)I"
+        ],
+        [
+          "public final int read();",
+          "descriptor: ()I"
+        ],
+        [
+          "public final kotlin.jvm.functions.Function0<java.lang.Integer> delayed(int);",
+          "descriptor: (I)Lkotlin/jvm/functions/Function0;"
+        ],
+        [
+          "public static final companionstate.Store$Companion Companion;",
+          "descriptor: Lcompanionstate/Store$Companion;"
+        ],
+        [
+          "public static java.lang.String raw;",
+          "descriptor: Ljava/lang/String;"
+        ]
+      ],
+      "public final class companionstate.Store$Companion": [
+        [
+          "public final int getCustom();",
+          "descriptor: ()I"
+        ],
+        [
+          "public final int getFixed();",
+          "descriptor: ()I"
+        ],
+        [
+          "public final void setCustom(int);",
+          "descriptor: (I)V"
+        ]
+      ],
+      "public final class companionstate.Shadow": [
+        [
+          "public companionstate.Shadow();",
+          "descriptor: ()V"
+        ],
+        [
+          "public final java.lang.String change(java.lang.String);",
+          "descriptor: (Ljava/lang/String;)Ljava/lang/String;"
+        ],
+        [
+          "public final java.lang.String getCount();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "public final void setCount(java.lang.String);",
+          "descriptor: (Ljava/lang/String;)V"
+        ],
+        [
+          "public static final companionstate.Shadow$Companion Companion;",
+          "descriptor: Lcompanionstate/Shadow$Companion;"
+        ]
+      ],
+      "public final class companionstate.Shadow$Companion": [
+        [
+          "public final int getCount();",
+          "descriptor: ()I"
+        ],
+        [
+          "public final void setCount(int);",
+          "descriptor: (I)V"
+        ]
+      ]
+    },
+    "candidate": {
+      "public final class companionstate.Store": [
+        [
+          "public companionstate.Store(int);",
+          "descriptor: (I)V"
+        ],
+        [
+          "public final int assign(int);",
+          "descriptor: (I)I"
+        ],
+        [
+          "public final int local(int);",
+          "descriptor: (I)I"
+        ],
+        [
+          "public final int read();",
+          "descriptor: ()I"
+        ],
+        [
+          "public final kotlin.jvm.functions.Function0<java.lang.Integer> delayed(int);",
+          "descriptor: (I)Lkotlin/jvm/functions/Function0;"
+        ],
+        [
+          "public static final companionstate.Store$Companion Companion;",
+          "descriptor: Lcompanionstate/Store$Companion;"
+        ],
+        [
+          "public static java.lang.String raw;",
+          "descriptor: Ljava/lang/String;"
+        ]
+      ],
+      "public final class companionstate.Store$Companion": [
+        [
+          "public final int getCustom();",
+          "descriptor: ()I"
+        ],
+        [
+          "public final int getFixed();",
+          "descriptor: ()I"
+        ],
+        [
+          "public final void setCustom(int);",
+          "descriptor: (I)V"
+        ]
+      ],
+      "public final class companionstate.Shadow": [
+        [
+          "public companionstate.Shadow();",
+          "descriptor: ()V"
+        ],
+        [
+          "public final java.lang.String change(java.lang.String);",
+          "descriptor: (Ljava/lang/String;)Ljava/lang/String;"
+        ],
+        [
+          "public final java.lang.String getCount();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "public final void setCount(java.lang.String);",
+          "descriptor: (Ljava/lang/String;)V"
+        ],
+        [
+          "public static final companionstate.Shadow$Companion Companion;",
+          "descriptor: Lcompanionstate/Shadow$Companion;"
+        ]
+      ],
+      "public final class companionstate.Shadow$Companion": [
+        [
+          "public final int getCount();",
+          "descriptor: ()I"
+        ],
+        [
+          "public final void setCount(int);",
+          "descriptor: (I)V"
+        ]
+      ]
+    }
+  },
+  "synthetic_members": {
+    "official": {
+      "public final class companionstate.Store": [
+        [
+          "public static final int access$getCustom$cp();",
+          "descriptor: ()I"
+        ],
+        [
+          "public static final int access$getFixed$cp();",
+          "descriptor: ()I"
+        ],
+        [
+          "public static final void access$setCustom$cp(int);",
+          "descriptor: (I)V"
+        ]
+      ],
+      "public final class companionstate.Store$Companion": [
+        [
+          "public companionstate.Store$Companion(kotlin.jvm.internal.DefaultConstructorMarker);",
+          "descriptor: (Lkotlin/jvm/internal/DefaultConstructorMarker;)V"
+        ]
+      ],
+      "public final class companionstate.Shadow": [
+        [
+          "public static final int access$getCount$cp();",
+          "descriptor: ()I"
+        ],
+        [
+          "public static final void access$setCount$cp(int);",
+          "descriptor: (I)V"
+        ]
+      ],
+      "public final class companionstate.Shadow$Companion": [
+        [
+          "public companionstate.Shadow$Companion(kotlin.jvm.internal.DefaultConstructorMarker);",
+          "descriptor: (Lkotlin/jvm/internal/DefaultConstructorMarker;)V"
+        ]
+      ]
+    },
+    "candidate": {
+      "public final class companionstate.Store": [
+        [
+          "public static final int access$getCustom$cp();",
+          "descriptor: ()I"
+        ],
+        [
+          "public static final int access$getFixed$cp();",
+          "descriptor: ()I"
+        ],
+        [
+          "public static final int access$getHidden$cp();",
+          "descriptor: ()I"
+        ],
+        [
+          "public static final void access$setCustom$cp(int);",
+          "descriptor: (I)V"
+        ],
+        [
+          "public static final void access$setHidden$cp(int);",
+          "descriptor: (I)V"
+        ]
+      ],
+      "public final class companionstate.Store$Companion": [
+        [
+          "public companionstate.Store$Companion(kotlin.jvm.internal.DefaultConstructorMarker);",
+          "descriptor: (Lkotlin/jvm/internal/DefaultConstructorMarker;)V"
+        ]
+      ],
+      "public final class companionstate.Shadow": [
+        [
+          "public static final int access$getCount$cp();",
+          "descriptor: ()I"
+        ],
+        [
+          "public static final void access$setCount$cp(int);",
+          "descriptor: (I)V"
+        ]
+      ],
+      "public final class companionstate.Shadow$Companion": [
+        [
+          "public companionstate.Shadow$Companion(kotlin.jvm.internal.DefaultConstructorMarker);",
+          "descriptor: (Lkotlin/jvm/internal/DefaultConstructorMarker;)V"
+        ]
+      ]
+    }
+  },
+  "jvm_contract_interpretation": "Declared public/protected API is compared. ACC_SYNTHETIC members are recorded separately: class-based lambdas may require extra private-field access bridges compared with invokedynamic lambdas. Fixed Java and Kotlin consumers check the external contracts.",
+  "counts": {
+    "pass": 13,
+    "invalid_rejected": 2,
+    "unsupported_language": 3
+  },
+  "limitations": [
+    "Private custom companion accessors needing lexical bridges, private companion singleton captures and equal-name/equal-descriptor backing field collisions are explicitly unsupported. Ordinary public custom setters, private default accessors and different-descriptor instance shadowing are covered. No complete application or performance claim."
+  ],
+  "input_integrity": {
+    "status": "unchanged"
+  },
+  "evidence": [
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/000-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/000-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/001-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/001-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/002-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/002-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/003-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/003-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/004-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/004-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/005-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/005-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/006-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/006-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/007-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/007-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/008-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/008-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/009-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/009-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/010-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/010-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/011-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/011-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/012-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/012-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/013-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/013-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/014-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/014-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/015-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/015-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/016-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/016-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/017-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/017-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/018-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/018-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/019-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/019-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/020-stderr.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/020-stdout.txt",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/application-070.json",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/application-352.json",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/companion-interface-full-lib.log",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/companion-interface-full-lib32.log",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/companion-interface-targeted.log",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/companion-properties-frozen3-clippy.log",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/companion-properties-frozen3-fmt.log",
+    "reports/correctness/2026-11-26T050415104882Z-companion-properties/companion-properties-frozen3-test.log"
+  ],
+  "supplementary_checks": {
+    "rust_test": {
+      "status": "pass",
+      "evidence": "reports/correctness/2026-11-26T050415104882Z-companion-properties/companion-properties-frozen3-test.log"
+    },
+    "format": {
+      "status": "pass",
+      "evidence": "reports/correctness/2026-11-26T050415104882Z-companion-properties/companion-properties-frozen3-fmt.log"
+    },
+    "clippy": {
+      "status": "pass",
+      "evidence": "reports/correctness/2026-11-26T050415104882Z-companion-properties/companion-properties-frozen3-clippy.log"
+    },
+    "targeted_interface_regression": {
+      "status": "pass",
+      "evidence": "reports/correctness/2026-11-26T050415104882Z-companion-properties/companion-interface-targeted.log",
+      "scope": "shared working tree after class/interface lookup fix",
+      "environment": {}
+    },
+    "full_library_tests": {
+      "status": "pass",
+      "evidence": "reports/correctness/2026-11-26T050415104882Z-companion-properties/companion-interface-full-lib32.log",
+      "scope": "shared working tree after class/interface lookup fix",
+      "environment": {
+        "RUST_MIN_STACK": "33554432"
+      }
+    }
+  },
+  "source_snapshot": "/workspace/work/targets159/companion-properties-freeze3",
+  "harness_revision": "e9b7aee28",
+  "reference_interpretation": {
+    "specification": {
+      "path": "references/kotlin-spec/docs/src/md/kotlin.core/declarations.md",
+      "sha256": "2ed0769a437144f01c290e6a11688a2b846bdb7babcbb16d1ee2c5d26fe2b404",
+      "property_rule": "Mutable property reads invoke the getter and writes invoke the setter; initializers assign backing fields directly.",
+      "scope_rule": "Companion declarations belong to static classifier body scope; lexical local and instance declarations retain their own bindings."
+    },
+    "pinned_jvm_evidence": "Fixed official Java caller and separately compiled pinned Kotlin consumers verify constructor and lambda writes, private default accessor bridges, public custom setter evaluation, JVM exposed mutable fields, and local/instance shadowing against both outputs."
+  },
+  "environment_observations": [
+    {
+      "scope": "Shared-tree debug library tests with the default Rust test-thread stack",
+      "outcome": "process_stack_overflow",
+      "evidence": "reports/correctness/2026-11-26T050415104882Z-companion-properties/companion-interface-full-lib.log",
+      "resolution": "The established root-wave RUST_MIN_STACK=33554432 setting is used for the complete successful295-test run; no existing test was changed."
+    }
+  ],
+  "testing_environment": {
+    "RUST_MIN_STACK": "33554432",
+    "CARGO_INCREMENTAL": "0",
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_TEST_DEBUG": "0"
+  },
+  "regression_resolution": "The class companion resolver initially inspected interface companions and intercepted existing private String-array bindings. The resolver now leaves interface owners on their established path. Existing interface unit tests and the complete library suite are preserved; the fixed Java caller also exercises the interface default method.",
+  "contract_resolution": "Public synthetic private-field bridges depend on lambda lowering strategy. Declared public/protected API is checked separately and must contain the four requested nonempty classes; all synthetic members and raw verbose javap flags remain recorded.",
+  "application_observations": [
+    {
+      "source": "Alkitab/src/main/java/yuku/alkitab/base/cp/Provider.kt",
+      "source_sha256": "407d9e748304afb37248e88d3acbaa07d332dd2063c3abcb2b9fd69623c0ea06",
+      "compiler_source_revision": "16e76d01f",
+      "compiler_binary_sha256": "31a45c0571b0a868e348af3e9b02b6f804c9d603c92e19edcc575c6511b493c7",
+      "outcome": "rejected_at_later_boundary",
+      "observed_attempt": {
+        "configuration": "resolved",
+        "exit_code": 1,
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/cp/Provider.kt\",\"offset\":2836,\"category\":\"invalid_kotlin\",\"code\":\"TYPE_MISMATCH\",\"message\":\"Type mismatch: expected Null, found Java(\\\"android/database/Cursor\\\")\",\"path\":\"/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base/cp/Provider.kt\",\"line\":69,\"column\":16}",
+        "outcome": "rejected"
+      },
+      "evidence": "reports/correctness/2026-11-26T050415104882Z-companion-properties/application-070.json"
+    },
+    {
+      "source": "Alkitab/src/test/java/yuku/alkitab/base/verses/VerseItemComposeDictionaryTest.kt",
+      "source_sha256": "28dc43902a04a5e944ee8228f0c159b1ea15abf77ddc001ae624c98d78d6b91c",
+      "compiler_source_revision": "16e76d01f",
+      "compiler_binary_sha256": "31a45c0571b0a868e348af3e9b02b6f804c9d603c92e19edcc575c6511b493c7",
+      "outcome": "rejected_at_later_boundary",
+      "observed_attempt": {
+        "configuration": "resolved",
+        "exit_code": 1,
+        "diagnostic": "{\"source_identity\":\"/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseItemComposeDictionaryTest.kt\",\"offset\":6231,\"category\":\"invalid_kotlin\",\"code\":\"NO_APPLICABLE_OVERLOAD\",\"message\":\"No applicable member overload\",\"path\":\"/workspace/korrust/benchmarks/sources/androidbible/Alkitab/src/test/java/yuku/alkitab/base/verses/VerseItemComposeDictionaryTest.kt\",\"line\":162,\"column\":13}",
+        "outcome": "rejected"
+      },
+      "evidence": "reports/correctness/2026-11-26T050415104882Z-companion-properties/application-352.json"
+    }
+  ],
+  "evidence_text_normalization": "Copied text logs omit trailing empty lines."
+}

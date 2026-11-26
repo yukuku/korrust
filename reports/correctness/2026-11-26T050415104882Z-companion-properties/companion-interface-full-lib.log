@@ -1,0 +1,37 @@
+    Finished `test` profile [unoptimized] target(s) in 0.09s
+     Running unittests src/lib.rs (/tmp/targets159-root/debug/deps/korrust-1be98ef3aaebec7f)
+
+running 295 tests
+test bytecode::annotation_files::tests::duplicate_utf8_attribute_name_still_merges_existing_metadata ... ok
+test bytecode::annotation_files::tests::malformed_pool_and_classfile_boundaries_reject_without_panics ... ok
+test bytecode::annotation_files::tests::missing_member_and_incorrect_descriptor_parameter_count_reject ... ok
+test bytecode::annotation_files::tests::rewrite_preserves_old_pool_metadata_unknown_attributes_and_member_placement ... ok
+test bytecode::annotations::tests::malformed_and_misaligned_existing_attributes_leave_member_unchanged ... ok
+test bytecode::annotations::tests::member_merge_coalesces_both_retentions_and_preserves_other_attributes ... ok
+test bytecode::annotation_files::tests::original_constant_tags_and_two_slot_positions_survive ... ok
+test bytecode::annotations::tests::nullable_result_merges_method_annotations_and_preserves_parameter_attributes ... ok
+test bytecode::annotations::tests::nested_array_enum_class_and_primitive_existing_values_are_preserved ... ok
+test bytecode::annotations::tests::parameter_merge_keeps_indices_and_nullability_for_unannotated_parameters ... ok
+test bytecode::annotations::tests::parameter_merge_preserves_nested_annotations_and_array_values ... ok
+test bytecode::annotations::tests::scalar_elements_have_jvm_tags_and_utf8_string_constants ... ok
+test bytecode::lambdas::tests::generated_bridges_execute_with_jvm_verification ... ok
+test bytecode::suspend::tests::forbidden_carriers_reject_parameters_callbacks_and_saved_locals ... ok
+test check::annotations::tests::compiler_annotation_guards_use_canonical_identity ... ok
+test check::annotations::tests::compiler_semantics_are_rejected_before_loading_annotation_definitions ... ok
+test bytecode::representation_tests::default_bridge_uses_descriptor_when_metadata_has_primitive_types ... ok
+test check::annotations::tests::jvm_method_markers_preserve_distinct_retention ... ok
+test check::classes::tests::generic_extension_property_metadata_preserves_declaration_scope ... ok
+test check::classes::tests::parameter_bound_inspection_preserves_nullability_and_limits_resource_use ... ok
+test check::control::java_lang_tests::imported_java_lang_noarg_constructors_resolve ... ok
+test check::control::tests::array_constructor_and_receiver_lambda_keep_semantic_element_types ... ok
+test check::control::tests::array_initializer_expressions_require_stable_function_values ... ok
+test check::classes::tests::class_literal_reference_is_a_supported_template_value ... ok
+test check::control::tests::explicitly_labeled_returns_are_local_to_the_lambda ... ok
+test check::control::tests::local_function_self_cells_keep_declaration_immutability ... ok
+
+thread 'check::control::tests::local_functions_capture_mutable_cells_and_recursive_self' has overflowed its stack
+fatal runtime error: stack overflow, aborting
+error: test failed, to rerun pass `--lib`
+
+Caused by:
+  process didn't exit successfully: `/tmp/targets159-root/debug/deps/korrust-1be98ef3aaebec7f` (signal: 6, SIGABRT: process abort signal)
