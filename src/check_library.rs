@@ -1827,27 +1827,27 @@ impl Checker<'_> {
             return Ok(None);
         }
         let root = &names[0];
-        if self.local(root).is_some()
-            || self.captured.contains_key(root)
-            || self.constants.contains_key(root)
-            || self.fields.contains_key(root)
-            || self.object_fields.contains_key(root)
-            || self.companion_fields.contains_key(root)
-            || self
-                .members
-                .values()
-                .any(|method| method.source_property.as_ref() == Some(root))
-        {
+        if self.value_name_is_bound(root) {
             return Ok(None);
         }
+        let root_class =
+            match self
+                .classpath
+                .value_symbol(&self.lambda_owner, root, expression.offset)?
+            {
+                Some(crate::classpath::ValueSymbol::Classifier(class)) => Some(class.name),
+                Some(_) => return Ok(None),
+                None => None,
+            };
         let qualified = names.join("/");
         let owner = self
             .imports
             .get(&qualified)
             .cloned()
             .or_else(|| {
-                self.imports
-                    .get(&names[0])
+                root_class
+                    .as_ref()
+                    .or_else(|| self.imports.get(root))
                     .map(|root| format!("{root}${}", names[1..].join("$")))
             })
             .unwrap_or(qualified);
@@ -2169,7 +2169,22 @@ impl Checker<'_> {
 
     pub(super) fn value_classifier(&self, expression: &Expr) -> Result<Option<JavaClass>> {
         let ExprKind::Name(name) = &expression.kind else {
-            return Ok(None);
+            if let ExprKind::Property(receiver, name) = &expression.kind
+                && let Some(parent) = self.value_classifier(receiver)?
+                && parent
+                    .library
+                    .as_ref()
+                    .and_then(|library| library.companion_name.as_ref())
+                    == Some(name)
+            {
+                return Ok(None);
+            }
+            if let Some((class, _)) =
+                self.qualified_java_classifier(expression, expression.offset)?
+            {
+                return Ok(Some(class));
+            }
+            return self.qualified_classifier(expression);
         };
         if self.value_name_is_bound(name) {
             return Ok(None);

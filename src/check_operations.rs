@@ -604,6 +604,9 @@ impl Checker<'_> {
         let kind = match &target.kind {
             ExprKind::Name(_) => return Ok(target.clone()),
             ExprKind::Property(receiver, name) => {
+                if self.value_classifier(receiver)?.is_some() {
+                    return Ok(target.clone());
+                }
                 let receiver = self.value(receiver)?;
                 if receiver.ty.is_nullable() {
                     return Err(Diagnostic::new(

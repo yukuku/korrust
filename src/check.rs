@@ -3031,34 +3031,8 @@ impl Checker<'_> {
                 value,
             });
         }
-        let (owner, receiver) = if let ExprKind::Name(alias) = &receiver.kind {
-            if self.local(alias).is_none()
-                && !self.fields.contains_key(alias)
-                && !self.object_fields.contains_key(alias)
-                && !self.constants.contains_key(alias)
-            {
-                if let Some(class) = self.value_classifier(receiver)? {
-                    (class.name, None)
-                } else {
-                    let value = self.value(receiver)?;
-                    let Some(owner) = library::type_owner(&value.ty) else {
-                        return Err(Diagnostic::new(
-                            offset,
-                            "Java field requires a class receiver",
-                        ));
-                    };
-                    (owner.to_owned(), Some(value))
-                }
-            } else {
-                let value = self.value(receiver)?;
-                let Some(owner) = library::type_owner(&value.ty) else {
-                    return Err(Diagnostic::new(
-                        offset,
-                        "Java field requires a class receiver",
-                    ));
-                };
-                (owner.to_owned(), Some(value))
-            }
+        let (owner, receiver) = if let Some(class) = self.value_classifier(receiver)? {
+            (class.name, None)
         } else {
             let value = self.value(receiver)?;
             let Some(owner) = library::type_owner(&value.ty) else {
@@ -5171,6 +5145,9 @@ impl Checker<'_> {
                     }
                 }
                 if let Some(class) = self.qualified_classifier(expr)? {
+                    if let Some(companion) = self.companion_receiver(&class.name, offset)? {
+                        return Ok(companion);
+                    }
                     if class.fields.iter().any(|f| {
                         f.name == "INSTANCE" && f.descriptor == format!("L{};", class.name)
                     }) {
@@ -5216,108 +5193,93 @@ impl Checker<'_> {
                     };
                     (Type::Int, ValueKind::Int(value))
                 } else {
-                    if let ExprKind::Name(alias) = &receiver.kind {
-                        if self.local(alias).is_none()
-                            && !self.fields.contains_key(alias)
-                            && !self.object_fields.contains_key(alias)
-                            && !self.constants.contains_key(alias)
+                    if let Some(class) = self.value_classifier(receiver)? {
+                        let owner = &class.name;
+                        if let Some(companion) = self.companion_receiver(owner, offset)? {
+                            if matches!(&companion.kind, ValueKind::StaticField { name: declared, .. } if declared == name)
+                            {
+                                return Ok(companion);
+                            }
+                        }
                         {
-                            if let Some(class) = self.value_classifier(receiver)? {
-                                let owner = &class.name;
-                                if let Some(companion) = self.companion_receiver(owner, offset)? {
-                                    if matches!(&companion.kind, ValueKind::StaticField { name: declared, .. } if declared == name)
-                                    {
-                                        return Ok(companion);
-                                    }
-                                }
+                            if class.fields.iter().any(|f| {
+                                f.name == "INSTANCE" && f.descriptor == format!("L{owner};")
+                            }) {
+                                if let Some(method) = class
+                                    .methods
+                                    .iter()
+                                    .find(|m| {
+                                        m.source_property.as_deref() == Some(name)
+                                            && m.library
+                                                .as_ref()
+                                                .is_none_or(|library| library.receiver.is_none())
+                                            && m.kotlin_params.as_ref().is_some_and(Vec::is_empty)
+                                    })
+                                    .cloned()
                                 {
-                                    if class.fields.iter().any(|f| {
-                                        f.name == "INSTANCE" && f.descriptor == format!("L{owner};")
-                                    }) {
-                                        if let Some(method) = class
-                                            .methods
-                                            .iter()
-                                            .find(|m| {
-                                                m.source_property.as_deref() == Some(name)
-                                                    && m.library.as_ref().is_none_or(|library| {
-                                                        library.receiver.is_none()
-                                                    })
-                                                    && m.kotlin_params
-                                                        .as_ref()
-                                                        .is_some_and(Vec::is_empty)
-                                            })
-                                            .cloned()
-                                        {
-                                            return self.member_call(
-                                                method,
-                                                Value {
-                                                    ty: Type::Java(owner.clone()),
-                                                    kind: ValueKind::ObjectInstance(owner.clone()),
-                                                },
-                                                &[],
-                                                offset,
-                                            );
-                                        }
-                                    }
-                                    if let Some(method) = class
-                                        .methods
-                                        .iter()
-                                        .find(|method| {
-                                            method.access & 8 != 0
-                                                && method.source_property.as_deref() == Some(name)
-                                                && method
-                                                    .kotlin_params
-                                                    .as_ref()
-                                                    .is_some_and(Vec::is_empty)
-                                        })
-                                        .cloned()
-                                    {
-                                        return self.library_static_call(method, &[], offset);
-                                    }
-                                    if let Some(field) = class.fields.iter().find(|f| {
-                                        class
-                                            .library
-                                            .as_ref()
-                                            .and_then(|library| library.companion_name.as_ref())
-                                            == Some(&f.name)
-                                    }) {
-                                        let companion = field
-                                            .descriptor
-                                            .trim_start_matches('L')
-                                            .trim_end_matches(';')
-                                            .to_owned();
-                                        let class = self.classpath.load(&companion)?;
-                                        if let Some(method) = class
-                                            .methods
-                                            .iter()
-                                            .find(|m| {
-                                                m.source_property.as_deref() == Some(name)
-                                                    && m.library.as_ref().is_none_or(|library| {
-                                                        library.receiver.is_none()
-                                                    })
-                                                    && m.kotlin_params
-                                                        .as_ref()
-                                                        .is_some_and(Vec::is_empty)
-                                            })
-                                            .cloned()
-                                        {
-                                            return self.member_call(
-                                                method,
-                                                Value {
-                                                    ty: Type::Java(companion),
-                                                    kind: ValueKind::StaticField {
-                                                        owner: owner.clone(),
-                                                        name: field.name.clone(),
-                                                    },
-                                                },
-                                                &[],
-                                                offset,
-                                            );
-                                        }
-                                    }
-                                    return self.java_field(owner, name, None, offset);
+                                    return self.member_call(
+                                        method,
+                                        Value {
+                                            ty: Type::Java(owner.clone()),
+                                            kind: ValueKind::ObjectInstance(owner.clone()),
+                                        },
+                                        &[],
+                                        offset,
+                                    );
                                 }
                             }
+                            if let Some(method) = class
+                                .methods
+                                .iter()
+                                .find(|method| {
+                                    method.access & 8 != 0
+                                        && method.source_property.as_deref() == Some(name)
+                                        && method.kotlin_params.as_ref().is_some_and(Vec::is_empty)
+                                })
+                                .cloned()
+                            {
+                                return self.library_static_call(method, &[], offset);
+                            }
+                            if let Some(field) = class.fields.iter().find(|f| {
+                                class
+                                    .library
+                                    .as_ref()
+                                    .and_then(|library| library.companion_name.as_ref())
+                                    == Some(&f.name)
+                            }) {
+                                let companion = field
+                                    .descriptor
+                                    .trim_start_matches('L')
+                                    .trim_end_matches(';')
+                                    .to_owned();
+                                let class = self.classpath.load(&companion)?;
+                                if let Some(method) = class
+                                    .methods
+                                    .iter()
+                                    .find(|m| {
+                                        m.source_property.as_deref() == Some(name)
+                                            && m.library
+                                                .as_ref()
+                                                .is_none_or(|library| library.receiver.is_none())
+                                            && m.kotlin_params.as_ref().is_some_and(Vec::is_empty)
+                                    })
+                                    .cloned()
+                                {
+                                    return self.member_call(
+                                        method,
+                                        Value {
+                                            ty: Type::Java(companion),
+                                            kind: ValueKind::StaticField {
+                                                owner: owner.clone(),
+                                                name: field.name.clone(),
+                                            },
+                                        },
+                                        &[],
+                                        offset,
+                                    );
+                                }
+                            }
+                            return self.java_field(owner, name, None, offset);
                         }
                     }
                     let receiver = self.value(receiver)?;
