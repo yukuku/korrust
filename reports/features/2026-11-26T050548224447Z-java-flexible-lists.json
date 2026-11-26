@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-26T05:05:48.224447+00:00",
+  "status": "complete",
+  "compiler": {
+    "implementation_revisions": [
+      "991a94ef9",
+      "95ff64752"
+    ],
+    "source_base_revision": "8ca97853f47b308dc632d663a8d25d8862a5d6ba",
+    "binary_sha256": "64633e11f8eed48de72b138f462a5eb994ca9952ba5f13690f755c1b5df27e6f",
+    "source_archive_sha256": "a1a678d22834912f721932a94e23e414ea81971339bca257dfe99504581dcbfe"
+  },
+  "reference_compiler": "Kotlin 2.3.21",
+  "reference_sources": {
+    "references/kotlin/core/descriptors.jvm/src/org/jetbrains/kotlin/load/java/lazy/types/JavaTypeResolver.kt": "54d6540725aa0555cdf00a562ca8a8753e052d7c9af6c21cd124a8a17f80f443",
+    "references/kotlin/core/descriptors.jvm/src/org/jetbrains/kotlin/load/java/typeEnhancement/typeEnhancement.kt": "7f22551874c18f496fe556dcff1109edd1792d9beaad0819cb28f0fa50c92508",
+    "references/kotlin/compiler/fir/checkers/checkers.jvm/src/org/jetbrains/kotlin/fir/analysis/jvm/checkers/expression/FirJavaGenericVarianceViolationTypeChecker.kt": "44149bb7143ed6ba278eba8fd1a3cbdc8d0b15a51e4bc00d47baf640cb0cccc5"
+  },
+  "counts": {
+    "pass": 92
+  },
+  "evidence": [
+    "reports/correctness/2026-11-26T045054871274Z-flexible-lists.json",
+    "reports/correctness/2026-11-26T045054861670Z-flexible-list-projections.json",
+    "reports/correctness/2026-11-26T045432062554Z-java-list-variance.json",
+    "reports/features/2026-11-26T050548224447Z-java-flexible-lists/Android-accessibility-probe.kt",
+    "reports/features/2026-11-26T050548224447Z-java-flexible-lists/VerseItem-case167.json",
+    "reports/features/2026-11-26T050548224447Z-java-flexible-lists/VerseItem-earlier-timeout.json",
+    "reports/features/2026-11-26T050548224447Z-java-flexible-lists/VerseItem-typed-earlier-timeout.json",
+    "reports/features/2026-11-26T050548224447Z-java-flexible-lists/build.log",
+    "reports/features/2026-11-26T050548224447Z-java-flexible-lists/clippy-all-targets.log",
+    "reports/features/2026-11-26T050548224447Z-java-flexible-lists/compiler-source-case167.tar.gz",
+    "reports/features/2026-11-26T050548224447Z-java-flexible-lists/compiler-source.tar.gz",
+    "reports/features/2026-11-26T050548224447Z-java-flexible-lists/earlier-lib-suite.log",
+    "reports/features/2026-11-26T050548224447Z-java-flexible-lists/format-check.log",
+    "reports/features/2026-11-26T050548224447Z-java-flexible-lists/pinned-variance-boundaries.kt",
+    "reports/features/2026-11-26T050548224447Z-java-flexible-lists/pinned-variance-boundaries.log",
+    "reports/features/2026-11-26T050548224447Z-java-flexible-lists/report-viewer-tests.log",
+    "reports/features/2026-11-26T050548224447Z-java-flexible-lists/rust-api-tests.log"
+  ],
+  "features": [
+    {
+      "name": "Java List mutability independent of nullability",
+      "status": "supported",
+      "scope": "Invariant Java List signatures retain a MutableList..List bound when non-null, nullable or platform. Canonical ReadOnly and Mutable qualifiers select concrete Kotlin views independently. Explicit Kotlin read-only views retain their write restrictions; JVM signatures and inferred flexible metadata round-trip through both compilers.",
+      "evidence": [
+        "reports/correctness/2026-11-26T045054871274Z-flexible-lists.json"
+      ]
+    },
+    {
+      "name": "Redundant read-only List projections",
+      "status": "supported",
+      "scope": "List<out T> normalizes for source checking, source member indexing and Kotlin metadata decoding without changing its read-only contract. Type aliases, Java parameter compatibility and generic JVM signatures are tested. Mutable projections retain existing bounded metadata support and write restrictions.",
+      "evidence": [
+        "reports/correctness/2026-11-26T045054861670Z-flexible-list-projections.json"
+      ]
+    },
+    {
+      "name": "Invocation-scoped Java generic variance safeguard",
+      "status": "supported",
+      "scope": "Flexible expected types use the read-only upper bound. After ordinary overload selection, direct Java methods and constructors reject mutable/flexible generic widening as the pinned compiler does. Java field and synthetic-property assignments retain the pinned accepted behavior. Same-element mutable out projections and exactly-once argument evaluation are tested.",
+      "evidence": [
+        "reports/correctness/2026-11-26T045432062554Z-java-list-variance.json"
+      ]
+    }
+  ],
+  "validation": {
+    "rust_api_tests": {
+      "passed": 3,
+      "log": "reports/features/2026-11-26T050548224447Z-java-flexible-lists/rust-api-tests.log"
+    },
+    "clippy": "all-targets with warnings denied passed",
+    "format": "frozen source passed",
+    "report_viewer_tests": 8,
+    "earlier_lib_suite": {
+      "passed": 292,
+      "failed": 2,
+      "note": "Both failures were stale preexisting expectations in the frozen source base: noncallable-property diagnostic wording and internal-classifier rejection. Branch fixes356da9292 and8555169a3 preserve genuine rejection/access tests. Default2MiB test-worker stack also overflowed in an existing recursive-local test, which passed in0.06s with32MiB; the recorded full run used RUST_MIN_STACK=33554432."
+    }
+  },
+  "androidbible": {
+    "case167_outcome": "rejected",
+    "source_sha256": "414e69a1b861da5b5af9df7873eca75ec60badcdc91a9c22ed57e9548502bb76",
+    "receipt": "reports/features/2026-11-26T050548224447Z-java-flexible-lists/VerseItem-case167.json",
+    "receipt_compiler_binary_sha256": "1fb2cab3948cba535b8a5480c942b4f73df04a3c8331ebfbc08e394b305adff5",
+    "receipt_source_archive_sha256": "4042de2f1e08a5126f98ae02a590015449aad772f5a66b79c001083edf87ffd1",
+    "remaining_boundary": "The unchanged source advances past event.text.add(contentDescription) at line266 and rejects valid multi-positional @SuppressLint arguments at line274. Its current diagnostic incorrectly labels this valid annotation form invalid_kotlin; annotation-array positional support is separate integration work."
+  },
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_flexible_lists.py",
+      "--candidate",
+      "/tmp/targets159-variance/debug/korrust",
+      "--reference-root",
+      "/workspace/korrust",
+      "--source-root",
+      "/workspace/work/flex159-variance-freeze"
+    ],
+    [
+      "python3",
+      "tools/check_flexible_list_projections.py",
+      "--candidate",
+      "/tmp/targets159-variance/debug/korrust",
+      "--reference-root",
+      "/workspace/korrust",
+      "--source-root",
+      "/workspace/work/flex159-variance-freeze"
+    ],
+    [
+      "python3",
+      "tools/check_java_list_variance.py",
+      "--candidate",
+      "/tmp/targets159-variance/debug/korrust",
+      "--reference-root",
+      "/workspace/korrust",
+      "--source-root",
+      "/workspace/work/flex159-variance-freeze"
+    ]
+  ],
+  "limitations": [
+    "Only invariant Java List classifiers gain flexible mutability; raw and projected Java signatures, other collection families and broader projected Kotlin metadata remain at existing bounded support.",
+    "The final source archive is the exact isolated compiler used by all92 final differential cases. Branch integration also preserves later companion visibility and reified-member argument code; combined branch verification is separate.",
+    "Historical intermediate reports are preserved, including one deliberately interrupted preliminary run and one Java fixture compile error corrected by comparing generic lists as Object. They are not counted in the92 final cases.",
+    "The unchanged Android source receipt uses the separately archived core snapshot; projection and invocation-variance followups are independently tested. No Android runtime or full-app claim."
+  ]
+}

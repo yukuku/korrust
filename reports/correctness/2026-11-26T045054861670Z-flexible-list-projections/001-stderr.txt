@@ -1,0 +1,15 @@
+tests/flexible_list_projections/Effects.kt:2:29: warning: projection is redundant: the corresponding type parameter of 'List<out String>' has the same variance.
+fun readonlyOut(value: List<out String>): Int = Lists.accept(value)
+                            ^^^
+tests/flexible_list_projections/Effects.kt:4:20: warning: projection is redundant: the corresponding type parameter of 'List<out String>' has the same variance.
+    val view: List<out String> = value
+                   ^^^
+tests/flexible_list_projections/Effects.kt:7:29: warning: projection is redundant: the corresponding type parameter of 'List<out String>' has the same variance.
+fun identityOut(value: List<out String>) = value
+                            ^^^
+tests/flexible_list_projections/Effects.kt:9:28: warning: projection is redundant: the corresponding type parameter of 'List<out String>' has the same variance.
+    fun accept(value: List<out String>): Int = Lists.accept(value)
+                           ^^^
+tests/flexible_list_projections/Effects.kt:11:24: warning: projection is redundant: the corresponding type parameter of 'List<out String>' has the same variance.
+typealias Names = List<out String>
+                       ^^^

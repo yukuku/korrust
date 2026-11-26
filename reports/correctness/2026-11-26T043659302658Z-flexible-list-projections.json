@@ -1,0 +1,754 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T04:36:59.302658+00:00",
+  "status": "passed",
+  "compiler": {
+    "binary": "/tmp/targets159-flex/debug/korrust",
+    "binary_sha256": "75a81eb79b2b9c866c38b8b9958e2eaa0f105d31cf0d569880fe129e912c98df",
+    "source_revision": "8ca97853f47b308dc632d663a8d25d8862a5d6ba"
+  },
+  "reference_compiler": {
+    "version": "2.3.21",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "compiler_jar_sha256": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "inputs": {
+    "files_sha256": {
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "references/kotlin/core/compiler.common.jvm/src/org/jetbrains/kotlin/load/java/JavaNullabilityAnnotationSettings.kt": "94061106794761ae07ff733efff1766fffa9682ab3337508a689f0f5cccd90b2",
+      "references/kotlin/core/descriptors.jvm/src/org/jetbrains/kotlin/load/java/lazy/types/JavaTypeResolver.kt": "54d6540725aa0555cdf00a562ca8a8753e052d7c9af6c21cd124a8a17f80f443",
+      "references/kotlin/core/descriptors.jvm/src/org/jetbrains/kotlin/load/java/typeEnhancement/typeEnhancement.kt": "7f22551874c18f496fe556dcff1109edd1792d9beaad0819cb28f0fa50c92508",
+      "tests/flexible_list_projections/Calls.java": "16754a9aea4393df794ab4cf966c96e013bb07b47d958b477130b9bea86c4d23",
+      "tests/flexible_list_projections/ConsumeCalls.java": "961b8a9ca6579141eb8bcba75f2a2e833253f14eef553ec442f460cdca1fc416",
+      "tests/flexible_list_projections/Consumer.kt": "4d5f6fc1d32c866bc9cc4169ea51f43551bafc3dd3ff72f722d14a2e1c4a2da4",
+      "tests/flexible_list_projections/ConsumerRejections.json": "e300761fb7fb32439b251c6085dc6a274b484d3677ed3d0cfc4c762b5adcd4d3",
+      "tests/flexible_list_projections/Effects.kt": "346e33d2e910ef03d69ff82cad645f238d0e7231ff93af3073386f94d2a338fa",
+      "tests/flexible_list_projections/Rejections.json": "efef1c8ca7a3bfc51d65421290fcaa92dc3a3776fe0f87c70685ff541c598a04",
+      "tests/flexible_list_projections/java/Lists.java": "850af40315e3d72c4ec016b0be179b9f0a07a834b364af0269539dfc823e91a0",
+      "tests/flexible_list_projections/java/android/annotation/NonNull.java": "205326f75a458178a296df388e2e99f89eb83c991d18cc3e5aea4bc63b7ff3bc",
+      "tests/flexible_list_projections/java/android/annotation/Nullable.java": "b042b6031632a92e4f3df8cd7c3a1fb3babc564a8c22097a850b4ed5b5450592",
+      "tests/flexible_list_projections/java/org/jetbrains/annotations/Mutable.java": "f7224c53ad356607360220d585e6aeb2d617e9a5470e6a62c6487e8dedc256bf",
+      "tests/flexible_list_projections/java/org/jetbrains/annotations/ReadOnly.java": "173dde3911676ab839df8ec9e7a2517da0ef94608c84a7cd5111ff7cefabbc51",
+      "tests/flexible_list_projections.rs": "05bf3f50a008fbf57fbccae210b5210ea23ac3a4a08d41c9d1e51a9ee9f6480d",
+      "tools/check_flexible_list_projections.py": "5a2462b2852758671cd21a65a4f3f2d0ee53d52a0a742c13ba0f4b8e925d5029",
+      "tools/check_nov21_generics.py": "70fed499f3652d9181c2aabc3baf4e9a7327c436eec67c83d6fe4e4f539e4f86",
+      "/workspace/work/flex159-projections-freeze/Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "/workspace/work/flex159-projections-freeze/Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "/workspace/work/flex159-projections-freeze/src/annotation_declarations.rs": "68824921ba8a6cac0425cfd3c574eb87bc78c478575ade5f0fc5d7d31bb8fecc",
+      "/workspace/work/flex159-projections-freeze/src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "/workspace/work/flex159-projections-freeze/src/bytecode/annotation_files.rs": "0fe8ebba7bbd2c80fcdd6fda797b448ca8cd63945b100781361bf1e3ace02eaa",
+      "/workspace/work/flex159-projections-freeze/src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "/workspace/work/flex159-projections-freeze/src/bytecode/anonymous_context.rs": "38286f62b08a6d1e48d41a515bf00a192bb0761d2c30d7b14b7f517b4dad5e63",
+      "/workspace/work/flex159-projections-freeze/src/bytecode/class_companion.rs": "7463d1e739919160b82ed1137a195ebc3a36037ed8b5419a26c1f38889b533a7",
+      "/workspace/work/flex159-projections-freeze/src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+      "/workspace/work/flex159-projections-freeze/src/bytecode/defaults.rs": "d092d8a420cfb719f92dbb9a3bcc58f7c644d67bf9b3c611c72949122c22e827",
+      "/workspace/work/flex159-projections-freeze/src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "/workspace/work/flex159-projections-freeze/src/bytecode/frames.rs": "1659d0401bfa59f751e3b6db250a2395a827ccad13c156f19f62c76773983b48",
+      "/workspace/work/flex159-projections-freeze/src/bytecode/inline.rs": "ca8a4f4da8f11e405a3cdcbcf87c3bfde49635e331f9712fb7b2f4aca0f84d25",
+      "/workspace/work/flex159-projections-freeze/src/bytecode/interfaces.rs": "5456ea3de3402ee3ead9920bb2cb0e7c0baab4f6eb7b211e481a16bf9ad3207b",
+      "/workspace/work/flex159-projections-freeze/src/bytecode/lambdas.rs": "80d29fe68d378de0b0458e601dec4cc6daaa539a64ce137a7d9f3c10e19f2d98",
+      "/workspace/work/flex159-projections-freeze/src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+      "/workspace/work/flex159-projections-freeze/src/bytecode/suspend.rs": "f3cae5d5e83cf1605b13146fec74bc4141d9c880f81340d60adb2e1714f85e5f",
+      "/workspace/work/flex159-projections-freeze/src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+      "/workspace/work/flex159-projections-freeze/src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+      "/workspace/work/flex159-projections-freeze/src/bytecode.rs": "ebcdf3fc4a9b46c1c35cae8f51e7b89d5d12cadf9a3406902a66418545d6c29a",
+      "/workspace/work/flex159-projections-freeze/src/check.rs": "4edfbddc5e0a4b4115a99ac934ead90e39dfa6e29c2cf219a73dadba86a5f6ff",
+      "/workspace/work/flex159-projections-freeze/src/check_annotation_placements.rs": "027e77c6a6db60f98262fbaf0f44be170c53b58b03d64ae6e8cc43cdb2dc1579",
+      "/workspace/work/flex159-projections-freeze/src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "/workspace/work/flex159-projections-freeze/src/check_anonymous.rs": "2cd40f92df1162b58e5f5ddec8c33b97f344835c969975d875f86dd3ee0f8404",
+      "/workspace/work/flex159-projections-freeze/src/check_captures.rs": "f752d88bb81c26576caad658160a332fa21946e7275e6faf331bfd73f6a84479",
+      "/workspace/work/flex159-projections-freeze/src/check_class_delegation.rs": "c5295cce1ad653ec469256f57b60a40a538552e564855d8a2568087dd90f035c",
+      "/workspace/work/flex159-projections-freeze/src/check_classes.rs": "8a31d9a6fd4ade2c0a289c41f3f3058eee3e46e3d6dcec2ff350e2a1b2622ac9",
+      "/workspace/work/flex159-projections-freeze/src/check_constructor_inference.rs": "aa075021a7641e74e4193d8890e701893a7de5bc8e867760361e6b89a2478d2e",
+      "/workspace/work/flex159-projections-freeze/src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+      "/workspace/work/flex159-projections-freeze/src/check_control.rs": "990a9a7bb9c384759c32eecda07ffcd38b2ed737edb6d254c1639e9f738a966f",
+      "/workspace/work/flex159-projections-freeze/src/check_declarations.rs": "2ac392a9c57a9a1d72ab9f1350c1fc7110a97563ca4c099ae1fd7f26a1ea9f91",
+      "/workspace/work/flex159-projections-freeze/src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+      "/workspace/work/flex159-projections-freeze/src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "/workspace/work/flex159-projections-freeze/src/check_functions.rs": "19f0b4589dc2559e506fbb07dffc19b0fd248f1783b5eb8dbe6b9fd6b548da75",
+      "/workspace/work/flex159-projections-freeze/src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+      "/workspace/work/flex159-projections-freeze/src/check_interfaces.rs": "64fe44bfafc789bd21cc719894ef3c890722c03b4df9eb86f25e654738a32399",
+      "/workspace/work/flex159-projections-freeze/src/check_ir_walk.rs": "caaeeea794075c7e23b17fc9e2d06ace5a02d366c9abffbdc9393d3c8a1a2e96",
+      "/workspace/work/flex159-projections-freeze/src/check_java_properties.rs": "2400dd59efe5856609c7927875a4da2aa2b7d5e90945ae4f412a1b9e4cc97b7c",
+      "/workspace/work/flex159-projections-freeze/src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+      "/workspace/work/flex159-projections-freeze/src/check_library.rs": "784d98225b29ccd18c4f5620a0ec1e23a49958649c3a5194a7854138f970cd24",
+      "/workspace/work/flex159-projections-freeze/src/check_local_annotations.rs": "ad5d937aae27ec3bed4528322c068a39eca915a49c449b68b2c4453f87f1a770",
+      "/workspace/work/flex159-projections-freeze/src/check_member_extensions.rs": "cfca4c6c2b51effce735dd6ef1132d6490e6cf2cf358e43a3ab471e72a92d71e",
+      "/workspace/work/flex159-projections-freeze/src/check_objects.rs": "9d227ff7c4981f5af6c5016839f5c0f618716744d53351a1dc941909d7cb0e79",
+      "/workspace/work/flex159-projections-freeze/src/check_operations.rs": "b12d1fb3a59344bc9b49fe7591757ee323181d4a43c90b90825baa55e20ca9fd",
+      "/workspace/work/flex159-projections-freeze/src/check_overloads.rs": "4b6a84fdc783bd52f6535e8bf8321813c3151b467c6bee7f7d31e523c8324d6e",
+      "/workspace/work/flex159-projections-freeze/src/check_references.rs": "61a780d0816443007725e52f992c717eeab828f7b971749ed3242318a8d80077",
+      "/workspace/work/flex159-projections-freeze/src/check_relations.rs": "ed1ec338f71fc86d75283699436b99c6a89f20db2538a24532dfbc494ee34832",
+      "/workspace/work/flex159-projections-freeze/src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "/workspace/work/flex159-projections-freeze/src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+      "/workspace/work/flex159-projections-freeze/src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+      "/workspace/work/flex159-projections-freeze/src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "/workspace/work/flex159-projections-freeze/src/check_varargs.rs": "461fe197ed8507a21ab7aa60cede390d70fd1fce9867015561b1d43738d7d14b",
+      "/workspace/work/flex159-projections-freeze/src/check_variant_signatures.rs": "a2610d403ef1d76ef1c256b074a27920c1c3ac53e13a7bc8d1c25d446763cff0",
+      "/workspace/work/flex159-projections-freeze/src/classpath/aliases.rs": "0ae64b0193d9592a61423d8f4f3365f12063359e3a58120f80f1eea4c702f4f7",
+      "/workspace/work/flex159-projections-freeze/src/classpath/archive.rs": "835e4a79bbbc5c7328ce6a540ed1a2ca975fc526278fe7c31fd9433e08cc56d5",
+      "/workspace/work/flex159-projections-freeze/src/classpath/import_classes.rs": "65a1563c6df2772ac3d71602a54e7fd1b64bab1ab51d6053e74bdb65b2bf5f4e",
+      "/workspace/work/flex159-projections-freeze/src/classpath/inline_defaults.rs": "7f3801938414c155a47fb7e82e2a2a7dda1d2cf1d0e9f92e9cdb686ab7324f2f",
+      "/workspace/work/flex159-projections-freeze/src/classpath/jdk_modules.rs": "cd1a350e7f8e03cda618a1d919d4e6ee49aba7e9a26728178ebad5f73c4bd8f8",
+      "/workspace/work/flex159-projections-freeze/src/classpath/jvm_builtins.rs": "b8c6e4789a998c1b3737da4879a15d74eb453170c4b03542d4c8ae13f6e40e86",
+      "/workspace/work/flex159-projections-freeze/src/classpath/metadata.rs": "d0adef353b5197e0116de04516c28b8f4f653bf7fb1b6d301e2a0d0b62b4ddcb",
+      "/workspace/work/flex159-projections-freeze/src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+      "/workspace/work/flex159-projections-freeze/src/classpath/package_info.rs": "f3bd436a8c64d48216bae3a55a2a3e82a903d354a42b629928fe1af95197061a",
+      "/workspace/work/flex159-projections-freeze/src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "/workspace/work/flex159-projections-freeze/src/classpath/signature.rs": "b90f3b4106006ae4e7f644270e044db5534bfbdfd066a1d3feac87b65fc10aa9",
+      "/workspace/work/flex159-projections-freeze/src/classpath/singletons.rs": "836fe172f37cc9282e259ba446688b3d2d6bf34fde25ddc3973c1800f29c71a5",
+      "/workspace/work/flex159-projections-freeze/src/classpath/source.rs": "6dca9e7204a713a8dd65ad4ea67a5b5518e56af1af0a7a0220935ada45b3e00b",
+      "/workspace/work/flex159-projections-freeze/src/classpath/source_enums.rs": "1b6719565931913df35f26994fb0077985f1f5c89614fb1b5d4009e63957933d",
+      "/workspace/work/flex159-projections-freeze/src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+      "/workspace/work/flex159-projections-freeze/src/classpath/value_names.rs": "92bce0a6418edd333df08b6f388636648a2967560f8757c4bb00b1479236cae2",
+      "/workspace/work/flex159-projections-freeze/src/classpath.rs": "ac5832d4e204d257cd1503f3758bd35664f0ef7c01f5551825c940195d738d5a",
+      "/workspace/work/flex159-projections-freeze/src/compiled_inline/defaults.rs": "89d95d8b98e4af043bc3c592ba7588bffb7924bc86bdae57d457c0b420cbde37",
+      "/workspace/work/flex159-projections-freeze/src/compiled_inline.rs": "44b3beeb7d4ce4d6f70ff9d6b6ba14e525d442826d607c0a495610aac0181058",
+      "/workspace/work/flex159-projections-freeze/src/const_eval.rs": "24319c4a5076f678ed53cbeeff7c52c4bdcf081c9f78485514326e92078e10fd",
+      "/workspace/work/flex159-projections-freeze/src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "/workspace/work/flex159-projections-freeze/src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "/workspace/work/flex159-projections-freeze/src/jvm_descriptor.rs": "3946ec2e66e89185c9d3e284f9d114e29e5e88d0a3eba52ec39fba2200d07ad2",
+      "/workspace/work/flex159-projections-freeze/src/lib.rs": "3c19e2b8c95ebce9fda8d5282c9caf48bcf98f2a93dc80370d314e73432f27e1",
+      "/workspace/work/flex159-projections-freeze/src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "/workspace/work/flex159-projections-freeze/src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "/workspace/work/flex159-projections-freeze/src/metadata.rs": "d8fdd006329b199b780a4875f46fc90fe41e466830957b7841346e79c40b426e",
+      "/workspace/work/flex159-projections-freeze/src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "/workspace/work/flex159-projections-freeze/src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "/workspace/work/flex159-projections-freeze/src/source_inline.rs": "d59ecaba2b32264cc4190594c19e5ec7e99e6cbb5db28b33c1eaca7c7aa404e5",
+      "/workspace/work/flex159-projections-freeze/src/syntax.rs": "fd967d52116b194ee96ee160b7e49807b444c39a28c2288d2d0ed648e510a15a",
+      "/workspace/work/flex159-projections-freeze/src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "/workspace/work/flex159-projections-freeze/src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525"
+    },
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "commands": [
+    {
+      "label": "compile annotated Java provider",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies",
+        "/workspace/korrust/tests/flexible_list_projections/java/Lists.java",
+        "/workspace/korrust/tests/flexible_list_projections/java/android/annotation/NonNull.java",
+        "/workspace/korrust/tests/flexible_list_projections/java/android/annotation/Nullable.java",
+        "/workspace/korrust/tests/flexible_list_projections/java/org/jetbrains/annotations/Mutable.java",
+        "/workspace/korrust/tests/flexible_list_projections/java/org/jetbrains/annotations/ReadOnly.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/000-stderr.txt"
+    },
+    {
+      "label": "compile official Effects.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/flexible_list_projections/Effects.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "flexible_list_projections",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/001-stderr.txt"
+    },
+    {
+      "label": "compile candidate Effects.kt",
+      "argv": [
+        "/tmp/targets159-flex/debug/korrust",
+        "/workspace/korrust/tests/flexible_list_projections/Effects.kt",
+        "--module-name",
+        "flexible_list_projections",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/002-stderr.txt"
+    },
+    {
+      "label": "compile fixed Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/java",
+        "/workspace/korrust/tests/flexible_list_projections/Calls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/003-stderr.txt"
+    },
+    {
+      "label": "verified fixed Java caller official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/java:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/004-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official",
+        "EffectsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/005-stderr.txt"
+    },
+    {
+      "label": "compile official Consumer.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/flexible_list_projections/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "flexible_list_projections",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/006-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official-official:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official-official-runner",
+        "/workspace/korrust/tests/flexible_list_projections/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/007-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer official/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official-official-runner:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official-official:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/008-stderr.txt"
+    },
+    {
+      "label": "compile candidate Consumer.kt",
+      "argv": [
+        "/tmp/targets159-flex/debug/korrust",
+        "/workspace/korrust/tests/flexible_list_projections/Consumer.kt",
+        "--module-name",
+        "flexible_list_projections",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/009-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official-candidate:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official-candidate-runner",
+        "/workspace/korrust/tests/flexible_list_projections/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/010-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer official/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official-candidate-runner:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official-candidate:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/011-stderr.txt"
+    },
+    {
+      "label": "verified fixed Java caller candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/java:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/012-stderr.txt"
+    },
+    {
+      "label": "JVM callable signatures candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-p",
+        "-s",
+        "-v",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate",
+        "EffectsKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/013-stderr.txt"
+    },
+    {
+      "label": "compile official Consumer.kt",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/flexible_list_projections/Consumer.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-module-name",
+        "flexible_list_projections",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate-official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/014-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate-official:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate-official-runner",
+        "/workspace/korrust/tests/flexible_list_projections/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/015-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer candidate/official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate-official-runner:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate-official:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/016-stderr.txt"
+    },
+    {
+      "label": "compile candidate Consumer.kt",
+      "argv": [
+        "/tmp/targets159-flex/debug/korrust",
+        "/workspace/korrust/tests/flexible_list_projections/Consumer.kt",
+        "--module-name",
+        "flexible_list_projections",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate-candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/017-stderr.txt"
+    },
+    {
+      "label": "compile consumer runner",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate-candidate:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate-candidate-runner",
+        "/workspace/korrust/tests/flexible_list_projections/ConsumeCalls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/018-stderr.txt"
+    },
+    {
+      "label": "verified Kotlin consumer candidate/candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate-candidate-runner:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate-candidate:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "ConsumeCalls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/019-stderr.txt"
+    },
+    {
+      "label": "consumer negative official/official/returned-readonly-write",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/consumer-negative-returned-readonly-write.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/negative-consumer-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/020-stderr.txt"
+    },
+    {
+      "label": "consumer negative official/candidate/returned-readonly-write",
+      "argv": [
+        "/tmp/targets159-flex/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/consumer-negative-returned-readonly-write.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/official:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/negative-consumer-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/021-stderr.txt"
+    },
+    {
+      "label": "consumer negative candidate/official/returned-readonly-write",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/consumer-negative-returned-readonly-write.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/negative-consumer-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/022-stderr.txt"
+    },
+    {
+      "label": "consumer negative candidate/candidate/returned-readonly-write",
+      "argv": [
+        "/tmp/targets159-flex/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/consumer-negative-returned-readonly-write.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/candidate:/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/negative-consumer-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/023-stderr.txt"
+    },
+    {
+      "label": "negative official/projected-mutable-widening",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/projected-mutable-widening.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/024-stderr.txt"
+    },
+    {
+      "label": "negative candidate/projected-mutable-widening",
+      "argv": [
+        "/tmp/targets159-flex/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/projected-mutable-widening.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/025-stderr.txt"
+    },
+    {
+      "label": "negative official/readonly-to-mutable",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/readonly-to-mutable.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/026-stderr.txt"
+    },
+    {
+      "label": "negative candidate/readonly-to-mutable",
+      "argv": [
+        "/tmp/targets159-flex/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/readonly-to-mutable.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/027-stderr.txt"
+    },
+    {
+      "label": "negative official/readonly-write",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/readonly-write.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/028-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/028-stderr.txt"
+    },
+    {
+      "label": "negative candidate/readonly-write",
+      "argv": [
+        "/tmp/targets159-flex/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/readonly-write.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/029-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/029-stderr.txt"
+    },
+    {
+      "label": "negative official/readonly-index-write",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/readonly-index-write.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/030-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/030-stderr.txt"
+    },
+    {
+      "label": "negative candidate/readonly-index-write",
+      "argv": [
+        "/tmp/targets159-flex/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/readonly-index-write.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/031-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/031-stderr.txt"
+    },
+    {
+      "label": "negative official/projected-mutable-write",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/projected-mutable-write.kt",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/negative-official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/032-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/032-stderr.txt"
+    },
+    {
+      "label": "negative candidate/projected-mutable-write",
+      "argv": [
+        "/tmp/targets159-flex/debug/korrust",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/projected-mutable-write.kt",
+        "--diagnostic-format",
+        "json",
+        "-cp",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/dependencies:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/korrust/target/checks/2026-11-26T043659302658Z-flexible-list-projections/negative-candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/033-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T043659302658Z-flexible-list-projections/033-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "fixed-java/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/official/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/official/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "fixed-java/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/candidate/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-consumer/candidate/candidate",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer-negative/official/official/returned-readonly-write",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer-negative/official/candidate/returned-readonly-write",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer-negative/candidate/official/returned-readonly-write",
+      "outcome": "pass"
+    },
+    {
+      "id": "consumer-negative/candidate/candidate/returned-readonly-write",
+      "outcome": "pass"
+    },
+    {
+      "id": "JVM-public-callable-signatures",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/projected-mutable-widening",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/projected-mutable-widening",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/readonly-to-mutable",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/readonly-to-mutable",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/readonly-write",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/readonly-write",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/readonly-index-write",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/readonly-index-write",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/official/projected-mutable-write",
+      "outcome": "pass"
+    },
+    {
+      "id": "negative/candidate/projected-mutable-write",
+      "outcome": "pass"
+    },
+    {
+      "id": "frozen-inputs",
+      "outcome": "pass"
+    }
+  ],
+  "evidence": [],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/check_flexible_list_projections.py",
+      "--candidate",
+      "/tmp/targets159-flex/debug/korrust",
+      "--reference-root",
+      "/workspace/korrust",
+      "--source-root",
+      "/workspace/work/flex159-projections-freeze"
+    ]
+  ],
+  "limitations": [
+    "Redundant readonly List<out T> projections normalize for checking and source indexing while syntax metadata preserves source form. Mutable projections keep their write and Java generic-invariance restrictions. JVM signatures, aliases and all four Kotlin provider/consumer combinations are checked. No Android runtime or full-app claim."
+  ],
+  "counts": {
+    "pass": 22
+  }
+}
