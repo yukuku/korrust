@@ -45,6 +45,28 @@ fn text(annotation: &Annotation, key: &str) -> Result<Option<String>> {
     }
 }
 
+fn supported_metadata_version(annotation: &Annotation) -> Result<bool> {
+    let Some(AnnotationValue::Array(version)) = annotation
+        .values
+        .iter()
+        .find(|(key, _)| key == "mv")
+        .map(|(_, value)| value)
+    else {
+        return Err(invalid());
+    };
+    let version = version
+        .iter()
+        .map(|value| match value {
+            AnnotationValue::Integer(value) => Ok(*value),
+            _ => Err(invalid()),
+        })
+        .collect::<Result<Vec<_>>>()?;
+    Ok(matches!(
+        version.as_slice(),
+        [1, 4..=9, ..] | [2, 0..=3, ..]
+    ))
+}
+
 fn decode(values: &[String]) -> Result<Vec<u8>> {
     let value = values.concat();
     let mut chars = value.chars();
@@ -1521,22 +1543,7 @@ pub(super) fn attach_with_values(
     if !matches!(kind, 1 | 2 | 5) {
         return Err(invalid());
     }
-    let version = annotation
-        .values
-        .iter()
-        .find(|(k, _)| k == "mv")
-        .map(|(_, v)| v);
-    let Some(AnnotationValue::Array(version)) = version else {
-        return Err(invalid());
-    };
-    let version = version
-        .iter()
-        .map(|v| match v {
-            AnnotationValue::Integer(i) => Ok(*i),
-            _ => Err(invalid()),
-        })
-        .collect::<Result<Vec<_>>>()?;
-    if version.first() != Some(&2) || version.get(1).copied().unwrap_or(0) > 3 {
+    if !supported_metadata_version(annotation)? {
         return Err(invalid());
     }
     let bytes = decode(&strings(annotation, "d1")?)?;
@@ -2037,22 +2044,7 @@ pub(super) fn annotation_parameters(
     if integer(annotation, "k")?.unwrap_or(1) != 1 {
         return Err(invalid());
     }
-    let version = annotation
-        .values
-        .iter()
-        .find(|(key, _)| key == "mv")
-        .map(|(_, value)| value);
-    let Some(AnnotationValue::Array(version)) = version else {
-        return Err(invalid());
-    };
-    let version = version
-        .iter()
-        .map(|value| match value {
-            AnnotationValue::Integer(value) => Ok(*value),
-            _ => Err(invalid()),
-        })
-        .collect::<Result<Vec<_>>>()?;
-    if version.first() != Some(&2) || version.get(1).copied().unwrap_or(0) > 3 {
+    if !supported_metadata_version(annotation)? {
         return Err(invalid());
     }
     let bytes = decode(&strings(annotation, "d1")?)?;
@@ -2452,6 +2444,42 @@ mod tests {
             unsupported: false,
             kotlin_interface: false,
             kotlin_fun_interface: false,
+        }
+    }
+
+    #[test]
+    fn metadata_versions_bound_package_and_annotation_decoding() {
+        for (version, accepted) in [
+            (vec![1, 3, 0], false),
+            (vec![1, 4, 0], true),
+            (vec![1, 7, 0], true),
+            (vec![1, 9, 0], true),
+            (vec![1, 10, 0], false),
+            (vec![2, 0, 0], true),
+            (vec![2, 3, 0], true),
+            (vec![2, 4, 0], false),
+            (vec![3, 0, 0], false),
+            (vec![2], false),
+            (vec![], false),
+        ] {
+            let mut annotation = metadata_annotation(2, &["sample"], &[]);
+            annotation.values[1].1 = AnnotationValue::Array(
+                version
+                    .iter()
+                    .copied()
+                    .map(AnnotationValue::Integer)
+                    .collect(),
+            );
+            assert_eq!(supported_metadata_version(&annotation).unwrap(), accepted);
+            let mut class = bare_metadata_class("sample/LegacyKt", 1);
+            assert_eq!(
+                attach(&annotation, &mut class, &[], &[]).is_ok(),
+                accepted,
+                "{version:?}"
+            );
+            if accepted {
+                assert_eq!(class.library.unwrap().package.as_deref(), Some("sample"));
+            }
         }
     }
 
