@@ -102,7 +102,7 @@ impl Checker<'_> {
             ));
         }
         let count = parameters.len();
-        let parameters = parameters
+        let bounds = parameters
             .iter()
             .map(|types| {
                 types
@@ -112,8 +112,38 @@ impl Checker<'_> {
             })
             .collect::<Vec<_>>();
         let forwards = |first: usize, second: usize| {
-            parameters[first].iter().zip(&parameters[second]).enumerate().all(
-                |(argument_index, (first, second))| {
+            let mut witnesses = HashMap::new();
+            if generic[first] && generic[second] {
+                for (index, (source, target)) in parameters[first]
+                    .iter()
+                    .zip(&parameters[second])
+                    .enumerate()
+                {
+                    if let (Type::Parameter { .. }, Type::Parameter { name, .. }) = (source, target)
+                    {
+                        let from = &bounds[first][index];
+                        if !self.subtype(from, &bounds[second][index]) {
+                            return false;
+                        }
+                        if witnesses
+                            .insert(name.clone(), from.clone())
+                            .is_some_and(|old| old != *from)
+                        {
+                            witnesses.clear();
+                            break;
+                        }
+                    }
+                }
+            }
+            bounds[first].iter().zip(&parameters[second]).enumerate().all(
+                |(argument_index, (first, target))| {
+                    let substituted;
+                    let second = if witnesses.is_empty() {
+                        &bounds[second][argument_index]
+                    } else {
+                        substituted = upper_bounds(&relations::substitute(target, &witnesses), 0);
+                        &substituted
+                    };
                     if matches!(first, Type::Int | Type::Byte | Type::Short | Type::Long)
                         && matches!(second, Type::Int | Type::Byte | Type::Short | Type::Long)
                     {
