@@ -198,8 +198,10 @@ impl Checker<'_> {
                 ExprKind::Unary(operator, expr) if operator == "*" => (true, expr.as_ref()),
                 _ => (false, expr),
             };
-            let value = if inferred || spread {
+            let value = if inferred {
                 self.value(expr)?
+            } else if spread {
+                self.value_expected(expr, Some(array))?
             } else {
                 self.argument_value(expr, &element)?
             };
