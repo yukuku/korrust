@@ -361,6 +361,48 @@ fn evaluate_inner(
             })?;
             resolve(&path, offset)?
         }
+        ExprKind::Call(target, arguments) if arguments.is_empty() => {
+            let ExprKind::Property(receiver, member) = &target.kind else {
+                return Err(unsupported(
+                    offset,
+                    "This expression is unsupported in constant initializers",
+                ));
+            };
+            if !matches!(member.as_str(), "toInt" | "toLong" | "toFloat" | "toDouble") {
+                return Err(unsupported(
+                    offset,
+                    "This expression is unsupported in constant initializers",
+                ));
+            }
+            let Value::Constant(number) = evaluate(receiver, resolve, enabled, depth)? else {
+                return Err(invalid(
+                    offset,
+                    "Numeric conversions require a nonnull receiver",
+                ));
+            };
+            if numeric_rank(&number).is_none() {
+                return Err(unsupported(
+                    offset,
+                    "Only primitive numeric member conversions are supported in constants",
+                ));
+            }
+            match member.as_str() {
+                "toInt" => ConstValue::Int(match number {
+                    ConstValue::Int(value) => value,
+                    ConstValue::Long(value) => value as i32,
+                    _ => as_double(&number) as i32,
+                }),
+                "toLong" => ConstValue::Long(match number {
+                    ConstValue::Int(_) | ConstValue::Long(_) => as_long(&number),
+                    _ => as_double(&number) as i64,
+                }),
+                "toFloat" => ConstValue::Float(match number {
+                    ConstValue::Double(bits) => (f64::from_bits(bits) as f32).to_bits(),
+                    _ => as_float(&number).to_bits(),
+                }),
+                _ => ConstValue::Double(as_double(&number).to_bits()),
+            }
+        }
         ExprKind::Unary(operator, value) => {
             if operator == "-" {
                 match value.kind {
