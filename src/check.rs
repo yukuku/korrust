@@ -3223,17 +3223,17 @@ impl Checker<'_> {
                 ),
             );
         }
-        if field
-            .java_type
-            .as_deref()
-            .is_some_and(|ty| !Self::plain_java_field_type(ty))
-        {
-            return Err(
-                Diagnostic::new(offset, "Generic Java field writes are unsupported").with_kind(
-                    crate::DiagnosticKind::UnsupportedLanguage,
-                    "GENERIC_JAVA_FIELD_WRITE_UNSUPPORTED",
-                ),
-            );
+        if field.java_type.as_deref().is_some_and(|ty| {
+            !Self::concrete_java_field_type(ty) || ty.descriptor() != field.descriptor
+        }) {
+            return Err(Diagnostic::new(
+                offset,
+                "Java field writes requiring generic substitution or projections are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "GENERIC_JAVA_FIELD_WRITE_UNSUPPORTED",
+            ));
         }
         let mut cursor = 0;
         let ty = if let Some(kotlin) = &field.kotlin {
@@ -3270,6 +3270,37 @@ impl Checker<'_> {
             store
         })
     }
+    fn concrete_java_field_type(ty: &Type) -> bool {
+        match ty.base() {
+            Type::Parameter { .. } | Type::OutArray(_) => false,
+            Type::Parameterized { arguments, .. } => arguments.iter().all(|argument| {
+                argument.variance == syntax::Variance::Invariant
+                    && argument
+                        .ty
+                        .as_ref()
+                        .is_some_and(Self::concrete_java_field_type)
+            }),
+            Type::Nullable(element)
+            | Type::Array(element)
+            | Type::List(element)
+            | Type::MutableList(element) => Self::concrete_java_field_type(element),
+            Type::Function { params, result } | Type::SuspendFunction { params, result } => {
+                params.iter().all(Self::concrete_java_field_type)
+                    && Self::concrete_java_field_type(result)
+            }
+            Type::ReceiverFunction {
+                receiver,
+                params,
+                result,
+            } => {
+                Self::concrete_java_field_type(receiver)
+                    && params.iter().all(Self::concrete_java_field_type)
+                    && Self::concrete_java_field_type(result)
+            }
+            _ => true,
+        }
+    }
+
     fn plain_java_field_type(ty: &Type) -> bool {
         match ty.base() {
             Type::Parameter { .. }
