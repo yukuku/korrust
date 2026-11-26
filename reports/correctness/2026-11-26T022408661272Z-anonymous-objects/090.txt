@@ -1,0 +1,4 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /workspace/korrust/tests/anonymous_objects/boundaries/MissingPropertySetter.kt -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -module-name anonymous_objects -cp /workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/MissingPropertySetter/official
+tests/anonymous_objects/boundaries/MissingPropertySetter.kt:2:38: error: 'var' property 'var n: Int' defined in 'A' cannot be overridden by 'val' property 'val n: Int'.
+fun bad(): A = object : A { override val n: Int = 1 }
+                                     ^^^

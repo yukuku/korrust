@@ -21,11 +21,12 @@ fn anonymous_initializers_reject_unsupported_own_receiver_and_forward_reads() {
         );
         let error = std::thread::Builder::new()
             .stack_size(16 * 1024 * 1024)
-            .spawn(move || compile(&source))
+            .spawn(move || compile(&source, "Boundary.kt"))
             .unwrap()
             .join()
             .unwrap()
-            .unwrap_err();
+            .err()
+            .unwrap();
         assert_eq!(error.kind, DiagnosticKind::UnsupportedLanguage);
         assert_eq!(error.code, code);
     }

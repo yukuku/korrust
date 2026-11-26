@@ -1,0 +1,10 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /workspace/korrust/tests/anonymous_objects/boundaries/PrivatePropertyOverride.kt -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -module-name anonymous_objects -cp /workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/korrust/target/checks/2026-11-26T022408661272Z-anonymous-objects/boundaries/PrivatePropertyOverride/official
+tests/anonymous_objects/boundaries/PrivatePropertyOverride.kt:2:29: error: cannot weaken access privilege private for 'accessor' in 'A'.
+fun bad(): A = object : A { private override val n: Int = 1 }
+                            ^^^^^^^
+tests/anonymous_objects/boundaries/PrivatePropertyOverride.kt:2:29: error: modifier 'private' is incompatible with 'override'.
+fun bad(): A = object : A { private override val n: Int = 1 }
+                            ^^^^^^^
+tests/anonymous_objects/boundaries/PrivatePropertyOverride.kt:2:37: error: modifier 'override' is incompatible with 'private'.
+fun bad(): A = object : A { private override val n: Int = 1 }
+                                    ^^^^^^^^
