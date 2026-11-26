@@ -252,10 +252,19 @@ pub(super) fn field(value: &str, parameters: &[TypeParameter]) -> Result<Type> {
 }
 
 pub(super) fn attach_fields(class: &mut JavaClass, attrs: &Attributes, field_attrs: &[Attributes]) {
+    let _ = attach_fields_with_declarations(class, attrs, field_attrs, &mut |_| Ok(false));
+}
+
+pub(super) fn attach_fields_with_declarations(
+    class: &mut JavaClass,
+    attrs: &Attributes,
+    field_attrs: &[Attributes],
+    passive: &mut impl FnMut(&Annotation) -> Result<bool>,
+) -> Result<()> {
     let parameters = match attrs.signature.as_deref().map(self::class).transpose() {
         Ok(Some((parameters, _))) => parameters,
         Ok(None) => Vec::new(),
-        Err(_) => return,
+        Err(_) => return Ok(()),
     };
     for (field, attributes) in class.fields.iter_mut().zip(field_attrs) {
         if attributes.signature.is_none()

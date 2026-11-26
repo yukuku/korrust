@@ -1291,6 +1291,14 @@ impl Classpath {
                 &method_attrs,
                 &mut |annotation| self.passive_declaration_annotation(annotation),
             );
+            if class.access & 0x4000 == 0 {
+                let _ = signature::attach_fields_with_declarations(
+                    &mut class,
+                    &attrs,
+                    &field_attrs,
+                    &mut |annotation| self.passive_declaration_annotation(annotation),
+                );
+            }
         }
         if class.access & 0x4000 != 0 {
             for (field, attributes) in class.fields.iter_mut().zip(&field_attrs) {
