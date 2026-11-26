@@ -1061,10 +1061,7 @@ impl Checker<'_> {
             self.initialized = earlier.clone();
             let value = expr
                 .as_ref()
-                .map(|expr| {
-                    let value = self.value(expr)?;
-                    self.coerce(value, ty.clone(), expr.offset)
-                })
+                .map(|expr| self.expected_value(expr, ty))
                 .transpose()?;
             values.push(value);
             if let Some(local) = self.local(name) {
