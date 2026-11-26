@@ -1,0 +1,289 @@
+Compiled from "SongComposeFragment.kt"
+final class yuku.alkitab.songs.SongComposeFragment$onCreateView$1$1 extends kotlin.jvm.internal.Lambda implements kotlin.jvm.functions.Function2<androidx.compose.runtime.Composer, java.lang.Integer, kotlin.Unit> {
+  final yuku.alkitab.songs.SongComposeFragment this$0;
+
+  yuku.alkitab.songs.SongComposeFragment$onCreateView$1$1(yuku.alkitab.songs.SongComposeFragment);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #13                 // Field this$0:Lyuku/alkitab/songs/SongComposeFragment;
+       5: aload_0
+       6: iconst_2
+       7: invokespecial #16                 // Method kotlin/jvm/internal/Lambda."<init>":(I)V
+      10: return
+
+  public final void invoke(androidx.compose.runtime.Composer, int);
+    Code:
+       0: aload_1
+       1: iload_2
+       2: iconst_3
+       3: iand
+       4: iconst_2
+       5: if_icmpeq     12
+       8: iconst_1
+       9: goto          13
+      12: iconst_0
+      13: iload_2
+      14: iconst_1
+      15: iand
+      16: invokeinterface #38,  3           // InterfaceMethod androidx/compose/runtime/Composer.shouldExecute:(ZI)Z
+      21: ifeq          555
+      24: invokestatic  #44                 // Method androidx/compose/runtime/ComposerKt.isTraceInProgress:()Z
+      27: ifeq          39
+      30: ldc           #28                 // int -970111244
+      32: iload_2
+      33: iconst_m1
+      34: ldc           #46                 // String yuku.alkitab.songs.SongComposeFragment.onCreateView.<anonymous>.<anonymous> (SongComposeFragment.kt:38)
+      36: invokestatic  #50                 // Method androidx/compose/runtime/ComposerKt.traceEventStart:(IIILjava/lang/String;)V
+      39: aload_0
+      40: getfield      #13                 // Field this$0:Lyuku/alkitab/songs/SongComposeFragment;
+      43: invokevirtual #56                 // Method yuku/alkitab/songs/SongComposeFragment.getActivity:()Landroidx/fragment/app/FragmentActivity;
+      46: astore        4
+      48: aload         4
+      50: instanceof    #58                 // class yuku/alkitab/songs/SongComposeFragment$Host
+      53: ifeq          64
+      56: aload         4
+      58: checkcast     #58                 // class yuku/alkitab/songs/SongComposeFragment$Host
+      61: goto          65
+      64: aconst_null
+      65: astore_3
+      66: getstatic     #64                 // Field yuku/alkitab/base/App.services:Lyuku/alkitab/base/services/AppServices;
+      69: getfield      #70                 // Field yuku/alkitab/base/services/AppServices.uiDimensions:Lyuku/alkitab/base/services/UiDimensionsProvider;
+      72: invokeinterface #76,  1           // InterfaceMethod yuku/alkitab/base/services/UiDimensionsProvider.applied:()Lyuku/alkitab/base/S$CalculatedDimensions;
+      77: astore        4
+      79: aload         4
+      81: getfield      #82                 // Field yuku/alkitab/base/S$CalculatedDimensions.fontColor:I
+      84: istore        6
+      86: aload         4
+      88: getfield      #85                 // Field yuku/alkitab/base/S$CalculatedDimensions.verseNumberColor:I
+      91: istore        7
+      93: aload         4
+      95: getfield      #88                 // Field yuku/alkitab/base/S$CalculatedDimensions.backgroundColor:I
+      98: istore        8
+     100: aload         4
+     102: getfield      #92                 // Field yuku/alkitab/base/S$CalculatedDimensions.fontSize2dp:F
+     105: fstore        9
+     107: aload         4
+     109: getfield      #95                 // Field yuku/alkitab/base/S$CalculatedDimensions.lineSpacingMult:F
+     112: fstore        10
+     114: aload         4
+     116: getfield      #99                 // Field yuku/alkitab/base/S$CalculatedDimensions.fontFace:Landroid/graphics/Typeface;
+     119: astore        11
+     121: aload         4
+     123: getfield      #102                // Field yuku/alkitab/base/S$CalculatedDimensions.fontBold:I
+     126: iconst_1
+     127: if_icmpne     134
+     130: iconst_1
+     131: goto          135
+     134: iconst_0
+     135: istore        12
+     137: aload_0
+     138: getfield      #13                 // Field this$0:Lyuku/alkitab/songs/SongComposeFragment;
+     141: invokestatic  #106                // Method yuku/alkitab/songs/SongComposeFragment.access$getZoomPercentState$p:(Lyuku/alkitab/songs/SongComposeFragment;)Landroidx/compose/runtime/MutableIntState;
+     144: invokeinterface #112,  1          // InterfaceMethod androidx/compose/runtime/MutableIntState.getIntValue:()I
+     149: istore        13
+     151: new           #114                // class yuku/alkitab/songs/SongComposeStyle
+     154: dup
+     155: iload         6
+     157: iload         7
+     159: iload         8
+     161: fload         9
+     163: fload         10
+     165: aload         11
+     167: iload         13
+     169: iload         12
+     171: invokespecial #117                // Method yuku/alkitab/songs/SongComposeStyle."<init>":(IIIFFLandroid/graphics/Typeface;IZ)V
+     174: astore        5
+     176: aload_0
+     177: getfield      #13                 // Field this$0:Lyuku/alkitab/songs/SongComposeFragment;
+     180: invokestatic  #121                // Method yuku/alkitab/songs/SongComposeFragment.access$getDoc:(Lyuku/alkitab/songs/SongComposeFragment;)Lyuku/alkitab/songs/newdoc/SongDocument;
+     183: aload         5
+     185: aload_0
+     186: getfield      #13                 // Field this$0:Lyuku/alkitab/songs/SongComposeFragment;
+     189: invokestatic  #125                // Method yuku/alkitab/songs/SongComposeFragment.access$getCopyright:(Lyuku/alkitab/songs/SongComposeFragment;)Ljava/lang/String;
+     192: aload_0
+     193: getfield      #13                 // Field this$0:Lyuku/alkitab/songs/SongComposeFragment;
+     196: invokestatic  #128                // Method yuku/alkitab/songs/SongComposeFragment.access$getPatchTextLinkLabel:(Lyuku/alkitab/songs/SongComposeFragment;)Ljava/lang/String;
+     199: aload_1
+     200: astore        6
+     202: aload_1
+     203: aload_3
+     204: invokeinterface #132,  2          // InterfaceMethod androidx/compose/runtime/Composer.changedInstance:(Ljava/lang/Object;)Z
+     209: istore        7
+     211: nop
+     212: iconst_0
+     213: istore        8
+     215: aload         6
+     217: invokeinterface #136,  1          // InterfaceMethod androidx/compose/runtime/Composer.rememberedValue:()Ljava/lang/Object;
+     222: astore        9
+     224: iconst_0
+     225: istore        10
+     227: iload         7
+     229: ifne          243
+     232: aload         9
+     234: getstatic     #140                // Field androidx/compose/runtime/Composer.Companion:Landroidx/compose/runtime/Composer$Companion;
+     237: invokevirtual #145                // Method androidx/compose/runtime/Composer$Companion.getEmpty:()Ljava/lang/Object;
+     240: if_acmpne     293
+     243: astore        17
+     245: astore        16
+     247: astore        15
+     249: astore        14
+     251: iconst_0
+     252: istore        11
+     254: new           #147                // class yuku/alkitab/songs/SongComposeFragment$onCreateView$1$1$1$1
+     257: dup
+     258: aload_3
+     259: invokespecial #150                // Method yuku/alkitab/songs/SongComposeFragment$onCreateView$1$1$1$1."<init>":(Lyuku/alkitab/songs/SongComposeFragment$Host;)V
+     262: checkcast     #152                // class kotlin/jvm/functions/Function1
+     265: astore        18
+     267: aload         14
+     269: aload         15
+     271: aload         16
+     273: aload         17
+     275: aload         18
+     277: astore        12
+     279: aload         6
+     281: aload         12
+     283: invokeinterface #156,  2          // InterfaceMethod androidx/compose/runtime/Composer.updateRememberedValue:(Ljava/lang/Object;)V
+     288: aload         12
+     290: goto          295
+     293: aload         9
+     295: nop
+     296: nop
+     297: checkcast     #152                // class kotlin/jvm/functions/Function1
+     300: aload_1
+     301: astore        6
+     303: aload_1
+     304: aload_3
+     305: invokeinterface #132,  2          // InterfaceMethod androidx/compose/runtime/Composer.changedInstance:(Ljava/lang/Object;)Z
+     310: istore        7
+     312: nop
+     313: iconst_0
+     314: istore        8
+     316: aload         6
+     318: invokeinterface #136,  1          // InterfaceMethod androidx/compose/runtime/Composer.rememberedValue:()Ljava/lang/Object;
+     323: astore        9
+     325: iconst_0
+     326: istore        10
+     328: iload         7
+     330: ifne          344
+     333: aload         9
+     335: getstatic     #140                // Field androidx/compose/runtime/Composer.Companion:Landroidx/compose/runtime/Composer$Companion;
+     338: invokevirtual #145                // Method androidx/compose/runtime/Composer$Companion.getEmpty:()Ljava/lang/Object;
+     341: if_acmpne     398
+     344: astore        18
+     346: astore        17
+     348: astore        16
+     350: astore        15
+     352: astore        14
+     354: iconst_0
+     355: istore        11
+     357: new           #158                // class yuku/alkitab/songs/SongComposeFragment$onCreateView$1$1$2$1
+     360: dup
+     361: aload_3
+     362: invokespecial #159                // Method yuku/alkitab/songs/SongComposeFragment$onCreateView$1$1$2$1."<init>":(Lyuku/alkitab/songs/SongComposeFragment$Host;)V
+     365: checkcast     #152                // class kotlin/jvm/functions/Function1
+     368: astore        19
+     370: aload         14
+     372: aload         15
+     374: aload         16
+     376: aload         17
+     378: aload         18
+     380: aload         19
+     382: astore        12
+     384: aload         6
+     386: aload         12
+     388: invokeinterface #156,  2          // InterfaceMethod androidx/compose/runtime/Composer.updateRememberedValue:(Ljava/lang/Object;)V
+     393: aload         12
+     395: goto          400
+     398: aload         9
+     400: nop
+     401: nop
+     402: checkcast     #152                // class kotlin/jvm/functions/Function1
+     405: aload_1
+     406: astore        6
+     408: aload_1
+     409: aload_3
+     410: invokeinterface #132,  2          // InterfaceMethod androidx/compose/runtime/Composer.changedInstance:(Ljava/lang/Object;)Z
+     415: istore        7
+     417: nop
+     418: iconst_0
+     419: istore        8
+     421: aload         6
+     423: invokeinterface #136,  1          // InterfaceMethod androidx/compose/runtime/Composer.rememberedValue:()Ljava/lang/Object;
+     428: astore        9
+     430: iconst_0
+     431: istore        10
+     433: iload         7
+     435: ifne          449
+     438: aload         9
+     440: getstatic     #140                // Field androidx/compose/runtime/Composer.Companion:Landroidx/compose/runtime/Composer$Companion;
+     443: invokevirtual #145                // Method androidx/compose/runtime/Composer$Companion.getEmpty:()Ljava/lang/Object;
+     446: if_acmpne     507
+     449: astore        19
+     451: astore        18
+     453: astore        17
+     455: astore        16
+     457: astore        15
+     459: astore        14
+     461: iconst_0
+     462: istore        11
+     464: new           #161                // class yuku/alkitab/songs/SongComposeFragment$onCreateView$1$1$3$1
+     467: dup
+     468: aload_3
+     469: invokespecial #162                // Method yuku/alkitab/songs/SongComposeFragment$onCreateView$1$1$3$1."<init>":(Lyuku/alkitab/songs/SongComposeFragment$Host;)V
+     472: checkcast     #164                // class kotlin/jvm/functions/Function0
+     475: astore        20
+     477: aload         14
+     479: aload         15
+     481: aload         16
+     483: aload         17
+     485: aload         18
+     487: aload         19
+     489: aload         20
+     491: astore        12
+     493: aload         6
+     495: aload         12
+     497: invokeinterface #156,  2          // InterfaceMethod androidx/compose/runtime/Composer.updateRememberedValue:(Ljava/lang/Object;)V
+     502: aload         12
+     504: goto          509
+     507: aload         9
+     509: nop
+     510: nop
+     511: checkcast     #164                // class kotlin/jvm/functions/Function0
+     514: getstatic     #169                // Field androidx/compose/ui/Modifier.Companion:Landroidx/compose/ui/Modifier$Companion;
+     517: checkcast     #166                // class androidx/compose/ui/Modifier
+     520: fconst_0
+     521: iconst_1
+     522: aconst_null
+     523: invokestatic  #175                // Method androidx/compose/foundation/layout/SizeKt.fillMaxSize$default:(Landroidx/compose/ui/Modifier;FILjava/lang/Object;)Landroidx/compose/ui/Modifier;
+     526: aload_1
+     527: ldc           #176                // int 12582912
+     529: getstatic     #181                // Field yuku/alkitab/songs/newdoc/SongDocument.$stable:I
+     532: ior
+     533: getstatic     #182                // Field yuku/alkitab/songs/SongComposeStyle.$stable:I
+     536: iconst_3
+     537: ishl
+     538: ior
+     539: iconst_0
+     540: invokestatic  #188                // Method yuku/alkitab/songs/SongComposeContentKt.SongDocumentComposable:(Lyuku/alkitab/songs/newdoc/SongDocument;Lyuku/alkitab/songs/SongComposeStyle;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+     543: invokestatic  #44                 // Method androidx/compose/runtime/ComposerKt.isTraceInProgress:()Z
+     546: ifeq          561
+     549: invokestatic  #192                // Method androidx/compose/runtime/ComposerKt.traceEventEnd:()V
+     552: goto          561
+     555: aload_1
+     556: invokeinterface #195,  1          // InterfaceMethod androidx/compose/runtime/Composer.skipToGroupEnd:()V
+     561: return
+
+  public java.lang.Object invoke(java.lang.Object, java.lang.Object);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: checkcast     #34                 // class androidx/compose/runtime/Composer
+       5: aload_2
+       6: checkcast     #225                // class java/lang/Number
+       9: invokevirtual #228                // Method java/lang/Number.intValue:()I
+      12: invokevirtual #230                // Method invoke:(Landroidx/compose/runtime/Composer;I)V
+      15: getstatic     #236                // Field kotlin/Unit.INSTANCE:Lkotlin/Unit;
+      18: areturn
+}

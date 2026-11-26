@@ -1,0 +1,7 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /tmp/2026-11-26T073212154819Z-compose-callbacks-6j_n3ax4/wrong-lambda-arity.kt -no-stdlib -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -Xlambdas=class -Xplugin=/workspace/korrust/references/kotlinc/lib/compose-compiler-plugin.jar -P plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false -cp /tmp/2026-11-26T073212154819Z-compose-callbacks-6j_n3ax4/dependency:/workspace/korrust/references/compose/runtime.jar:/workspace/korrust/references/compose/annotations.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /tmp/2026-11-26T073212154819Z-compose-callbacks-6j_n3ax4/boundary-official-wrong-lambda-arity
+/tmp/2026-11-26T073212154819Z-compose-callbacks-6j_n3ax4/wrong-lambda-arity.kt:1:50: error: argument type mismatch: actual type is 'ComposableFunction1<??? (Unknown type for value parameter value), Unit>', but 'ComposableFunction0<Unit>' was expected.
+fun invalid(s: composeprobe.Registry) { s.accept { value -> println(value) } }
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/2026-11-26T073212154819Z-compose-callbacks-6j_n3ax4/wrong-lambda-arity.kt:1:52: error: cannot infer type for value parameter 'value'. Specify it explicitly.
+fun invalid(s: composeprobe.Registry) { s.accept { value -> println(value) } }
+                                                   ^^^^^

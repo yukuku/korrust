@@ -1,0 +1,7 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /tmp/2026-11-26T073212154819Z-compose-callbacks-6j_n3ax4/outside-composable.kt -no-stdlib -language-version 2.3 -api-version 2.3 -jvm-target 1.8 -Xlambdas=class -Xplugin=/workspace/korrust/references/kotlinc/lib/compose-compiler-plugin.jar -P plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false -cp /tmp/2026-11-26T073212154819Z-compose-callbacks-6j_n3ax4/dependency:/workspace/korrust/references/compose/runtime.jar:/workspace/korrust/references/compose/annotations.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /tmp/2026-11-26T073212154819Z-compose-callbacks-6j_n3ax4/boundary-official-outside-composable
+/tmp/2026-11-26T073212154819Z-compose-callbacks-6j_n3ax4/outside-composable.kt:2:5: error: functions which invoke @Composable functions must be marked with the @Composable annotation
+fun invalid() { paint() }
+    ^^^^^^^
+/tmp/2026-11-26T073212154819Z-compose-callbacks-6j_n3ax4/outside-composable.kt:2:17: error: @Composable invocations can only happen from the context of a @Composable function
+fun invalid() { paint() }
+                ^^^^^
