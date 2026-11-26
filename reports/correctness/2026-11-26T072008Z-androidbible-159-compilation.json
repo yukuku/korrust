@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "status": "complete",
+  "created_at": "2026-11-26T07:20:08.302333+00:00",
+  "selection": "Standalone native compilation of the original 159 archive and const-member diagnostic cohort files.",
+  "compiler": {
+    "revision": "621dc6b7974f9a9aad0e2080581d4acafa1a2180",
+    "sha256": "332ef323330eca2cf6866735961e569e875836c2f245bf0a00ff14a92467da9e"
+  },
+  "source_manifest": "benchmarks/source-files.sha256.json",
+  "dependency_manifest_sha256": "5edd0c421b881a5a7e5e8a960beee1cdf23362453f75ebc7b41a0f6d9559f20d",
+  "method": "Each source was compiled on its resolved Gradle classpath with all original source-owned class files and Kotlin package parts excluded. The successful compiles have class ownership receipts, SHA-256 of emitted bytes and inline relocation provenance where needed. Counts here measure compilation only. The initial 900-second VerseItem.kt attempt timed out. Retrying that same input on the same compiler with a 3,600-second limit produced 16 verified classes. Both receipts are retained. The summary includes the retry.",
+  "summary": {
+    "production": {
+      "rejected": 7,
+      "compiled": 6,
+      "timeout": 0
+    },
+    "tests": {
+      "compiled": 101,
+      "rejected": 45
+    }
+  },
+  "evidence": [
+    "reports/correctness/2026-11-26T072008Z-androidbible-159-compilation/build.log",
+    "reports/correctness/2026-11-26T072008Z-androidbible-159-compilation/inline_origins.py",
+    "reports/correctness/2026-11-26T072008Z-androidbible-159-compilation/receipts.json",
+    "reports/correctness/2026-11-26T072008Z-androidbible-159-compilation/recheck.py",
+    "reports/correctness/2026-11-26T072008Z-androidbible-159-compilation/timeout-retry.json"
+  ],
+  "first_attempt_summary": {
+    "production": {
+      "rejected": 7,
+      "compiled": 5,
+      "timeout": 1
+    },
+    "tests": {
+      "compiled": 101,
+      "rejected": 45
+    }
+  }
+}

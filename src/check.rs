@@ -51,6 +51,8 @@ mod captures;
 mod classes;
 #[path = "check_compose.rs"]
 mod compose;
+#[path = "check_compose_memo.rs"]
+mod compose_memo;
 #[path = "check_constructor_aliases.rs"]
 mod constructor_aliases;
 #[path = "check_constructor_bridges.rs"]
@@ -735,6 +737,13 @@ type ConstructorSignature<'a> = (&'a str, &'a Vec<(String, Type)>, &'a Vec<Optio
 type CheckedArguments = (Vec<Value>, Vec<(u8, Value)>, u64);
 type CallableParameters = (Vec<(String, Type)>, Vec<bool>);
 #[derive(Clone)]
+struct LocalFunctionDefaults {
+    params: Vec<(String, Type)>,
+    values: Vec<Option<Value>>,
+}
+type LocalDefaultBindings = HashMap<(Option<u8>, String), Rc<LocalFunctionDefaults>>;
+
+#[derive(Clone)]
 struct Checker<'a> {
     composer: Option<Local>,
     composable_target: Option<String>,
@@ -748,6 +757,7 @@ struct Checker<'a> {
     lambdas: Rc<RefCell<Vec<LambdaDecl>>>,
     captured: HashMap<String, (String, Type)>,
     captured_cells: HashMap<String, Type>,
+    local_defaults: LocalDefaultBindings,
     cells: HashMap<u8, String>,
     cell_names: HashSet<String>,
     changing_cells: HashSet<u8>,
@@ -2709,14 +2719,14 @@ impl Checker<'_> {
         };
         let kind = if reified_member && !method.inline_value_dispatch() {
             if mask != 0 {
-                return Err(Diagnostic::new(
+                crate::compiled_inline::validate(&method)?;
+                method = self.inline_default_bridge(
+                    method,
+                    mask,
+                    value_parameters,
+                    &mut values,
                     offset,
-                    "Reified instance member default bridge expansion is unsupported",
-                )
-                .with_kind(
-                    crate::DiagnosticKind::UnsupportedLanguage,
-                    "REIFIED_MEMBER_DEFAULT_UNSUPPORTED",
-                ));
+                )?;
             }
             crate::compiled_inline::validate_access(&method, self.classpath, &self.lambda_owner)?;
             self.compiled_inline_body(method, values, &lets, offset)?
@@ -2770,6 +2780,9 @@ impl Checker<'_> {
                 "I".repeat(value_parameters.div_ceil(32)),
                 &method.descriptor[method.descriptor.find(')').unwrap() + 1..]
             );
+            let descriptor = self
+                .binary_default_descriptor(&method, offset)?
+                .unwrap_or(descriptor);
             for index in 0..value_parameters.div_ceil(32) {
                 values.push(Value {
                     ty: Type::Int,
@@ -2874,7 +2887,8 @@ impl Checker<'_> {
         if value.ty == expected {
             return Ok(value);
         }
-        if value.ty == Type::Null
+        if (value.ty == Type::Null
+            || matches!(&value.ty, Type::Nullable(inner) if matches!(inner.as_ref(), Type::Java(name) if name == "kotlin/Nothing")))
             && expected.is_reference()
             && expected.is_nullable()
             && !matches!(value.kind, ValueKind::Null)
@@ -2894,7 +2908,9 @@ impl Checker<'_> {
                 && !matches!(expected, Type::Platform(_)))
         {
             if value.ty.is_reference() {
-                let kind = if value.ty.descriptor() == expected.descriptor() {
+                let preserve_producer =
+                    crate::value_abi::value_parameter(&value.ty, &self.classpath.value_classes());
+                let kind = if value.ty.descriptor() == expected.descriptor() && !preserve_producer {
                     value.kind
                 } else {
                     ValueKind::Box(Box::new(value))
@@ -3977,6 +3993,7 @@ impl Checker<'_> {
             ));
         }
         let slot = self.allocate_typed_slot(&ty, offset)?;
+        self.local_defaults.remove(&(Some(slot), name.to_owned()));
         self.initialized.insert(slot);
         self.scopes
             .last_mut()
@@ -4704,8 +4721,10 @@ impl Checker<'_> {
                     statement
                 }
                 StatementKind::Expression(expr) => {
-                    returns |= control::expression_terminates(expr);
-                    Statement::Expression(self.discarded_value(expr)?)
+                    let value = self.discarded_value(expr)?;
+                    returns |= control::expression_terminates(expr)
+                        || matches!(value.kind, ValueKind::Abrupt(_));
+                    Statement::Expression(value)
                 }
                 StatementKind::If(cond, yes, no) => {
                     let source_condition = cond;
@@ -4800,13 +4819,30 @@ impl Checker<'_> {
             self.contract_facts.remove(&expr.offset);
         }
         self.contract_registration = previous;
-        result
+        result.map(|value| {
+            if matches!(&value.ty, Type::Java(name) if name == "kotlin/Nothing") {
+                Value {
+                    ty: value.ty.clone(),
+                    kind: ValueKind::Abrupt(vec![
+                        Statement::Expression(value),
+                        Statement::ThrowException {
+                            owner: "kotlin/KotlinNothingValueException".into(),
+                            message: None,
+                        },
+                    ]),
+                }
+            } else {
+                value
+            }
+        })
     }
 
     fn value_untracked(&mut self, expr: &Expr, expected_result: Option<&Type>) -> Result<Value> {
         let offset = expr.offset;
         if let ExprKind::Call(target, args) = &expr.kind {
-            if let Some(value) = self.qualified_constructor(target, args, offset)? {
+            if let Some(value) =
+                self.qualified_constructor(target, args, expected_result, offset)?
+            {
                 return Ok(value);
             }
         }
@@ -5278,6 +5314,20 @@ impl Checker<'_> {
                     }
                 }
                 if let Some(value) = self.lexical_companion_property(name, None, offset)? {
+                    return Ok(value);
+                }
+                if self.local(name).is_none()
+                    && !self.captured.contains_key(name)
+                    && !self.fields.contains_key(name)
+                    && !self.members.values().any(|method| {
+                        method.source_property.as_deref() == Some(name)
+                            && method
+                                .library
+                                .as_ref()
+                                .is_none_or(|library| library.receiver.is_none())
+                    })
+                    && let Some(value) = self.lexical_java_static_field(name, offset)?
+                {
                     return Ok(value);
                 }
                 if let Some(value) = self.imported_value(name, offset)? {
@@ -6081,12 +6131,20 @@ impl Checker<'_> {
                                 | Type::ReceiverFunction { .. }
                                 | Type::SuspendFunction { .. }
                                 | Type::SuspendReceiverFunction { .. }
+                                | Type::ComposableUnitFunction
                         ) {
-                            if let Some(value) =
-                                self.implicit_extension_receiver_call(name, args, &[], offset)?
-                            {
+                            if let Some(value) = self.implicit_extension_receiver_call(
+                                name,
+                                args,
+                                &[],
+                                expected_result,
+                                offset,
+                            )? {
                                 return Ok(value);
                             }
+                        }
+                        if let Some(signature) = self.local_default_signature(name) {
+                            return self.defaulted_local_call(function, &signature, args, offset);
                         }
                         return self.function_invoke(function, args, offset);
                     }
@@ -6553,6 +6611,7 @@ impl Checker<'_> {
                                 | Type::ReceiverFunction { .. }
                                 | Type::SuspendFunction { .. }
                                 | Type::SuspendReceiverFunction { .. }
+                                | Type::ComposableUnitFunction
                         )
                     {
                         return self.function_invoke(receiver, args, offset);
@@ -7227,6 +7286,19 @@ fn resolve_type_checked(
     let enriched_imports = library::default_type_imports(&expanded, imports, classpath);
     let ty = resolve_type(&expanded, &enriched_imports, offset)?;
     relations::validate_type_arguments_with_classes(&ty, classpath, classes, offset)?;
+    if crate::classpath::compose_abi::contains(&ty) {
+        if ty != Type::ComposableUnitFunction {
+            return Err(Diagnostic::new(
+                offset,
+                "Composite Compose callback types are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "COMPOSE_CALLBACK_SHAPE_UNSUPPORTED",
+            ));
+        }
+        crate::classpath::compose_abi::validate_runtime(classpath, offset)?;
+    }
     Ok(ty)
 }
 fn resolve_parameters(
@@ -7729,8 +7801,10 @@ pub fn check_with_owner(
                 "Imports shadowing builtin types are not supported",
             ));
         }
-        if name != "kotlin/jvm/JvmName"
-            && let Some(code) = annotations::unsupported_lowering(name)
+        if !matches!(
+            name.as_str(),
+            "kotlin/jvm/JvmName" | "androidx/compose/runtime/Composable"
+        ) && let Some(code) = annotations::unsupported_lowering(name)
         {
             return Err(Diagnostic::new(
                 *offset,
@@ -7749,6 +7823,7 @@ pub fn check_with_owner(
                 | "kotlin/jvm/JvmStatic"
                 | "kotlin/jvm/Throws"
                 | "kotlin/jvm/Synchronized"
+                | "androidx/compose/runtime/Composable"
         );
         if class.access & 0x2000 != 0
             && class.annotation_definition.is_none()
@@ -8335,6 +8410,7 @@ pub fn check_with_owner(
             receiver_labels: HashMap::new(),
             lambdas: lambdas.clone(),
             captured: HashMap::new(),
+            local_defaults: HashMap::new(),
             captured_cells: HashMap::new(),
             cells: HashMap::new(),
             cell_names: HashSet::new(),

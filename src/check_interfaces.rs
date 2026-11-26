@@ -460,6 +460,7 @@ fn register_classes(
                 annotation_definition: None,
                 kotlin_fun_interface: false,
                 library: Some(crate::classpath::LibraryClass {
+                    compose_stability: crate::classpath::compose_abi::Stability::Unknown,
                     value_class: None,
                     companion_name: None,
                     kotlin_visibility: Some(if source.internal { 0 } else { 3 }),
@@ -1088,6 +1089,7 @@ fn check_function(
         receiver_labels: HashMap::new(),
         lambdas: lambdas.clone(),
         captured: HashMap::new(),
+        local_defaults: HashMap::new(),
         captured_cells: HashMap::new(),
         cells: HashMap::new(),
         cell_names: HashSet::new(),
@@ -1475,6 +1477,7 @@ interface Catalog {
                 receiver_labels: HashMap::new(),
                 lambdas: Rc::new(RefCell::new(Vec::new())),
                 captured: HashMap::new(),
+                local_defaults: HashMap::new(),
                 captured_cells: HashMap::new(),
                 cells: HashMap::new(),
                 cell_names: HashSet::new(),

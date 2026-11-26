@@ -456,7 +456,9 @@ impl Checker<'_> {
         if self.local(name).is_some() || self.captured.contains_key(name) {
             return Ok(None);
         }
-        if let Some(value) = self.implicit_extension_receiver_call(name, args, explicit, offset)? {
+        if let Some(value) =
+            self.implicit_extension_receiver_call(name, args, explicit, expected, offset)?
+        {
             return Ok(Some(value));
         }
         let mut methods = self.object_methods.get(name).cloned().unwrap_or_default();
@@ -930,12 +932,20 @@ impl Checker<'_> {
         let Some((owner, source_name)) = binding.rsplit_once("::") else {
             let (package, source_name) = binding.rsplit_once('/').unwrap_or(("", binding.as_str()));
             if self.classes.get(binding).is_some_and(|class| {
-                !class.kotlin_class
+                let prefer_constructor = !class.kotlin_class
                     || class.access & (0x200 | 0x400) == 0
                         && class
                             .library
                             .as_ref()
-                            .is_some_and(|library| !library.type_parameters.is_empty())
+                            .is_some_and(|library| !library.type_parameters.is_empty());
+                prefer_constructor
+                    && class.access & (0x200 | 0x400) == 0
+                    && class.methods.iter().any(|method| {
+                        method.name == "<init>"
+                            && self
+                                .classpath
+                                .constructor_visible(&self.lambda_owner, method)
+                    })
             }) {
                 return Vec::new();
             }
@@ -1244,28 +1254,8 @@ impl Checker<'_> {
                         .as_ref()
                         .is_some_and(|library| library.receiver.is_some()),
                 );
-            let method = crate::compiled_inline::with_defaults(
-                method,
-                mask,
-                parameters,
-                self.classpath,
-                &self.lambda_owner,
-                offset,
-            )
-            .map_err(|mut error| {
-                error.offset = offset;
-                error
-            })?;
-            for word in 0..parameters.div_ceil(32) {
-                values.push(Value {
-                    ty: Type::Int,
-                    kind: ValueKind::Int((mask >> (word * 32)) as i32),
-                });
-            }
-            values.push(Value {
-                ty: Type::Java("java/lang/Object".into()),
-                kind: ValueKind::Null,
-            });
+            let method =
+                self.inline_default_bridge(method, mask, parameters, &mut values, offset)?;
             crate::compiled_inline::validate_access(&method, self.classpath, &self.lambda_owner)?;
             mask = 0;
             method
@@ -1302,6 +1292,9 @@ impl Checker<'_> {
                 ),
                 &method.descriptor[split + 1..]
             );
+            let descriptor = self
+                .binary_default_descriptor(&method, offset)?
+                .unwrap_or(descriptor);
             for index in 0..(params.len()
                 - usize::from(
                     method
@@ -1330,6 +1323,41 @@ impl Checker<'_> {
         self.contract_registration = Some(offset);
         self.contract_facts.insert(offset, contract_facts);
         Ok(Self::wrap_lets(Value { ty: result, kind }, lets))
+    }
+
+    pub(super) fn inline_default_bridge(
+        &self,
+        method: JavaMethod,
+        mask: u64,
+        parameters: usize,
+        values: &mut Vec<Value>,
+        offset: usize,
+    ) -> Result<JavaMethod> {
+        let default_descriptor = self.binary_default_descriptor(&method, offset)?;
+        let method = crate::compiled_inline::with_defaults(
+            method,
+            mask,
+            parameters,
+            default_descriptor,
+            self.classpath,
+            &self.lambda_owner,
+            offset,
+        )
+        .map_err(|mut error| {
+            error.offset = offset;
+            error
+        })?;
+        for word in 0..parameters.div_ceil(32) {
+            values.push(Value {
+                ty: Type::Int,
+                kind: ValueKind::Int((mask >> (word * 32)) as i32),
+            });
+        }
+        values.push(Value {
+            ty: Type::Java("java/lang/Object".into()),
+            kind: ValueKind::Null,
+        });
+        Ok(method)
     }
 
     pub(super) fn compiled_inline_body(
@@ -1883,7 +1911,7 @@ impl Checker<'_> {
         {
             return Ok(None);
         }
-        self.generic_constructor_expected(name, &[], args, expected, offset)
+        self.generic_constructor_expected(name, &[], args, expected, offset, None)
     }
 
     pub(super) fn generic_constructor(
@@ -1893,7 +1921,7 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Option<Value>> {
-        self.generic_constructor_expected(name, types, args, None, offset)
+        self.generic_constructor_expected(name, types, args, None, offset, None)
     }
 
     fn generic_constructor_expected(
@@ -1903,6 +1931,7 @@ impl Checker<'_> {
         args: &[Expr],
         expected: Option<&Type>,
         offset: usize,
+        resolved_class: Option<&JavaClass>,
     ) -> Result<Option<Value>> {
         if self
             .imports
@@ -1923,7 +1952,7 @@ impl Checker<'_> {
                 })
                 .collect::<Result<Vec<_>>>()?,
         };
-        let alias_template = if types.is_empty() {
+        let alias_template = if types.is_empty() && resolved_class.is_none() {
             self.classpath
                 .constructor_type_alias(name, self.imports, DEFAULT_PACKAGES)?
         } else {
@@ -1939,7 +1968,9 @@ impl Checker<'_> {
         while let Type::Nullable(inner) = expanded {
             expanded = *inner;
         }
-        let class = if alias {
+        let class = if let Some(class) = resolved_class {
+            class.clone()
+        } else if alias {
             let owner = library::type_owner(&expanded).ok_or_else(|| {
                 Diagnostic::new(offset, "Type alias does not name a constructible class").with_kind(
                     crate::DiagnosticKind::InvalidKotlin,
@@ -1977,7 +2008,7 @@ impl Checker<'_> {
                 ),
             );
         }
-        if !self.library_call_candidates(name).is_empty() {
+        if resolved_class.is_none() && !self.library_call_candidates(name).is_empty() {
             return Ok(None);
         }
         if alias
@@ -2526,6 +2557,7 @@ impl Checker<'_> {
         &mut self,
         expression: &Expr,
         args: &[Expr],
+        expected: Option<&Type>,
         offset: usize,
     ) -> Result<Option<Value>> {
         if let Some(value) = self.java_callee_collision(expression, args, offset)? {
@@ -2534,6 +2566,12 @@ impl Checker<'_> {
         if matches!(expression.kind, ExprKind::Name(_)) {
             return Ok(None);
         }
+        let (expression, types) = match &expression.kind {
+            ExprKind::Generic(target, types) if matches!(target.kind, ExprKind::Property(..)) => {
+                (target.as_ref(), types.as_slice())
+            }
+            _ => (expression, &[][..]),
+        };
         let java = self.qualified_java_classifier(expression, offset)?;
         if java
             .as_ref()
@@ -2576,6 +2614,23 @@ impl Checker<'_> {
                 "ANNOTATION_INSTANCE_CONSTRUCTION_UNSUPPORTED",
             ));
         }
+        if class
+            .library
+            .as_ref()
+            .is_some_and(|library| !library.type_parameters.is_empty())
+        {
+            return self.generic_constructor_expected(
+                &class.name,
+                types,
+                args,
+                expected,
+                offset,
+                Some(&class),
+            );
+        }
+        if !types.is_empty() {
+            return Ok(None);
+        }
         if let Some(value) =
             self.sam_constructor(&class, Type::Java(class.name.clone()), args, offset)?
         {
@@ -2591,20 +2646,7 @@ impl Checker<'_> {
                 "ABSTRACT_CONSTRUCTION_INVALID",
             ));
         }
-        if class
-            .library
-            .as_ref()
-            .is_some_and(|l| !l.type_parameters.is_empty())
-        {
-            return Err(Diagnostic::new(
-                offset,
-                "Qualified generic construction requires unsupported explicit classifier handling",
-            )
-            .with_kind(
-                crate::DiagnosticKind::UnsupportedLanguage,
-                "QUALIFIED_GENERIC_CONSTRUCTOR_UNSUPPORTED",
-            ));
-        }
+
         let constructors = class
             .methods
             .iter()

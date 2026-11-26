@@ -157,6 +157,39 @@ pub(crate) fn physical(ty: &Type, registry: &Registry) -> Type {
     ty.clone()
 }
 
+pub(crate) fn default_storage(
+    parameters: &[(String, Type, bool)],
+    storage: &[Type],
+    trailing: usize,
+    registry: &Registry,
+) -> Option<Vec<Type>> {
+    let start = storage.len().checked_sub(parameters.len() + trailing)?;
+    let mut result = storage.to_vec();
+    for (index, (_, ty, default)) in parameters.iter().enumerate() {
+        if !default {
+            continue;
+        }
+        let Some(owner) = nominal_owner(ty) else {
+            continue;
+        };
+        let Some(info) = registry.get(owner) else {
+            continue;
+        };
+        let mut carrier = info.carrier.clone();
+        for _ in 0..32 {
+            if carrier.is_nullable() {
+                result[start + index] = Type::Java(owner.into());
+                break;
+            }
+            let Some(nested) = nominal_owner(&carrier).and_then(|name| registry.get(name)) else {
+                break;
+            };
+            carrier = nested.carrier.clone();
+        }
+    }
+    Some(result)
+}
+
 pub(crate) fn nominal_owner(ty: &Type) -> Option<&str> {
     match ty.base() {
         Type::Java(owner) => Some(owner),

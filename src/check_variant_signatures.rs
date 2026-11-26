@@ -54,6 +54,7 @@ fn final_type(ty: &Type, cp: &Classpath) -> bool {
         | Type::MutableList(_)
         | Type::FlexibleList(_)
         | Type::Function { .. }
+        | Type::ComposableUnitFunction
         | Type::SuspendFunction { .. }
         | Type::ReceiverFunction { .. }
         | Type::SuspendReceiverFunction { .. } => false,
@@ -145,6 +146,9 @@ fn signature_type(ty: &Type, cp: &Classpath, mode: Mode, names: &[&str], argumen
         return boxed.into();
     }
     match ty {
+        Type::ComposableUnitFunction => {
+            signature_type(&Type::composable_runtime(), cp, mode, names, argument)
+        }
         Type::Parameter { name, upper_bound } => {
             if names.contains(&name.as_str()) {
                 format!("T{name};")

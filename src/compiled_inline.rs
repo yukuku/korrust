@@ -63,7 +63,7 @@ fn unsupported(message: impl AsRef<str>) -> Diagnostic {
     )
 }
 
-pub(crate) fn reifies_only_array_allocation(method: &JavaMethod, parameter: &str) -> bool {
+pub(crate) fn supports_erased_reified_classifier(method: &JavaMethod, parameter: &str) -> bool {
     let Some(code) = method
         .library
         .as_ref()
@@ -74,8 +74,13 @@ pub(crate) fn reifies_only_array_allocation(method: &JavaMethod, parameter: &str
     let Ok(body) = decode(code) else {
         return false;
     };
-    let mut found = false;
+    let mut uses_classifier = false;
+    let mut indirect_reification = false;
     for (index, instruction) in body.instructions.iter().enumerate() {
+        if matches!(&instruction.kind, InlineOp::Reference { constant: InlineConstant::Method { owner, name, .. }, .. } if owner == "kotlin/jvm/internal/Intrinsics" && name == "needClassReification")
+        {
+            indirect_reification = true;
+        }
         if !matches!(&instruction.kind, InlineOp::Reference { constant: InlineConstant::Method { owner, name, descriptor, .. }, .. } if owner == "kotlin/jvm/internal/Intrinsics" && name == "reifiedOperationMarker" && descriptor == "(ILjava/lang/String;)V")
         {
             continue;
@@ -90,30 +95,44 @@ pub(crate) fn reifies_only_array_allocation(method: &JavaMethod, parameter: &str
         let Ok(name) = String::from_utf16(name) else {
             return false;
         };
-        if name.strip_suffix('?').unwrap_or(&name) != parameter {
-            continue;
-        }
-        if !matches!(&body.instructions[index - 2].kind, InlineOp::Raw { opcode: 0x03, operands } if operands.is_empty())
-            && !matches!(
-                &body.instructions[index - 2].kind,
-                InlineOp::Constant(InlineConstant::Integer(0))
-            )
-        {
+        let classifier = name.strip_suffix('?').unwrap_or(&name);
+        if classifier.starts_with('[') && classifier.trim_start_matches('[') == parameter {
             return false;
         }
-        if !matches!(
-            &body.instructions[index + 1].kind,
-            InlineOp::Reference {
-                opcode: 0xbd,
-                constant: InlineConstant::Class(_),
-                ..
+        if classifier != parameter {
+            continue;
+        }
+        let operation = match &body.instructions[index - 2].kind {
+            InlineOp::Raw { opcode, operands }
+                if operands.is_empty() && (0x03..=0x08).contains(opcode) =>
+            {
+                i32::from(*opcode - 0x03)
             }
+            InlineOp::Constant(InlineConstant::Integer(operation)) => *operation,
+            _ => return false,
+        };
+        let next = &body.instructions[index + 1].kind;
+        if !matches!(
+            (operation, next),
+            (
+                0,
+                InlineOp::Reference {
+                    opcode: 0xbd,
+                    constant: InlineConstant::Class(_),
+                    ..
+                }
+            ) | (4, InlineOp::Constant(InlineConstant::Class(_)))
         ) {
             return false;
         }
-        found = true;
+        uses_classifier = true;
     }
-    found
+    !indirect_reification
+        && (uses_classifier
+            || method
+                .kotlin_params
+                .as_ref()
+                .is_some_and(|params| params.iter().all(|(_, _, default)| !default)))
 }
 
 pub(crate) fn validate(method: &JavaMethod) -> Result<()> {

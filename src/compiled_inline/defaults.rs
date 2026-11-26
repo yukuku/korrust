@@ -25,6 +25,7 @@ pub(crate) fn with_defaults(
     mut method: JavaMethod,
     mask: u64,
     parameters: usize,
+    default_descriptor: Option<String>,
     classpath: &Classpath,
     caller: &str,
     offset: usize,
@@ -34,9 +35,30 @@ pub(crate) fn with_defaults(
         .as_ref()
         .and_then(|library| library.default_code.clone())
         .ok_or_else(|| unsupported("default dispatcher bytecode is unavailable"))?;
-    let (widths, _) = descriptor_widths(&method.descriptor)?;
-    let first_mask = widths.iter().map(|width| u16::from(*width)).sum::<u16>();
+    let instance = method.access & 8 == 0;
     let words = parameters.div_ceil(32);
+    let closing = method
+        .descriptor
+        .find(')')
+        .ok_or_else(|| unsupported("default dispatcher descriptor is malformed"))?;
+    let dispatch = if instance {
+        format!("L{};", method.owner)
+    } else {
+        String::new()
+    };
+    let descriptor = default_descriptor.unwrap_or_else(|| {
+        format!(
+            "({dispatch}{}{}Ljava/lang/Object;){}",
+            &method.descriptor[1..closing],
+            "I".repeat(words),
+            &method.descriptor[closing + 1..]
+        )
+    });
+    let (widths, _) = descriptor_widths(&descriptor)?;
+    let first_mask = widths[..widths.len() - words - 1]
+        .iter()
+        .map(|width| u16::from(*width))
+        .sum::<u16>();
     let masks = (0..words)
         .map(|word| (first_mask + word as u16, (mask >> (word * 32)) as u32))
         .collect::<BTreeMap<_, _>>();
@@ -47,7 +69,23 @@ pub(crate) fn with_defaults(
         .enumerate()
         .map(|(index, instruction)| (instruction.offset, index))
         .collect::<BTreeMap<_, _>>();
-    let mut cursor = 0;
+    let mut cursor = match body.instructions.as_slice() {
+        [load, branch, ..]
+            if instance
+                && matches!(load.kind, InlineOp::Local { opcode: 0x19, slot } if slot == first_mask + words as u16) =>
+        {
+            match branch.kind {
+                InlineOp::Branch {
+                    opcode: 0xc6,
+                    target,
+                } => *indices
+                    .get(&target)
+                    .ok_or_else(|| unsupported("invalid default marker branch"))?,
+                _ => 0,
+            }
+        }
+        _ => 0,
+    };
     let mut recognized = 0u64;
     let mut erased = Vec::new();
     while cursor + 4 < body.instructions.len() {
@@ -161,17 +199,15 @@ pub(crate) fn with_defaults(
             code.bytes[instruction.offset..next.offset].fill(0);
         }
     }
-    let closing = method
-        .descriptor
-        .find(')')
-        .ok_or_else(|| unsupported("default dispatcher descriptor is malformed"))?;
-    method.descriptor = format!(
-        "({}{}Ljava/lang/Object;){}",
-        &method.descriptor[1..closing],
-        "I".repeat(words),
-        &method.descriptor[closing + 1..]
-    );
+    method.descriptor = descriptor;
     method.name.push_str("$default");
-    method.library.as_mut().unwrap().code = Some(code);
+    let library = method.library.as_mut().unwrap();
+    if instance {
+        method.access |= 8;
+        library
+            .parameter_modes
+            .insert(0, crate::syntax::InlineParameterMode::Ordinary);
+    }
+    library.code = Some(code);
     Ok(method)
 }

@@ -1647,7 +1647,11 @@ fn attach_member(
             jvm_descriptor
         };
         let closing = default_descriptor.find(')').ok_or_else(invalid)?;
-        let parameters = &default_descriptor[1..closing];
+        let (storage, _) = crate::jvm_descriptor::method_types(default_descriptor)?;
+        let storage =
+            crate::value_abi::default_storage(&params, &storage, usize::from(suspend_), &registry)
+                .ok_or_else(invalid)?;
+        let parameters = storage.iter().map(Type::descriptor).collect::<String>();
         let (bridge_name, bridge_descriptor) = if name == "<init>" {
             (
                 "<init>".into(),
@@ -1969,6 +1973,11 @@ pub(super) fn attach_with_values(
     }
     let class_flags = proto.integer(1)?.unwrap_or(6);
     class.library = Some(LibraryClass {
+        compose_stability: if kind == 1 && class.access & 0x200 != 0 && class_flags & 1 == 0 {
+            super::compose_abi::Stability::UnmarkedInterface
+        } else {
+            super::compose_abi::Stability::Unknown
+        },
         value_class: if kind == 1 && class_flags & 8192 != 0 {
             let mut info = crate::value_abi::ValueClassInfo {
                 property: metadata_name(&strings, proto.integer(17)?)?.into(),

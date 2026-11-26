@@ -518,7 +518,7 @@ pub(super) fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: 
     if depth > 64 {
         return false;
     }
-    if actual == expected {
+    if actual == expected || matches!(actual, Type::Java(name) if name == "kotlin/Nothing") {
         return true;
     }
     if actual == &Type::Null {
@@ -1177,13 +1177,6 @@ impl Checker<'_> {
             ExprKind::LambdaWithParams { params, body } => (params.clone(), body.clone()),
             _ => return Ok(()),
         };
-        if self.nonlocal_result.is_some()
-            && body
-                .last()
-                .is_some_and(|statement| matches!(statement.kind, StatementKind::Return(_)))
-        {
-            return Ok(());
-        }
         let names = match declared {
             Some(declared) => {
                 if declared.len() != params.len() {
@@ -1224,6 +1217,10 @@ impl Checker<'_> {
                 ));
             }
         };
+        let output = substitute(result, substitutions);
+        if !parameters.iter().any(|name| mentions(&output, name)) {
+            return Ok(());
+        }
         let params = params
             .iter()
             .map(|ty| substitute(ty, substitutions))
@@ -1236,10 +1233,6 @@ impl Checker<'_> {
                 expr.offset,
                 "Cannot infer lambda parameter types from the available constraints",
             ));
-        }
-        let output = substitute(result, substitutions);
-        if !parameters.iter().any(|name| mentions(&output, name)) {
-            return Ok(());
         }
         let saved_contract_registration = self.contract_registration;
         let saved_contract_facts = self.contract_facts.clone();
@@ -1274,7 +1267,9 @@ impl Checker<'_> {
             }
             match &last.kind {
                 StatementKind::Expression(value) => Ok(self.value(value)?.ty),
-                StatementKind::Return(_) => Err(Diagnostic::new(expr.offset, "Generic lambda results with unconditional nonlocal returns require unsupported Nothing inference").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "LAMBDA_ABRUPT_RESULT_INFERENCE_UNSUPPORTED")),
+                // The target is checked when the lambda is checked against the
+                // selected overload, including inline/crossinline restrictions.
+                StatementKind::Return(_) => Ok(Type::Java("kotlin/Nothing".into())),
                 _ => Ok(Type::Unit),
             }
         })();
@@ -2047,7 +2042,7 @@ impl Checker<'_> {
                 if unsupported_classifier(ty)
                     && !(erased_reference_classifier(ty)
                         && (library.builtin_array
-                            || crate::compiled_inline::reifies_only_array_allocation(
+                            || crate::compiled_inline::supports_erased_reified_classifier(
                                 method, parameter,
                             )))
                 {
@@ -2135,6 +2130,7 @@ mod tests {
             receiver_labels: HashMap::new(),
             lambdas: Rc::new(RefCell::new(Vec::new())),
             captured: HashMap::new(),
+            local_defaults: HashMap::new(),
             captured_cells: HashMap::new(),
             cells: HashMap::new(),
             cell_names: HashSet::new(),

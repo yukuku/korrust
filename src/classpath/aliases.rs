@@ -303,6 +303,7 @@ mod tests {
             annotation_definition: None,
             kotlin_fun_interface: false,
             library: Some(LibraryClass {
+                compose_stability: crate::classpath::compose_abi::Stability::Unknown,
                 value_class: None,
                 companion_name: None,
                 kotlin_visibility: None,

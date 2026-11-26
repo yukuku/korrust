@@ -407,6 +407,7 @@ impl Checker<'_> {
         name: &str,
         args: &[Expr],
         explicit: &[Type],
+        expected: Option<&Type>,
         offset: usize,
     ) -> Result<Option<Value>> {
         for receiver in self.extension_receivers.clone() {
@@ -435,10 +436,13 @@ impl Checker<'_> {
                     kind: ExprKind::Generic(Box::new(target), explicit.to_vec()),
                 }
             };
-            let result = self.value(&Expr {
-                offset,
-                kind: ExprKind::Call(Box::new(target), args.to_vec()),
-            });
+            let result = self.value_expected(
+                &Expr {
+                    offset,
+                    kind: ExprKind::Call(Box::new(target), args.to_vec()),
+                },
+                expected,
+            );
             self.scopes.pop();
             match result {
                 Ok(value) => return Ok(Some(value)),

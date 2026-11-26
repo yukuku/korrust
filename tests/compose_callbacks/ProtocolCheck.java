@@ -46,7 +46,7 @@ public class ProtocolCheck {
                 case "endRestartGroup": ends++; return scope;
                 case "getRecomposeScope": reads++; return scope;
                 case "recordUsed": records++; if (a[0]!=scope) throw new AssertionError("scope parameter"); return null;
-                case "changed": changes++; return changed;
+                case "changedInstance": case "changed": changes++; return changed;
                 case "shouldExecute": parameterChanged=(Boolean)a[0];force=(Integer)a[1]; return parameterChanged || force!=0 || !skipping;
                 case "skipToGroupEnd": skips++; return null;
                 case "getSkipping": return skipping;
@@ -65,6 +65,9 @@ public class ProtocolCheck {
         Registry registry=new Registry();
         ConsumerKt.stateless(registry);
         Function2 constant=(Function2)registry.getContent();
+        Registry forwarded=new Registry();
+        ConsumerKt.forwardTyped(forwarded, constant);
+        if (forwarded.getContent()!=constant) throw new AssertionError("typed callback forwarding identity");
         ConsumerKt.stateless(registry);
         if (constant!=registry.getContent()) throw new AssertionError("stateless cache");
         ConsumerKt.captured(registry,7);
@@ -150,6 +153,7 @@ public class ProtocolCheck {
         controller.labeled(shadow);
         checkBody(registry,19);
         BinaryProtocol.check(trace);
+        MemoProtocol.main(new String[0]);
         ComposerKt.class.getDeclaredMethod("access$setCompositionTracer$p", CompositionTracer.class).invoke(null,new Object[]{null});
         System.out.println("compose-protocol-ok:"+scenarios);
     }

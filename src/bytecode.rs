@@ -117,6 +117,7 @@ fn nullability_annotation(ty: &Type) -> Option<&'static str> {
 
 fn generic_type(ty: &Type) -> String {
     match ty {
+        Type::ComposableUnitFunction => generic_type(&Type::composable_runtime()),
         Type::Parameter { name, .. } => format!("T{name};"),
         Type::SuspendReceiverFunction {
             receiver,
@@ -244,6 +245,7 @@ fn covariant_wildcard(ty: &Type) -> &'static str {
 
 fn generic_parameter(ty: &Type) -> String {
     match ty {
+        Type::ComposableUnitFunction => generic_parameter(&Type::composable_runtime()),
         Type::List(inner) if covariant_parameter_type(inner) => {
             format!("Ljava/util/List<+{}>;", generic_parameter(inner))
         }
@@ -1953,6 +1955,7 @@ impl Code<'_> {
             }
             ValueKind::FunctionInvoke { function, args } => {
                 let arity = match function.ty.base() {
+                    Type::ComposableUnitFunction => 2,
                     Type::Function { params, .. } => params.len(),
                     Type::ReceiverFunction { params, .. } => params.len() + 1,
                     _ => return Err(failure("Expected a function type for invoke")),

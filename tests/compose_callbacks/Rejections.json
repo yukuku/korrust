@@ -42,12 +42,6 @@
     "code": "LIBRARY_DECLARATION_UNSUPPORTED"
   },
   {
-    "id": "nonliteral",
-    "source": "fun unsupported(s: composeprobe.Registry, b: @androidx.compose.runtime.Composable () -> Unit) { s.accept(b) }",
-    "oracle": "accept",
-    "code": "ANNOTATION_TYPE_USE_UNSUPPORTED"
-  },
-  {
     "id": "nested-callback",
     "source": "fun unsupported(s: composeprobe.Registry) { s.accept { s.accept {} } }",
     "oracle": "accept",
@@ -60,12 +54,6 @@
     "code": "COMPILER_PLUGIN_UNSUPPORTED"
   },
   {
-    "id": "hidden-composer-call",
-    "source": "import androidx.compose.runtime.SideEffect\nfun unsupported(s: composeprobe.Registry) { s.accept { SideEffect {} } }",
-    "oracle": "accept",
-    "code": "COMPOSE_BODY_LAMBDA_UNSUPPORTED"
-  },
-  {
     "id": "wrong-lambda-arity",
     "source": "fun invalid(s: composeprobe.Registry) { s.accept { value -> println(value) } }",
     "oracle": "reject"
@@ -74,18 +62,6 @@
     "id": "nonlocal-return",
     "source": "fun invalid(s: composeprobe.Registry) { s.accept { return } }",
     "oracle": "reject"
-  },
-  {
-    "id": "ordinary-body-lambda",
-    "source": "import composeprobe.execute\nfun unsupported(s: composeprobe.Registry) { s.accept { execute {} } }",
-    "oracle": "accept",
-    "code": "COMPOSE_BODY_LAMBDA_UNSUPPORTED"
-  },
-  {
-    "id": "ordinary-body-reference",
-    "source": "import composeprobe.execute\nimport composeprobe.globalHit\nfun unsupported(s: composeprobe.Registry) { s.accept { execute(::globalHit) } }",
-    "oracle": "accept",
-    "code": "COMPOSE_BODY_LAMBDA_UNSUPPORTED"
   },
   {
     "id": "generic-composable",
@@ -128,5 +104,53 @@
     "source": "fun unsupported(s: composeprobe.FixedRegistry) { s.accept {} }",
     "oracle": "accept",
     "code": "LIBRARY_DECLARATION_UNSUPPORTED"
+  },
+  {
+    "id": "unknown-capture-stability",
+    "source": "import composeprobe.execute\nclass Holder { fun hit() {} }\nfun unsupported(s: composeprobe.Registry, h: Holder) { s.accept { execute { h.hit() } } }",
+    "oracle": "accept",
+    "code": "COMPOSE_BODY_LAMBDA_UNSUPPORTED"
+  },
+  {
+    "id": "stable-interface-capture",
+    "source": "import composeprobe.execute\nfun unsupported(s: composeprobe.Registry, h: composeprobe.StableMemoHost) { s.accept { execute { h.hit(1) } } }",
+    "oracle": "accept",
+    "code": "COMPOSE_BODY_LAMBDA_UNSUPPORTED"
+  },
+  {
+    "id": "inherited-stability-capture",
+    "source": "import composeprobe.execute\nfun unsupported(s: composeprobe.Registry, h: composeprobe.InheritedStableMemoHost) { s.accept { execute { h.hit(1) } } }",
+    "oracle": "accept",
+    "code": "COMPOSE_BODY_LAMBDA_UNSUPPORTED"
+  },
+  {
+    "id": "conditional-memoization",
+    "source": "import composeprobe.execute\nfun unsupported(s: composeprobe.Registry, flag: Boolean) { s.accept { if (flag) execute {} } }",
+    "oracle": "accept",
+    "code": "COMPOSE_CONTROL_FLOW_UNSUPPORTED"
+  },
+  {
+    "id": "mutable-cell-capture",
+    "source": "import composeprobe.execute\nfun unsupported(s: composeprobe.Registry) { s.accept { var amount = 0; execute { amount += 1 } } }",
+    "oracle": "accept",
+    "code": "COMPOSE_BODY_LAMBDA_UNSUPPORTED"
+  },
+  {
+    "id": "memoized-result-shape",
+    "source": "import composeprobe.consumeInt\nfun unsupported(s: composeprobe.Registry) { s.accept { consumeInt { 1 } } }",
+    "oracle": "accept",
+    "code": "COMPOSE_BODY_LAMBDA_UNSUPPORTED"
+  },
+  {
+    "id": "memoized-arity-shape",
+    "source": "import composeprobe.consumePair\nfun unsupported(s: composeprobe.Registry) { s.accept { consumePair { left, right -> println(left + right) } } }",
+    "oracle": "accept",
+    "code": "COMPOSE_BODY_LAMBDA_UNSUPPORTED"
+  },
+  {
+    "id": "generic-runtime-stability",
+    "source": "import composeprobe.genericPayloadUse\nimport composeprobe.genericPayload\nfun unsupported(s: composeprobe.Registry) { s.accept { genericPayloadUse(genericPayload()) } }",
+    "oracle": "accept",
+    "code": "COMPOSE_ARGUMENT_STABILITY_UNSUPPORTED"
   }
 ]

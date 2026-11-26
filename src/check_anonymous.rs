@@ -386,6 +386,7 @@ impl Checker<'_> {
             annotation_definition: None,
             kotlin_fun_interface: false,
             library: Some(crate::classpath::LibraryClass {
+                compose_stability: crate::classpath::compose_abi::Stability::Unknown,
                 value_class: None,
                 companion_name: None,
                 kotlin_visibility: None,
@@ -753,10 +754,10 @@ impl Checker<'_> {
             let (_, mut result) = class_method_types(&method)?;
             if !source.result_inferred {
                 let declared_result = self.resolve(&source.result, source.offset)?;
-                if !override_type(&declared_result, &result)
-                    && !(declared_result.descriptor() == result.descriptor()
-                        && self.subtype(&declared_result, &result))
-                {
+                let compatible = override_type(&declared_result, &result)
+                    || declared_result.descriptor() == result.descriptor()
+                        && self.subtype(&declared_result, &result);
+                if !compatible {
                     if method.kotlin_result.is_none()
                         && declared_result.descriptor() == result.descriptor()
                     {
@@ -1014,6 +1015,7 @@ impl Checker<'_> {
                 }],
                 receiver_labels: HashMap::new(),
                 lambdas: self.lambdas.clone(),
+                local_defaults: self.captured_default_signatures(&captured),
                 captured: captured.clone(),
                 captured_cells: captured_cells.clone(),
                 cells: HashMap::new(),
@@ -1130,10 +1132,10 @@ impl Checker<'_> {
                 let inferred = probe.value(expression);
                 checker.lambdas.borrow_mut().truncate(saved_count);
                 let inferred = inferred?;
-                if !override_type(&inferred.ty, &result)
-                    && !(inferred.ty.descriptor() == result.descriptor()
-                        && checker.subtype(&inferred.ty, &result))
-                {
+                let compatible = override_type(&inferred.ty, &result)
+                    || inferred.ty.descriptor() == result.descriptor()
+                        && checker.subtype(&inferred.ty, &result);
+                if !compatible {
                     if checker.subtype(&inferred.ty, &result)
                         || result == Type::Java("java/lang/Object".into())
                     {

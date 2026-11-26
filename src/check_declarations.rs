@@ -665,6 +665,7 @@ pub(super) fn check_class_with_constants(
         source_operator: &HashSet::new(),
         lambdas: lambdas.clone(),
         captured: HashMap::new(),
+        local_defaults: HashMap::new(),
         captured_cells: HashMap::new(),
         cells: HashMap::new(),
         cell_names: HashSet::new(),
@@ -851,6 +852,7 @@ pub(super) fn check_class_with_constants(
                 receiver_labels: HashMap::new(),
                 lambdas: lambdas.clone(),
                 captured: HashMap::new(),
+                local_defaults: HashMap::new(),
                 captured_cells: HashMap::new(),
                 cells: HashMap::new(),
                 cell_names: HashSet::new(),
@@ -1353,6 +1355,7 @@ pub(super) fn check_class_with_constants(
             receiver_labels: HashMap::new(),
             lambdas: lambdas.clone(),
             captured: HashMap::new(),
+            local_defaults: HashMap::new(),
             captured_cells: HashMap::new(),
             cells: HashMap::new(),
             cell_names: HashSet::new(),
@@ -2213,6 +2216,22 @@ pub(super) fn check_class_with_constants(
         }
     }
     let abstract_methods = method_keys(|m| !m.has_body);
+    if params
+        .iter()
+        .any(|(_, ty)| crate::classpath::compose_abi::contains(ty))
+        || class_fields
+            .iter()
+            .any(|field| crate::classpath::compose_abi::contains(&field.ty))
+        || methods.iter().any(|method| {
+            method
+                .params
+                .iter()
+                .any(|(_, ty)| crate::classpath::compose_abi::contains(ty))
+                || crate::classpath::compose_abi::contains(&method.result)
+        })
+    {
+        return Err(Diagnostic::new(source.offset, "Source classes exporting Compose callback types require unsupported stability ABI export").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "COMPOSE_SOURCE_CLASS_STABILITY_UNSUPPORTED"));
+    }
     Ok(ClassDecl {
         default_functions,
         operator_offsets,
@@ -2344,6 +2363,7 @@ impl<'a> DeclarationContext<'a> {
             receiver_labels: HashMap::new(),
             lambdas: self.lambdas.clone(),
             captured: HashMap::new(),
+            local_defaults: HashMap::new(),
             captured_cells: HashMap::new(),
             cells: HashMap::new(),
             cell_names: HashSet::new(),
