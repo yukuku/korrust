@@ -2,22 +2,20 @@ use korrust::{DiagnosticKind, compile};
 
 #[test]
 fn unchanged_upstream_generic_interface_properties_reject_explicitly() {
-    for (source, name, code) in [(
-        include_str!(
-            "../references/kotlin/compiler/testData/codegen/box/delegation/genericProperty.kt"
-        ),
-        "genericProperty.kt",
-        "INTERFACE_EXTENSION_UNSUPPORTED",
-    )] {
-        let error = compile(source, name).err().unwrap();
-        assert_eq!(error.kind, DiagnosticKind::UnsupportedLanguage);
-        assert_eq!(error.code, code);
-    }
+    let source = include_str!(
+        "../references/kotlin/compiler/testData/codegen/box/delegation/genericProperty.kt"
+    );
+    let error = compile(source, "genericProperty.kt").err().unwrap();
+    assert_eq!(error.kind, DiagnosticKind::UnsupportedLanguage);
+    assert_eq!(error.code, "INTERFACE_EXTENSION_UNSUPPORTED");
 }
 
 #[test]
 fn unchanged_upstream_reference_varargs_compile() {
-    korrust::compile_all_with_classpath(
+    std::thread::Builder::new()
+        .stack_size(16 * 1024 * 1024)
+        .spawn(|| {
+            korrust::compile_all_with_classpath(
         include_str!(
             "../references/kotlin/compiler/testData/codegen/box/strings/rawStringsWithManyQuotes.kt"
         ),
@@ -26,4 +24,8 @@ fn unchanged_upstream_reference_varargs_compile() {
             .join("references/kotlinc/lib/kotlin-stdlib.jar")],
     )
     .unwrap();
+        })
+        .unwrap()
+        .join()
+        .unwrap();
 }
