@@ -6,6 +6,7 @@ mod archive;
 pub(crate) mod jvm_builtins;
 mod metadata;
 pub(crate) mod nested;
+mod package_info;
 mod signature;
 mod source;
 mod static_imports;
@@ -1137,7 +1138,9 @@ impl Classpath {
             .map(|(p, _)| format!("{p}/package-info.class"))
             .unwrap_or_else(|| "package-info.class".into());
         for path in &self.paths {
-            if self.read_resource(path, &package_info)?.is_some() {
+            if let Some(bytes) = self.read_resource(path, &package_info)?
+                && !self.passive_package_info(&bytes, &package_info)?
+            {
                 return Err(Diagnostic::new(
                     0,
                     format!(
