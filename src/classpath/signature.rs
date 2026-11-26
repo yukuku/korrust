@@ -536,6 +536,17 @@ pub(super) fn type_semantic_annotation(name: &str) -> bool {
         )
 }
 
+// On Java parameters a root nullability annotation constrains the array
+// reference. Its reference elements retain the Java platform projection.
+fn java_array_input(ty: Type) -> Type {
+    match ty {
+        Type::Array(element) => Type::OutArray(Box::new(Type::Platform(element))),
+        Type::StringArray => Type::OutArray(Box::new(Type::Platform(Box::new(Type::String)))),
+        Type::Nullable(inner) => Type::Nullable(Box::new(java_array_input(*inner))),
+        other => other,
+    }
+}
+
 pub(super) fn attach(
     class: &mut JavaClass,
     attrs: &Attributes,
@@ -635,7 +646,7 @@ pub(super) fn attach_with_declarations(
                 .map(|(i, ty)| {
                     Ok((
                         format!("arg{i}"),
-                        nullability(
+                        java_array_input(nullability(
                             ty,
                             parameter_declarations
                                 .get(i)
@@ -645,7 +656,7 @@ pub(super) fn attach_with_declarations(
                                 .chain(attributes.parameter_type_annotations.iter().filter_map(
                                     |(index, annotation)| (*index == i).then_some(annotation),
                                 )),
-                        )?,
+                        )?),
                         false,
                     ))
                 })
