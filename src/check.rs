@@ -4716,8 +4716,10 @@ impl Checker<'_> {
                     statement
                 }
                 StatementKind::Expression(expr) => {
-                    returns |= control::expression_terminates(expr);
-                    Statement::Expression(self.discarded_value(expr)?)
+                    let value = self.discarded_value(expr)?;
+                    returns |= control::expression_terminates(expr)
+                        || matches!(value.kind, ValueKind::Abrupt(_));
+                    Statement::Expression(value)
                 }
                 StatementKind::If(cond, yes, no) => {
                     let source_condition = cond;

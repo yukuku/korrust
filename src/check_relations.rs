@@ -1177,13 +1177,6 @@ impl Checker<'_> {
             ExprKind::LambdaWithParams { params, body } => (params.clone(), body.clone()),
             _ => return Ok(()),
         };
-        if self.nonlocal_result.is_some()
-            && body
-                .last()
-                .is_some_and(|statement| matches!(statement.kind, StatementKind::Return(_)))
-        {
-            return Ok(());
-        }
         let names = match declared {
             Some(declared) => {
                 if declared.len() != params.len() {
@@ -1274,7 +1267,9 @@ impl Checker<'_> {
             }
             match &last.kind {
                 StatementKind::Expression(value) => Ok(self.value(value)?.ty),
-                StatementKind::Return(_) => Err(Diagnostic::new(expr.offset, "Generic lambda results with unconditional nonlocal returns require unsupported Nothing inference").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "LAMBDA_ABRUPT_RESULT_INFERENCE_UNSUPPORTED")),
+                // The target is checked when the lambda is checked against the
+                // selected overload, including inline/crossinline restrictions.
+                StatementKind::Return(_) => Ok(Type::Java("kotlin/Nothing".into())),
                 _ => Ok(Type::Unit),
             }
         })();
