@@ -16,3 +16,28 @@ fun localReturn(registry: Registry, value: Int) {
 }
 fun exceptional(registry: Registry) { registry.accept { Events.fail() } }
 fun lookalike() { ordinaryAccept { Events.hit(31) } }
+
+class Controller : LexicalBase() {
+    val initial: Int = activity
+    fun constant(registry: Registry) { registry.accept { globalHit() } }
+    fun ordinary(registry: Registry) {
+        registry.apply { execute { Events.hit(activity) } }
+    }
+    fun install(registry: Registry) {
+        registry.apply {
+            accept {
+                Events.hit(activity)
+                if (this === registry) Events.hit(100)
+            }
+        }
+    }
+    fun shadow(shadow: ShadowRegistry) {
+        shadow.apply { accept { Events.hit(activity) } }
+    }
+    fun nested(shadow: ShadowRegistry) {
+        shadow.apply { registry.apply { accept { Events.hit(activity) } } }
+    }
+    fun labeled(shadow: ShadowRegistry) {
+        shadow.apply { accept { Events.hit(this@Controller.activity) } }
+    }
+}

@@ -2719,20 +2719,30 @@ impl Checker<'_> {
 
 impl Checker<'_> {
     pub(super) fn receiver_property(&mut self, name: &str, offset: usize) -> Result<Value> {
-        let result = if self.dispatch_receiver.is_none() {
-            Err(Diagnostic::new(offset, format!("Unresolved name: {name}"))
-                .with_kind(crate::DiagnosticKind::Unclassified, "UNRESOLVED_VALUE"))
-        } else {
-            self.value(&Expr {
+        let result = if let Some(receiver) = self.dispatch_receiver.clone() {
+            let receiver_slot = receiver.slot;
+            let was_initialized = self.initialized.insert(receiver_slot);
+            let local_name = format!("this@<dispatch{}>", receiver.slot);
+            self.scopes
+                .push(HashMap::from([(local_name.clone(), receiver)]));
+            let result = self.value(&Expr {
                 offset,
                 kind: ExprKind::Property(
                     Box::new(Expr {
                         offset,
-                        kind: ExprKind::Name("this".into()),
+                        kind: ExprKind::Name(local_name),
                     }),
                     name.into(),
                 ),
-            })
+            });
+            self.scopes.pop();
+            if !was_initialized {
+                self.initialized.remove(&receiver_slot);
+            }
+            result
+        } else {
+            Err(Diagnostic::new(offset, format!("Unresolved name: {name}"))
+                .with_kind(crate::DiagnosticKind::Unclassified, "UNRESOLVED_VALUE"))
         };
         if let Err(error) = &result {
             if error.message.starts_with("Unresolved")

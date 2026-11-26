@@ -126,6 +126,25 @@ public class ProtocolCheck {
         trace.reset();
         ConsumerKt.lookalike();
         if (Events.INSTANCE.getValue()!=31 || trace.checks!=0) throw new AssertionError("annotation namespace");
+        Controller controller=new Controller();
+        if (controller.getInitial()!=19) throw new AssertionError("dispatch initialization");
+        controller.constant(registry);
+        Function2 memberConstant=(Function2)registry.getContent();
+        new Controller().constant(registry);
+        if (memberConstant!=registry.getContent()) throw new AssertionError("member constant cache");
+        checkBody(registry,37);
+        Events.INSTANCE.setValue(0);
+        controller.ordinary(registry);
+        if (Events.INSTANCE.getValue()!=19) throw new AssertionError("ordinary lexical dispatch");
+        controller.install(registry);
+        checkBody(registry,119);
+        ShadowRegistry shadow=new ShadowRegistry(registry);
+        controller.shadow(shadow);
+        checkBody(registry,41);
+        controller.nested(shadow);
+        checkBody(registry,41);
+        controller.labeled(shadow);
+        checkBody(registry,19);
         ComposerKt.class.getDeclaredMethod("access$setCompositionTracer$p", CompositionTracer.class).invoke(null,new Object[]{null});
         System.out.println("compose-protocol-ok:"+scenarios);
     }

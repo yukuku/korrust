@@ -671,6 +671,45 @@ impl Checker<'_> {
             })),
             None => return Err(Diagnostic::new(expr.offset, "Lambda must produce a result")),
         }
+        if self.composable_body {
+            let mut used = HashSet::new();
+            let mut creates_function = false;
+            ir_walk::statements(&mut body, &owner, &mut |value: &mut Value, _: &str| {
+                if let ValueKind::Local(slot) = &value.kind {
+                    used.insert(*slot);
+                }
+                creates_function |= matches!(value.kind, ValueKind::Lambda { .. });
+            });
+            if creates_function {
+                return Err(Diagnostic::new(
+                    expr.offset,
+                    "Function creation in Compose callback bodies requires unsupported memoization",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "COMPOSE_BODY_LAMBDA_UNSUPPORTED",
+                ));
+            }
+            let mut unused = HashSet::new();
+            receiver_setup.retain(|statement| {
+                let Statement::Store(slot, value) = statement else {
+                    unreachable!()
+                };
+                if used.contains(slot) {
+                    return true;
+                }
+                let ValueKind::JavaField { name, .. } = &value.kind else {
+                    unreachable!()
+                };
+                unused.insert(name.clone());
+                false
+            });
+            (fields, captures) = fields
+                .into_iter()
+                .zip(captures)
+                .filter(|((name, _), _)| !unused.contains(name))
+                .unzip();
+        }
         receiver_setup.append(&mut body);
         let body = receiver_setup;
         let defaults = if let Some(method) = &interface {
