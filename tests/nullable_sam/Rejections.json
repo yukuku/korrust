@@ -1,0 +1,6 @@
+[
+ {"id":"not-functional","source":"import nullable.Callbacks\nfun invalid(): Int = Callbacks.bad { 1 }"},
+ {"id":"wrong-arity","source":"import nullable.Callbacks\nfun invalid(): Int = Callbacks.call({ a, b -> a + b }, 4)"},
+ {"id":"wrong-result","source":"import nullable.Callbacks\nfun invalid(): Int = Callbacks.call({ value -> \"wrong\" }, 4)"},
+ {"id":"nullable-parameter","source":"import nullable.Callbacks\nfun invalid() { Callbacks.event({ value -> value.length }, null) }"}
+]

@@ -51,13 +51,13 @@ impl Checker<'_> {
                 _ => false,
             };
             if callable
-                && matches!(
+                && (matches!(
                     inner.base(),
                     Type::Function { .. }
                         | Type::ReceiverFunction { .. }
                         | Type::SuspendFunction { .. }
                         | Type::SuspendReceiverFunction { .. }
-                )
+                ) || self.sam_function(inner, expr.offset)?.is_some())
             {
                 let value = self.expected_value(expr, inner)?;
                 return self.coerce(value, expected.clone(), expr.offset);
@@ -345,10 +345,12 @@ impl Checker<'_> {
             } => (params, result, Some(receiver.as_ref().clone())),
             _ => {
                 if let Some((method, function)) = self.sam_function(expected, expr.offset)? {
-                    return self.lambda(expr, &function, Some(method)).map(|mut value| {
-                        value.ty = expected.clone();
-                        value
-                    });
+                    return self
+                        .lambda_context(expr, &function, Some(method), local_return, label)
+                        .map(|mut value| {
+                            value.ty = expected.clone();
+                            value
+                        });
                 }
                 return Err(Diagnostic::new(
                     expr.offset,
