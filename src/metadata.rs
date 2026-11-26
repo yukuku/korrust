@@ -635,14 +635,18 @@ fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<
     let mut proto = Proto::default();
     let name = match ty {
         Type::ComposableUnitFunction => {
-            return Err(Diagnostic::new(
-                0,
-                "Composable function values are supported only as binary callback arguments",
-            )
-            .with_kind(
-                crate::DiagnosticKind::UnsupportedLanguage,
-                "COMPOSE_CALLBACK_EXPORT_UNSUPPORTED",
-            ));
+            let mut proto = type_proto(
+                &Type::Function {
+                    params: Vec::new(),
+                    result: Box::new(Type::Unit),
+                },
+                imports,
+                strings,
+            )?;
+            let mut annotation = Proto::default();
+            annotation.number(1, strings.id("androidx/compose/runtime/Composable")?);
+            proto.message(100, &annotation);
+            return Ok(proto);
         }
         Type::Int => "kotlin/Int",
         Type::Long => "kotlin/Long",

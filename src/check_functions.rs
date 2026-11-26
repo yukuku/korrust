@@ -20,21 +20,6 @@ impl Checker<'_> {
         if let ExprKind::TrailingLambda(inner) = &expr.kind {
             return self.expected_value(inner, expected);
         }
-        if expected.base() == &Type::ComposableUnitFunction
-            && !matches!(
-                expr.kind,
-                ExprKind::Lambda(_) | ExprKind::LambdaWithParams { .. } | ExprKind::Labeled(..)
-            )
-        {
-            return Err(Diagnostic::new(
-                expr.offset,
-                "Compose callback parameters require a literal lambda",
-            )
-            .with_kind(
-                crate::DiagnosticKind::UnsupportedLanguage,
-                "COMPOSE_LITERAL_CALLBACK_REQUIRED",
-            ));
-        }
         if let ExprKind::Unsigned { bits, long } = &expr.kind {
             let value = self.unsigned_literal(*bits, *long, Some(expected), expr.offset)?;
             return self.coerce(value, expected.clone(), expr.offset);
@@ -928,6 +913,7 @@ impl Checker<'_> {
                     | Type::ReceiverFunction { .. }
                     | Type::SuspendFunction { .. }
                     | Type::SuspendReceiverFunction { .. }
+                    | Type::ComposableUnitFunction
                     | Type::Nullable(_)
             ) {
                 return Err(
@@ -1024,6 +1010,44 @@ impl Checker<'_> {
                 offset,
                 "Nullable function values require a safe call or not-null assertion",
             ));
+        }
+        if function.ty.base() == &Type::ComposableUnitFunction {
+            if !args.is_empty() {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Composable callback requires zero logical arguments",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "COMPOSE_CALLBACK_ARITY_INVALID",
+                ));
+            }
+            let composer = self.composer.clone().ok_or_else(|| {
+                Diagnostic::new(
+                    offset,
+                    "Composable callbacks can only be invoked from a composable context",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "COMPOSE_CALLBACK_OUTSIDE_CONTEXT",
+                )
+            })?;
+            return Ok(Value {
+                ty: Type::Unit,
+                kind: ValueKind::FunctionInvoke {
+                    function: Box::new(function),
+                    args: vec![
+                        Value {
+                            ty: composer.ty,
+                            kind: ValueKind::Local(composer.slot),
+                        },
+                        Value {
+                            ty: Type::Int,
+                            kind: ValueKind::Int(0),
+                        },
+                    ],
+                },
+            });
         }
         let (params, result) = match function.ty.base() {
             Type::Function { params, result } | Type::SuspendFunction { params, result } => {

@@ -76,3 +76,5 @@ fun binaryUnstableReceiver(registry: Registry) { registry.accept { paint(BinaryE
 fun binaryUnstableResult(registry: Registry) { registry.accept { consumePayload(unstablePayload()) } }
 fun binaryRuntimeShift(registry: Registry) { registry.accept { pairedPayload(3, unstablePayload()) } }
 fun binaryRuntimeMany(registry: Registry) { registry.accept { manyRuntime(0,1,2,3,4,5,6,7,8,9,unstablePayload()) } }
+
+fun forwardTyped(registry: Registry, callback: @androidx.compose.runtime.Composable () -> Unit) { registry.accept(callback) }

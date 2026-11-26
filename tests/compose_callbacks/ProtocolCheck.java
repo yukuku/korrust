@@ -65,6 +65,9 @@ public class ProtocolCheck {
         Registry registry=new Registry();
         ConsumerKt.stateless(registry);
         Function2 constant=(Function2)registry.getContent();
+        Registry forwarded=new Registry();
+        ConsumerKt.forwardTyped(forwarded, constant);
+        if (forwarded.getContent()!=constant) throw new AssertionError("typed callback forwarding identity");
         ConsumerKt.stateless(registry);
         if (constant!=registry.getContent()) throw new AssertionError("stateless cache");
         ConsumerKt.captured(registry,7);

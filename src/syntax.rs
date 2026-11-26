@@ -90,6 +90,15 @@ pub struct LambdaParameter {
 }
 
 impl Type {
+    pub fn composable_runtime() -> Type {
+        Type::Function {
+            params: vec![
+                Type::Java("androidx/compose/runtime/Composer".into()),
+                Type::Int,
+            ],
+            result: Box::new(Type::Unit),
+        }
+    }
     pub fn continuation(result: &Type, variance: Variance) -> Type {
         Type::Parameterized {
             name: "kotlin/coroutines/Continuation".into(),
@@ -1486,6 +1495,7 @@ fn string_parts_depth(
                     token.offset += expression_start;
                 }
                 let mut parser = Parser {
+                    composable_annotations: std::collections::HashSet::new(),
                     local_annotations: Vec::new(),
                     in_delegation_expression: false,
                     annotation_context: false,
@@ -1861,6 +1871,7 @@ struct ClassHeader {
 }
 
 struct Parser {
+    composable_annotations: std::collections::HashSet<String>,
     local_annotations: Vec<(Vec<AnnotationUse>, &'static str)>,
     in_delegation_expression: bool,
     annotation_context: bool,
@@ -1970,6 +1981,14 @@ impl Parser {
             ty
         };
         self.depth -= 1;
+        if matches!(&ty, Type::Nullable(inner) if inner.base() == &Type::ComposableUnitFunction) {
+            return Err(self
+                .error("Nullable Compose callback types are unsupported")
+                .with_kind(
+                    DiagnosticKind::UnsupportedLanguage,
+                    "COMPOSE_CALLBACK_SHAPE_UNSUPPORTED",
+                ));
+        }
         Ok(ty)
     }
     fn reject_type_annotations(&self) -> Result<()> {
@@ -2027,6 +2046,88 @@ impl Parser {
         Ok(())
     }
     fn nonnullable_ty(&mut self) -> Result<Type> {
+        if self.at("@") {
+            let offset = self.token().offset;
+            self.expect("@")?;
+            let first = self.declaration_name()?;
+            let (use_site, mut name) = if self.take(":") { (Some(first), self.declaration_name()?) } else { (None, first) };
+            while self.take(".") { name.push('/'); name.push_str(&self.declaration_name()?); }
+            self.lines();
+            let mut arguments = Vec::new();
+            if self.at("(") {
+                let mut level = 0;
+                let mut end = self.pos;
+                let mut arrow = false;
+                while let Some(token) = self.tokens.get(end) {
+                    match token.text.as_str() {
+                        "(" => level += 1,
+                        ")" => level -= 1,
+                        "->" => arrow = true,
+                        _ => {}
+                    }
+                    end += 1;
+                    if level == 0 {
+                        break;
+                    }
+                }
+                while self.tokens.get(end).is_some_and(|token| token.text == "\n") {
+                    end += 1;
+                }
+                if !arrow && !self.tokens.get(end).is_some_and(|token| token.text == "->") {
+                    arguments = self
+                        .arguments()?
+                        .into_iter()
+                        .map(|argument| (None, argument))
+                        .collect();
+                    self.lines();
+                }
+            }
+            let annotation = AnnotationUse {
+                name,
+                offset,
+                use_site,
+                arguments,
+            };
+            let canonical = annotation.name.replace('.', "/")
+                == "androidx/compose/runtime/Composable"
+                || self.composable_annotations.contains(&annotation.name)
+                    && !self
+                        .type_parameters
+                        .iter()
+                        .any(|parameter| parameter.name == annotation.name);
+            if self.at("@") || !canonical {
+                return Err(Diagnostic::new(annotation.offset, "Only explicitly imported or qualified Compose function type annotations are supported").with_kind(DiagnosticKind::UnsupportedLanguage, "ANNOTATION_TYPE_USE_UNSUPPORTED"));
+            }
+            if annotation.use_site.is_some() || !annotation.arguments.is_empty() {
+                return Err(Diagnostic::new(
+                    annotation.offset,
+                    "Composable function type annotations have no use-site target or arguments",
+                )
+                .with_kind(
+                    DiagnosticKind::InvalidKotlin,
+                    "COMPOSE_TYPE_ANNOTATION_INVALID",
+                ));
+            }
+            let ty = self.ty()?;
+            if matches!(
+                &ty,
+                Type::SuspendFunction { .. } | Type::SuspendReceiverFunction { .. }
+            ) {
+                return Err(Diagnostic::new(
+                    annotation.offset,
+                    "Composable and suspend function type kinds cannot be combined",
+                )
+                .with_kind(
+                    DiagnosticKind::InvalidKotlin,
+                    "COMPOSE_SUSPEND_TYPE_INVALID",
+                ));
+            }
+            if matches!(&ty, Type::Function { params, result } if params.is_empty() && result.as_ref() == &Type::Unit)
+            {
+                return Ok(Type::ComposableUnitFunction);
+            }
+            return Err(Diagnostic::new(annotation.offset, "Only nonreceiver nonsuspend zero-argument Unit Compose callback types are supported").with_kind(DiagnosticKind::UnsupportedLanguage, "COMPOSE_CALLBACK_SHAPE_UNSUPPORTED"));
+        }
         self.reject_type_annotations()?;
         if self.take("(") {
             self.lines();
@@ -7739,6 +7840,7 @@ fn precedence(op: &str) -> Option<u8> {
 }
 pub fn parse(source: &str) -> Result<Module> {
     let mut p = Parser {
+        composable_annotations: std::collections::HashSet::new(),
         local_annotations: Vec::new(),
         in_delegation_expression: false,
         tokens: lex(source)?,
@@ -7802,6 +7904,14 @@ pub fn parse(source: &str) -> Result<Module> {
         }
         p.end()?;
         imports.push((alias, name, offset));
+    }
+    p.composable_annotations = imports
+        .iter()
+        .filter(|(_, name, _)| name == "androidx/compose/runtime/Composable")
+        .map(|(alias, _, _)| alias.clone())
+        .collect();
+    if package == "androidx.compose.runtime" {
+        p.composable_annotations.insert("Composable".into());
     }
     let mut type_aliases = Vec::new();
     let mut functions = Vec::new();

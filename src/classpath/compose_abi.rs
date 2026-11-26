@@ -144,7 +144,7 @@ pub(super) fn validate_member(
             "COMPOSE_CALLABLE_ABI_UNSUPPORTED",
         )
     };
-    if contains(result)
+    if contains(result) && result != &Type::ComposableUnitFunction
         || receiver.is_some_and(contains)
         || flags & (1024 | (1 << 13)) != 0
         || !type_parameters.is_empty()
@@ -152,12 +152,17 @@ pub(super) fn validate_member(
         return Err(unsupported());
     }
     let signature = signature.ok_or_else(unsupported)?;
-    let (_, physical, _) = super::signature::method(signature, class_parameters)?;
+    let (_, physical, physical_result) = super::signature::method(signature, class_parameters)?;
     let skip = usize::from(receiver.is_some());
     if physical.len() != params.len() + skip {
         return Err(unsupported());
     }
-    for ((_, ty, _), physical) in params.iter().zip(&physical[skip..]) {
+    for (ty, physical) in params
+        .iter()
+        .map(|(_, ty, _)| ty)
+        .zip(&physical[skip..])
+        .chain(std::iter::once((result, &physical_result)))
+    {
         if !contains(ty) {
             continue;
         }

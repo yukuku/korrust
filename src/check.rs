@@ -6124,6 +6124,7 @@ impl Checker<'_> {
                                 | Type::ReceiverFunction { .. }
                                 | Type::SuspendFunction { .. }
                                 | Type::SuspendReceiverFunction { .. }
+                                | Type::ComposableUnitFunction
                         ) {
                             if let Some(value) = self.implicit_extension_receiver_call(
                                 name,
@@ -6603,6 +6604,7 @@ impl Checker<'_> {
                                 | Type::ReceiverFunction { .. }
                                 | Type::SuspendFunction { .. }
                                 | Type::SuspendReceiverFunction { .. }
+                                | Type::ComposableUnitFunction
                         )
                     {
                         return self.function_invoke(receiver, args, offset);
@@ -7277,6 +7279,19 @@ fn resolve_type_checked(
     let enriched_imports = library::default_type_imports(&expanded, imports, classpath);
     let ty = resolve_type(&expanded, &enriched_imports, offset)?;
     relations::validate_type_arguments_with_classes(&ty, classpath, classes, offset)?;
+    if crate::classpath::compose_abi::contains(&ty) {
+        if ty != Type::ComposableUnitFunction {
+            return Err(Diagnostic::new(
+                offset,
+                "Composite Compose callback types are unsupported",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "COMPOSE_CALLBACK_SHAPE_UNSUPPORTED",
+            ));
+        }
+        crate::classpath::compose_abi::validate_runtime(classpath, offset)?;
+    }
     Ok(ty)
 }
 fn resolve_parameters(
@@ -7779,8 +7794,10 @@ pub fn check_with_owner(
                 "Imports shadowing builtin types are not supported",
             ));
         }
-        if name != "kotlin/jvm/JvmName"
-            && let Some(code) = annotations::unsupported_lowering(name)
+        if !matches!(
+            name.as_str(),
+            "kotlin/jvm/JvmName" | "androidx/compose/runtime/Composable"
+        ) && let Some(code) = annotations::unsupported_lowering(name)
         {
             return Err(Diagnostic::new(
                 *offset,
@@ -7799,6 +7816,7 @@ pub fn check_with_owner(
                 | "kotlin/jvm/JvmStatic"
                 | "kotlin/jvm/Throws"
                 | "kotlin/jvm/Synchronized"
+                | "androidx/compose/runtime/Composable"
         );
         if class.access & 0x2000 != 0
             && class.annotation_definition.is_none()

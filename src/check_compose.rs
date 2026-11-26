@@ -2,6 +2,7 @@ use super::*;
 
 fn compose_effect(value: &Value) -> bool {
     matches!(&value.kind, ValueKind::Lambda { .. })
+        || matches!(&value.kind, ValueKind::FunctionInvoke { function, .. } if function.ty.base() == &Type::ComposableUnitFunction)
         || matches!(&value.kind, ValueKind::JavaCall { method, .. }
         if method.library.as_ref().is_some_and(|library| library.compose.is_some()))
 }
