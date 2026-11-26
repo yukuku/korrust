@@ -518,6 +518,12 @@ pub(super) fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: 
         } else {
             actual
         };
+        if matches!(inner.as_ref(), Type::Array(_) | Type::StringArray)
+            && actual.primitive_array_element().is_none()
+            && let (Some(actual), Some(expected)) = (actual.array_element(), inner.array_element())
+        {
+            return subtype_at(cp, &actual, &Type::Platform(Box::new(expected)), depth + 1);
+        }
         return subtype_at(cp, actual, inner, depth + 1);
     }
     if let Type::Nullable(inner) = expected {
