@@ -1,6 +1,73 @@
 use super::*;
 
 impl Checker<'_> {
+    pub(super) fn join_when_results(
+        &self,
+        left: &Type,
+        right: &Type,
+        offset: usize,
+    ) -> Result<Type> {
+        let nullable = |ty: &Type| {
+            if ty.is_nullable() {
+                ty.clone()
+            } else {
+                Type::Nullable(Box::new(ty.clone()))
+            }
+        };
+        if left == right {
+            return Ok(left.clone());
+        }
+        if left == &Type::Null {
+            return Ok(nullable(right));
+        }
+        if right == &Type::Null {
+            return Ok(nullable(left));
+        }
+        let left_inner = if let Type::Nullable(inner) = left.base() {
+            inner.as_ref()
+        } else {
+            left
+        };
+        let right_inner = if let Type::Nullable(inner) = right.base() {
+            inner.as_ref()
+        } else {
+            right
+        };
+        let result = if (matches!(left_inner, Type::Platform(_))
+            || matches!(right_inner, Type::Platform(_)))
+            && left_inner.base() == right_inner.base()
+        {
+            Type::Platform(Box::new(left_inner.base().clone()))
+        } else if self.subtype(right_inner, left_inner) {
+            left_inner.clone()
+        } else if self.subtype(left_inner, right_inner) {
+            right_inner.clone()
+        } else {
+            return Err(
+                Diagnostic::new(offset, "The when branch common type is unsupported").with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "WHEN_RESULT_JOIN_UNSUPPORTED",
+                ),
+            );
+        };
+        Ok(if left.is_nullable() || right.is_nullable() {
+            nullable(&result)
+        } else {
+            result
+        })
+    }
+
+    pub(super) fn intersect_refinements(
+        paths: &[HashMap<stable_properties::Subject, Type>],
+    ) -> HashMap<stable_properties::Subject, Type> {
+        let Some(first) = paths.first() else {
+            return HashMap::new();
+        };
+        let mut result = first.clone();
+        result.retain(|subject, ty| paths[1..].iter().all(|path| path.get(subject) == Some(ty)));
+        result
+    }
+
     fn result_block(
         &mut self,
         statements: &[syntax::Statement],

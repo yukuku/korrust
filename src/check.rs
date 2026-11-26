@@ -4860,6 +4860,7 @@ impl Checker<'_> {
                 }
                 let slot = self.allocate_typed_slot(&subject.ty, offset)?;
                 let mut checked = Vec::new();
+                let mut continuing_refinements = Vec::new();
                 for (conditions, branch) in branches {
                     self.refinements = before_refinements.clone();
                     let mut combined = None;
@@ -4882,60 +4883,48 @@ impl Checker<'_> {
                         });
                     }
                     self.refine_when_branch(source_subject, conditions);
+                    let value = self.value(branch)?;
+                    if !control::expression_terminates(branch) {
+                        continuing_refinements.push(self.refinements.clone());
+                    }
                     checked.push((
                         combined.ok_or_else(|| Diagnostic::new(offset, "Empty when condition"))?,
-                        self.value(branch)?,
+                        value,
                     ));
                 }
                 self.refinements = before_refinements.clone();
-                let mut body = if missing {
-                    let mut result: Option<Type> = None;
-                    for (_, value) in &checked {
-                        if matches!(value.kind, ValueKind::Abrupt(_)) {
-                            continue;
-                        }
-                        result = Some(match result {
-                            None => value.ty.clone(),
-                            Some(previous)
-                                if previous == value.ty || self.subtype(&value.ty, &previous) =>
-                            {
-                                previous
-                            }
-                            Some(previous) if self.subtype(&previous, &value.ty) => {
-                                value.ty.clone()
-                            }
-                            Some(Type::Null) => {
-                                if value.ty.is_nullable() {
-                                    value.ty.clone()
-                                } else {
-                                    Type::Nullable(Box::new(value.ty.clone()))
-                                }
-                            }
-                            Some(previous) if value.ty == Type::Null => {
-                                if previous.is_nullable() {
-                                    previous
-                                } else {
-                                    Type::Nullable(Box::new(previous))
-                                }
-                            }
-                            _ => {
-                                return Err(Diagnostic::new(
-                                    offset,
-                                    "The exhaustive when branch common type is unsupported",
-                                )
-                                .with_kind(
-                                    crate::DiagnosticKind::UnsupportedLanguage,
-                                    "WHEN_RESULT_JOIN_UNSUPPORTED",
-                                ));
-                            }
-                        });
-                    }
-                    let result = result.ok_or_else(|| Diagnostic::new(offset, "Exhaustive when expressions with only abrupt branches require unsupported Nothing inference").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "WHEN_ABRUPT_RESULT_UNSUPPORTED"))?;
-                    self.unmatched_when(result, offset)?
+                let otherwise = if missing {
+                    None
                 } else {
-                    self.value(otherwise)?
+                    let value = self.value(otherwise)?;
+                    if !control::expression_terminates(otherwise) {
+                        continuing_refinements.push(self.refinements.clone());
+                    }
+                    Some(value)
                 };
-                self.refinements = before_refinements;
+                let mut result: Option<Type> = None;
+                for value in checked
+                    .iter()
+                    .map(|(_, value)| value)
+                    .chain(otherwise.iter())
+                {
+                    if matches!(value.kind, ValueKind::Abrupt(_)) {
+                        continue;
+                    }
+                    result = Some(match result {
+                        None => value.ty.clone(),
+                        Some(previous) => self.join_when_results(&previous, &value.ty, offset)?,
+                    });
+                }
+                let result = result
+                    .or_else(|| otherwise.as_ref().map(|value| value.ty.clone()))
+                    .ok_or_else(|| Diagnostic::new(offset, "Exhaustive when expressions with only abrupt branches require unsupported Nothing inference").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "WHEN_ABRUPT_RESULT_UNSUPPORTED"))?;
+                let mut body = if let Some(otherwise) = otherwise {
+                    self.coerce(otherwise, result, offset)?
+                } else {
+                    self.unmatched_when(result, offset)?
+                };
+                self.refinements = Self::intersect_refinements(&continuing_refinements);
                 if body.ty == Type::Unit {
                     return Err(Diagnostic::new(
                         offset,
