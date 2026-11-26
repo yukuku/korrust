@@ -5755,7 +5755,13 @@ impl Checker<'_> {
                                 return Ok(value);
                             }
                         }
-                        let method = self.select_method(&imported, args, offset)?;
+                        let method = self.select_method_expected(
+                            &imported,
+                            args,
+                            &[],
+                            expected_result,
+                            offset,
+                        )?;
                         return self.library_static_call(method, args, offset);
                     }
                     if let Some((owner, params, defaults)) = self.constructor {
