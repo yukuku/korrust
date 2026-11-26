@@ -2342,6 +2342,22 @@ impl Checker<'_> {
         if self.value_name_is_bound(name) {
             return Ok(None);
         }
+        let mut lexical = self.lambda_owner.as_str();
+        loop {
+            if let Ok(class) = self.classpath.load(lexical)
+                && class
+                    .library
+                    .as_ref()
+                    .and_then(|library| library.companion_name.as_deref())
+                    == Some(name)
+            {
+                return self.companion_receiver(lexical, offset);
+            }
+            let Some((parent, _)) = lexical.rsplit_once('$') else {
+                break;
+            };
+            lexical = parent;
+        }
         match self
             .classpath
             .value_symbol(&self.lambda_owner, name, offset)?

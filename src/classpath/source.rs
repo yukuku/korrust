@@ -718,6 +718,20 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         if let Some(companion) = &source.companion {
             let companion_owner = format!("{owner}$Companion");
             let mut nested = empty(&companion_owner);
+            if companion.private {
+                nested.access &= !1;
+            }
+            nested.library = Some(LibraryClass {
+                value_class: None,
+                companion_name: None,
+                kotlin_visibility: Some(if companion.private { 1 } else { 3 }),
+                type_aliases: Vec::new(),
+                type_parameters: Vec::new(),
+                supertypes: Vec::new(),
+                package: None,
+                multifile_facade: None,
+            });
+            cp.register_lexical_parent(&companion_owner, owner);
             constants(&mut class, &companion.constants)?;
             let mut companion_constants = empty(owner);
             constants(&mut companion_constants, &companion.constants)?;
@@ -764,7 +778,11 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                 owner: owner.into(),
                 name: "Companion".into(),
                 descriptor: format!("L{owner}$Companion;"),
-                access: 0x19,
+                access: if source.companion.as_ref().is_some_and(|c| c.private) {
+                    0x1a
+                } else {
+                    0x19
+                },
                 unsupported: false,
             });
         }

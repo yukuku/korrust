@@ -5205,6 +5205,7 @@ fn emit_class_with(
                 &mut pool,
                 owner,
                 &companion.owner,
+                companion.private,
             )?);
         }
     } else if !class.delegated_properties.is_empty() || enum_data.is_some() {

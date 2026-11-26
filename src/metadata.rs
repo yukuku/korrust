@@ -1873,7 +1873,7 @@ pub(crate) fn for_class_companion(
     let mut strings = Strings::default();
     strings.checked_methods(companion.methods.iter());
     let mut proto = Proto::default();
-    proto.number(1, 390);
+    proto.number(1, if source.private { 386 } else { 390 });
     proto.number(3, strings.id(&companion.owner.replace('$', "."))?);
     proto.message(
         6,

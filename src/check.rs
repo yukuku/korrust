@@ -237,6 +237,7 @@ pub struct ClassCompanionProperty {
     pub value: Value,
 }
 pub struct ClassCompanion {
+    pub private: bool,
     pub constants: Vec<syntax::ConstDecl>,
     pub exposed_fields: HashMap<String, u16>,
     pub methods: Vec<Function>,
@@ -2322,6 +2323,21 @@ impl Checker<'_> {
         extension: bool,
         offset: usize,
     ) -> Result<Value> {
+        if let Some((owner, name)) = method.owner.rsplit_once('$')
+            && self.classpath.load(owner).is_ok_and(|class| {
+                class
+                    .library
+                    .as_ref()
+                    .and_then(|library| library.companion_name.as_deref())
+                    == Some(name)
+            })
+        {
+            self.classpath.check_classifier_visibility(
+                &self.lambda_owner,
+                &method.owner,
+                offset,
+            )?;
+        }
         let method = if let Some(class) = library::type_owner(&receiver.ty).and_then(|owner| {
             self.classes
                 .get(owner)

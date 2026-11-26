@@ -32,6 +32,22 @@ impl Classpath {
     }
 
     pub(crate) fn kotlin_field_visible(&self, caller: &str, field: &JavaField) -> bool {
+        if field.kotlin.is_some() {
+            if let Ok(owner) = self.load(&field.owner)
+                && let Some(name) = owner
+                    .library
+                    .as_ref()
+                    .and_then(|library| library.companion_name.as_ref())
+                && let Ok(companion) = self.load(&format!("{}${name}", owner.name))
+                && companion
+                    .fields
+                    .iter()
+                    .any(|candidate| candidate.name == field.name && candidate.kotlin.is_some())
+                && !self.classifier_visible(caller, &companion.name)
+            {
+                return false;
+            }
+        }
         match field.kotlin.as_ref().map(|field| field.visibility) {
             Some(0) => self.internal_visible(&field.owner),
             Some(1 | 4) => self.same_source_file(caller, &field.owner),
