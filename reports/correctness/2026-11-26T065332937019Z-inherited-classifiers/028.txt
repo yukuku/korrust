@@ -1,0 +1,13 @@
+$ /workspace/work/targets159/inherited-dev/references/kotlinc/bin/kotlinc -language-version 2.3 -api-version 2.3 -jvm-target 1.8 /workspace/work/targets159/inherited-dev/target/checks/2026-11-26T065332937019Z-inherited-classifiers/private-kotlin.kt -cp /workspace/work/targets159/inherited-dev/target/checks/2026-11-26T065332937019Z-inherited-classifiers/official:/workspace/work/targets159/inherited-dev/target/checks/2026-11-26T065332937019Z-inherited-classifiers/java:/workspace/work/targets159/inherited-dev/target/checks/2026-11-26T065332937019Z-inherited-classifiers/dependencies:/workspace/work/targets159/inherited-dev/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/targets159/inherited-dev/target/checks/2026-11-26T065332937019Z-inherited-classifiers/invalid-official-private-kotlin
+target/checks/2026-11-26T065332937019Z-inherited-classifiers/private-kotlin.kt:2:31: error: 'public' function exposes its 'private-in-class' return type 'KHidden'.
+class Bad: KotlinBase() { fun bad(value: KHidden): KHidden = value }
+                              ^^^
+target/checks/2026-11-26T065332937019Z-inherited-classifiers/private-kotlin.kt:2:35: error: 'public' function exposes its 'private-in-class' parameter type 'KHidden'.
+class Bad: KotlinBase() { fun bad(value: KHidden): KHidden = value }
+                                  ^^^^^^^^^^^^^^
+target/checks/2026-11-26T065332937019Z-inherited-classifiers/private-kotlin.kt:2:42: error: cannot access 'class KHidden : Any': it is private in 'inherited.library.KotlinBase'.
+class Bad: KotlinBase() { fun bad(value: KHidden): KHidden = value }
+                                         ^^^^^^^
+target/checks/2026-11-26T065332937019Z-inherited-classifiers/private-kotlin.kt:2:52: error: cannot access 'class KHidden : Any': it is private in 'inherited.library.KotlinBase'.
+class Bad: KotlinBase() { fun bad(value: KHidden): KHidden = value }
+                                                   ^^^^^^^

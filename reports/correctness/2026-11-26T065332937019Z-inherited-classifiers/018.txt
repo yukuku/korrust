@@ -1,0 +1,13 @@
+$ /workspace/work/targets159/inherited-dev/references/kotlinc/bin/kotlinc -language-version 2.3 -api-version 2.3 -jvm-target 1.8 /workspace/work/targets159/inherited-dev/target/checks/2026-11-26T065332937019Z-inherited-classifiers/package-outside.kt -cp /workspace/work/targets159/inherited-dev/target/checks/2026-11-26T065332937019Z-inherited-classifiers/official:/workspace/work/targets159/inherited-dev/target/checks/2026-11-26T065332937019Z-inherited-classifiers/java:/workspace/work/targets159/inherited-dev/target/checks/2026-11-26T065332937019Z-inherited-classifiers/dependencies:/workspace/work/targets159/inherited-dev/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/targets159/inherited-dev/target/checks/2026-11-26T065332937019Z-inherited-classifiers/invalid-official-package-outside
+target/checks/2026-11-26T065332937019Z-inherited-classifiers/package-outside.kt:2:25: error: 'public' function exposes its 'public/*package*/' return type 'PackageType'.
+class Bad: Base() { fun bad(value: PackageType): PackageType = value }
+                        ^^^
+target/checks/2026-11-26T065332937019Z-inherited-classifiers/package-outside.kt:2:29: error: 'public' function exposes its 'public/*package*/' parameter type 'PackageType'.
+class Bad: Base() { fun bad(value: PackageType): PackageType = value }
+                            ^^^^^^^^^^^^^^^^^^
+target/checks/2026-11-26T065332937019Z-inherited-classifiers/package-outside.kt:2:36: error: cannot access 'class PackageType : Any': it is package-private in 'inherited.library.JavaTypes.Base'.
+class Bad: Base() { fun bad(value: PackageType): PackageType = value }
+                                   ^^^^^^^^^^^
+target/checks/2026-11-26T065332937019Z-inherited-classifiers/package-outside.kt:2:50: error: cannot access 'class PackageType : Any': it is package-private in 'inherited.library.JavaTypes.Base'.
+class Bad: Base() { fun bad(value: PackageType): PackageType = value }
+                                                 ^^^^^^^^^^^

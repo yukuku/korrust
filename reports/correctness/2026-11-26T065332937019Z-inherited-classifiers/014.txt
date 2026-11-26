@@ -1,0 +1,13 @@
+$ /workspace/work/targets159/inherited-dev/references/kotlinc/bin/kotlinc -language-version 2.3 -api-version 2.3 -jvm-target 1.8 /workspace/work/targets159/inherited-dev/target/checks/2026-11-26T065332937019Z-inherited-classifiers/private-java.kt -cp /workspace/work/targets159/inherited-dev/target/checks/2026-11-26T065332937019Z-inherited-classifiers/official:/workspace/work/targets159/inherited-dev/target/checks/2026-11-26T065332937019Z-inherited-classifiers/java:/workspace/work/targets159/inherited-dev/target/checks/2026-11-26T065332937019Z-inherited-classifiers/dependencies:/workspace/work/targets159/inherited-dev/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/targets159/inherited-dev/target/checks/2026-11-26T065332937019Z-inherited-classifiers/invalid-official-private-java
+target/checks/2026-11-26T065332937019Z-inherited-classifiers/private-java.kt:2:25: error: 'public' function exposes its 'private-in-class' return type 'Hidden'.
+class Bad: Base() { fun bad(value: Hidden): Hidden = value }
+                        ^^^
+target/checks/2026-11-26T065332937019Z-inherited-classifiers/private-java.kt:2:29: error: 'public' function exposes its 'private-in-class' parameter type 'Hidden'.
+class Bad: Base() { fun bad(value: Hidden): Hidden = value }
+                            ^^^^^^^^^^^^^
+target/checks/2026-11-26T065332937019Z-inherited-classifiers/private-java.kt:2:36: error: cannot access 'class Hidden : Any': it is private in 'inherited.library.JavaTypes.Base'.
+class Bad: Base() { fun bad(value: Hidden): Hidden = value }
+                                   ^^^^^^
+target/checks/2026-11-26T065332937019Z-inherited-classifiers/private-java.kt:2:45: error: cannot access 'class Hidden : Any': it is private in 'inherited.library.JavaTypes.Base'.
+class Bad: Base() { fun bad(value: Hidden): Hidden = value }
+                                            ^^^^^^
