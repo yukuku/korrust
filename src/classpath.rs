@@ -745,6 +745,10 @@ impl Classpath {
             .insert(child.into(), parent.into());
     }
 
+    pub(crate) fn lexical_parent(&self, owner: &str) -> Option<String> {
+        self.lexical_parents.borrow().get(owner).cloned()
+    }
+
     pub(crate) fn lexically_within(&self, caller: &str, outer: &str) -> bool {
         let parents = self.lexical_parents.borrow();
         let mut current = caller;

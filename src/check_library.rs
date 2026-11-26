@@ -526,6 +526,56 @@ impl Checker<'_> {
                     }
                 }
             }
+            let mut scope = Some(self.lambda_owner.clone());
+            let mut seen_scopes = HashSet::new();
+            while let Some(owner) = scope {
+                if !seen_scopes.insert(owner.clone()) {
+                    return Err(Diagnostic::new(offset, "Cyclic lexical classifier hierarchy"));
+                }
+                scope = self.classpath.lexical_parent(&owner);
+                let Ok(class) = self.classpath.load(&owner) else {
+                    continue;
+                };
+                let mut parent = class.super_name;
+                let mut overloads = Vec::new();
+                let mut signatures = HashSet::new();
+                let mut visited = HashSet::new();
+                while let Some(ancestor) = parent {
+                    if !visited.insert(ancestor.clone()) || ancestor == "java/lang/Object" {
+                        break;
+                    }
+                    let declaration = self.classpath.load(&ancestor)?;
+                    parent = declaration.super_name;
+                    if declaration.kotlin_class {
+                        continue;
+                    }
+                    for mut method in declaration.methods {
+                        if method.name == name
+                            && method.access & 9 == 9
+                            && signatures.insert(method.descriptor.clone())
+                        {
+                            if declaration.access & 1 == 0 {
+                                method.owner = owner.clone();
+                            }
+                            overloads.push(method);
+                        }
+                    }
+                }
+                if !overloads.is_empty() {
+                    match self.select_method_expected(&overloads, args, explicit, expected, offset)
+                    {
+                        Ok(method) => {
+                            return self.library_static_call(method, args, offset).map(Some);
+                        }
+                        Err(error)
+                            if matches!(
+                                error.code,
+                                "NO_APPLICABLE_OVERLOAD" | "ARGUMENT_MAPPING_MISMATCH"
+                            ) => {}
+                        Err(error) => return Err(error),
+                    }
+                }
+            }
             if let Some(error) = failures.into_iter().next() {
                 return Err(error);
             }
