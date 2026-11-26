@@ -1663,9 +1663,21 @@ impl Checker<'_> {
                     if projection.variance == Variance::Invariant && projection.ty.is_some() {
                         continue;
                     }
-                    if projection.variance != Variance::Out
-                        || projection.ty.is_none()
+                    let star = projection.ty.is_none();
+                    if (!star && projection.variance != Variance::Out)
                         || fixed.contains(name)
+                        || star
+                            && (patterns
+                                .iter()
+                                .filter(|pattern| {
+                                    pattern.ty.as_ref().is_some_and(|ty| mentions(ty, name))
+                                })
+                                .count()
+                                != 1
+                                || library
+                                    .type_parameters
+                                    .iter()
+                                    .any(|p| p.name == *name && p.reified))
                         || params.iter().skip(1).any(|(_, ty, _)| mentions(ty, name))
                         || captures
                             .get(name)
@@ -1673,6 +1685,12 @@ impl Checker<'_> {
                     {
                         return Err(Diagnostic::new(offset, "Projected extension receiver requires unsupported writable or conflicting capture semantics")
                             .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "PROJECTED_EXTENSION_CAPTURE_UNSUPPORTED"));
+                    }
+                    if star {
+                        substitutions.insert(
+                            name.clone(),
+                            Type::Nullable(Box::new(Type::Java("java/lang/Object".into()))),
+                        );
                     }
                     captures.insert(name.clone(), projection.clone());
                 }
