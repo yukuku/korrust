@@ -1584,7 +1584,8 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Option<Value>> {
-        if self.functions.contains_key(name)
+        if self.type_parameter_name_is_bound(name)
+            || self.functions.contains_key(name)
             || self.local(name).is_some()
             || self.captured.contains_key(name)
             || self.object_methods.contains_key(name)
@@ -1859,10 +1860,11 @@ impl Checker<'_> {
         expected: Option<&Type>,
         offset: usize,
     ) -> Result<Option<Value>> {
-        if self
-            .imports
-            .get(name)
-            .is_some_and(|binding| binding.contains("::"))
+        if self.type_parameter_name_is_bound(name)
+            || self
+                .imports
+                .get(name)
+                .is_some_and(|binding| binding.contains("::"))
         {
             return Ok(None);
         }
@@ -2148,8 +2150,25 @@ impl Checker<'_> {
             }
         }
         let mut names = Vec::new();
-        if !parts(expression, &mut names) || names.len() < 2 || self.value_name_is_bound(names[0]) {
+        if !parts(expression, &mut names) || self.value_name_is_bound(names[0]) {
             return Ok(None);
+        }
+        if names.len() == 1 {
+            return Ok(
+                match self
+                    .classpath
+                    .value_symbol(&self.lambda_owner, names[0], offset)?
+                {
+                    Some(crate::classpath::ValueSymbol::Classifier(class))
+                        if !class.kotlin_class
+                            && self.classpath.java_nested_access(&class.name).is_some() =>
+                    {
+                        let access = self.classpath.java_nested_access(&class.name);
+                        Some((*class, access))
+                    }
+                    _ => None,
+                },
+            );
         }
         let symbol = self
             .classpath
@@ -2421,6 +2440,9 @@ impl Checker<'_> {
         if let Some(value) = self.java_callee_collision(expression, args, offset)? {
             return Ok(Some(value));
         }
+        if matches!(expression.kind, ExprKind::Name(_)) {
+            return Ok(None);
+        }
         let java = self.qualified_java_classifier(expression, offset)?;
         if java
             .as_ref()
@@ -2562,8 +2584,18 @@ impl Checker<'_> {
 }
 
 impl Checker<'_> {
+    pub(super) fn type_parameter_name_is_bound(&self, name: &str) -> bool {
+        self.reified_parameters
+            .iter()
+            .any(|parameter| parameter.name == name)
+            || self
+                .classpath
+                .type_parameter_in_scope(&self.lambda_owner, name)
+    }
+
     fn value_name_is_bound(&self, name: &str) -> bool {
         name == "this"
+            || self.type_parameter_name_is_bound(name)
             || self.local(name).is_some()
             || self.captured.contains_key(name)
             || self.constants.contains_key(name)

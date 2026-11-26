@@ -5,6 +5,7 @@ mod aliases;
 mod archive;
 pub(crate) mod compose_abi;
 mod import_classes;
+mod inherited_classifiers;
 mod inline_defaults;
 mod jdk_modules;
 pub(crate) mod jvm_builtins;
@@ -1047,8 +1048,12 @@ impl Classpath {
         Ok(())
     }
 
-    pub(crate) fn source_default_imports(&self, module: &mut crate::syntax::Module) -> Result<()> {
-        source::defaults(module, self)?;
+    pub(crate) fn source_default_imports(
+        &self,
+        module: &mut crate::syntax::Module,
+        owner: &str,
+    ) -> Result<()> {
+        source::defaults(module, self, owner)?;
         source::expand_aliases(module, self)
     }
 
@@ -1645,11 +1650,11 @@ impl Classpath {
         }))
     }
 
-    pub(crate) fn java_member_class(
+    pub(crate) fn member_class_entry(
         &self,
         owner: &str,
         short: &str,
-    ) -> Result<Option<(JavaClass, u16)>> {
+    ) -> Result<Option<(String, u16)>> {
         if self.is_source(owner) {
             let nested = format!("{owner}${short}");
             if self.is_source(&nested)
@@ -1662,7 +1667,7 @@ impl Classpath {
                 && let Some(class) = self.cache.borrow().get(&nested)
                 && class.kotlin_class
             {
-                return Ok(Some((class.clone(), class.access)));
+                return Ok(Some((class.name.clone(), class.access)));
             }
             return Ok(None);
         }
@@ -1688,9 +1693,19 @@ impl Classpath {
             .collect::<Vec<_>>();
         match entries.as_slice() {
             [] => Ok(None),
-            [(name, _, _, access)] => Ok(Some((self.load(name)?, *access))),
+            [(name, _, _, access)] => Ok(Some((name.to_string(), *access))),
             _ => Err(invalid()),
         }
+    }
+
+    pub(crate) fn java_member_class(
+        &self,
+        owner: &str,
+        short: &str,
+    ) -> Result<Option<(JavaClass, u16)>> {
+        self.member_class_entry(owner, short)?
+            .map(|(name, access)| Ok((self.load(&name)?, access)))
+            .transpose()
     }
 
     pub fn package_classes(&self, package: &str) -> Result<Vec<JavaClass>> {

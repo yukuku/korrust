@@ -2391,6 +2391,7 @@ impl<'a> DeclarationContext<'a> {
             self.classes,
         )?;
         let mut checker = self.checker(receiver, u16::from(receiver), result.clone());
+        checker.reified_parameters = source.type_params.clone();
         checker.validate_update_declaration(source, &Type::Java(self.owner.clone()))?;
         let mut params = Vec::new();
         if let Some(receiver) = &source.receiver {

@@ -6118,7 +6118,9 @@ impl Checker<'_> {
                             );
                         }
                     }
-                    if let Some(owner) = self.imports.get(name) {
+                    if !self.type_parameter_name_is_bound(name)
+                        && let Some(owner) = self.imports.get(name)
+                    {
                         if let Some(class) = self.classes.get(owner).cloned() {
                             if class.access & 0x2000 != 0 {
                                 return Err(Diagnostic::new(
@@ -7740,7 +7742,7 @@ pub fn check_with_owner(
             {
                 return Err(Diagnostic::new(
                     *offset,
-                    "Compiled value class uses an unsupported carrier or generic declaration",
+                    format!("Compiled value class uses an unsupported carrier or generic declaration: {owner}"),
                 )
                 .with_kind(
                     crate::DiagnosticKind::UnsupportedLanguage,

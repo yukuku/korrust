@@ -1283,15 +1283,15 @@ fn constants(class: &mut JavaClass, constants: &[crate::syntax::ConstDecl]) -> R
     Ok(())
 }
 
-pub(super) fn defaults(module: &mut Module, cp: &Classpath) -> Result<()> {
+pub(super) fn defaults(module: &mut Module, cp: &Classpath, owner: &str) -> Result<()> {
     if let Some(mut enumeration) = module.enum_decl.take() {
         let mut context = module.clone();
         context.class_decl = Some(enumeration.body.clone());
-        defaults(&mut context, cp)?;
+        defaults(&mut context, cp, owner)?;
         enumeration.body = context.class_decl.take().unwrap();
         for entry in enumeration.entry_bodies.iter_mut().flatten() {
             context.class_decl = Some(entry.clone());
-            defaults(&mut context, cp)?;
+            defaults(&mut context, cp, owner)?;
             *entry = context.class_decl.take().unwrap();
         }
         module.imports = context.imports;
@@ -1427,9 +1427,6 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) -> Result<()> {
                         function(&value.function, names);
                     }
                 }
-                for value in &value.nested {
-                    declaration(value, names);
-                }
             }
             crate::syntax::Declaration::Object(value) => {
                 annotations(&value.annotation_uses, names);
@@ -1444,12 +1441,6 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) -> Result<()> {
                 }
                 for value in &value.methods {
                     function(&value.function, names);
-                }
-                for value in &value.nested {
-                    declaration(value, names);
-                }
-                for value in &value.objects {
-                    declaration(&crate::syntax::Declaration::Object(value.clone()), names);
                 }
             }
             crate::syntax::Declaration::Interface(value) => {
@@ -1479,12 +1470,6 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) -> Result<()> {
                     for value in &value.methods {
                         function(&value.function, names);
                     }
-                }
-                for value in &value.declarations {
-                    declaration(value, names);
-                }
-                for value in &value.nested {
-                    declaration(&crate::syntax::Declaration::Interface(value.clone()), names);
                 }
             }
             crate::syntax::Declaration::Annotation(_) | crate::syntax::Declaration::Enum(_) => {}
@@ -1519,6 +1504,7 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) -> Result<()> {
             &mut names,
         );
     }
+    let direct_names = names.clone();
     names.extend(
         module
             .type_locations
@@ -1552,6 +1538,27 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) -> Result<()> {
             .filter_map(|name| name.split_once('/').map(|(root, _)| root.to_owned()))
             .collect::<Vec<_>>(),
     );
+    let inherited_names = names
+        .iter()
+        .cloned()
+        .chain(
+            module
+                .imports
+                .iter()
+                .filter(|(alias, _, _)| alias != "*")
+                .map(|(alias, _, _)| alias.clone()),
+        )
+        .collect::<std::collections::BTreeSet<_>>();
+    for name in inherited_names {
+        if !name.contains('/')
+            && !name.contains('.')
+            && !name.contains('$')
+            && let Some(class) = cp.scoped_member_classifier(owner, &name)?
+        {
+            module.imports.retain(|(alias, _, _)| alias != &name);
+            module.imports.push((name, class.name, 0));
+        }
+    }
     for name in names {
         if name.contains('/')
             || name.contains('.')
@@ -1583,10 +1590,9 @@ pub(super) fn defaults(module: &mut Module, cp: &Classpath) -> Result<()> {
             }
         };
         let classifier = |package: &str| -> Result<bool> {
-            Ok(cp
-                .load(&path(package))
-                .is_ok_and(|class| class.access & 1 != 0)
-                || cp.type_alias(package, &name)?.is_some())
+            Ok(cp.load(&path(package)).is_ok_and(|class| {
+                class.access & 1 != 0 && (!class.unsupported || direct_names.contains(&name))
+            }) || cp.type_alias(package, &name)?.is_some())
         };
         let source_package = module.package.replace('.', "/");
         if classifier(&source_package)? {
@@ -1986,14 +1992,14 @@ mod import_priority_tests {
             "package use\nimport one.*\nimport two.*\nclass Holder(val value: Collision)",
         )
         .unwrap();
-        let error = defaults(&mut module, &classpath).unwrap_err();
+        let error = defaults(&mut module, &classpath, "use/Holder").unwrap_err();
         assert_eq!(error.kind, crate::DiagnosticKind::InvalidKotlin);
         assert_eq!(error.code, "AMBIGUOUS_CLASSIFIER_IMPORT");
         let mut module = crate::syntax::parse(
             "package use\nimport one.*\nimport one.*\nclass Holder(val value: Collision)",
         )
         .unwrap();
-        defaults(&mut module, &classpath).unwrap();
+        defaults(&mut module, &classpath, "use/Holder").unwrap();
         assert!(
             module
                 .imports
