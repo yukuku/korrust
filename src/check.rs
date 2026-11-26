@@ -51,6 +51,8 @@ mod captures;
 mod classes;
 #[path = "check_compose.rs"]
 mod compose;
+#[path = "check_compose_memo.rs"]
+mod compose_memo;
 #[path = "check_constructor_aliases.rs"]
 mod constructor_aliases;
 #[path = "check_constructor_bridges.rs"]

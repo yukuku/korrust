@@ -4,6 +4,15 @@ pub(crate) const COMPOSER: &str = "androidx/compose/runtime/Composer";
 pub(crate) const FACTORY: &str = "androidx/compose/runtime/internal/ComposableLambdaKt";
 pub(crate) const WRAPPER: &str = "androidx/compose/runtime/internal/ComposableLambda";
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(crate) enum Stability {
+    Unknown,
+    UnmarkedInterface,
+    Stable,
+    Runtime,
+    UnsupportedRuntime,
+}
+
 #[derive(Clone, Debug)]
 pub(crate) struct Call {
     pub changed_words: usize,

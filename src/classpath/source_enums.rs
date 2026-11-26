@@ -101,6 +101,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         });
     }
     class.library = Some(LibraryClass {
+        compose_stability: crate::classpath::compose_abi::Stability::Unknown,
         value_class: None,
         companion_name: source.body.companion.as_ref().map(|_| "Companion".into()),
         kotlin_visibility: Some(if source.body.internal { 0 } else { 3 }),

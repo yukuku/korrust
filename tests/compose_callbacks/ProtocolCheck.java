@@ -46,7 +46,7 @@ public class ProtocolCheck {
                 case "endRestartGroup": ends++; return scope;
                 case "getRecomposeScope": reads++; return scope;
                 case "recordUsed": records++; if (a[0]!=scope) throw new AssertionError("scope parameter"); return null;
-                case "changed": changes++; return changed;
+                case "changedInstance": case "changed": changes++; return changed;
                 case "shouldExecute": parameterChanged=(Boolean)a[0];force=(Integer)a[1]; return parameterChanged || force!=0 || !skipping;
                 case "skipToGroupEnd": skips++; return null;
                 case "getSkipping": return skipping;
@@ -150,6 +150,7 @@ public class ProtocolCheck {
         controller.labeled(shadow);
         checkBody(registry,19);
         BinaryProtocol.check(trace);
+        MemoProtocol.main(new String[0]);
         ComposerKt.class.getDeclaredMethod("access$setCompositionTracer$p", CompositionTracer.class).invoke(null,new Object[]{null});
         System.out.println("compose-protocol-ok:"+scenarios);
     }

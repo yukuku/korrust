@@ -26,6 +26,7 @@ def main():
     parser.add_argument('--compiler-source', type=Path, default=ROOT)
     parser.add_argument('--baseline', type=Path)
     parser.add_argument('--no-report', action='store_true')
+    parser.add_argument('--skip-html', action='store_true')
     args = parser.parse_args()
     now = datetime.now(timezone.utc)
     ident = now.strftime('%Y-%m-%dT%H%M%S%fZ') + '-compose-callbacks'
@@ -56,7 +57,7 @@ def main():
         for path, data in inputs.items():
             archive.writestr(path, data)
     frozen = {path: hashlib.sha256(data).hexdigest() for path, data in inputs.items()}
-    report = dict(schema_version=1, kind='correctness', created_at=now.isoformat(), status='running', compiler=dict(binary=rel(candidate), sha256=sha(candidate), source_revision=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()), reference_compiler=json.loads((ROOT / 'references/compiler.json').read_text()), compose_runtime=pin, inputs=dict(files_sha256=frozen, bundle=rel(logs / 'inputs.zip'), bundle_sha256=sha(logs / 'inputs.zip'), stdlib_sha256=sha(standard), compose_plugin_sha256=sha(plugin), jdk_release_sha256=sha(jdk.parent / 'release')), commands=[], cases=[], limitations=['Only literal zero-argument Unit Compose callbacks passed to supported noninline, nongeneric binary methods are lowered', 'Source composable declarations, hidden Composer calls inside the body, nested function creation and its plugin memoization, receiver/argument/result/suspend/nullable/generic callback shapes remain explicitly unsupported', 'Runtime protocol is pinned to AndroidX Compose Runtime 1.11.0 and the Kotlin 2.3.21 bundled plugin; keys and generated class names are compiler-specific', 'Composer and RecomposeScope are controlled proxies; actual pinned composableLambdaInstance wrappers and generated callback bodies execute, without a real Composition/Recomposer or Android execution claim'], reproduction_commands=[['python3', 'tools/setup_compose_reference.py'], ['python3', 'tools/check_compose_callbacks.py', '--candidate', str(args.candidate)]])
+    report = dict(schema_version=1, kind='correctness', created_at=now.isoformat(), status='running', compiler=dict(binary=rel(candidate), sha256=sha(candidate), source_revision=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()), reference_compiler=json.loads((ROOT / 'references/compiler.json').read_text()), compose_runtime=pin, inputs=dict(files_sha256=frozen, bundle=rel(logs / 'inputs.zip'), bundle_sha256=sha(logs / 'inputs.zip'), stdlib_sha256=sha(standard), compose_plugin_sha256=sha(plugin), jdk_release_sha256=sha(jdk.parent / 'release')), commands=[], cases=[], limitations=['Only literal zero-argument Unit Compose callbacks passed to supported noninline, nongeneric binary methods are lowered', 'Source composable declarations and receiver/argument/result/suspend/nullable/generic composable callback shapes remain unsupported; binary composable calls accept only supported static noninline nongeneric Unit file-facade methods and straight-line groups; nested ordinary Unit functions support up to one parameter and stable scalar/String or annotation-free Kotlin interface captures; annotated or unknown class stability, mutable cells and conditional memoization remain explicit unsupported boundaries', 'Runtime protocol is pinned to AndroidX Compose Runtime 1.11.0 and the Kotlin 2.3.21 bundled plugin; keys and generated class names are compiler-specific', 'Composer and RecomposeScope are controlled proxies; actual pinned composableLambdaInstance wrappers and generated callback bodies execute, without a real Composition/Recomposer or Android execution claim'], reproduction_commands=[['python3', 'tools/setup_compose_reference.py'], ['python3', 'tools/check_compose_callbacks.py', '--candidate', str(args.candidate)]])
 
     report['reproduction_commands'][-1].extend(['--compiler-source', str(args.compiler_source)])
     if args.baseline:
@@ -83,11 +84,12 @@ def main():
         dependencies = work / 'dependency'
         run('compile Java lexical superclass', [jdk / 'javac', '-d', dependencies, FIXTURES / 'LexicalBase.java'])
         run('compile hidden-argument recorder', [jdk / 'javac', '-cp', cp(runtime, standard), '-d', dependencies, FIXTURES / 'Capture.java'])
-        library_sources = [FIXTURES / name for name in ['Library.kt', 'Lookalike.kt', 'LexicalLibrary.kt', 'Binary.kt']]
+        library_sources = [FIXTURES / name for name in ['Library.kt', 'Lookalike.kt', 'LexicalLibrary.kt', 'Binary.kt', 'Memo.kt']]
         run('compile transformed binary dependency', [kotlin, *library_sources, *options, '-cp', cp(runtime, annotations, standard), '-d', dependencies])
         instrumenter = work / 'instrumenter'
         run('compile descriptor-preserving entry probe', [jdk / 'javac', '-cp', compiler_jar, '-d', instrumenter, FIXTURES / 'Instrument.java'])
         run('instrument pinned binary method arguments', [jdk / 'java', '-cp', cp(instrumenter, compiler_jar), 'Instrument', dependencies / 'composeprobe/BinaryKt.class'])
+        run('probe pinned memo callee ABI', [jdk / 'java', '-cp', cp(instrumenter, compiler_jar), 'Instrument', dependencies / 'composeprobe/MemoKt.class'])
         dependency_cp = cp(dependencies, runtime, annotations, standard)
         if args.baseline:
             baseline = work / 'baseline-frozen'
@@ -102,11 +104,11 @@ def main():
             run('compile callback consumer ' + provider, [*command, FIXTURES / 'Consumer.kt', '-cp', dependency_cp, '-d', output])
             case('compile/' + provider, True)
         callers = work / 'callers'
-        run('fixed Java caller against official', [jdk / 'javac', '-cp', cp(outputs['official'], dependency_cp), '-d', callers, FIXTURES / 'ProtocolCheck.java', FIXTURES / 'BinaryProtocol.java'])
+        run('fixed Java caller against official', [jdk / 'javac', '-cp', cp(outputs['official'], dependency_cp), '-d', callers, FIXTURES / 'ProtocolCheck.java', FIXTURES / 'BinaryProtocol.java', FIXTURES / 'MemoProtocol.java'])
         signatures = []
         for provider, output in outputs.items():
             result = run('verified runtime protocol ' + provider, [jdk / 'java', '-Xverify:all', '-cp', cp(callers, output, dependency_cp), 'composeprobe.ProtocolCheck'])
-            case('runtime/' + provider, result.stdout == 'compose-protocol-ok:128\n', protocol_scenarios=128, additional_assertions=['interface and top-level hosts', 'mutable captures', 'nullable reference and wide captures', 'local return', 'disabled tracing', 'abrupt exception', 'lexical dispatch and initialization', 'nearer and nested receiver precedence', 'labeled and nearest this'])
+            case('runtime/' + provider, result.stdout == 'memo-protocol-ok\ncompose-protocol-ok:128\n', protocol_scenarios=128, additional_assertions=['interface and top-level hosts', 'mutable captures', 'nullable reference and wide captures', 'local return', 'disabled tracing', 'abrupt exception', 'lexical dispatch and initialization', 'nested callback remembered identity and invalidation', 'primitive and String value comparisons versus unannotated interface identity', 'nullable host and wide captures', 'captureless literal and callable reference caching', 'deferred runtime side effects and source markers', 'exact binary callee flags and defaults', 'nearer and nested receiver precedence', 'labeled and nearest this'])
             signatures.append(run('public JVM signatures ' + provider, [jdk / 'javap', '-public', '-s', '-cp', output, 'composeprobe.ConsumerKt']).stdout)
         case('public-JVM-signatures', signatures[0] == signatures[1])
         boundaries = json.loads((FIXTURES / 'Rejections.json').read_text())
@@ -152,7 +154,7 @@ def main():
         path = logs.with_suffix('.json')
         path.write_text(json.dumps(report, indent=2) + '\n')
         print(path)
-        if not args.no_report:
+        if not args.no_report and not args.skip_html:
             subprocess.run(['python3', ROOT / 'tools/reports.py'], cwd=ROOT, check=True)
     if args.no_report:
         shutil.rmtree(work)

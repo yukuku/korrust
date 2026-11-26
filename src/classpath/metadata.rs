@@ -1969,6 +1969,11 @@ pub(super) fn attach_with_values(
     }
     let class_flags = proto.integer(1)?.unwrap_or(6);
     class.library = Some(LibraryClass {
+        compose_stability: if kind == 1 && class.access & 0x200 != 0 && class_flags & 1 == 0 {
+            super::compose_abi::Stability::UnmarkedInterface
+        } else {
+            super::compose_abi::Stability::Unknown
+        },
         value_class: if kind == 1 && class_flags & 8192 != 0 {
             let mut info = crate::value_abi::ValueClassInfo {
                 property: metadata_name(&strings, proto.integer(17)?)?.into(),

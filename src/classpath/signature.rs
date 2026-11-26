@@ -711,6 +711,7 @@ pub(super) fn attach_with_declarations(
         class.unsupported = false;
     }
     class.library = Some(LibraryClass {
+        compose_stability: crate::classpath::compose_abi::Stability::Unknown,
         value_class: None,
         companion_name: None,
         kotlin_visibility: None,

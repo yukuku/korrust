@@ -204,6 +204,7 @@ pub(crate) struct JavaMethod {
 
 #[derive(Clone, Debug)]
 pub(crate) struct LibraryClass {
+    pub compose_stability: compose_abi::Stability,
     pub value_class: Option<crate::value_abi::ValueClassInfo>,
     pub companion_name: Option<String>,
     pub kotlin_visibility: Option<u8>,
@@ -622,6 +623,7 @@ impl Classpath {
                     annotation_definition: None,
                     kotlin_fun_interface: false,
                     library: Some(LibraryClass {
+                        compose_stability: crate::classpath::compose_abi::Stability::Unknown,
                         value_class: None,
                         companion_name: None,
                         kotlin_visibility: None,
@@ -1446,6 +1448,40 @@ impl Classpath {
             && class.access & 0x2000 == 0
         {
             self.apply_java_package_defaults(&mut class, &attrs, &method_attrs, &field_attrs)?;
+        }
+        if let Some(library) = &mut class.library {
+            let inferred = attrs
+                .annotations
+                .iter()
+                .filter(|annotation| {
+                    annotation.name == "Landroidx/compose/runtime/internal/StabilityInferred;"
+                })
+                .collect::<Vec<_>>();
+            let marked = attrs.annotations.iter().any(|annotation| {
+                annotation.values.is_empty()
+                    && matches!(
+                        annotation.name.as_str(),
+                        "Landroidx/compose/runtime/Stable;"
+                            | "Landroidx/compose/runtime/Immutable;"
+                    )
+            });
+            if marked {
+                library.compose_stability = compose_abi::Stability::Stable;
+            } else if !inferred.is_empty() {
+                let supported = inferred.len() == 1
+                    && matches!(inferred[0].values.as_slice(), [(name, AnnotationValue::Integer(0))] if name == "parameters")
+                    && class.fields.iter().any(|field| {
+                        field.name == "$stable"
+                            && field.descriptor == "I"
+                            && field.access & 0x19 == 0x19
+                            && !field.unsupported
+                    });
+                library.compose_stability = if supported {
+                    compose_abi::Stability::Runtime
+                } else {
+                    compose_abi::Stability::UnsupportedRuntime
+                };
+            }
         }
         Ok(class)
     }

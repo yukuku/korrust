@@ -441,6 +441,15 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         });
     if let Some((parameters, _)) = generic {
         class.library = Some(LibraryClass {
+            compose_stability: if module
+                .interface_decl
+                .as_ref()
+                .is_some_and(|declaration| declaration.annotations.is_empty())
+            {
+                crate::classpath::compose_abi::Stability::UnmarkedInterface
+            } else {
+                crate::classpath::compose_abi::Stability::Unknown
+            },
             value_class: None,
             companion_name: None,
             kotlin_visibility: None,
@@ -772,6 +781,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                 nested.access &= !1;
             }
             nested.library = Some(LibraryClass {
+                compose_stability: crate::classpath::compose_abi::Stability::Unknown,
                 value_class: None,
                 companion_name: None,
                 kotlin_visibility: Some(if companion.private { 1 } else { 3 }),
@@ -1026,6 +1036,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
         constants(&mut class, &source.constants)?;
     } else {
         class.library = Some(LibraryClass {
+            compose_stability: crate::classpath::compose_abi::Stability::Unknown,
             value_class: None,
             companion_name: None,
             kotlin_visibility: None,
@@ -1221,6 +1232,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
             .map(Type::Java)
             .collect();
         let library = class.library.get_or_insert_with(|| LibraryClass {
+            compose_stability: crate::classpath::compose_abi::Stability::Unknown,
             value_class: None,
             companion_name: None,
             kotlin_visibility: None,

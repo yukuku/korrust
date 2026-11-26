@@ -464,10 +464,18 @@ impl Checker<'_> {
                 cell
             } else {
                 if self.local(&name).is_some_and(|local| local.mutable) {
-                    return Err(Diagnostic::new(
+                    let diagnostic = Diagnostic::new(
                         expr.offset,
                         "Mutable capture must be initialized in the enclosing block",
-                    ));
+                    );
+                    return Err(if self.composable_body {
+                        diagnostic.with_kind(
+                            crate::DiagnosticKind::UnsupportedLanguage,
+                            "COMPOSE_BODY_LAMBDA_UNSUPPORTED",
+                        )
+                    } else {
+                        diagnostic
+                    });
                 }
                 self.value(&Expr {
                     offset: expr.offset,
@@ -717,23 +725,12 @@ impl Checker<'_> {
         if composable {
             self.validate_composable_groups(&mut body, expr.offset)?;
             let mut used = HashSet::new();
-            let mut creates_function = false;
+            checker.memoize_compose_functions(&mut body, &owner, expr.offset)?;
             ir_walk::statements(&mut body, &owner, &mut |value: &mut Value, _: &str| {
                 if let ValueKind::Local(slot) = &value.kind {
                     used.insert(*slot);
                 }
-                creates_function |= matches!(value.kind, ValueKind::Lambda { .. });
             });
-            if creates_function {
-                return Err(Diagnostic::new(
-                    expr.offset,
-                    "Function creation in Compose callback bodies requires unsupported memoization",
-                )
-                .with_kind(
-                    crate::DiagnosticKind::UnsupportedLanguage,
-                    "COMPOSE_BODY_LAMBDA_UNSUPPORTED",
-                ));
-            }
             let mut unused = HashSet::new();
             receiver_setup.retain(|statement| {
                 let Statement::Store(slot, value) = statement else {
@@ -1371,6 +1368,7 @@ mod shadowing_tests {
                 annotation_definition: None,
                 kotlin_fun_interface: false,
                 library: Some(crate::classpath::LibraryClass {
+                    compose_stability: crate::classpath::compose_abi::Stability::Unknown,
                     value_class: None,
                     companion_name: None,
                     kotlin_visibility: None,
