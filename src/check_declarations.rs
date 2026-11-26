@@ -36,6 +36,21 @@ pub(super) fn check_class_with_constants(
     lambdas: &Rc<RefCell<Vec<LambdaDecl>>>,
     constants: &HashMap<String, (Type, Expr)>,
 ) -> Result<ClassDecl> {
+    if source.constructor_vararg {
+        if source.data || source.value_ {
+            return Err(Diagnostic::new(
+                source.offset,
+                "Data and value class primary constructors cannot declare vararg parameters",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "PRIMARY_VARARG_CLASS_KIND_INVALID",
+            ));
+        }
+        if let Some((_, array)) = source.params.last() {
+            validate_vararg_array(array, source.offset, classpath, imports, classes)?;
+        }
+    }
     let mut constants = constants.clone();
     if let Some(companion) = &source.companion {
         for constant in &companion.constants {
@@ -739,10 +754,11 @@ pub(super) fn check_class_with_constants(
                     .map(|(i, t)| (format!("p{i}"), java_parameter(t)))
                     .collect()
             });
+        let arguments = initializer_checker.vararg_arguments(&method, arguments, source.offset)?;
         let (args, lets, mask) = initializer_checker.arguments(
             &call_params,
             &vec![false; call_params.len()],
-            arguments,
+            &arguments,
             method.kotlin_params.is_some(),
             source.offset,
         )?;
@@ -1985,10 +2001,12 @@ pub(super) fn check_class_with_constants(
                 .collect::<String>()
         );
         if !constructor_descriptors.insert(descriptor) {
-            return Err(Diagnostic::new(
-                secondary.offset,
-                "Conflicting constructor signature",
-            ));
+            return Err(
+                Diagnostic::new(secondary.offset, "Conflicting constructor signature").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "CONFLICTING_CONSTRUCTOR_SIGNATURE",
+                ),
+            );
         }
         let delegates_to_this = secondary.delegation == "this";
         let delegation_owner = if delegates_to_this {
@@ -2031,10 +2049,12 @@ pub(super) fn check_class_with_constants(
                     .map(|(i, t)| (format!("p{i}"), java_parameter(t)))
                     .collect()
             });
+        let arguments =
+            checker.vararg_arguments(&selected, &secondary.arguments, secondary.offset)?;
         let (delegation_args, lets, mask) = checker.arguments(
             &call_params,
             &vec![false; call_params.len()],
-            &secondary.arguments,
+            &arguments,
             selected.kotlin_params.is_some(),
             secondary.offset,
         )?;
@@ -2241,6 +2261,7 @@ pub(super) fn check_class_with_constants(
             .collect(),
         delegated_properties,
         primary_constructor: source.primary_constructor,
+        constructor_vararg: source.constructor_vararg,
         constructor_visibility: source.constructor_visibility,
         constructor_signature: None,
         constructor_annotations,
@@ -3780,13 +3801,23 @@ pub(super) fn validate_vararg_type(
     let Some((_, array)) = function.params.last() else {
         return Ok(());
     };
-    let array = resolve_type_checked(array, imports, function.offset, classpath, classes)?;
+    validate_vararg_array(array, function.offset, classpath, imports, classes)
+}
+
+fn validate_vararg_array(
+    array: &Type,
+    offset: usize,
+    classpath: &Classpath,
+    imports: &HashMap<String, String>,
+    classes: &HashMap<String, JavaClass>,
+) -> Result<()> {
+    let array = resolve_type_checked(array, imports, offset, classpath, classes)?;
     let Type::OutArray(element) = array else {
         return Ok(());
     };
     if !element.is_reference() {
         return Err(Diagnostic::new(
-            function.offset,
+            offset,
             "Source Unit varargs and primitive-alias varargs require unsupported carrier lowering",
         )
         .with_kind(
@@ -3800,7 +3831,7 @@ pub(super) fn validate_vararg_type(
     }
     if nominal == &Type::Unit || matches!(nominal, Type::Java(owner) if owner == "kotlin/Unit") {
         return Err(Diagnostic::new(
-            function.offset,
+            offset,
             "Unit varargs require unsupported boxed Unit carriers",
         )
         .with_kind(
@@ -3810,7 +3841,7 @@ pub(super) fn validate_vararg_type(
     }
     if unsigned::owner(nominal).is_some() {
         return Err(Diagnostic::new(
-            function.offset,
+            offset,
             "Unsigned varargs require unsupported unsigned-array carriers",
         )
         .with_kind(
@@ -3826,7 +3857,7 @@ pub(super) fn validate_vararg_type(
             .is_some_and(|library| library.value_class.is_some())
     {
         return Err(Diagnostic::new(
-            function.offset,
+            offset,
             "Value classes cannot be direct vararg element types",
         )
         .with_kind(

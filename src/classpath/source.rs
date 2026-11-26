@@ -545,7 +545,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
                     4
                 } else {
                     source.constructor_visibility.max(1)
-                },
+                } | if source.constructor_vararg { 0x80 } else { 0 },
                 unsupported: false,
                 source_property: None,
                 kotlin_params: Some(params),

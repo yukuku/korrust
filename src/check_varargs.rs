@@ -180,6 +180,10 @@ impl Checker<'_> {
             let actual = if spread {
                 element_type(&value.ty).ok_or_else(|| {
                     Diagnostic::new(expr.offset, "Spread argument requires a non-null array")
+                        .with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "VARARG_SPREAD_REQUIRES_ARRAY",
+                        )
                 })?
             } else {
                 value.ty.clone()
@@ -230,10 +234,13 @@ impl Checker<'_> {
                     )
                 };
                 if !matching_array_kind || !self.subtype(&actual, &element) {
-                    return Err(Diagnostic::new(
-                        position,
-                        "Spread array component type mismatch",
-                    ));
+                    return Err(
+                        Diagnostic::new(position, "Spread array component type mismatch")
+                            .with_kind(
+                                crate::DiagnosticKind::InvalidKotlin,
+                                "VARARG_SPREAD_COMPONENT_MISMATCH",
+                            ),
+                    );
                 }
                 values.push((true, value));
             } else {

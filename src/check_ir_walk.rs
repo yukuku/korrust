@@ -521,6 +521,7 @@ mod tests {
                 exposed_fields: HashMap::new(),
                 delegated_properties: vec![("delegate".into(), int(5))],
                 primary_constructor: true,
+                constructor_vararg: false,
                 constructor_visibility: 1,
                 constructor_signature: None,
                 constructor_annotations: Vec::new(),

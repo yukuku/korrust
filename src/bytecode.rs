@@ -4839,7 +4839,7 @@ fn emit_class_with(
             2
         } else {
             constructor_flags
-        };
+        } | if class.constructor_vararg { 0x80 } else { 0 };
         let mut constructor = simple_method(
             &mut pool,
             flags,

@@ -1184,6 +1184,15 @@ fn class_metadata(
         }
         for (index, (name, ty)) in class.params.iter().enumerate() {
             let mut param = parameter(name, ty, imports, &mut strings)?;
+            if class.constructor_vararg && index + 1 == class.params.len() {
+                let element = ty.array_element().ok_or_else(|| {
+                    Diagnostic::new(
+                        class.offset,
+                        "Invalid primary constructor vararg array type",
+                    )
+                })?;
+                param.message(4, &type_proto(&element, imports, &mut strings)?);
+            }
             let flags = (u32::from(class.defaults.get(index).is_some_and(Option::is_some)) * 2)
                 | u32::from(
                     class

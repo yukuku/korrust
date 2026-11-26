@@ -551,6 +551,7 @@ pub struct ClassDecl {
     pub param_annotations: Vec<Vec<AnnotationUse>>,
     pub annotations: Vec<AnnotationUse>,
     pub primary_constructor: bool,
+    pub constructor_vararg: bool,
     pub constructor_visibility: u16,
     pub constructor_annotations: Vec<AnnotationUse>,
     pub name: String,
@@ -3619,7 +3620,8 @@ impl Parser {
                 "VALUE_MODIFIERS_INVALID",
             ));
         }
-        if class.params.len() != 1
+        if class.constructor_vararg
+            || class.params.len() != 1
             || class.param_properties.len() != 1
             || !class.mutable_params.is_empty()
         {
@@ -3928,6 +3930,7 @@ impl Parser {
         let mut override_params = Vec::new();
         let mut mutable_params = Vec::new();
         let mut defaults = Vec::new();
+        let mut constructor_vararg = false;
         let mut property_names = std::collections::HashSet::new();
         let mut param_names = std::collections::HashSet::new();
         if has_constructor {
@@ -3937,11 +3940,27 @@ impl Parser {
                     let mut annotations = self.annotations()?;
                     let is_override = self.take("override");
                     self.reject_internal_property()?;
+                    let leading_vararg = self.take("vararg");
+                    self.lines();
                     let private = self.take("private");
                     let public = !private && self.take("public");
                     self.lines();
                     annotations.extend(self.annotations()?);
                     self.reject_internal_property()?;
+                    let trailing_vararg = self.take("vararg");
+                    let parameter_vararg = leading_vararg || trailing_vararg;
+                    if leading_vararg && trailing_vararg || constructor_vararg && parameter_vararg {
+                        return Err(self
+                            .error(
+                                "A constructor cannot have repeated vararg modifiers or parameters",
+                            )
+                            .with_kind(DiagnosticKind::InvalidKotlin, "REPEATED_VARARG_INVALID"));
+                    }
+                    if constructor_vararg {
+                        return Err(self.error("A source constructor vararg parameter must be last in the supported subset").with_kind(DiagnosticKind::UnsupportedLanguage, "SOURCE_NONFINAL_VARARG_UNSUPPORTED"));
+                    }
+                    constructor_vararg = parameter_vararg;
+                    self.lines();
                     let mutable = self.take("var");
                     let property = mutable || self.take("val");
                     if (private || public) && !property {
@@ -3973,7 +3992,14 @@ impl Parser {
                             mutable_params.push(param.clone());
                         }
                     }
-                    params.push((param, self.ty()?));
+                    let ty = self.ty()?;
+                    let ty = if parameter_vararg {
+                        Type::primitive_array_for(&ty)
+                            .unwrap_or_else(|| Type::OutArray(Box::new(ty)))
+                    } else {
+                        ty
+                    };
+                    params.push((param, ty));
                     param_annotations.push(annotations);
                     if params.iter().map(|(_, ty)| ty.slots()).sum::<usize>() > 254 {
                         return Err(
@@ -3982,6 +4008,9 @@ impl Parser {
                     }
                     self.lines();
                     defaults.push(if self.take("=") {
+                        if parameter_vararg {
+                            return Err(self.error("Vararg constructor parameters with default values are unsupported").with_kind(DiagnosticKind::UnsupportedLanguage, "VARARG_DEFAULT_UNSUPPORTED"));
+                        }
                         self.lines();
                         Some(self.expr(0)?)
                     } else {
@@ -4082,6 +4111,7 @@ impl Parser {
             annotations,
             param_annotations,
             primary_constructor: true,
+            constructor_vararg,
             constructor_visibility,
             constructor_annotations,
             name,
@@ -4738,6 +4768,7 @@ impl Parser {
             annotations: Vec::new(),
             param_annotations: Vec::new(),
             primary_constructor: true,
+            constructor_vararg: false,
             constructor_visibility: 1,
             constructor_annotations: Vec::new(),
             name: "Companion".into(),
@@ -5329,6 +5360,7 @@ impl Parser {
                     annotations: Vec::new(),
                     param_annotations: Vec::new(),
                     primary_constructor: true,
+                    constructor_vararg: false,
                     constructor_visibility: 1,
                     constructor_annotations: Vec::new(),
                     name: String::new(),

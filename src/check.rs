@@ -304,6 +304,7 @@ pub struct ClassDecl {
     pub exposed_fields: HashMap<String, u16>,
     pub delegated_properties: Vec<(String, Value)>,
     pub primary_constructor: bool,
+    pub constructor_vararg: bool,
     pub constructor_visibility: u16,
     pub constructor_signature: Option<String>,
     pub constructor_annotations: Vec<DeclarationAnnotation>,
