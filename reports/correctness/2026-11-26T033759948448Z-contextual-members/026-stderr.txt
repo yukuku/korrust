@@ -1,0 +1,9 @@
+target/checks/2026-11-26T033759948448Z-contextual-members/explicit_bound.kt:1:58: error: none of the following candidates is applicable:
+
+fun <T : Item!> lookup(p0: Int): T!:
+  Inapplicable candidate(s): fun <T : Item!> lookup(p0: Int): T!
+
+fun <T : Item!> lookup(p0: String!): T!:
+  Inapplicable candidate(s): fun <T : Item!> lookup(p0: String!): T!
+fun invalid(value: contextcalls.Service): String = value.lookup<String>(1)
+                                                         ^^^^^^
