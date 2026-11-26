@@ -260,6 +260,7 @@ impl Type {
             }
             Self::String => "Ljava/lang/String;".into(),
             Self::Unit => "V".into(),
+            Self::Java(name) if name == "kotlin/Nothing" => "Ljava/lang/Void;".into(),
             Self::Java(name) | Self::Parameterized { name, .. } => format!("L{name};"),
             Self::Parameter { upper_bound, .. } => {
                 if upper_bound.is_reference() {

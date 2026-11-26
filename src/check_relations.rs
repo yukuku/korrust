@@ -518,7 +518,7 @@ pub(super) fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: 
     if depth > 64 {
         return false;
     }
-    if actual == expected {
+    if actual == expected || matches!(actual, Type::Java(name) if name == "kotlin/Nothing") {
         return true;
     }
     if actual == &Type::Null {

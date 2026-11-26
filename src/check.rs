@@ -2874,7 +2874,8 @@ impl Checker<'_> {
         if value.ty == expected {
             return Ok(value);
         }
-        if value.ty == Type::Null
+        if (value.ty == Type::Null
+            || matches!(&value.ty, Type::Nullable(inner) if matches!(inner.as_ref(), Type::Java(name) if name == "kotlin/Nothing")))
             && expected.is_reference()
             && expected.is_nullable()
             && !matches!(value.kind, ValueKind::Null)
@@ -4800,7 +4801,22 @@ impl Checker<'_> {
             self.contract_facts.remove(&expr.offset);
         }
         self.contract_registration = previous;
-        result
+        result.map(|value| {
+            if matches!(&value.ty, Type::Java(name) if name == "kotlin/Nothing") {
+                Value {
+                    ty: value.ty.clone(),
+                    kind: ValueKind::Abrupt(vec![
+                        Statement::Expression(value),
+                        Statement::ThrowException {
+                            owner: "kotlin/KotlinNothingValueException".into(),
+                            message: None,
+                        },
+                    ]),
+                }
+            } else {
+                value
+            }
+        })
     }
 
     fn value_untracked(&mut self, expr: &Expr, expected_result: Option<&Type>) -> Result<Value> {
