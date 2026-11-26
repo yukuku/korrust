@@ -1,0 +1,10 @@
+tests/constructor_varargs/InvalidCollision.kt:2:23: error: platform declaration clash: The following declarations have the same JVM signature (<init>([Ljava/lang/String;)V):
+    constructor InvalidCollision(values: Array<String>) defined in constructorvarargs.InvalidCollision
+    constructor InvalidCollision(vararg values: String) defined in constructorvarargs.InvalidCollision
+class InvalidCollision(vararg val values: String) {
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests/constructor_varargs/InvalidCollision.kt:3:5: error: platform declaration clash: The following declarations have the same JVM signature (<init>([Ljava/lang/String;)V):
+    constructor InvalidCollision(values: Array<String>) defined in constructorvarargs.InvalidCollision
+    constructor InvalidCollision(vararg values: String) defined in constructorvarargs.InvalidCollision
+    constructor(values: Array<String>) : this(*values)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
