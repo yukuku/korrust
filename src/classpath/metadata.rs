@@ -1712,7 +1712,7 @@ pub(super) fn attach_with_values(
     let class_flags = proto.integer(1)?.unwrap_or(6);
     class.library = Some(LibraryClass {
         value_class: if kind == 1 && class_flags & 8192 != 0 {
-            Some(crate::value_abi::ValueClassInfo {
+            let mut info = crate::value_abi::ValueClassInfo {
                 property: metadata_name(&strings, proto.integer(17)?)?.into(),
                 carrier: if proto.bytes(18)?.is_some() || proto.integer(19)?.is_some() {
                     ctx.field(&proto, 18, 19)?
@@ -1730,7 +1730,24 @@ pub(super) fn attach_with_values(
                         .ok_or_else(invalid)?;
                     ctx.field(&property, 3, 9)?
                 },
-            })
+            };
+            if let Type::Java(inner) = &info.carrier
+                && let Some(nested) = values.get(inner)
+            {
+                let descriptor = nested.carrier.descriptor();
+                if class.methods.iter().any(|m| {
+                    m.name == "unbox-impl"
+                        && m.access & 9 == 1
+                        && m.descriptor == format!("(){descriptor}")
+                }) && class.methods.iter().any(|m| {
+                    m.name == "box-impl"
+                        && m.access & 9 == 9
+                        && m.descriptor == format!("({descriptor})L{};", class.name)
+                }) {
+                    info.carrier = nested.carrier.clone();
+                }
+            }
+            Some(info)
         } else {
             None
         },
@@ -2071,12 +2088,10 @@ pub(super) fn attach_with_values(
             let mut constructor = constructor;
             constructor.name = "<init>".into();
             constructor.descriptor = format!("({})V", info.carrier.descriptor());
-            constructor.access = 1;
+            constructor.access &= 7;
             constructor.kotlin_result = Some(Type::Unit);
             if let Some(existing) = class.methods.iter_mut().find(|existing| {
-                existing.name == constructor.name
-                    && existing.descriptor == constructor.descriptor
-                    && existing.access & 1 != 0
+                existing.name == constructor.name && existing.descriptor == constructor.descriptor
             }) {
                 *existing = constructor;
             } else {
