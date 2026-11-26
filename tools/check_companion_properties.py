@@ -99,6 +99,7 @@ def main():
                 stripped = line.strip()
                 if not line.startswith(' ') and re.match(r'(public|protected).*\b(class|interface) ', line):
                     owner = line
+                    member = descriptor = None
                     declared[owner] = []
                     synthetic[owner] = []
                 elif re.match(r'^  (public|protected) .+;$', line):
@@ -116,7 +117,8 @@ def main():
         report['declared_api'] = {provider: contract[0] for provider, contract in contracts.items()}
         report['synthetic_members'] = {provider: contract[1] for provider, contract in contracts.items()}
         report['jvm_contract_interpretation'] = 'Declared public/protected API is compared. ACC_SYNTHETIC members are recorded separately: class-based lambdas may require extra private-field access bridges compared with invokedynamic lambdas. Fixed Java and Kotlin consumers check the external contracts.'
-        case('declared-api/match', contracts['official'][0] == contracts['candidate'][0])
+        nonempty = all(len(contract[0]) == 4 and all(members for members in contract[0].values()) for contract in contracts.values())
+        case('declared-api/match', nonempty and contracts['official'][0] == contracts['candidate'][0])
         current = {str(p.relative_to(ROOT)): sha(p) for folder in ['src', 'tests/companion_properties'] for p in (ROOT / folder).rglob('*') if p.is_file()}
         current.update({name: sha(ROOT / name) for name in ['Cargo.toml', 'Cargo.lock', 'tests/companion_properties.rs', 'tools/check_companion_properties.py']})
         case('inputs/unchanged', current == inputs)
