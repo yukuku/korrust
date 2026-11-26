@@ -1800,8 +1800,7 @@ pub(super) fn attach_with_values(
 
     class.kotlin_fun_interface = kind == 1 && class.kotlin_interface && class_flags & 16384 != 0;
     class.unsupported = kind == 1
-        && (class_flags & 14 == 0
-            || class_flags & (2048 | 4096) != 0
+        && (class_flags & (2048 | 4096) != 0
             || class.library.as_ref().is_some_and(|library| {
                 library.value_class.as_ref().is_some_and(|info| {
                     !library.type_parameters.is_empty()

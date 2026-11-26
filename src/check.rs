@@ -7464,7 +7464,7 @@ pub fn check_with_owner(
             if class.access & 1 == 0 || class.unsupported {
                 return Err(Diagnostic::new(
                     type_offset,
-                    "Same-package class is inaccessible or unsupported",
+                    format!("Same-package class is inaccessible or unsupported: {owner}"),
                 ));
             }
             entry.insert(owner.clone());
@@ -7532,10 +7532,13 @@ pub fn check_with_owner(
             continue;
         }
         if let Ok(class) = classpath.load(&owner) {
+            if !classpath.classifier_visible(lexical_owner, &class.name) {
+                continue;
+            }
             if class.access & 1 == 0 || class.unsupported {
                 return Err(Diagnostic::new(
                     0,
-                    "Same-package class is inaccessible or unsupported",
+                    format!("Same-package class is inaccessible or unsupported: {owner}"),
                 ));
             }
             imports.insert(alias, owner.clone());

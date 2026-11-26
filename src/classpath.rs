@@ -751,6 +751,15 @@ impl Classpath {
     }
 
     pub(crate) fn classifier_visible(&self, caller: &str, owner: &str) -> bool {
+        self.classifier_visible_with_internal(caller, owner, true)
+    }
+
+    fn classifier_visible_with_internal(
+        &self,
+        caller: &str,
+        owner: &str,
+        allow_internal: bool,
+    ) -> bool {
         let mut current = owner.to_owned();
         for _ in 0..64 {
             if let Ok(class) = self.load(&current) {
@@ -768,7 +777,7 @@ impl Classpath {
                             return false;
                         }
                     }
-                    Some(0) if !self.internal_visible(&current) => return false,
+                    Some(0) if !allow_internal || !self.internal_visible(&current) => return false,
                     _ => {}
                 }
             }
@@ -830,13 +839,37 @@ impl Classpath {
         ty: &Type,
         offset: usize,
     ) -> Result<()> {
+        self.check_type_visibility_policy(caller, ty, offset, true)
+    }
+
+    pub(crate) fn check_public_type_visibility(&self, ty: &Type, offset: usize) -> Result<()> {
+        self.check_type_visibility_policy("", ty, offset, false)
+    }
+
+    fn check_type_visibility_policy(
+        &self,
+        caller: &str,
+        ty: &Type,
+        offset: usize,
+        allow_internal: bool,
+    ) -> Result<()> {
         match ty {
             Type::Java(owner) | Type::Parameterized { name: owner, .. } => {
                 self.check_classifier_visibility(caller, owner, offset)?;
+                if !allow_internal && !self.classifier_visible_with_internal(caller, owner, false) {
+                    return Err(Diagnostic::new(
+                        offset,
+                        format!("Classifier is not public: {owner}"),
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "EXPOSED_INTERNAL_CLASSIFIER",
+                    ));
+                }
                 if let Type::Parameterized { arguments, .. } = ty {
                     for argument in arguments {
                         if let Some(ty) = &argument.ty {
-                            self.check_type_visibility(caller, ty, offset)?;
+                            self.check_type_visibility_policy(caller, ty, offset, allow_internal)?;
                         }
                     }
                 }
@@ -847,26 +880,28 @@ impl Classpath {
             | Type::MutableList(ty)
             | Type::Array(ty)
             | Type::OutArray(ty)
-            | Type::ThreadLocal(ty) => self.check_type_visibility(caller, ty, offset)?,
+            | Type::ThreadLocal(ty) => {
+                self.check_type_visibility_policy(caller, ty, offset, allow_internal)?
+            }
             Type::Function { params, result } | Type::SuspendFunction { params, result } => {
                 for ty in params {
-                    self.check_type_visibility(caller, ty, offset)?;
+                    self.check_type_visibility_policy(caller, ty, offset, allow_internal)?;
                 }
-                self.check_type_visibility(caller, result, offset)?;
+                self.check_type_visibility_policy(caller, result, offset, allow_internal)?;
             }
             Type::ReceiverFunction {
                 receiver,
                 params,
                 result,
             } => {
-                self.check_type_visibility(caller, receiver, offset)?;
+                self.check_type_visibility_policy(caller, receiver, offset, allow_internal)?;
                 for ty in params {
-                    self.check_type_visibility(caller, ty, offset)?;
+                    self.check_type_visibility_policy(caller, ty, offset, allow_internal)?;
                 }
-                self.check_type_visibility(caller, result, offset)?;
+                self.check_type_visibility_policy(caller, result, offset, allow_internal)?;
             }
             Type::Parameter { upper_bound, .. } => {
-                self.check_type_visibility(caller, upper_bound, offset)?
+                self.check_type_visibility_policy(caller, upper_bound, offset, allow_internal)?
             }
             _ => {}
         }
