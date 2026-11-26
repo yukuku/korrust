@@ -5058,10 +5058,8 @@ impl Checker<'_> {
                         },
                     });
                 }
-                if op.chars().all(|c| c.is_alphanumeric() || c == '_')
-                    && !matches!(op.as_str(), "and" | "or" | "xor" | "shl" | "shr" | "ushr")
-                {
-                    return self.check_infix_call(a, op, b, offset);
+                if operations::is_infix_name(op) {
+                    return self.check_infix_call(a, op, b, offset, None);
                 }
                 let source_left = a;
                 let a = self.value(a)?;

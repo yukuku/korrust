@@ -1319,6 +1319,30 @@ impl Checker<'_> {
         ))
     }
 
+    fn argument_with_result_hint(
+        &mut self,
+        arg: &Expr,
+        pattern: &Type,
+        hints: &HashMap<String, Type>,
+        parameters: &[syntax::TypeParameter],
+    ) -> Result<Value> {
+        if hints.is_empty() || !matches!(arg.kind, ExprKind::Call(..) | ExprKind::Binary(..)) {
+            return self.value(arg);
+        }
+        let expected = substitute(pattern, hints);
+        if expected == *pattern || parameters.iter().any(|p| mentions(&expected, &p.name)) {
+            return self.value(arg);
+        }
+        let previous = self.clone();
+        let lambda_count = self.lambdas.borrow().len();
+        let original = self.value(arg);
+        if original.as_ref().is_ok_and(|v| !unresolved_list(&v.ty)) {
+            return original;
+        }
+        *self = previous;
+        self.lambdas.borrow_mut().truncate(lambda_count);
+        self.argument_value(arg, &expected)
+    }
     fn specialize_method_named(
         &mut self,
         method: &JavaMethod,
@@ -1358,6 +1382,17 @@ impl Checker<'_> {
             substitutions.insert(parameter.name.clone(), self.resolve(ty, offset)?);
         }
         let fixed = substitutions.keys().cloned().collect::<HashSet<_>>();
+        let mut result_hints = HashMap::new();
+        if method.name != "<init>"
+            && let (Some(expected), Some(result)) = (expected, &method.kotlin_result)
+        {
+            let pattern = type_owner(expected)
+                .and_then(|owner| as_supertype(self.classpath, result, owner))
+                .unwrap_or_else(|| result.clone());
+            if !self.infer_constraints(&pattern, expected, &mut result_hints, &HashSet::new(), 0) {
+                result_hints.clear();
+            }
+        }
         let mut captures = HashMap::<String, TypeArgument>::new();
         let mut input_types = HashMap::<String, Vec<Type>>::new();
         let params = method
@@ -1424,7 +1459,13 @@ impl Checker<'_> {
                             Diagnostic::new(spread.offset, "Spread argument requires an array")
                         })?
                     } else {
-                        self.value(element)?.ty
+                        self.argument_with_result_hint(
+                            element,
+                            &pattern,
+                            &result_hints,
+                            &library.type_parameters,
+                        )?
+                        .ty
                     };
                     if !self.infer_constraints(&pattern, &actual, &mut substitutions, &fixed, 0) {
                         return Err(Diagnostic::new(
@@ -1466,7 +1507,12 @@ impl Checker<'_> {
                 }) {
                 self.argument_value(arg, &expected_argument)?
             } else {
-                self.value(arg)?
+                self.argument_with_result_hint(
+                    arg,
+                    &params[*index].1,
+                    &result_hints,
+                    &library.type_parameters,
+                )?
             };
             if *index == 0
                 && library.receiver.is_some()

@@ -1,5 +1,10 @@
 use super::*;
 
+pub(super) fn is_infix_name(token: &str) -> bool {
+    token.chars().all(|c| c.is_alphanumeric() || c == '_')
+        && !matches!(token, "in" | "and" | "or" | "xor" | "shl" | "shr" | "ushr")
+}
+
 pub(super) enum ExtensionKind {
     Ordinary,
     Operator,
@@ -1944,6 +1949,7 @@ impl Checker<'_> {
         name: &str,
         argument: &Expr,
         offset: usize,
+        expected: Option<&Type>,
     ) -> Result<Value> {
         let receiver = self.value(source)?;
         let mut methods = self
@@ -2066,13 +2072,14 @@ impl Checker<'_> {
                 }
             }
         }
-        self.resolved_extension_call(
+        self.resolved_extension_call_expected(
             receiver,
             name,
             std::slice::from_ref(argument),
             &[],
             ExtensionKind::Infix,
             offset,
+            expected,
         )
     }
 }

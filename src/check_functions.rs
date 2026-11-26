@@ -102,6 +102,13 @@ impl Checker<'_> {
                 ),
             });
         }
+        if let ExprKind::Binary(name, receiver, argument) = &expr.kind
+            && operations::is_infix_name(name)
+        {
+            let value =
+                self.check_infix_call(receiver, name, argument, expr.offset, Some(expected))?;
+            return self.coerce(value, expected.clone(), expr.offset);
+        }
         if let ExprKind::Call(target, args) = &expr.kind {
             let (target, explicit) = match &target.kind {
                 ExprKind::Generic(target, types) => (target.as_ref(), types.as_slice()),
