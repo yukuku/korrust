@@ -169,11 +169,11 @@ impl Checker<'_> {
                 library::specialize_receiver(method.clone(), receiver, &class, self.classpath);
             let (parameters, result) = class_method_types(&method)?;
             if parameters.is_empty() && result != Type::Unit && !method.unsupported {
-                if class.access & 0x4200 != 0
+                if class.access & (0x4000 | 0x2000) != 0
                     || crate::classpath::kotlin_mapped_classifier(&class.name).is_some()
                     || crate::classpath::kotlin_mapped_classifier(&method.owner).is_some()
                 {
-                    return Err(Diagnostic::new(offset, "Synthetic properties on mapped, interface, or enum receiver classes are unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "JAVA_SYNTHETIC_RECEIVER_UNSUPPORTED"));
+                    return Err(Diagnostic::new(offset, "Synthetic properties on mapped, annotation, or enum receiver classes are unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "JAVA_SYNTHETIC_RECEIVER_UNSUPPORTED"));
                 }
                 getters.push(method);
             }

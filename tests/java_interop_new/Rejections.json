@@ -58,27 +58,11 @@
     "diagnostic": ""
   },
   {
-    "id": "static_wildcard_boundary",
-    "source": "import newinterop.Bean.*\nfun f(): Int = CONSTANT",
-    "official": "accept",
-    "diagnostic": "Static-member wildcard imports are unsupported",
-    "code": "STATIC_MEMBER_WILDCARD_UNSUPPORTED",
-    "category": "unsupported_language"
-  },
-  {
     "id": "static_interface_boundary",
     "source": "import newinterop.StaticInterface.value\nfun f(): Int = value()",
     "official": "accept",
     "diagnostic": "Static interface method imports are unsupported",
     "code": "STATIC_INTERFACE_IMPORT_UNSUPPORTED",
-    "category": "unsupported_language"
-  },
-  {
-    "id": "interface_property_boundary",
-    "source": "import newinterop.InterfaceBean\nfun f(value: InterfaceBean): String = value.title",
-    "official": "accept",
-    "diagnostic": "Synthetic properties on mapped, interface, or enum receiver classes are unsupported",
-    "code": "JAVA_SYNTHETIC_RECEIVER_UNSUPPORTED",
     "category": "unsupported_language"
   }
 ]

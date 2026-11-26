@@ -54,13 +54,11 @@ fn check_kotlin_subclasses() {
     ] {
         assert!(compile_outputs_with_classpath(source, "Invalid.kt", &classpath).is_err());
     }
-    let error = compile_outputs_with_classpath(
-        "interface Child : beans.Title\nfun unsupported(value: Child): String = value.title",
-        "Unsupported.kt",
+    compile_outputs_with_classpath(
+        "interface Child : beans.Title\nfun title(value: Child): String = value.title",
+        "Interface.kt",
         &classpath,
     )
-    .err()
     .unwrap();
-    assert_eq!(error.code, "JAVA_SYNTHETIC_RECEIVER_UNSUPPORTED");
     fs::remove_dir_all(output).unwrap();
 }
