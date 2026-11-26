@@ -1,0 +1,3 @@
+target/checks/2026-11-26T035359463836Z-reference-varargs/mutable-argument.kt:1:100: error: argument type mismatch: actual type is 'Array<CapturedType(out String)>', but 'Array<String>' was expected.
+fun mutate(values: Array<String>) { values[0] = "wrong" }; fun bad(vararg values: String) { mutate(values) }
+                                                                                                   ^^^^^^

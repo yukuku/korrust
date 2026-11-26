@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-26T04:04:07.759383+00:00",
+  "status": "passed",
+  "reference_compiler": "Kotlin 2.3.21",
+  "evidence": [
+    "reports/correctness/2026-11-26T035359463836Z-reference-varargs.json",
+    "reports/correctness/2026-11-26T035850343168Z-reference-varargs-application.json"
+  ],
+  "features": [
+    {
+      "name": "Final-position source reference varargs and projected array bodies",
+      "status": "supported",
+      "scope": "Reference and generic vararg declarations use JVM arrays and varargs flags while exposing Array<out T> in bodies and metadata. Calls pack fresh arrays, preserve evaluation order, copy spreads and retain nullable elements. Methods, interfaces, objects, captures, generic receiver specialization, named arrays and Java callers are exercised. Four official/candidate Kotlin provider/consumer combinations execute and reject writes through returned projected arrays.",
+      "restrictions": [
+        "Source nonfinal/defaulted varargs, local vararg functions, Unit, unsigned and primitive-alias array carriers remain explicit unsupported boundaries. Direct custom value-class and nullable value-class varargs reject as invalid Kotlin.",
+        "Only public nonsynthetic callable JVM signatures are parity claims. No reflection, Android runtime, complete-application or performance claim."
+      ],
+      "evidence_report": "reports/correctness/2026-11-26T035359463836Z-reference-varargs.json"
+    },
+    {
+      "name": "Unchanged Sync_PinsTest and VerseTextFormatterTest",
+      "status": "supported",
+      "scope": "The two pinned original test sources compile unchanged. Their same 23 and 11 original JUnit tests pass against official and replacement outputs with verification enabled.",
+      "restrictions": [
+        "Existing official Gradle classpath providers are reused. Eight further original sources advance to later barriers and remain rejected; those observations are excluded from pass counts."
+      ],
+      "evidence_report": "reports/correctness/2026-11-26T035850343168Z-reference-varargs-application.json"
+    }
+  ],
+  "corrections": [
+    {
+      "reports": [
+        "reports/correctness/2026-11-26T032622245838Z-reference-varargs.json"
+      ],
+      "reason": "Projected source vararg metadata exposed a generic builtin arrayOf inventory mismatch. Factory recognition now compares element types and JVM carriers, and only fresh builtin vararg packets are retagged at the invariant factory-result boundary."
+    },
+    {
+      "reports": [
+        "reports/correctness/2026-11-26T033520132472Z-reference-varargs.json"
+      ],
+      "reason": "The development local-vararg boundary fixture used a semicolon after a local expression-body function, which the official parser rejected. The corrected multiline valid fixture rejects explicitly as unsupported; final evidence also includes unsigned and direct value-class carrier guards."
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+target/checks/2026-11-26T035359463836Z-reference-varargs/setter-call.kt:1:48: error: receiver type 'Array<out String>' contains out projection which prohibits the use of 'fun set(index: Int, value: T): Unit'.
+fun bad(vararg values: String) { values.set(0, "wrong") }
+                                               ^^^^^^^
