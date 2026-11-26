@@ -614,8 +614,7 @@ impl Checker<'_> {
             {
                 return Vec::new();
             }
-            if self.callable_name_was_renamed(name)
-                || self.functions.contains_key(name)
+            if self.functions.contains_key(name)
                 || shadow_members
                     && self.object_methods.get(name).is_some_and(|methods| {
                         methods
@@ -631,7 +630,85 @@ impl Checker<'_> {
             {
                 return Vec::new();
             }
-            let mut methods = Vec::new();
+            let visible = |method: &JavaMethod| {
+                method.access & 8 != 0
+                    && (method.access & 1 != 0
+                        || self
+                            .classpath
+                            .file_private_visible(&self.lambda_owner, method))
+                    && (!method.kotlin_internal || self.classpath.internal_visible(&method.owner))
+                    && (method.source_name() == name
+                        || method.source_property.as_deref() == Some(name))
+            };
+            let package = self.lambda_owner.rsplit_once('/').map_or("", |(p, _)| p);
+            let package_methods = self
+                .classpath
+                .package_methods(package, name)
+                .unwrap_or_default();
+            let mut methods = package_methods
+                .into_iter()
+                .filter(visible)
+                .collect::<Vec<_>>();
+            if methods.is_empty() {
+                let mut declarations = HashSet::new();
+                for (_, owner) in self
+                    .imports
+                    .iter()
+                    .filter(|(key, _)| key.starts_with("*::"))
+                {
+                    if let Some(class) = self.classes.get(owner) {
+                        let imported = if class
+                            .library
+                            .as_ref()
+                            .is_some_and(|library| library.package.is_some())
+                        {
+                            None
+                        } else {
+                            self.classpath
+                                .static_wildcard_owner(owner, 0)
+                                .ok()
+                                .flatten()
+                        };
+                        let class = imported.as_ref().unwrap_or(class);
+                        let originals = self.classpath.methods(owner).unwrap_or_default();
+                        for method in class.methods.iter().filter(|method| {
+                            visible(method)
+                                && !self.imports.iter().any(|(alias, binding)| {
+                                    alias != name
+                                        && !alias.starts_with("*::")
+                                        && binding == &format!("{owner}::{name}")
+                                })
+                        }) {
+                            let declaring = originals
+                                .iter()
+                                .find(|original| {
+                                    original.name == method.name
+                                        && original.descriptor == method.descriptor
+                                })
+                                .map_or(method.owner.as_str(), |original| original.owner.as_str());
+                            if declarations.insert((
+                                declaring.to_owned(),
+                                method.name.clone(),
+                                method.descriptor.clone(),
+                            )) {
+                                methods.push(method.clone());
+                            }
+                        }
+                    }
+                }
+            }
+            if !methods.is_empty() {
+                methods.sort_by(|a, b| {
+                    (&a.owner, &a.name, &a.descriptor).cmp(&(&b.owner, &b.name, &b.descriptor))
+                });
+                methods.dedup_by(|a, b| {
+                    a.owner == b.owner && a.name == b.name && a.descriptor == b.descriptor
+                });
+                return methods;
+            }
+            if self.callable_name_was_renamed(name) {
+                return Vec::new();
+            }
             for package in DEFAULT_PACKAGES {
                 if let Ok(package_methods) = self.classpath.package_methods(package, name) {
                     methods.extend(package_methods.into_iter().filter(|method| {
@@ -1234,6 +1311,11 @@ impl Checker<'_> {
                 )
             })?;
             Some(self.classpath.load(owner)?)
+        } else if let Some(crate::classpath::ValueSymbol::Classifier(class)) = self
+            .classpath
+            .value_symbol(&self.lambda_owner, name, offset)?
+        {
+            Some(*class)
         } else {
             self.classpath
                 .load(&source_name)

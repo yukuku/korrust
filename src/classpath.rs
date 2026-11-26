@@ -8,6 +8,7 @@ mod metadata;
 pub(crate) mod nested;
 mod signature;
 mod source;
+mod static_imports;
 mod value_names;
 pub(crate) use value_names::ValueSymbol;
 

@@ -2604,11 +2604,24 @@ fn infer_source_results_impl(
             }
         }
         if alias == "*" {
-            for class in classpath.package_classes(path.trim_end_matches("/*"))? {
-                imports.insert(
-                    class.name.rsplit('/').next().unwrap().into(),
-                    class.name.clone(),
-                );
+            let owner = path.trim_end_matches("/*");
+            if let Some(class) = classpath.static_wildcard_owner(owner, *import_offset)? {
+                imports.insert(format!("*::{owner}"), owner.into());
+                classes.insert(owner.into(), class);
+                continue;
+            }
+            for class in classpath.package_classes(owner)? {
+                if class
+                    .library
+                    .as_ref()
+                    .is_some_and(|library| library.package.is_some())
+                {
+                    imports.insert(format!("*::{}", class.name), class.name.clone());
+                } else {
+                    imports
+                        .entry(class.name.rsplit('/').next().unwrap().into())
+                        .or_insert_with(|| class.name.clone());
+                }
                 classes.insert(class.name.clone(), class);
             }
             continue;

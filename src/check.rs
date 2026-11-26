@@ -1144,6 +1144,10 @@ impl Checker<'_> {
             return Err(Diagnostic::new(
                 offset,
                 "No applicable function overload or wrong argument count",
+            )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "NO_APPLICABLE_OVERLOAD",
             ));
         }
         let parameters = applicable
@@ -1341,7 +1345,12 @@ impl Checker<'_> {
                     ),
                 );
             }
-            return Err(Diagnostic::new(offset, "No applicable member overload"));
+            return Err(
+                Diagnostic::new(offset, "No applicable member overload").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "NO_APPLICABLE_OVERLOAD",
+                ),
+            );
         }
         if applicable
             .iter()
@@ -3889,15 +3898,27 @@ impl Checker<'_> {
                             continue;
                         }
                         if !self.fields.contains_key(name)
+                            && !self.object_fields.contains_key(name)
+                            && !self.companion_fields.contains_key(name)
                             && !self.captured.contains_key(name)
                             && !self.constants.contains_key(name)
                         {
-                            if let Some((owner, member)) = self
-                                .imports
-                                .get(name)
-                                .and_then(|binding| binding.rsplit_once("::"))
-                                .map(|(owner, member)| (owner.to_owned(), member.to_owned()))
-                            {
+                            let imported_field = match self.classpath.value_symbol(
+                                &self.lambda_owner,
+                                name,
+                                offset,
+                            )? {
+                                Some(crate::classpath::ValueSymbol::Field(field)) => {
+                                    Some((field.owner, field.name))
+                                }
+                                _ => None,
+                            };
+                            if let Some((owner, member)) = imported_field.or_else(|| {
+                                self.imports
+                                    .get(name)
+                                    .and_then(|binding| binding.rsplit_once("::"))
+                                    .map(|(owner, member)| (owner.to_owned(), member.to_owned()))
+                            }) {
                                 if self
                                     .classpath
                                     .field_candidates(&owner, &member)?
@@ -6892,6 +6913,11 @@ pub fn check_with_owner(
         }
         if alias == "*" {
             let package = name.trim_end_matches("/*");
+            if let Some(class) = classpath.static_wildcard_owner(package, *offset)? {
+                imports.insert(format!("*::{package}"), package.into());
+                classes.insert(package.into(), class);
+                continue;
+            }
             let package_classes = classpath.package_classes(package)?;
             if package_classes.is_empty() {
                 return Err(Diagnostic::new(
@@ -6901,21 +6927,7 @@ pub fn check_with_owner(
             }
             for class in package_classes {
                 if class.library.as_ref().is_some_and(|l| l.package.is_some()) {
-                    for method in &class.methods {
-                        if method.access & 9 == 9 {
-                            let source_name = method
-                                .source_property
-                                .as_deref()
-                                .or_else(|| method.library.as_ref().map(|l| l.source_name.as_str()))
-                                .unwrap_or(&method.name);
-                            if renamed_imports.contains(&format!("{package}/{source_name}")) {
-                                continue;
-                            }
-                            imports
-                                .entry(source_name.into())
-                                .or_insert_with(|| format!("{}::{source_name}", class.name));
-                        }
-                    }
+                    imports.insert(format!("*::{}", class.name), class.name.clone());
                 } else {
                     if class.access & 1 == 0 || class.unsupported {
                         continue;

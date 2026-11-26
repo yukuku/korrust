@@ -2168,15 +2168,11 @@ fn validate_source_imports(
             ));
         }
         if alias == "*" {
-            if classpath.load(path.trim_end_matches("/*")).is_ok() {
-                return Err(Diagnostic::new(
-                    *offset,
-                    "Static-member wildcard imports are unsupported",
-                )
-                .with_kind(
-                    DiagnosticKind::UnsupportedLanguage,
-                    "STATIC_MEMBER_WILDCARD_UNSUPPORTED",
-                ));
+            if classpath
+                .static_wildcard_owner(path.trim_end_matches("/*"), *offset)?
+                .is_some()
+            {
+                continue;
             }
             if classpath
                 .package_classes(path.trim_end_matches("/*"))?
