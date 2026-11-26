@@ -1,5 +1,7 @@
 #[path = "check_annotation_placements.rs"]
 mod annotation_placements;
+#[path = "check_companion_properties.rs"]
+mod companion_properties;
 #[path = "check_jvm_fields.rs"]
 mod jvm_fields;
 #[path = "check_local_annotations.rs"]
@@ -3963,6 +3965,12 @@ impl Checker<'_> {
                             "IMMUTABLE_CAPTURE_ASSIGNMENT",
                         ));
                     }
+                    if let Some(value) =
+                        self.lexical_companion_property(name, Some(expr), offset)?
+                    {
+                        body.push(Statement::Expression(value));
+                        continue;
+                    }
                     if name != "field" {
                         if let Some(value) = self.outer_assignment(name, expr, offset)? {
                             body.push(value);
@@ -4106,7 +4114,11 @@ impl Checker<'_> {
                                 continue;
                             }
                         }
-                        if let Some((owner, ty)) = self.object_fields.get(name) {
+                        if let Some((owner, ty)) = self
+                            .object_fields
+                            .get(name)
+                            .filter(|_| !self.fields.contains_key(name))
+                        {
                             if !self.mutable_fields.contains(name) {
                                 return Err(Diagnostic::new(
                                     offset,
@@ -4902,6 +4914,9 @@ impl Checker<'_> {
                         };
                     }
                 }
+                if let Some(value) = self.lexical_companion_property(name, None, offset)? {
+                    return Ok(value);
+                }
                 if let Some(value) = self.imported_value(name, offset)? {
                     return Ok(value);
                 }
@@ -4994,7 +5009,11 @@ impl Checker<'_> {
                         }
                     }
                     (local.ty, ValueKind::Local(local.slot))
-                } else if let Some((owner, ty)) = self.object_fields.get(name) {
+                } else if let Some((owner, ty)) = self
+                    .object_fields
+                    .get(name)
+                    .filter(|_| !self.fields.contains_key(name))
+                {
                     (
                         ty.clone(),
                         if self.lambda_owner.starts_with(&format!("{owner}$Companion"))

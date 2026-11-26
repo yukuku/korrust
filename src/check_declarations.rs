@@ -1011,6 +1011,13 @@ pub(super) fn check_class_with_constants(
             lambdas,
         )?;
         checked.private = companion.private;
+        if checked.properties.iter().any(|property| {
+            class_fields.iter().any(|field| {
+                field.name == property.name && field.ty.descriptor() == property.ty.descriptor()
+            })
+        }) {
+            return Err(Diagnostic::new(source.offset, "Companion and instance properties sharing a JVM field name and descriptor require unsupported backing-field renaming").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "COMPANION_BACKING_FIELD_COLLISION_UNSUPPORTED"));
+        }
         for property in &checked.properties {
             companion_static_fields
                 .insert(property.name.clone(), (owner.clone(), property.ty.clone()));

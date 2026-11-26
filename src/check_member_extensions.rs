@@ -376,6 +376,11 @@ impl Checker<'_> {
                     ),
             );
         }
+        if field.access & 1 == 0
+            && (self.constructor_bridge_context || self.lambda_owner != owner)
+        {
+            return Err(Diagnostic::new(offset, "Private companion singleton captures require unsupported lexical bridges").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "PRIVATE_COMPANION_CAPTURE_UNSUPPORTED"));
+        }
         let target = field
             .descriptor
             .strip_prefix('L')
