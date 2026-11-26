@@ -4,6 +4,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -71,7 +72,7 @@ def main():
         for provider, output in providers.items():
             result = run(provider + '/runtime', ['java', '-Xverify:all', '-cp', cp(callers, output, stdlib), 'companionstatecheck.Calls'])
             case(provider + '/runtime', result.returncode == 0 and result.stdout.strip() == 'companion-properties-ok', observed=result.stdout.strip())
-            signatures = run(provider + '/signatures', ['javap', '-protected', '-s', '-classpath', output, 'companionstate.Store', 'companionstate.Store$Companion', 'companionstate.Shadow', 'companionstate.Shadow$Companion'])
+            signatures = run(provider + '/signatures', ['javap', '-protected', '-s', '-v', '-classpath', output, 'companionstate.Store', 'companionstate.Store$Companion', 'companionstate.Shadow', 'companionstate.Shadow$Companion'])
             case(provider + '/signatures-read', signatures.returncode == 0)
             report[provider + '_signatures'] = signatures.stdout
             consumer = work / (provider + '-consumer')
@@ -92,19 +93,30 @@ def main():
                 outcome = 'invalid_rejected'
             case(source.stem, passed and not list((work / (source.stem + '-candidate')).rglob('*.class')), outcome, diagnostics=diagnostics)
         def signature_contract(text):
-            result = {}
-            owner = member = None
+            declared, synthetic = {}, {}
+            owner = member = descriptor = None
             for line in text.splitlines():
-                line = line.strip()
-                if line.endswith('{'):
+                stripped = line.strip()
+                if not line.startswith(' ') and re.match(r'(public|protected).*\b(class|interface) ', line):
                     owner = line
-                    result[owner] = []
-                elif line.startswith('descriptor:'):
-                    result[owner].append((member, line))
-                elif line and line != '}' and not line.startswith('Compiled from'):
-                    member = line
-            return {owner: sorted(members) for owner, members in result.items()}
-        case('signatures/match', signature_contract(report['official_signatures']) == signature_contract(report['candidate_signatures']))
+                    declared[owner] = []
+                    synthetic[owner] = []
+                elif re.match(r'^  (public|protected) .+;$', line):
+                    member = stripped
+                    descriptor = None
+                elif member and stripped.startswith('descriptor:'):
+                    descriptor = stripped
+                elif member and stripped.startswith('flags:'):
+                    flags = int(re.search(r'0x([0-9a-fA-F]+)', stripped)[1], 16)
+                    destination = synthetic if flags & 0x1000 else declared
+                    destination[owner].append((member, descriptor))
+                    member = descriptor = None
+            return ({owner: sorted(members) for owner, members in declared.items()}, {owner: sorted(members) for owner, members in synthetic.items()})
+        contracts = {provider: signature_contract(report[provider + '_signatures']) for provider in ['official', 'candidate']}
+        report['declared_api'] = {provider: contract[0] for provider, contract in contracts.items()}
+        report['synthetic_members'] = {provider: contract[1] for provider, contract in contracts.items()}
+        report['jvm_contract_interpretation'] = 'Declared public/protected API is compared. ACC_SYNTHETIC members are recorded separately: class-based lambdas may require extra private-field access bridges compared with invokedynamic lambdas. Fixed Java and Kotlin consumers check the external contracts.'
+        case('declared-api/match', contracts['official'][0] == contracts['candidate'][0])
         current = {str(p.relative_to(ROOT)): sha(p) for folder in ['src', 'tests/companion_properties'] for p in (ROOT / folder).rglob('*') if p.is_file()}
         current.update({name: sha(ROOT / name) for name in ['Cargo.toml', 'Cargo.lock', 'tests/companion_properties.rs', 'tools/check_companion_properties.py']})
         case('inputs/unchanged', current == inputs)
