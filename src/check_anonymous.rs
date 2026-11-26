@@ -132,8 +132,7 @@ pub(super) fn check_exposed_types(source: &syntax::Module, classpath: &Classpath
 }
 
 fn override_type(actual: &Type, expected: &Type) -> bool {
-    actual == expected
-        || matches!(expected, Type::Platform(inner) if actual.base() == inner.base() || matches!(actual, Type::Nullable(nullable) if nullable.base() == inner.base()))
+    declarations::override_type_matches(expected, actual)
 }
 
 impl Checker<'_> {

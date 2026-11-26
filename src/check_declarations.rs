@@ -3992,29 +3992,40 @@ pub(super) fn override_generic_signature(
     override_signature(&renamed, params, result)
 }
 
+pub(super) fn override_type_matches(expected: &Type, actual: &Type) -> bool {
+    if expected == actual {
+        return true;
+    }
+    match (expected, actual) {
+        (Type::Platform(inner), Type::Nullable(value) | Type::Platform(value)) => {
+            override_type_matches(inner, value)
+        }
+        (Type::Platform(inner), value) => override_type_matches(inner, value),
+        (
+            Type::FlexibleList(element),
+            Type::MutableList(actual) | Type::List(actual) | Type::FlexibleList(actual),
+        )
+        | (Type::MutableList(element), Type::MutableList(actual))
+        | (Type::List(element), Type::List(actual))
+        | (Type::Nullable(element), Type::Nullable(actual)) => {
+            override_type_matches(element, actual)
+        }
+        _ => false,
+    }
+}
+
 pub(super) fn override_signature(
     method: &JavaMethod,
     params: &[Type],
     result: &Type,
 ) -> Result<bool> {
     let (expected_params, expected_result) = class_method_types(method)?;
-    fn compatible(expected: &Type, actual: &Type) -> bool {
-        if expected == actual {
-            return true;
-        }
-        match expected {
-            Type::Platform(inner) => {
-                inner.as_ref() == actual || matches!(actual,Type::Nullable(actual) if actual==inner)
-            }
-            _ => expected == actual,
-        }
-    }
     Ok(expected_params.len() == params.len()
         && expected_params
             .iter()
             .zip(params)
-            .all(|(e, a)| compatible(e, a))
-        && (compatible(&expected_result, result)
+            .all(|(e, a)| override_type_matches(e, a))
+        && (override_type_matches(&expected_result, result)
             || matches!(&expected_result,Type::Nullable(inner) if inner.as_ref()==result)))
 }
 
