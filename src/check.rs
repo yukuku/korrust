@@ -4416,6 +4416,9 @@ impl Checker<'_> {
                     Statement::While(cond, body)
                 }
             };
+            if let Statement::Expression(value) | Statement::Store(_, value) = &typed {
+                self.refine_evaluated_assertions(value);
+            }
             body.push(typed);
         }
         if pop_scope {

@@ -33,6 +33,70 @@ impl Checker<'_> {
         }
     }
 
+    /// Record assertions on stable locals after the expression has returned normally.
+    /// Follow only operands that evaluation must have reached on that path.
+    pub(super) fn refine_evaluated_assertions(&mut self, value: &Value) {
+        use ValueKind as V;
+        match &value.kind {
+            V::RequireNotNull(operand) => {
+                if let Some((slot, Type::Nullable(inner))) =
+                    self.stable_contract_local(operand, &[])
+                {
+                    self.refinements.entry(slot.into()).or_insert(*inner);
+                }
+                self.refine_evaluated_assertions(operand);
+            }
+            V::Call(_, args)
+            | V::StaticCall { args, .. }
+            | V::MemberCall { args, .. }
+            | V::JavaCall { args, .. }
+            | V::New { args, .. }
+            | V::CompiledInline { args, .. }
+            | V::DefaultCall(_, args, _)
+            | V::SuperCall { args, .. }
+            | V::StringCall(_, args) => {
+                for arg in args {
+                    self.refine_evaluated_assertions(arg);
+                }
+            }
+            V::FunctionInvoke { function, args } => {
+                self.refine_evaluated_assertions(function);
+                for arg in args {
+                    self.refine_evaluated_assertions(arg);
+                }
+            }
+            V::Let { value, body, .. }
+            | V::Index(value, body)
+            | V::ListGet(value, body)
+            | V::StringConcat(value, body) => {
+                self.refine_evaluated_assertions(value);
+                self.refine_evaluated_assertions(body);
+            }
+            V::Binary(op, left, right) => {
+                self.refine_evaluated_assertions(left);
+                if !matches!(op.as_str(), "&&" | "||") {
+                    self.refine_evaluated_assertions(right);
+                }
+            }
+            V::If(value, _, _)
+            | V::Cast { value, .. }
+            | V::TypeTest { value, .. }
+            | V::Unbox(value)
+            | V::Box(value)
+            | V::NotNull(value, _)
+            | V::Length(value)
+            | V::ListSize(value)
+            | V::Field(_, value)
+            | V::Convert(_, value)
+            | V::IsNull(value)
+            | V::JavaField {
+                receiver: Some(value),
+                ..
+            } => self.refine_evaluated_assertions(value),
+            _ => {}
+        }
+    }
+
     pub(super) fn call_contract_facts(
         &self,
         method: &JavaMethod,
