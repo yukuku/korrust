@@ -56,7 +56,7 @@ fn check_private_companions() {
     };
     for output in compile_batch_with_classpath(
         &[source("Hidden.kt")],
-        &[standard.clone()],
+        std::slice::from_ref(&standard),
         "private_companions",
     )
     .unwrap_or_else(|error| panic!("{}: {}", error.offset, error.message))
@@ -111,7 +111,7 @@ fn check_private_companions() {
     ] {
         let error = compile_batch_with_classpath(
             &[source("Hidden.kt"), source(name)],
-            &[standard.clone()],
+            std::slice::from_ref(&standard),
             "batch",
         )
         .err()

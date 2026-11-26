@@ -31,22 +31,45 @@ impl Classpath {
             });
     }
 
-    pub(crate) fn kotlin_field_visible(&self, caller: &str, field: &JavaField) -> bool {
-        if field.kotlin.is_some() {
-            if let Ok(owner) = self.load(&field.owner)
-                && let Some(name) = owner
+    pub(crate) fn check_companion_import_visibility(
+        &self,
+        owner: &str,
+        offset: usize,
+    ) -> Result<()> {
+        if let Ok(class) = self.load(owner)
+            && class
+                .library
+                .as_ref()
+                .is_some_and(|library| matches!(library.kotlin_visibility, Some(1 | 4)))
+            && let Some((outer, name)) = class.name.rsplit_once('$')
+            && self.load(outer).is_ok_and(|outer| {
+                outer
                     .library
                     .as_ref()
-                    .and_then(|library| library.companion_name.as_ref())
-                && let Ok(companion) = self.load(&format!("{}${name}", owner.name))
-                && companion
-                    .fields
-                    .iter()
-                    .any(|candidate| candidate.name == field.name && candidate.kotlin.is_some())
-                && !self.classifier_visible(caller, &companion.name)
-            {
-                return false;
-            }
+                    .and_then(|library| library.companion_name.as_deref())
+                    == Some(name)
+            })
+        {
+            self.check_classifier_visibility("<imports>", &class.name, offset)?;
+        }
+        Ok(())
+    }
+
+    pub(crate) fn kotlin_field_visible(&self, caller: &str, field: &JavaField) -> bool {
+        if field.kotlin.is_some()
+            && let Ok(owner) = self.load(&field.owner)
+            && let Some(name) = owner
+                .library
+                .as_ref()
+                .and_then(|library| library.companion_name.as_ref())
+            && let Ok(companion) = self.load(&format!("{}${name}", owner.name))
+            && companion
+                .fields
+                .iter()
+                .any(|candidate| candidate.name == field.name && candidate.kotlin.is_some())
+            && !self.classifier_visible(caller, &companion.name)
+        {
+            return false;
         }
         match field.kotlin.as_ref().map(|field| field.visibility) {
             Some(0) => self.internal_visible(&field.owner),

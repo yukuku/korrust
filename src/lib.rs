@@ -2120,6 +2120,10 @@ fn validate_source_imports(
     classpath: &classpath::Classpath,
 ) -> Result<()> {
     for (alias, path, offset) in &module.imports {
+        classpath.check_companion_import_visibility(path, *offset)?;
+        if let Some((owner, _)) = path.rsplit_once('/') {
+            classpath.check_companion_import_visibility(owner, *offset)?;
+        }
         let own = module
             .class_decl
             .as_ref()
