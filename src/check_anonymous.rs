@@ -890,7 +890,13 @@ impl Checker<'_> {
         let mut implementations = Vec::new();
         let mut bridges = Vec::new();
         let anonymous_fields = property_fields.clone();
-        let anonymous_mutable_fields = property_fields.keys().cloned().collect::<HashSet<_>>();
+        let anonymous_initialization_fields =
+            property_fields.keys().cloned().collect::<HashSet<_>>();
+        let anonymous_mutable_fields = properties
+            .iter()
+            .filter(|property| property.mutable)
+            .map(|property| format!("$property${}", property.name))
+            .collect::<HashSet<_>>();
         let mut anonymous_members = HashMap::new();
         for method in self.classpath.load(&owner)?.methods.iter() {
             anonymous_members.insert(
@@ -939,7 +945,11 @@ impl Checker<'_> {
                 constructor: self.constructor,
                 defaults: self.defaults,
                 function_names: self.function_names,
-                mutable_fields: &anonymous_mutable_fields,
+                mutable_fields: if source.name == "$initProperties" {
+                    &anonymous_initialization_fields
+                } else {
+                    &anonymous_mutable_fields
+                },
                 extensions: self.extensions,
                 classes: self.classes,
                 imports: self.imports,

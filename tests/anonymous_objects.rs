@@ -52,6 +52,7 @@ fn invalid_anonymous_property_contracts_reject() {
         include_str!("anonymous_objects/boundaries/PropertyWithoutOverride.kt"),
         include_str!("anonymous_objects/boundaries/PrivatePropertyOverride.kt"),
         include_str!("anonymous_objects/boundaries/PropertyValWrite.kt"),
+        include_str!("anonymous_objects/boundaries/PropertyValBackingWrite.kt"),
         include_str!("anonymous_objects/boundaries/MissingPropertySetter.kt"),
     ] {
         assert!(compile(source).is_err());
