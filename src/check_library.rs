@@ -503,6 +503,14 @@ impl Checker<'_> {
             }
         }
         if applicable.is_empty() {
+            if self.dispatch_receiver.is_some() {
+                let receiver = self.dispatch_receiver_value(offset)?;
+                if let Some(value) =
+                    self.member_property_invoke(receiver, name, args, explicit, offset)?
+                {
+                    return Ok(Some(value));
+                }
+            }
             if let Some(error) = failures.into_iter().next() {
                 return Err(error);
             }

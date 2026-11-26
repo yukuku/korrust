@@ -20,6 +20,7 @@ class Target {
             return { value -> trace = trace * 10 + 4; value + 10 }
         }
     fun action(value: String): Int = value.length + 100
+    fun own(): Int = action(5)
 }
 
 fun receiver(target: Target): Target { target.trace = target.trace * 10 + 1; return target }
