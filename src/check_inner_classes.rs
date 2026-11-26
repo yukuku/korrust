@@ -285,10 +285,10 @@ impl Checker<'_> {
         let Some(outer) = class.enclosing_instance() else {
             return Ok(None);
         };
-        let receiver = self
-            .implicit_receiver_values(offset)?
+        let (receiver, access) = self
+            .implicit_receiver_candidates(offset)?
             .into_iter()
-            .find(|receiver| self.subtype(&receiver.ty, &Type::Java(outer.into())))
+            .find(|(receiver, _)| self.subtype(&receiver.ty, &Type::Java(outer.into())))
             .ok_or_else(|| {
                 Diagnostic::new(offset, "Inner constructor requires an enclosing instance")
                     .with_kind(
@@ -296,6 +296,7 @@ impl Checker<'_> {
                         "INNER_CONSTRUCTOR_RECEIVER_REQUIRED",
                     )
             })?;
+        access?;
         self.inner_constructor(&class, receiver, args, offset)
             .map(Some)
     }
