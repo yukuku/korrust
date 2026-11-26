@@ -1,0 +1,4 @@
+$ /workspace/work/interop159-nullability-final/references/kotlinc/bin/kotlinc /workspace/work/interop159-nullability-final/tests/package_nullability/NestedResult.kt -cp /workspace/work/interop159-nullability-final-run2/dependency:/workspace/work/interop159-nullability-final/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/interop159-nullability-final-run2/officialNestedResult -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/package_nullability/NestedResult.kt:1:25: error: return type mismatch: expected 'String', actual 'String?'.
+fun invalid(): String = deepnullable.Library.words()!![0]
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

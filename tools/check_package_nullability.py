@@ -61,7 +61,7 @@ def main():
         reference_compiler=json.loads((ROOT / 'references/compiler.json').read_text()), frozen_input_hashes=frozen,
         input_bundle=dict(path=label(evidence / 'inputs.zip'), sha256=sha(evidence / 'inputs.zip')),
         scope='Java package qualifier defaults resolved by JSR305 meta-annotations and strict and warning migration contracts; arbitrary qualifier names and nicknames; return, parameter, field and nested type-use enhancement; explicit nullability precedence; non-null Java values checked in required Kotlin contexts; preserved nullable/Elvis/safe/discarded/Java receiver and array evaluation semantics; exact ordered package metadata lookup',
-        limitations=['Declaration default overrides, definitely non-null type parameters and JSpecify default contexts remain explicit unsupported boundaries; warning diagnostics are not emitted', 'Existing nested explicit type annotation, JVM and source language boundaries apply', 'A separate mapped String member binding mismatch is reproduced on the baseline and candidate; it is recorded as a known pre-existing failure, not counted as a pass', 'Unchanged app probes record compilation or exact later rejection only; no Android runtime or full app compatibility claim'],
+        limitations=['Declaration default overrides, definitely non-null type parameters and JSpecify default contexts remain explicit unsupported boundaries; warning diagnostics are not emitted', 'Existing nested explicit type annotation, JVM and source language boundaries apply', 'The receiver-temporary regression is checked independently using explicit Java annotations in a package without defaults', 'Unchanged app probes record compilation or exact later rejection only; no Android runtime or full app compatibility claim'],
         effective_options=dict(language_version='2.3', api_version='2.3', jvm_target='1.8'), cases=[], commands=[],
         reproduction_command=['python3', label(__file__), '--candidate', label(args.candidate)])
     for flag, value in [('--baseline', args.baseline), ('--app-classpath', args.app_classpath), ('--app-friend-path', args.app_friend_path)]:
@@ -167,11 +167,11 @@ def main():
         for name, output in outputs:
             result = run(name + ' mapped receiver observations', [java / 'java', '-Xverify:all', '-cp', os.pathsep.join(map(str, [callers, output, dependency, standard])), 'preexisting.MappedReceiverCalls'])
             observed[name] = result.stdout.strip()
-        assert observed['official'] == '0' and observed['candidate'] == '1', observed
+        assert observed['official'] == '0' and observed['candidate'] == '0', observed
         if args.baseline:
-            assert observed['baseline'] == observed['candidate'], observed
-        return dict(outcome='known_preexisting_mismatch', observed=observed, reason='Java String.indexOf is exposed as a mapped String member instead of resolving the pinned stdlib extension; this independent lookup issue predates package defaults and is outside this feature scope', caller_sha256={str(path.relative_to(callers)): sha(path) for path in callers.rglob('*.class')})
-    case('preexisting_mapped_string_member_binding', mapped_receiver_finding)
+            assert observed['baseline'] == '1', observed
+        return dict(outcome='pass', observed=observed, reason='Both compilers resolve the stdlib extension; required Java receiver checks must run before evaluating arguments, even when the receiver is saved to a synthetic local. The baseline performs the check too late; the candidate preserves oracle evaluation order', caller_sha256={str(path.relative_to(callers)): sha(path) for path in callers.rglob('*.class')})
+    case('java_annotation_receiver_temp_coercion_regression', mapped_receiver_finding)
     if args.app_classpath:
         for source in app_sources:
             def probe(source=source):

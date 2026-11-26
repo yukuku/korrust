@@ -1,0 +1,29 @@
+{
+  "base_revision": "9a8a4e0155884eb4c9e6a777078e87c5672c646a",
+  "patch_sha256": "e03f9810f5e93239af60a1fd613356e088dc4b392178561ec0f09563e0f9fea3",
+  "replayed_files": 142,
+  "replayed_files_match": true,
+  "validation": [
+    {
+      "command": "RUST_MIN_STACK=33554432 cargo test --test package_nullability",
+      "result": "1 passed; fixed official-compiled Java caller verifies both outputs"
+    },
+    {
+      "command": "cargo clippy --all-targets -- -D warnings",
+      "result": "pass"
+    },
+    {
+      "command": "rustfmt --check --edition 2024 --config skip_children=true src/check.rs src/check_operations.rs src/check_java_nullability.rs src/classpath.rs src/classpath/nullability_defaults.rs tests/package_nullability.rs",
+      "result": "pass; full baseline cargo fmt check has unrelated differences in check_library.rs and syntax.rs; see logs"
+    },
+    {
+      "command": "python3 -m unittest discover -s tests -p test_reports.py",
+      "result": "8 passed"
+    }
+  ],
+  "environment": {
+    "CARGO_INCREMENTAL": "0",
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_TEST_DEBUG": "0"
+  }
+}
