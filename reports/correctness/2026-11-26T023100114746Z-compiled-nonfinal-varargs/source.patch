@@ -1,0 +1,809 @@
+diff --git a/src/annotation_declarations.rs b/src/annotation_declarations.rs
+index 6f0313c48..f58c6a531 100644
+--- a/src/annotation_declarations.rs
++++ b/src/annotation_declarations.rs
+@@ -1158,6 +1158,7 @@ pub(crate) fn header(
+                 kotlin_result: Some(logical),
+                 kotlin_internal: false,
+                 library: Some(LibraryMethod {
++                    vararg_index: None,
+                     contracts: Vec::new(),
+                     value_dispatch: false,
+                     suspend_: false,
+diff --git a/src/check.rs b/src/check.rs
+index e184e4910..b79b426fd 100644
+--- a/src/check.rs
++++ b/src/check.rs
+@@ -1355,9 +1355,9 @@ impl Checker<'_> {
+         }
+         if applicable
+             .iter()
+-            .any(|(_, original)| original.access & 0x80 == 0)
++            .any(|(_, original)| original.vararg_index().is_none())
+         {
+-            applicable.retain(|(_, original)| original.access & 0x80 == 0);
++            applicable.retain(|(_, original)| original.vararg_index().is_none());
+         }
+         if applicable.len() > 1
+             && applicable.iter().any(|(_, m)| {
+diff --git a/src/check_declarations.rs b/src/check_declarations.rs
+index a33961c39..c3e2e76b7 100644
+--- a/src/check_declarations.rs
++++ b/src/check_declarations.rs
+@@ -1112,6 +1112,7 @@ pub(super) fn check_class_with_constants(
+                     .iter()
+                     .find(|m| m.function.offset == *offset && m.function.name == *name)
+                     .map(|m| -> Result<_> { Ok(crate::classpath::LibraryMethod {
++            vararg_index: None,
+             contracts: Vec::new(),
+             value_dispatch: false,
+                 suspend_: m.function.suspend_,
+diff --git a/src/check_functions.rs b/src/check_functions.rs
+index 283a0464c..086ab72bf 100644
+--- a/src/check_functions.rs
++++ b/src/check_functions.rs
+@@ -904,6 +904,7 @@ mod shadowing_tests {
+                 kotlin_interface: false,
+                 methods: vec![JavaMethod {
+                     library: Some(crate::classpath::LibraryMethod {
++                        vararg_index: None,
+                         contracts: Vec::new(),
+                         value_dispatch: false,
+                         suspend_: false,
+diff --git a/src/check_interfaces.rs b/src/check_interfaces.rs
+index d80779dbc..078654b3d 100644
+--- a/src/check_interfaces.rs
++++ b/src/check_interfaces.rs
+@@ -387,6 +387,7 @@ fn register_classes(
+                     || function.operator
+                     || !function.type_params.is_empty())
+                 .then(|| crate::classpath::LibraryMethod {
++                    vararg_index: None,
+                     contracts: Vec::new(),
+                     value_dispatch: false,
+                     suspend_: function.suspend_,
+diff --git a/src/check_member_extensions.rs b/src/check_member_extensions.rs
+index 7af750bf0..aec8c3399 100644
+--- a/src/check_member_extensions.rs
++++ b/src/check_member_extensions.rs
+@@ -512,6 +512,7 @@ impl Checker<'_> {
+                     Diagnostic::new(offset, "Member extension metadata has no value parameters")
+                 })?;
+                 params.insert(0, ("<this>".into(), extension, false));
++                library.vararg_index = library.vararg_index.map(|index| index + 1);
+             }
+             let dispatch_slot = self.allocate_typed_slot(&dispatch.ty, offset)?;
+             let dispatch_value = Self::local_receiver(&Local {
+diff --git a/src/check_objects.rs b/src/check_objects.rs
+index 4c2748263..641ecd180 100644
+--- a/src/check_objects.rs
++++ b/src/check_objects.rs
+@@ -122,6 +122,7 @@ fn legacy_check(
+         }
+         overloads.push(JavaMethod {
+             library: function.infix.then(|| crate::classpath::LibraryMethod {
++                vararg_index: None,
+                 contracts: Vec::new(),
+                 value_dispatch: false,
+                 suspend_: false,
+@@ -655,6 +656,7 @@ pub(super) fn check(
+             kotlin_result: Some(result),
+             kotlin_internal: function.internal,
+             library: Some(crate::classpath::LibraryMethod {
++                vararg_index: None,
+                 contracts: Vec::new(),
+                 value_dispatch: false,
+                 suspend_: false,
+diff --git a/src/check_operations.rs b/src/check_operations.rs
+index 8bfccae1d..1b8a9b4ff 100644
+--- a/src/check_operations.rs
++++ b/src/check_operations.rs
+@@ -604,6 +604,9 @@ impl Checker<'_> {
+         let kind = match &target.kind {
+             ExprKind::Name(_) => return Ok(target.clone()),
+             ExprKind::Property(receiver, name) => {
++                if self.value_classifier(receiver)?.is_some() {
++                    return Ok(target.clone());
++                }
+                 let receiver = self.value(receiver)?;
+                 if receiver.ty.is_nullable() {
+                     return Err(Diagnostic::new(
+@@ -1622,6 +1625,8 @@ impl Checker<'_> {
+                         let receiver = method.library.as_ref().unwrap().receiver.clone().unwrap();
+                         if let Some(params) = &mut method.kotlin_params {
+                             params.insert(0, ("<receiver>".into(), receiver, false));
++                            let library = method.library.as_mut().unwrap();
++                            library.vararg_index = library.vararg_index.map(|index| index + 1);
+                         }
+                         method
+                     })
+diff --git a/src/check_relations.rs b/src/check_relations.rs
+index 17725017b..238a1c6ae 100644
+--- a/src/check_relations.rs
++++ b/src/check_relations.rs
+@@ -1280,6 +1280,7 @@ impl Checker<'_> {
+             ),
+             kotlin_result: Some(result.clone()),
+             library: Some(crate::classpath::LibraryMethod {
++                vararg_index: None,
+                 contracts: Vec::new(),
+                 value_dispatch: false,
+                 suspend_: false,
+diff --git a/src/check_varargs.rs b/src/check_varargs.rs
+index b325ac10d..39e735517 100644
+--- a/src/check_varargs.rs
++++ b/src/check_varargs.rs
+@@ -11,14 +11,17 @@ impl Checker<'_> {
+         args: &[Expr],
+         offset: usize,
+     ) -> Result<Vec<Expr>> {
+-        if method.access & 0x80 == 0 {
++        let Some(index) = method.vararg_index() else {
+             return Ok(args.to_vec());
+-        }
++        };
+         let (params, _) = Self::method_parameters(method)?;
+-        let index = params.len().checked_sub(1).ok_or_else(|| {
+-            Diagnostic::new(offset, "Vararg declaration requires an array parameter")
+-        })?;
+-        let array = params[index].1.clone();
++        let array = params
++            .get(index)
++            .ok_or_else(|| {
++                Diagnostic::new(offset, "Vararg declaration requires an array parameter")
++            })?
++            .1
++            .clone();
+         if element_type(&array).is_none() {
+             return Err(Diagnostic::new(
+                 offset,
+@@ -27,6 +30,7 @@ impl Checker<'_> {
+         }
+         let mut normalized = Vec::new();
+         let mut elements = Vec::new();
++        let mut insertion = None;
+         let mut named_array = false;
+         let mut seen_named = false;
+         for (position, argument) in args.iter().enumerate() {
+@@ -46,6 +50,7 @@ impl Checker<'_> {
+                     }
+                     named_array = true;
+                     seen_named = true;
++                    insertion = Some(normalized.len());
+                     elements.push(match &value.kind {
+                         ExprKind::Unary(operator, _) if operator == "*" => value.as_ref().clone(),
+                         _ => Expr {
+@@ -58,6 +63,21 @@ impl Checker<'_> {
+                     seen_named = true;
+                     normalized.push(argument.clone());
+                 }
++                ExprKind::TrailingLambda(value) if index + 1 < params.len() => {
++                    if position + 1 != args.len() {
++                        return Err(Diagnostic::new(
++                            argument.offset,
++                            "Only one trailing lambda is supported",
++                        ));
++                    }
++                    normalized.push(Expr {
++                        offset: argument.offset,
++                        kind: ExprKind::NamedArgument(
++                            params.last().unwrap().0.clone(),
++                            value.clone(),
++                        ),
++                    });
++                }
+                 _ if seen_named => {
+                     return Err(Diagnostic::new(
+                         argument.offset,
+@@ -65,26 +85,25 @@ impl Checker<'_> {
+                     ));
+                 }
+                 _ if position < index => normalized.push(argument.clone()),
+-                _ => elements.push(argument.clone()),
++                _ => {
++                    insertion.get_or_insert(normalized.len());
++                    elements.push(argument.clone());
++                }
+             }
+         }
+         let packed = Expr {
+             offset,
+-            kind: ExprKind::VarargArray {
+-                array: array.clone(),
+-                elements,
+-            },
++            kind: ExprKind::VarargArray { array, elements },
+         };
+-        normalized.push(
+-            if (seen_named || normalized.len() < index) && self.method_named(method) {
+-                Expr {
+-                    offset,
+-                    kind: ExprKind::NamedArgument(params[index].0.clone(), Box::new(packed)),
+-                }
+-            } else {
+-                packed
+-            },
+-        );
++        let packed = if self.method_named(method) {
++            Expr {
++                offset,
++                kind: ExprKind::NamedArgument(params[index].0.clone(), Box::new(packed)),
++            }
++        } else {
++            packed
++        };
++        normalized.insert(insertion.unwrap_or(normalized.len()), packed);
+         Ok(normalized)
+     }
+ 
+diff --git a/src/classpath.rs b/src/classpath.rs
+index 5d26827a4..518d98995 100644
+--- a/src/classpath.rs
++++ b/src/classpath.rs
+@@ -209,6 +209,7 @@ pub(crate) struct LibraryTypeAlias {
+ 
+ #[derive(Clone, Debug)]
+ pub(crate) struct LibraryMethod {
++    pub vararg_index: Option<usize>,
+     pub contracts: Vec<ContractEffect>,
+     pub value_dispatch: bool,
+     pub suspend_: bool,
+@@ -279,6 +280,25 @@ pub(crate) enum InlineConstant {
+ }
+ 
+ impl JavaMethod {
++    pub(crate) fn vararg_index(&self) -> Option<usize> {
++        self.library
++            .as_ref()
++            .and_then(|library| library.vararg_index)
++            .or_else(|| {
++                (self.access & 0x80 != 0).then(|| {
++                    self.kotlin_params
++                        .as_ref()
++                        .map_or_else(
++                            || {
++                                signature::method(&self.descriptor, &[])
++                                    .map_or(0, |(_, params, _)| params.len())
++                            },
++                            Vec::len,
++                        )
++                        .saturating_sub(1)
++                })
++            })
++    }
+     pub(crate) fn inherit_defaults(&mut self, parent: &JavaMethod) {
+         if !self.instance_dispatch()
+             || !parent.instance_dispatch()
+diff --git a/src/classpath/metadata.rs b/src/classpath/metadata.rs
+index 520c32072..6b6b8ea3f 100644
+--- a/src/classpath/metadata.rs
++++ b/src/classpath/metadata.rs
+@@ -626,6 +626,7 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
+             kotlin_result: Some(array),
+             kotlin_internal: false,
+             library: Some(LibraryMethod {
++                vararg_index: None,
+                 contracts: Vec::new(),
+                 value_dispatch: false,
+                 suspend_: false,
+@@ -822,6 +823,7 @@ fn builtin_declarations(
+             kotlin_result: Some(returned),
+             kotlin_internal: false,
+             library: requested_name.map(|_| LibraryMethod {
++                vararg_index: None,
+                 contracts: Vec::new(),
+                 value_dispatch: false,
+                 suspend_: false,
+@@ -1149,6 +1151,7 @@ fn contracts(
+ 
+ struct MemberTypes<'a> {
+     value_classes: &'a crate::value_abi::Registry,
++    vararg_index: Option<usize>,
+     parameter_modes: Vec<crate::syntax::InlineParameterMode>,
+     contracts: Vec<ContractEffect>,
+     params: Vec<(String, Type, bool)>,
+@@ -1196,6 +1199,7 @@ fn attach_member(
+ ) -> Result<()> {
+     let MemberTypes {
+         value_classes: values,
++        vararg_index,
+         mut parameter_modes,
+         contracts,
+         params,
+@@ -1415,6 +1419,7 @@ fn attach_member(
+         parameter_modes.insert(0, crate::syntax::InlineParameterMode::Ordinary);
+     }
+     method.library = Some(LibraryMethod {
++        vararg_index,
+         contracts,
+         value_dispatch,
+         suspend_,
+@@ -1464,6 +1469,7 @@ fn remember_callable(
+             && method.library.is_none()
+         {
+             method.library = Some(LibraryMethod {
++                vararg_index: None,
+                 contracts: Vec::new(),
+                 value_dispatch: false,
+                 suspend_: false,
+@@ -1800,6 +1806,25 @@ pub(super) fn attach_with_values(
+                     .into_iter()
+                     .map(|p| context.parameter(p))
+                     .collect::<Result<Vec<_>>>()?;
++                let mut vararg_index = None;
++                for (index, bytes) in member
++                    .messages(if constructor { 2 } else { 6 })?
++                    .into_iter()
++                    .enumerate()
++                {
++                    let parameter = Proto::parse(bytes)?;
++                    if parameter.bytes(4)?.is_some() || parameter.integer(6)?.is_some() {
++                        if vararg_index.replace(index).is_some() {
++                            return Err(invalid());
++                        }
++                        let element = context.field(&parameter, 4, 6)?;
++                        if params[index].2
++                            || params[index].1.array_element().as_ref() != Some(&element)
++                        {
++                            return Err(invalid());
++                        }
++                    }
++                }
+                 let result = if constructor {
+                     Type::Unit
+                 } else {
+@@ -1818,6 +1843,7 @@ pub(super) fn attach_with_values(
+                     name,
+                     MemberTypes {
+                         value_classes: values,
++                        vararg_index,
+                         contracts: if constructor {
+                             Vec::new()
+                         } else {
+@@ -1937,6 +1963,7 @@ pub(super) fn attach_with_values(
+                     &crate::check::getter_name(name),
+                     MemberTypes {
+                         value_classes: values,
++                        vararg_index: None,
+                         parameter_modes: Vec::new(),
+                         contracts: Vec::new(),
+                         params: Vec::new(),
+@@ -1957,6 +1984,7 @@ pub(super) fn attach_with_values(
+                     &crate::check::setter_name(name),
+                     MemberTypes {
+                         value_classes: values,
++                        vararg_index: None,
+                         parameter_modes: Vec::new(),
+                         contracts: Vec::new(),
+                         params: vec![("value".into(), ty, false)],
+diff --git a/src/classpath/signature.rs b/src/classpath/signature.rs
+index 3f062ad95..948ab30b4 100644
+--- a/src/classpath/signature.rs
++++ b/src/classpath/signature.rs
+@@ -507,6 +507,7 @@ pub(super) fn attach_with_declarations(
+                     method.kotlin_params = Some(params);
+                     method.kotlin_result = Some(result);
+                     method.library = Some(LibraryMethod {
++                        vararg_index: None,
+                         contracts: Vec::new(),
+                         value_dispatch: false,
+                         suspend_: false,
+diff --git a/src/classpath/source.rs b/src/classpath/source.rs
+index dcde6344e..95f237ecf 100644
+--- a/src/classpath/source.rs
++++ b/src/classpath/source.rs
+@@ -143,6 +143,7 @@ fn method(
+     );
+     JavaMethod {
+         library: Some(LibraryMethod {
++            vararg_index: None,
+             contracts: Vec::new(),
+             value_dispatch: false,
+             suspend_: function.suspend_,
+@@ -658,6 +659,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
+                 let name = format!("component{}", index + 1);
+                 class.methods.push(JavaMethod {
+                     library: Some(LibraryMethod {
++                        vararg_index: None,
+                         contracts: Vec::new(),
+                         value_dispatch: false,
+                         suspend_: false,
+@@ -780,6 +782,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
+             if !p.annotations.is_empty() {
+                 for method in &mut methods {
+                     method.library = Some(LibraryMethod {
++                        vararg_index: None,
+                         contracts: Vec::new(),
+                         value_dispatch: false,
+                         suspend_: false,
+@@ -1067,6 +1070,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
+                     library.code = None;
+                 } else {
+                     method.library = Some(LibraryMethod {
++                        vararg_index: None,
+                         contracts: Vec::new(),
+                         value_dispatch: false,
+                         suspend_: false,
+diff --git a/src/classpath/source_enums.rs b/src/classpath/source_enums.rs
+index 357308726..73cbdcfe1 100644
+--- a/src/classpath/source_enums.rs
++++ b/src/classpath/source_enums.rs
+@@ -60,6 +60,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
+     ] {
+         class.methods.push(JavaMethod {
+             library: Some(LibraryMethod {
++                vararg_index: None,
+                 contracts: Vec::new(),
+                 value_dispatch: false,
+                 suspend_: false,
+diff --git a/src/compiled_inline.rs b/src/compiled_inline.rs
+index 67f525931..adbb84958 100644
+--- a/src/compiled_inline.rs
++++ b/src/compiled_inline.rs
+@@ -1056,6 +1056,7 @@ mod tests {
+     fn inline_method(code: JavaCode) -> JavaMethod {
+         JavaMethod {
+             library: Some(crate::classpath::LibraryMethod {
++                vararg_index: None,
+                 contracts: Vec::new(),
+                 value_dispatch: false,
+                 suspend_: false,
+diff --git a/tests/nonfinal_varargs.rs b/tests/nonfinal_varargs.rs
+new file mode 100644
+index 000000000..796d167f5
+--- /dev/null
++++ b/tests/nonfinal_varargs.rs
+@@ -0,0 +1,80 @@
++use korrust::{SourceInput, compile_batch_with_classpath};
++use std::path::PathBuf;
++use std::process::{Command, Output};
++
++fn run(command: &mut Command) -> Output {
++    let output = command.output().unwrap();
++    assert!(
++        output.status.success(),
++        "{command:?}\n{}\n{}",
++        String::from_utf8_lossy(&output.stdout),
++        String::from_utf8_lossy(&output.stderr)
++    );
++    output
++}
++
++#[test]
++fn compiled_nonfinal_varargs_preserve_defaults_types_and_evaluation_order() {
++    std::thread::Builder::new()
++        .stack_size(32 * 1024 * 1024)
++        .spawn(check_compiled_nonfinal_varargs)
++        .unwrap()
++        .join()
++        .unwrap();
++}
++
++fn check_compiled_nonfinal_varargs() {
++    let project = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
++    let fixtures = project.join("tests/nonfinal_varargs");
++    let standard = project.join("references/kotlinc/lib/kotlin-stdlib.jar");
++    let root =
++        std::env::temp_dir().join(format!("korrust-nonfinal-varargs-{}", std::process::id()));
++    std::fs::create_dir_all(&root).unwrap();
++    let dependency = root.join("dependency");
++    let official = root.join("official");
++    let candidate = root.join("candidate");
++    let kotlinc = project.join("references/kotlinc/bin/kotlinc");
++    run(Command::new(&kotlinc)
++        .arg(fixtures.join("Library.kt"))
++        .args(["-jvm-target", "1.8", "-Xmetadata-version=1.7.0", "-d"])
++        .arg(&dependency));
++    let classpath = std::env::join_paths([&dependency, &standard]).unwrap();
++    run(Command::new(&kotlinc)
++        .arg(fixtures.join("Consumer.kt"))
++        .args(["-jvm-target", "1.8", "-cp"])
++        .arg(&classpath)
++        .arg("-d")
++        .arg(&official));
++    let input = SourceInput {
++        identity: fixtures.join("Consumer.kt").display().to_string(),
++        file_name: "Consumer.kt".into(),
++        source: std::fs::read_to_string(fixtures.join("Consumer.kt")).unwrap(),
++    };
++    for output in compile_batch_with_classpath(
++        &[input],
++        &[dependency.clone(), standard.clone()],
++        "nonfinal_varargs",
++    )
++    .unwrap()
++    {
++        let path = candidate.join(output.output.relative_path);
++        std::fs::create_dir_all(path.parent().unwrap()).unwrap();
++        std::fs::write(path, output.output.bytes).unwrap();
++    }
++    let callers = root.join("callers");
++    run(Command::new("javac")
++        .arg("-cp")
++        .arg(std::env::join_paths([&official, &dependency, &standard]).unwrap())
++        .arg("-d")
++        .arg(&callers)
++        .arg(fixtures.join("Calls.java")));
++    for provider in [&official, &candidate] {
++        let output = run(Command::new("java")
++            .arg("-Xverify:all")
++            .arg("-cp")
++            .arg(std::env::join_paths([&callers, provider, &dependency, &standard]).unwrap())
++            .arg("nonfinal.consumer.Calls"));
++        assert_eq!(output.stdout, b"nonfinal-varargs-ok\n");
++    }
++    std::fs::remove_dir_all(root).unwrap();
++}
+diff --git a/tests/nonfinal_varargs/Calls.java b/tests/nonfinal_varargs/Calls.java
+new file mode 100644
+index 000000000..b779467d5
+--- /dev/null
++++ b/tests/nonfinal_varargs/Calls.java
+@@ -0,0 +1,17 @@
++package nonfinal.consumer;
++
++public class Calls {
++    public static void main(String[] args) {
++        if (ConsumerKt.empty() != 102) throw new AssertionError("empty");
++        nonfinal.library.LibraryKt.setOrder(0);
++        if (ConsumerKt.filled() != 322 || nonfinal.library.LibraryKt.getOrder() != 456) throw new AssertionError("filled order");
++        nonfinal.library.LibraryKt.setOrder(0);
++        if (ConsumerKt.reordered() != 117 || nonfinal.library.LibraryKt.getOrder() != 8451) throw new AssertionError("named order");
++        if (ConsumerKt.spread() != 218) throw new AssertionError("spread");
++        if (!ConsumerKt.generic().equals("first") || !ConsumerKt.genericEmpty().equals("last")) throw new AssertionError("generic");
++        if (ConsumerKt.member() != 6 || ConsumerKt.constructor() != 6) throw new AssertionError("members");
++        if (ConsumerKt.extension() != 16) throw new AssertionError("extension");
++        if (ConsumerKt.overload() != 3) throw new AssertionError("overload specificity");
++        System.out.println("nonfinal-varargs-ok");
++    }
++}
+diff --git a/tests/nonfinal_varargs/Consumer.kt b/tests/nonfinal_varargs/Consumer.kt
+new file mode 100644
+index 000000000..cf9dffcae
+--- /dev/null
++++ b/tests/nonfinal_varargs/Consumer.kt
+@@ -0,0 +1,22 @@
++package nonfinal.consumer
++
++import nonfinal.library.Collected
++import nonfinal.library.Collector
++import nonfinal.library.choose
++import nonfinal.library.collect
++import nonfinal.library.pack
++import nonfinal.library.record
++import nonfinal.library.tail
++
++fun empty(): Int = pack()
++fun filled(): Int = pack(3, record(4), record(5), suffix = record(6)) { it + 7 }
++fun reordered(): Int = pack(suffix = record(8), values = intArrayOf(record(4), record(5)), prefix = record(1))
++fun spread(): Int = pack(2, *intArrayOf(3, 4), 5, suffix = 6) { it }
++fun generic(): String = tail("first", "second", last = "last")
++fun genericEmpty(): String = tail(last = "last")
++fun member(): Int = Collector().pack(1, 2, suffix = 3)
++fun constructor(): Int = Collected(1, 2, suffix = 3).total
++
++fun extension(): Int = 10.collect(1, 2, suffix = 3)
++
++fun overload(): Int = choose(1) { 2 }
+diff --git a/tests/nonfinal_varargs/InvalidDuplicate.kt b/tests/nonfinal_varargs/InvalidDuplicate.kt
+new file mode 100644
+index 000000000..dfb227578
+--- /dev/null
++++ b/tests/nonfinal_varargs/InvalidDuplicate.kt
+@@ -0,0 +1,2 @@
++import nonfinal.library.pack
++fun invalid(): Int = pack(1, 2, values = intArrayOf(3), suffix = 4)
+diff --git a/tests/nonfinal_varargs/InvalidMissing.kt b/tests/nonfinal_varargs/InvalidMissing.kt
+new file mode 100644
+index 000000000..8432c7111
+--- /dev/null
++++ b/tests/nonfinal_varargs/InvalidMissing.kt
+@@ -0,0 +1,2 @@
++import nonfinal.library.tail
++fun invalid(): Int = tail<Int>(1, 2)
+diff --git a/tests/nonfinal_varargs/InvalidType.kt b/tests/nonfinal_varargs/InvalidType.kt
+new file mode 100644
+index 000000000..dd8ca5af1
+--- /dev/null
++++ b/tests/nonfinal_varargs/InvalidType.kt
+@@ -0,0 +1,2 @@
++import nonfinal.library.pack
++fun invalid(): Int = pack(1, "wrong", suffix = 2)
+diff --git a/tests/nonfinal_varargs/Library.kt b/tests/nonfinal_varargs/Library.kt
+new file mode 100644
+index 000000000..28fba70ac
+--- /dev/null
++++ b/tests/nonfinal_varargs/Library.kt
+@@ -0,0 +1,31 @@
++package nonfinal.library
++
++var order: Int = 0
++
++fun record(value: Int): Int {
++    order = order * 10 + value
++    return value
++}
++
++fun pack(prefix: Int = 1, vararg values: Int, suffix: Int = 2, block: (Int) -> Int = { it }): Int {
++    var total = prefix * 100 + suffix
++    for (value in values) total += value
++    return block(total)
++}
++
++fun <T> tail(vararg values: T, last: T): T = if (values.isEmpty()) last else values[0]
++
++class Collector {
++    fun pack(vararg values: Int, suffix: Int): Int = values.sum() + suffix
++}
++
++class Collected(vararg values: Int, suffix: Int) {
++    val total: Int = values.sum() + suffix
++}
++
++fun Int.collect(vararg values: Int, suffix: Int): Int = this + values.sum() + suffix
++
++fun ownDefault(vararg values: Int = intArrayOf(9), suffix: Int = 2): Int = values.sum() + suffix
++
++fun choose(value: Int, block: () -> Int): Int = value + block()
++fun choose(vararg values: Int, block: () -> Int): Int = values.sum() + block() + 1000
+diff --git a/tests/nonfinal_varargs/UnsupportedDefault.kt b/tests/nonfinal_varargs/UnsupportedDefault.kt
+new file mode 100644
+index 000000000..fd2d7899c
+--- /dev/null
++++ b/tests/nonfinal_varargs/UnsupportedDefault.kt
+@@ -0,0 +1,2 @@
++import nonfinal.library.ownDefault
++fun boundary(): Int = ownDefault()
+diff --git a/tools/check_nonfinal_varargs.py b/tools/check_nonfinal_varargs.py
+new file mode 100644
+index 000000000..12621792e
+--- /dev/null
++++ b/tools/check_nonfinal_varargs.py
+@@ -0,0 +1,147 @@
++#!/usr/bin/env python3
++import argparse
++from collections import Counter
++from datetime import datetime, timezone
++import hashlib
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import zipfile
++
++ROOT = Path(__file__).resolve().parents[1]
++FIXTURES = ROOT / 'tests/nonfinal_varargs'
++
++
++def sha(path):
++    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++
++def relative(path):
++    path = Path(path).absolute()
++    return str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)
++
++
++def main():
++    parser = argparse.ArgumentParser()
++    parser.add_argument('--candidate', type=Path, default=ROOT / 'target/release/korrust')
++    parser.add_argument('--output', type=Path)
++    parser.add_argument('--evidence-directory', type=Path)
++    args = parser.parse_args()
++    created = datetime.now(timezone.utc)
++    stamp = created.strftime('%Y-%m-%dT%H%M%S%fZ') + '-compiled-nonfinal-varargs'
++    directory = (args.output or ROOT / 'target/checks' / stamp).absolute()
++    evidence = (args.evidence_directory or ROOT / 'reports/correctness' / stamp).absolute()
++    directory.mkdir(parents=True, exist_ok=False)
++    evidence.mkdir(parents=True, exist_ok=False)
++    candidate = directory / 'korrust-frozen'
++    shutil.copy2(args.candidate.resolve(), candidate)
++    official = ROOT / 'references/kotlinc/bin/kotlinc'
++    standard = ROOT / 'references/kotlinc/lib/kotlin-stdlib.jar'
++    java = Path(os.environ['JAVA_HOME']) / 'bin'
++    options = ['-language-version', '2.3', '-api-version', '2.3', '-jvm-target', '1.8']
++    inputs = [*sorted((ROOT / 'src').rglob('*.rs')), *sorted(FIXTURES.iterdir()), ROOT / 'tests/nonfinal_varargs.rs', Path(__file__), ROOT / 'Cargo.toml', ROOT / 'Cargo.lock', ROOT / 'references/compiler.json', ROOT / 'references/sources.json']
++    frozen = {relative(path): sha(path) for path in [*inputs, candidate, standard, ROOT / 'references/kotlinc/lib/kotlin-compiler.jar']}
++    with zipfile.ZipFile(evidence / 'inputs.zip', 'w', zipfile.ZIP_DEFLATED) as archive:
++        for path in inputs:
++            archive.writestr(relative(path), path.read_bytes())
++    report_path = evidence.with_suffix('.json')
++    report = dict(schema_version=1, kind='correctness', created_at=created.isoformat(), status='running',
++        compiler=dict(path=relative(candidate), sha256=sha(candidate), source_revision=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()),
++        reference_compiler=json.loads((ROOT / 'references/compiler.json').read_text()),
++        frozen_input_hashes=frozen, input_bundle=dict(path=relative(evidence / 'inputs.zip'), sha256=sha(evidence / 'inputs.zip')),
++        scope='Compiled Kotlin nonfinal varargs: empty arrays, named/default arguments, trailing lambdas, spread arguments, generic elements, member functions, constructors, extensions, fixed-arity overload priority and left-to-right evaluation order',
++        limitations=['Source declarations still require final varargs; this suite tests ordinary calls to compiled Kotlin declarations', 'Defaults on the vararg parameter itself remain unsupported', 'Existing compiled inline expansion boundaries apply; no full MockK or application execution claim'],
++        effective_options=dict(language_version='2.3', api_version='2.3', jvm_target='1.8'),
++        cases=[], commands=[], reproduction_command=['python3', relative(__file__), '--candidate', relative(args.candidate), '--output', relative(directory), '--evidence-directory', relative(evidence)])
++
++    def save():
++        report['counts'] = dict(Counter(case['outcome'] for case in report['cases']))
++        report_path.write_text(json.dumps(report, indent=2) + '\n')
++
++    def run(label, command):
++        command = [str(part) for part in command]
++        result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=360)
++        log = evidence / f'{len(report["commands"]):03d}.txt'
++        log.write_text('$ ' + ' '.join(command) + '\n' + result.stdout + result.stderr)
++        report['commands'].append(dict(label=label, argv=command, exit_code=result.returncode, log=relative(log)))
++        save()
++        assert result.returncode == 0, label + ': ' + result.stdout + result.stderr
++        return result
++
++    def case(name, operation):
++        try:
++            detail = operation()
++            outcome = detail.pop('outcome', 'pass') if isinstance(detail, dict) else 'pass'
++            report['cases'].append(dict(id=name, outcome=outcome, detail=detail))
++        except Exception as error:
++            report['cases'].append(dict(id=name, outcome='correctness_failure', detail=str(error)))
++        save()
++
++    save()
++    dependency = directory / 'dependency'
++    run('official dependency with metadata 1.7', [official, FIXTURES / 'Library.kt', '-d', dependency, '-Xmetadata-version=1.7.0', *options])
++    cp = os.pathsep.join(map(str, [dependency, standard]))
++    providers = [('official', directory / 'official'), ('candidate', directory / 'candidate')]
++    for name, output in providers:
++        def compile_consumer(name=name, output=output):
++            run(name + ' consumer', [(official if name == 'official' else candidate), FIXTURES / 'Consumer.kt', '-cp', cp, '-d', output, *(options if name == 'official' else [])])
++            return 'Same unmodified source, compiled dependency and standard library'
++        case(name + '_compile', compile_consumer)
++    def runtime():
++        caller = directory / 'caller'
++        run('fixed Java caller against official', [java / 'javac', '-cp', os.pathsep.join(map(str, [providers[0][1], dependency, standard])), '-d', caller, FIXTURES / 'Calls.java'])
++        hashes = {str(path.relative_to(caller)): sha(path) for path in caller.rglob('*.class')}
++        for name, output in providers:
++            result = run(name + ' independent runtime assertions', [java / 'java', '-Xverify:all', '-cp', os.pathsep.join(map(str, [caller, output, dependency, standard])), 'nonfinal.consumer.Calls'])
++            assert result.stdout == 'nonfinal-varargs-ok\n', result.stdout
++        return dict(caller_sha256=hashes, assertions='Empty/default result 102; filled result 322 with order 456; named result 117 with order 8451; spread 218; generic element and empty generic inference; ordinary members and constructors return 6')
++    case('fixed_java_caller_both_providers', runtime)
++    def signatures():
++        listings = []
++        for name, output in providers:
++            result = run(name + ' public JVM signatures', [java / 'javap', '-public', '-s', '-classpath', output, 'nonfinal.consumer.ConsumerKt'])
++            listings.append(result.stdout)
++        assert listings[0] == listings[1], listings
++        return listings[0]
++    case('public_jvm_signatures', signatures)
++    for source in sorted(FIXTURES.glob('Invalid*.kt')):
++        def invalid(source=source):
++            results = []
++            for name, compiler in [('official', official), ('candidate', candidate)]:
++                command = [str(part) for part in [compiler, source, '-cp', cp, '-d', directory / (name + '-' + source.stem)]]
++                result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=360)
++                log = evidence / f'{len(report["commands"]):03d}.txt'
++                log.write_text('$ ' + ' '.join(command) + '\n' + result.stdout + result.stderr)
++                report['commands'].append(dict(label=name + ' ' + source.stem, argv=command, exit_code=result.returncode, log=relative(log)))
++                save()
++                assert result.returncode == 1, name + ': ' + result.stdout + result.stderr
++                results.append(result.stderr)
++            return dict(outcome='invalid_rejected', rejections=results)
++        case(source.stem, invalid)
++    def unsupported_default():
++        source = FIXTURES / 'UnsupportedDefault.kt'
++        run('official vararg default parameter boundary', [official, source, '-cp', cp, '-d', directory / 'official-unsupported-default', *options])
++        command = [str(part) for part in [candidate, source, '-cp', cp, '-d', directory / 'candidate-unsupported-default', '--diagnostic-format', 'json']]
++        result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=360)
++        log = evidence / f'{len(report["commands"]):03d}.txt'
++        log.write_text('$ ' + ' '.join(command) + '\n' + result.stdout + result.stderr)
++        report['commands'].append(dict(label='candidate vararg default parameter boundary', argv=command, exit_code=result.returncode, log=relative(log)))
++        save()
++        assert result.returncode == 1, result.stdout + result.stderr
++        diagnostic = json.loads(result.stderr)
++        assert diagnostic['category'] == 'unsupported_language', diagnostic
++        return dict(outcome='unsupported_language', diagnostic=diagnostic)
++    case('vararg_parameter_default_boundary', unsupported_default)
++    changed = [name for name, digest in frozen.items() if sha(ROOT / name) != digest]
++    report['cases'].append(dict(id='frozen_inputs', outcome='correctness_failure' if changed else 'pass', changed=changed))
++    report['status'] = 'failed' if any(case['outcome'] == 'correctness_failure' for case in report['cases']) else 'complete'
++    save()
++    subprocess.run(['python3', ROOT / 'tools/reports.py'], cwd=ROOT, check=True)
++    print(json.dumps(dict(report=relative(report_path), status=report['status'], counts=report['counts'])))
++    return report['status'] != 'complete'
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())

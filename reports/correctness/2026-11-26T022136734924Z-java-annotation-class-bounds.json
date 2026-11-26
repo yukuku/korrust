@@ -1,0 +1,1171 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T02:21:36.734924+00:00",
+  "status": "pass",
+  "selection": "Binary Java annotation Class upper, invariant, lower and star bounds, arrays and nested values; defaults and real JUnit 4 Test annotation; checked property reads; invalid arguments and unsupported parameterized bounds. Deprecated Java annotation elements and real Robolectric Config with Android Application bound.",
+  "compiler": {
+    "binary_sha256": "8b4429f0dcb00022fdd921db7a4a857a4a8c63628e9dd300e8f0d0e07c9a0f16",
+    "source_base_revision": "380dfb2ff",
+    "source_snapshot": "/workspace/work/targets159/annotation-freeze2",
+    "source_state": "Immutable source snapshot containing the integrated annotation work and concurrent JDK module changes; exact source hashes are recorded in inputs."
+  },
+  "reference_compiler": {
+    "pin": {
+      "schema_version": 1,
+      "installed_at": "2026-10-23T02:43:55.924832+00:00",
+      "version": "2.3.21",
+      "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+      "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+      "path": "references/kotlinc",
+      "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+    }
+  },
+  "inputs": {
+    "files_sha256": {
+      "src/annotation_declarations.rs": "1dbea7954f183ec549558e4bf72686b48b438a152c4b1207d8bb988943ada49f",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/annotation_files.rs": "0fe8ebba7bbd2c80fcdd6fda797b448ca8cd63945b100781361bf1e3ace02eaa",
+      "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "src/bytecode/anonymous_context.rs": "e48d7aba57745c9e3ecb0a2317ea627f3b6d9b2d86805563bae680d79a301910",
+      "src/bytecode/class_companion.rs": "7463d1e739919160b82ed1137a195ebc3a36037ed8b5419a26c1f38889b533a7",
+      "src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+      "src/bytecode/defaults.rs": "d092d8a420cfb719f92dbb9a3bcc58f7c644d67bf9b3c611c72949122c22e827",
+      "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "src/bytecode/frames.rs": "1659d0401bfa59f751e3b6db250a2395a827ccad13c156f19f62c76773983b48",
+      "src/bytecode/inline.rs": "ca8a4f4da8f11e405a3cdcbcf87c3bfde49635e331f9712fb7b2f4aca0f84d25",
+      "src/bytecode/interfaces.rs": "5456ea3de3402ee3ead9920bb2cb0e7c0baab4f6eb7b211e481a16bf9ad3207b",
+      "src/bytecode/lambdas.rs": "80d29fe68d378de0b0458e601dec4cc6daaa539a64ce137a7d9f3c10e19f2d98",
+      "src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+      "src/bytecode/suspend.rs": "dfac0ad895edaf45c25655df1fad6c1828fe3fc767fd936dabe6e45357dd96d7",
+      "src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+      "src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+      "src/bytecode.rs": "4a64af005a11fd9a87467750b5acf485aa9e6e1057a4249fa52258e41b76d712",
+      "src/check.rs": "0dbdf722d4472cd77df152110f96d9d3bd819847ef4302c7839fe1b3cbe3502b",
+      "src/check_annotation_placements.rs": "027e77c6a6db60f98262fbaf0f44be170c53b58b03d64ae6e8cc43cdb2dc1579",
+      "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "src/check_anonymous.rs": "25817090ac3a19aef8fd11a5374a77049d19b85cc14d20958768ddacf649310e",
+      "src/check_captures.rs": "f752d88bb81c26576caad658160a332fa21946e7275e6faf331bfd73f6a84479",
+      "src/check_class_delegation.rs": "171fec70b3ce6632bbbd704ea92e040f1ef841fbebd02659388fe88ba97135f2",
+      "src/check_classes.rs": "eaa5547ca75d6f4bef4f21d200a050bb8a47362c9c7ea3e4f47b3a66e1cca4b3",
+      "src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+      "src/check_control.rs": "23bcd78c9f4a12b2665110ed5565c4cfe63c0c00f148463ef28c608336fa38b9",
+      "src/check_declarations.rs": "f40765759d6ae8af1fd247510be825d034d027d5d7f709bab435b9e462deddd2",
+      "src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+      "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "src/check_functions.rs": "907613d420b382c67d3842fb6ef8c5b6cc1316bcac77a415e0c8f58165f7ec21",
+      "src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+      "src/check_interfaces.rs": "866fcc764651619c0c9ed431a81fc8343d7db846adba4f34e9c6ff17db95659a",
+      "src/check_ir_walk.rs": "caaeeea794075c7e23b17fc9e2d06ace5a02d366c9abffbdc9393d3c8a1a2e96",
+      "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+      "src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+      "src/check_library.rs": "0b149088e46e79be33fdbea754a370c4de3e034443327b2260352248e25b1081",
+      "src/check_member_extensions.rs": "66a4cfa55e05e5699d510113566c91fd54fa79e1257f769df334338c0f7201e5",
+      "src/check_objects.rs": "14866723da0c865f81c12f7837bf042a696c6723f1a191671179cc0568a599e0",
+      "src/check_operations.rs": "5a0b0b380559259c1d11e8a2ec109a3955e1ad85f62c1b655df8632ac5362c8f",
+      "src/check_overloads.rs": "03618a927df2d30db9bc245df9a57e99001e9a525a49c089968cd22cb1f0671e",
+      "src/check_references.rs": "61a780d0816443007725e52f992c717eeab828f7b971749ed3242318a8d80077",
+      "src/check_relations.rs": "4c8f631777a422c0747c1c17d7618ac0a7cfe4ccae5f8066d8569222f03e696b",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+      "src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+      "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "src/check_varargs.rs": "a7dd5e1acfc35df5ed0de0632b2232bee62766cc8dd7abd7ae73030d4e4a0836",
+      "src/check_variant_signatures.rs": "ea8be16effafa3af58d46e0e732d196feeca4ef1468d4b373c2e1c29ee984ed3",
+      "src/classpath/aliases.rs": "2ad31713a22f8eb0607ed96d838aa96fecedf7a6b261f07473aef66b8bdb8827",
+      "src/classpath/archive.rs": "835e4a79bbbc5c7328ce6a540ed1a2ca975fc526278fe7c31fd9433e08cc56d5",
+      "src/classpath/jdk_modules.rs": "cd1a350e7f8e03cda618a1d919d4e6ee49aba7e9a26728178ebad5f73c4bd8f8",
+      "src/classpath/jvm_builtins.rs": "b8c6e4789a998c1b3737da4879a15d74eb453170c4b03542d4c8ae13f6e40e86",
+      "src/classpath/metadata.rs": "b425fbce06d6553a1abb15f7e1277344f6374e05e062366381a9346d8d1760c1",
+      "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/signature.rs": "7438c668defd40b0592905a08275daeac45d684fa5521f39edb5ec8db45f18ee",
+      "src/classpath/source.rs": "e8f91db20e32497c7eff5de705b414f051f3849094cfc0bc6197e8efe8187df2",
+      "src/classpath/source_enums.rs": "3eb834a1e2c63cf5fd233437c02bd797a47f3465a426cf5274ecfe7f7434c55d",
+      "src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+      "src/classpath/value_names.rs": "a0798cfa02230410ee554e39dc09057bc9a41bf1a366f9159b73604270f83728",
+      "src/classpath.rs": "1e4a466da0f0b083c1a2f64c58a3a5f13207767fb3d0fd5332fb42cd24779215",
+      "src/compiled_inline.rs": "4ac6c9c5b98cd806c6f7e36ea990e6fd2f05ae04aceb6b643df7e4ea3ecfa20a",
+      "src/const_eval.rs": "bc6a053823a41c822bcc5af603023019a6ace1895c9fae75bf0372f02381dacf",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+      "src/lib.rs": "0d5fafb7ae492d9d287650e2ab5bed999cf448e816c87f7febbe0ee0d2a3100d",
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/metadata.rs": "b3579828d0fcecc950ffa5a01bb3c34e710f52127185036c46055e18caafce34",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/source_inline.rs": "50bee0804aaea9cd3e2b8c8e0f162784e0e0e0b16b9e0770dd8c27fca764add2",
+      "src/syntax.rs": "36d50b22b549d443c1104f04a3f0cdd299ccb099ef048208c4d38a12379dbe61",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525",
+      "tests/java_annotation_class_bounds/Accepted.kt": "b7c3564a24ec0aee9216d06c704c6a15f0f7ae33c4ad51cab98d30036dadda64",
+      "tests/java_annotation_class_bounds/Bounds.java": "8ec5a7b5336f046b01d064536bf2a9bed2515055037fe21320736691bd07d0da",
+      "tests/java_annotation_class_bounds/Check.java": "5730551dd5d9210a37f4dc2c49f711f1ea24405fd20f40425de835c388ebc4bd",
+      "tests/java_annotation_class_bounds/Complex.java": "88f714c17e0a1864f0b388c8a4f2a6910d3c0dcd3c1e768bbee264019dda80df",
+      "tests/java_annotation_class_bounds/Junit.kt": "7e864ca0cd1db097fa1d2ccc79ba03f5123932bc4f98bf1aacc2d3f00a933730",
+      "tests/java_annotation_class_bounds/JunitCheck.java": "f93f46a2e1a1939af311879540a999ef93ea4a288fed86753b801611026512f3",
+      "tests/java_annotation_class_bounds/Nested.java": "fda9410fd4e56d336a790d5f93ab370b6320f482069d09d5687a23fc389d63ac",
+      "tests/java_annotation_class_bounds/Robolectric.kt": "94ba695eca904f84fc6c118602b502370c1026def9936acc78cf56f7315df358",
+      "tests/java_annotation_class_bounds/RobolectricCheck.java": "f36dbab13e1dfd375eaf25deb6e289fd8816d85f32c5d7ac3033471c0790250f",
+      "tests/java_annotation_class_bounds/Unsupported.kt": "a6f215acb81a9dbbd2fd438843bccee8757a0cb4b9fcc3c1fd9015e0f2a9aada",
+      "tests/java_annotation_class_bounds/Upper.java": "82a9c4b00844c8f38d335df6d50652f65cb3679ae06171c8b2df480cd683bfbb",
+      "tests/java_annotation_class_bounds/WrongArray.kt": "86b9a0cf086be66161e629f2fec065f2be8623be423cea4f7af5fbf41c94dc55",
+      "tests/java_annotation_class_bounds/WrongArrayMarker.kt": "17b6b9be00e6a5e45892ed38209a8de883aa688e515129a9c002fa6f163832d3",
+      "tests/java_annotation_class_bounds/WrongArrayPositional.kt": "1d0b41676aff9118d2370b3b15c9a55772ef31a87deb5ec6c78d2e9c3c2939f5",
+      "tests/java_annotation_class_bounds/WrongArrayScalar.kt": "65fc59ed548cdc16b361731206731981f870cf3e63fd55eec40d31772429fb4e",
+      "tests/java_annotation_class_bounds/WrongExact.kt": "8955a5a674aa5a83e62f41b441337a34ade3f5e645e82dc8b2a22eaba7a762a4",
+      "tests/java_annotation_class_bounds/WrongJunit.kt": "ac32cc824a2eae9f8d60d6d240f8b821182a2474d4d1f9aeb2040036671d659a",
+      "tests/java_annotation_class_bounds/WrongLower.kt": "f2c4840af29ea2c969634a5361f425526877d7765da515dcbafad58c4e3cbc99",
+      "tests/java_annotation_class_bounds/WrongNested.kt": "ee0fe5ae1edb90a1727ab84b537c4d2c9b0bbb9e38ce8f410f522266ff86aa81",
+      "tests/java_annotation_class_bounds/WrongReadArray.kt": "76c51aed83ee3f6326db1537e4d0b572136845137589399f86b4547c3fb77ee8",
+      "tests/java_annotation_class_bounds/WrongReadExact.kt": "884bf7b1fab2522234b0f209fdd5a8833e0960328ef4faa0b92282617a1ac17b",
+      "tests/java_annotation_class_bounds/WrongReadLower.kt": "22a9dbede1b83ea81e8a241acdf31e09bb87b0e0a914da9ce6d0f6b4e75fdc59",
+      "tests/java_annotation_class_bounds/WrongReadUpper.kt": "9ea544a9534300b9319b6deb2bd39b36567c692fb1bf96a330eab9feb04969ae",
+      "tests/java_annotation_class_bounds/WrongUpper.kt": "075295683c985628548a51b27f2d53987e10ccdc9e805531e373caffb21d7ce0",
+      "tools/check_java_annotation_class_bounds.py": "92897f5dbf5f54de6486f8e4c8ddee131e8563c1445af8d80e7d503f72f1e1de",
+      "tests/java_annotation_class_bounds.rs": "8bd8a047c9184ce5fad991df3ae3728f7a4e622f82e82574ee3fe749496e63d3",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d"
+    }
+  },
+  "dependencies": {
+    "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar": "8e495b634469d64fb8acfa3495a065cbacc8a0fff55ce1e31007be4c16dc57d3",
+    "/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.robolectric/annotations/4.13/714fb8aacd7be8c497325dad2bb1b3754e6b2a34/annotations-4.13.jar": "d813def0542230c510fb1a8f062f0e05e81b914878a4d961281437c99c177e21",
+    "/workspace/work/deps33/sdk/platforms/android-36/android.jar": "d9eb9da824d9e247a352f570f01e1169e725b2954bca9e283a71786c59b59f9a"
+  },
+  "commands": [
+    {
+      "id": "java-library",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "--release",
+        "8",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/Bounds.java",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/Upper.java",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/Nested.java",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/Complex.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/000-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/Accepted.kt",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/Junit.kt",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/Robolectric.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.robolectric/annotations/4.13/714fb8aacd7be8c497325dad2bb1b3754e6b2a34/annotations-4.13.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/001-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/korrust-frozen",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/Accepted.kt",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/Junit.kt",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/Robolectric.kt",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.robolectric/annotations/4.13/714fb8aacd7be8c497325dad2bb1b3754e6b2a34/annotations-4.13.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "annotationbounds",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/002-stderr.txt"
+    },
+    {
+      "id": "fixed-java-callers",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "--release",
+        "8",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/official:/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.robolectric/annotations/4.13/714fb8aacd7be8c497325dad2bb1b3754e6b2a34/annotations-4.13.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/caller",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/Check.java",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/JunitCheck.java",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/RobolectricCheck.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/003-stderr.txt"
+    },
+    {
+      "id": "official/Check",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/caller:/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/official:/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.robolectric/annotations/4.13/714fb8aacd7be8c497325dad2bb1b3754e6b2a34/annotations-4.13.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "annotationboundscheck.Check"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/004-stderr.txt"
+    },
+    {
+      "id": "official/JunitCheck",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/caller:/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/official:/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.robolectric/annotations/4.13/714fb8aacd7be8c497325dad2bb1b3754e6b2a34/annotations-4.13.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "annotationboundscheck.JunitCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/005-stderr.txt"
+    },
+    {
+      "id": "official/RobolectricCheck",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/caller:/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/official:/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.robolectric/annotations/4.13/714fb8aacd7be8c497325dad2bb1b3754e6b2a34/annotations-4.13.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "annotationboundscheck.RobolectricCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/006-stderr.txt"
+    },
+    {
+      "id": "official/signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/official:/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java",
+        "annotationboundsuses.AcceptedKt",
+        "annotationboundsuses.Junit"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/007-stderr.txt"
+    },
+    {
+      "id": "candidate/Check",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/caller:/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/candidate:/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.robolectric/annotations/4.13/714fb8aacd7be8c497325dad2bb1b3754e6b2a34/annotations-4.13.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "annotationboundscheck.Check"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/008-stderr.txt"
+    },
+    {
+      "id": "candidate/JunitCheck",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/caller:/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/candidate:/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.robolectric/annotations/4.13/714fb8aacd7be8c497325dad2bb1b3754e6b2a34/annotations-4.13.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "annotationboundscheck.JunitCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/009-stderr.txt"
+    },
+    {
+      "id": "candidate/RobolectricCheck",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/caller:/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/candidate:/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.robolectric/annotations/4.13/714fb8aacd7be8c497325dad2bb1b3754e6b2a34/annotations-4.13.jar:/workspace/work/deps33/sdk/platforms/android-36/android.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "annotationboundscheck.RobolectricCheck"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/010-stderr.txt"
+    },
+    {
+      "id": "candidate/signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/candidate:/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java",
+        "annotationboundsuses.AcceptedKt",
+        "annotationboundsuses.Junit"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/011-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongArray.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongArray/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/012-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/korrust-frozen",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongArray.kt",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "annotationbounds",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongArray/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/013-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/013-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongArrayMarker.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongArrayMarker/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/014-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/014-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/korrust-frozen",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongArrayMarker.kt",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "annotationbounds",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongArrayMarker/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/015-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/015-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongArrayPositional.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongArrayPositional/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/016-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/016-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/korrust-frozen",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongArrayPositional.kt",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "annotationbounds",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongArrayPositional/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/017-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/017-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongArrayScalar.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongArrayScalar/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/018-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/018-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/korrust-frozen",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongArrayScalar.kt",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "annotationbounds",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongArrayScalar/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/019-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/019-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongExact.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongExact/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/020-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/020-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/korrust-frozen",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongExact.kt",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "annotationbounds",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongExact/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/021-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/021-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongJunit.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongJunit/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/022-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/022-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/korrust-frozen",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongJunit.kt",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "annotationbounds",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongJunit/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/023-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/023-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongLower.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongLower/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/024-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/024-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/korrust-frozen",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongLower.kt",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "annotationbounds",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongLower/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/025-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/025-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongNested.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongNested/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/026-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/026-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/korrust-frozen",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongNested.kt",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "annotationbounds",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongNested/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/027-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/027-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongReadArray.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongReadArray/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/028-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/028-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/korrust-frozen",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongReadArray.kt",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "annotationbounds",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongReadArray/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/029-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/029-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongReadExact.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongReadExact/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/030-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/030-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/korrust-frozen",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongReadExact.kt",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "annotationbounds",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongReadExact/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/031-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/031-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongReadLower.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongReadLower/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/032-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/032-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/korrust-frozen",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongReadLower.kt",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "annotationbounds",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongReadLower/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/033-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/033-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongReadUpper.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongReadUpper/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/034-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/034-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/korrust-frozen",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongReadUpper.kt",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "annotationbounds",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongReadUpper/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/035-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/035-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongUpper.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongUpper/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/036-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/036-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/korrust-frozen",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongUpper.kt",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/junit/junit/4.13.2/8ac9e16d933b6fb43bc7f576336b8f4d7eb5ba12/junit-4.13.2.jar:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "annotationbounds",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/WrongUpper/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/037-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/037-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/Unsupported.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/unsupported/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/038-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/038-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/korrust-frozen",
+        "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/Unsupported.kt",
+        "-cp",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/java:/workspace/work/targets159/annotation-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "annotationbounds",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/annotation-freeze2/target/checks/2026-11-26T022136734924Z-java-annotation-class-bounds/unsupported/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/039-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/039-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "java-library",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "callers/compile-official",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/Check",
+      "outcome": "pass",
+      "observed": "OK:bounds"
+    },
+    {
+      "id": "official/JunitCheck",
+      "outcome": "pass",
+      "observed": "OK:junit"
+    },
+    {
+      "id": "official/RobolectricCheck",
+      "outcome": "pass",
+      "observed": "OK:robolectric"
+    },
+    {
+      "id": "official/signatures-read",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/Check",
+      "outcome": "pass",
+      "observed": "OK:bounds"
+    },
+    {
+      "id": "candidate/JunitCheck",
+      "outcome": "pass",
+      "observed": "OK:junit"
+    },
+    {
+      "id": "candidate/RobolectricCheck",
+      "outcome": "pass",
+      "observed": "OK:robolectric"
+    },
+    {
+      "id": "candidate/signatures-read",
+      "outcome": "pass"
+    },
+    {
+      "id": "signatures/match",
+      "outcome": "pass"
+    },
+    {
+      "id": "WrongArray",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongArray.kt",
+          "offset": 107,
+          "category": "invalid_kotlin",
+          "code": "INVALID_ANNOTATION_VALUE",
+          "message": "Annotation class literal does not satisfy the declared class bound",
+          "path": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongArray.kt",
+          "line": 4,
+          "column": 16
+        }
+      ]
+    },
+    {
+      "id": "WrongArrayMarker",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongArrayMarker.kt",
+          "offset": 34,
+          "category": "invalid_kotlin",
+          "code": "INVALID_ANNOTATION_VALUE",
+          "message": "Annotation class literal does not satisfy the declared class bound",
+          "path": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongArrayMarker.kt",
+          "line": 1,
+          "column": 35
+        }
+      ]
+    },
+    {
+      "id": "WrongArrayPositional",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongArrayPositional.kt",
+          "offset": 24,
+          "category": "invalid_kotlin",
+          "code": "INVALID_ANNOTATION_VALUE",
+          "message": "Annotation class arguments require a pure classifier literal",
+          "path": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongArrayPositional.kt",
+          "line": 1,
+          "column": 25
+        }
+      ]
+    },
+    {
+      "id": "WrongArrayScalar",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongArrayScalar.kt",
+          "offset": 32,
+          "category": "invalid_kotlin",
+          "code": "INVALID_ANNOTATION_VALUE",
+          "message": "Expected an annotation array value",
+          "path": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongArrayScalar.kt",
+          "line": 1,
+          "column": 33
+        }
+      ]
+    },
+    {
+      "id": "WrongExact",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongExact.kt",
+          "offset": 108,
+          "category": "invalid_kotlin",
+          "code": "INVALID_ANNOTATION_VALUE",
+          "message": "Annotation class literal does not satisfy the declared class bound",
+          "path": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongExact.kt",
+          "line": 4,
+          "column": 17
+        }
+      ]
+    },
+    {
+      "id": "WrongJunit",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongJunit.kt",
+          "offset": 143,
+          "category": "invalid_kotlin",
+          "code": "INVALID_ANNOTATION_VALUE",
+          "message": "Annotation class literal does not satisfy the declared class bound",
+          "path": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongJunit.kt",
+          "line": 5,
+          "column": 30
+        }
+      ]
+    },
+    {
+      "id": "WrongLower",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongLower.kt",
+          "offset": 108,
+          "category": "invalid_kotlin",
+          "code": "INVALID_ANNOTATION_VALUE",
+          "message": "Annotation class literal does not satisfy the declared class bound",
+          "path": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongLower.kt",
+          "line": 4,
+          "column": 17
+        }
+      ]
+    },
+    {
+      "id": "WrongNested",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongNested.kt",
+          "offset": 114,
+          "category": "invalid_kotlin",
+          "code": "INVALID_ANNOTATION_VALUE",
+          "message": "Annotation class literal does not satisfy the declared class bound",
+          "path": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongNested.kt",
+          "line": 4,
+          "column": 23
+        }
+      ]
+    },
+    {
+      "id": "WrongReadArray",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongReadArray.kt",
+          "offset": 154,
+          "category": "invalid_kotlin",
+          "code": "TYPE_MISMATCH",
+          "message": "Type mismatch: expected Array(Parameterized { name: \"kotlin/reflect/KClass\", arguments: [TypeArgument { variance: Invariant, ty: Some(String) }] }), found Array(Parameterized { name: \"kotlin/reflect/KClass\", arguments: [TypeArgument { variance: Out, ty: Some(Platform(Java(\"java/lang/Number\"))) }] })",
+          "path": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongReadArray.kt",
+          "line": 4,
+          "column": 63
+        }
+      ]
+    },
+    {
+      "id": "WrongReadExact",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongReadExact.kt",
+          "offset": 145,
+          "category": "invalid_kotlin",
+          "code": "TYPE_MISMATCH",
+          "message": "Type mismatch: expected Parameterized { name: \"kotlin/reflect/KClass\", arguments: [TypeArgument { variance: Invariant, ty: Some(Int) }] }, found Parameterized { name: \"kotlin/reflect/KClass\", arguments: [TypeArgument { variance: Invariant, ty: Some(Platform(Java(\"java/lang/Number\"))) }] }",
+          "path": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongReadExact.kt",
+          "line": 4,
+          "column": 54
+        }
+      ]
+    },
+    {
+      "id": "WrongReadLower",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongReadLower.kt",
+          "offset": 87,
+          "category": "invalid_kotlin",
+          "code": "TYPE_MISMATCH",
+          "message": "Type mismatch: expected Parameterized { name: \"kotlin/reflect/KClass\", arguments: [TypeArgument { variance: Invariant, ty: Some(Java(\"java/lang/Number\")) }] }, found Parameterized { name: \"kotlin/reflect/KClass\", arguments: [TypeArgument { variance: In, ty: Some(Platform(Java(\"java/lang/Number\"))) }] }",
+          "path": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongReadLower.kt",
+          "line": 2,
+          "column": 57
+        }
+      ]
+    },
+    {
+      "id": "WrongReadUpper",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongReadUpper.kt",
+          "offset": 148,
+          "category": "invalid_kotlin",
+          "code": "TYPE_MISMATCH",
+          "message": "Type mismatch: expected Parameterized { name: \"kotlin/reflect/KClass\", arguments: [TypeArgument { variance: Invariant, ty: Some(String) }] }, found Parameterized { name: \"kotlin/reflect/KClass\", arguments: [TypeArgument { variance: Out, ty: Some(Platform(Java(\"java/lang/Throwable\"))) }] }",
+          "path": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongReadUpper.kt",
+          "line": 4,
+          "column": 57
+        }
+      ]
+    },
+    {
+      "id": "WrongUpper",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongUpper.kt",
+          "offset": 108,
+          "category": "invalid_kotlin",
+          "code": "INVALID_ANNOTATION_VALUE",
+          "message": "Annotation class literal does not satisfy the declared class bound",
+          "path": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/WrongUpper.kt",
+          "line": 4,
+          "column": 17
+        }
+      ]
+    },
+    {
+      "id": "parameterized-bound",
+      "outcome": "unsupported_language",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/Unsupported.kt",
+          "offset": 7,
+          "category": "unsupported_language",
+          "code": "ANNOTATION_DEFINITION_UNSUPPORTED",
+          "message": "Unsupported annotation definition or required compiler plugin: annotationbounds/Complex",
+          "path": "/workspace/work/targets159/annotation-freeze2/tests/java_annotation_class_bounds/Unsupported.kt",
+          "line": 1,
+          "column": 8
+        }
+      ]
+    }
+  ],
+  "fixed_java_caller_hashes": {
+    "annotationboundscheck/Check.class": "043026f5fe0ab768eb5ebd9df18fdf4bb1fd6e4027a32b9ef5444d2c88d85077",
+    "annotationboundscheck/JunitCheck.class": "6493663d16c43f5d44fa895afd94ca19740a425c1483e31ef6ed756000604671",
+    "annotationboundscheck/RobolectricCheck.class": "03cec1c19acf86a1145dd0034eb3a123ed132fb7c59ac9f7f85f0d40f4240762"
+  },
+  "official_signatures": "Compiled from \"Accepted.kt\"\npublic final class annotationboundsuses.AcceptedKt {\n  public static final kotlin.reflect.KClass<? extends java.lang.Throwable> errorClass(annotationbounds.Bounds);\n    descriptor: (Lannotationbounds/Bounds;)Lkotlin/reflect/KClass;\n\n  public static final kotlin.reflect.KClass<java.lang.Number> exactClass(annotationbounds.Bounds);\n    descriptor: (Lannotationbounds/Bounds;)Lkotlin/reflect/KClass;\n\n  public static final kotlin.reflect.KClass<? super java.lang.Number> lowerClass(annotationbounds.Bounds);\n    descriptor: (Lannotationbounds/Bounds;)Lkotlin/reflect/KClass;\n\n  public static final kotlin.reflect.KClass<java.lang.Integer> integerClass(annotationbounds.Bounds);\n    descriptor: (Lannotationbounds/Bounds;)Lkotlin/reflect/KClass;\n\n  public static final int arrayCount(annotationbounds.Upper);\n    descriptor: (Lannotationbounds/Upper;)I\n}\nCompiled from \"Junit.kt\"\npublic final class annotationboundsuses.Junit {\n  public annotationboundsuses.Junit();\n    descriptor: ()V\n\n  public final void defaults();\n    descriptor: ()V\n\n  public final void explicit();\n    descriptor: ()V\n}\n",
+  "candidate_signatures": "Compiled from \"Accepted.kt\"\npublic final class annotationboundsuses.AcceptedKt {\n  public static final kotlin.reflect.KClass<? extends java.lang.Throwable> errorClass(annotationbounds.Bounds);\n    descriptor: (Lannotationbounds/Bounds;)Lkotlin/reflect/KClass;\n\n  public static final kotlin.reflect.KClass<java.lang.Number> exactClass(annotationbounds.Bounds);\n    descriptor: (Lannotationbounds/Bounds;)Lkotlin/reflect/KClass;\n\n  public static final kotlin.reflect.KClass<? super java.lang.Number> lowerClass(annotationbounds.Bounds);\n    descriptor: (Lannotationbounds/Bounds;)Lkotlin/reflect/KClass;\n\n  public static final kotlin.reflect.KClass<java.lang.Integer> integerClass(annotationbounds.Bounds);\n    descriptor: (Lannotationbounds/Bounds;)Lkotlin/reflect/KClass;\n\n  public static final int arrayCount(annotationbounds.Upper);\n    descriptor: (Lannotationbounds/Upper;)I\n}\nCompiled from \"Junit.kt\"\npublic final class annotationboundsuses.Junit {\n  public annotationboundsuses.Junit();\n    descriptor: ()V\n\n  public final void defaults();\n    descriptor: ()V\n\n  public final void explicit();\n    descriptor: ()V\n}\n",
+  "input_integrity": {
+    "status": "unchanged"
+  },
+  "counts": {
+    "pass": 13,
+    "invalid_rejected": 13,
+    "unsupported_language": 1
+  },
+  "supplementary_validation": {
+    "rust_test": {
+      "outcome": "pass",
+      "log": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/annotation-test2.log"
+    },
+    "clippy": {
+      "outcome": "pass",
+      "log": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/annotation-clippy2.log"
+    },
+    "format": {
+      "outcome": "pass",
+      "log": "reports/correctness/2026-11-26T022136734924Z-java-annotation-class-bounds/annotation-fmt2.log"
+    }
+  }
+}

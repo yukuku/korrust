@@ -148,7 +148,9 @@ def main():
             if (official.returncode == 0) != expected:
                 case(row['id'], False, reason='Authored oracle expectation differs', oracle_expected=row['expected_oracle'])
                 continue
-            if expected:
+            if expected and row['proposed_candidate_classification'] == 'supported':
+                case(row['id'], candidate.returncode == 0)
+            elif expected:
                 diagnostics = [json.loads(line) for line in candidate.stderr.splitlines() if line.startswith('{')]
                 okay = candidate.returncode != 0 and diagnostics and all(d.get('category') == 'unsupported_language' for d in diagnostics)
                 case(row['id'], okay, outcome='unsupported_language', diagnostics=diagnostics)
