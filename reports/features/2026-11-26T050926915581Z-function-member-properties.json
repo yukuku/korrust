@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-26T05:09:26.915581+00:00",
+  "status": "passed",
+  "compiler": {
+    "binary": "/tmp/targets159-member-function-properties/debug/korrust",
+    "binary_sha256": "83bc58b3409ead06311c2e532b223be84f3aee41e26deb2d50745bd60cb9a610",
+    "source_revision": null,
+    "source_root": "/workspace/work/member-function-properties159-freeze"
+  },
+  "reference_compiler": "Kotlin 2.3.21",
+  "evidence": [
+    "reports/correctness/2026-11-26T045229428745Z-member-function-properties.json",
+    "reports/correctness/2026-11-26T050111454255Z-member-function-property-application.json",
+    "reports/features/2026-11-26T050926915581Z-function-member-properties/targeted-interface-unit.log",
+    "reports/features/2026-11-26T050926915581Z-function-member-properties/library-clippy.log",
+    "reports/features/2026-11-26T050926915581Z-function-member-properties/focused-before-fallback.log",
+    "reports/features/2026-11-26T050926915581Z-function-member-properties/formatting.log",
+    "reports/features/2026-11-26T050926915581Z-function-member-properties/report-generator-tests.log"
+  ],
+  "features": [
+    {
+      "name": "Ordinary function-typed member property invocation",
+      "status": "supported",
+      "scope": "Stored and computed function properties use ordinary getters and fields, including private enclosing receivers captured by anonymous implementations, mutable callback replacement, generic and receiver function properties, and safe receiver calls. Applicable methods retain precedence. Known property type/arity inapplicability permits same-name extensions after checking state is restored. Static singleton accessors evaluate receivers once, and getters precede arguments. Four Kotlin provider/frontend combinations execute and public nonsynthetic JVM signatures are compared.",
+      "restrictions": [
+        "This scope covers ordinary function values; suspend receiver lambdas are a separate milestone. Existing unsupported declaration and callable/SAM adaptation boundaries remain.",
+        "No reflection, complete metadata, Android runtime, full-application or performance claim."
+      ],
+      "evidence_report": "reports/correctness/2026-11-26T045229428745Z-member-function-properties.json"
+    },
+    {
+      "name": "Unchanged DevotionDownloaderTest",
+      "status": "supported",
+      "scope": "The pinned original source compiles unchanged to 18 owned JVM class outputs. The same 10 original JUnit tests pass against official and replacement providers with verification, including mutable callback invocation from an anonymous Request and concurrent selection/prefetch behavior.",
+      "restrictions": [
+        "Existing original Gradle dependency and provider outputs are reused. This is a bounded JVM test result."
+      ],
+      "evidence_report": "reports/correctness/2026-11-26T050111454255Z-member-function-property-application.json"
+    }
+  ],
+  "validation": {
+    "final_differential_counts": {
+      "pass": 8,
+      "invalid_rejected": 7
+    },
+    "final_application_counts": {
+      "pass": 3
+    },
+    "targeted_interface_unit": "1 passed",
+    "focused_before_extension_fallback": "7 passed",
+    "library_clippy": "passed",
+    "formatting": "passed",
+    "report_generator_tests": "8 passed"
+  },
+  "corrections": [
+    {
+      "reports": [
+        "reports/correctness/2026-11-26T041735042255Z-member-function-properties.json"
+      ],
+      "reason": "The first frozen run exposed a duplicate imported-singleton method-only path bypassing callback properties. The final resolver uses the ordinary member call path."
+    },
+    {
+      "reports": [
+        "reports/correctness/2026-11-26T042224126842Z-member-function-properties.json"
+      ],
+      "reason": "All recorded cases passed. Final review added valid extension fallbacks for noncallable, wrong-type and wrong-arity properties, including imported providers, implicit receivers and independent evaluation counters. The final report verifies the corrected resolution and restoration of rejected probe state."
+    }
+  ],
+  "inputs": {
+    "evidence_sha256": {
+      "reports/correctness/2026-11-26T045229428745Z-member-function-properties.json": "f6edfe530e9b4798de0e7b43a187753ab4d6a269fddd7350725d8a2831c43b19",
+      "reports/correctness/2026-11-26T050111454255Z-member-function-property-application.json": "52a117ef29c482e879a46bebe410e409fdb865b2e7c2068bc2bf1582895ec075",
+      "reports/features/2026-11-26T050926915581Z-function-member-properties/library-clippy.log": "371a28de5d966011bbc0bdefa0ed36bbb6329659f503da386b9d13ac955fd677",
+      "reports/features/2026-11-26T050926915581Z-function-member-properties/formatting.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "reports/features/2026-11-26T050926915581Z-function-member-properties/focused-before-fallback.log": "4a9e7268f19a2cf6fcd958a340180625a9eb534be8176bf6480c5e087ab860d2",
+      "reports/features/2026-11-26T050926915581Z-function-member-properties/targeted-interface-unit.log": "a85b9d6a73cde48b0a9317795800cb6a338467a2737c49fde59802346828e8c9",
+      "reports/features/2026-11-26T050926915581Z-function-member-properties/report-generator-tests.log": "3f6fc415e552b1bb857fe9a6a2373b669ea902c4d3c6fd7a1f850fb371823db8"
+    }
+  }
+}

@@ -6,7 +6,7 @@ pub(super) fn type_owner(ty: &Type) -> Option<&str> {
         Type::Java(name) | Type::Parameterized { name, .. } => Some(name),
         Type::String => Some("java/lang/String"),
         Type::Parameter { upper_bound, .. } => type_owner(upper_bound),
-        Type::List(_) | Type::MutableList(_) => Some("java/util/List"),
+        Type::List(_) | Type::MutableList(_) | Type::FlexibleList(_) => Some("java/util/List"),
         _ => None,
     }
 }
@@ -51,6 +51,7 @@ pub(super) fn substitute(ty: &Type, substitutions: &HashMap<String, Type>) -> Ty
         Type::OutArray(inner) => Type::OutArray(Box::new(substitute(inner, substitutions))),
         Type::List(inner) => Type::List(Box::new(substitute(inner, substitutions))),
         Type::MutableList(inner) => Type::MutableList(Box::new(substitute(inner, substitutions))),
+        Type::FlexibleList(inner) => Type::FlexibleList(Box::new(substitute(inner, substitutions))),
         Type::ThreadLocal(inner) => Type::ThreadLocal(Box::new(substitute(inner, substitutions))),
         Type::Parameterized { name, arguments } => Type::Parameterized {
             name: name.clone(),
@@ -95,10 +96,12 @@ pub(super) fn substitute(ty: &Type, substitutions: &HashMap<String, Type>) -> Ty
 fn arguments(ty: &Type) -> Option<Vec<TypeArgument>> {
     match ty.base() {
         Type::Parameterized { arguments, .. } => Some(arguments.clone()),
-        Type::List(inner) | Type::MutableList(inner) => Some(vec![TypeArgument {
-            variance: Variance::Invariant,
-            ty: Some(inner.as_ref().clone()),
-        }]),
+        Type::List(inner) | Type::MutableList(inner) | Type::FlexibleList(inner) => {
+            Some(vec![TypeArgument {
+                variance: Variance::Invariant,
+                ty: Some(inner.as_ref().clone()),
+            }])
+        }
         _ => None,
     }
 }
@@ -174,7 +177,7 @@ fn project_supertype(
                 .map(|value| argument(value, substitutions, projections))
                 .collect(),
         },
-        Type::List(inner) | Type::MutableList(inner)
+        Type::List(inner) | Type::MutableList(inner) | Type::FlexibleList(inner)
             if projections.iter().any(|(name, projection)| {
                 (projection.ty.is_none() || projection.variance != Variance::Invariant)
                     && mentions(inner, name)
@@ -261,6 +264,7 @@ fn mentions(ty: &Type, name: &str) -> bool {
         | Type::OutArray(inner)
         | Type::List(inner)
         | Type::MutableList(inner)
+        | Type::FlexibleList(inner)
         | Type::ThreadLocal(inner) => mentions(inner, name),
         Type::Parameterized { arguments, .. } => arguments
             .iter()
@@ -463,7 +467,7 @@ pub(super) fn specialize_receiver(
     if let Some(result) = &mut method.kotlin_result {
         let precise_mapped_parameter = matches!(
             receiver.base(),
-            Type::List(_) | Type::MutableList(_)
+            Type::List(_) | Type::MutableList(_) | Type::FlexibleList(_)
         ) && matches!(result, Type::Platform(inner) if matches!(inner.as_ref(), Type::Parameter { .. }));
         if precise_mapped_parameter {
             if let Type::Platform(inner) = result {
@@ -665,7 +669,8 @@ pub(super) fn subtype_at(cp: &Classpath, actual: &Type, expected: &Type, depth: 
             };
             let variance = if expected_argument.variance != Variance::Invariant {
                 expected_argument.variance
-            } else if matches!(expected, Type::List(_)) {
+            } else if matches!(expected, Type::List(_)) || matches!(expected, Type::FlexibleList(_))
+            {
                 Variance::Out
             } else {
                 declared
@@ -808,6 +813,7 @@ pub(super) fn validate_type_arguments_with_classes(
             | Type::OutArray(inner)
             | Type::List(inner)
             | Type::MutableList(inner)
+            | Type::FlexibleList(inner)
             | Type::ThreadLocal(inner) => validate(inner, cp, classes, offset, depth + 1)?,
             Type::Platform(_) => {}
             Type::Parameter { .. } => {}
@@ -1096,6 +1102,13 @@ impl Checker<'_> {
             ExprKind::LambdaWithParams { params, body } => (params.clone(), body.clone()),
             _ => return Ok(()),
         };
+        if self.nonlocal_result.is_some()
+            && body
+                .last()
+                .is_some_and(|statement| matches!(statement.kind, StatementKind::Return(_)))
+        {
+            return Ok(());
+        }
         let names = match declared {
             Some(declared) => {
                 if declared.len() != params.len() {
@@ -1441,6 +1454,7 @@ impl Checker<'_> {
                 substitutions.entry(name).or_insert(ty);
             }
         }
+        let mut postponed = Vec::new();
         for (arg, index) in args.iter().zip(&mapping) {
             let arg = if let ExprKind::NamedArgument(_, expr) | ExprKind::TrailingLambda(expr) =
                 &arg.kind
@@ -1534,7 +1548,7 @@ impl Checker<'_> {
                 .map(|(name, ty)| (name.clone(), ty.clone()))
                 .collect::<HashMap<_, _>>();
             let expected_argument = substitute(&params[*index].1, &fixed_types);
-            let value = if (!fixed.is_empty() || method.name == "<init>" && expected.is_some())
+            let value = if (!fixed.is_empty() || method.name == "<init>")
                 && !library.type_parameters.iter().any(|parameter| {
                     !fixed.contains(&parameter.name)
                         && mentions(&expected_argument, &parameter.name)
@@ -1544,6 +1558,30 @@ impl Checker<'_> {
                 } else {
                     self.argument_value(arg, &expected_argument)?
                 }
+            } else if args.len() > 1
+                && matches!(arg.kind, ExprKind::Call(..))
+                && method.name != "<init>"
+                && !library.type_parameters.iter().any(|p| p.only_input_types)
+            {
+                let saved = self.clone();
+                let lambdas = self.lambdas.borrow().len();
+                let checked = self.argument_with_result_hint(
+                    arg,
+                    &params[*index].1,
+                    &result_hints,
+                    &library.type_parameters,
+                );
+                let needs_context = match &checked {
+                    Ok(value) => unresolved_list(&value.ty),
+                    Err(error) => error.code == "TYPE_PARAMETER_INFERENCE_INCOMPLETE",
+                };
+                if needs_context {
+                    *self = saved;
+                    self.lambdas.borrow_mut().truncate(lambdas);
+                    postponed.push((arg.clone(), *index));
+                    continue;
+                }
+                checked?
             } else {
                 self.argument_with_result_hint(
                     arg,
@@ -1634,6 +1672,19 @@ impl Checker<'_> {
             }
             if !self.infer_constraints(&params[*index].1, &value.ty, &mut substitutions, &fixed, 0)
             {
+                return Err(Diagnostic::new(
+                    arg.offset,
+                    "Conflicting generic type constraints",
+                ));
+            }
+        }
+        for (arg, index) in postponed {
+            let mut hints = result_hints.clone();
+            hints.extend(substitutions.clone());
+            let parameter = &params[index].1;
+            let value =
+                self.argument_with_result_hint(&arg, parameter, &hints, &library.type_parameters)?;
+            if !self.infer_constraints(parameter, &value.ty, &mut substitutions, &fixed, 0) {
                 return Err(Diagnostic::new(
                     arg.offset,
                     "Conflicting generic type constraints",
@@ -1736,6 +1787,10 @@ impl Checker<'_> {
                 Diagnostic::new(
                     offset,
                     format!("Cannot infer type parameter {}", parameter.name),
+                )
+                .with_kind(
+                    crate::DiagnosticKind::Unclassified,
+                    "TYPE_PARAMETER_INFERENCE_INCOMPLETE",
                 )
             })?;
             if parameter.reified
@@ -1840,6 +1895,7 @@ impl Checker<'_> {
                         | Type::Parameterized { .. }
                         | Type::List(_)
                         | Type::MutableList(_)
+                        | Type::FlexibleList(_)
                         | Type::Function { .. }
                         | Type::ReceiverFunction { .. }
                         | Type::Unit
@@ -1855,6 +1911,7 @@ impl Checker<'_> {
                         Type::Parameterized { .. }
                         | Type::List(_)
                         | Type::MutableList(_)
+                        | Type::FlexibleList(_)
                         | Type::Java(_)
                         | Type::String => true,
                         _ => false,

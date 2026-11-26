@@ -1,0 +1,40 @@
+$ /workspace/work/interop159-internal-proof/references/kotlinc/bin/kotlinc /workspace/work/interop159-internal-proof/tests/compiled_internal_classifiers/Consumer.kt -cp /workspace/work/interop159-internal-final-run/2.3.0-directory/dependency:/workspace/work/interop159-internal-proof/references/kotlinc/lib/kotlin-stdlib.jar -module-name friends_production -d /workspace/work/interop159-internal-final-run/official-no-friend-Consumer -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/compiled_internal_classifiers/Consumer.kt:4:30: error: cannot access 'interface Counter : Any': it is internal in file.
+private fun consume(counter: Counter): Int = counter.value()
+                             ^^^^^^^
+tests/compiled_internal_classifiers/Consumer.kt:4:54: error: cannot access 'interface Counter : Any': it is internal in file.
+private fun consume(counter: Counter): Int = counter.value()
+                                                     ^^^^^
+tests/compiled_internal_classifiers/Consumer.kt:5:20: error: cannot access 'class Plain : Any': it is internal in file.
+fun total(): Int = Plain(3).bump() + Data().copy(value = 5).value +
+                   ^^^^^
+tests/compiled_internal_classifiers/Consumer.kt:5:29: error: cannot access 'class Plain : Any': it is internal in file.
+fun total(): Int = Plain(3).bump() + Data().copy(value = 5).value +
+                            ^^^^
+tests/compiled_internal_classifiers/Consumer.kt:5:38: error: cannot access 'data class Data : Any': it is internal in file.
+fun total(): Int = Plain(3).bump() + Data().copy(value = 5).value +
+                                     ^^^^
+tests/compiled_internal_classifiers/Consumer.kt:5:45: error: cannot access 'data class Data : Any': it is internal in file.
+fun total(): Int = Plain(3).bump() + Data().copy(value = 5).value +
+                                            ^^^^
+tests/compiled_internal_classifiers/Consumer.kt:5:61: error: cannot access 'data class Data : Any': it is internal in file.
+fun total(): Int = Plain(3).bump() + Data().copy(value = 5).value +
+                                                            ^^^^^
+tests/compiled_internal_classifiers/Consumer.kt:6:13: error: cannot access 'class Implementation : Counter': it is internal in file.
+    consume(Implementation(7)) + Singleton.value() + Choice.FIRST.value()
+            ^^^^^^^^^^^^^^
+tests/compiled_internal_classifiers/Consumer.kt:6:34: error: cannot access 'object Singleton : Any': it is internal in file.
+    consume(Implementation(7)) + Singleton.value() + Choice.FIRST.value()
+                                 ^^^^^^^^^
+tests/compiled_internal_classifiers/Consumer.kt:6:44: error: cannot access 'object Singleton : Any': it is internal in file.
+    consume(Implementation(7)) + Singleton.value() + Choice.FIRST.value()
+                                           ^^^^^
+tests/compiled_internal_classifiers/Consumer.kt:6:54: error: cannot access 'enum class Choice : Enum<Choice>': it is internal in file.
+    consume(Implementation(7)) + Singleton.value() + Choice.FIRST.value()
+                                                     ^^^^^^
+tests/compiled_internal_classifiers/Consumer.kt:6:61: error: cannot access 'enum class Choice : Enum<Choice>': it is internal in file.
+    consume(Implementation(7)) + Singleton.value() + Choice.FIRST.value()
+                                                            ^^^^^
+tests/compiled_internal_classifiers/Consumer.kt:6:67: error: cannot access 'enum class Choice : Enum<Choice>': it is internal in file.
+    consume(Implementation(7)) + Singleton.value() + Choice.FIRST.value()
+                                                                  ^^^^^

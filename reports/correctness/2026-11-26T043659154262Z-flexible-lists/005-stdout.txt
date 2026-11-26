@@ -1,0 +1,493 @@
+Classfile /workspace/korrust/target/checks/2026-11-26T043659154262Z-flexible-lists/official/EffectsKt.class
+  Last modified Nov 26, 2026; size 3714 bytes
+  SHA-256 checksum b787eabfef24757f6272049084c5f252dbcfbace08db85f258aeecf59bc29031
+  Compiled from "Effects.kt"
+public final class EffectsKt
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // EffectsKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 17, attributes: 2
+Constant pool:
+    #1 = Utf8               EffectsKt
+    #2 = Class              #1            // EffectsKt
+    #3 = Utf8               java/lang/Object
+    #4 = Class              #3            // java/lang/Object
+    #5 = Utf8               inferred
+    #6 = Utf8               ()Ljava/util/List;
+    #7 = Utf8               ()Ljava/util/List<Ljava/lang/CharSequence;>;
+    #8 = Utf8               Lorg/jetbrains/annotations/NotNull;
+    #9 = Utf8               Lists
+   #10 = Class              #9            // Lists
+   #11 = Utf8               nonNull
+   #12 = NameAndType        #11:#6        // nonNull:()Ljava/util/List;
+   #13 = Methodref          #10.#12       // Lists.nonNull:()Ljava/util/List;
+   #14 = Utf8               nonNull(...)
+   #15 = String             #14           // nonNull(...)
+   #16 = Utf8               kotlin/jvm/internal/Intrinsics
+   #17 = Class              #16           // kotlin/jvm/internal/Intrinsics
+   #18 = Utf8               checkNotNullExpressionValue
+   #19 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+   #20 = NameAndType        #18:#19       // checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+   #21 = Methodref          #17.#20       // kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+   #22 = Utf8               inferredNullable
+   #23 = Utf8               Lorg/jetbrains/annotations/Nullable;
+   #24 = Utf8               nullable
+   #25 = Utf8               (Z)Ljava/util/List;
+   #26 = NameAndType        #24:#25       // nullable:(Z)Ljava/util/List;
+   #27 = Methodref          #10.#26       // Lists.nullable:(Z)Ljava/util/List;
+   #28 = Utf8               inferredPlatform
+   #29 = Utf8               platform
+   #30 = NameAndType        #29:#25       // platform:(Z)Ljava/util/List;
+   #31 = Methodref          #10.#30       // Lists.platform:(Z)Ljava/util/List;
+   #32 = Utf8               inferredReadOnly
+   #33 = Utf8               readOnly
+   #34 = NameAndType        #33:#6        // readOnly:()Ljava/util/List;
+   #35 = Methodref          #10.#34       // Lists.readOnly:()Ljava/util/List;
+   #36 = Utf8               readOnly(...)
+   #37 = String             #36           // readOnly(...)
+   #38 = Utf8               inferredPlatformReadOnly
+   #39 = Utf8               platformReadOnly
+   #40 = NameAndType        #39:#6        // platformReadOnly:()Ljava/util/List;
+   #41 = Methodref          #10.#40       // Lists.platformReadOnly:()Ljava/util/List;
+   #42 = Utf8               inferredPlatformMutable
+   #43 = Utf8               platformMutable
+   #44 = NameAndType        #43:#6        // platformMutable:()Ljava/util/List;
+   #45 = Methodref          #10.#44       // Lists.platformMutable:()Ljava/util/List;
+   #46 = Utf8               inferredMutable
+   #47 = Utf8               mutable
+   #48 = NameAndType        #47:#6        // mutable:()Ljava/util/List;
+   #49 = Methodref          #10.#48       // Lists.mutable:()Ljava/util/List;
+   #50 = Utf8               mutable(...)
+   #51 = String             #50           // mutable(...)
+   #52 = Utf8               mutate
+   #53 = Utf8               ()I
+   #54 = Utf8               a
+   #55 = String             #54           // a
+   #56 = Utf8               java/util/List
+   #57 = Class              #56           // java/util/List
+   #58 = Utf8               add
+   #59 = Utf8               (Ljava/lang/Object;)Z
+   #60 = NameAndType        #58:#59       // add:(Ljava/lang/Object;)Z
+   #61 = InterfaceMethodref #57.#60       // java/util/List.add:(Ljava/lang/Object;)Z
+   #62 = Utf8               b
+   #63 = String             #62           // b
+   #64 = Utf8               set
+   #65 = Utf8               (ILjava/lang/Object;)Ljava/lang/Object;
+   #66 = NameAndType        #64:#65       // set:(ILjava/lang/Object;)Ljava/lang/Object;
+   #67 = InterfaceMethodref #57.#66       // java/util/List.set:(ILjava/lang/Object;)Ljava/lang/Object;
+   #68 = Utf8               size
+   #69 = NameAndType        #68:#53       // size:()I
+   #70 = InterfaceMethodref #57.#69       // java/util/List.size:()I
+   #71 = Utf8               value
+   #72 = Utf8               Ljava/util/List;
+   #73 = Utf8               direct
+   #74 = Utf8               ()Z
+   #75 = Utf8               mutableView
+   #76 = Utf8               readonlyView
+   #77 = Utf8               readonlyArgument
+   #78 = Utf8               (Ljava/util/List;)I
+   #79 = Utf8               (Ljava/util/List<Ljava/lang/String;>;)I
+   #80 = String             #71           // value
+   #81 = Utf8               checkNotNullParameter
+   #82 = NameAndType        #81:#19       // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+   #83 = Methodref          #17.#82       // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+   #84 = Utf8               accept
+   #85 = NameAndType        #84:#78       // accept:(Ljava/util/List;)I
+   #86 = Methodref          #10.#85       // Lists.accept:(Ljava/util/List;)I
+   #87 = Utf8               mutableArgument
+   #88 = Utf8               (Ljava/util/List<Ljava/lang/CharSequence;>;)I
+   #89 = Utf8               explicitReadonlyArgument
+   #90 = Utf8               readonly
+   #91 = NameAndType        #90:#78       // readonly:(Ljava/util/List;)I
+   #92 = Methodref          #10.#91       // Lists.readonly:(Ljava/util/List;)I
+   #93 = Utf8               explicitMutableArgument
+   #94 = Utf8               mutableArg
+   #95 = NameAndType        #94:#78       // mutableArg:(Ljava/util/List;)I
+   #96 = Methodref          #10.#95       // Lists.mutableArg:(Ljava/util/List;)I
+   #97 = Utf8               Lkotlin/Metadata;
+   #98 = Utf8               mv
+   #99 = Integer            2
+  #100 = Integer            3
+  #101 = Integer            0
+  #102 = Utf8               k
+  #103 = Utf8               xi
+  #104 = Integer            48
+  #105 = Utf8               d1
+  #106 = Utf8               \u0000D\n\u0000\n\u0002\u0010!\n\u0002\u0010\r\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010 \n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0010\u000e\n\u0002\b\u0006\u001a2\u0010\u0000\u001a.\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u0002 \u0003*\u0015\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u00020\u0005¢\u0006\u0002\b\u00040\u0001¢\u0006\u0002\b\u0004\u001a6\u0010\u0006\u001a2\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u0002\u0018\u0001 \u0003*\u0017\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u0002\u0018\u00010\u0005¢\u0006\u0002\b\u00070\u0001¢\u0006\u0002\b\u0007\u001a*\u0010\b\u001a&\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u0002 \u0003*\u0012\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u0002\u0018\u00010\u00050\u0001\u001a\u001e\u0010\t\u001a\u001a\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u00020\u0005¢\u0006\u0002\b\u0004¢\u0006\u0002\b\n\u001a4\u0010\u000b\u001a0\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u0002 \u0003*\u0017\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u0002\u0018\u00010\u0005¢\u0006\u0002\b\n0\u0005¢\u0006\u0002\b\n\u001a4\u0010\f\u001a0\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u0002 \u0003*\u0017\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u0002\u0018\u00010\u0001¢\u0006\u0002\b\r0\u0001¢\u0006\u0002\b\r\u001a\u001e\u0010\u000e\u001a\u001a\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u00020\u0001¢\u0006\u0002\b\u0004¢\u0006\u0002\b\r\u001a\u0006\u0010\u000f\u001a\u00020\u0010\u001a\u0006\u0010\u0011\u001a\u00020\u0012\u001a\u0006\u0010\u0013\u001a\u00020\u0010\u001a\u0006\u0010\u0014\u001a\u00020\u0010\u001a\u0014\u0010\u0015\u001a\u00020\u00102\f\u0010\u0016\u001a\b\u0012\u0004\u0012\u00020\u00170\u0005\u001a\u0014\u0010\u0018\u001a\u00020\u00102\f\u0010\u0016\u001a\b\u0012\u0004\u0012\u00020\u00020\u0001\u001a\u0014\u0010\u0019\u001a\u00020\u00102\f\u0010\u0016\u001a\b\u0012\u0004\u0012\u00020\u00170\u0005\u001a\u0014\u0010\u001a\u001a\u00020\u00102\f\u0010\u0016\u001a\b\u0012\u0004\u0012\u00020\u00020\u0001\u001a\u0006\u0010\u001b\u001a\u00020\u0010\u001a\u0006\u0010\u001c\u001a\u00020\u0010¨\u0006\u001d
+  #107 = Utf8               d2
+  #108 = Utf8
+  #109 = Utf8               kotlin.jvm.PlatformType
+  #110 = Utf8               Landroid/annotation/NonNull;
+  #111 = Utf8               Landroid/annotation/Nullable;
+  #112 = Utf8               Lorg/jetbrains/annotations/ReadOnly;
+  #113 = Utf8               Lorg/jetbrains/annotations/Mutable;
+  #114 = Utf8               flexible_lists
+  #115 = Utf8               Effects.kt
+  #116 = Utf8               Code
+  #117 = Utf8               LineNumberTable
+  #118 = Utf8               Signature
+  #119 = Utf8               RuntimeInvisibleAnnotations
+  #120 = Utf8               LocalVariableTable
+  #121 = Utf8               RuntimeInvisibleParameterAnnotations
+  #122 = Utf8               StackMapTable
+  #123 = Utf8               SourceFile
+  #124 = Utf8               RuntimeVisibleAnnotations
+{
+  public static final java.util.List<java.lang.CharSequence> inferred();
+    descriptor: ()Ljava/util/List;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: invokestatic  #13                 // Method Lists.nonNull:()Ljava/util/List;
+         3: dup
+         4: ldc           #15                 // String nonNull(...)
+         6: invokestatic  #21                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+         9: areturn
+      LineNumberTable:
+        line 2: 0
+    Signature: #7                           // ()Ljava/util/List<Ljava/lang/CharSequence;>;
+    RuntimeInvisibleAnnotations:
+      0: #8()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.util.List<java.lang.CharSequence> inferredNullable();
+    descriptor: ()Ljava/util/List;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: iconst_0
+         1: invokestatic  #27                 // Method Lists.nullable:(Z)Ljava/util/List;
+         4: areturn
+      LineNumberTable:
+        line 3: 0
+    Signature: #7                           // ()Ljava/util/List<Ljava/lang/CharSequence;>;
+    RuntimeInvisibleAnnotations:
+      0: #23()
+        org.jetbrains.annotations.Nullable
+
+  public static final java.util.List<java.lang.CharSequence> inferredPlatform();
+    descriptor: ()Ljava/util/List;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: iconst_0
+         1: invokestatic  #31                 // Method Lists.platform:(Z)Ljava/util/List;
+         4: areturn
+      LineNumberTable:
+        line 4: 0
+    Signature: #7                           // ()Ljava/util/List<Ljava/lang/CharSequence;>;
+
+  public static final java.util.List<java.lang.CharSequence> inferredReadOnly();
+    descriptor: ()Ljava/util/List;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: invokestatic  #35                 // Method Lists.readOnly:()Ljava/util/List;
+         3: dup
+         4: ldc           #37                 // String readOnly(...)
+         6: invokestatic  #21                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+         9: areturn
+      LineNumberTable:
+        line 5: 0
+    Signature: #7                           // ()Ljava/util/List<Ljava/lang/CharSequence;>;
+    RuntimeInvisibleAnnotations:
+      0: #8()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.util.List<java.lang.CharSequence> inferredPlatformReadOnly();
+    descriptor: ()Ljava/util/List;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: invokestatic  #41                 // Method Lists.platformReadOnly:()Ljava/util/List;
+         3: areturn
+      LineNumberTable:
+        line 6: 0
+    Signature: #7                           // ()Ljava/util/List<Ljava/lang/CharSequence;>;
+
+  public static final java.util.List<java.lang.CharSequence> inferredPlatformMutable();
+    descriptor: ()Ljava/util/List;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: invokestatic  #45                 // Method Lists.platformMutable:()Ljava/util/List;
+         3: areturn
+      LineNumberTable:
+        line 7: 0
+    Signature: #7                           // ()Ljava/util/List<Ljava/lang/CharSequence;>;
+
+  public static final java.util.List<java.lang.CharSequence> inferredMutable();
+    descriptor: ()Ljava/util/List;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: invokestatic  #49                 // Method Lists.mutable:()Ljava/util/List;
+         3: dup
+         4: ldc           #51                 // String mutable(...)
+         6: invokestatic  #21                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+         9: areturn
+      LineNumberTable:
+        line 8: 0
+    Signature: #7                           // ()Ljava/util/List<Ljava/lang/CharSequence;>;
+    RuntimeInvisibleAnnotations:
+      0: #8()
+        org.jetbrains.annotations.NotNull
+
+  public static final int mutate();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=0
+         0: invokestatic  #13                 // Method Lists.nonNull:()Ljava/util/List;
+         3: dup
+         4: ldc           #15                 // String nonNull(...)
+         6: invokestatic  #21                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+         9: astore_0
+        10: aload_0
+        11: ldc           #55                 // String a
+        13: invokeinterface #61,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        18: pop
+        19: aload_0
+        20: aconst_null
+        21: invokeinterface #61,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        26: pop
+        27: aload_0
+        28: iconst_0
+        29: ldc           #63                 // String b
+        31: invokeinterface #67,  3           // InterfaceMethod java/util/List.set:(ILjava/lang/Object;)Ljava/lang/Object;
+        36: pop
+        37: aload_0
+        38: invokeinterface #70,  1           // InterfaceMethod java/util/List.size:()I
+        43: ireturn
+      LineNumberTable:
+        line 10: 0
+        line 11: 10
+        line 12: 19
+        line 13: 27
+        line 14: 37
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           10      34     0 value   Ljava/util/List;
+
+  public static final boolean direct();
+    descriptor: ()Z
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: invokestatic  #13                 // Method Lists.nonNull:()Ljava/util/List;
+         3: ldc           #55                 // String a
+         5: invokeinterface #61,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        10: ireturn
+      LineNumberTable:
+        line 16: 0
+
+  public static final int mutableView();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=0
+         0: invokestatic  #13                 // Method Lists.nonNull:()Ljava/util/List;
+         3: dup
+         4: ldc           #15                 // String nonNull(...)
+         6: invokestatic  #21                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+         9: astore_0
+        10: aload_0
+        11: ldc           #55                 // String a
+        13: invokeinterface #61,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        18: pop
+        19: aload_0
+        20: invokeinterface #70,  1           // InterfaceMethod java/util/List.size:()I
+        25: ireturn
+      LineNumberTable:
+        line 18: 0
+        line 19: 10
+        line 20: 19
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           10      16     0 value   Ljava/util/List;
+
+  public static final int readonlyView();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=0
+         0: invokestatic  #13                 // Method Lists.nonNull:()Ljava/util/List;
+         3: dup
+         4: ldc           #15                 // String nonNull(...)
+         6: invokestatic  #21                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+         9: astore_0
+        10: aload_0
+        11: invokeinterface #70,  1           // InterfaceMethod java/util/List.size:()I
+        16: ireturn
+      LineNumberTable:
+        line 23: 0
+        line 24: 10
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+           10       7     0 value   Ljava/util/List;
+
+  public static final int readonlyArgument(java.util.List<java.lang.String>);
+    descriptor: (Ljava/util/List;)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #80                 // String value
+         3: invokestatic  #83                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokestatic  #86                 // Method Lists.accept:(Ljava/util/List;)I
+        10: ireturn
+      LineNumberTable:
+        line 26: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      11     0 value   Ljava/util/List;
+    Signature: #79                          // (Ljava/util/List<Ljava/lang/String;>;)I
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #8()
+          org.jetbrains.annotations.NotNull
+
+  public static final int mutableArgument(java.util.List<java.lang.CharSequence>);
+    descriptor: (Ljava/util/List;)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #80                 // String value
+         3: invokestatic  #83                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokestatic  #86                 // Method Lists.accept:(Ljava/util/List;)I
+        10: ireturn
+      LineNumberTable:
+        line 27: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      11     0 value   Ljava/util/List;
+    Signature: #88                          // (Ljava/util/List<Ljava/lang/CharSequence;>;)I
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #8()
+          org.jetbrains.annotations.NotNull
+
+  public static final int explicitReadonlyArgument(java.util.List<java.lang.String>);
+    descriptor: (Ljava/util/List;)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #80                 // String value
+         3: invokestatic  #83                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokestatic  #92                 // Method Lists.readonly:(Ljava/util/List;)I
+        10: ireturn
+      LineNumberTable:
+        line 28: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      11     0 value   Ljava/util/List;
+    Signature: #79                          // (Ljava/util/List<Ljava/lang/String;>;)I
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #8()
+          org.jetbrains.annotations.NotNull
+
+  public static final int explicitMutableArgument(java.util.List<java.lang.CharSequence>);
+    descriptor: (Ljava/util/List;)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #80                 // String value
+         3: invokestatic  #83                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokestatic  #96                 // Method Lists.mutableArg:(Ljava/util/List;)I
+        10: ireturn
+      LineNumberTable:
+        line 29: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      11     0 value   Ljava/util/List;
+    Signature: #88                          // (Ljava/util/List<Ljava/lang/CharSequence;>;)I
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #8()
+          org.jetbrains.annotations.NotNull
+
+  public static final int nullable();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=0
+         0: iconst_0
+         1: invokestatic  #27                 // Method Lists.nullable:(Z)Ljava/util/List;
+         4: astore_0
+         5: aload_0
+         6: dup
+         7: ifnull        21
+        10: ldc           #55                 // String a
+        12: invokeinterface #61,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        17: pop
+        18: goto          22
+        21: pop
+        22: aload_0
+        23: dup
+        24: ifnull        35
+        27: invokeinterface #70,  1           // InterfaceMethod java/util/List.size:()I
+        32: goto          37
+        35: pop
+        36: iconst_m1
+        37: ireturn
+      StackMapTable: number_of_entries = 4
+        frame_type = 255 /* full_frame */
+          offset_delta = 21
+          locals = [ class java/util/List ]
+          stack = [ class java/util/List ]
+        frame_type = 0 /* same */
+        frame_type = 76 /* same_locals_1_stack_item */
+          stack = [ class java/util/List ]
+        frame_type = 65 /* same_locals_1_stack_item */
+          stack = [ int ]
+      LineNumberTable:
+        line 31: 0
+        line 32: 5
+        line 33: 22
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            5      33     0 value   Ljava/util/List;
+
+  public static final int platform();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=0
+         0: iconst_0
+         1: invokestatic  #31                 // Method Lists.platform:(Z)Ljava/util/List;
+         4: astore_0
+         5: aload_0
+         6: ldc           #55                 // String a
+         8: invokeinterface #61,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        13: pop
+        14: aload_0
+        15: invokeinterface #70,  1           // InterfaceMethod java/util/List.size:()I
+        20: ireturn
+      LineNumberTable:
+        line 36: 0
+        line 37: 5
+        line 38: 14
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            5      16     0 value   Ljava/util/List;
+}
+SourceFile: "Effects.kt"
+RuntimeVisibleAnnotations:
+  0: #97(#98=[I#99,I#100,I#101],#102=I#99,#103=I#104,#105=[s#106],#107=[s#5,s#108,s#108,s#109,s#110,s#108,s#22,s#111,s#28,s#32,s#112,s#38,s#42,s#113,s#46,s#52,s#108,s#73,s#108,s#75,s#76,s#77,s#71,s#108,s#87,s#89,s#93,s#24,s#29,s#114])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000D\n\u0000\n\u0002\u0010!\n\u0002\u0010\r\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010 \n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0010\u000e\n\u0002\b\u0006\u001a2\u0010\u0000\u001a.\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u0002 \u0003*\u0015\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u00020\u0005¢\u0006\u0002\b\u00040\u0001¢\u0006\u0002\b\u0004\u001a6\u0010\u0006\u001a2\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u0002\u0018\u0001 \u0003*\u0017\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u0002\u0018\u00010\u0005¢\u0006\u0002\b\u00070\u0001¢\u0006\u0002\b\u0007\u001a*\u0010\b\u001a&\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u0002 \u0003*\u0012\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u0002\u0018\u00010\u00050\u0001\u001a\u001e\u0010\t\u001a\u001a\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u00020\u0005¢\u0006\u0002\b\u0004¢\u0006\u0002\b\n\u001a4\u0010\u000b\u001a0\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u0002 \u0003*\u0017\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u0002\u0018\u00010\u0005¢\u0006\u0002\b\n0\u0005¢\u0006\u0002\b\n\u001a4\u0010\f\u001a0\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u0002 \u0003*\u0017\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u0002\u0018\u00010\u0001¢\u0006\u0002\b\r0\u0001¢\u0006\u0002\b\r\u001a\u001e\u0010\u000e\u001a\u001a\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u00020\u0001¢\u0006\u0002\b\u0004¢\u0006\u0002\b\r\u001a\u0006\u0010\u000f\u001a\u00020\u0010\u001a\u0006\u0010\u0011\u001a\u00020\u0012\u001a\u0006\u0010\u0013\u001a\u00020\u0010\u001a\u0006\u0010\u0014\u001a\u00020\u0010\u001a\u0014\u0010\u0015\u001a\u00020\u00102\f\u0010\u0016\u001a\b\u0012\u0004\u0012\u00020\u00170\u0005\u001a\u0014\u0010\u0018\u001a\u00020\u00102\f\u0010\u0016\u001a\b\u0012\u0004\u0012\u00020\u00020\u0001\u001a\u0014\u0010\u0019\u001a\u00020\u00102\f\u0010\u0016\u001a\b\u0012\u0004\u0012\u00020\u00170\u0005\u001a\u0014\u0010\u001a\u001a\u00020\u00102\f\u0010\u0016\u001a\b\u0012\u0004\u0012\u00020\u00020\u0001\u001a\u0006\u0010\u001b\u001a\u00020\u0010\u001a\u0006\u0010\u001c\u001a\u00020\u0010¨\u0006\u001d"]
+      d2=["inferred","","","kotlin.jvm.PlatformType","Landroid/annotation/NonNull;","","inferredNullable","Landroid/annotation/Nullable;","inferredPlatform","inferredReadOnly","Lorg/jetbrains/annotations/ReadOnly;","inferredPlatformReadOnly","inferredPlatformMutable","Lorg/jetbrains/annotations/Mutable;","inferredMutable","mutate","","direct","","mutableView","readonlyView","readonlyArgument","value","","mutableArgument","explicitReadonlyArgument","explicitMutableArgument","nullable","platform","flexible_lists"]
+    )

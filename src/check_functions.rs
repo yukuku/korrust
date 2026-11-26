@@ -671,6 +671,45 @@ impl Checker<'_> {
             })),
             None => return Err(Diagnostic::new(expr.offset, "Lambda must produce a result")),
         }
+        if self.composable_body {
+            let mut used = HashSet::new();
+            let mut creates_function = false;
+            ir_walk::statements(&mut body, &owner, &mut |value: &mut Value, _: &str| {
+                if let ValueKind::Local(slot) = &value.kind {
+                    used.insert(*slot);
+                }
+                creates_function |= matches!(value.kind, ValueKind::Lambda { .. });
+            });
+            if creates_function {
+                return Err(Diagnostic::new(
+                    expr.offset,
+                    "Function creation in Compose callback bodies requires unsupported memoization",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "COMPOSE_BODY_LAMBDA_UNSUPPORTED",
+                ));
+            }
+            let mut unused = HashSet::new();
+            receiver_setup.retain(|statement| {
+                let Statement::Store(slot, value) = statement else {
+                    unreachable!()
+                };
+                if used.contains(slot) {
+                    return true;
+                }
+                let ValueKind::JavaField { name, .. } = &value.kind else {
+                    unreachable!()
+                };
+                unused.insert(name.clone());
+                false
+            });
+            (fields, captures) = fields
+                .into_iter()
+                .zip(captures)
+                .filter(|((name, _), _)| !unused.contains(name))
+                .unzip();
+        }
         receiver_setup.append(&mut body);
         let body = receiver_setup;
         let defaults = if let Some(method) = &interface {
@@ -794,7 +833,12 @@ impl Checker<'_> {
                     .classpath
                     .field_candidates(&owner, name)?
                     .iter()
-                    .any(|field| field.access & 1 != 0)
+                    .any(|field| {
+                        field.access & 1 != 0
+                            || self
+                                .classpath
+                                .package_field_visible(&self.lambda_owner, field)
+                    })
                 {
                     return self
                         .java_field(&owner.clone(), name, Some(receiver), offset)
@@ -816,30 +860,51 @@ impl Checker<'_> {
         types: &[Type],
         offset: usize,
     ) -> Result<Option<Value>> {
-        let Some(function) = self.member_property_value(receiver, name, offset)? else {
-            return Ok(None);
-        };
-        if !types.is_empty() {
-            return Err(Diagnostic::new(
-                offset,
-                "Function properties do not accept explicit type arguments",
-            ));
+        let next = self.next;
+        let initialized = self.initialized.clone();
+        let refinements = self.refinements.clone();
+        let cells = self.cells.clone();
+        let cell_names = self.cell_names.clone();
+        let contract_registration = self.contract_registration;
+        let contract_facts = self.contract_facts.clone();
+        let count = self.lambdas.borrow().len();
+        let result = (|| {
+            let Some(function) = self.member_property_value(receiver, name, offset)? else {
+                return Ok(None);
+            };
+            if !types.is_empty() {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Function properties do not accept explicit type arguments",
+                ));
+            }
+            if !matches!(
+                function.ty.base(),
+                Type::Function { .. }
+                    | Type::ReceiverFunction { .. }
+                    | Type::SuspendFunction { .. }
+                    | Type::Nullable(_)
+            ) {
+                return Err(
+                    Diagnostic::new(offset, "Property is not callable").with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "PROPERTY_NOT_CALLABLE",
+                    ),
+                );
+            }
+            self.function_invoke(function, args, offset).map(Some)
+        })();
+        if result.is_err() {
+            self.next = next;
+            self.initialized = initialized;
+            self.refinements = refinements;
+            self.cells = cells;
+            self.cell_names = cell_names;
+            self.contract_registration = contract_registration;
+            self.contract_facts = contract_facts;
+            self.lambdas.borrow_mut().truncate(count);
         }
-        if !matches!(
-            function.ty.base(),
-            Type::Function { .. }
-                | Type::ReceiverFunction { .. }
-                | Type::SuspendFunction { .. }
-                | Type::Nullable(_)
-        ) {
-            return Err(
-                Diagnostic::new(offset, "Property is not callable").with_kind(
-                    crate::DiagnosticKind::InvalidKotlin,
-                    "PROPERTY_NOT_CALLABLE",
-                ),
-            );
-        }
-        self.function_invoke(function, args, offset).map(Some)
+        result
     }
 
     pub(super) fn function_invoke(

@@ -4,8 +4,9 @@ use crate::Result;
 pub(crate) fn attributes(
     bytes: &[u8],
     entries: &[(String, String, String, u16)],
+    anonymous: &[String],
 ) -> Result<Vec<u8>> {
-    if entries.is_empty() {
+    if entries.is_empty() && anonymous.is_empty() {
         return Ok(bytes.to_vec());
     }
     let mut reader = Reader { bytes, offset: 8 };
@@ -146,6 +147,11 @@ pub(crate) fn attributes(
         row.extend(class(&mut pool, &mut count, outer)?.to_be_bytes());
         row.extend(text(&mut pool, &mut count, short)?.to_be_bytes());
         row.extend(access.to_be_bytes());
+        rows.push(row);
+    }
+    for name in anonymous {
+        let mut row = class(&mut pool, &mut count, name)?.to_be_bytes().to_vec();
+        row.extend([0, 0, 0, 0, 0, 0x19]);
         rows.push(row);
     }
     let mut result = bytes[..8].to_vec();

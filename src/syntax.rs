@@ -52,6 +52,7 @@ pub enum Type {
     Null,
     List(Box<Type>),
     MutableList(Box<Type>),
+    FlexibleList(Box<Type>),
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -198,6 +199,7 @@ impl Type {
                 | Self::Null
                 | Self::List(_)
                 | Self::MutableList(_)
+                | Self::FlexibleList(_)
         )
     }
     pub fn is_nullable(&self) -> bool {
@@ -264,7 +266,9 @@ impl Type {
                 format!("Lkotlin/jvm/functions/Function{};", params.len())
             }
             Self::ThreadLocal(_) => "Ljava/lang/ThreadLocal;".into(),
-            Self::List(_) | Self::MutableList(_) => "Ljava/util/List;".into(),
+            Self::List(_) | Self::MutableList(_) | Self::FlexibleList(_) => {
+                "Ljava/util/List;".into()
+            }
             Self::Null => "Ljava/lang/Object;".into(),
             Self::Nullable(inner) => match inner.base() {
                 Self::Int => "Ljava/lang/Integer;".into(),
@@ -3735,9 +3739,9 @@ impl Parser {
                 ));
         }
         if visibility.as_deref() == Some("private")
-            && (inner || value_ || sealed_ || open || abstract_)
+            && (value_ || sealed_ || open || abstract_)
         {
-            return Err(self.error("Private nested inner, value, sealed, open and abstract classes are unsupported").with_kind(DiagnosticKind::UnsupportedLanguage, "PRIVATE_NESTED_SHAPE_UNSUPPORTED"));
+            return Err(self.error("Private nested value, sealed, open and abstract classes are unsupported").with_kind(DiagnosticKind::UnsupportedLanguage, "PRIVATE_NESTED_SHAPE_UNSUPPORTED"));
         }
         if !self.take("class") {
             return Err(self.error("Only ordinary final classes are supported"));

@@ -1,0 +1,484 @@
+Classfile /workspace/korrust/target/checks/2026-11-26T041855721913Z-flexible-lists/candidate/EffectsKt.class
+  Last modified Nov 26, 2026; size 3578 bytes
+  SHA-256 checksum d0caec8b8d8f5f84fc94c65ec71facfa507e8ac14964368dccbeab99e9d6cc88
+  Compiled from "Effects.kt"
+public final class EffectsKt
+  minor version: 0
+  major version: 49
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // EffectsKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 17, attributes: 2
+Constant pool:
+    #1 = Utf8               EffectsKt
+    #2 = Class              #1            // EffectsKt
+    #3 = Utf8               java/lang/Object
+    #4 = Class              #3            // java/lang/Object
+    #5 = Utf8               SourceFile
+    #6 = Utf8               Effects.kt
+    #7 = Utf8               Lists
+    #8 = Class              #7            // Lists
+    #9 = Utf8               nonNull
+   #10 = Utf8               ()Ljava/util/List;
+   #11 = NameAndType        #9:#10        // nonNull:()Ljava/util/List;
+   #12 = Methodref          #8.#11        // Lists.nonNull:()Ljava/util/List;
+   #13 = Utf8               inferred
+   #14 = Utf8               Code
+   #15 = Utf8               Signature
+   #16 = Utf8               ()Ljava/util/List<Ljava/lang/CharSequence;>;
+   #17 = Utf8               RuntimeInvisibleAnnotations
+   #18 = Utf8               Lorg/jetbrains/annotations/NotNull;
+   #19 = Utf8               nullable
+   #20 = Utf8               (Z)Ljava/util/List;
+   #21 = NameAndType        #19:#20       // nullable:(Z)Ljava/util/List;
+   #22 = Methodref          #8.#21        // Lists.nullable:(Z)Ljava/util/List;
+   #23 = Utf8               inferredNullable
+   #24 = Utf8               Lorg/jetbrains/annotations/Nullable;
+   #25 = Utf8               RuntimeVisibleAnnotations
+   #26 = Utf8               platform
+   #27 = NameAndType        #26:#20       // platform:(Z)Ljava/util/List;
+   #28 = Methodref          #8.#27        // Lists.platform:(Z)Ljava/util/List;
+   #29 = Utf8               inferredPlatform
+   #30 = Utf8               readOnly
+   #31 = NameAndType        #30:#10       // readOnly:()Ljava/util/List;
+   #32 = Methodref          #8.#31        // Lists.readOnly:()Ljava/util/List;
+   #33 = Utf8               inferredReadOnly
+   #34 = Utf8               platformReadOnly
+   #35 = NameAndType        #34:#10       // platformReadOnly:()Ljava/util/List;
+   #36 = Methodref          #8.#35        // Lists.platformReadOnly:()Ljava/util/List;
+   #37 = Utf8               inferredPlatformReadOnly
+   #38 = Utf8               platformMutable
+   #39 = NameAndType        #38:#10       // platformMutable:()Ljava/util/List;
+   #40 = Methodref          #8.#39        // Lists.platformMutable:()Ljava/util/List;
+   #41 = Utf8               inferredPlatformMutable
+   #42 = Utf8               mutable
+   #43 = NameAndType        #42:#10       // mutable:()Ljava/util/List;
+   #44 = Methodref          #8.#43        // Lists.mutable:()Ljava/util/List;
+   #45 = Utf8               inferredMutable
+   #46 = Utf8               java/util/List
+   #47 = Class              #46           // java/util/List
+   #48 = Utf8               a
+   #49 = String             #48           // a
+   #50 = Utf8               add
+   #51 = Utf8               (Ljava/lang/Object;)Z
+   #52 = NameAndType        #50:#51       // add:(Ljava/lang/Object;)Z
+   #53 = InterfaceMethodref #47.#52       // java/util/List.add:(Ljava/lang/Object;)Z
+   #54 = Utf8               b
+   #55 = String             #54           // b
+   #56 = Utf8               set
+   #57 = Utf8               (ILjava/lang/Object;)Ljava/lang/Object;
+   #58 = NameAndType        #56:#57       // set:(ILjava/lang/Object;)Ljava/lang/Object;
+   #59 = InterfaceMethodref #47.#58       // java/util/List.set:(ILjava/lang/Object;)Ljava/lang/Object;
+   #60 = Utf8               java/lang/CharSequence
+   #61 = Class              #60           // java/lang/CharSequence
+   #62 = Utf8               size
+   #63 = Utf8               ()I
+   #64 = NameAndType        #62:#63       // size:()I
+   #65 = InterfaceMethodref #47.#64       // java/util/List.size:()I
+   #66 = Utf8               mutate
+   #67 = Utf8               direct
+   #68 = Utf8               ()Z
+   #69 = Utf8               mutableView
+   #70 = Utf8               readonlyView
+   #71 = Utf8               value
+   #72 = String             #71           // value
+   #73 = Utf8               kotlin/jvm/internal/Intrinsics
+   #74 = Class              #73           // kotlin/jvm/internal/Intrinsics
+   #75 = Utf8               checkNotNullParameter
+   #76 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+   #77 = NameAndType        #75:#76       // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+   #78 = Methodref          #74.#77       // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+   #79 = Utf8               accept
+   #80 = Utf8               (Ljava/util/List;)I
+   #81 = NameAndType        #79:#80       // accept:(Ljava/util/List;)I
+   #82 = Methodref          #8.#81        // Lists.accept:(Ljava/util/List;)I
+   #83 = Utf8               readonlyArgument
+   #84 = Utf8               (Ljava/util/List<Ljava/lang/String;>;)I
+   #85 = Utf8               RuntimeInvisibleParameterAnnotations
+   #86 = Utf8               mutableArgument
+   #87 = Utf8               (Ljava/util/List<Ljava/lang/CharSequence;>;)I
+   #88 = Utf8               readonly
+   #89 = NameAndType        #88:#80       // readonly:(Ljava/util/List;)I
+   #90 = Methodref          #8.#89        // Lists.readonly:(Ljava/util/List;)I
+   #91 = Utf8               explicitReadonlyArgument
+   #92 = Utf8               mutableArg
+   #93 = NameAndType        #92:#80       // mutableArg:(Ljava/util/List;)I
+   #94 = Methodref          #8.#93        // Lists.mutableArg:(Ljava/util/List;)I
+   #95 = Utf8               explicitMutableArgument
+   #96 = Utf8               null cannot be cast to non-null type FlexibleList(Platform(Java(\"java/lang/CharSequence\")))
+   #97 = String             #96           // null cannot be cast to non-null type FlexibleList(Platform(Java(\"java/lang/CharSequence\")))
+   #98 = Utf8               checkNotNull
+   #99 = NameAndType        #98:#76       // checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V
+  #100 = Methodref          #74.#99       // kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V
+  #101 = Utf8               java/lang/Boolean
+  #102 = Class              #101          // java/lang/Boolean
+  #103 = Utf8               valueOf
+  #104 = Utf8               (Z)Ljava/lang/Boolean;
+  #105 = NameAndType        #103:#104     // valueOf:(Z)Ljava/lang/Boolean;
+  #106 = Methodref          #102.#105     // java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+  #107 = Utf8               java/lang/Integer
+  #108 = Class              #107          // java/lang/Integer
+  #109 = Utf8               (I)Ljava/lang/Integer;
+  #110 = NameAndType        #103:#109     // valueOf:(I)Ljava/lang/Integer;
+  #111 = Methodref          #108.#110     // java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+  #112 = Utf8               intValue
+  #113 = NameAndType        #112:#63      // intValue:()I
+  #114 = Methodref          #108.#113     // java/lang/Integer.intValue:()I
+  #115 = Utf8               Lkotlin/Metadata;
+  #116 = Utf8               mv
+  #117 = Integer            2
+  #118 = Integer            3
+  #119 = Integer            0
+  #120 = Utf8               k
+  #121 = Utf8               xi
+  #122 = Integer            48
+  #123 = Utf8               d1
+  #124 = Utf8               \u0000\b\n\u0002\b\u001d\n\u0002\b\u0001\u001a1H\u0006\u0010\u0000\u001a$\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0003 \u0002*\u0010\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0004¢\u0006\u0004\b\u0000\u0010\u0005\u001a5H\u0006\u0010\u0006\u001a(\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0003\u0018\u0001 \u0002*\u0012\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0004\u0018\u0001¢\u0006\u0004\b\u0006\u0010\u0005\u001a3H\u0006\u0010\u0007\u001a&\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0003 \u0002*\u0012\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0004\u0018\u0001¢\u0006\u0004\b\u0007\u0010\u0005\u001a\u001dH\u0006\u0010\b\u001a\u0010\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0004¢\u0006\u0004\b\b\u0010\u0005\u001a3H\u0006\u0010\t\u001a&\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0004 \u0002*\u0012\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0004\u0018\u0001¢\u0006\u0004\b\t\u0010\u0005\u001a3H\u0006\u0010\n\u001a&\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0003 \u0002*\u0012\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0003\u0018\u0001¢\u0006\u0004\b\n\u0010\u0005\u001a\u001dH\u0006\u0010\u000b\u001a\u0010\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0003¢\u0006\u0004\b\u000b\u0010\u0005\u001a\u000fH\u0006\u0010\f\u001a\u00020\r¢\u0006\u0004\b\f\u0010\u000e\u001a\u000fH\u0006\u0010\u000f\u001a\u00020\u0010¢\u0006\u0004\b\u000f\u0010\u0011\u001a\u000fH\u0006\u0010\u0012\u001a\u00020\r¢\u0006\u0004\b\u0012\u0010\u000e\u001a\u000fH\u0006\u0010\u0013\u001a\u00020\r¢\u0006\u0004\b\u0013\u0010\u000e\u001a\u001dH\u0006\u0010\u0014\u001a\u00020\r2\f\u0010\u0015\u001a\b\u0012\u0004\u0012\u00020\u00160\u0004¢\u0006\u0004\b\u0014\u0010\u0017\u001a\u001dH\u0006\u0010\u0018\u001a\u00020\r2\f\u0010\u0015\u001a\b\u0012\u0004\u0012\u00020\u00010\u0003¢\u0006\u0004\b\u0018\u0010\u0017\u001a\u001dH\u0006\u0010\u0019\u001a\u00020\r2\f\u0010\u0015\u001a\b\u0012\u0004\u0012\u00020\u00160\u0004¢\u0006\u0004\b\u0019\u0010\u0017\u001a\u001dH\u0006\u0010\u001a\u001a\u00020\r2\f\u0010\u0015\u001a\b\u0012\u0004\u0012\u00020\u00010\u0003¢\u0006\u0004\b\u001a\u0010\u0017\u001a\u000fH\u0006\u0010\u001b\u001a\u00020\r¢\u0006\u0004\b\u001b\u0010\u000e\u001a\u000fH\u0006\u0010\u001c\u001a\u00020\r¢\u0006\u0004\b\u001c\u0010\u000e¨\u0006\u001d
+  #125 = Utf8               d2
+  #126 = Utf8               kotlin/CharSequence
+  #127 = Utf8               kotlin.jvm.PlatformType
+  #128 = Utf8               kotlin/collections/MutableList
+  #129 = Utf8               kotlin/collections/List
+  #130 = Utf8               kotlin/Int
+  #131 = Utf8               kotlin/Boolean
+  #132 = Utf8               kotlin/String
+  #133 = Utf8               flexible_lists
+{
+  public static final java.util.List<java.lang.CharSequence> inferred();
+    descriptor: ()Ljava/util/List;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: invokestatic  #12                 // Method Lists.nonNull:()Ljava/util/List;
+         3: areturn
+         4: aconst_null
+         5: athrow
+    Signature: #16                          // ()Ljava/util/List<Ljava/lang/CharSequence;>;
+    RuntimeInvisibleAnnotations:
+      0: #18()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.util.List<java.lang.CharSequence> inferredNullable();
+    descriptor: ()Ljava/util/List;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: iconst_0
+         1: invokestatic  #22                 // Method Lists.nullable:(Z)Ljava/util/List;
+         4: areturn
+         5: aconst_null
+         6: athrow
+    Signature: #16                          // ()Ljava/util/List<Ljava/lang/CharSequence;>;
+    RuntimeInvisibleAnnotations:
+      0: #24()
+        org.jetbrains.annotations.Nullable
+
+  public static final java.util.List<java.lang.CharSequence> inferredPlatform();
+    descriptor: ()Ljava/util/List;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: iconst_0
+         1: invokestatic  #28                 // Method Lists.platform:(Z)Ljava/util/List;
+         4: areturn
+         5: aconst_null
+         6: athrow
+    Signature: #16                          // ()Ljava/util/List<Ljava/lang/CharSequence;>;
+
+  public static final java.util.List<java.lang.CharSequence> inferredReadOnly();
+    descriptor: ()Ljava/util/List;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: invokestatic  #32                 // Method Lists.readOnly:()Ljava/util/List;
+         3: areturn
+         4: aconst_null
+         5: athrow
+    Signature: #16                          // ()Ljava/util/List<Ljava/lang/CharSequence;>;
+    RuntimeInvisibleAnnotations:
+      0: #18()
+        org.jetbrains.annotations.NotNull
+
+  public static final java.util.List<java.lang.CharSequence> inferredPlatformReadOnly();
+    descriptor: ()Ljava/util/List;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: invokestatic  #36                 // Method Lists.platformReadOnly:()Ljava/util/List;
+         3: areturn
+         4: aconst_null
+         5: athrow
+    Signature: #16                          // ()Ljava/util/List<Ljava/lang/CharSequence;>;
+
+  public static final java.util.List<java.lang.CharSequence> inferredPlatformMutable();
+    descriptor: ()Ljava/util/List;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: invokestatic  #40                 // Method Lists.platformMutable:()Ljava/util/List;
+         3: areturn
+         4: aconst_null
+         5: athrow
+    Signature: #16                          // ()Ljava/util/List<Ljava/lang/CharSequence;>;
+
+  public static final java.util.List<java.lang.CharSequence> inferredMutable();
+    descriptor: ()Ljava/util/List;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: invokestatic  #44                 // Method Lists.mutable:()Ljava/util/List;
+         3: areturn
+         4: aconst_null
+         5: athrow
+    Signature: #16                          // ()Ljava/util/List<Ljava/lang/CharSequence;>;
+    RuntimeInvisibleAnnotations:
+      0: #18()
+        org.jetbrains.annotations.NotNull
+
+  public static final int mutate();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=7, locals=1, args_size=0
+         0: invokestatic  #12                 // Method Lists.nonNull:()Ljava/util/List;
+         3: checkcast     #47                 // class java/util/List
+         6: astore        0
+         8: aload         0
+        10: checkcast     #47                 // class java/util/List
+        13: ldc_w         #49                 // String a
+        16: invokeinterface #53,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        21: pop
+        22: aload         0
+        24: checkcast     #47                 // class java/util/List
+        27: aconst_null
+        28: invokeinterface #53,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        33: pop
+        34: aload         0
+        36: checkcast     #47                 // class java/util/List
+        39: iconst_0
+        40: ldc_w         #55                 // String b
+        43: invokeinterface #59,  3           // InterfaceMethod java/util/List.set:(ILjava/lang/Object;)Ljava/lang/Object;
+        48: checkcast     #61                 // class java/lang/CharSequence
+        51: pop
+        52: aload         0
+        54: invokeinterface #65,  1           // InterfaceMethod java/util/List.size:()I
+        59: ireturn
+        60: aconst_null
+        61: athrow
+
+  public static final boolean direct();
+    descriptor: ()Z
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=5, locals=0, args_size=0
+         0: invokestatic  #12                 // Method Lists.nonNull:()Ljava/util/List;
+         3: checkcast     #47                 // class java/util/List
+         6: ldc_w         #49                 // String a
+         9: invokeinterface #53,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        14: ireturn
+        15: aconst_null
+        16: athrow
+
+  public static final int mutableView();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=5, locals=1, args_size=0
+         0: invokestatic  #12                 // Method Lists.nonNull:()Ljava/util/List;
+         3: checkcast     #47                 // class java/util/List
+         6: astore        0
+         8: aload         0
+        10: checkcast     #47                 // class java/util/List
+        13: ldc_w         #49                 // String a
+        16: invokeinterface #53,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        21: pop
+        22: aload         0
+        24: invokeinterface #65,  1           // InterfaceMethod java/util/List.size:()I
+        29: ireturn
+        30: aconst_null
+        31: athrow
+
+  public static final int readonlyView();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=0
+         0: invokestatic  #12                 // Method Lists.nonNull:()Ljava/util/List;
+         3: checkcast     #47                 // class java/util/List
+         6: astore        0
+         8: aload         0
+        10: invokeinterface #65,  1           // InterfaceMethod java/util/List.size:()I
+        15: ireturn
+        16: aconst_null
+        17: athrow
+
+  public static final int readonlyArgument(java.util.List<java.lang.String>);
+    descriptor: (Ljava/util/List;)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload         0
+         2: ldc_w         #72                 // String value
+         5: invokestatic  #78                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         0
+        10: invokestatic  #82                 // Method Lists.accept:(Ljava/util/List;)I
+        13: ireturn
+        14: aconst_null
+        15: athrow
+    Signature: #84                          // (Ljava/util/List<Ljava/lang/String;>;)I
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #18()
+          org.jetbrains.annotations.NotNull
+
+  public static final int mutableArgument(java.util.List<java.lang.CharSequence>);
+    descriptor: (Ljava/util/List;)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload         0
+         2: ldc_w         #72                 // String value
+         5: invokestatic  #78                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         0
+        10: invokestatic  #82                 // Method Lists.accept:(Ljava/util/List;)I
+        13: ireturn
+        14: aconst_null
+        15: athrow
+    Signature: #87                          // (Ljava/util/List<Ljava/lang/CharSequence;>;)I
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #18()
+          org.jetbrains.annotations.NotNull
+
+  public static final int explicitReadonlyArgument(java.util.List<java.lang.String>);
+    descriptor: (Ljava/util/List;)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload         0
+         2: ldc_w         #72                 // String value
+         5: invokestatic  #78                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         0
+        10: invokestatic  #90                 // Method Lists.readonly:(Ljava/util/List;)I
+        13: ireturn
+        14: aconst_null
+        15: athrow
+    Signature: #84                          // (Ljava/util/List<Ljava/lang/String;>;)I
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #18()
+          org.jetbrains.annotations.NotNull
+
+  public static final int explicitMutableArgument(java.util.List<java.lang.CharSequence>);
+    descriptor: (Ljava/util/List;)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload         0
+         2: ldc_w         #72                 // String value
+         5: invokestatic  #78                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         0
+        10: invokestatic  #94                 // Method Lists.mutableArg:(Ljava/util/List;)I
+        13: ireturn
+        14: aconst_null
+        15: athrow
+    Signature: #87                          // (Ljava/util/List<Ljava/lang/CharSequence;>;)I
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #18()
+          org.jetbrains.annotations.NotNull
+
+  public static final int nullable();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=5, locals=4, args_size=0
+         0: iconst_0
+         1: invokestatic  #22                 // Method Lists.nullable:(Z)Ljava/util/List;
+         4: checkcast     #47                 // class java/util/List
+         7: astore        0
+         9: aload         0
+        11: checkcast     #47                 // class java/util/List
+        14: astore        1
+        16: aload         1
+        18: ifnull        25
+        21: iconst_0
+        22: goto          26
+        25: iconst_1
+        26: ifeq          33
+        29: aconst_null
+        30: goto          59
+        33: aload         1
+        35: dup
+        36: ldc_w         #97                 // String null cannot be cast to non-null type FlexibleList(Platform(Java(\"java/lang/CharSequence\")))
+        39: invokestatic  #100                // Method kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V
+        42: checkcast     #47                 // class java/util/List
+        45: checkcast     #47                 // class java/util/List
+        48: ldc_w         #49                 // String a
+        51: invokeinterface #53,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        56: invokestatic  #106                // Method java/lang/Boolean.valueOf:(Z)Ljava/lang/Boolean;
+        59: pop
+        60: aload         0
+        62: checkcast     #47                 // class java/util/List
+        65: astore        2
+        67: aload         2
+        69: ifnull        76
+        72: iconst_0
+        73: goto          77
+        76: iconst_1
+        77: ifeq          84
+        80: aconst_null
+        81: goto          104
+        84: aload         2
+        86: dup
+        87: ldc_w         #97                 // String null cannot be cast to non-null type FlexibleList(Platform(Java(\"java/lang/CharSequence\")))
+        90: invokestatic  #100                // Method kotlin/jvm/internal/Intrinsics.checkNotNull:(Ljava/lang/Object;Ljava/lang/String;)V
+        93: checkcast     #47                 // class java/util/List
+        96: invokeinterface #65,  1           // InterfaceMethod java/util/List.size:()I
+       101: invokestatic  #111                // Method java/lang/Integer.valueOf:(I)Ljava/lang/Integer;
+       104: checkcast     #108                // class java/lang/Integer
+       107: astore        3
+       109: aload         3
+       111: ifnull        118
+       114: iconst_0
+       115: goto          119
+       118: iconst_1
+       119: ifeq          126
+       122: iconst_m1
+       123: goto          131
+       126: aload         3
+       128: invokevirtual #114                // Method java/lang/Integer.intValue:()I
+       131: ireturn
+       132: aconst_null
+       133: athrow
+
+  public static final int platform();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=5, locals=1, args_size=0
+         0: iconst_0
+         1: invokestatic  #28                 // Method Lists.platform:(Z)Ljava/util/List;
+         4: checkcast     #47                 // class java/util/List
+         7: astore        0
+         9: aload         0
+        11: checkcast     #47                 // class java/util/List
+        14: ldc_w         #49                 // String a
+        17: invokeinterface #53,  2           // InterfaceMethod java/util/List.add:(Ljava/lang/Object;)Z
+        22: pop
+        23: aload         0
+        25: invokeinterface #65,  1           // InterfaceMethod java/util/List.size:()I
+        30: ireturn
+        31: aconst_null
+        32: athrow
+}
+SourceFile: "Effects.kt"
+RuntimeVisibleAnnotations:
+  0: #115(#116=[I#117,I#118,I#119],#120=I#117,#121=I#122,#123=[s#124],#125=[s#13,s#126,s#127,s#128,s#129,s#10,s#23,s#29,s#33,s#37,s#41,s#45,s#66,s#130,s#63,s#67,s#131,s#68,s#69,s#70,s#83,s#71,s#132,s#80,s#86,s#91,s#95,s#19,s#26,s#133])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u001d\n\u0002\b\u0001\u001a1H\u0006\u0010\u0000\u001a$\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0003 \u0002*\u0010\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0004¢\u0006\u0004\b\u0000\u0010\u0005\u001a5H\u0006\u0010\u0006\u001a(\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0003\u0018\u0001 \u0002*\u0012\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0004\u0018\u0001¢\u0006\u0004\b\u0006\u0010\u0005\u001a3H\u0006\u0010\u0007\u001a&\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0003 \u0002*\u0012\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0004\u0018\u0001¢\u0006\u0004\b\u0007\u0010\u0005\u001a\u001dH\u0006\u0010\b\u001a\u0010\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0004¢\u0006\u0004\b\b\u0010\u0005\u001a3H\u0006\u0010\t\u001a&\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0004 \u0002*\u0012\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0004\u0018\u0001¢\u0006\u0004\b\t\u0010\u0005\u001a3H\u0006\u0010\n\u001a&\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0003 \u0002*\u0012\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0003\u0018\u0001¢\u0006\u0004\b\n\u0010\u0005\u001a\u001dH\u0006\u0010\u000b\u001a\u0010\u0012\f\u0012\n0\u0001 \u0002*\u00040\u0001\u0018\u00010\u0003¢\u0006\u0004\b\u000b\u0010\u0005\u001a\u000fH\u0006\u0010\f\u001a\u00020\r¢\u0006\u0004\b\f\u0010\u000e\u001a\u000fH\u0006\u0010\u000f\u001a\u00020\u0010¢\u0006\u0004\b\u000f\u0010\u0011\u001a\u000fH\u0006\u0010\u0012\u001a\u00020\r¢\u0006\u0004\b\u0012\u0010\u000e\u001a\u000fH\u0006\u0010\u0013\u001a\u00020\r¢\u0006\u0004\b\u0013\u0010\u000e\u001a\u001dH\u0006\u0010\u0014\u001a\u00020\r2\f\u0010\u0015\u001a\b\u0012\u0004\u0012\u00020\u00160\u0004¢\u0006\u0004\b\u0014\u0010\u0017\u001a\u001dH\u0006\u0010\u0018\u001a\u00020\r2\f\u0010\u0015\u001a\b\u0012\u0004\u0012\u00020\u00010\u0003¢\u0006\u0004\b\u0018\u0010\u0017\u001a\u001dH\u0006\u0010\u0019\u001a\u00020\r2\f\u0010\u0015\u001a\b\u0012\u0004\u0012\u00020\u00160\u0004¢\u0006\u0004\b\u0019\u0010\u0017\u001a\u001dH\u0006\u0010\u001a\u001a\u00020\r2\f\u0010\u0015\u001a\b\u0012\u0004\u0012\u00020\u00010\u0003¢\u0006\u0004\b\u001a\u0010\u0017\u001a\u000fH\u0006\u0010\u001b\u001a\u00020\r¢\u0006\u0004\b\u001b\u0010\u000e\u001a\u000fH\u0006\u0010\u001c\u001a\u00020\r¢\u0006\u0004\b\u001c\u0010\u000e¨\u0006\u001d"]
+      d2=["inferred","kotlin/CharSequence","kotlin.jvm.PlatformType","kotlin/collections/MutableList","kotlin/collections/List","()Ljava/util/List;","inferredNullable","inferredPlatform","inferredReadOnly","inferredPlatformReadOnly","inferredPlatformMutable","inferredMutable","mutate","kotlin/Int","()I","direct","kotlin/Boolean","()Z","mutableView","readonlyView","readonlyArgument","value","kotlin/String","(Ljava/util/List;)I","mutableArgument","explicitReadonlyArgument","explicitMutableArgument","nullable","platform","flexible_lists"]
+    )

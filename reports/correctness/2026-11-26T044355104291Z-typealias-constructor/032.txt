@@ -1,0 +1,25 @@
+$ /workspace/work/targets159/alias-committed/references/kotlinc/bin/kotlinc -language-version 2.3 -api-version 2.3 -jvm-target 1.8 /workspace/work/targets159/alias-committed/target/checks/2026-11-26T044355104291Z-typealias-constructor/java-named.kt -cp /workspace/work/targets159/alias-committed/target/checks/2026-11-26T044355104291Z-typealias-constructor/official:/workspace/work/targets159/alias-committed/target/checks/2026-11-26T044355104291Z-typealias-constructor/java:/workspace/work/targets159/alias-committed/target/checks/2026-11-26T044355104291Z-typealias-constructor/dependencies:/workspace/work/targets159/alias-committed/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/targets159/alias-committed/target/checks/2026-11-26T044355104291Z-typealias-constructor/invalid-official
+target/checks/2026-11-26T044355104291Z-typealias-constructor/java-named.kt:2:13: error: cannot infer type for type parameter 'A'. Specify it explicitly.
+fun bad() = Swap(first = 7, second = "value")
+            ^^^^
+target/checks/2026-11-26T044355104291Z-typealias-constructor/java-named.kt:2:13: error: cannot infer type for type parameter 'B'. Specify it explicitly.
+fun bad() = Swap(first = 7, second = "value")
+            ^^^^
+target/checks/2026-11-26T044355104291Z-typealias-constructor/java-named.kt:2:18: error: named arguments are prohibited for non-Kotlin functions.
+fun bad() = Swap(first = 7, second = "value")
+                 ^^^^^
+target/checks/2026-11-26T044355104291Z-typealias-constructor/java-named.kt:2:18: error: no parameter with name 'first' found.
+fun bad() = Swap(first = 7, second = "value")
+                 ^^^^^
+target/checks/2026-11-26T044355104291Z-typealias-constructor/java-named.kt:2:29: error: named arguments are prohibited for non-Kotlin functions.
+fun bad() = Swap(first = 7, second = "value")
+                            ^^^^^^
+target/checks/2026-11-26T044355104291Z-typealias-constructor/java-named.kt:2:29: error: no parameter with name 'second' found.
+fun bad() = Swap(first = 7, second = "value")
+                            ^^^^^^
+target/checks/2026-11-26T044355104291Z-typealias-constructor/java-named.kt:2:29: error: no value passed for parameter 'p0'.
+fun bad() = Swap(first = 7, second = "value")
+                            ^^^^^^^^^^^^^^^^^
+target/checks/2026-11-26T044355104291Z-typealias-constructor/java-named.kt:2:29: error: no value passed for parameter 'p1'.
+fun bad() = Swap(first = 7, second = "value")
+                            ^^^^^^^^^^^^^^^^^

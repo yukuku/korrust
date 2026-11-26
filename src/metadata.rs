@@ -579,7 +579,48 @@ fn metadata_classifier<'a>(name: &'a str, imports: Imports<'a>) -> Result<&'a st
     }
 }
 
+fn flexible_list_bounds(ty: &Type) -> Option<(Type, Type)> {
+    match ty {
+        Type::FlexibleList(element) => Some((
+            Type::MutableList(element.clone()),
+            Type::List(element.clone()),
+        )),
+        Type::Nullable(inner) => flexible_list_bounds(inner).map(|(lower, upper)| {
+            (
+                if lower.is_nullable() {
+                    lower
+                } else {
+                    Type::Nullable(Box::new(lower))
+                },
+                if upper.is_nullable() {
+                    upper
+                } else {
+                    Type::Nullable(Box::new(upper))
+                },
+            )
+        }),
+        Type::Platform(inner) => flexible_list_bounds(inner).map(|(lower, upper)| {
+            (
+                lower,
+                if upper.is_nullable() {
+                    upper
+                } else {
+                    Type::Nullable(Box::new(upper))
+                },
+            )
+        }),
+        _ => None,
+    }
+}
+
 fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<Proto> {
+    if let Some((lower, upper)) = flexible_list_bounds(ty) {
+        let mut lower = type_proto(&lower, imports, strings)?;
+        let upper = type_proto(&upper, imports, strings)?;
+        lower.number(4, strings.id("kotlin.jvm.PlatformType")?);
+        lower.message(5, &upper);
+        return Ok(lower);
+    }
     if let Type::Nullable(inner) = ty {
         if inner.is_nullable() {
             return type_proto(inner, imports, strings);
@@ -610,6 +651,7 @@ fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<
             "kotlin/Nothing"
         }
         Type::Nullable(_) => unreachable!(),
+        Type::FlexibleList(_) => unreachable!(),
         Type::List(inner) | Type::MutableList(inner) => {
             let mut argument = Proto::default();
             argument.message(2, &type_proto(inner, imports, strings)?);
@@ -1721,7 +1763,8 @@ fn same_metadata_type(source: &Type, checked: &Type, imports: Imports<'_>) -> bo
         }
         (Type::Nullable(a), Type::Nullable(b))
         | (Type::List(a), Type::List(b))
-        | (Type::MutableList(a), Type::MutableList(b)) => same_metadata_type(a, b, imports),
+        | (Type::MutableList(a), Type::MutableList(b))
+        | (Type::FlexibleList(a), Type::FlexibleList(b)) => same_metadata_type(a, b, imports),
         _ => source == checked,
     }
 }
@@ -1807,6 +1850,7 @@ pub(crate) fn for_checked_class(
             (Type::Nullable(a), Type::Nullable(b))
             | (Type::List(a), Type::List(b))
             | (Type::MutableList(a), Type::MutableList(b))
+            | (Type::FlexibleList(a), Type::FlexibleList(b))
             | (Type::Array(a), Type::Array(b))
             | (Type::OutArray(a), Type::OutArray(b)) => bind(a, b, bindings),
             _ => {}
@@ -2890,6 +2934,7 @@ pub(crate) fn for_checked_package(
             (Type::Nullable(a), Type::Nullable(b))
             | (Type::List(a), Type::List(b))
             | (Type::MutableList(a), Type::MutableList(b))
+            | (Type::FlexibleList(a), Type::FlexibleList(b))
             | (Type::ThreadLocal(a), Type::ThreadLocal(b))
             | (Type::Array(a), Type::Array(b))
             | (Type::OutArray(a), Type::OutArray(b)) => bind(a, b, bindings),

@@ -505,10 +505,75 @@ impl Checker<'_> {
         if applicable.is_empty() {
             if self.dispatch_receiver.is_some() {
                 let receiver = self.dispatch_receiver_value(offset)?;
-                if let Some(value) =
-                    self.member_property_invoke(receiver, name, args, explicit, offset)?
-                {
-                    return Ok(Some(value));
+                match self.member_property_invoke(receiver.clone(), name, args, explicit, offset) {
+                    Ok(Some(value)) => return Ok(Some(value)),
+                    Ok(None) => {}
+                    Err(error)
+                        if error.kind == crate::DiagnosticKind::UnsupportedLanguage
+                            || error.message.contains("Ambiguous") =>
+                    {
+                        return Err(error);
+                    }
+                    Err(_) if !explicit.is_empty() => {
+                        return self
+                            .extension_call(receiver, name, args, explicit, offset)
+                            .map(Some);
+                    }
+                    Err(error) => {
+                        return self
+                            .member_extension_fallback(receiver, name, args, error)
+                            .map(Some);
+                    }
+                }
+            }
+            let mut scope = Some(self.lambda_owner.clone());
+            let mut seen_scopes = HashSet::new();
+            while let Some(owner) = scope {
+                if !seen_scopes.insert(owner.clone()) {
+                    return Err(Diagnostic::new(offset, "Cyclic lexical classifier hierarchy"));
+                }
+                scope = self.classpath.lexical_parent(&owner);
+                let Ok(class) = self.classpath.load(&owner) else {
+                    continue;
+                };
+                let mut parent = class.super_name;
+                let mut overloads = Vec::new();
+                let mut signatures = HashSet::new();
+                let mut visited = HashSet::new();
+                while let Some(ancestor) = parent {
+                    if !visited.insert(ancestor.clone()) || ancestor == "java/lang/Object" {
+                        break;
+                    }
+                    let declaration = self.classpath.load(&ancestor)?;
+                    parent = declaration.super_name;
+                    if declaration.kotlin_class {
+                        continue;
+                    }
+                    for mut method in declaration.methods {
+                        if method.name == name
+                            && method.access & 9 == 9
+                            && signatures.insert(method.descriptor.clone())
+                        {
+                            if declaration.access & 1 == 0 {
+                                method.owner = owner.clone();
+                            }
+                            overloads.push(method);
+                        }
+                    }
+                }
+                if !overloads.is_empty() {
+                    match self.select_method_expected(&overloads, args, explicit, expected, offset)
+                    {
+                        Ok(method) => {
+                            return self.library_static_call(method, args, offset).map(Some);
+                        }
+                        Err(error)
+                            if matches!(
+                                error.code,
+                                "NO_APPLICABLE_OVERLOAD" | "ARGUMENT_MAPPING_MISMATCH"
+                            ) => {}
+                        Err(error) => return Err(error),
+                    }
                 }
             }
             if let Some(error) = failures.into_iter().next() {
@@ -936,7 +1001,17 @@ impl Checker<'_> {
                 .map(|library| library.parameter_modes.clone())
                 .unwrap_or_default(),
         );
-        let checked = self.arguments(&params, &defaults, args, named, offset);
+        let checked = self.arguments_checked(
+            &params,
+            &defaults,
+            args,
+            named,
+            method
+                .library
+                .as_ref()
+                .is_some_and(|library| !library.kotlin_declared),
+            offset,
+        );
         self.inline_result = old_inline;
         self.inline_argument_modes = old_modes;
         let (mut values, lets, mut mask) = checked?;
@@ -1036,84 +1111,7 @@ impl Checker<'_> {
             method
         };
         let kind = if inline && mask == 0 {
-            let code = method
-                .library
-                .as_ref()
-                .and_then(|l| l.code.as_ref())
-                .ok_or_else(|| Diagnostic::new(offset, "Compiled inline bytecode unavailable"))?;
-            let local_base = self.next;
-            self.next = self
-                .next
-                .checked_add(code.max_locals)
-                .ok_or_else(|| Diagnostic::new(offset, "Inline locals overflow"))?;
-            let mut lambda_bases = Vec::new();
-            for (index, value) in values.iter().enumerate() {
-                if method.library.as_ref().is_some_and(|library| {
-                    library.parameter_modes.get(index)
-                        == Some(&syntax::InlineParameterMode::Noinline)
-                }) {
-                    lambda_bases.push(None);
-                    continue;
-                }
-                let owner = match &value.kind {
-                    ValueKind::Lambda { owner, .. } => Some(owner),
-                    ValueKind::Local(slot) => {
-                        lets.iter()
-                            .find_map(|(saved, initializer)| match &initializer.kind {
-                                ValueKind::Lambda { owner, .. } if saved == slot => Some(owner),
-                                _ => None,
-                            })
-                    }
-                    _ => None,
-                };
-                if let Some(owner) = owner {
-                    let lambdas = self.lambdas.borrow();
-                    let lambda = lambdas.iter().find(|l| l.owner == *owner).ok_or_else(|| {
-                        Diagnostic::new(offset, "Inline lambda declaration missing")
-                    })?;
-                    lambda_bases.push(Some((owner.clone(), self.next)));
-                    self.next = self
-                        .next
-                        .checked_add(lambda.function.locals)
-                        .ok_or_else(|| Diagnostic::new(offset, "Inline lambda locals overflow"))?;
-                } else {
-                    lambda_bases.push(None);
-                }
-            }
-            if self.next > 256 {
-                return Err(Diagnostic::new(
-                    offset,
-                    "Compiled inline locals exceed current limit",
-                ));
-            }
-            let reified_temp = if method
-                .library
-                .as_ref()
-                .is_some_and(|library| !library.reified_arguments.is_empty())
-            {
-                if self.next >= 256 {
-                    return Err(Diagnostic::new(
-                        offset,
-                        "Reified inline locals exceed the current JVM slot limit",
-                    )
-                    .with_kind(
-                        crate::DiagnosticKind::UnsupportedLanguage,
-                        "COMPILED_INLINE_LOCALS_UNSUPPORTED",
-                    ));
-                }
-                let slot = self.next;
-                self.next += 1;
-                Some(slot)
-            } else {
-                None
-            };
-            ValueKind::CompiledInline {
-                method,
-                args: values,
-                local_base,
-                lambda_bases,
-                reified_temp,
-            }
+            self.compiled_inline_body(method, values, &lets, offset)?
         } else if mask == 0 {
             ValueKind::JavaCall {
                 method,
@@ -1172,6 +1170,95 @@ impl Checker<'_> {
         Ok(Self::wrap_lets(Value { ty: result, kind }, lets))
     }
 
+    pub(super) fn compiled_inline_body(
+        &mut self,
+        method: JavaMethod,
+        values: Vec<Value>,
+        lets: &[(u8, Value)],
+        offset: usize,
+    ) -> Result<ValueKind> {
+        let code = method
+            .library
+            .as_ref()
+            .and_then(|l| l.code.as_ref())
+            .ok_or_else(|| Diagnostic::new(offset, "Compiled inline bytecode unavailable"))?;
+        let local_base = self.next;
+        self.next = self
+            .next
+            .checked_add(code.max_locals)
+            .ok_or_else(|| Diagnostic::new(offset, "Inline locals overflow"))?;
+        let mut lambda_bases = Vec::new();
+        for (index, value) in values.iter().enumerate() {
+            if method.library.as_ref().is_some_and(|library| {
+                index
+                    .checked_sub(usize::from(method.access & 8 == 0))
+                    .and_then(|i| library.parameter_modes.get(i))
+                    == Some(&syntax::InlineParameterMode::Noinline)
+            }) {
+                lambda_bases.push(None);
+                continue;
+            }
+            let owner = match &value.kind {
+                ValueKind::Lambda { owner, .. } => Some(owner),
+                ValueKind::Local(slot) => {
+                    lets.iter()
+                        .find_map(|(saved, initializer)| match &initializer.kind {
+                            ValueKind::Lambda { owner, .. } if saved == slot => Some(owner),
+                            _ => None,
+                        })
+                }
+                _ => None,
+            };
+            if let Some(owner) = owner {
+                let lambdas = self.lambdas.borrow();
+                let lambda = lambdas
+                    .iter()
+                    .find(|l| l.owner == *owner)
+                    .ok_or_else(|| Diagnostic::new(offset, "Inline lambda declaration missing"))?;
+                lambda_bases.push(Some((owner.clone(), self.next)));
+                self.next = self
+                    .next
+                    .checked_add(lambda.function.locals)
+                    .ok_or_else(|| Diagnostic::new(offset, "Inline lambda locals overflow"))?;
+            } else {
+                lambda_bases.push(None);
+            }
+        }
+        if self.next > 256 {
+            return Err(Diagnostic::new(
+                offset,
+                "Compiled inline locals exceed current limit",
+            ));
+        }
+        let reified_temp = if method
+            .library
+            .as_ref()
+            .is_some_and(|library| !library.reified_arguments.is_empty())
+        {
+            if self.next >= 256 {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Reified inline locals exceed the current JVM slot limit",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "COMPILED_INLINE_LOCALS_UNSUPPORTED",
+                ));
+            }
+            let slot = self.next;
+            self.next += 1;
+            Some(slot)
+        } else {
+            None
+        };
+        Ok(ValueKind::CompiledInline {
+            method,
+            args: values,
+            local_base,
+            lambda_bases,
+            reified_temp,
+        })
+    }
     pub(super) fn extension_call(
         &mut self,
         receiver: Value,
@@ -1340,6 +1427,7 @@ pub(super) fn default_type_imports(
             | Type::Platform(inner)
             | Type::List(inner)
             | Type::MutableList(inner)
+            | Type::FlexibleList(inner)
             | Type::ThreadLocal(inner) => visit(inner, imports, classpath),
             Type::Parameter { upper_bound, .. } => visit(upper_bound, imports, classpath),
             Type::Function { params, result } | Type::SuspendFunction { params, result } => {
@@ -1586,12 +1674,29 @@ impl Checker<'_> {
         {
             return Ok(None);
         }
-        let class = match self
+        let alias = self
             .classpath
-            .value_symbol(&self.lambda_owner, name, offset)?
-        {
-            Some(crate::classpath::ValueSymbol::Classifier(class)) => *class,
-            _ => return Ok(None),
+            .constructor_type_alias(name, self.imports, DEFAULT_PACKAGES)?;
+        let class = if let Some((_, expanded)) = &alias {
+            let mut expanded = expanded;
+            while let Type::Nullable(inner) = expanded {
+                expanded = inner;
+            }
+            let owner = library::type_owner(expanded).ok_or_else(|| {
+                Diagnostic::new(
+                    offset,
+                    "Type alias does not expand to a constructor classifier",
+                )
+            })?;
+            self.classpath.load(owner)?
+        } else {
+            match self
+                .classpath
+                .value_symbol(&self.lambda_owner, name, offset)?
+            {
+                Some(crate::classpath::ValueSymbol::Classifier(class)) => *class,
+                _ => return Ok(None),
+            }
         };
         if class
             .library
@@ -1642,9 +1747,18 @@ impl Checker<'_> {
                 })
                 .collect::<Result<Vec<_>>>()?,
         };
-        let mut expanded =
+        let alias_template = if types.is_empty() {
             self.classpath
-                .expand_type_alias(&requested, self.imports, DEFAULT_PACKAGES)?;
+                .constructor_type_alias(name, self.imports, DEFAULT_PACKAGES)?
+        } else {
+            None
+        };
+        let mut expanded = if let Some((_, expanded)) = &alias_template {
+            expanded.clone()
+        } else {
+            self.classpath
+                .expand_type_alias(&requested, self.imports, DEFAULT_PACKAGES)?
+        };
         let alias = expanded != requested;
         while let Type::Nullable(inner) = expanded {
             expanded = *inner;
@@ -1690,36 +1804,46 @@ impl Checker<'_> {
         if !self.library_call_candidates(name).is_empty() {
             return Ok(None);
         }
-        let inferred = if types.is_empty() && !alias {
-            Some(
-                self.infer_constructor_method(&class, args, expected, offset)
-                    .map_err(|mut error| {
-                        for (index, parameter) in class
-                            .library
-                            .as_ref()
-                            .unwrap()
-                            .type_parameters
-                            .iter()
-                            .enumerate()
-                        {
-                            error.message = error
-                                .message
-                                .replace(&format!("<constructor-class-{index}>"), &parameter.name);
-                        }
-                        for (method_index, method) in class.methods.iter().enumerate() {
-                            if let Some(library) = &method.library {
-                                for (index, parameter) in library.type_parameters.iter().enumerate()
-                                {
-                                    error.message = error.message.replace(
-                                        &format!("<constructor-method-{method_index}-{index}>"),
-                                        &parameter.name,
-                                    );
-                                }
-                            }
-                        }
-                        error
-                    })?,
+        if alias
+            && matches!(&expanded, Type::Parameterized { arguments, .. } if arguments.iter().any(|argument| argument.variance != syntax::Variance::Invariant || argument.ty.is_none()))
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Projected type alias expansions cannot be constructed",
             )
+            .with_kind(
+                crate::DiagnosticKind::InvalidKotlin,
+                "TYPE_ALIAS_CONSTRUCTOR_PROJECTION",
+            ));
+        }
+        let inferred = if types.is_empty() && (!alias || alias_template.is_some()) {
+            let method = if let Some((declaration, expanded)) = &alias_template {
+                self.infer_constructor_alias(&class, declaration, expanded, args, expected, offset)
+            } else {
+                self.infer_constructor_method(&class, args, expected, offset)
+            };
+            Some(method.map_err(|mut error| {
+                let parameters = alias_template
+                    .as_ref()
+                    .map(|(declaration, _)| declaration.type_parameters.as_slice())
+                    .unwrap_or_else(|| class.library.as_ref().unwrap().type_parameters.as_slice());
+                for (index, parameter) in parameters.iter().enumerate() {
+                    error.message = error
+                        .message
+                        .replace(&format!("<constructor-class-{index}>"), &parameter.name);
+                }
+                for (method_index, method) in class.methods.iter().enumerate() {
+                    if let Some(library) = &method.library {
+                        for (index, parameter) in library.type_parameters.iter().enumerate() {
+                            error.message = error.message.replace(
+                                &format!("<constructor-method-{method_index}-{index}>"),
+                                &parameter.name,
+                            );
+                        }
+                    }
+                }
+                error
+            })?)
         } else {
             None
         };
@@ -1815,8 +1939,17 @@ impl Checker<'_> {
         let normalized = self.vararg_arguments(&method, args, offset)?;
         let args = normalized.as_slice();
         let (params, defaults) = Self::method_parameters(&method)?;
-        let (values, lets, mask) =
-            self.arguments(&params, &defaults, args, self.method_named(&method), offset)?;
+        let (values, lets, mask) = self.arguments_checked(
+            &params,
+            &defaults,
+            args,
+            self.method_named(&method),
+            method
+                .library
+                .as_ref()
+                .is_some_and(|library| !library.kotlin_declared),
+            offset,
+        )?;
         let mut raw = method.clone();
         raw.kotlin_params = None;
         raw.kotlin_result = None;

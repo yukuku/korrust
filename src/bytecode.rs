@@ -132,7 +132,7 @@ fn generic_type(ty: &Type) -> String {
         }
         Type::Nullable(inner) if !inner.is_reference() => boxed_descriptor(inner).into(),
         Type::Nullable(inner) | Type::Platform(inner) => generic_type(inner),
-        Type::List(inner) | Type::MutableList(inner) => {
+        Type::List(inner) | Type::MutableList(inner) | Type::FlexibleList(inner) => {
             format!("Ljava/util/List<{}>;", generic_argument(inner))
         }
         Type::Array(inner) | Type::OutArray(inner) => format!("[{}", generic_argument(inner)),
@@ -279,6 +279,7 @@ fn covariant_parameter_type(ty: &Type) -> bool {
         Type::Nullable(inner) | Type::Platform(inner) => covariant_parameter_type(inner),
         Type::List(_)
         | Type::MutableList(_)
+        | Type::FlexibleList(_)
         | Type::Function { .. }
         | Type::ReceiverFunction { .. }
         | Type::Parameter { .. } => true,
@@ -315,6 +316,7 @@ fn erase_generic_variables(ty: &Type) -> Type {
         Type::OutArray(t) => Type::OutArray(Box::new(erase_generic_variables(t))),
         Type::List(t) => Type::List(Box::new(erase_generic_variables(t))),
         Type::MutableList(t) => Type::MutableList(Box::new(erase_generic_variables(t))),
+        Type::FlexibleList(t) => Type::FlexibleList(Box::new(erase_generic_variables(t))),
         Type::Parameterized { name, arguments } => Type::Parameterized {
             name: name.clone(),
             arguments: arguments
@@ -398,7 +400,7 @@ fn generic_function(function: &crate::check::Function) -> Option<String> {
             Type::Parameter { name, .. } if names.contains(&name.as_str()) => format!("T{name};"),
             Type::Nullable(inner) if !inner.is_reference() => boxed_descriptor(inner).into(),
             Type::Nullable(inner) | Type::Platform(inner) => scoped(inner, names, argument),
-            Type::List(inner) | Type::MutableList(inner) => {
+            Type::List(inner) | Type::MutableList(inner) | Type::FlexibleList(inner) => {
                 format!("Ljava/util/List<{}>;", scoped(inner, names, true))
             }
             Type::Function { params, result } => format!(
@@ -601,7 +603,34 @@ fn cast_type_name(ty: &Type) -> String {
         Type::Char => "kotlin.Char".into(),
         Type::Boolean => "kotlin.Boolean".into(),
         Type::String => "kotlin.String".into(),
-        Type::Java(name) | Type::Parameterized { name, .. } => name.replace('/', "."),
+        Type::Java(name) => crate::classpath::kotlin_mapped_classifier(name)
+            .unwrap_or(name)
+            .replace(['/', '$'], "."),
+        Type::Parameterized { name, arguments } => {
+            let arguments = arguments
+                .iter()
+                .map(|arg| {
+                    let Some(ty) = &arg.ty else {
+                        return "*".to_owned();
+                    };
+                    let prefix = match arg.variance {
+                        crate::syntax::Variance::In => "in ",
+                        crate::syntax::Variance::Out => "out ",
+                        crate::syntax::Variance::Invariant => "",
+                    };
+                    format!("{prefix}{}", cast_type_name(ty))
+                })
+                .collect::<Vec<_>>()
+                .join(", ");
+            let classifier = crate::classpath::kotlin_mapped_classifier(name)
+                .unwrap_or(name)
+                .replace(['/', '$'], ".");
+            format!("{classifier}<{arguments}>")
+        }
+        Type::Nullable(inner) => format!("{}?", cast_type_name(inner)),
+        Type::Array(inner) => format!("kotlin.Array<{}>", cast_type_name(inner)),
+        Type::OutArray(inner) => format!("kotlin.Array<out {}>", cast_type_name(inner)),
+        Type::Parameter { name, .. } => name.clone(),
         Type::IntArray => "kotlin.IntArray".into(),
         Type::ByteArray => "kotlin.ByteArray".into(),
         Type::ShortArray => "kotlin.ShortArray".into(),
@@ -612,8 +641,10 @@ fn cast_type_name(ty: &Type) -> String {
         Type::DoubleArray => "kotlin.DoubleArray".into(),
 
         Type::StringArray => "kotlin.Array<kotlin.String>".into(),
-        Type::List(_) => "kotlin.collections.List".into(),
-        Type::MutableList(_) => "kotlin.collections.MutableList".into(),
+        Type::List(inner) => format!("kotlin.collections.List<{}>", cast_type_name(inner)),
+        Type::MutableList(inner) => {
+            format!("kotlin.collections.MutableList<{}>", cast_type_name(inner))
+        }
         _ => format!("{ty:?}"),
     }
 }
@@ -1995,7 +2026,9 @@ impl Code<'_> {
                 } else {
                     self.integer(elements.len() as i32)?;
                     let element_class = match value.ty.base() {
-                        Type::List(element) | Type::MutableList(element) => {
+                        Type::List(element)
+                        | Type::MutableList(element)
+                        | Type::FlexibleList(element) => {
                             if element.is_reference() {
                                 reference_class(element)?
                             } else {
@@ -2949,10 +2982,15 @@ impl Code<'_> {
                     let element = match iterable.ty.base() {
                         Type::String => Type::Char,
                         array if array.array_element().is_some() => array.array_element().unwrap(),
-                        Type::List(element) | Type::MutableList(element) => *element.clone(),
+                        Type::List(element)
+                        | Type::MutableList(element)
+                        | Type::FlexibleList(element) => *element.clone(),
                         _ => return Err(failure("Unsupported for-loop iterable type")),
                     };
-                    let list = matches!(iterable.ty.base(), Type::List(_) | Type::MutableList(_));
+                    let list = matches!(
+                        iterable.ty.base(),
+                        Type::List(_) | Type::MutableList(_) | Type::FlexibleList(_)
+                    );
                     self.value(iterable)?;
                     if list {
                         let method = self.pool.interface_method(

@@ -11,6 +11,37 @@ pub(super) fn expand(
     expand_at(cp, ty, imports, packages, &mut HashSet::new(), 0)
 }
 
+pub(super) fn constructor_template(
+    cp: &Classpath,
+    name: &str,
+    imports: &HashMap<String, String>,
+    packages: &[&str],
+) -> Result<Option<(LibraryTypeAlias, Type)>> {
+    let Some((_, declaration)) = alias(cp, name, imports, packages)? else {
+        return Ok(None);
+    };
+    let requested = Type::Parameterized {
+        name: name.into(),
+        arguments: declaration
+            .type_parameters
+            .iter()
+            .map(|parameter| TypeArgument {
+                variance: Variance::Invariant,
+                ty: Some(Type::Parameter {
+                    name: parameter.name.clone(),
+                    upper_bound: Box::new(parameter.bounds.first().cloned().unwrap_or(
+                        Type::Nullable(Box::new(Type::Java("java/lang/Object".into()))),
+                    )),
+                }),
+            })
+            .collect(),
+    };
+    Ok(Some((
+        declaration,
+        expand(cp, &requested, imports, packages)?,
+    )))
+}
+
 fn alias(
     cp: &Classpath,
     name: &str,
@@ -131,6 +162,7 @@ fn expand_at(
         Type::OutArray(t) => Type::OutArray(Box::new(recurse(t)?)),
         Type::List(t) => Type::List(Box::new(recurse(t)?)),
         Type::MutableList(t) => Type::MutableList(Box::new(recurse(t)?)),
+        Type::FlexibleList(t) => Type::FlexibleList(Box::new(recurse(t)?)),
         Type::ThreadLocal(t) => Type::ThreadLocal(Box::new(recurse(t)?)),
         Type::Parameter { name, upper_bound } => Type::Parameter {
             name: name.clone(),
@@ -220,6 +252,7 @@ fn substitute(ty: &Type, arguments: &HashMap<String, TypeArgument>) -> Result<Ty
         Type::OutArray(t) => Type::OutArray(Box::new(recurse(t)?)),
         Type::List(t) => Type::List(Box::new(recurse(t)?)),
         Type::MutableList(t) => Type::MutableList(Box::new(recurse(t)?)),
+        Type::FlexibleList(t) => Type::FlexibleList(Box::new(recurse(t)?)),
         Type::ThreadLocal(t) => Type::ThreadLocal(Box::new(recurse(t)?)),
         Type::Parameter { name, upper_bound } => Type::Parameter {
             name: name.clone(),

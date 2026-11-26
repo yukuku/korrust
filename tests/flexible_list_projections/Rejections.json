@@ -1,0 +1,22 @@
+[
+  {
+    "id": "projected-mutable-widening",
+    "source": "import Lists\nfun invalid(value: MutableList<out String>): Int = Lists.accept(value)"
+  },
+  {
+    "id": "readonly-to-mutable",
+    "source": "import Lists\nfun invalid(value: List<out CharSequence>): Int = Lists.mutableArg(value)"
+  },
+  {
+    "id": "readonly-write",
+    "source": "import Lists\nfun invalid(value: List<out String>) { value.add(\"x\") }"
+  },
+  {
+    "id": "readonly-index-write",
+    "source": "import Lists\nfun invalid(value: List<out String>) { value[0] = \"x\" }"
+  },
+  {
+    "id": "projected-mutable-write",
+    "source": "import Lists\nfun invalid(value: MutableList<out String>) { value.add(\"x\") }"
+  }
+]

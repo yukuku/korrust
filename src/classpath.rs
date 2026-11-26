@@ -464,6 +464,15 @@ impl Classpath {
         aliases::expand(self, ty, imports, packages)
     }
 
+    pub(crate) fn constructor_type_alias(
+        &self,
+        name: &str,
+        imports: &std::collections::HashMap<String, String>,
+        packages: &[&str],
+    ) -> Result<Option<(LibraryTypeAlias, Type)>> {
+        aliases::constructor_template(self, name, imports, packages)
+    }
+
     pub(crate) fn builtin_class_declarations(&self, classifier: &str) -> Result<Vec<JavaMethod>> {
         metadata::builtin_class_declarations(&self.builtin_class_resource(classifier)?, classifier)
     }
@@ -736,6 +745,10 @@ impl Classpath {
             .insert(child.into(), parent.into());
     }
 
+    pub(crate) fn lexical_parent(&self, owner: &str) -> Option<String> {
+        self.lexical_parents.borrow().get(owner).cloned()
+    }
+
     pub(crate) fn lexically_within(&self, caller: &str, outer: &str) -> bool {
         let parents = self.lexical_parents.borrow();
         let mut current = caller;
@@ -879,6 +892,7 @@ impl Classpath {
             | Type::Platform(ty)
             | Type::List(ty)
             | Type::MutableList(ty)
+            | Type::FlexibleList(ty)
             | Type::Array(ty)
             | Type::OutArray(ty)
             | Type::ThreadLocal(ty) => {
@@ -912,7 +926,13 @@ impl Classpath {
     pub(crate) fn constructor_visible(&self, caller: &str, method: &JavaMethod) -> bool {
         (!method.kotlin_internal || self.internal_visible(&method.owner))
             && (method.access & 1 != 0
-                || method.access & 2 != 0 && self.lexically_within(caller, &method.owner))
+                || method.access & 2 != 0 && self.lexically_within(caller, &method.owner)
+                || method.access & 7 == 0
+                    && caller.rsplit_once('/').map(|(p, _)| p)
+                        == method.owner.rsplit_once('/').map(|(p, _)| p)
+                    && self
+                        .load(&method.owner)
+                        .is_ok_and(|class| !class.kotlin_class))
     }
 
     pub(crate) fn internal_visible(&self, owner: &str) -> bool {
@@ -3040,12 +3060,15 @@ fn kotlin_typed_class(
         match ty {
             Type::Nullable(inner) if !inner.is_reference() => ty.descriptor(),
             Type::Nullable(inner) => generic_type(inner, variance, argument),
-            Type::List(inner) | Type::MutableList(inner) => {
+            Type::List(inner) | Type::MutableList(inner) | Type::FlexibleList(inner) => {
                 let prefix = if variance
                     && matches!(ty, Type::List(_))
                     && matches!(
                         inner.as_ref(),
-                        Type::Java(_) | Type::List(_) | Type::MutableList(_)
+                        Type::Java(_)
+                            | Type::List(_)
+                            | Type::MutableList(_)
+                            | Type::FlexibleList(_)
                     ) {
                     "+"
                 } else {

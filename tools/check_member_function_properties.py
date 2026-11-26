@@ -99,7 +99,7 @@ def main():
             result=run('verified fixed Java caller '+provider,[jdk/'java','-Xverify:all','-cp',cp(callers,output,dependency,stdlib),'Check'])
             case('fixed-java/'+provider,result.stdout=='OK\n')
             signatures[provider]={}
-            for class_name in ['memberfunctions.ValuesKt','memberfunctions.Request','memberfunctions.Captured','memberfunctions.Target','memberfunctions.Both','memberfunctions.Dispatch','memberfunctions.Multiplied','memberfunctions.Generic','memberfunctions.ExtensionHolder']:
+            for class_name in ['memberfunctions.ValuesKt','memberfunctions.Request','memberfunctions.Captured','memberfunctions.Target','memberfunctions.Both','memberfunctions.Dispatch','memberfunctions.Multiplied','memberfunctions.Generic','memberfunctions.ExtensionHolder','memberfunctions.ExtensionValue','memberfunctions.ExtensionFunction','memberfunctions.ExtensionArity','memberfunctions.OwnFallback']:
                 sig=run('JVM callable signatures '+provider+'/'+class_name,[jdk/'javap','-p','-s','-v','-cp',cp(output,dependency),class_name])
                 signatures[provider][class_name]=public_signatures(sig.stdout)
         case('JVM-public-nonsynthetic-callable-signatures',signatures['official']==signatures['candidate'])

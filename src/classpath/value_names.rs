@@ -55,6 +55,16 @@ impl Classpath {
         Ok(())
     }
 
+    pub(crate) fn package_field_visible(&self, caller: &str, field: &JavaField) -> bool {
+        field.access & 7 == 0
+            && field.kotlin.is_none()
+            && caller.rsplit_once('/').map(|(pkg, _)| pkg)
+                == field.owner.rsplit_once('/').map(|(pkg, _)| pkg)
+            && self
+                .load(&field.owner)
+                .is_ok_and(|class| !class.kotlin_class)
+    }
+
     pub(crate) fn kotlin_field_visible(&self, caller: &str, field: &JavaField) -> bool {
         if field.kotlin.is_some()
             && let Ok(owner) = self.load(&field.owner)
@@ -74,7 +84,8 @@ impl Classpath {
         match field.kotlin.as_ref().map(|field| field.visibility) {
             Some(0) => self.internal_visible(&field.owner),
             Some(1 | 4) => self.same_source_file(caller, &field.owner),
-            Some(3) | None => field.access & 1 != 0,
+            Some(3) => field.access & 1 != 0,
+            None => field.access & 1 != 0 || self.package_field_visible(caller, field),
             _ => false,
         }
     }

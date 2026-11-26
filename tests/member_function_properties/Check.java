@@ -18,6 +18,9 @@ public final class Check {
         if (!ValuesKt.generic(new Generic<String>(value -> value + "!")).equals("value!")) throw new AssertionError("generic");
         if (ValuesKt.extension(new ExtensionHolder((value, count) -> value.length() + count)) != 5) throw new AssertionError("receiver function");
         if (ValuesKt.singleton() != 54 || memberfunctionlibrary.Callbacks.INSTANCE.getReads() != 12) throw new AssertionError("static getter");
+        ExtensionFunction fallback = new ExtensionFunction();
+        if (ValuesKt.fallbacks(fallback) != 35 || fallback.getReads() != 110) throw new AssertionError("extension fallback " + fallback.getReads());
+        if (new OwnFallback().own() != 21) throw new AssertionError("implicit extension fallback");
         System.out.println("OK");
     }
 }

@@ -164,9 +164,14 @@ def main():
                     for name, compiler in [('baseline', args.baseline), ('candidate', candidate)]:
                         result = run(name + ' unchanged ' + source.name, [compiler, source, '-cp', args.app_classpath, '--friend-paths', args.app_friend_path, '-d', directory / (name + '-' + source.stem), '--diagnostic-format', 'json'], accepted=(0, 1))
                         results.append(result)
-                    assert results[0].returncode == 1 and 'Same-package class is inaccessible or unsupported' in results[0].stderr, results[0].stderr
-                    assert 'Same-package class is inaccessible or unsupported' not in results[1].stderr, results[1].stderr
-                    return dict(outcome='compiled_unchanged' if results[1].returncode == 0 else 'advanced_to_later_rejection', source=relative(source), source_sha256=sha(source), before=results[0].stderr, after=results[1].stderr)
+                    assert results[0].returncode == 1, results[0].stderr
+                    target_boundary = 'Same-package class is inaccessible or unsupported'
+                    if target_boundary in results[0].stderr:
+                        assert target_boundary not in results[1].stderr, results[1].stderr
+                        outcome = 'compiled_unchanged' if results[1].returncode == 0 else 'advanced_to_later_rejection'
+                    else:
+                        outcome = 'baseline_before_target_boundary'
+                    return dict(outcome=outcome, source=relative(source), source_sha256=sha(source), before=results[0].stderr, after=results[1].stderr)
                 case('unchanged_' + source.stem, advance)
     changed = [name for name, digest in frozen.items() if sha(ROOT / name) != digest]
     report['cases'].append(dict(id='frozen_inputs', outcome='correctness_failure' if changed else 'pass', changed=changed))

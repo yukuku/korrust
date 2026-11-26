@@ -1,0 +1,10 @@
+$ /workspace/work/interop159-internal-proof/references/kotlinc/bin/kotlinc /workspace/work/interop159-internal-proof/tests/compiled_internal_classifiers/Explicit.kt -cp /workspace/work/interop159-internal-final-run/2.3.0-directory/dependency:/workspace/work/interop159-internal-proof/references/kotlinc/lib/kotlin-stdlib.jar -module-name friends_production -d /workspace/work/interop159-internal-final-run/official-no-friend-Explicit -language-version 2.3 -api-version 2.3 -jvm-target 1.8
+tests/compiled_internal_classifiers/Explicit.kt:2:24: error: cannot access 'class Plain : Any': it is internal in file.
+import friends.library.Plain as Imported
+                       ^^^^^
+tests/compiled_internal_classifiers/Explicit.kt:3:23: error: cannot access 'class Plain : Any': it is internal in file.
+fun explicit(): Int = Imported(9).value
+                      ^^^^^^^^
+tests/compiled_internal_classifiers/Explicit.kt:3:35: error: cannot access 'class Plain : Any': it is internal in file.
+fun explicit(): Int = Imported(9).value
+                                  ^^^^^

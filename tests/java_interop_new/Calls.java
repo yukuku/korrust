@@ -18,6 +18,12 @@ public final class Calls {
         if (newinterop.use.UseKt.nullable(null) != null) throw new AssertionError("nullable getter was invoked");
         equal("child:new", newinterop.use.UseKt.nullable(Factory.current));
         equal("OK", newinterop.use.UseKt.generic(new GenericBean<String>("O")));
+        equal("interface", newinterop.use.UseKt.interfaceTitle(() -> "interface"));
+        equal("updated", newinterop.use.UseKt.updateTitle(new InterfaceBean.Writable() {
+            private String title = "initial";
+            public String getTitle() { return title; }
+            public void setTitle(String value) { title = value; }
+        }));
         Bean identity = new Bean();
         equal(true, newinterop.use.UseKt.objectMembers(identity));
         equal(System.identityHashCode(identity), newinterop.use.UseKt.objectHash(identity));

@@ -11,5 +11,7 @@
   {"id":"composable-declaration", "source":"@androidx.compose.runtime.Composable fun unsupported() {}", "oracle":"accept", "code":"COMPILER_PLUGIN_UNSUPPORTED"},
   {"id":"hidden-composer-call", "source":"import androidx.compose.runtime.SideEffect\nfun unsupported(s: composeprobe.Registry) { s.accept { SideEffect {} } }", "oracle":"accept", "code":"LIBRARY_DECLARATION_UNSUPPORTED"},
   {"id":"wrong-lambda-arity", "source":"fun invalid(s: composeprobe.Registry) { s.accept { value -> println(value) } }", "oracle":"reject"},
-  {"id":"nonlocal-return", "source":"fun invalid(s: composeprobe.Registry) { s.accept { return } }", "oracle":"reject"}
+  {"id":"nonlocal-return", "source":"fun invalid(s: composeprobe.Registry) { s.accept { return } }", "oracle":"reject"},
+  {"id":"ordinary-body-lambda", "source":"import composeprobe.execute\nfun unsupported(s: composeprobe.Registry) { s.accept { execute {} } }", "oracle":"accept", "code":"COMPOSE_BODY_LAMBDA_UNSUPPORTED"},
+  {"id":"ordinary-body-reference", "source":"import composeprobe.execute\nimport composeprobe.globalHit\nfun unsupported(s: composeprobe.Registry) { s.accept { execute(::globalHit) } }", "oracle":"accept", "code":"COMPOSE_BODY_LAMBDA_UNSUPPORTED"}
 ]

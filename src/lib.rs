@@ -1780,12 +1780,13 @@ fn emit_unit_without_annotations(
         }
     }
     let with_lambdas = |mut files: Vec<ClassFile>| -> Result<Vec<ClassFile>> {
-        files.extend(bytecode::emit_lambdas(
+        bytecode::emit_lambdas(
+            &mut files,
             typed,
             internal_name,
             file_name,
             &_classpath.value_classes(),
-        )?);
+        )?;
         Ok(files)
     };
     if module.interface_decl.is_some() {
@@ -1940,7 +1941,7 @@ fn add_nested_attributes(
             })
             .cloned()
             .collect::<Vec<_>>();
-        file.bytes = classpath::nested::attributes(&file.bytes, &relevant)?;
+        file.bytes = classpath::nested::attributes(&file.bytes, &relevant, &[])?;
     }
     Ok(())
 }

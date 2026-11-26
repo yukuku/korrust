@@ -1,0 +1,310 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T04:32:36.310574+00:00",
+  "status": "failed",
+  "compiler": {
+    "binary": "/tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/korrust-frozen",
+    "sha256": "79dd40a6c085bcefacc5b64d5f31c39adda0cdf3645bc7ca8ff5d21877d9b1e8",
+    "source_revision": "8555169a3a48f783bf0031b86974134e90025664"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "compose_runtime": {
+    "name": "AndroidX Compose Runtime",
+    "version": "1.11.0",
+    "coordinate": "androidx.compose.runtime:runtime-android:1.11.0",
+    "url": "https://dl.google.com/dl/android/maven2/androidx/compose/runtime/runtime-android/1.11.0/runtime-android-1.11.0.aar",
+    "sha256": "65a9e3c6b496e255bb54268ff4e44d3a6a316434d7e9310bdd940f41c2e0b6e7",
+    "classes_entry": "classes.jar",
+    "classes_sha256": "03aa2514a35fcf343e64c64841311860334262efee6bb0df5b6a963ba262e938",
+    "license": "Apache-2.0",
+    "purpose": "Differential validation of the zero-argument Unit Compose callback ABI using the Compose compiler plugin bundled with the pinned Kotlin compiler"
+  },
+  "inputs": {
+    "files_sha256": {
+      "src/annotation_declarations.rs": "68824921ba8a6cac0425cfd3c574eb87bc78c478575ade5f0fc5d7d31bb8fecc",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/annotation_files.rs": "0fe8ebba7bbd2c80fcdd6fda797b448ca8cd63945b100781361bf1e3ace02eaa",
+      "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "src/bytecode/anonymous_context.rs": "e48d7aba57745c9e3ecb0a2317ea627f3b6d9b2d86805563bae680d79a301910",
+      "src/bytecode/class_companion.rs": "7463d1e739919160b82ed1137a195ebc3a36037ed8b5419a26c1f38889b533a7",
+      "src/bytecode/compose_lambdas.rs": "9c74c11d3e2deaaf5846bbe294614c440c0c1d0ad9881ae662caaf48ea1574ef",
+      "src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+      "src/bytecode/defaults.rs": "d092d8a420cfb719f92dbb9a3bcc58f7c644d67bf9b3c611c72949122c22e827",
+      "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "src/bytecode/frames.rs": "1659d0401bfa59f751e3b6db250a2395a827ccad13c156f19f62c76773983b48",
+      "src/bytecode/inline.rs": "ca8a4f4da8f11e405a3cdcbcf87c3bfde49635e331f9712fb7b2f4aca0f84d25",
+      "src/bytecode/interfaces.rs": "5456ea3de3402ee3ead9920bb2cb0e7c0baab4f6eb7b211e481a16bf9ad3207b",
+      "src/bytecode/lambdas.rs": "ac4b8a962948c4b5c635f01918736f15dbeee9ce63222476b385f06eda8ec292",
+      "src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+      "src/bytecode/suspend.rs": "dfac0ad895edaf45c25655df1fad6c1828fe3fc767fd936dabe6e45357dd96d7",
+      "src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+      "src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+      "src/bytecode.rs": "01e96e1207b9a51a92a11aade83b1a16485c1f1c7d87cfe25dce6eeca79062ed",
+      "src/check.rs": "fb51c1a6a91bf632db95ab1a8b845b21be39217e893c6e1de76d5905b69fd7f1",
+      "src/check_annotation_placements.rs": "027e77c6a6db60f98262fbaf0f44be170c53b58b03d64ae6e8cc43cdb2dc1579",
+      "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "src/check_anonymous.rs": "87282edf3ebc0d5bf3e4b45aac402fe412e6517f452da4238f65c6f20f182908",
+      "src/check_captures.rs": "f752d88bb81c26576caad658160a332fa21946e7275e6faf331bfd73f6a84479",
+      "src/check_class_delegation.rs": "972c573827d747f7d12aa92254c71a9206a4679516047d305b83a89cddf5ba9c",
+      "src/check_classes.rs": "6f8ef44983d86b3e918cfad4bab9f6ac2aabd953563cefd59eb4d9ab5fb8e347",
+      "src/check_constructor_inference.rs": "aa075021a7641e74e4193d8890e701893a7de5bc8e867760361e6b89a2478d2e",
+      "src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+      "src/check_control.rs": "990a9a7bb9c384759c32eecda07ffcd38b2ed737edb6d254c1639e9f738a966f",
+      "src/check_declarations.rs": "03169dbcbdd2d0a4cd42c5491cde6770ac03b6cf51571d8da2a60b563a5a876a",
+      "src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+      "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "src/check_functions.rs": "bd6e6d83657daad0e4e8be12cd701efcfcafeaad2f2edfe957250d36545df76c",
+      "src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+      "src/check_interfaces.rs": "3ad45a30d0c5ebaea143a0816c130cf98bb7102a419b24bd615a7f84df81c122",
+      "src/check_ir_walk.rs": "53b370a217c42a9a819f42bd59ba32c49a1a424b24197c1654730aa5316edb8b",
+      "src/check_java_properties.rs": "2400dd59efe5856609c7927875a4da2aa2b7d5e90945ae4f412a1b9e4cc97b7c",
+      "src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+      "src/check_library.rs": "15c1784a0903343effb841958cd630f9df316fff84016142ff33cec9dc8b1dbe",
+      "src/check_local_annotations.rs": "ad5d937aae27ec3bed4528322c068a39eca915a49c449b68b2c4453f87f1a770",
+      "src/check_member_extensions.rs": "cfca4c6c2b51effce735dd6ef1132d6490e6cf2cf358e43a3ab471e72a92d71e",
+      "src/check_objects.rs": "a0e2252e86da5e9d1b834204e9963eeecca068b0e9095d604ae1223762fab008",
+      "src/check_operations.rs": "4b8e729ac8f5ab24dee63e21ebb01471c8a9faec91673c81e9e19130172bcdf5",
+      "src/check_overloads.rs": "1e330b4b4ec9e0c72e78bfab1dcbb6c8187e8361af76ee353d2fad9055aa2d4d",
+      "src/check_references.rs": "61a780d0816443007725e52f992c717eeab828f7b971749ed3242318a8d80077",
+      "src/check_relations.rs": "480210c7d788afa0d4599aee5033a08366c63d41908f97a356c7a3f5f4af80c0",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+      "src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+      "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "src/check_varargs.rs": "461fe197ed8507a21ab7aa60cede390d70fd1fce9867015561b1d43738d7d14b",
+      "src/check_variant_signatures.rs": "11de1f1c614227ef47a5e7e11ddbf0606cc50fadffe3eb4a3057175b475c53df",
+      "src/classpath/aliases.rs": "2ad31713a22f8eb0607ed96d838aa96fecedf7a6b261f07473aef66b8bdb8827",
+      "src/classpath/archive.rs": "835e4a79bbbc5c7328ce6a540ed1a2ca975fc526278fe7c31fd9433e08cc56d5",
+      "src/classpath/compose_abi.rs": "cbfbcfaba7037e7cd3972e69a5a52fa45f6cdd0982f553e9e5c3a190fa66312f",
+      "src/classpath/import_classes.rs": "65a1563c6df2772ac3d71602a54e7fd1b64bab1ab51d6053e74bdb65b2bf5f4e",
+      "src/classpath/inline_defaults.rs": "dadace0ef70c2e788fa6c7ffb49bb53119a74be6221435c6c124c1abc8391c5b",
+      "src/classpath/jdk_modules.rs": "cd1a350e7f8e03cda618a1d919d4e6ee49aba7e9a26728178ebad5f73c4bd8f8",
+      "src/classpath/jvm_builtins.rs": "b8c6e4789a998c1b3737da4879a15d74eb453170c4b03542d4c8ae13f6e40e86",
+      "src/classpath/metadata.rs": "9028afb1adaa4ecf3e115be5ffc70f774c27669412867080b527aadf2fddebbe",
+      "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+      "src/classpath/package_info.rs": "f3bd436a8c64d48216bae3a55a2a3e82a903d354a42b629928fe1af95197061a",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/signature.rs": "5dd5097b24b9bce36682ac24d649a4d39703175cf8d9680cb5cbea995c2e03cc",
+      "src/classpath/singletons.rs": "836fe172f37cc9282e259ba446688b3d2d6bf34fde25ddc3973c1800f29c71a5",
+      "src/classpath/source.rs": "e01402734801fdce67a63f987aca970cabbca59bf6cef7e0da3bfc40220c72d8",
+      "src/classpath/source_enums.rs": "1b6719565931913df35f26994fb0077985f1f5c89614fb1b5d4009e63957933d",
+      "src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+      "src/classpath/value_names.rs": "92bce0a6418edd333df08b6f388636648a2967560f8757c4bb00b1479236cae2",
+      "src/classpath.rs": "65bc1f14ac1e6abd42c15345900c2f46cd6835b5ef7477d9dca40e76f6d6a21d",
+      "src/compiled_inline/defaults.rs": "89d95d8b98e4af043bc3c592ba7588bffb7924bc86bdae57d457c0b420cbde37",
+      "src/compiled_inline.rs": "44b3beeb7d4ce4d6f70ff9d6b6ba14e525d442826d607c0a495610aac0181058",
+      "src/const_eval.rs": "bc6a053823a41c822bcc5af603023019a6ace1895c9fae75bf0372f02381dacf",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/jvm_descriptor.rs": "3946ec2e66e89185c9d3e284f9d114e29e5e88d0a3eba52ec39fba2200d07ad2",
+      "src/lib.rs": "3c19e2b8c95ebce9fda8d5282c9caf48bcf98f2a93dc80370d314e73432f27e1",
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/metadata.rs": "42a49933ba2173d9ba4cb268ff250394bc03d9fa6f0d495d383b4a8c6d6496fd",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/source_inline.rs": "d59ecaba2b32264cc4190594c19e5ec7e99e6cbb5db28b33c1eaca7c7aa404e5",
+      "src/syntax.rs": "4c675238c5911c2505d0637c8157ca040e7bfbf964c8038e9904a2ad1a382a5d",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525",
+      "tests/compose_callbacks/Consumer.kt": "1aa0acfc3ce3a89548149279c692f97ecc943b6e51cacbce6edca8c375dae73f",
+      "tests/compose_callbacks/LexicalBase.java": "ebc8ad1cd4da92d051a94fea4ebed0d5e3979004e0a7ba1e70124a0e64bc266e",
+      "tests/compose_callbacks/LexicalLibrary.kt": "1c6afa6dc2a4d549ca2e60d2f5aa5bbbeb21cb470dd9ec9073a4d3de6f67a21a",
+      "tests/compose_callbacks/Library.kt": "1ce96b7082b7ac270084dc02317b264186b074b6120cfc34fa9901f2dc5456f0",
+      "tests/compose_callbacks/Lookalike.kt": "09d278c3b0188d5d0298f91141d9a6db6897a232336580f2986982f3cf8c765f",
+      "tests/compose_callbacks/ProtocolCheck.java": "f2fd63bab824007716e4d67e3c51c4f30b381daedd03e37309fb4a8b30f67e9e",
+      "tests/compose_callbacks/Rejections.json": "8adb30c46c2f031ed341fc38923b3956a16281632a862957bc89a9f42aede65f",
+      "tests/compose_callbacks.rs": "18394a9ac8a86e8ed9837927d02d1cc5223e9cb7830a7d1999e597fbdf43f160",
+      "tools/check_compose_callbacks.py": "56a6da88229347ed7d99fb6bd966cdb5aae0e7cb58a547e44962a40d4ccd6dbd",
+      "tools/setup_compose_reference.py": "8fb5c51b02d6ff1adfc6228191a2e4844d44bbe87f6f20c8d75e894319dc14c0",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+      "references/compose-runtime.json": "c810e308090491fc6acda189807f43ebfafb75db452a52a65071c4e5e549a36b"
+    },
+    "bundle": "reports/correctness/2026-11-26T043236310574Z-compose-callbacks/inputs.zip",
+    "bundle_sha256": "10a823546dff9bc9c0061054af80e8a86638e2250805e8077941e21c239869ae",
+    "stdlib_sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "compose_plugin_sha256": "e8b44d65a4ba5fb14f3e51d10fb605d7da2a0c35a9ee275c94ffd74cb3f2b11e",
+    "jdk_release_sha256": "ebbd70bf00bab6d39addf51969c5ff244030b86b29de400b9fb10612ebd3ceec"
+  },
+  "commands": [
+    {
+      "label": "compile Java lexical superclass",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-d",
+        "/tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/dependency",
+        "/workspace/korrust/tests/compose_callbacks/LexicalBase.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T043236310574Z-compose-callbacks/000.txt"
+    },
+    {
+      "label": "compile transformed binary dependency",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "/workspace/korrust/tests/compose_callbacks/Library.kt",
+        "/workspace/korrust/tests/compose_callbacks/Lookalike.kt",
+        "/workspace/korrust/tests/compose_callbacks/LexicalLibrary.kt",
+        "-no-stdlib",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/korrust/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "-cp",
+        "/workspace/korrust/references/compose/runtime.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/dependency"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T043236310574Z-compose-callbacks/001.txt"
+    },
+    {
+      "label": "controlled lexical-dispatch baseline",
+      "argv": [
+        "/tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/baseline-frozen",
+        "--diagnostic-format",
+        "json",
+        "/workspace/korrust/tests/compose_callbacks/Consumer.kt",
+        "-cp",
+        "/tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/dependency:/workspace/korrust/references/compose/runtime.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/baseline"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T043236310574Z-compose-callbacks/002.txt"
+    },
+    {
+      "label": "compile callback consumer official",
+      "argv": [
+        "/workspace/korrust/references/kotlinc/bin/kotlinc",
+        "-no-stdlib",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-Xlambdas=class",
+        "-Xplugin=/workspace/korrust/references/kotlinc/lib/compose-compiler-plugin.jar",
+        "-P",
+        "plugin:androidx.compose.compiler.plugins.kotlin:sourceInformation=false",
+        "/workspace/korrust/tests/compose_callbacks/Consumer.kt",
+        "-cp",
+        "/tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/dependency:/workspace/korrust/references/compose/runtime.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/official"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T043236310574Z-compose-callbacks/003.txt"
+    },
+    {
+      "label": "compile callback consumer candidate",
+      "argv": [
+        "/tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/korrust-frozen",
+        "/workspace/korrust/tests/compose_callbacks/Consumer.kt",
+        "-cp",
+        "/tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/dependency:/workspace/korrust/references/compose/runtime.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T043236310574Z-compose-callbacks/004.txt"
+    },
+    {
+      "label": "fixed Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/official:/tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/dependency:/workspace/korrust/references/compose/runtime.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/callers",
+        "/workspace/korrust/tests/compose_callbacks/ProtocolCheck.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T043236310574Z-compose-callbacks/005.txt"
+    },
+    {
+      "label": "verified runtime protocol official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/callers:/tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/official:/tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/dependency:/workspace/korrust/references/compose/runtime.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar",
+        "composeprobe.ProtocolCheck"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T043236310574Z-compose-callbacks/006.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "lexical-dispatch-baseline",
+      "outcome": "pass",
+      "diagnostic": {
+        "source_identity": "/workspace/korrust/tests/compose_callbacks/Consumer.kt",
+        "offset": 1116,
+        "category": "unclassified",
+        "code": "UNCLASSIFIED",
+        "message": "Unresolved member or imported extension: apply",
+        "path": "/workspace/korrust/tests/compose_callbacks/Consumer.kt",
+        "line": 24,
+        "column": 9
+      }
+    },
+    {
+      "id": "compile/official",
+      "outcome": "pass"
+    },
+    {
+      "id": "compile/candidate",
+      "outcome": "pass"
+    }
+  ],
+  "limitations": [
+    "Only literal zero-argument Unit Compose callbacks passed to supported noninline, nongeneric binary methods are lowered",
+    "Source composable declarations, hidden Composer calls inside the body, nested composable creation, receiver/argument/result/suspend/nullable/generic callback shapes remain explicitly unsupported",
+    "Runtime protocol is pinned to AndroidX Compose Runtime 1.11.0 and the Kotlin 2.3.21 bundled plugin; keys and generated class names are compiler-specific",
+    "Composer and RecomposeScope are controlled proxies; actual pinned composableLambdaInstance wrappers and generated callback bodies execute, without a real Composition/Recomposer or Android execution claim"
+  ],
+  "reproduction_commands": [
+    [
+      "python3",
+      "tools/setup_compose_reference.py"
+    ],
+    [
+      "python3",
+      "tools/check_compose_callbacks.py",
+      "--candidate",
+      "/tmp/targets159-compose-dispatch/debug/korrust",
+      "--compiler-source",
+      "/tmp/compose159-dispatch-freeze",
+      "--baseline",
+      "/tmp/2026-11-26T040839695788Z-compose-callbacks-0suieedr/korrust-frozen"
+    ]
+  ],
+  "baseline_compiler": {
+    "binary": "/tmp/2026-11-26T043236310574Z-compose-callbacks-4suxw9i9/baseline-frozen",
+    "sha256": "285f5d1455390cde243b4a6099b9f572cf4d290d06b79629270db91ba2223e7c"
+  },
+  "error": "verified runtime protocol official\nException in thread \"main\" java.lang.AssertionError: public abstract java.lang.Object androidx.compose.runtime.Composer.rememberedValue()\n\tat composeprobe.ProtocolCheck$State.invoke(ProtocolCheck.java:54)\n\tat jdk.proxy1/jdk.proxy1.$Proxy1.rememberedValue(Unknown Source)\n\tat composeprobe.ComposableSingletons$ConsumerKt$lambda$-441458004$1.invoke(Consumer.kt:45)\n\tat composeprobe.ComposableSingletons$ConsumerKt$lambda$-441458004$1.invoke(Consumer.kt:22)\n\tat androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.kt:122)\n\tat androidx.compose.runtime.internal.ComposableLambdaImpl.invoke(ComposableLambda.kt:52)\n\tat composeprobe.ProtocolCheck.checkBody(ProtocolCheck.java:154)\n\tat composeprobe.ProtocolCheck.main(ProtocolCheck.java:135)\n",
+  "counts": {
+    "pass": 3
+  }
+}

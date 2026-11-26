@@ -1,0 +1,54 @@
+JUnit version 4.13.2
+..E..
+Time: 45.89
+There was 1 failure:
+1) a failed verse list read can be retried(yuku.alkitab.base.appwidget.DailyVerseLoadingTest)
+java.lang.AssertionError: unexpected exception type thrown; expected:<java.lang.RuntimeException> but was:<java.lang.IncompatibleClassChangeError>
+	at org.junit.Assert.assertThrows(Assert.java:1020)
+	at org.junit.Assert.assertThrows(Assert.java:981)
+	at yuku.alkitab.base.appwidget.DailyVerseLoadingTest.a failed verse list read can be retried(DailyVerseLoadingTest.kt)
+	... 16 trimmed
+Caused by: java.lang.IncompatibleClassChangeError: yuku.alkitab.base.appwidget.DailyVerseLoadingTest and yuku.alkitab.base.appwidget.DailyVerseLoadingTest$object$3996 disagree on InnerClasses attribute
+	at java.base/java.lang.Class.getDeclaringClass0(Native Method)
+	at java.base/java.lang.Class.getDeclaringClass(Class.java:1696)
+	at kotlin.reflect.jvm.internal.impl.descriptors.runtime.structure.ReflectJavaClass.getOuterClass(ReflectJavaClass.kt:59)
+	at kotlin.reflect.jvm.internal.impl.descriptors.runtime.structure.ReflectJavaClass.getOuterClass(ReflectJavaClass.kt:29)
+	at kotlin.reflect.jvm.internal.impl.load.java.lazy.descriptors.LazyJavaClassDescriptor.<init>(LazyJavaClassDescriptor.kt:88)
+	at kotlin.reflect.jvm.internal.impl.load.java.lazy.descriptors.LazyJavaClassDescriptor.<init>(LazyJavaClassDescriptor.kt:42)
+	at kotlin.reflect.jvm.internal.impl.load.java.lazy.descriptors.LazyJavaPackageScope.classes$lambda$1(LazyJavaPackageScope.kt:102)
+	at kotlin.reflect.jvm.internal.impl.load.java.lazy.descriptors.LazyJavaPackageScope.accessor$LazyJavaPackageScope$lambda1(LazyJavaPackageScope.kt)
+	at kotlin.reflect.jvm.internal.impl.load.java.lazy.descriptors.LazyJavaPackageScope$$Lambda$1.invoke(Unknown Source)
+	at kotlin.reflect.jvm.internal.impl.storage.LockBasedStorageManager$MapBasedMemoizedFunction.invoke(LockBasedStorageManager.java:578)
+	at kotlin.reflect.jvm.internal.impl.load.java.lazy.descriptors.LazyJavaPackageScope.findClassifier(LazyJavaPackageScope.kt:146)
+	at kotlin.reflect.jvm.internal.impl.load.java.lazy.descriptors.LazyJavaPackageScope.getContributedClassifier(LazyJavaPackageScope.kt:136)
+	at kotlin.reflect.jvm.internal.impl.load.java.lazy.descriptors.JvmPackageScope.getContributedClassifier(JvmPackageScope.kt:55)
+	at kotlin.reflect.jvm.internal.impl.resolve.scopes.ChainedMemberScope.getContributedClassifier(ChainedMemberScope.kt:35)
+	at kotlin.reflect.jvm.internal.impl.resolve.scopes.AbstractScopeAdapter.getContributedClassifier(AbstractScopeAdapter.kt:44)
+	at kotlin.reflect.jvm.internal.impl.descriptors.FindClassInModuleKt.findClassifierAcrossModuleDependencies(findClassInModule.kt:26)
+	at kotlin.reflect.jvm.internal.impl.descriptors.FindClassInModuleKt.findClassAcrossModuleDependencies(findClassInModule.kt:48)
+	at kotlin.reflect.jvm.internal.KClassImpl$Data.descriptor_delegate$lambda$0(KClassImpl.kt:64)
+	at kotlin.reflect.jvm.internal.KClassImpl$Data.accessor$KClassImpl$Data$lambda0(KClassImpl.kt)
+	at kotlin.reflect.jvm.internal.KClassImpl$Data$$Lambda$0.invoke(Unknown Source)
+	at kotlin.reflect.jvm.internal.ReflectProperties$LazySoftVal.invoke(ReflectProperties.java:70)
+	at kotlin.reflect.jvm.internal.ReflectProperties$Val.getValue(ReflectProperties.java:32)
+	at kotlin.reflect.jvm.internal.KClassImpl$Data.getDescriptor(KClassImpl.kt:53)
+	at kotlin.reflect.jvm.internal.KClassImpl.getDescriptor(KClassImpl.kt:193)
+	at kotlin.reflect.jvm.internal.KClassImpl.isValue(KClassImpl.kt:300)
+	at io.mockk.core.ValueClassSupport.isValue_safe(ValueClassSupport.kt:116)
+	at io.mockk.core.ValueClassSupport.maybeUnboxValueForMethodReturn(ValueClassSupport.kt:24)
+	at io.mockk.proxy.jvm.advice.Interceptor.call(Interceptor.kt:22)
+	at android.content.res.Resources.openRawResource(Resources.java)
+	at yuku.alkitab.base.appwidget.DailyVerseData.listAllDailyVerses(DailyVerseData.kt:91)
+	at yuku.alkitab.base.appwidget.DailyVerseData.getAris(DailyVerseData.kt:43)
+	at yuku.alkitab.base.appwidget.DailyVerseLoadingTest$lambda$4359$14.invoke(DailyVerseLoadingTest.kt)
+	at yuku.alkitab.base.appwidget.DailyVerseLoadingTest$lambda$4359$14.run(DailyVerseLoadingTest.kt)
+	at org.junit.Assert.assertThrows(Assert.java:1001)
+	... 19 more
+
+FAILURES!!!
+Tests run: 4,  Failures: 1
+
+WARNING: A Java agent has been loaded dynamically (/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.14.17/e3c251a39dc90badaf71c83427ba46840f219d8d/byte-buddy-agent-1.14.17.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release

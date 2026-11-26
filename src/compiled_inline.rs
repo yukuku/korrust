@@ -117,8 +117,8 @@ pub(crate) fn reifies_only_array_allocation(method: &JavaMethod, parameter: &str
 }
 
 pub(crate) fn validate(method: &JavaMethod) -> Result<()> {
-    if method.access & 8 == 0 {
-        return Err(unsupported("only static inline functions are supported"));
+    if method.access & 8 == 0 && method.access & (0x10 | 0x2) == 0 {
+        return Err(unsupported("virtual inline methods require final dispatch"));
     }
     let library = method
         .library

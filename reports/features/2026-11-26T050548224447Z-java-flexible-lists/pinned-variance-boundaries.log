@@ -1,0 +1,21 @@
+work/targets159/variance-negative-batch.kt:4:61: error: Java type mismatch: expected '(Mutable)List<CharSequence!>!' but found 'MutableList<String>'. Use explicit cast.
+fun invalid0(value: MutableList<String>): Int = Bags.accept(value)
+                                                            ^^^^^
+work/targets159/variance-negative-batch.kt:5:61: error: Java type mismatch: expected '(Mutable)List<CharSequence!>!' but found 'MutableList<String>'. Use explicit cast.
+fun invalid1(value: MutableList<String>): Int = Bags.choose(value)
+                                                            ^^^^^
+work/targets159/variance-negative-batch.kt:6:77: error: Java type mismatch: expected '(Mutable)List<CharSequence!>!' but found 'MutableList<String>'. Use explicit cast.
+fun invalid2(holder: Bags, value: MutableList<String>): Int = holder.select(value)
+                                                                            ^^^^^
+work/targets159/variance-negative-batch.kt:7:74: error: Java type mismatch: expected '(Mutable)List<CharSequence!>!' but found 'MutableList<String>'. Use explicit cast.
+fun invalid3(holder: Bags, value: MutableList<String>) { holder.setValue(value) }
+                                                                         ^^^^^
+work/targets159/variance-negative-batch.kt:8:48: error: Java type mismatch: expected '(Mutable)List<CharSequence!>!' but found 'MutableList<String>'. Use explicit cast.
+fun invalid4(value: MutableList<String>) = Box(value)
+                                               ^^^^^
+work/targets159/variance-negative-batch.kt:9:69: error: Java type mismatch: expected '(Mutable)List<CharSequence!>!' but found 'MutableList<String>'. Use explicit cast.
+fun invalid5(value: MutableList<String>) = GenericBox<CharSequence>(value)
+                                                                    ^^^^^
+work/targets159/variance-negative-batch.kt:10:35: error: Java type mismatch: expected '(Mutable)List<CharSequence!>!' but found '(Mutable)List<String!>!'. Use explicit cast.
+fun invalid6(): Int = Bags.accept(Bags.strings())
+                                  ^^^^^^^^^^^^^^

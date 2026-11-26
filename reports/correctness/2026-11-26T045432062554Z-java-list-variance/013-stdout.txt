@@ -1,0 +1,213 @@
+Classfile /workspace/korrust/target/checks/2026-11-26T045432062554Z-java-list-variance/candidate/EffectsKt.class
+  Last modified Nov 26, 2026; size 1802 bytes
+  SHA-256 checksum 1c5e599a796c6a57e2834ff716f8c67b416acad80065ca8fca9cb24a620b3566
+  Compiled from "Effects.kt"
+public final class EffectsKt
+  minor version: 0
+  major version: 49
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // EffectsKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 7, attributes: 2
+Constant pool:
+   #1 = Utf8               EffectsKt
+   #2 = Class              #1             // EffectsKt
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               SourceFile
+   #6 = Utf8               Effects.kt
+   #7 = Utf8               holder
+   #8 = String             #7             // holder
+   #9 = Utf8               kotlin/jvm/internal/Intrinsics
+  #10 = Class              #9             // kotlin/jvm/internal/Intrinsics
+  #11 = Utf8               checkNotNullParameter
+  #12 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+  #13 = NameAndType        #11:#12        // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #14 = Methodref          #10.#13        // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+  #15 = Utf8               value
+  #16 = String             #15            // value
+  #17 = Utf8               variance/Bags
+  #18 = Class              #17            // variance/Bags
+  #19 = Utf8               field
+  #20 = Utf8               Ljava/util/List;
+  #21 = NameAndType        #19:#20        // field:Ljava/util/List;
+  #22 = Fieldref           #18.#21        // variance/Bags.field:Ljava/util/List;
+  #23 = Utf8               setValue
+  #24 = Utf8               (Ljava/util/List;)V
+  #25 = NameAndType        #23:#24        // setValue:(Ljava/util/List;)V
+  #26 = Methodref          #18.#25        // variance/Bags.setValue:(Ljava/util/List;)V
+  #27 = Utf8               fields
+  #28 = Utf8               (Lvariance/Bags;Ljava/util/List;)V
+  #29 = Utf8               Code
+  #30 = Utf8               Signature
+  #31 = Utf8               (Lvariance/Bags;Ljava/util/List<Ljava/lang/String;>;)V
+  #32 = Utf8               Lorg/jetbrains/annotations/NotNull;
+  #33 = Utf8               RuntimeInvisibleParameterAnnotations
+  #34 = Utf8               accept
+  #35 = Utf8               (Ljava/util/List;)I
+  #36 = NameAndType        #34:#35        // accept:(Ljava/util/List;)I
+  #37 = Methodref          #18.#36        // variance/Bags.accept:(Ljava/util/List;)I
+  #38 = Utf8               readonly
+  #39 = Utf8               (Ljava/util/List<Ljava/lang/String;>;)I
+  #40 = Utf8               same
+  #41 = NameAndType        #40:#35        // same:(Ljava/util/List;)I
+  #42 = Methodref          #18.#41        // variance/Bags.same:(Ljava/util/List;)I
+  #43 = Utf8               projectedSame
+  #44 = Utf8               (Ljava/util/List<+Ljava/lang/String;>;)I
+  #45 = Utf8               strings
+  #46 = Utf8               ()Ljava/util/List;
+  #47 = NameAndType        #45:#46        // strings:()Ljava/util/List;
+  #48 = Methodref          #18.#47        // variance/Bags.strings:()Ljava/util/List;
+  #49 = Utf8               flexibleSame
+  #50 = Utf8               ()I
+  #51 = Utf8               nullable
+  #52 = NameAndType        #51:#35        // nullable:(Ljava/util/List;)I
+  #53 = Methodref          #18.#52        // variance/Bags.nullable:(Ljava/util/List;)I
+  #54 = Utf8               next
+  #55 = NameAndType        #54:#46        // next:()Ljava/util/List;
+  #56 = Methodref          #18.#55        // variance/Bags.next:()Ljava/util/List;
+  #57 = Utf8               once
+  #58 = Utf8               inferred
+  #59 = Utf8               ()Ljava/util/List<Ljava/lang/String;>;
+  #60 = Utf8               Lkotlin/Metadata;
+  #61 = Utf8               mv
+  #62 = Integer            2
+  #63 = Integer            3
+  #64 = Integer            0
+  #65 = Utf8               k
+  #66 = Utf8               xi
+  #67 = Integer            48
+  #68 = Utf8               d1
+  #69 = Utf8               \u0000\b\n\u0002\b\u0014\n\u0002\b\u0001\u001a%H\u0006\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u00032\f\u0010\u0004\u001a\b\u0012\u0004\u0012\u00020\u00050\u0006¢\u0006\u0004\b\u0000\u0010\u0007\u001a\u001dH\u0006\u0010\b\u001a\u00020\t2\f\u0010\u0004\u001a\b\u0012\u0004\u0012\u00020\u00050\n¢\u0006\u0004\b\b\u0010\u000b\u001a\u001fH\u0006\u0010\f\u001a\u00020\t2\u000e\u0010\u0004\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00050\u0006¢\u0006\u0004\b\f\u0010\u000b\u001a\u000fH\u0006\u0010\r\u001a\u00020\t¢\u0006\u0004\b\r\u0010\u000e\u001a\u000fH\u0006\u0010\u000f\u001a\u00020\t¢\u0006\u0004\b\u000f\u0010\u000e\u001a\u000fH\u0006\u0010\u0010\u001a\u00020\t¢\u0006\u0004\b\u0010\u0010\u000e\u001a3H\u0006\u0010\u0011\u001a&\u0012\f\u0012\n0\u0005 \u0012*\u00040\u0005\u0018\u00010\u0006 \u0012*\u0012\u0012\f\u0012\n0\u0005 \u0012*\u00040\u0005\u0018\u00010\n\u0018\u0001¢\u0006\u0004\b\u0011\u0010\u0013¨\u0006\u0014
+  #70 = Utf8               d2
+  #71 = Utf8               kotlin/Unit
+  #72 = Utf8               kotlin/String
+  #73 = Utf8               kotlin/collections/MutableList
+  #74 = Utf8               kotlin/Int
+  #75 = Utf8               kotlin/collections/List
+  #76 = Utf8               kotlin.jvm.PlatformType
+  #77 = Utf8               java_list_variance
+  #78 = Utf8               RuntimeVisibleAnnotations
+{
+  public static final void fields(variance.Bags, java.util.List<java.lang.String>);
+    descriptor: (Lvariance/Bags;Ljava/util/List;)V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=4, locals=2, args_size=2
+         0: aload         0
+         2: ldc_w         #8                  // String holder
+         5: invokestatic  #14                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         1
+        10: ldc_w         #16                 // String value
+        13: invokestatic  #14                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+        16: aload         0
+        18: aload         1
+        20: putfield      #22                 // Field variance/Bags.field:Ljava/util/List;
+        23: aload         0
+        25: checkcast     #18                 // class variance/Bags
+        28: aload         1
+        30: invokevirtual #26                 // Method variance/Bags.setValue:(Ljava/util/List;)V
+        33: return
+        34: aconst_null
+        35: athrow
+    Signature: #31                          // (Lvariance/Bags;Ljava/util/List<Ljava/lang/String;>;)V
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #32()
+          org.jetbrains.annotations.NotNull
+      parameter 1:
+        0: #32()
+          org.jetbrains.annotations.NotNull
+
+  public static final int readonly(java.util.List<java.lang.String>);
+    descriptor: (Ljava/util/List;)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload         0
+         2: ldc_w         #16                 // String value
+         5: invokestatic  #14                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         0
+        10: invokestatic  #37                 // Method variance/Bags.accept:(Ljava/util/List;)I
+        13: ireturn
+        14: aconst_null
+        15: athrow
+    Signature: #39                          // (Ljava/util/List<Ljava/lang/String;>;)I
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #32()
+          org.jetbrains.annotations.NotNull
+
+  public static final int projectedSame(java.util.List<? extends java.lang.String>);
+    descriptor: (Ljava/util/List;)I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload         0
+         2: ldc_w         #16                 // String value
+         5: invokestatic  #14                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         8: aload         0
+        10: invokestatic  #42                 // Method variance/Bags.same:(Ljava/util/List;)I
+        13: ireturn
+        14: aconst_null
+        15: athrow
+    Signature: #44                          // (Ljava/util/List<+Ljava/lang/String;>;)I
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #32()
+          org.jetbrains.annotations.NotNull
+
+  public static final int flexibleSame();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: invokestatic  #48                 // Method variance/Bags.strings:()Ljava/util/List;
+         3: invokestatic  #42                 // Method variance/Bags.same:(Ljava/util/List;)I
+         6: ireturn
+         7: aconst_null
+         8: athrow
+
+  public static final int nullable();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=4, locals=0, args_size=0
+         0: aconst_null
+         1: invokestatic  #53                 // Method variance/Bags.nullable:(Ljava/util/List;)I
+         4: ireturn
+         5: aconst_null
+         6: athrow
+
+  public static final int once();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: invokestatic  #56                 // Method variance/Bags.next:()Ljava/util/List;
+         3: invokestatic  #42                 // Method variance/Bags.same:(Ljava/util/List;)I
+         6: ireturn
+         7: aconst_null
+         8: athrow
+
+  public static final java.util.List<java.lang.String> inferred();
+    descriptor: ()Ljava/util/List;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: invokestatic  #48                 // Method variance/Bags.strings:()Ljava/util/List;
+         3: areturn
+         4: aconst_null
+         5: athrow
+    Signature: #59                          // ()Ljava/util/List<Ljava/lang/String;>;
+}
+SourceFile: "Effects.kt"
+RuntimeVisibleAnnotations:
+  0: #60(#61=[I#62,I#63,I#64],#65=I#62,#66=I#67,#68=[s#69],#70=[s#27,s#71,s#7,s#17,s#15,s#72,s#73,s#28,s#38,s#74,s#75,s#35,s#43,s#49,s#50,s#51,s#57,s#58,s#76,s#46,s#77])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000\b\n\u0002\b\u0014\n\u0002\b\u0001\u001a%H\u0006\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u00032\f\u0010\u0004\u001a\b\u0012\u0004\u0012\u00020\u00050\u0006¢\u0006\u0004\b\u0000\u0010\u0007\u001a\u001dH\u0006\u0010\b\u001a\u00020\t2\f\u0010\u0004\u001a\b\u0012\u0004\u0012\u00020\u00050\n¢\u0006\u0004\b\b\u0010\u000b\u001a\u001fH\u0006\u0010\f\u001a\u00020\t2\u000e\u0010\u0004\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u00050\u0006¢\u0006\u0004\b\f\u0010\u000b\u001a\u000fH\u0006\u0010\r\u001a\u00020\t¢\u0006\u0004\b\r\u0010\u000e\u001a\u000fH\u0006\u0010\u000f\u001a\u00020\t¢\u0006\u0004\b\u000f\u0010\u000e\u001a\u000fH\u0006\u0010\u0010\u001a\u00020\t¢\u0006\u0004\b\u0010\u0010\u000e\u001a3H\u0006\u0010\u0011\u001a&\u0012\f\u0012\n0\u0005 \u0012*\u00040\u0005\u0018\u00010\u0006 \u0012*\u0012\u0012\f\u0012\n0\u0005 \u0012*\u00040\u0005\u0018\u00010\n\u0018\u0001¢\u0006\u0004\b\u0011\u0010\u0013¨\u0006\u0014"]
+      d2=["fields","kotlin/Unit","holder","variance/Bags","value","kotlin/String","kotlin/collections/MutableList","(Lvariance/Bags;Ljava/util/List;)V","readonly","kotlin/Int","kotlin/collections/List","(Ljava/util/List;)I","projectedSame","flexibleSame","()I","nullable","once","inferred","kotlin.jvm.PlatformType","()Ljava/util/List;","java_list_variance"]
+    )

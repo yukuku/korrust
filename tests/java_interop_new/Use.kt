@@ -51,3 +51,10 @@ fun objectHash(value: Bean): Int = value.hashCode()
 fun platformConcat(): String = Bean.nullableText() + "K"
 fun concatObject(value: Bean): String = "bean:" + value
 fun emptySum(): Int = sum()
+
+fun interfaceTitle(bean: newinterop.InterfaceBean): String = bean.title
+
+fun updateTitle(bean: newinterop.InterfaceBean.Writable): String {
+    bean.title = "updated"
+    return bean.title
+}

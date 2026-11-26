@@ -111,7 +111,9 @@ impl Checker<'_> {
     ) -> Result<Statement> {
         let iterable = self.value(iterable)?;
         let iterator_element = match iterable.ty.base() {
-            Type::List(element) | Type::MutableList(element) => Some(*element.clone()),
+            Type::List(element) | Type::MutableList(element) | Type::FlexibleList(element) => {
+                Some(*element.clone())
+            }
             _ => relations::as_supertype(self.classpath, &iterable.ty, "java/lang/Iterable")
                 .and_then(|ty| match ty {
                     Type::Parameterized { arguments, .. }
@@ -993,11 +995,18 @@ impl Checker<'_> {
         result
     }
 
-    fn resolve_runtime_type(&self, target: &Type, offset: usize) -> Result<Type> {
+    fn resolve_runtime_type(&self, target: &Type, operator: &str, offset: usize) -> Result<Type> {
         let target = self.resolve(target, offset)?;
-        fn supported(ty: &Type) -> bool {
+        fn supported(ty: &Type, operator: &str) -> bool {
             match ty.base() {
-                Type::Nullable(inner) => supported(inner),
+                Type::Nullable(inner) => supported(inner, operator),
+                Type::Parameterized { name, arguments }
+                    if crate::classpath::kotlin_mapped_classifier(name).is_none()
+                        && !name.starts_with("kotlin/jvm/functions/") =>
+                {
+                    matches!(operator, "as" | "as?")
+                        || arguments.iter().all(|argument| argument.ty.is_none())
+                }
                 Type::Int
                 | Type::Long
                 | Type::Byte
@@ -1030,7 +1039,7 @@ impl Checker<'_> {
             }
             _ => false,
         };
-        if !supported(&target) && !reified {
+        if !supported(&target, operator) && !reified {
             return Err(Diagnostic::new(
                 offset,
                 "Type tests and casts require a supported runtime type; erased generic types are unsupported",
@@ -1046,7 +1055,7 @@ impl Checker<'_> {
         target: &Type,
         offset: usize,
     ) -> Result<Value> {
-        let target = self.resolve_runtime_type(target, offset)?;
+        let target = self.resolve_runtime_type(target, op, offset)?;
         let value = self.value(source)?;
         self.checked_type_operation(op, value, target, offset)
     }
@@ -1117,7 +1126,7 @@ impl Checker<'_> {
     pub(super) fn check_when_condition(&mut self, left: Value, condition: &Expr) -> Result<Value> {
         if let ExprKind::TypeOperation(op, subject, target) = &condition.kind {
             if matches!(&subject.kind, ExprKind::Name(name) if name == "$whenSubject") {
-                let target = self.resolve_runtime_type(target, condition.offset)?;
+                let target = self.resolve_runtime_type(target, op, condition.offset)?;
                 return self.checked_type_operation(op, left, target, condition.offset);
             }
         }
@@ -2712,20 +2721,30 @@ impl Checker<'_> {
 
 impl Checker<'_> {
     pub(super) fn receiver_property(&mut self, name: &str, offset: usize) -> Result<Value> {
-        let result = if self.dispatch_receiver.is_none() {
-            Err(Diagnostic::new(offset, format!("Unresolved name: {name}"))
-                .with_kind(crate::DiagnosticKind::Unclassified, "UNRESOLVED_VALUE"))
-        } else {
-            self.value(&Expr {
+        let result = if let Some(receiver) = self.dispatch_receiver.clone() {
+            let receiver_slot = receiver.slot;
+            let was_initialized = self.initialized.insert(receiver_slot);
+            let local_name = format!("this@<dispatch{}>", receiver.slot);
+            self.scopes
+                .push(HashMap::from([(local_name.clone(), receiver)]));
+            let result = self.value(&Expr {
                 offset,
                 kind: ExprKind::Property(
                     Box::new(Expr {
                         offset,
-                        kind: ExprKind::Name("this".into()),
+                        kind: ExprKind::Name(local_name),
                     }),
                     name.into(),
                 ),
-            })
+            });
+            self.scopes.pop();
+            if !was_initialized {
+                self.initialized.remove(&receiver_slot);
+            }
+            result
+        } else {
+            Err(Diagnostic::new(offset, format!("Unresolved name: {name}"))
+                .with_kind(crate::DiagnosticKind::Unclassified, "UNRESOLVED_VALUE"))
         };
         if let Err(error) = &result {
             if error.message.starts_with("Unresolved")

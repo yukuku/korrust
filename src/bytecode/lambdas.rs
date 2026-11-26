@@ -4,11 +4,12 @@ use super::*;
 mod anonymous_context;
 
 pub fn emit_lambdas(
+    files: &mut Vec<crate::ClassFile>,
     module: &Module,
     facade: &str,
     file: &str,
     values: &crate::value_abi::Registry,
-) -> Result<Vec<crate::ClassFile>> {
+) -> Result<()> {
     let mut exposed = HashSet::new();
     if let Some(class) = &module.class_decl
         && let Some(companion) = &class.companion
@@ -31,8 +32,16 @@ pub fn emit_lambdas(
         );
     }
     let contexts = anonymous_context::collect(module, facade);
-    let mut files = Vec::new();
+    let mut children = std::collections::BTreeMap::<String, Vec<String>>::new();
     for lambda in &module.lambdas {
+        if lambda.anonymous_super.is_some()
+            && let Some(context) = contexts.get(&lambda.owner)
+        {
+            children
+                .entry(context.owner.clone())
+                .or_default()
+                .push(lambda.owner.clone());
+        }
         files.push(emit_in(
             lambda,
             &module.functions,
@@ -56,7 +65,12 @@ pub fn emit_lambdas(
             )?);
         }
     }
-    Ok(files)
+    for file in files {
+        if let Some(children) = children.get(&file.internal_name) {
+            file.bytes = crate::classpath::nested::attributes(&file.bytes, &[], children)?;
+        }
+    }
+    Ok(())
 }
 
 pub(super) fn emit(

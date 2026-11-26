@@ -144,6 +144,7 @@ fn array_literal_shape(ty: &Type, offset: usize, depth: usize) -> Result<()> {
         }
         Type::List(_)
         | Type::MutableList(_)
+        | Type::FlexibleList(_)
         | Type::ThreadLocal(_)
         | Type::Parameterized { .. }
         | Type::Function { .. }
@@ -235,6 +236,7 @@ impl Checker<'_> {
             &expanded,
             Type::List(_)
                 | Type::MutableList(_)
+                | Type::FlexibleList(_)
                 | Type::ThreadLocal(_)
                 | Type::Parameterized { .. }
         ) {
@@ -441,6 +443,7 @@ impl Checker<'_> {
             | Type::OutArray(inner)
             | Type::List(inner)
             | Type::MutableList(inner)
+            | Type::FlexibleList(inner)
             | Type::ThreadLocal(inner) => {
                 self.class_literal_value_visibility(inner, active, offset, depth + 1)
             }
@@ -739,6 +742,7 @@ impl Checker<'_> {
                         | Type::StringArray
                         | Type::List(_)
                         | Type::MutableList(_)
+                        | Type::FlexibleList(_)
                         | Type::ThreadLocal(_)
                         | Type::Function { .. }
                         | Type::ReceiverFunction { .. }

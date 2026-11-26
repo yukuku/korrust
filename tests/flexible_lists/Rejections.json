@@ -1,0 +1,50 @@
+[
+  {
+    "id": "kotlin-readonly",
+    "source": "import Lists\nfun invalid(value: List<String>) { value.add(\"x\") }"
+  },
+  {
+    "id": "java-explicit-readonly",
+    "source": "import Lists\nfun invalid() { Lists.readOnly().add(\"x\") }"
+  },
+  {
+    "id": "explicit-readonly-view",
+    "source": "import Lists\nfun invalid() { val value: List<CharSequence> = Lists.nonNull(); value.add(\"x\") }"
+  },
+  {
+    "id": "strict-nullable",
+    "source": "import Lists\nfun invalid() { Lists.nullable(false).add(\"x\") }"
+  },
+  {
+    "id": "readonly-to-mutable",
+    "source": "import Lists\nfun invalid(value: List<CharSequence>) { Lists.mutableArg(value) }"
+  },
+  {
+    "id": "invariant-mutable",
+    "source": "import Lists\nfun invalid(value: MutableList<String>) { Lists.mutableArg(value) }"
+  },
+  {
+    "id": "kotlin-element-nullability",
+    "source": "import Lists\nfun invalid() { val value: MutableList<CharSequence> = Lists.nonNull(); value.add(null) }"
+  },
+  {
+    "id": "projected-write",
+    "source": "import Lists\nfun invalid() { Lists.projected().add(\"x\") }"
+  },
+  {
+    "id": "flexible-parameter-invariance",
+    "source": "import Lists\nfun invalid(value: MutableList<String>) { Lists.accept(value) }"
+  },
+  {
+    "id": "platform-readonly",
+    "source": "import Lists\nfun invalid() { Lists.platformReadOnly().add(\"x\") }"
+  },
+  {
+    "id": "flexible-argument-invariance",
+    "source": "import Lists\nfun invalid() { Lists.accept(Lists.strings()) }"
+  },
+  {
+    "id": "strict-nonnull-argument",
+    "source": "import Lists\nfun invalid() { Lists.accept(null) }"
+  }
+]

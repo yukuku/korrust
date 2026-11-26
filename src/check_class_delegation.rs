@@ -49,6 +49,7 @@ pub(super) fn normalize_contract(
             | Type::StringArray
             | Type::List(_)
             | Type::MutableList(_)
+            | Type::FlexibleList(_)
             | Type::Function { .. }
             | Type::ReceiverFunction { .. } => true,
             _ => false,
@@ -136,6 +137,7 @@ fn internal_type(ty: &Type, classpath: &Classpath) -> bool {
         | Type::Platform(inner)
         | Type::List(inner)
         | Type::MutableList(inner)
+        | Type::FlexibleList(inner)
         | Type::ThreadLocal(inner)
         | Type::Parameter {
             upper_bound: inner, ..
@@ -172,6 +174,7 @@ fn nested_type(ty: &Type) -> bool {
         | Type::Platform(inner)
         | Type::List(inner)
         | Type::MutableList(inner)
+        | Type::FlexibleList(inner)
         | Type::ThreadLocal(inner)
         | Type::Parameter {
             upper_bound: inner, ..

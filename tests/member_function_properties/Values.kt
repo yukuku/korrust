@@ -55,3 +55,23 @@ fun extension(value: ExtensionHolder): Int = value.action("abc", 2)
 
 fun callbackReceiver(): Callbacks { Callbacks.reads += 10; return Callbacks }
 fun singleton(): Int = Callbacks.action(5) + Callbacks.amount + callbackReceiver().action(1)
+
+class ExtensionValue(val action: Int)
+fun ExtensionValue.action(value: Int): Int = value + 8
+class ExtensionFunction {
+    var reads: Int = 0
+    val action: (String) -> Int
+        get() { reads += 1; return { it.length } }
+}
+fun ExtensionFunction.action(value: Int): Int = value + 9
+class ExtensionArity(val action: (Int, Int) -> Int)
+fun ExtensionArity.action(value: Int): Int = value + 10
+fun fallbackReceiver(value: ExtensionFunction): ExtensionFunction { value.reads += 10; return value }
+fun fallbackArgument(value: ExtensionFunction): Int { value.reads += 100; return 3 }
+fun fallbacks(value: ExtensionFunction): Int = ExtensionValue(1).action(2) + fallbackReceiver(value).action(fallbackArgument(value)) + ExtensionArity({ left, right -> left + right }).action(3)
+
+class OwnFallback {
+    val action: (String) -> Int = { it.length }
+    fun own(): Int = action(1)
+}
+fun OwnFallback.action(value: Int): Int = value + 20

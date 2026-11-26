@@ -68,6 +68,22 @@ fn anonymous_enclosing_type_variables_resolve_to_their_lexical_generic_declarati
             .arg(classpath(&[&callers, output, &standard]))
             .arg("typevars.Driver"));
         assert_eq!(String::from_utf8_lossy(&result.stdout).trim(), "OK");
+        for owner in ["typevars.ModelKt", "typevars.Holder"] {
+            let verbose = run(Command::new("javap")
+                .args(["-v", "-classpath"])
+                .arg(output)
+                .arg(owner));
+            let listing = String::from_utf8(verbose.stdout).unwrap();
+            let table = listing.split_once("InnerClasses:").unwrap().1;
+            assert!(
+                table
+                    .lines()
+                    .skip(1)
+                    .take_while(|line| line.starts_with(' '))
+                    .any(|line| line.contains(";") && line.contains("// class typevars/")),
+                "{owner}"
+            );
+        }
         let abi = run(Command::new("javap")
             .args(["-public", "-s", "-classpath"])
             .arg(output)
