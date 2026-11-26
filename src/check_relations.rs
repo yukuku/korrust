@@ -1441,6 +1441,7 @@ impl Checker<'_> {
                 substitutions.entry(name).or_insert(ty);
             }
         }
+        let mut postponed = Vec::new();
         for (arg, index) in args.iter().zip(&mapping) {
             let arg = if let ExprKind::NamedArgument(_, expr) | ExprKind::TrailingLambda(expr) =
                 &arg.kind
@@ -1544,6 +1545,30 @@ impl Checker<'_> {
                 } else {
                     self.argument_value(arg, &expected_argument)?
                 }
+            } else if args.len() > 1
+                && matches!(arg.kind, ExprKind::Call(..))
+                && method.name != "<init>"
+                && !library.type_parameters.iter().any(|p| p.only_input_types)
+            {
+                let saved = self.clone();
+                let lambdas = self.lambdas.borrow().len();
+                let checked = self.argument_with_result_hint(
+                    arg,
+                    &params[*index].1,
+                    &result_hints,
+                    &library.type_parameters,
+                );
+                let needs_context = match &checked {
+                    Ok(value) => unresolved_list(&value.ty),
+                    Err(error) => error.code == "TYPE_PARAMETER_INFERENCE_INCOMPLETE",
+                };
+                if needs_context {
+                    *self = saved;
+                    self.lambdas.borrow_mut().truncate(lambdas);
+                    postponed.push((arg.clone(), *index));
+                    continue;
+                }
+                checked?
             } else {
                 self.argument_with_result_hint(
                     arg,
@@ -1634,6 +1659,19 @@ impl Checker<'_> {
             }
             if !self.infer_constraints(&params[*index].1, &value.ty, &mut substitutions, &fixed, 0)
             {
+                return Err(Diagnostic::new(
+                    arg.offset,
+                    "Conflicting generic type constraints",
+                ));
+            }
+        }
+        for (arg, index) in postponed {
+            let mut hints = result_hints.clone();
+            hints.extend(substitutions.clone());
+            let parameter = &params[index].1;
+            let value =
+                self.argument_with_result_hint(&arg, parameter, &hints, &library.type_parameters)?;
+            if !self.infer_constraints(parameter, &value.ty, &mut substitutions, &fixed, 0) {
                 return Err(Diagnostic::new(
                     arg.offset,
                     "Conflicting generic type constraints",
@@ -1736,6 +1774,10 @@ impl Checker<'_> {
                 Diagnostic::new(
                     offset,
                     format!("Cannot infer type parameter {}", parameter.name),
+                )
+                .with_kind(
+                    crate::DiagnosticKind::Unclassified,
+                    "TYPE_PARAMETER_INFERENCE_INCOMPLETE",
                 )
             })?;
             if parameter.reified
