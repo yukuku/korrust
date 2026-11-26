@@ -1558,14 +1558,26 @@ impl Checker<'_> {
                 if !mentions(pattern, &parameter.name) {
                     continue;
                 }
-                if !matches!(pattern, Type::Parameter { name, .. } if name == &parameter.name) {
+                let input = match pattern {
+                    Type::Parameter { name, .. } if name == &parameter.name => {
+                        Some(value.ty.clone())
+                    }
+                    Type::Array(inner) | Type::OutArray(inner)
+                        if matches!(inner.as_ref(), Type::Parameter { name, .. } if name == &parameter.name)
+                            && value.ty.base().primitive_array_element().is_none() =>
+                    {
+                        value.ty.base().array_element().map(|ty| ty.base().clone())
+                    }
+                    _ => None,
+                };
+                let Some(input) = input else {
                     return Err(Diagnostic::new(offset, "OnlyInputTypes inference through nested or captured parameter types is unsupported")
                         .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "ONLY_INPUT_TYPES_SHAPE_UNSUPPORTED"));
-                }
+                };
                 input_types
                     .entry(parameter.name.clone())
                     .or_default()
-                    .push(value.ty.clone());
+                    .push(input);
             }
             if !self.infer_constraints(&params[*index].1, &value.ty, &mut substitutions, &fixed, 0)
             {
