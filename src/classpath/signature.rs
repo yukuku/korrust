@@ -7,6 +7,7 @@ pub(super) struct Signature<'a> {
     offset: usize,
     parameters: BTreeMap<String, Type>,
     depth: usize,
+    scanning_formals: bool,
 }
 impl<'a> Signature<'a> {
     fn new(value: &'a str, parameters: &[TypeParameter]) -> Self {
@@ -31,6 +32,7 @@ impl<'a> Signature<'a> {
                 })
                 .collect(),
             depth: 0,
+            scanning_formals: false,
         }
     }
     fn peek(&self) -> Option<u8> {
@@ -61,21 +63,78 @@ impl<'a> Signature<'a> {
             .into())
     }
     fn type_params(&mut self) -> Result<Vec<TypeParameter>> {
-        let mut result = Vec::new();
         if self.peek() != Some(b'<') {
-            return Ok(result);
+            return Ok(Vec::new());
         }
+        let start = self.offset;
+        self.scanning_formals = true;
+        let formals = self.read_formals()?;
+        self.scanning_formals = false;
+        // All names are in scope throughout the bound list. Seed their erasures
+        // before resolving any nested bound or member signature.
+        let mut bounds = BTreeMap::new();
+        for formal in &formals {
+            if bounds
+                .insert(formal.name.clone(), formal.bounds.first())
+                .is_some()
+            {
+                return Err(invalid());
+            }
+        }
+        let mut seeded = self.parameters.clone();
+        for formal in &formals {
+            let mut bound = bounds[&formal.name];
+            let mut seen = std::collections::HashSet::new();
+            while let Some(Type::Parameter { name, .. }) = bound {
+                if !seen.insert(name) {
+                    return Err(invalid());
+                }
+                bound = match bounds.get(name) {
+                    Some(next) => *next,
+                    None => self.parameters.get(name).map(|ty| match ty {
+                        Type::Parameter { upper_bound, .. } => upper_bound.as_ref(),
+                        other => other,
+                    }),
+                };
+            }
+            seeded.insert(
+                formal.name.clone(),
+                Type::Parameter {
+                    name: formal.name.clone(),
+                    upper_bound: Box::new(
+                        bound
+                            .cloned()
+                            .unwrap_or(Type::Java("java/lang/Object".into())),
+                    ),
+                },
+            );
+        }
+        self.parameters = seeded;
+        self.offset = start;
+        let result = self.read_formals()?;
+        for formal in &result {
+            self.parameters.insert(
+                formal.name.clone(),
+                Type::Parameter {
+                    name: formal.name.clone(),
+                    upper_bound: Box::new(
+                        formal
+                            .bounds
+                            .first()
+                            .cloned()
+                            .unwrap_or(Type::Java("java/lang/Object".into())),
+                    ),
+                },
+            );
+        }
+        Ok(result)
+    }
+    fn read_formals(&mut self) -> Result<Vec<TypeParameter>> {
+        let mut result = Vec::new();
         self.next()?;
         while self.peek() != Some(b'>') {
             let name = self.name(b":")?;
             self.expect(b':')?;
-            self.parameters.insert(
-                name.clone(),
-                Type::Parameter {
-                    name: name.clone(),
-                    upper_bound: Box::new(Type::Java("java/lang/Object".into())),
-                },
-            );
             let mut bounds = Vec::new();
             if self.peek() != Some(b':') {
                 bounds.push(self.ty()?);
@@ -84,19 +143,6 @@ impl<'a> Signature<'a> {
                 self.next()?;
                 bounds.push(self.ty()?);
             }
-            let upper_bound = Box::new(
-                bounds
-                    .first()
-                    .cloned()
-                    .unwrap_or(Type::Java("java/lang/Object".into())),
-            );
-            self.parameters.insert(
-                name.clone(),
-                Type::Parameter {
-                    name: name.clone(),
-                    upper_bound,
-                },
-            );
             result.push(TypeParameter {
                 only_input_types: false,
                 reified: false,
@@ -129,7 +175,14 @@ impl<'a> Signature<'a> {
             b'T' => {
                 let name = self.name(b";")?;
                 self.expect(b';')?;
-                self.parameters.get(&name).cloned().ok_or_else(invalid)?
+                if self.scanning_formals {
+                    Type::Parameter {
+                        name,
+                        upper_bound: Box::new(Type::Java("java/lang/Object".into())),
+                    }
+                } else {
+                    self.parameters.get(&name).cloned().ok_or_else(invalid)?
+                }
             }
             b'[' => match self.ty()? {
                 Type::Int => Type::IntArray,
@@ -627,6 +680,21 @@ pub(super) fn attach_with_declarations(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn forward_bounds_preserve_erasure_and_reject_undeclared_or_cyclic_formals() {
+        let (_, args, result) = method("<T:TU;U:Ljava/lang/Number;>(TT;)TU;", &[]).unwrap();
+        assert_eq!(args[0].descriptor(), "Ljava/lang/Number;");
+        assert_eq!(result.descriptor(), "Ljava/lang/Number;");
+        for invalid in [
+            "<T:TU;>()V",
+            "<T:Ljava/util/List<TU;>;>()V",
+            "<T:TU;U:TT;>()V",
+            "<T:Ljava/lang/Object;T:Ljava/lang/Object;>()V",
+        ] {
+            assert!(method(invalid, &[]).is_err(), "{invalid}");
+        }
+    }
+
     #[test]
     fn generic_field_signatures_preserve_variables_and_reject_malformed_inputs() {
         let (parameters, _) = class("<T:Ljava/lang/Object;>Ljava/lang/Object;").unwrap();
