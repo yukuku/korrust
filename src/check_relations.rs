@@ -1806,16 +1806,27 @@ impl Checker<'_> {
                 let ty = if !substitutions.contains_key(&name)
                     && matches!(pattern.base(), Type::Parameter { name: result_name, .. } if *result_name == name)
                     && let Some(parameter) = library.type_parameters.iter().find(|p| p.name == name)
-                    && let Some(bound) = parameter
+                {
+                    let bounds = parameter
                         .bounds
                         .iter()
                         .map(|bound| substitute(bound, &substitutions))
-                        .find(|bound| {
-                            matches!(bound.base(), Type::Java(_) | Type::String)
-                                && !self.subtype(&ty, bound)
-                                && self.subtype(bound, &ty)
-                        }) {
-                    bound
+                        .collect::<Vec<_>>();
+                    if let Type::Nullable(inner) = &ty
+                        && bounds.iter().any(|bound| !self.subtype(&ty, bound))
+                        && bounds.iter().all(|bound| self.subtype(inner, bound))
+                    {
+                        inner.as_ref().clone()
+                    } else {
+                        bounds
+                            .into_iter()
+                            .find(|bound| {
+                                matches!(bound.base(), Type::Java(_) | Type::String)
+                                    && !self.subtype(&ty, bound)
+                                    && self.subtype(bound, &ty)
+                            })
+                            .unwrap_or(ty)
+                    }
                 } else {
                     ty
                 };
