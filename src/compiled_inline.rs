@@ -63,7 +63,7 @@ fn unsupported(message: impl AsRef<str>) -> Diagnostic {
     )
 }
 
-pub(crate) fn reifies_only_array_allocation(method: &JavaMethod, parameter: &str) -> bool {
+pub(crate) fn supports_erased_reified_classifier(method: &JavaMethod, parameter: &str) -> bool {
     let Some(code) = method
         .library
         .as_ref()
@@ -74,8 +74,13 @@ pub(crate) fn reifies_only_array_allocation(method: &JavaMethod, parameter: &str
     let Ok(body) = decode(code) else {
         return false;
     };
-    let mut found = false;
+    let mut uses_array = false;
+    let mut indirect_reification = false;
     for (index, instruction) in body.instructions.iter().enumerate() {
+        if matches!(&instruction.kind, InlineOp::Reference { constant: InlineConstant::Method { owner, name, .. }, .. } if owner == "kotlin/jvm/internal/Intrinsics" && name == "needClassReification")
+        {
+            indirect_reification = true;
+        }
         if !matches!(&instruction.kind, InlineOp::Reference { constant: InlineConstant::Method { owner, name, descriptor, .. }, .. } if owner == "kotlin/jvm/internal/Intrinsics" && name == "reifiedOperationMarker" && descriptor == "(ILjava/lang/String;)V")
         {
             continue;
@@ -90,7 +95,11 @@ pub(crate) fn reifies_only_array_allocation(method: &JavaMethod, parameter: &str
         let Ok(name) = String::from_utf16(name) else {
             return false;
         };
-        if name.strip_suffix('?').unwrap_or(&name) != parameter {
+        let classifier = name.strip_suffix('?').unwrap_or(&name);
+        if classifier.starts_with('[') && classifier.trim_start_matches('[') == parameter {
+            return false;
+        }
+        if classifier != parameter {
             continue;
         }
         if !matches!(&body.instructions[index - 2].kind, InlineOp::Raw { opcode: 0x03, operands } if operands.is_empty())
@@ -111,9 +120,14 @@ pub(crate) fn reifies_only_array_allocation(method: &JavaMethod, parameter: &str
         ) {
             return false;
         }
-        found = true;
+        uses_array = true;
     }
-    found
+    !indirect_reification
+        && (uses_array
+            || method
+                .kotlin_params
+                .as_ref()
+                .is_some_and(|params| params.iter().all(|(_, _, default)| !default)))
 }
 
 pub(crate) fn validate(method: &JavaMethod) -> Result<()> {

@@ -2047,7 +2047,7 @@ impl Checker<'_> {
                 if unsupported_classifier(ty)
                     && !(erased_reference_classifier(ty)
                         && (library.builtin_array
-                            || crate::compiled_inline::reifies_only_array_allocation(
+                            || crate::compiled_inline::supports_erased_reified_classifier(
                                 method, parameter,
                             )))
                 {
