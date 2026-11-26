@@ -1467,6 +1467,20 @@ impl Checker<'_> {
                     .is_some_and(|l| !l.type_parameters.is_empty())
             })
             .collect::<Vec<_>>();
+        if applicable
+            .iter()
+            .any(|(_, method)| method.vararg_index() != applicable[0].1.vararg_index())
+        {
+            let (parameters, omitted): (Vec<_>, Vec<_>) = applicable
+                .iter()
+                .map(|(_, method)| self.vararg_overload_parameters(method, args, offset))
+                .collect::<Result<Vec<_>>>()?
+                .into_iter()
+                .unzip();
+            let selected =
+                self.rank_mapped_arguments(&parameters, &omitted, args, &generic, offset)?;
+            return Ok(applicable.swap_remove(selected).0);
+        }
         let normalized_arguments = self.vararg_arguments(&applicable[0].0, args, offset)?;
         let selected = self.most_specific(
             &parameters,

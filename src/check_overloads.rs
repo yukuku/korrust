@@ -72,22 +72,48 @@ impl Checker<'_> {
             .collect::<Result<Vec<_>>>()?;
         let parameters = candidates
             .iter()
-            .map(|params| {
-                params
-                    .iter()
-                    .map(|(_, ty)| upper_bounds(ty, 0))
-                    .collect::<Vec<_>>()
+            .zip(mapping)
+            .map(|(params, mapping)| {
+                mapping
+                    .into_iter()
+                    .map(|index| params[index].1.clone())
+                    .collect()
             })
             .collect::<Vec<_>>();
         let omitted = candidates
             .iter()
             .map(|params| params.len().saturating_sub(args.len()))
             .collect::<Vec<_>>();
+        self.rank_mapped_arguments(&parameters, &omitted, args, generic, offset)
+    }
+
+    pub(super) fn rank_mapped_arguments(
+        &self,
+        parameters: &[Vec<Type>],
+        omitted: &[usize],
+        args: &[Expr],
+        generic: &[bool],
+        offset: usize,
+    ) -> Result<usize> {
+        if parameters.iter().any(|p| p.len() != args.len()) {
+            return Err(Diagnostic::new(
+                offset,
+                "Overload argument mapping is inconsistent",
+            ));
+        }
+        let count = parameters.len();
+        let parameters = parameters
+            .iter()
+            .map(|types| {
+                types
+                    .iter()
+                    .map(|ty| upper_bounds(ty, 0))
+                    .collect::<Vec<_>>()
+            })
+            .collect::<Vec<_>>();
         let forwards = |first: usize, second: usize| {
-            mapping[first].iter().zip(&mapping[second]).enumerate().all(
-                |(argument_index, (first_parameter, second_parameter))| {
-                    let first = &parameters[first][*first_parameter];
-                    let second = &parameters[second][*second_parameter];
+            parameters[first].iter().zip(&parameters[second]).enumerate().all(
+                |(argument_index, (first, second))| {
                     if matches!(first, Type::Int | Type::Byte | Type::Short | Type::Long)
                         && matches!(second, Type::Int | Type::Byte | Type::Short | Type::Long)
                     {

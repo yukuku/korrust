@@ -107,6 +107,50 @@ impl Checker<'_> {
         Ok(normalized)
     }
 
+    pub(super) fn vararg_overload_parameters(
+        &self,
+        method: &JavaMethod,
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<(Vec<Type>, usize)> {
+        let packed = self.vararg_arguments(method, args, offset)?;
+        let (parameters, defaults) = Self::method_parameters(method)?;
+        let mapping = Self::argument_mapping(
+            &parameters,
+            &defaults,
+            &packed,
+            self.method_named(method),
+            offset,
+        )?;
+        let mut expanded = Vec::with_capacity(args.len());
+        for (argument, index) in packed.iter().zip(mapping) {
+            let ty = &parameters[index].1;
+            if Some(index) != method.vararg_index() {
+                expanded.push(ty.clone());
+                continue;
+            }
+            let argument = match &argument.kind {
+                ExprKind::NamedArgument(_, value) => value.as_ref(),
+                _ => argument,
+            };
+            let ExprKind::VarargArray { elements, .. } = &argument.kind else {
+                return Err(Diagnostic::new(offset, "Expected a packed vararg argument"));
+            };
+            let element = element_type(ty)
+                .ok_or_else(|| Diagnostic::new(offset, "Invalid vararg element type"))?;
+            for value in elements {
+                expanded.push(
+                    if matches!(&value.kind, ExprKind::Unary(op, _) if op == "*") {
+                        ty.clone()
+                    } else {
+                        element.clone()
+                    },
+                );
+            }
+        }
+        Ok((expanded, parameters.len().saturating_sub(packed.len())))
+    }
+
     pub(super) fn vararg_array(
         &mut self,
         array: &Type,
