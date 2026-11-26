@@ -2534,7 +2534,18 @@ impl Checker<'_> {
             self.inline_result = previous_result;
             checked?
         } else {
-            self.arguments_checked(&params, &defaults, args, self.method_named(&method), java_variance && method.library.as_ref().is_some_and(|library| !library.kotlin_declared), offset)?
+            self.arguments_checked(
+                &params,
+                &defaults,
+                args,
+                self.method_named(&method),
+                java_variance
+                    && method
+                        .library
+                        .as_ref()
+                        .is_some_and(|library| !library.kotlin_declared),
+                offset,
+            )?
         };
         if extension {
             mask >>= 1;
