@@ -666,6 +666,124 @@ impl Checker<'_> {
         })
     }
 
+    pub(super) fn member_property_value(
+        &mut self,
+        receiver: Value,
+        name: &str,
+        offset: usize,
+    ) -> Result<Option<Value>> {
+        if self
+            .dispatch_receiver
+            .as_ref()
+            .is_some_and(|this| this.ty == receiver.ty)
+        {
+            if let Some(method) = self.members.get(&format!("#get:{name}")) {
+                return self
+                    .member_call(method.clone(), receiver, &[], offset)
+                    .map(Some);
+            }
+        }
+        if self
+            .dispatch_receiver
+            .as_ref()
+            .is_some_and(|this| this.ty == receiver.ty)
+        {
+            if let Some(ty) = self.fields.get(name) {
+                return Ok(Some(Value {
+                    ty: ty.clone(),
+                    kind: ValueKind::Field(name.to_owned(), Box::new(receiver)),
+                }));
+            }
+        }
+        if self
+            .dispatch_receiver
+            .as_ref()
+            .is_some_and(|this| this.ty == receiver.ty)
+        {
+            if let Some(method) = self.members.values().find(|method| {
+                method.source_property.as_deref() == Some(name)
+                    && method
+                        .library
+                        .as_ref()
+                        .is_none_or(|library| library.receiver.is_none())
+                    && method.source_name() == getter_name(name)
+            }) {
+                return self
+                    .member_call(method.clone(), receiver, &[], offset)
+                    .map(Some);
+            }
+        }
+        if let Some(owner) = library::type_owner(&receiver.ty).map(str::to_owned) {
+            let loaded = self.classpath.load(&owner).ok();
+            if let Some(class) = self.classes.get(&owner).or(loaded.as_ref()) {
+                if let Some(method) =
+                    library::ordinary_member_methods(self.classpath, &owner, name, 0)
+                        .unwrap_or_else(|_| class.methods.clone())
+                        .into_iter()
+                        .find(|m| {
+                            m.source_property.as_deref() == Some(name)
+                                && m.library
+                                    .as_ref()
+                                    .is_none_or(|library| library.receiver.is_none())
+                                && m.kotlin_params.as_ref().is_some_and(Vec::is_empty)
+                        })
+                {
+                    let method =
+                        library::specialize_receiver(method, &receiver.ty, class, self.classpath);
+                    return self.member_call(method, receiver, &[], offset).map(Some);
+                }
+                if self
+                    .classpath
+                    .field_candidates(&owner, name)?
+                    .iter()
+                    .any(|field| field.access & 1 != 0)
+                {
+                    return self
+                        .java_field(&owner.clone(), name, Some(receiver), offset)
+                        .map(Some);
+                }
+            }
+        }
+        if let Some(method) = self.java_property_getter(&receiver.ty, name, offset)? {
+            return self.member_call(method, receiver, &[], offset).map(Some);
+        }
+        Ok(None)
+    }
+
+    pub(super) fn member_property_invoke(
+        &mut self,
+        receiver: Value,
+        name: &str,
+        args: &[Expr],
+        types: &[Type],
+        offset: usize,
+    ) -> Result<Option<Value>> {
+        let Some(function) = self.member_property_value(receiver, name, offset)? else {
+            return Ok(None);
+        };
+        if !types.is_empty() {
+            return Err(Diagnostic::new(
+                offset,
+                "Function properties do not accept explicit type arguments",
+            ));
+        }
+        if !matches!(
+            function.ty.base(),
+            Type::Function { .. }
+                | Type::ReceiverFunction { .. }
+                | Type::SuspendFunction { .. }
+                | Type::Nullable(_)
+        ) {
+            return Err(
+                Diagnostic::new(offset, "Property is not callable").with_kind(
+                    crate::DiagnosticKind::InvalidKotlin,
+                    "PROPERTY_NOT_CALLABLE",
+                ),
+            );
+        }
+        self.function_invoke(function, args, offset).map(Some)
+    }
+
     pub(super) fn function_invoke(
         &mut self,
         function: Value,

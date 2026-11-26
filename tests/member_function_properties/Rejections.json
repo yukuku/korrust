@@ -1,0 +1,8 @@
+[
+  {"id":"non-callable", "source":"class Box(val action: Int)\nfun bad(value: Box): Int = value.action(1)"},
+  {"id":"nullable-function", "source":"class Box(val action: ((Int) -> Int)?)\nfun bad(value: Box): Int = value.action(1)"},
+  {"id":"wrong-type", "source":"class Box(val action: (Int) -> Int)\nfun bad(value: Box): Int = value.action(\"wrong\")"},
+  {"id":"wrong-arity", "source":"class Box(val action: (Int) -> Int)\nfun bad(value: Box): Int = value.action()"},
+  {"id":"explicit-types", "source":"class Box(val action: (Int) -> Int)\nfun bad(value: Box): Int = value.action<Int>(1)"},
+  {"id":"private-property", "source":"class Box(private val action: (Int) -> Int)\nfun bad(value: Box): Int = value.action(1)"}
+]

@@ -2915,6 +2915,11 @@ impl Checker<'_> {
             })
             .collect::<Vec<_>>();
         if methods.is_empty() {
+            if let Some(value) =
+                self.member_property_invoke(receiver.clone(), name, args, types, offset)?
+            {
+                return Ok(value);
+            }
             if !types.is_empty() {
                 return self.extension_call(receiver, name, args, types, offset);
             }
@@ -2971,7 +2976,14 @@ impl Checker<'_> {
             Err(_) if !types.is_empty() => {
                 return self.extension_call(receiver, name, args, types, offset);
             }
-            Err(error) => return self.member_extension_fallback(receiver, name, args, error),
+            Err(error) => {
+                if let Some(value) =
+                    self.member_property_invoke(receiver.clone(), name, args, types, offset)?
+                {
+                    return Ok(value);
+                }
+                return self.member_extension_fallback(receiver, name, args, error);
+            }
         };
         if !method.instance_dispatch() {
             let call = self.library_static_call(method, args, offset)?;
@@ -5423,83 +5435,8 @@ impl Checker<'_> {
                             });
                         }
                     }
-                    if self
-                        .dispatch_receiver
-                        .as_ref()
-                        .is_some_and(|this| this.ty == receiver.ty)
-                    {
-                        if let Some(method) = self.members.get(&format!("#get:{name}")) {
-                            return self.member_call(method.clone(), receiver, &[], offset);
-                        }
-                    }
-                    if self
-                        .dispatch_receiver
-                        .as_ref()
-                        .is_some_and(|this| this.ty == receiver.ty)
-                    {
-                        if let Some(ty) = self.fields.get(name) {
-                            return Ok(Value {
-                                ty: ty.clone(),
-                                kind: ValueKind::Field(name.clone(), Box::new(receiver)),
-                            });
-                        }
-                    }
-                    if self
-                        .dispatch_receiver
-                        .as_ref()
-                        .is_some_and(|this| this.ty == receiver.ty)
-                    {
-                        if let Some(method) = self.members.values().find(|method| {
-                            method.source_property.as_deref() == Some(name)
-                                && method
-                                    .library
-                                    .as_ref()
-                                    .is_none_or(|library| library.receiver.is_none())
-                                && method.source_name() == getter_name(name)
-                        }) {
-                            return self.member_call(method.clone(), receiver, &[], offset);
-                        }
-                    }
-                    if let Some(owner) = library::type_owner(&receiver.ty).map(str::to_owned) {
-                        let loaded = self.classpath.load(&owner).ok();
-                        if let Some(class) = self.classes.get(&owner).or(loaded.as_ref()) {
-                            if let Some(method) =
-                                library::ordinary_member_methods(self.classpath, &owner, name, 0)
-                                    .unwrap_or_else(|_| class.methods.clone())
-                                    .into_iter()
-                                    .find(|m| {
-                                        m.source_property.as_deref() == Some(name)
-                                            && m.library
-                                                .as_ref()
-                                                .is_none_or(|library| library.receiver.is_none())
-                                            && m.kotlin_params.as_ref().is_some_and(Vec::is_empty)
-                                    })
-                            {
-                                let method = library::specialize_receiver(
-                                    method,
-                                    &receiver.ty,
-                                    class,
-                                    self.classpath,
-                                );
-                                return self.member_call(method, receiver, &[], offset);
-                            }
-                            if self
-                                .classpath
-                                .field_candidates(&owner, name)?
-                                .iter()
-                                .any(|field| field.access & 1 != 0)
-                            {
-                                return self.java_field(
-                                    &owner.clone(),
-                                    name,
-                                    Some(receiver),
-                                    offset,
-                                );
-                            }
-                        }
-                    }
-                    if let Some(method) = self.java_property_getter(&receiver.ty, name, offset)? {
-                        return self.member_call(method, receiver, &[], offset);
+                    if let Some(value) = self.member_property_value(receiver.clone(), name, offset)? {
+                        return Ok(value);
                     }
                     if let Some(value) = enums::property(self, &receiver, name, offset)? {
                         return Ok(value);
