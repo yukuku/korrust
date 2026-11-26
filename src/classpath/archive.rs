@@ -1,5 +1,6 @@
 use super::{Diagnostic, Result};
 use std::{
+    collections::HashMap,
     fs,
     io::{BufReader, Read},
     path::{Path, PathBuf},
@@ -35,25 +36,33 @@ fn valid_entry_name(name: &str) -> bool {
         && name.split('/').all(|part| !matches!(part, "" | "." | ".."))
 }
 
-pub(super) fn validate(paths: &[PathBuf]) -> Result<()> {
-    for path in paths {
-        if path.is_dir() {
-            continue;
-        }
-        if !path.is_file() {
-            return Err(error(
-                path,
-                "must be an existing directory or JAR/ZIP archive",
-            ));
-        }
-        let mut archive = open(path)?;
-        let mut names = std::collections::HashSet::new();
-        for i in 0..archive.len() {
-            let entry = archive.by_index(i).map_err(|e| error(path, e))?;
-            if !valid_entry_name(entry.name()) {
+// Keep the central directory and open reader for the lifetime of a classpath.
+// Missing-class probes must not reopen and rescan every dependency archive.
+#[derive(Default)]
+pub(super) struct Index {
+    archives: HashMap<PathBuf, IndexedArchive>,
+}
+
+struct IndexedArchive {
+    reader: zip::ZipArchive<BufReader<fs::File>>,
+    entries: HashMap<String, usize>,
+    packages: HashMap<String, Vec<String>>,
+    metadata: Vec<String>,
+}
+
+impl IndexedArchive {
+    fn open(path: &Path) -> Result<Self> {
+        let mut reader = open(path)?;
+        let mut entries = HashMap::new();
+        let mut packages: HashMap<String, Vec<String>> = HashMap::new();
+        let mut metadata = Vec::new();
+        for i in 0..reader.len() {
+            let entry = reader.by_index(i).map_err(|e| error(path, e))?;
+            let name = entry.name();
+            if !valid_entry_name(name) {
                 return Err(error(path, "malformed ZIP entry name"));
             }
-            if !names.insert(entry.name().to_owned()) {
+            if entries.insert(name.to_owned(), i).is_some() {
                 return Err(error(path, "duplicate ZIP entry names are unsupported"));
             }
             if !matches!(
@@ -65,16 +74,93 @@ pub(super) fn validate(paths: &[PathBuf]) -> Result<()> {
             if entry.size() > MAX_ENTRY {
                 return Err(error(path, "ZIP entry exceeds the 64 MiB limit"));
             }
+            if !entry.is_dir() && !module_descriptor(name) && !versioned_entry(name) {
+                let package = name.rsplit_once('/').map_or("", |(package, _)| package);
+                packages
+                    .entry(package.into())
+                    .or_default()
+                    .push(name.into());
+                if name.starts_with("META-INF/") && name.ends_with(".kotlin_module") {
+                    metadata.push(name.into());
+                }
+            }
         }
+        for names in packages.values_mut() {
+            names.sort();
+        }
+        metadata.sort();
+        Ok(Self {
+            reader,
+            entries,
+            packages,
+            metadata,
+        })
     }
-    Ok(())
+
+    fn read(&mut self, path: &Path, name: &str) -> Result<Option<Vec<u8>>> {
+        let Some(&index) = self.entries.get(name) else {
+            return Ok(None);
+        };
+        let mut entry = self.reader.by_index(index).map_err(|e| error(path, e))?;
+        let size = entry.size();
+        if size > MAX_ENTRY {
+            return Err(error(path, "ZIP entry exceeds the 64 MiB limit"));
+        }
+        let mut bytes = Vec::new();
+        (&mut entry)
+            .take(MAX_ENTRY + 1)
+            .read_to_end(&mut bytes)
+            .map_err(|e| error(path, e))?;
+        if bytes.len() as u64 != size {
+            return Err(error(path, "ZIP entry size mismatch"));
+        }
+        Ok(Some(bytes))
+    }
+
+    fn names(&self, package: &str) -> Vec<String> {
+        let mut names = self.packages.get(package).cloned().unwrap_or_default();
+        names.extend(self.metadata.iter().cloned());
+        names.sort();
+        names.dedup();
+        names
+    }
 }
 
-pub(super) fn read(path: &Path, name: &str) -> Result<Option<Vec<u8>>> {
-    if module_descriptor(name) || versioned_entry(name) {
-        return Ok(None);
+impl Index {
+    pub(super) fn new(paths: &[PathBuf]) -> Result<Self> {
+        let mut index = Self::default();
+        for path in paths {
+            if !path.is_dir() {
+                if !path.is_file() {
+                    return Err(error(
+                        path,
+                        "must be an existing directory or JAR/ZIP archive",
+                    ));
+                }
+                index.archive(path)?;
+            }
+        }
+        Ok(index)
     }
-    if path.is_dir() {
+
+    fn archive(&mut self, path: &Path) -> Result<&mut IndexedArchive> {
+        if !self.archives.contains_key(path) {
+            self.archives
+                .insert(path.into(), IndexedArchive::open(path)?);
+        }
+        Ok(self.archives.get_mut(path).unwrap())
+    }
+
+    pub(super) fn read(&mut self, path: &Path, name: &str) -> Result<Option<Vec<u8>>> {
+        if module_descriptor(name) || versioned_entry(name) {
+            return Ok(None);
+        }
+        if let Some(archive) = self.archives.get_mut(path) {
+            return archive.read(path, name);
+        }
+        if !path.is_dir() {
+            return self.archive(path)?.read(path, name);
+        }
         let file = match fs::File::open(path.join(name)) {
             Ok(file) => file,
             Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(None),
@@ -90,27 +176,45 @@ pub(super) fn read(path: &Path, name: &str) -> Result<Option<Vec<u8>>> {
         if bytes.len() as u64 > MAX_ENTRY {
             return Err(error(path, "class exceeds the 64 MiB limit"));
         }
-        return Ok(Some(bytes));
+        Ok(Some(bytes))
     }
-    let mut archive = open(path)?;
-    let mut entry = match archive.by_name(name) {
-        Ok(entry) => entry,
-        Err(zip::result::ZipError::FileNotFound) => return Ok(None),
-        Err(e) => return Err(error(path, e)),
-    };
-    let size = entry.size();
-    if size > MAX_ENTRY {
-        return Err(error(path, "ZIP entry exceeds the 64 MiB limit"));
+
+    pub(super) fn names(&mut self, path: &Path, package: &str) -> Result<Vec<String>> {
+        if let Some(archive) = self.archives.get(path) {
+            return Ok(archive.names(package));
+        }
+        if !path.is_dir() {
+            return Ok(self.archive(path)?.names(package));
+        }
+        let mut names = Vec::new();
+        collect(path, package, false, &mut names)?;
+        let mut metadata = Vec::new();
+        collect(path, "META-INF", true, &mut metadata)?;
+        names.extend(
+            metadata
+                .into_iter()
+                .filter(|name| name.ends_with(".kotlin_module")),
+        );
+        names.retain(|name| !module_descriptor(name) && !versioned_entry(name));
+        names.sort();
+        names.dedup();
+        Ok(names)
     }
-    let mut bytes = Vec::new();
-    (&mut entry)
-        .take(MAX_ENTRY + 1)
-        .read_to_end(&mut bytes)
-        .map_err(|e| error(path, e))?;
-    if bytes.len() as u64 != size {
-        return Err(error(path, "ZIP entry size mismatch"));
-    }
-    Ok(Some(bytes))
+}
+
+#[cfg(test)]
+pub(super) fn validate(paths: &[PathBuf]) -> Result<()> {
+    Index::new(paths).map(|_| ())
+}
+
+#[cfg(test)]
+pub(super) fn read(path: &Path, name: &str) -> Result<Option<Vec<u8>>> {
+    Index::default().read(path, name)
+}
+
+#[cfg(test)]
+fn names(path: &Path, package: &str) -> Result<Vec<String>> {
+    Index::default().names(path, package)
 }
 
 fn collect(directory: &Path, prefix: &str, recursive: bool, names: &mut Vec<String>) -> Result<()> {
@@ -137,38 +241,6 @@ fn collect(directory: &Path, prefix: &str, recursive: bool, names: &mut Vec<Stri
         }
     }
     Ok(())
-}
-
-pub(super) fn names(path: &Path, package: &str) -> Result<Vec<String>> {
-    let mut result = Vec::new();
-    if path.is_dir() {
-        collect(path, package, false, &mut result)?;
-        let mut metadata = Vec::new();
-        collect(path, "META-INF", true, &mut metadata)?;
-        result.extend(
-            metadata
-                .into_iter()
-                .filter(|name| name.ends_with(".kotlin_module")),
-        );
-    } else {
-        let mut archive = open(path)?;
-        for i in 0..archive.len() {
-            let entry = archive.by_index(i).map_err(|e| error(path, e))?;
-            let name = entry.name();
-            if !entry.is_dir()
-                && (name
-                    .rsplit_once('/')
-                    .map_or(package.is_empty(), |(p, _)| p == package)
-                    || name.starts_with("META-INF/") && name.ends_with(".kotlin_module"))
-            {
-                result.push(name.into());
-            }
-        }
-    }
-    result.retain(|name| !module_descriptor(name) && !versioned_entry(name));
-    result.sort();
-    result.dedup();
-    Ok(result)
 }
 
 #[cfg(test)]
@@ -268,22 +340,86 @@ mod tests {
                 writer.write_all(&payload).unwrap();
             }
             let file = Temp::new(&writer.finish().unwrap().into_inner());
-            validate(std::slice::from_ref(&file.0)).unwrap();
+            let mut index = Index::new(std::slice::from_ref(&file.0)).unwrap();
             for name in [
                 "p/Last.class",
                 "p/First.class",
                 "p/Middle.class",
                 "p/First.class",
             ] {
-                assert_eq!(read(&file.0, name).unwrap().unwrap(), payload);
+                assert_eq!(index.read(&file.0, name).unwrap().unwrap(), payload);
             }
-            assert!(read(&file.0, "p/Missing.class").unwrap().is_none());
+            assert!(index.read(&file.0, "p/Missing.class").unwrap().is_none());
             assert_eq!(
-                names(&file.0, "p").unwrap(),
+                index.names(&file.0, "p").unwrap(),
                 ["p/First.class", "p/Last.class", "p/Middle.class"]
             );
         }
     }
+    #[test]
+    fn indexed_archives_reuse_validated_entries_for_reads_and_package_names() {
+        let file = entries(&[
+            ("p/A.class", b"first"),
+            ("q/B.class", b"second"),
+            ("META-INF/library.kotlin_module", b"metadata"),
+            ("META-INF/versions/21/p/A.class", b"override"),
+            ("module-info.class", b"module"),
+        ]);
+        let mut index = Index::new(&[file.0.clone(), file.0.clone()]).unwrap();
+        assert_eq!(index.archives.len(), 1);
+        // Removing the path proves that both hits and misses use the same
+        // validated central directory and reader rather than reopening it.
+        fs::remove_file(&file.0).unwrap();
+        for _ in 0..3 {
+            assert_eq!(
+                index.read(&file.0, "q/B.class").unwrap().unwrap(),
+                b"second"
+            );
+            assert_eq!(index.read(&file.0, "p/A.class").unwrap().unwrap(), b"first");
+            assert!(index.read(&file.0, "p/Missing.class").unwrap().is_none());
+            assert!(index.read(&file.0, "module-info.class").unwrap().is_none());
+            assert!(
+                index
+                    .read(&file.0, "META-INF/versions/21/p/A.class")
+                    .unwrap()
+                    .is_none()
+            );
+            assert_eq!(
+                index.names(&file.0, "p").unwrap(),
+                ["META-INF/library.kotlin_module", "p/A.class"]
+            );
+            assert_eq!(
+                index.names(&file.0, "missing").unwrap(),
+                ["META-INF/library.kotlin_module"]
+            );
+            assert_eq!(
+                index.names(&file.0, "META-INF").unwrap(),
+                ["META-INF/library.kotlin_module"]
+            );
+        }
+    }
+
+    #[test]
+    fn directory_resources_stay_live_with_an_archive_index() {
+        let directory = directory(&[("p/A.class", b"original")]);
+        let mut index = Index::new(std::slice::from_ref(&directory.0)).unwrap();
+        assert!(index.archives.is_empty());
+        assert_eq!(
+            index.read(&directory.0, "p/A.class").unwrap().unwrap(),
+            b"original"
+        );
+        fs::write(directory.0.join("p/A.class"), b"changed").unwrap();
+        fs::write(directory.0.join("p/B.class"), b"added").unwrap();
+        assert_eq!(
+            index.read(&directory.0, "p/A.class").unwrap().unwrap(),
+            b"changed"
+        );
+        assert_eq!(
+            index.names(&directory.0, "p").unwrap(),
+            ["p/A.class", "p/B.class"]
+        );
+    }
+
     #[test]
     fn duplicate_zip_names_are_diagnosed() {
         let mut writer = zip::ZipWriter::new(Cursor::new(Vec::new()));

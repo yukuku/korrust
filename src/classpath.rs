@@ -62,6 +62,9 @@ pub(crate) fn kotlin_mapped_classifier(owner: &str) -> Option<&'static str> {
 #[derive(Clone)]
 pub(crate) struct Classpath {
     paths: Vec<PathBuf>,
+    archives: std::rc::Rc<std::cell::RefCell<archive::Index>>,
+    cache_class_misses: bool,
+    missing_classes: std::cell::RefCell<std::collections::HashMap<String, Diagnostic>>,
     module_name: String,
     friends: std::collections::HashSet<PathBuf>,
     value_scopes: std::cell::RefCell<std::collections::HashMap<String, value_names::ValueScope>>,
@@ -317,6 +320,14 @@ impl JavaMethod {
 }
 
 impl Classpath {
+    fn read_resource(&self, path: &std::path::Path, name: &str) -> Result<Option<Vec<u8>>> {
+        self.archives.borrow_mut().read(path, name)
+    }
+
+    fn resource_names(&self, path: &std::path::Path, package: &str) -> Result<Vec<String>> {
+        self.archives.borrow_mut().names(path, package)
+    }
+
     pub(crate) fn source_value_method(&self, mut method: JavaMethod, member: bool) -> JavaMethod {
         if !self.is_source(&method.owner) || method.access & 2 != 0 {
             return method;
@@ -451,7 +462,7 @@ impl Classpath {
             package.rsplit('/').next().unwrap()
         );
         for path in &self.paths {
-            if let Some(bytes) = archive::read(path, &resource)? {
+            if let Some(bytes) = self.read_resource(path, &resource)? {
                 return Ok(bytes);
             }
         }
@@ -552,7 +563,7 @@ impl Classpath {
             return Ok(Some(class));
         }
         for path in &self.paths {
-            if let Some(bytes) = archive::read(path, "kotlin/kotlin.kotlin_builtins")? {
+            if let Some(bytes) = self.read_resource(path, "kotlin/kotlin.kotlin_builtins")? {
                 let methods = metadata::builtin_array_factories(&bytes)?;
                 let class = JavaClass {
                     sealed_: false,
@@ -617,12 +628,12 @@ impl Classpath {
             }
         }
         for path in &self.paths {
-            let entries = archive::names(path, package)?;
+            let entries = self.resource_names(path, package)?;
             let mut mappings = false;
             for name in &entries {
                 if name.ends_with(".kotlin_module") {
                     mappings = true;
-                    let bytes = archive::read(path, name)?.ok_or_else(invalid)?;
+                    let bytes = self.read_resource(path, name)?.ok_or_else(invalid)?;
                     names.extend(metadata::module_parts(&bytes, package)?);
                 }
             }
@@ -886,6 +897,7 @@ impl Classpath {
     }
 
     pub(crate) fn register_source(&self, class: JavaClass) {
+        self.missing_classes.borrow_mut().remove(&class.name);
         if !self.source_files.borrow().contains_key(&class.name) {
             if let Some(parent) = class.name.strip_suffix("$Companion") {
                 let origin = { self.source_files.borrow().get(parent).cloned() };
@@ -947,7 +959,7 @@ impl Classpath {
     }
 
     pub(crate) fn with_options(paths: &[PathBuf], options: &crate::CompileOptions) -> Result<Self> {
-        archive::validate(paths)?;
+        let archives = archive::Index::new(paths)?;
         let friends = options
             .friend_paths
             .iter()
@@ -963,6 +975,9 @@ impl Classpath {
             .collect::<Result<_>>()?;
         Ok(Self {
             paths: paths.to_vec(),
+            archives: std::rc::Rc::new(std::cell::RefCell::new(archives)),
+            cache_class_misses: paths.iter().all(|path| !path.is_dir()),
+            missing_classes: Default::default(),
             module_name: options.module_name.clone(),
             friends,
             value_scopes: Default::default(),
@@ -1088,7 +1103,25 @@ impl Classpath {
         if let Some(class) = self.cache.borrow().get(internal_name) {
             return Ok(class.clone());
         }
-        let class = self.load_uncached(internal_name)?;
+        // Directory dependencies can gain files during a compilation. JDK
+        // fallback also depends on the current JAVA_HOME, so keep those misses live.
+        let cache_miss = self.cache_class_misses
+            && !internal_name.starts_with("java/")
+            && !internal_name.starts_with("javax/");
+        if cache_miss && let Some(error) = self.missing_classes.borrow().get(internal_name) {
+            return Err(error.clone());
+        }
+        let class = self.load_uncached(internal_name).map_err(|error| {
+            if cache_miss
+                && error.kind == crate::DiagnosticKind::MissingDependency
+                && error.code == "CLASS_NOT_FOUND"
+            {
+                self.missing_classes
+                    .borrow_mut()
+                    .insert(internal_name.into(), error.clone());
+            }
+            error
+        })?;
         self.cache
             .borrow_mut()
             .insert(internal_name.into(), class.clone());
@@ -1104,7 +1137,7 @@ impl Classpath {
             .map(|(p, _)| format!("{p}/package-info.class"))
             .unwrap_or_else(|| "package-info.class".into());
         for path in &self.paths {
-            if archive::read(path, &package_info)?.is_some() {
+            if self.read_resource(path, &package_info)?.is_some() {
                 return Err(Diagnostic::new(
                     0,
                     format!(
@@ -1115,7 +1148,7 @@ impl Classpath {
             }
         }
         for path in &self.paths {
-            if let Some(bytes) = archive::read(path, &format!("{internal_name}.class"))? {
+            if let Some(bytes) = self.read_resource(path, &format!("{internal_name}.class"))? {
                 let class = self
                     .parse_with_declarations(&bytes, internal_name)
                     .map_err(|mut e| {
@@ -1135,7 +1168,7 @@ impl Classpath {
                 let jmod = PathBuf::from(java_home).join("jmods/java.base.jmod");
                 if jmod.is_file() {
                     if let Some(bytes) =
-                        archive::read(&jmod, &format!("classes/{internal_name}.class"))?
+                        self.read_resource(&jmod, &format!("classes/{internal_name}.class"))?
                     {
                         return self.parse_with_declarations(&bytes, internal_name);
                     }
@@ -1277,7 +1310,7 @@ impl Classpath {
         }
         let sibling = |name: &str| -> Result<Option<Vec<u8>>> {
             for path in &self.paths {
-                if let Some(bytes) = archive::read(path, &format!("{name}.class"))? {
+                if let Some(bytes) = self.read_resource(path, &format!("{name}.class"))? {
                     return Ok(Some(bytes));
                 }
             }
@@ -1423,7 +1456,7 @@ impl Classpath {
         let resource = format!("{owner}.class");
         let mut bytes = None;
         for path in &self.paths {
-            if let Some(found) = archive::read(path, &resource)? {
+            if let Some(found) = self.read_resource(path, &resource)? {
                 bytes = Some(found);
                 break;
             }
@@ -1433,7 +1466,7 @@ impl Classpath {
         {
             let jmod = PathBuf::from(java_home).join("jmods/java.base.jmod");
             if jmod.is_file() {
-                bytes = archive::read(&jmod, &format!("classes/{resource}"))?;
+                bytes = self.read_resource(&jmod, &format!("classes/{resource}"))?;
             }
         }
         let Some(bytes) = bytes else {
@@ -1476,14 +1509,14 @@ impl Classpath {
         let resource = format!("{owner}.class");
         let mut bytes = None;
         for path in &self.paths {
-            if let Some(found) = archive::read(path, &resource)? {
+            if let Some(found) = self.read_resource(path, &resource)? {
                 bytes = Some(found);
                 break;
             }
         }
         if bytes.is_none() && (owner.starts_with("java/") || owner.starts_with("javax/")) {
             if let Some(home) = std::env::var_os("JAVA_HOME") {
-                bytes = archive::read(
+                bytes = self.read_resource(
                     &PathBuf::from(home).join("jmods/java.base.jmod"),
                     &format!("classes/{resource}"),
                 )?;
@@ -1525,9 +1558,9 @@ impl Classpath {
             }
         }
         for path in &self.paths {
-            for name in archive::names(path, &package)? {
+            for name in self.resource_names(path, &package)? {
                 if name.ends_with(".kotlin_module") {
-                    let bytes = archive::read(path, &name)?.ok_or_else(invalid)?;
+                    let bytes = self.read_resource(path, &name)?.ok_or_else(invalid)?;
                     for part in metadata::module_parts(&bytes, &package)? {
                         names.insert(part);
                     }
@@ -3760,6 +3793,72 @@ fn parse_details_impl(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn exact_archive_class_misses_are_invalidated_by_source_registration() {
+        let file = crate::compile("class CacheAdded", "CacheAdded.kt").unwrap();
+        let classpath = Classpath::new(&[]).unwrap();
+        for _ in 0..2 {
+            assert_eq!(
+                classpath.load(&file.internal_name).unwrap_err().code,
+                "CLASS_NOT_FOUND"
+            );
+        }
+        assert!(
+            classpath
+                .missing_classes
+                .borrow()
+                .contains_key(&file.internal_name)
+        );
+        assert_ne!(
+            classpath.load("bad//name").unwrap_err().code,
+            "CLASS_NOT_FOUND"
+        );
+        assert_eq!(classpath.missing_classes.borrow().len(), 1);
+        classpath.register_source_output(&file).unwrap();
+        assert!(classpath.missing_classes.borrow().is_empty());
+        assert_eq!(
+            classpath.load(&file.internal_name).unwrap().name,
+            file.internal_name
+        );
+        // JDK misses never enter this cache, preserving the live fallback path.
+        assert_eq!(
+            classpath.load("java/cachetest/Missing").unwrap_err().code,
+            "CLASS_NOT_FOUND"
+        );
+        assert!(classpath.missing_classes.borrow().is_empty());
+    }
+
+    #[test]
+    fn class_misses_do_not_hide_files_added_to_directory_dependencies() {
+        let file = crate::compile("class DirectoryAdded", "DirectoryAdded.kt").unwrap();
+        let stamp = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let directory = std::env::temp_dir().join(format!(
+            "korrust-directory-miss-{}-{stamp}",
+            std::process::id()
+        ));
+        std::fs::create_dir(&directory).unwrap();
+        let classpath = Classpath::new(std::slice::from_ref(&directory)).unwrap();
+        assert_eq!(
+            classpath.load(&file.internal_name).unwrap_err().code,
+            "CLASS_NOT_FOUND"
+        );
+        assert!(classpath.missing_classes.borrow().is_empty());
+        std::fs::write(
+            directory.join(format!("{}.class", file.internal_name)),
+            &file.bytes,
+        )
+        .unwrap();
+        assert_eq!(
+            classpath.load(&file.internal_name).unwrap().name,
+            file.internal_name
+        );
+        std::fs::remove_dir_all(directory).unwrap();
+    }
+
     #[test]
     fn type_annotation_targets_paths_and_parameter_indices_are_checked() {
         fn decode(payload: &[u8]) -> Result<Attributes> {
