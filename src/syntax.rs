@@ -9013,12 +9013,24 @@ fun h(): String = target(prefix = "named") label@{ return@label "tail" }"#,
             "fun <T: Int?> f(value: T): T = value",
             "fun <T: Unit> f(value: T): T = value",
             "fun <T> f(value: T): T where T: Any = value",
-            "fun f(value: suspend String.() -> Unit): Unit {}",
             "fun f(value: List<in String>): Unit {}",
             "fun f(value: Comparable<out String>): Unit {}",
         ] {
             assert!(parse(source).is_err(), "{source}");
         }
+        let module = parse("fun f(value: suspend String.() -> Unit): Unit {}").unwrap();
+        assert_eq!(
+            module.functions[0].params[0].1,
+            Type::SuspendReceiverFunction {
+                receiver: Box::new(Type::String),
+                params: Vec::new(),
+                result: Box::new(Type::Unit),
+            }
+        );
+        assert_eq!(
+            module.functions[0].params[0].1.descriptor(),
+            "Lkotlin/jvm/functions/Function2;"
+        );
         let source = format!(
             "fun f(value: ({}) -> Int): Unit {{}}",
             vec!["Int"; 23].join(",")
