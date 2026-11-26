@@ -1,0 +1,78 @@
+$ /workspace/korrust-setup/jdk-21/bin/javap -public -s -v -classpath /workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate star.consumer.InheritedKt
+Classfile /workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate/star/consumer/InheritedKt.class
+  Last modified Nov 26, 2026; size 526 bytes
+  SHA-256 checksum 7230e9b79770801f06bd2f3f4431127fafaa3699eab0058c3bead6f763b4f90a
+  Compiled from "Inherited.kt"
+public final class star.consumer.InheritedKt
+  minor version: 0
+  major version: 49
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // star/consumer/InheritedKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 2, attributes: 2
+Constant pool:
+   #1 = Utf8               star/consumer/InheritedKt
+   #2 = Class              #1             // star/consumer/InheritedKt
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               SourceFile
+   #6 = Utf8               Inherited.kt
+   #7 = Utf8               star/library/Derived
+   #8 = Class              #7             // star/library/Derived
+   #9 = Utf8               inherited
+  #10 = Utf8               (I)I
+  #11 = NameAndType        #9:#10         // inherited:(I)I
+  #12 = Methodref          #8.#11         // star/library/Derived.inherited:(I)I
+  #13 = Utf8               inheritedMethod
+  #14 = Utf8               ()I
+  #15 = Utf8               Code
+  #16 = Utf8               inheritedState
+  #17 = Utf8               I
+  #18 = NameAndType        #16:#17        // inheritedState:I
+  #19 = Fieldref           #8.#18         // star/library/Derived.inheritedState:I
+  #20 = Utf8               inheritedField
+  #21 = Utf8               Lkotlin/Metadata;
+  #22 = Utf8               mv
+  #23 = Integer            2
+  #24 = Integer            3
+  #25 = Integer            0
+  #26 = Utf8               k
+  #27 = Utf8               xi
+  #28 = Integer            48
+  #29 = Utf8               d1
+  #30 = Utf8               \u0000\u0004\n\u0002\b\u0004\u001a\u000fH\u0006\u0010\u0000\u001a\u00020\u0001¢\u0006\u0004\b\u0000\u0010\u0002\u001a\u000fH\u0006\u0010\u0003\u001a\u00020\u0001¢\u0006\u0004\b\u0003\u0010\u0002
+  #31 = Utf8               d2
+  #32 = Utf8               kotlin/Int
+  #33 = Utf8               RuntimeVisibleAnnotations
+{
+  public static final int inheritedMethod();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: iconst_3
+         1: invokestatic  #12                 // Method star/library/Derived.inherited:(I)I
+         4: ireturn
+         5: aconst_null
+         6: athrow
+
+  public static final int inheritedField();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: getstatic     #19                 // Field star/library/Derived.inheritedState:I
+         3: ireturn
+         4: aconst_null
+         5: athrow
+}
+SourceFile: "Inherited.kt"
+RuntimeVisibleAnnotations:
+  0: #21(#22=[I#23,I#24,I#25],#26=I#23,#27=I#28,#29=[s#30],#31=[s#13,s#32,s#14,s#20])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000\u0004\n\u0002\b\u0004\u001a\u000fH\u0006\u0010\u0000\u001a\u00020\u0001¢\u0006\u0004\b\u0000\u0010\u0002\u001a\u000fH\u0006\u0010\u0003\u001a\u00020\u0001¢\u0006\u0004\b\u0003\u0010\u0002"]
+      d2=["inheritedMethod","kotlin/Int","()I","inheritedField"]
+    )

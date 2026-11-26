@@ -1,0 +1,1058 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T02:14:10.202446+00:00",
+  "status": "complete",
+  "compiler": {
+    "path": "target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/korrust-frozen",
+    "sha256": "d67b7f4e56837e7fad7b84ed32b1e9d7d0eef7549c3fd6d0e04cb90fbd025491",
+    "source_revision": "3451ae4172e322ebcc932fa34b8c8000cc408a86"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "frozen_input_hashes": {
+    "src/annotation_declarations.rs": "9f9c44425fec7867daf244b76c9dc2794224d03e5e87f7eeea968016d27d8844",
+    "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+    "src/bytecode/annotation_files.rs": "349e861501424f9c02a177074fd7fb847837d24772ae4773e598ca8c656638c4",
+    "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+    "src/bytecode/anonymous_context.rs": "e48d7aba57745c9e3ecb0a2317ea627f3b6d9b2d86805563bae680d79a301910",
+    "src/bytecode/class_companion.rs": "7463d1e739919160b82ed1137a195ebc3a36037ed8b5419a26c1f38889b533a7",
+    "src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+    "src/bytecode/defaults.rs": "d092d8a420cfb719f92dbb9a3bcc58f7c644d67bf9b3c611c72949122c22e827",
+    "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+    "src/bytecode/frames.rs": "1bde37761ced16a881b82e9e87cedf9c9e8b999baf56d4d7c0493f22d5eee7d4",
+    "src/bytecode/inline.rs": "ca8a4f4da8f11e405a3cdcbcf87c3bfde49635e331f9712fb7b2f4aca0f84d25",
+    "src/bytecode/interfaces.rs": "5456ea3de3402ee3ead9920bb2cb0e7c0baab4f6eb7b211e481a16bf9ad3207b",
+    "src/bytecode/lambdas.rs": "dd0d577c594954559bdc0c9eeec19d7442070893dcdc7d3e35e1a70c8125c306",
+    "src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+    "src/bytecode/suspend.rs": "dfac0ad895edaf45c25655df1fad6c1828fe3fc767fd936dabe6e45357dd96d7",
+    "src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+    "src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+    "src/bytecode.rs": "930a749e4aab2232bf797d15800728a74e49a8e4c5df6acfc82e9f9d7376cd84",
+    "src/check.rs": "77493bfd11b6aa7a5b36a330ea88807a9f006081f6682a06c3f4bf1e708486f5",
+    "src/check_annotation_placements.rs": "fc226ed5e82027736d934052e390b36456c4bbf7f72cf42c7dc1e10bfc44e2f3",
+    "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+    "src/check_anonymous.rs": "c100534b577e31bb01002d5886c640032bfbaab6198783931cb2f21ce4ef147f",
+    "src/check_captures.rs": "4ae1823c1c10f138f4a4f0c36b15a24c9466c428f08102f366e966306e8b98fa",
+    "src/check_class_delegation.rs": "171fec70b3ce6632bbbd704ea92e040f1ef841fbebd02659388fe88ba97135f2",
+    "src/check_classes.rs": "eaa5547ca75d6f4bef4f21d200a050bb8a47362c9c7ea3e4f47b3a66e1cca4b3",
+    "src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+    "src/check_control.rs": "23bcd78c9f4a12b2665110ed5565c4cfe63c0c00f148463ef28c608336fa38b9",
+    "src/check_declarations.rs": "a88c52c905ebbdf834af9ce0b3220f950e27303cd75df634b725051de4f67c68",
+    "src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+    "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+    "src/check_functions.rs": "209f4c7fd09fd44341e19b58e7791fa122e4a069e593822b463f2296684ff091",
+    "src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+    "src/check_interfaces.rs": "f7411289c4a4595b5ecca8c0788a688c3161014cce5b0631f2222b882d7e209a",
+    "src/check_ir_walk.rs": "caaeeea794075c7e23b17fc9e2d06ace5a02d366c9abffbdc9393d3c8a1a2e96",
+    "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+    "src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+    "src/check_library.rs": "657b65be0e461e241be387807384d7b020250395e1a6eca9aa93def57f6083ec",
+    "src/check_member_extensions.rs": "66a4cfa55e05e5699d510113566c91fd54fa79e1257f769df334338c0f7201e5",
+    "src/check_objects.rs": "149bbaa4c8a9cab9cf634edc131bd17a37b8411493c77235311ae860a65c1766",
+    "src/check_operations.rs": "5a0b0b380559259c1d11e8a2ec109a3955e1ad85f62c1b655df8632ac5362c8f",
+    "src/check_overloads.rs": "03618a927df2d30db9bc245df9a57e99001e9a525a49c089968cd22cb1f0671e",
+    "src/check_references.rs": "61a780d0816443007725e52f992c717eeab828f7b971749ed3242318a8d80077",
+    "src/check_relations.rs": "bf23f89185f965099b4b2ddff45623570fc775804c2d5f6d2d31f21bfa481ef3",
+    "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+    "src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+    "src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+    "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+    "src/check_varargs.rs": "9928a6be54a33a83360cec67726e8beffba6ed00366a7f3d378f030f1055f90d",
+    "src/check_variant_signatures.rs": "ea8be16effafa3af58d46e0e732d196feeca4ef1468d4b373c2e1c29ee984ed3",
+    "src/classpath/aliases.rs": "2ad31713a22f8eb0607ed96d838aa96fecedf7a6b261f07473aef66b8bdb8827",
+    "src/classpath/archive.rs": "0510927e9b2d694000f668fc93909e7d5bff69a348c15fa2bc89159da8d8dd0f",
+    "src/classpath/jvm_builtins.rs": "dd016061b00d44070b6a0f0d1263d5225f8daa932bd7ed5f1e7f2223ce238dbc",
+    "src/classpath/metadata.rs": "abfa728c467ea8f5fe57f60282c0f74fa696e67c9e2da6e545540348dd73ce65",
+    "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+    "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+    "src/classpath/signature.rs": "11e1e7c67cfe84b56892cddf6b6fa85daa19dfec4f34846a215a18605dfb3bec",
+    "src/classpath/source.rs": "b4c5edcf8cb847ed86e3dcfa82f00a601a565d39fc3c643127a82fb439e3dc2a",
+    "src/classpath/source_enums.rs": "3ae8bea81669d8feec40a16fae21a80f4a9d8006acd23c3f4f68d5d177f79be3",
+    "src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+    "src/classpath/value_names.rs": "a0798cfa02230410ee554e39dc09057bc9a41bf1a366f9159b73604270f83728",
+    "src/classpath.rs": "5b77c61d2be2ac16e05e20109aa44ba486722ed3d146a10d37a097c80fae06b9",
+    "src/compiled_inline.rs": "694e4535cb5da5254818eea8ca6818a5ad919dd4f6556d890b36a40e613d489e",
+    "src/const_eval.rs": "bc6a053823a41c822bcc5af603023019a6ace1895c9fae75bf0372f02381dacf",
+    "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+    "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+    "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+    "src/lib.rs": "0d5fafb7ae492d9d287650e2ab5bed999cf448e816c87f7febbe0ee0d2a3100d",
+    "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+    "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+    "src/metadata.rs": "b3579828d0fcecc950ffa5a01bb3c34e710f52127185036c46055e18caafce34",
+    "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+    "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+    "src/source_inline.rs": "50bee0804aaea9cd3e2b8c8e0f162784e0e0e0b16b9e0770dd8c27fca764add2",
+    "src/syntax.rs": "f927db439ad5a0e20cfc0d7234b6b58573f8049093e83c0dedba2fb6c387adb7",
+    "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+    "src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525",
+    "tests/static_wildcard/Alias.kt": "536d1e2c9551e27091069cca0a6cc022079dbb682ab80463b4b8afe23d7c1554",
+    "tests/static_wildcard/Calls.java": "4fc1a5c1dca4f51f445b23fc75679eb51c4e6eaf03ab67e536597555aeb000a7",
+    "tests/static_wildcard/Consumer.kt": "e426474088fc6d1474b990c212679b71b3e0cebe29af681b9ff53d5744b18e30",
+    "tests/static_wildcard/Derived.java": "26d45ce2ddb0032562a2c31f3d07f10bd06b61b7d38445abb3986971b33a673e",
+    "tests/static_wildcard/DerivedAgain.java": "1b336cf7bd9d74c971393f5774574484a51c79fd5dd5e9679b6fb8bba689ef1a",
+    "tests/static_wildcard/Duplicate.kt": "baafd2d8b2934e1567601997f8607700f57cc632477fe8057a4fffcdebe8ea6e",
+    "tests/static_wildcard/Explicit.kt": "2a0b2181a58b1776cb0b397c301ea7a437a87e881a783c0017eced224ffbdd90",
+    "tests/static_wildcard/First.java": "7c058016823e0d85c243dbfff3f0d9e31db9f08d316de24cb9abc4ff77a7f355",
+    "tests/static_wildcard/Inherited.kt": "234d7a763fcc0bfa409cdbec39616edf0727b88b40c6f466f9cb0b67c3f2ab1f",
+    "tests/static_wildcard/InheritedDuplicate.kt": "c44177fa83f85df83c7d81ab5f1ff83f8af7d69ab3cf3c6f5f72f84114385fb7",
+    "tests/static_wildcard/InvalidAmbiguous.kt": "9cc0ca85b824ff2b937f2549016907333701c6e910287f811004b1cc494e91fb",
+    "tests/static_wildcard/InvalidAmbiguousField.kt": "14cb0c5233b4598c2a50bfa78d689fa3b130d7e473927399f506016d13db9669",
+    "tests/static_wildcard/InvalidInstance.kt": "f5077e9bbfbd31c646b57960d24d5bb2cff064b4c88685016cfbf65ae376d010",
+    "tests/static_wildcard/InvalidPackage.kt": "17a0e14b60be3f3de0d029043f193a29deab4dd3e04993a5f5d04286e3068337",
+    "tests/static_wildcard/InvalidPrivate.kt": "74b7f1e865e4e81d6123aae43e84f17bab1b2752a7126ac9371a5e098424f1d3",
+    "tests/static_wildcard/InvalidProtected.kt": "a9dd8c92a331ec409b33c2c4886ad13babafeb3e40cf452b6ea25807f6bdaa7d",
+    "tests/static_wildcard/InvalidRenamed.kt": "5d43815084270cf2304a925560d37de9c4efbb5dad63452a3a6ae8638f44ad5e",
+    "tests/static_wildcard/Overloads.kt": "a3cccce6e384ae6a2522b3a7616e4ed9c5d0d474e0c685661a0b9bcbea89eb79",
+    "tests/static_wildcard/Second.java": "5b51a6057962fce08dba1bcd8fc5c797cc68e43f64ccda9b846eef144cb31f3d",
+    "tests/static_wildcard/SourcePriority.kt": "e19d0512a5da45b92f92fd142b71e10e3df35fe491ff26bf9804fa58ff1321c3",
+    "tests/static_wildcard/Values.kt": "b75d4c921d00ba3ef063661a2d67489ce22137ebca45379d8b2f4f520aadb4d4",
+    "tests/static_wildcard.rs": "2eaa5adea3faed48486b49433ed3c3f4d24c0216b8fb919981b61401a345ba96",
+    "tools/check_static_wildcard.py": "6d839bed301f221c5f9f09253154775e17f6df6cda89b42a258fc2fb9c8070fa",
+    "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+    "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+    "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/korrust-frozen": "d67b7f4e56837e7fad7b84ed32b1e9d7d0eef7549c3fd6d0e04cb90fbd025491",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7"
+  },
+  "input_bundle": {
+    "path": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/inputs.zip",
+    "sha256": "0c6c01f42dc26c94ec58251e5da10fa1f571d9b3f07172bd10f6a407be70cc13"
+  },
+  "effective_options": {
+    "jvm_target": "1.8",
+    "language_version": "2.3",
+    "api_version": "2.3"
+  },
+  "scope": "Java class wildcard imports: merged overload candidates, explicit/renamed/local precedence, deduplication, visibility, nested constructor values, inherited static members through accessible qualifiers, mutable fields and callable references",
+  "limitations": [
+    "Wildcard owners are bounded to supported public Java classes; Kotlin classes/objects and Java interfaces remain explicitly unsupported",
+    "No full application or performance claim"
+  ],
+  "cases": [
+    {
+      "id": "static_wildcard_fixture_compile",
+      "outcome": "pass",
+      "detail": "Same unmodified fixtures, dependency and standard library"
+    },
+    {
+      "id": "fixed_java_caller_both_providers",
+      "outcome": "pass",
+      "detail": {
+        "caller_sha256": {
+          "target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/caller/star/consumer/Calls.class": "065b18a6cf346f4b647dc5d4c4530d273abbb503faf003b655bd9d7d0d24813e"
+        },
+        "assertions": "Overloaded static calls, mutable field reads/writes, nested construction, inherited methods/fields, explicit/renamed/source priority, duplicate imports and callable capture/reference results"
+      }
+    },
+    {
+      "id": "public_jvm_descriptors",
+      "outcome": "pass",
+      "detail": [
+        [
+          "star.consumer.AliasKt",
+          "public static final int alias();",
+          "descriptor: ()I"
+        ],
+        [
+          "star.consumer.DuplicateKt",
+          "public static final int duplicate();",
+          "descriptor: ()I"
+        ],
+        [
+          "star.consumer.ExplicitKt",
+          "public static final int selected();",
+          "descriptor: ()I"
+        ],
+        [
+          "star.consumer.InheritedDuplicateKt",
+          "public static final int inheritedDuplicate();",
+          "descriptor: ()I"
+        ],
+        [
+          "star.consumer.InheritedKt",
+          "public static final int inheritedField();",
+          "descriptor: ()I"
+        ],
+        [
+          "star.consumer.InheritedKt",
+          "public static final int inheritedMethod();",
+          "descriptor: ()I"
+        ],
+        [
+          "star.consumer.OverloadsKt",
+          "public static final int fromFirst();",
+          "descriptor: ()I"
+        ],
+        [
+          "star.consumer.OverloadsKt",
+          "public static final int fromSecond();",
+          "descriptor: ()I"
+        ],
+        [
+          "star.consumer.OverloadsKt",
+          "public static final int separate();",
+          "descriptor: ()I"
+        ],
+        [
+          "star.consumer.ValuesKt",
+          "public static final int captured();",
+          "descriptor: ()I"
+        ],
+        [
+          "star.consumer.ValuesKt",
+          "public static final int constant();",
+          "descriptor: ()I"
+        ],
+        [
+          "star.consumer.ValuesKt",
+          "public static final int field();",
+          "descriptor: ()I"
+        ],
+        [
+          "star.consumer.ValuesKt",
+          "public static final int inferred();",
+          "descriptor: ()I"
+        ],
+        [
+          "star.consumer.ValuesKt",
+          "public static final int integer();",
+          "descriptor: ()I"
+        ],
+        [
+          "star.consumer.ValuesKt",
+          "public static final int local(kotlin.jvm.functions.Function1<? super java.lang.Integer, java.lang.Integer>);",
+          "descriptor: (Lkotlin/jvm/functions/Function1;)I"
+        ],
+        [
+          "star.consumer.ValuesKt",
+          "public static final int mutate();",
+          "descriptor: ()I"
+        ],
+        [
+          "star.consumer.ValuesKt",
+          "public static final int nested();",
+          "descriptor: ()I"
+        ],
+        [
+          "star.consumer.ValuesKt",
+          "public static final int reference();",
+          "descriptor: ()I"
+        ],
+        [
+          "star.consumer.ValuesKt",
+          "public static final java.lang.String text();",
+          "descriptor: ()Ljava/lang/String;"
+        ],
+        [
+          "star.local.SourcePriorityKt",
+          "public static final int choose(int);",
+          "descriptor: (I)I"
+        ],
+        [
+          "star.local.SourcePriorityKt",
+          "public static final int sourcePriority();",
+          "descriptor: ()I"
+        ]
+      ]
+    },
+    {
+      "id": "kotlin_consumer_official",
+      "outcome": "pass",
+      "detail": "Official consumers read emitted Kotlin metadata and run against both providers"
+    },
+    {
+      "id": "kotlin_consumer_candidate",
+      "outcome": "pass",
+      "detail": "Official consumers read emitted Kotlin metadata and run against both providers"
+    },
+    {
+      "id": "InvalidAmbiguous",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": {
+          "source_identity": "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidAmbiguous.kt",
+          "offset": 77,
+          "category": "invalid_kotlin",
+          "code": "AMBIGUOUS_OVERLOAD",
+          "message": "Ambiguous overload: no unique most specific declaration",
+          "path": "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidAmbiguous.kt",
+          "line": 3,
+          "column": 21
+        }
+      }
+    },
+    {
+      "id": "InvalidAmbiguousField",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": {
+          "source_identity": "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidAmbiguousField.kt",
+          "offset": 77,
+          "category": "invalid_kotlin",
+          "code": "AMBIGUOUS_VALUE_NAME",
+          "message": "Ambiguous imported value name",
+          "path": "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidAmbiguousField.kt",
+          "line": 3,
+          "column": 21
+        }
+      }
+    },
+    {
+      "id": "InvalidInstance",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": {
+          "source_identity": "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidInstance.kt",
+          "offset": 48,
+          "category": "invalid_kotlin",
+          "code": "NO_APPLICABLE_OVERLOAD",
+          "message": "No applicable function overload or wrong argument count",
+          "path": "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidInstance.kt",
+          "line": 2,
+          "column": 21
+        }
+      }
+    },
+    {
+      "id": "InvalidPackage",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": {
+          "source_identity": "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidPackage.kt",
+          "offset": 48,
+          "category": "invalid_kotlin",
+          "code": "NO_APPLICABLE_OVERLOAD",
+          "message": "No applicable function overload or wrong argument count",
+          "path": "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidPackage.kt",
+          "line": 2,
+          "column": 21
+        }
+      }
+    },
+    {
+      "id": "InvalidPrivate",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": {
+          "source_identity": "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidPrivate.kt",
+          "offset": 48,
+          "category": "invalid_kotlin",
+          "code": "NO_APPLICABLE_OVERLOAD",
+          "message": "No applicable function overload or wrong argument count",
+          "path": "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidPrivate.kt",
+          "line": 2,
+          "column": 21
+        }
+      }
+    },
+    {
+      "id": "InvalidProtected",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": {
+          "source_identity": "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidProtected.kt",
+          "offset": 48,
+          "category": "invalid_kotlin",
+          "code": "NO_APPLICABLE_OVERLOAD",
+          "message": "No applicable function overload or wrong argument count",
+          "path": "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidProtected.kt",
+          "line": 2,
+          "column": 21
+        }
+      }
+    },
+    {
+      "id": "InvalidRenamed",
+      "outcome": "invalid_rejected",
+      "detail": {
+        "diagnostic": {
+          "source_identity": "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidRenamed.kt",
+          "offset": 94,
+          "category": "invalid_kotlin",
+          "code": "NO_APPLICABLE_OVERLOAD",
+          "message": "No applicable function overload or wrong argument count",
+          "path": "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidRenamed.kt",
+          "line": 3,
+          "column": 21
+        }
+      }
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "pass",
+      "changed": []
+    }
+  ],
+  "commands": [
+    {
+      "label": "Java static providers",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-d",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/First.java",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/Second.java",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/Derived.java",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/DerivedAgain.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/000.txt"
+    },
+    {
+      "label": "official semantic fixtures",
+      "argv": [
+        "/workspace/work/interop159-static-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/Values.kt",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/Overloads.kt",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/Explicit.kt",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/Alias.kt",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/Duplicate.kt",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/Inherited.kt",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/InheritedDuplicate.kt",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/SourcePriority.kt",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/001.txt"
+    },
+    {
+      "label": "candidate semantic fixtures",
+      "argv": [
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/korrust-frozen",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/Values.kt",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/Overloads.kt",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/Explicit.kt",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/Alias.kt",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/Duplicate.kt",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/Inherited.kt",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/InheritedDuplicate.kt",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/SourcePriority.kt",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/002.txt"
+    },
+    {
+      "label": "fixed Java caller compiled against official only",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official:/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/caller",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/Calls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/003.txt"
+    },
+    {
+      "label": "official independent assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/caller:/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official:/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "star.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/004.txt"
+    },
+    {
+      "label": "candidate independent assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/caller:/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate:/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "star.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/005.txt"
+    },
+    {
+      "label": "official public JVM descriptors star.consumer.ValuesKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official",
+        "star.consumer.ValuesKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/006.txt"
+    },
+    {
+      "label": "official public JVM descriptors star.consumer.OverloadsKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official",
+        "star.consumer.OverloadsKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/007.txt"
+    },
+    {
+      "label": "official public JVM descriptors star.consumer.ExplicitKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official",
+        "star.consumer.ExplicitKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/008.txt"
+    },
+    {
+      "label": "official public JVM descriptors star.consumer.AliasKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official",
+        "star.consumer.AliasKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/009.txt"
+    },
+    {
+      "label": "official public JVM descriptors star.consumer.DuplicateKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official",
+        "star.consumer.DuplicateKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/010.txt"
+    },
+    {
+      "label": "official public JVM descriptors star.consumer.InheritedKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official",
+        "star.consumer.InheritedKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/011.txt"
+    },
+    {
+      "label": "official public JVM descriptors star.consumer.InheritedDuplicateKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official",
+        "star.consumer.InheritedDuplicateKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/012.txt"
+    },
+    {
+      "label": "official public JVM descriptors star.local.SourcePriorityKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official",
+        "star.local.SourcePriorityKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/013.txt"
+    },
+    {
+      "label": "candidate public JVM descriptors star.consumer.ValuesKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate",
+        "star.consumer.ValuesKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/014.txt"
+    },
+    {
+      "label": "candidate public JVM descriptors star.consumer.OverloadsKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate",
+        "star.consumer.OverloadsKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/015.txt"
+    },
+    {
+      "label": "candidate public JVM descriptors star.consumer.ExplicitKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate",
+        "star.consumer.ExplicitKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/016.txt"
+    },
+    {
+      "label": "candidate public JVM descriptors star.consumer.AliasKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate",
+        "star.consumer.AliasKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/017.txt"
+    },
+    {
+      "label": "candidate public JVM descriptors star.consumer.DuplicateKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate",
+        "star.consumer.DuplicateKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/018.txt"
+    },
+    {
+      "label": "candidate public JVM descriptors star.consumer.InheritedKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate",
+        "star.consumer.InheritedKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/019.txt"
+    },
+    {
+      "label": "candidate public JVM descriptors star.consumer.InheritedDuplicateKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate",
+        "star.consumer.InheritedDuplicateKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/020.txt"
+    },
+    {
+      "label": "candidate public JVM descriptors star.local.SourcePriorityKt",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-v",
+        "-classpath",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate",
+        "star.local.SourcePriorityKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/021.txt"
+    },
+    {
+      "label": "official Kotlin consumer against official",
+      "argv": [
+        "/workspace/work/interop159-static-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official:/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/consumer-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/022.txt"
+    },
+    {
+      "label": "consumer official on official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/consumer-official:/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official:/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "star.reader.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/023.txt"
+    },
+    {
+      "label": "consumer official on candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/consumer-official:/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate:/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "star.reader.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/024.txt"
+    },
+    {
+      "label": "official Kotlin consumer against candidate",
+      "argv": [
+        "/workspace/work/interop159-static-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate:/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/consumer-candidate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/025.txt"
+    },
+    {
+      "label": "consumer candidate on official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/consumer-candidate:/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official:/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "star.reader.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/026.txt"
+    },
+    {
+      "label": "consumer candidate on candidate",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/consumer-candidate:/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate:/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "star.reader.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/027.txt"
+    },
+    {
+      "label": "official invalid InvalidAmbiguous",
+      "argv": [
+        "/workspace/work/interop159-static-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidAmbiguous.kt",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official-InvalidAmbiguous",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/028.txt"
+    },
+    {
+      "label": "candidate invalid InvalidAmbiguous",
+      "argv": [
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/korrust-frozen",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidAmbiguous.kt",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate-InvalidAmbiguous",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/029.txt"
+    },
+    {
+      "label": "official invalid InvalidAmbiguousField",
+      "argv": [
+        "/workspace/work/interop159-static-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidAmbiguousField.kt",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official-InvalidAmbiguousField",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/030.txt"
+    },
+    {
+      "label": "candidate invalid InvalidAmbiguousField",
+      "argv": [
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/korrust-frozen",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidAmbiguousField.kt",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate-InvalidAmbiguousField",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/031.txt"
+    },
+    {
+      "label": "official invalid InvalidInstance",
+      "argv": [
+        "/workspace/work/interop159-static-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidInstance.kt",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official-InvalidInstance",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/032.txt"
+    },
+    {
+      "label": "candidate invalid InvalidInstance",
+      "argv": [
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/korrust-frozen",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidInstance.kt",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate-InvalidInstance",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/033.txt"
+    },
+    {
+      "label": "official invalid InvalidPackage",
+      "argv": [
+        "/workspace/work/interop159-static-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidPackage.kt",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official-InvalidPackage",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/034.txt"
+    },
+    {
+      "label": "candidate invalid InvalidPackage",
+      "argv": [
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/korrust-frozen",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidPackage.kt",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate-InvalidPackage",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/035.txt"
+    },
+    {
+      "label": "official invalid InvalidPrivate",
+      "argv": [
+        "/workspace/work/interop159-static-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidPrivate.kt",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official-InvalidPrivate",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/036.txt"
+    },
+    {
+      "label": "candidate invalid InvalidPrivate",
+      "argv": [
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/korrust-frozen",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidPrivate.kt",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate-InvalidPrivate",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/037.txt"
+    },
+    {
+      "label": "official invalid InvalidProtected",
+      "argv": [
+        "/workspace/work/interop159-static-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidProtected.kt",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official-InvalidProtected",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/038.txt"
+    },
+    {
+      "label": "candidate invalid InvalidProtected",
+      "argv": [
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/korrust-frozen",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidProtected.kt",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate-InvalidProtected",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/039.txt"
+    },
+    {
+      "label": "official invalid InvalidRenamed",
+      "argv": [
+        "/workspace/work/interop159-static-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidRenamed.kt",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official-InvalidRenamed",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/040.txt"
+    },
+    {
+      "label": "candidate invalid InvalidRenamed",
+      "argv": [
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/korrust-frozen",
+        "/workspace/work/interop159-static-freeze/tests/static_wildcard/InvalidRenamed.kt",
+        "-cp",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/dependency:/workspace/work/interop159-static-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate-InvalidRenamed",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports/041.txt"
+    }
+  ],
+  "reproduction_command": [
+    "python3",
+    "tools/check_static_wildcard.py",
+    "--candidate",
+    "/tmp/interop159-static-build/debug/korrust",
+    "--output",
+    "target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports",
+    "--evidence-directory",
+    "reports/correctness/2026-11-26T021410202446Z-java-static-wildcard-imports"
+  ],
+  "counts": {
+    "pass": 6,
+    "invalid_rejected": 7
+  }
+}

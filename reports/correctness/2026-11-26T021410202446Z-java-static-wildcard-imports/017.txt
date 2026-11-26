@@ -1,0 +1,69 @@
+$ /workspace/korrust-setup/jdk-21/bin/javap -public -s -v -classpath /workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate star.consumer.AliasKt
+Classfile /workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate/star/consumer/AliasKt.class
+  Last modified Nov 26, 2026; size 436 bytes
+  SHA-256 checksum 6399981f79965eebf3c47aca49946dada014591eca9fc5c62b02c21a60db4a3b
+  Compiled from "Alias.kt"
+public final class star.consumer.AliasKt
+  minor version: 0
+  major version: 49
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // star/consumer/AliasKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 1, attributes: 2
+Constant pool:
+   #1 = Utf8               star/consumer/AliasKt
+   #2 = Class              #1             // star/consumer/AliasKt
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               SourceFile
+   #6 = Utf8               Alias.kt
+   #7 = Utf8               star/library/First
+   #8 = Class              #7             // star/library/First
+   #9 = Utf8               clash
+  #10 = Utf8               (I)I
+  #11 = NameAndType        #9:#10         // clash:(I)I
+  #12 = Methodref          #8.#11         // star/library/First.clash:(I)I
+  #13 = Utf8               star/library/Second
+  #14 = Class              #13            // star/library/Second
+  #15 = Methodref          #14.#11        // star/library/Second.clash:(I)I
+  #16 = Utf8               alias
+  #17 = Utf8               ()I
+  #18 = Utf8               Code
+  #19 = Utf8               Lkotlin/Metadata;
+  #20 = Utf8               mv
+  #21 = Integer            2
+  #22 = Integer            3
+  #23 = Integer            0
+  #24 = Utf8               k
+  #25 = Utf8               xi
+  #26 = Integer            48
+  #27 = Utf8               d1
+  #28 = Utf8               \u0000\u0004\n\u0002\b\u0003\u001a\u000fH\u0006\u0010\u0000\u001a\u00020\u0001¢\u0006\u0004\b\u0000\u0010\u0002
+  #29 = Utf8               d2
+  #30 = Utf8               kotlin/Int
+  #31 = Utf8               RuntimeVisibleAnnotations
+{
+  public static final int alias();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: iconst_1
+         1: invokestatic  #12                 // Method star/library/First.clash:(I)I
+         4: iconst_2
+         5: invokestatic  #15                 // Method star/library/Second.clash:(I)I
+         8: iadd
+         9: ireturn
+        10: aconst_null
+        11: athrow
+}
+SourceFile: "Alias.kt"
+RuntimeVisibleAnnotations:
+  0: #19(#20=[I#21,I#22,I#23],#24=I#21,#25=I#26,#27=[s#28],#29=[s#16,s#30,s#17])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000\u0004\n\u0002\b\u0003\u001a\u000fH\u0006\u0010\u0000\u001a\u00020\u0001¢\u0006\u0004\b\u0000\u0010\u0002"]
+      d2=["alias","kotlin/Int","()I"]
+    )

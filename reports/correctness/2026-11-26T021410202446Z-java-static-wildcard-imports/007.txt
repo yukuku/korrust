@@ -1,0 +1,103 @@
+$ /workspace/korrust-setup/jdk-21/bin/javap -public -s -v -classpath /workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official star.consumer.OverloadsKt
+Classfile /workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/official/star/consumer/OverloadsKt.class
+  Last modified Nov 26, 2026; size 650 bytes
+  SHA-256 checksum f50055d4710dda60b7f697b54d23abc3dd5a03333d29526dcf389f629a2e0540
+  Compiled from "Overloads.kt"
+public final class star.consumer.OverloadsKt
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // star/consumer/OverloadsKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 3, attributes: 2
+Constant pool:
+   #1 = Utf8               star/consumer/OverloadsKt
+   #2 = Class              #1             // star/consumer/OverloadsKt
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               fromFirst
+   #6 = Utf8               ()I
+   #7 = Utf8               star/library/First
+   #8 = Class              #7             // star/library/First
+   #9 = Utf8               choose
+  #10 = Utf8               (I)I
+  #11 = NameAndType        #9:#10         // choose:(I)I
+  #12 = Methodref          #8.#11         // star/library/First.choose:(I)I
+  #13 = Utf8               fromSecond
+  #14 = Long               5l
+  #16 = Utf8               star/library/Second
+  #17 = Class              #16            // star/library/Second
+  #18 = Utf8               (J)I
+  #19 = NameAndType        #9:#18         // choose:(J)I
+  #20 = Methodref          #17.#19        // star/library/Second.choose:(J)I
+  #21 = Utf8               separate
+  #22 = Utf8               left
+  #23 = NameAndType        #22:#10        // left:(I)I
+  #24 = Methodref          #8.#23         // star/library/First.left:(I)I
+  #25 = Utf8               right
+  #26 = NameAndType        #25:#10        // right:(I)I
+  #27 = Methodref          #17.#26        // star/library/Second.right:(I)I
+  #28 = Utf8               Lkotlin/Metadata;
+  #29 = Utf8               mv
+  #30 = Integer            2
+  #31 = Integer            3
+  #32 = Integer            0
+  #33 = Utf8               k
+  #34 = Utf8               xi
+  #35 = Integer            48
+  #36 = Utf8               d1
+  #37 = Utf8               \u0000\n\n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\u001a\u0006\u0010\u0000\u001a\u00020\u0001\u001a\u0006\u0010\u0002\u001a\u00020\u0001\u001a\u0006\u0010\u0003\u001a\u00020\u0001
+  #38 = Utf8               d2
+  #39 = Utf8
+  #40 = Utf8               Overloads.kt
+  #41 = Utf8               Code
+  #42 = Utf8               LineNumberTable
+  #43 = Utf8               SourceFile
+  #44 = Utf8               RuntimeVisibleAnnotations
+{
+  public static final int fromFirst();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=1, locals=0, args_size=0
+         0: iconst_5
+         1: invokestatic  #12                 // Method star/library/First.choose:(I)I
+         4: ireturn
+      LineNumberTable:
+        line 4: 0
+
+  public static final int fromSecond();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: ldc2_w        #14                 // long 5l
+         3: invokestatic  #20                 // Method star/library/Second.choose:(J)I
+         6: ireturn
+      LineNumberTable:
+        line 5: 0
+
+  public static final int separate();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=0, args_size=0
+         0: iconst_1
+         1: invokestatic  #24                 // Method star/library/First.left:(I)I
+         4: iconst_2
+         5: invokestatic  #27                 // Method star/library/Second.right:(I)I
+         8: iadd
+         9: ireturn
+      LineNumberTable:
+        line 6: 0
+}
+SourceFile: "Overloads.kt"
+RuntimeVisibleAnnotations:
+  0: #28(#29=[I#30,I#31,I#32],#33=I#30,#34=I#35,#36=[s#37],#38=[s#5,s#39,s#13,s#21])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000\n\n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\u001a\u0006\u0010\u0000\u001a\u00020\u0001\u001a\u0006\u0010\u0002\u001a\u00020\u0001\u001a\u0006\u0010\u0003\u001a\u00020\u0001"]
+      d2=["fromFirst","","fromSecond","separate"]
+    )

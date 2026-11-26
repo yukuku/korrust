@@ -1,0 +1,69 @@
+$ /workspace/korrust-setup/jdk-21/bin/javap -public -s -v -classpath /workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate star.consumer.InheritedDuplicateKt
+Classfile /workspace/work/interop159-static-freeze/target/checks/2026-11-26T021410202446Z-java-static-wildcard-imports/candidate/star/consumer/InheritedDuplicateKt.class
+  Last modified Nov 26, 2026; size 486 bytes
+  SHA-256 checksum c74bcbb9a82d27aca654fe1363b125affeda01c6c147839dbb9ef75d21a88ead
+  Compiled from "InheritedDuplicate.kt"
+public final class star.consumer.InheritedDuplicateKt
+  minor version: 0
+  major version: 49
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // star/consumer/InheritedDuplicateKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 1, attributes: 2
+Constant pool:
+   #1 = Utf8               star/consumer/InheritedDuplicateKt
+   #2 = Class              #1             // star/consumer/InheritedDuplicateKt
+   #3 = Utf8               java/lang/Object
+   #4 = Class              #3             // java/lang/Object
+   #5 = Utf8               SourceFile
+   #6 = Utf8               InheritedDuplicate.kt
+   #7 = Utf8               star/library/DerivedAgain
+   #8 = Class              #7             // star/library/DerivedAgain
+   #9 = Utf8               inherited
+  #10 = Utf8               (I)I
+  #11 = NameAndType        #9:#10         // inherited:(I)I
+  #12 = Methodref          #8.#11         // star/library/DerivedAgain.inherited:(I)I
+  #13 = Utf8               inheritedState
+  #14 = Utf8               I
+  #15 = NameAndType        #13:#14        // inheritedState:I
+  #16 = Fieldref           #8.#15         // star/library/DerivedAgain.inheritedState:I
+  #17 = Utf8               inheritedDuplicate
+  #18 = Utf8               ()I
+  #19 = Utf8               Code
+  #20 = Utf8               Lkotlin/Metadata;
+  #21 = Utf8               mv
+  #22 = Integer            2
+  #23 = Integer            3
+  #24 = Integer            0
+  #25 = Utf8               k
+  #26 = Utf8               xi
+  #27 = Integer            48
+  #28 = Utf8               d1
+  #29 = Utf8               \u0000\u0004\n\u0002\b\u0003\u001a\u000fH\u0006\u0010\u0000\u001a\u00020\u0001¢\u0006\u0004\b\u0000\u0010\u0002
+  #30 = Utf8               d2
+  #31 = Utf8               kotlin/Int
+  #32 = Utf8               RuntimeVisibleAnnotations
+{
+  public static final int inheritedDuplicate();
+    descriptor: ()I
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=0, args_size=0
+         0: iconst_3
+         1: invokestatic  #12                 // Method star/library/DerivedAgain.inherited:(I)I
+         4: getstatic     #16                 // Field star/library/DerivedAgain.inheritedState:I
+         7: iadd
+         8: ireturn
+         9: aconst_null
+        10: athrow
+}
+SourceFile: "InheritedDuplicate.kt"
+RuntimeVisibleAnnotations:
+  0: #20(#21=[I#22,I#23,I#24],#25=I#22,#26=I#27,#28=[s#29],#30=[s#17,s#31,s#18])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000\u0004\n\u0002\b\u0003\u001a\u000fH\u0006\u0010\u0000\u001a\u00020\u0001¢\u0006\u0004\b\u0000\u0010\u0002"]
+      d2=["inheritedDuplicate","kotlin/Int","()I"]
+    )
