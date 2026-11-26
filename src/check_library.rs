@@ -26,7 +26,9 @@ fn kotlin_default_bridge(
         if declaring.kotlin_interface {
             for candidate in declaring.methods.iter().filter(|candidate| {
                 candidate.name == method.name
-                    && candidate.access & 0x409 == 1
+                    && candidate.access & 9 == 1
+                    && (candidate.access & 0x400 == 0
+                        || candidate.library.as_ref().is_some_and(|l| !l.abstract_))
                     && !candidate.unsupported
             }) {
                 let specialized =
@@ -56,14 +58,19 @@ pub(super) fn ordinary_member_methods(
         .ordinary_methods(owner)?
         .into_iter()
         .map(|method| {
-            if method.access & 0x40 != 0 && method.access & 9 == 1 {
-                if method.unsupported
-                    && classpath.load(owner)?.kotlin_class
-                    && let Some(declaration) =
-                        kotlin_default_bridge(classpath, owner, &method, &mut HashSet::new())?
-                {
-                    return Ok(declaration);
-                }
+            // Kotlin in legacy JVM-default mode emits ordinary class methods forwarding
+            // to DefaultImpls. Their source signatures live on the interface.
+            let bridge = method.access & 0x40 != 0;
+            if method.unsupported
+                && method.access & 9 == 1
+                && (bridge || (method.library.is_none() && method.access & 0x1400 == 0))
+                && classpath.load(&method.owner)?.kotlin_class
+                && let Some(declaration) =
+                    kotlin_default_bridge(classpath, &method.owner, &method, &mut HashSet::new())?
+            {
+                return Ok(declaration);
+            }
+            if bridge && method.access & 9 == 1 {
                 if let Some(declaration) = java_properties::accessibility_bridge(
                     classpath,
                     owner,
