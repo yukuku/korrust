@@ -84,6 +84,86 @@ fn boxed_return(value: &Value) -> Value {
     }
 }
 
+fn operand_calls(
+    body: &mut [Statement],
+    functions: &[crate::check::Function],
+    locals: u16,
+) -> Result<u16> {
+    struct Hoist<'a> {
+        functions: &'a [crate::check::Function],
+        counts: Vec<usize>,
+        locals: u16,
+        error: Option<Diagnostic>,
+    }
+    impl crate::check::ir_walk::Visitor for Hoist<'_> {
+        fn enter_value(&mut self, _: &Value) {
+            self.counts.push(0);
+        }
+        fn value(&mut self, value: &mut Value, _: &str) {
+            let nested = self.counts.pop().unwrap();
+            let total = nested + usize::from(suspension(value, self.functions));
+            if let Some(parent) = self.counts.last_mut() {
+                *parent += total;
+            }
+            if nested == 0 || self.error.is_some() {
+                return;
+            }
+            let mut invocation = value.clone();
+            let (function, arguments) = match &mut invocation.kind {
+                ValueKind::Call(_, args)
+                | ValueKind::JavaCall { args, .. }
+                | ValueKind::MemberCall { args, .. }
+                | ValueKind::StaticCall { args, .. } => (None, args),
+                ValueKind::FunctionInvoke { function, args } => (Some(function), args),
+                _ => return,
+            };
+            let mut operands = Vec::new();
+            if let Some(function) = function {
+                operands.push(function.as_mut());
+            }
+            operands.extend(arguments.iter_mut());
+            let mut stores = Vec::new();
+            for operand in operands {
+                if operand.ty == Type::Unit || self.locals as usize + operand.ty.slots() > 255 {
+                    self.error = Some(unsupported(
+                        "Suspension call operands exceed supported JVM storage",
+                    ));
+                    return;
+                }
+                let slot = self.locals as u8;
+                self.locals += operand.ty.slots() as u16;
+                let local = Value {
+                    ty: operand.ty.clone(),
+                    kind: ValueKind::Local(slot),
+                };
+                stores.push((slot, std::mem::replace(operand, local)));
+            }
+            for (slot, operand) in stores.into_iter().rev() {
+                invocation = Value {
+                    ty: invocation.ty.clone(),
+                    kind: ValueKind::Let {
+                        slot,
+                        value: Box::new(operand),
+                        body: Box::new(invocation),
+                    },
+                };
+            }
+            *value = invocation;
+        }
+    }
+    let mut hoist = Hoist {
+        functions,
+        counts: Vec::new(),
+        locals,
+        error: None,
+    };
+    crate::check::ir_walk::statements(body, "", &mut hoist);
+    if let Some(error) = hoist.error {
+        return Err(error);
+    }
+    Ok(hoist.locals)
+}
+
 fn plan(function: &crate::check::Function, functions: &[crate::check::Function]) -> Result<Plan> {
     if !function.suspend_ && contains_suspension(&function.body, functions) {
         return Err(
@@ -285,6 +365,8 @@ fn plan(function: &crate::check::Function, functions: &[crate::check::Function])
         .zip(&function.params)
         .map(|(slot, (_, ty))| (slot as u8, ty.clone()))
         .collect();
+    let mut body = function.body.clone();
+    let locals = operand_calls(&mut body, functions, function.locals)?;
     let mut planner = Planner {
         functions,
         fields,

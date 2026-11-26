@@ -30,6 +30,7 @@ def main():
     parser.add_argument('--no-report', action='store_true')
     parser.add_argument('--runtime-only', action='store_true')
     parser.add_argument('--skip-html', action='store_true')
+    parser.add_argument('--operand-calls', action='store_true')
     args = parser.parse_args()
     candidate = args.candidate.resolve()
     source_root = args.source_root.resolve()
@@ -46,7 +47,7 @@ def main():
     kotlin = reference / 'bin/kotlinc'
     standard = reference / 'lib/kotlin-stdlib.jar'
     now = datetime.now(timezone.utc)
-    ident = now.strftime('%Y-%m-%dT%H%M%S%fZ') + '-suspend-receiver-functions'
+    ident = now.strftime('%Y-%m-%dT%H%M%S%fZ') + ('-suspend-call-operands' if args.operand_calls else '-suspend-receiver-functions')
     temporary = tempfile.TemporaryDirectory(prefix='korrust-suspend-receivers-') if args.no_report else None
     work = Path(temporary.name) if temporary else ROOT / 'target/checks' / ident
     logs = work / 'logs' if temporary else ROOT / 'reports/correctness' / ident
@@ -57,6 +58,8 @@ def main():
     inputs = [*FIXTURES.glob('*'), artifact_path, ROOT / 'references/compiler.json',
               Path(__file__), ROOT / 'tools/check_member_function_properties.py',
               ROOT / 'tools/check_nov21_generics.py', ROOT / 'tests/suspend_receiver_functions.rs']
+    if args.operand_calls:
+        inputs += [*(ROOT / 'tests/suspend_call_operands').glob('*'), ROOT / 'tests/suspend_call_operands.rs']
     if not temporary:
         inputs += [*source_root.glob('src/**/*.rs'), source_root / 'Cargo.toml', source_root / 'Cargo.lock']
     frozen = {rel(path): sha(path) for path in inputs if path.is_file()}
@@ -66,6 +69,8 @@ def main():
                   coroutine_dependency=artifact, inputs=dict(files_sha256=frozen, stdlib_sha256=sha(standard)),
                   commands=[], cases=[], evidence=[],
                   limitations=['Ordinary and receiver suspend lambdas use the existing explicit frame subset. Fixed Java callers resume only after observing the suspended thread parked, checking receiver/context identity, saved primitives, and captured mutable state. Four Kotlin provider/frontend combinations exercise exported callback metadata. Unsupported frame and declaration shapes remain explicit boundaries. No debugger/reflection, Android, full-application or performance claim.'])
+    if args.operand_calls:
+        report['limitations'].append('Ordinary/source/member/function invocation operands evaluate once in source order and are saved across resumed calls. Constructor operands remain an explicit unsupported boundary; their allocation and initialization timing is not normalized.')
     if not temporary:
         archive = logs / 'frozen-inputs.zip'
         with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as bundle:
@@ -120,7 +125,10 @@ def main():
                         run('compile fixed consumer caller against official', ['javac', '-cp', cp(consumer, caller, output, library, coroutine, standard), '-d', runner, FIXTURES / 'ConsumerCheck.java'])
                     result = run('verified resumed consumer/' + provider + '/' + frontend, ['java', '-Xmx256m', '-Xverify:all', '-cp', cp(runner, consumer, caller, output, library, coroutine, standard), 'ConsumerCheck'])
                     case('resumed-consumer/' + provider + '/' + frontend, result.stdout == 'OK\n')
-            for item in json.loads((FIXTURES / 'Rejections.json').read_text()):
+            boundaries = json.loads((FIXTURES / 'Rejections.json').read_text())
+            if args.operand_calls:
+                boundaries += json.loads((ROOT / 'tests/suspend_call_operands/Rejections.json').read_text())
+            for item in boundaries:
                 source = logs / (item['id'] + '.kt')
                 source.write_text(item['source'])
                 oracle = run('boundary official/' + item['id'], [kotlin, source, '-cp', cp(library, coroutine, standard), '-d', work / ('oracle-' + item['id'])], (0, 1))
@@ -134,6 +142,16 @@ def main():
                     assert diagnostics[0]['category'] in ['invalid_kotlin', 'unclassified'], diagnostics
                 report['cases'].append(dict(id='boundary/' + item['id'], outcome='unsupported_language' if item.get('unsupported') else 'invalid_rejected', oracle_exit_code=oracle.returncode, diagnostic=diagnostics, rejection_check='pass'))
                 report['evidence'].append(rel(source))
+        if args.operand_calls:
+            fixture = ROOT / 'tests/suspend_call_operands'
+            operand_outputs = {name: work / ('operands-' + name) for name in outputs}
+            for provider, output in operand_outputs.items():
+                compile(provider, fixture / 'Values.kt', output, [library])
+            operand_caller = work / 'operand-java'
+            run('compile fixed operand caller against official', ['javac', '-cp', cp(operand_outputs['official'], library, standard), '-d', operand_caller, fixture / 'OperandCheck.java'])
+            for provider, output in operand_outputs.items():
+                result = run('verified suspended operands/' + provider, ['java', '-Xmx256m', '-Xverify:all', '-cp', cp(operand_caller, output, library, coroutine, standard), 'OperandCheck'])
+                case('ordered-resumed-operands/' + provider, result.stdout == 'OK\n')
         case('frozen-inputs', all(sha(Path(path) if Path(path).is_absolute() else ROOT / path) == value for path, value in frozen.items()))
         report['status'] = 'passed'
     except Exception as error:
@@ -147,6 +165,8 @@ def main():
         else:
             path = logs.with_suffix('.json')
             report['reproduction_commands'] = [['python3', rel(Path(__file__)), '--candidate', str(candidate), '--source-root', str(source_root), '--coroutines', str(coroutine)]]
+            if args.operand_calls:
+                report['reproduction_commands'][0].append('--operand-calls')
             path.write_text(json.dumps(report, indent=2) + '\n')
             print(path)
             if not args.skip_html:
