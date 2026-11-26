@@ -3406,7 +3406,13 @@ fn annotation_definition(
         if attrs.code.is_some() || parameters.iter().any(|(name, _, _)| name == &method.name) {
             return Err(invalid());
         }
-        if attrs.unsupported || attrs.annotated {
+        let deprecated_only = !attrs.annotations.is_empty()
+            && attrs.annotations.iter().all(|annotation| {
+                annotation.name == "Ljava/lang/Deprecated;" && annotation.values.is_empty()
+            })
+            && attrs.parameter_annotations.is_empty()
+            && attrs.type_annotation_targets.is_empty();
+        if attrs.unsupported || attrs.annotated && !deprecated_only {
             return Ok(None);
         }
         if let Some(signature) = &attrs.signature {

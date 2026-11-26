@@ -3,7 +3,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface Bounds {
-    Class<? extends Throwable> error() default IllegalStateException.class;
+    @Deprecated Class<? extends Throwable> error() default IllegalStateException.class;
     Class<Number> exact() default Number.class;
     Class<? super Number> lower() default Object.class;
     Class<? extends Cloneable> arrays() default int[].class;

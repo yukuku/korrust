@@ -21,8 +21,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--compiler', type=Path, default=ROOT / 'target/release/korrust')
     parser.add_argument('--junit', type=Path, required=True)
+    parser.add_argument('--robolectric', type=Path)
+    parser.add_argument('--android', type=Path)
     parser.add_argument('--output', type=Path)
     args = parser.parse_args()
+    if bool(args.robolectric) != bool(args.android):
+        parser.error('--robolectric and --android must be provided together')
     created = datetime.now(timezone.utc)
     work = (args.output or ROOT / 'target/checks' / (created.strftime('%Y-%m-%dT%H%M%S%fZ') + '-java-annotation-class-bounds')).resolve()
     work.mkdir(parents=True, exist_ok=False)
@@ -36,6 +40,9 @@ def main():
     inputs['tests/java_annotation_class_bounds.rs'] = sha(ROOT / 'tests/java_annotation_class_bounds.rs')
     inputs.update({name: sha(ROOT / name) for name in ['Cargo.toml', 'Cargo.lock']})
     report = {'schema_version': 1, 'kind': 'correctness', 'created_at': created.isoformat(), 'status': 'running', 'selection': 'Binary Java annotation Class upper, invariant, lower and star bounds, arrays and nested values; defaults and real JUnit 4 Test annotation; checked property reads; invalid arguments and unsupported parameterized bounds.', 'compiler': {'binary_sha256': sha(frozen)}, 'reference_compiler': {'pin': json.loads((ROOT / 'references/compiler.json').read_text())}, 'inputs': {'files_sha256': inputs}, 'dependencies': {str(args.junit): sha(args.junit), str(stdlib): sha(stdlib)}, 'commands': [], 'cases': []}
+    if args.robolectric:
+        report['selection'] += ' Deprecated Java annotation elements and real Robolectric Config with Android Application bound.'
+        report['dependencies'].update({str(path): sha(path) for path in [args.robolectric, args.android]})
 
     def cp(*paths):
         return os.pathsep.join(map(str, paths))
@@ -64,21 +71,30 @@ def main():
         result = run('java-library', [jdk / 'javac', '--release', '8', '-d', java, *[FIXTURES / name for name in ['Bounds.java', 'Upper.java', 'Nested.java', 'Complex.java']]])
         case('java-library', result.returncode == 0)
         providers = {}
+        accepted = [FIXTURES / 'Accepted.kt', FIXTURES / 'Junit.kt']
+        dependencies = [java, args.junit]
+        callers = [FIXTURES / 'Check.java', FIXTURES / 'JunitCheck.java']
+        checks = [('Check', 'OK:bounds'), ('JunitCheck', 'OK:junit')]
+        if args.robolectric:
+            accepted.append(FIXTURES / 'Robolectric.kt')
+            dependencies.extend([args.robolectric, args.android])
+            callers.append(FIXTURES / 'RobolectricCheck.java')
+            checks.append(('RobolectricCheck', 'OK:robolectric'))
         for provider in ['official', 'candidate']:
             output = work / provider
-            result = compile(provider, [FIXTURES / 'Accepted.kt', FIXTURES / 'Junit.kt'], output, [java, args.junit])
+            result = compile(provider, accepted, output, dependencies)
             case(provider + '/compile', result.returncode == 0)
             if result.returncode == 0:
                 providers[provider] = output
         if 'official' not in providers:
             return 1
         caller = work / 'caller'
-        result = run('fixed-java-callers', [jdk / 'javac', '--release', '8', '-cp', cp(providers['official'], java, args.junit, stdlib), '-d', caller, FIXTURES / 'Check.java', FIXTURES / 'JunitCheck.java'])
+        result = run('fixed-java-callers', [jdk / 'javac', '--release', '8', '-cp', cp(providers['official'], *dependencies, stdlib), '-d', caller, *callers])
         case('callers/compile-official', result.returncode == 0)
         report['fixed_java_caller_hashes'] = {str(p.relative_to(caller)): sha(p) for p in caller.rglob('*.class')}
         for provider, output in providers.items():
-            for name, expected in [('Check', 'OK:bounds'), ('JunitCheck', 'OK:junit')]:
-                result = run(provider + '/' + name, [jdk / 'java', '-Xverify:all', '-cp', cp(caller, output, java, args.junit, stdlib), 'annotationboundscheck.' + name])
+            for name, expected in checks:
+                result = run(provider + '/' + name, [jdk / 'java', '-Xverify:all', '-cp', cp(caller, output, *dependencies, stdlib), 'annotationboundscheck.' + name])
                 case(provider + '/' + name, result.returncode == 0 and result.stdout.strip() == expected, observed=result.stdout.strip())
             result = run(provider + '/signatures', [jdk / 'javap', '-protected', '-s', '-classpath', cp(output, java), 'annotationboundsuses.AcceptedKt', 'annotationboundsuses.Junit'])
             case(provider + '/signatures-read', result.returncode == 0)
