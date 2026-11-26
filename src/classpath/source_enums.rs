@@ -60,6 +60,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
     ] {
         class.methods.push(JavaMethod {
             library: Some(LibraryMethod {
+                default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),
                 value_dispatch: false,

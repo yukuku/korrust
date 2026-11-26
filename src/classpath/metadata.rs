@@ -626,6 +626,7 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
             kotlin_result: Some(array),
             kotlin_internal: false,
             library: Some(LibraryMethod {
+                default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),
                 value_dispatch: false,
@@ -853,6 +854,7 @@ fn builtin_declarations(
             kotlin_result: Some(returned),
             kotlin_internal: false,
             library: requested_name.map(|_| LibraryMethod {
+                default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),
                 value_dispatch: false,
@@ -1390,6 +1392,7 @@ fn attach_member(
             return Err(invalid());
         }
     }
+    let mut default_code = None;
     if params.iter().any(|(_, _, default)| *default) {
         if params.len() > 64 {
             return Err(invalid());
@@ -1420,11 +1423,16 @@ fn attach_member(
                 ),
             )
         };
-        if !class.methods.iter().any(|m| {
-            m.name == bridge_name && m.descriptor == bridge_descriptor && m.access & 0x1000 != 0
-        }) {
-            return Err(invalid());
-        }
+        let bridge = class
+            .methods
+            .iter()
+            .position(|method| {
+                method.name == bridge_name
+                    && method.descriptor == bridge_descriptor
+                    && method.access & 0x1000 != 0
+            })
+            .ok_or_else(invalid)?;
+        default_code = attributes[bridge].code.clone();
     }
     let observed = &attributes[*index].only_input_type_parameters;
     if observed
@@ -1449,6 +1457,7 @@ fn attach_member(
         parameter_modes.insert(0, crate::syntax::InlineParameterMode::Ordinary);
     }
     method.library = Some(LibraryMethod {
+        default_code,
         vararg_index,
         contracts,
         value_dispatch,
@@ -1499,6 +1508,7 @@ fn remember_callable(
             && method.library.is_none()
         {
             method.library = Some(LibraryMethod {
+                default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),
                 value_dispatch: false,

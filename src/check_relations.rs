@@ -1286,6 +1286,7 @@ impl Checker<'_> {
             ),
             kotlin_result: Some(result.clone()),
             library: Some(crate::classpath::LibraryMethod {
+                default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),
                 value_dispatch: false,

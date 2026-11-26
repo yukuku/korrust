@@ -387,6 +387,7 @@ fn register_classes(
                     || function.operator
                     || !function.type_params.is_empty())
                 .then(|| crate::classpath::LibraryMethod {
+                    default_code: None,
                     vararg_index: None,
                     contracts: Vec::new(),
                     value_dispatch: false,

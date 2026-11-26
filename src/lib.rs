@@ -1413,6 +1413,7 @@ fn emit_unit(
             file.bytes = bytecode::annotation_files::apply(&file.bytes, annotations)?;
         }
     }
+    files.extend(classpath.inline_default_outputs(&files)?);
     Ok(files)
 }
 
