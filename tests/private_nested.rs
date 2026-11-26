@@ -25,6 +25,7 @@ fn private_nested_classes_preserve_owned_outputs_and_lexical_access() {
     for name in [
         "privateprobe/Vault.class",
         "privateprobe/Vault$Entry.class",
+        "privateprobe/Vault$Cursor.class",
         "privateprobe/Vault$Record.class",
         "privateprobe/Vault$Reader.class",
         "privateprobe/ObjectOwner$Reader.class",
@@ -46,6 +47,7 @@ fn inaccessible_private_classifiers_reject_constructor_and_type_uses() {
     for source in [
         "class Outer { private class Hidden(val x: Int) }\nfun bad(): Int = Outer.Hidden(1).x",
         "class Outer { private class Hidden }\nfun bad(value: Outer.Hidden): Int = 1",
+        "class Outer { private inner class Hidden }\nfun bad(value: Outer.Hidden): Int = 1",
         "class Outer { private class Hidden { class Public(val x: Int) } }\nfun bad(): Int = Outer.Hidden.Public(1).x",
         "class Outer { class First { private class Hidden }; class Second { fun bad(): Int = First.Hidden().hashCode() } }",
     ] {
@@ -93,7 +95,6 @@ fn private_member_signatures_within_owning_scope_are_accepted() {
 #[test]
 fn unsupported_private_shapes_remain_explicit() {
     for source in [
-        "class Outer { private inner class Hidden }",
         "class Outer { private open class Hidden }",
         "class Outer { private abstract class Hidden }",
         "class Outer { private sealed class Hidden }",

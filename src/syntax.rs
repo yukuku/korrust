@@ -3739,9 +3739,9 @@ impl Parser {
                 ));
         }
         if visibility.as_deref() == Some("private")
-            && (inner || value_ || sealed_ || open || abstract_)
+            && (value_ || sealed_ || open || abstract_)
         {
-            return Err(self.error("Private nested inner, value, sealed, open and abstract classes are unsupported").with_kind(DiagnosticKind::UnsupportedLanguage, "PRIVATE_NESTED_SHAPE_UNSUPPORTED"));
+            return Err(self.error("Private nested value, sealed, open and abstract classes are unsupported").with_kind(DiagnosticKind::UnsupportedLanguage, "PRIVATE_NESTED_SHAPE_UNSUPPORTED"));
         }
         if !self.take("class") {
             return Err(self.error("Only ordinary final classes are supported"));

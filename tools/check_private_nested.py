@@ -17,7 +17,7 @@ APP_PATHS = [
     'Alkitab/src/main/java/yuku/alkitab/base/util/BackForwardListController.kt',
     'Alkitab/src/main/java/yuku/alkitab/songs/newdoc/LegacyParcelDecoder.kt',
 ]
-OWNERS = ['privateprobe.Vault$Entry', 'privateprobe.Vault$Record', 'privateprobe.Vault$Reader', 'privateprobe.ObjectOwner$Reader', 'privateprobe.Depth$Hidden']
+OWNERS = ['privateprobe.Vault$Cursor', 'privateprobe.Vault$Entry', 'privateprobe.Vault$Record', 'privateprobe.Vault$Reader', 'privateprobe.ObjectOwner$Reader', 'privateprobe.Depth$Hidden']
 
 
 def sha(path):
@@ -55,7 +55,7 @@ class Check:
             for path in self.frozen_paths:
                 if path not in (self.compiler, self.stdlib, self.compiler_jar):
                     output.write(path, relative(path))
-        self.report = dict(schema_version=1, kind='correctness', created_at=now.isoformat(), status='running', environment={'platform': platform.platform(), 'java_home': os.environ['JAVA_HOME']}, compiler={'binary': relative(self.compiler), 'binary_sha256': sha(self.compiler), 'frozen_source_root': relative(args.source_root)}, reference_compiler={'version': pin['version'], 'archive_sha256': pin['archive_sha256'], 'compiler_jar_sha256': sha(self.compiler_jar), 'options': self.options}, inputs={'files_sha256': self.frozen}, source_archive={'path': relative(archive), 'sha256': sha(archive)}, commands=[], cases=[], evidence=[], reproduction_commands=[['python3', 'tools/check_private_nested.py', '--compiler', relative(self.compiler), '--source-root', relative(args.source_root)]], limitations=['One bounded feature family: private static nested final ordinary/data classes. Existing public nested declarations are prerequisites and are not a new feature count.', 'Private inner, open, abstract, sealed and value classes, generic enclosing classes, escaped dollar classifier names and top-level private classes remain unsupported. Individual members retain existing visibility limitations; this feature does not add access to private sibling members.', 'No unchanged whole AndroidBible source, Android build, APK/device, or full-app compatibility claim. Both reviewed files retain independent blockers.'])
+        self.report = dict(schema_version=1, kind='correctness', created_at=now.isoformat(), status='running', environment={'platform': platform.platform(), 'java_home': os.environ['JAVA_HOME']}, compiler={'binary': relative(self.compiler), 'binary_sha256': sha(self.compiler), 'frozen_source_root': relative(args.source_root)}, reference_compiler={'version': pin['version'], 'archive_sha256': pin['archive_sha256'], 'compiler_jar_sha256': sha(self.compiler_jar), 'options': self.options}, inputs={'files_sha256': self.frozen}, source_archive={'path': relative(archive), 'sha256': sha(archive)}, commands=[], cases=[], evidence=[], reproduction_commands=[['python3', 'tools/check_private_nested.py', '--compiler', relative(self.compiler), '--source-root', relative(args.source_root)]], limitations=['One bounded feature family: private nested final ordinary/data classes and final inner classes. Existing public nested declarations are prerequisites and are not a new feature count.', 'Private open, abstract, sealed and value classes, generic enclosing classes, escaped dollar classifier names and top-level private classes remain unsupported. Individual members retain existing visibility limitations; this feature does not add access to private sibling members.', 'No unchanged whole AndroidBible source, Android build, APK/device, or full-app compatibility claim. Both reviewed files retain independent blockers.'])
 
     def run(self, label, command, accepted=(0,)):
         result = subprocess.run(list(map(str, command)), cwd=ROOT, capture_output=True, text=True, timeout=300)
@@ -92,7 +92,7 @@ class Check:
         runs = {}
         for provider, output in outputs.items():
             runs[provider] = self.run('runtime/' + provider, [self.java, '-Xverify:all', '-cp', cp(callers, output, self.stdlib), 'Driver']).stdout
-        expected = 'Record(id=9, text=ok):42\n13\n11\n17\n31\n23\n23\nEntry:private static final\nRecord:private static final\nReader:private static final\n'
+        expected = 'Record(id=9, text=ok):42\n13\n11\n17\n31\n23\n23\n9\nEntry:private static final\nRecord:private static final\nReader:private static final\nCursor:private final\n'
         self.case('runtime/independent_expected', runs['official'] == expected, expected=expected, actual=runs['official'])
         self.case('runtime/same_java_bytecode', runs['official'] == runs['candidate'], expected=runs['official'], actual=runs['candidate'], verified=True)
         self.case('runtime/fixed_java_unchanged', hashes == {relative(file): sha(file) for file in callers.rglob('*.class')})

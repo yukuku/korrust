@@ -1,6 +1,11 @@
 package privateprobe
 
 class Vault {
+    private val offset = 5
+    private inner class Cursor(val position: Int) {
+        fun read(): Int = offset + position
+    }
+    fun position(): Int = Cursor(4).read()
     private class Entry(val index: Int, val text: String?)
     private data class Record(val id: Int, val text: String)
     private class Reader(private val bytes: ByteArray) {

@@ -9,7 +9,8 @@ public class Driver {
         System.out.println(privateprobe.ObjectOwner.INSTANCE.read());
         System.out.println(new privateprobe.Depth().read());
         System.out.println(new privateprobe.Depth().viaPrivate());
-        for (String name : new String[]{"Entry", "Record", "Reader"}) {
+        System.out.println(new Vault().position());
+        for (String name : new String[]{"Entry", "Record", "Reader", "Cursor"}) {
             Class<?> cls = Class.forName("privateprobe.Vault$" + name);
             System.out.println(name + ":" + Modifier.toString(cls.getModifiers()));
         }
