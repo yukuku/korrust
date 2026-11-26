@@ -494,6 +494,7 @@ mod tests {
             constants: Vec::new(),
             functions: vec![top_function],
             lambdas: vec![LambdaDecl {
+                composable_key: None,
                 anonymous_methods: None,
                 anonymous_super: None,
                 defaults: Vec::new(),

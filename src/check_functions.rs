@@ -20,6 +20,21 @@ impl Checker<'_> {
         if let ExprKind::TrailingLambda(inner) = &expr.kind {
             return self.expected_value(inner, expected);
         }
+        if expected.base() == &Type::ComposableUnitFunction
+            && !matches!(
+                expr.kind,
+                ExprKind::Lambda(_) | ExprKind::LambdaWithParams { .. } | ExprKind::Labeled(..)
+            )
+        {
+            return Err(Diagnostic::new(
+                expr.offset,
+                "Compose callback parameters require a literal lambda",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "COMPOSE_LITERAL_CALLBACK_REQUIRED",
+            ));
+        }
         if let ExprKind::Unsigned { bits, long } = &expr.kind {
             let value = self.unsigned_literal(*bits, *long, Some(expected), expr.offset)?;
             return self.coerce(value, expected.clone(), expr.offset);
@@ -260,6 +275,47 @@ impl Checker<'_> {
         local_return: bool,
         label: Option<&str>,
     ) -> Result<Value> {
+        if expected.base() == &Type::ComposableUnitFunction {
+            if self.composable_body
+                || self.public_inline_body
+                || self.inline_analysis
+                || interface.is_some()
+            {
+                return Err(Diagnostic::new(
+                    expr.offset,
+                    "Compose callbacks in nested or inline contexts are unsupported",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "COMPOSE_NESTED_CALLBACK_UNSUPPORTED",
+                ));
+            }
+            crate::classpath::compose_abi::validate_runtime(self.classpath, expr.offset)?;
+            self.composable_body = true;
+            let checked = self.lambda_context(
+                expr,
+                &Type::Function {
+                    params: Vec::new(),
+                    result: Box::new(Type::Unit),
+                },
+                None,
+                local_return,
+                label,
+            );
+            self.composable_body = false;
+            let mut value = checked?;
+            let ValueKind::Lambda { owner, .. } = &value.kind else {
+                unreachable!()
+            };
+            let mut lambdas = self.lambdas.borrow_mut();
+            let declaration = lambdas
+                .iter_mut()
+                .find(|lambda| &lambda.owner == owner)
+                .unwrap();
+            declaration.composable_key = Some(crate::classpath::compose_abi::key(owner));
+            value.ty = expected.clone();
+            return Ok(value);
+        }
         if matches!(expected.base(), Type::SuspendFunction { .. }) && !local_return {
             return Err(
                 Diagnostic::new(expr.offset, "Source suspend lambdas are unsupported").with_kind(
@@ -442,6 +498,7 @@ impl Checker<'_> {
             }
         }
         let mut checker = Checker {
+            composable_body: self.composable_body,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
             public_inline_body: self.public_inline_body,
@@ -632,6 +689,7 @@ impl Checker<'_> {
             Vec::new()
         };
         self.lambdas.borrow_mut().push(LambdaDecl {
+            composable_key: None,
             anonymous_methods: None,
             anonymous_super: None,
             defaults,
@@ -1157,6 +1215,7 @@ mod shadowing_tests {
             },
         )]);
         let mut checker = Checker {
+            composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
             public_inline_body: false,

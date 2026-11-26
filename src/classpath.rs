@@ -3,6 +3,7 @@ use std::path::PathBuf;
 
 mod aliases;
 mod archive;
+pub(crate) mod compose_abi;
 mod import_classes;
 mod inline_defaults;
 mod jdk_modules;

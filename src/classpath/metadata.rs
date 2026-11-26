@@ -268,14 +268,40 @@ impl<'a> Context<'a> {
                         .map(|a| a.ty.ok_or_else(invalid))
                         .collect::<Result<Vec<_>>>()?;
                     let result = Box::new(types.pop().ok_or_else(invalid)?);
-                    let extension = p.messages(100)?.into_iter().any(|bytes| {
-                        Proto::parse(bytes)
-                            .ok()
-                            .and_then(|annotation| annotation.integer(1).ok().flatten())
-                            .and_then(|id| self.strings.get(id as usize))
-                            .is_some_and(|name| name == "kotlin/ExtensionFunctionType")
-                    });
-                    if extension && !types.is_empty() {
+                    let mut extension = false;
+                    let mut composable = false;
+                    for bytes in p.messages(100)?.into_iter().chain(p.messages(14)?) {
+                        let annotation = Proto::parse(bytes)?;
+                        let name = metadata_name(
+                            self.qualified_names.unwrap_or(self.strings),
+                            annotation.integer(1)?,
+                        )?;
+                        if name == "kotlin/ExtensionFunctionType" {
+                            extension = true;
+                        }
+                        if name == "androidx/compose/runtime/Composable" {
+                            annotation.allowed(&[1])?;
+                            composable = true;
+                        }
+                    }
+                    if composable {
+                        if name != "kotlin/Function0"
+                            || extension
+                            || !types.is_empty()
+                            || result.as_ref() != &Type::Unit
+                            || suspend_function
+                        {
+                            return Err(Diagnostic::new(
+                                0,
+                                "Only zero-argument Unit Compose callbacks are supported",
+                            )
+                            .with_kind(
+                                crate::DiagnosticKind::UnsupportedLanguage,
+                                "COMPOSE_CALLBACK_SHAPE_UNSUPPORTED",
+                            ));
+                        }
+                        Type::ComposableUnitFunction
+                    } else if extension && !types.is_empty() {
                         Type::ReceiverFunction {
                             receiver: Box::new(types.remove(0)),
                             params: types,
@@ -1311,6 +1337,18 @@ fn attach_member(
         }
         return Err(invalid());
     };
+    super::compose_abi::validate_member(
+        &params,
+        &result,
+        receiver.as_ref(),
+        flags,
+        &type_parameters,
+        attributes[*index].signature.as_deref(),
+        class
+            .library
+            .as_ref()
+            .map_or(&[][..], |library| library.type_parameters.as_slice()),
+    )?;
     let own = class
         .library
         .as_ref()

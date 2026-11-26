@@ -1938,6 +1938,7 @@ mod tests {
 
     fn with_checker(cp: &Classpath, action: impl FnOnce(&mut Checker<'_>)) {
         let mut checker = Checker {
+            composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
             public_inline_body: false,

@@ -2,6 +2,7 @@ use crate::{Diagnostic, DiagnosticKind, Result};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Type {
+    ComposableUnitFunction,
     SuspendFunction {
         params: Vec<Type>,
         result: Box<Type>,
@@ -191,6 +192,7 @@ impl Type {
                 | Self::Parameterized { .. }
                 | Self::Parameter { .. }
                 | Self::Function { .. }
+                | Self::ComposableUnitFunction
                 | Self::SuspendFunction { .. }
                 | Self::ThreadLocal(_)
                 | Self::Null
@@ -212,6 +214,7 @@ impl Type {
     }
     pub fn descriptor(&self) -> String {
         match self.base() {
+            Self::ComposableUnitFunction => "Lkotlin/jvm/functions/Function2;".into(),
             Self::Int => "I".into(),
             Self::Long => "J".into(),
             Self::Byte => "B".into(),

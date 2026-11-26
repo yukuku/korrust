@@ -593,6 +593,16 @@ fn type_proto(ty: &Type, imports: Imports<'_>, strings: &mut Strings) -> Result<
     }
     let mut proto = Proto::default();
     let name = match ty {
+        Type::ComposableUnitFunction => {
+            return Err(Diagnostic::new(
+                0,
+                "Composable function values are supported only as binary callback arguments",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "COMPOSE_CALLBACK_EXPORT_UNSUPPORTED",
+            ));
+        }
         Type::Int => "kotlin/Int",
         Type::Long => "kotlin/Long",
         Type::Null => {
