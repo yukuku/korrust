@@ -1738,7 +1738,7 @@ impl Checker<'_> {
                     )
                 })
                 .collect();
-            for (_, ty) in &metadata.reified_arguments {
+            for (parameter, ty) in &metadata.reified_arguments {
                 fn nested_parameter(ty: &Type, nested: bool) -> Option<&str> {
                     match ty.base() {
                         Type::Parameter { name, .. } if nested => Some(name),
@@ -1786,7 +1786,26 @@ impl Checker<'_> {
                         _ => false,
                     }
                 }
-                if unsupported_classifier(ty) {
+                fn erased_reference_classifier(ty: &Type) -> bool {
+                    match ty.base() {
+                        Type::Nullable(inner) | Type::Array(inner) | Type::OutArray(inner) => {
+                            erased_reference_classifier(inner)
+                        }
+                        Type::Parameterized { .. }
+                        | Type::List(_)
+                        | Type::MutableList(_)
+                        | Type::Java(_)
+                        | Type::String => true,
+                        _ => false,
+                    }
+                }
+                if unsupported_classifier(ty)
+                    && !(erased_reference_classifier(ty)
+                        && (library.builtin_array
+                            || crate::compiled_inline::reifies_only_array_allocation(
+                                method, parameter,
+                            )))
+                {
                     return Err(Diagnostic::new(
                         offset,
                         "This reified argument classifier is unsupported",
