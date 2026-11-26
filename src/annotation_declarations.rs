@@ -357,7 +357,7 @@ pub(crate) fn definition(
         targets: jvm_targets,
         parameters,
         kotlin_types: Vec::new(),
-        java_class_types: Vec::new(),
+        class_literal_types: Vec::new(),
         kotlin_parameters: Some(source.parameters.iter().map(|p| p.name.clone()).collect()),
         kotlin_targets: Some(kotlin_targets),
         vararg,
@@ -899,7 +899,7 @@ pub(crate) fn arguments_value(
         }
         let checked = value(expression, descriptor, imports, cp, depth + 1, scope)?;
         if let Some((_, expected)) = definition
-            .java_class_types
+            .class_literal_types
             .iter()
             .find(|(name, _)| name == &key)
         {
@@ -916,7 +916,7 @@ pub(crate) fn arguments_value(
         {
             let checked = Value::Array(variadic);
             if let Some((_, expected)) = definition
-                .java_class_types
+                .class_literal_types
                 .iter()
                 .find(|(key, _)| key == name)
             {

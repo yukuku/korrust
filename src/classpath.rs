@@ -122,7 +122,7 @@ pub(crate) enum AnnotationRetention {
 pub(crate) struct AnnotationDefinition {
     pub kotlin_parameters: Option<Vec<String>>,
     pub kotlin_types: Vec<Type>,
-    pub java_class_types: Vec<(String, Type)>,
+    pub class_literal_types: Vec<(String, Type)>,
     pub kotlin_targets: Option<Vec<String>>,
     pub vararg: Option<String>,
     pub retention: AnnotationRetention,
@@ -3550,7 +3550,7 @@ fn annotation_definition(
         return Ok(None);
     }
     let mut parameters = Vec::new();
-    let mut java_class_types = Vec::new();
+    let mut class_literal_types = Vec::new();
     for (method, attrs) in class.methods.iter().zip(methods) {
         if method.name.starts_with('<') {
             continue;
@@ -3584,16 +3584,16 @@ fn annotation_definition(
             return Ok(None);
         }
         if let Some(signature) = &attrs.signature {
-            fn supported_annotation_signature(ty: &Type, bounded: bool) -> bool {
+            fn supported_annotation_signature(ty: &Type) -> bool {
                 match ty {
                     Type::Parameterized { name, arguments } => {
                         name == "java/lang/Class"
                             && arguments.len() == 1
                             && arguments[0].ty.as_ref().is_none_or(|ty| {
-                                bounded && matches!(ty.base(), Type::Java(_) | Type::String)
+                                matches!(ty.base(), Type::Java(_) | Type::String)
                             })
                     }
-                    Type::Array(inner) => supported_annotation_signature(inner, bounded),
+                    Type::Array(inner) => supported_annotation_signature(inner),
                     _ => true,
                 }
             }
@@ -3601,14 +3601,11 @@ fn annotation_definition(
             if !parameters.is_empty()
                 || !args.is_empty()
                 || signature_result.descriptor() != result
-                || !supported_annotation_signature(&signature_result, kotlin_parameters.is_none())
+                || !supported_annotation_signature(&signature_result)
             {
                 return Ok(None);
             }
-            if kotlin_parameters.is_none() {
-                java_class_types
-                    .push((method.name.clone(), java_annotation_type(signature_result)));
-            }
+            class_literal_types.push((method.name.clone(), java_annotation_type(signature_result)));
         }
         if let Some(payload) = &attrs.annotation_default_payload {
             validate_annotation_default(result, payload, pool)?;
@@ -3648,7 +3645,7 @@ fn annotation_definition(
     Ok(Some(AnnotationDefinition {
         kotlin_parameters,
         kotlin_types,
-        java_class_types,
+        class_literal_types,
         kotlin_targets,
         vararg,
         retention,
@@ -3954,7 +3951,7 @@ fn parse_details_impl(
                     } else {
                         Some(
                             definition
-                                .java_class_types
+                                .class_literal_types
                                 .iter()
                                 .find(|(parameter, _)| parameter == name)
                                 .map(|(_, ty)| ty.clone())
