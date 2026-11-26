@@ -6101,6 +6101,13 @@ impl Parser {
         Ok(result)
     }
     fn prefix(&mut self) -> Result<Expr> {
+        if self.at("break") || self.at("continue") {
+            let jump = self.statement()?;
+            return Ok(Expr {
+                offset: jump.offset,
+                kind: ExprKind::Block(vec![jump]),
+            });
+        }
         if self.take("object") {
             let offset = self.tokens[self.pos - 1].offset;
             self.lines();

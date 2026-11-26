@@ -549,7 +549,12 @@ pub(super) fn expression_terminates(expr: &Expr) -> bool {
 
 fn statements_terminate(body: &[syntax::Statement]) -> bool {
     body.last().is_some_and(|statement| match &statement.kind {
-        StatementKind::Return(_) | StatementKind::Throw(_) => true,
+        StatementKind::Return(_)
+        | StatementKind::Throw(_)
+        | StatementKind::Break
+        | StatementKind::Continue
+        | StatementKind::BreakLabel(_)
+        | StatementKind::ContinueLabel(_) => true,
         StatementKind::Expression(expr) => expression_terminates(expr),
         StatementKind::Block(body) => statements_terminate(body),
         StatementKind::If(_, yes, no) => statements_terminate(yes) && statements_terminate(no),

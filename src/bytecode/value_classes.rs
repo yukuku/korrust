@@ -19,6 +19,7 @@ fn emitter<'a>(pool: &'a mut Pool, owner: &'a str) -> Code<'a> {
         exceptions: Vec::new(),
         temporary_count: 0,
         temporary_patches: Vec::new(),
+        jump_cleanups: Vec::new(),
         lambdas: &[],
         inline_local_maps: Vec::new(),
         inline_returns: Vec::new(),
