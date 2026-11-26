@@ -3426,7 +3426,12 @@ impl Checker<'_> {
             }
         }
         let candidates = self.classpath.field_candidates(&class.name, name)?;
-        if !candidates.iter().any(|field| field.access & 1 != 0) {
+        if !candidates.iter().any(|field| {
+            field.access & 1 != 0
+                || self
+                    .classpath
+                    .package_field_visible(&self.lambda_owner, field)
+        }) {
             if let Some(value) = &receiver {
                 if let Some(method) = self.java_property_setter(&value.ty, name, offset)? {
                     let call = self.member_call_checked(
@@ -3484,7 +3489,12 @@ impl Checker<'_> {
             return Err(Diagnostic::new(offset, "Field is inaccessible")
                 .with_kind(crate::DiagnosticKind::InvalidKotlin, "INVISIBLE_REFERENCE"));
         }
-        if field.access & 1 == 0 || (field.access & 8 != 0) != receiver.is_none() {
+        if (field.access & 1 == 0
+            && !self
+                .classpath
+                .package_field_visible(&self.lambda_owner, field))
+            || (field.access & 8 != 0) != receiver.is_none()
+        {
             return Err(Diagnostic::new(
                 offset,
                 "Java field is inaccessible or unsupported",
@@ -3747,7 +3757,12 @@ impl Checker<'_> {
                 ),
             );
         }
-        if field.access & 1 == 0 && !field.kotlin.as_ref().is_some_and(|field| field.constant) {
+        if field.access & 1 == 0
+            && !self
+                .classpath
+                .package_field_visible(&self.lambda_owner, field)
+            && !field.kotlin.as_ref().is_some_and(|field| field.constant)
+        {
             return Err(Diagnostic::new(
                 offset,
                 "Java field is inaccessible or unsupported",

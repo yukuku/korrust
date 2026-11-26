@@ -833,7 +833,12 @@ impl Checker<'_> {
                     .classpath
                     .field_candidates(&owner, name)?
                     .iter()
-                    .any(|field| field.access & 1 != 0)
+                    .any(|field| {
+                        field.access & 1 != 0
+                            || self
+                                .classpath
+                                .package_field_visible(&self.lambda_owner, field)
+                    })
                 {
                     return self
                         .java_field(&owner.clone(), name, Some(receiver), offset)
