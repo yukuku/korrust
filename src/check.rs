@@ -2790,6 +2790,20 @@ impl Checker<'_> {
                 kind: value.kind,
             });
         }
+        if expected == Type::Unit
+            && matches!(&value.ty, Type::Java(owner) if owner == "kotlin/Unit")
+        {
+            return Ok(Value {
+                ty: Type::Unit,
+                kind: ValueKind::Block(
+                    vec![Statement::Expression(value)],
+                    Box::new(Value {
+                        ty: Type::Unit,
+                        kind: ValueKind::Unit,
+                    }),
+                ),
+            });
+        }
         if value.ty == expected {
             return Ok(value);
         }

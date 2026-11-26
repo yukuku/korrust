@@ -3227,7 +3227,11 @@ fn infer_function(
             "Cannot infer a supported return type from null",
         ));
     }
-    function.result = value.ty;
+    function.result = if matches!(&value.ty, Type::Java(owner) if owner == "kotlin/Unit") {
+        Type::Unit
+    } else {
+        value.ty
+    };
     function.result_inferred = false;
     Ok(true)
 }
