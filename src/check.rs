@@ -4806,7 +4806,9 @@ impl Checker<'_> {
     fn value_untracked(&mut self, expr: &Expr, expected_result: Option<&Type>) -> Result<Value> {
         let offset = expr.offset;
         if let ExprKind::Call(target, args) = &expr.kind {
-            if let Some(value) = self.qualified_constructor(target, args, offset)? {
+            if let Some(value) =
+                self.qualified_constructor(target, args, expected_result, offset)?
+            {
                 return Ok(value);
             }
         }

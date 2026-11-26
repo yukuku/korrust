@@ -1838,6 +1838,7 @@ impl Checker<'_> {
         args: &[Expr],
         expected: Option<&Type>,
         offset: usize,
+        resolved_class: Option<&JavaClass>,
     ) -> Result<Option<Value>> {
         if self.value_name_is_bound(name)
             || self.functions.contains_key(name)
@@ -1883,7 +1884,7 @@ impl Checker<'_> {
         {
             return Ok(None);
         }
-        self.generic_constructor_expected(name, &[], args, expected, offset)
+        self.generic_constructor_expected(name, &[], args, expected, offset, None)
     }
 
     pub(super) fn generic_constructor(
@@ -1893,7 +1894,7 @@ impl Checker<'_> {
         args: &[Expr],
         offset: usize,
     ) -> Result<Option<Value>> {
-        self.generic_constructor_expected(name, types, args, None, offset)
+        self.generic_constructor_expected(name, types, args, None, offset, None)
     }
 
     fn generic_constructor_expected(
@@ -1923,7 +1924,7 @@ impl Checker<'_> {
                 })
                 .collect::<Result<Vec<_>>>()?,
         };
-        let alias_template = if types.is_empty() {
+        let alias_template = if types.is_empty() && resolved_class.is_none() {
             self.classpath
                 .constructor_type_alias(name, self.imports, DEFAULT_PACKAGES)?
         } else {
@@ -1939,7 +1940,9 @@ impl Checker<'_> {
         while let Type::Nullable(inner) = expanded {
             expanded = *inner;
         }
-        let class = if alias {
+        let class = if let Some(class) = resolved_class {
+            class.clone()
+        } else if alias {
             let owner = library::type_owner(&expanded).ok_or_else(|| {
                 Diagnostic::new(offset, "Type alias does not name a constructible class").with_kind(
                     crate::DiagnosticKind::InvalidKotlin,
@@ -1977,7 +1980,7 @@ impl Checker<'_> {
                 ),
             );
         }
-        if !self.library_call_candidates(name).is_empty() {
+        if resolved_class.is_none() && !self.library_call_candidates(name).is_empty() {
             return Ok(None);
         }
         if alias
@@ -2526,6 +2529,7 @@ impl Checker<'_> {
         &mut self,
         expression: &Expr,
         args: &[Expr],
+        expected: Option<&Type>,
         offset: usize,
     ) -> Result<Option<Value>> {
         if let Some(value) = self.java_callee_collision(expression, args, offset)? {
@@ -2534,6 +2538,12 @@ impl Checker<'_> {
         if matches!(expression.kind, ExprKind::Name(_)) {
             return Ok(None);
         }
+        let (expression, types) = match &expression.kind {
+            ExprKind::Generic(target, types) if matches!(target.kind, ExprKind::Property(..)) => {
+                (target.as_ref(), types.as_slice())
+            }
+            _ => (expression, &[][..]),
+        };
         let java = self.qualified_java_classifier(expression, offset)?;
         if java
             .as_ref()
@@ -2576,6 +2586,23 @@ impl Checker<'_> {
                 "ANNOTATION_INSTANCE_CONSTRUCTION_UNSUPPORTED",
             ));
         }
+        if class
+            .library
+            .as_ref()
+            .is_some_and(|library| !library.type_parameters.is_empty())
+        {
+            return self.generic_constructor_expected(
+                &class.name,
+                types,
+                args,
+                expected,
+                offset,
+                Some(&class),
+            );
+        }
+        if !types.is_empty() {
+            return Ok(None);
+        }
         if let Some(value) =
             self.sam_constructor(&class, Type::Java(class.name.clone()), args, offset)?
         {
@@ -2591,20 +2618,7 @@ impl Checker<'_> {
                 "ABSTRACT_CONSTRUCTION_INVALID",
             ));
         }
-        if class
-            .library
-            .as_ref()
-            .is_some_and(|l| !l.type_parameters.is_empty())
-        {
-            return Err(Diagnostic::new(
-                offset,
-                "Qualified generic construction requires unsupported explicit classifier handling",
-            )
-            .with_kind(
-                crate::DiagnosticKind::UnsupportedLanguage,
-                "QUALIFIED_GENERIC_CONSTRUCTOR_UNSUPPORTED",
-            ));
-        }
+
         let constructors = class
             .methods
             .iter()
