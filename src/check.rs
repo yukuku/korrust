@@ -2709,14 +2709,14 @@ impl Checker<'_> {
         };
         let kind = if reified_member && !method.inline_value_dispatch() {
             if mask != 0 {
-                return Err(Diagnostic::new(
+                crate::compiled_inline::validate(&method)?;
+                method = self.inline_default_bridge(
+                    method,
+                    mask,
+                    value_parameters,
+                    &mut values,
                     offset,
-                    "Reified instance member default bridge expansion is unsupported",
-                )
-                .with_kind(
-                    crate::DiagnosticKind::UnsupportedLanguage,
-                    "REIFIED_MEMBER_DEFAULT_UNSUPPORTED",
-                ));
+                )?;
             }
             crate::compiled_inline::validate_access(&method, self.classpath, &self.lambda_owner)?;
             self.compiled_inline_body(method, values, &lets, offset)?

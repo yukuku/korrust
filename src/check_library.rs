@@ -1244,28 +1244,8 @@ impl Checker<'_> {
                         .as_ref()
                         .is_some_and(|library| library.receiver.is_some()),
                 );
-            let method = crate::compiled_inline::with_defaults(
-                method,
-                mask,
-                parameters,
-                self.classpath,
-                &self.lambda_owner,
-                offset,
-            )
-            .map_err(|mut error| {
-                error.offset = offset;
-                error
-            })?;
-            for word in 0..parameters.div_ceil(32) {
-                values.push(Value {
-                    ty: Type::Int,
-                    kind: ValueKind::Int((mask >> (word * 32)) as i32),
-                });
-            }
-            values.push(Value {
-                ty: Type::Java("java/lang/Object".into()),
-                kind: ValueKind::Null,
-            });
+            let method =
+                self.inline_default_bridge(method, mask, parameters, &mut values, offset)?;
             crate::compiled_inline::validate_access(&method, self.classpath, &self.lambda_owner)?;
             mask = 0;
             method
@@ -1330,6 +1310,39 @@ impl Checker<'_> {
         self.contract_registration = Some(offset);
         self.contract_facts.insert(offset, contract_facts);
         Ok(Self::wrap_lets(Value { ty: result, kind }, lets))
+    }
+
+    pub(super) fn inline_default_bridge(
+        &self,
+        method: JavaMethod,
+        mask: u64,
+        parameters: usize,
+        values: &mut Vec<Value>,
+        offset: usize,
+    ) -> Result<JavaMethod> {
+        let method = crate::compiled_inline::with_defaults(
+            method,
+            mask,
+            parameters,
+            self.classpath,
+            &self.lambda_owner,
+            offset,
+        )
+        .map_err(|mut error| {
+            error.offset = offset;
+            error
+        })?;
+        for word in 0..parameters.div_ceil(32) {
+            values.push(Value {
+                ty: Type::Int,
+                kind: ValueKind::Int((mask >> (word * 32)) as i32),
+            });
+        }
+        values.push(Value {
+            ty: Type::Java("java/lang/Object".into()),
+            kind: ValueKind::Null,
+        });
+        Ok(method)
     }
 
     pub(super) fn compiled_inline_body(
