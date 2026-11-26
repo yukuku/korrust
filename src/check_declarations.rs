@@ -2849,6 +2849,16 @@ fn infer_source_results_impl(
         }
     }
     if let Some(class) = &mut source.class_decl {
+        context
+            .mutable_fields
+            .extend(class.mutable_params.iter().cloned());
+        context.mutable_fields.extend(
+            class
+                .properties
+                .iter()
+                .filter(|property| property.mutable)
+                .map(|property| property.name.clone()),
+        );
         for (name, ty) in &class.params {
             if class.param_properties.contains(name) {
                 if let Ok(ty) =
