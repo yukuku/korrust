@@ -926,7 +926,13 @@ impl Classpath {
     pub(crate) fn constructor_visible(&self, caller: &str, method: &JavaMethod) -> bool {
         (!method.kotlin_internal || self.internal_visible(&method.owner))
             && (method.access & 1 != 0
-                || method.access & 2 != 0 && self.lexically_within(caller, &method.owner))
+                || method.access & 2 != 0 && self.lexically_within(caller, &method.owner)
+                || method.access & 7 == 0
+                    && caller.rsplit_once('/').map(|(p, _)| p)
+                        == method.owner.rsplit_once('/').map(|(p, _)| p)
+                    && self
+                        .load(&method.owner)
+                        .is_ok_and(|class| !class.kotlin_class))
     }
 
     pub(crate) fn internal_visible(&self, owner: &str) -> bool {

@@ -6151,6 +6151,17 @@ impl Checker<'_> {
                             };
                             if let Some(owner) = library::type_owner(receiver_type) {
                                 if let Ok(class) = self.classpath.load(&format!("{owner}${name}")) {
+                                    if !class.kotlin_class
+                                        && self
+                                            .classpath
+                                            .java_nested_access(&class.name)
+                                            .is_some_and(|access| access & 8 == 0)
+                                        && self.classpath.lexical_parent(&class.name).as_deref()
+                                            == Some(owner)
+                                    {
+                                        return self
+                                            .java_inner_constructor(&class, value, args, offset);
+                                    }
                                     if class.enclosing_instance().is_some() {
                                         return self.inner_constructor(&class, value, args, offset);
                                     }

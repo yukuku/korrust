@@ -62,6 +62,107 @@ impl Checker<'_> {
         .map(Some)
     }
 
+    pub(super) fn java_inner_constructor(
+        &mut self,
+        class: &JavaClass,
+        receiver: Value,
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<Value> {
+        self.classpath
+            .check_java_import_visibility(&self.lambda_owner, &class.name, offset)?;
+        let outer = self
+            .classpath
+            .lexical_parent(&class.name)
+            .ok_or_else(|| Diagnostic::new(offset, "Missing Java inner class declaration"))?;
+        if class.unsupported
+            || class.access & 0x400 != 0
+            || receiver.ty.is_nullable()
+            || !self.subtype(&receiver.ty, &Type::Java(outer.clone()))
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Java inner constructor requires a concrete class and a non-null enclosing instance",
+            ));
+        }
+        if class
+            .library
+            .as_ref()
+            .is_some_and(|l| !l.type_parameters.is_empty())
+            || self
+                .classpath
+                .load(&outer)?
+                .library
+                .as_ref()
+                .is_some_and(|l| !l.type_parameters.is_empty())
+        {
+            return Err(Diagnostic::new(
+                offset,
+                "Generic Java inner classes require enclosing type argument substitution",
+            )
+            .with_kind(
+                crate::DiagnosticKind::UnsupportedLanguage,
+                "INNER_CONSTRUCTOR_SHAPE_UNSUPPORTED",
+            ));
+        }
+        let receiver = self.coerce(receiver, Type::Java(outer.clone()), offset)?;
+        let prefix = format!("(L{outer};");
+        let methods = class
+            .methods
+            .iter()
+            .filter(|m| {
+                m.name == "<init>"
+                    && m.descriptor.starts_with(&prefix)
+                    && self.classpath.constructor_visible(&self.lambda_owner, m)
+            })
+            .cloned()
+            .collect::<Vec<_>>();
+        let slot = self.allocate_typed_slot(&receiver.ty, offset)?;
+        let name = format!("<enclosing-{slot}>");
+        let mut arguments = vec![Expr {
+            offset,
+            kind: ExprKind::Name(name.clone()),
+        }];
+        arguments.extend_from_slice(args);
+        self.scopes.push(HashMap::from([(
+            name,
+            Local {
+                slot,
+                ty: receiver.ty.clone(),
+                mutable: false,
+            },
+        )]));
+        self.initialized.insert(slot);
+        let result = (|| {
+            let method = self.select_method(&methods, &arguments, offset)?;
+            let (params, defaults) = Self::method_parameters(&method)?;
+            let descriptor = format!(
+                "({})V",
+                params.iter().map(|p| p.1.descriptor()).collect::<String>()
+            );
+            if method.descriptor != descriptor
+                || method
+                    .library
+                    .as_ref()
+                    .is_some_and(|l| !l.type_parameters.is_empty())
+            {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Java inner constructor has unsupported hidden or generic parameters",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "INNER_CONSTRUCTOR_SHAPE_UNSUPPORTED",
+                ));
+            }
+            let arguments = self.vararg_arguments(&method, &arguments, offset)?;
+            self.construct_value(&class.name, &params, &defaults, &arguments, false, offset)
+        })();
+        self.scopes.pop();
+        self.initialized.remove(&slot);
+        Ok(Self::wrap_lets(result?, vec![(slot, receiver)]))
+    }
+
     pub(super) fn inner_constructor(
         &mut self,
         class: &JavaClass,
