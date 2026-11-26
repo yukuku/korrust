@@ -13,8 +13,8 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / 'tests/anonymous_objects'
 UPSTREAM = ROOT / 'references/kotlin/compiler/testData'
-UNSUPPORTED = {'Property', 'GenericMethod', 'ExtraMember', 'NoSupertype', 'Covariant', 'InferredCovariant', 'AbruptInlineInference'}
-SUPPORTED = {'ClassSupertype', 'Multiple', 'Marker', 'Generic', 'GenericJava'}
+UNSUPPORTED = {'GenericMethod', 'NoSupertype', 'Covariant', 'InferredCovariant', 'AbruptInlineInference'}
+SUPPORTED = {'ClassSupertype', 'Multiple', 'Marker', 'Generic', 'GenericJava', 'Property', 'ExtraMember'}
 INVALID = {'Missing', 'Duplicate', 'WrongParameter', 'WrongResult', 'NullResult', 'Uninitialized', 'ValWrite', 'Sealed', 'InferredWrongNumeric'}
 
 
@@ -61,14 +61,14 @@ def main():
     upstream = UPSTREAM / 'codegen/box/objects/kt2663_2.kt'
     helpers = UPSTREAM / 'diagnostics/helpers/coroutines/CoroutineHelpers.kt'
     apps = [ROOT / 'benchmarks/sources/androidbible/Alkitab/src/main/java/yuku/alkitab/base' / part for part in ['devotion/DevotionDownloadBackend.kt', 'ac/DevotionActivity.kt']]
-    inputs = [*sorted(args.source_root.glob('src/**/*.rs')), args.source_root / 'Cargo.toml', args.source_root / 'Cargo.lock', *sorted(FIXTURES.rglob('*')), ROOT / 'tests/anonymous_objects.rs', Path(__file__), ROOT / 'references/compiler.json', upstream, helpers, *apps]
+    inputs = [*sorted(args.source_root.glob('src/**/*.rs')), args.source_root / 'Cargo.toml', args.source_root / 'Cargo.lock', *sorted(FIXTURES.rglob('*')), *sorted((ROOT / 'tests/anonymous_members').glob('*')), ROOT / 'tests/anonymous_members.rs', ROOT / 'tests/anonymous_objects.rs', Path(__file__), ROOT / 'references/compiler.json', upstream, helpers, *apps]
     inputs = [path for path in inputs if path.is_file()]
     frozen = {relative(path): sha(path) for path in [*inputs, candidate, stdlib, compiler_jar]}
     bundle = evidence / 'frozen-inputs.zip'
     with zipfile.ZipFile(bundle, 'w', zipfile.ZIP_DEFLATED) as archive:
         for path in inputs:
             archive.writestr(relative(path), path.read_bytes())
-    report = dict(schema_version=1, kind='correctness', created_at=datetime.now(timezone.utc).isoformat(), status='running', compiler={'path': relative(candidate), 'sha256': sha(candidate)}, reference_compiler={**json.loads((ROOT / 'references/compiler.json').read_text()), 'options': options}, inputs={'files_sha256': frozen}, source_archive={'path': relative(bundle), 'sha256': sha(bundle)}, commands=[], cases=[], evidence=[], reproduction_commands=[['python3', 'tools/check_anonymous_objects.py', '--compiler', relative(candidate), '--source-root', relative(args.source_root)]], limitations=['Nonsealed class and interface supertypes with superclass constructor arguments, ordinary override methods, lexical captures, fresh allocation, own and enclosing receivers. This suite covers nongeneric runtime cases and concrete generic-supertype compilation boundaries; generic-base runtime, erased bridges and JVM generic signatures have separate check_anonymous_subclasses.py evidence. Own properties, generic methods, annotations and covariant results remain explicit unsupported boundaries. Generic inline lambdas with unconditional nonlocal returns still require unsupported Nothing inference; conditional method returns are exercised.', 'Same Java caller compiles once against official provider and runs with -Xverify:all against both. Official and candidate Kotlin consumers compile separately against both providers. Public provider ABI is compared; generated anonymous class names and private capture layouts are not ABI claims.', 'Generated classes omit EnclosingMethod and anonymous-class Kotlin metadata. Reflection equivalence for Class.isAnonymousClass, isLocalClass, enclosingMethod and Kotlin reflection is unsupported and unverified.', 'AndroidBible source inspection motivates scope; no unchanged whole AndroidBible file, full application, APK/device or full Kotlin compatibility claim. Upstream CoroutineHelpers requires generic Continuation, Result value class and property support beyond this scope.'])
+    report = dict(schema_version=1, kind='correctness', created_at=datetime.now(timezone.utc).isoformat(), status='running', compiler={'path': relative(candidate), 'sha256': sha(candidate)}, reference_compiler={**json.loads((ROOT / 'references/compiler.json').read_text()), 'options': options}, inputs={'files_sha256': frozen}, source_archive={'path': relative(bundle), 'sha256': sha(bundle)}, commands=[], cases=[], evidence=[], reproduction_commands=[['python3', 'tools/check_anonymous_objects.py', '--compiler', relative(candidate), '--source-root', relative(args.source_root)]], limitations=['Nonsealed class and interface supertypes with superclass constructor arguments, ordinary override methods, lexical captures, fresh allocation, own and enclosing receivers. This suite covers nongeneric runtime cases and concrete generic-supertype compilation boundaries; generic-base runtime, erased bridges and JVM generic signatures have separate check_anonymous_subclasses.py evidence. Own stored and computed properties, custom accessors and explicit-result methods are exercised. Generic methods, property delegates and annotations, own method result inference and covariant results remain explicit unsupported boundaries. Generic inline lambdas with unconditional nonlocal returns still require unsupported Nothing inference; conditional method returns are exercised.', 'Same Java caller compiles once against official provider and runs with -Xverify:all against both. Official and candidate Kotlin consumers compile separately against both providers. Public provider ABI is compared; generated anonymous class names and private capture layouts are not ABI claims.', 'Generated classes omit EnclosingMethod and anonymous-class Kotlin metadata. Reflection equivalence for Class.isAnonymousClass, isLocalClass, enclosingMethod and Kotlin reflection is unsupported and unverified.', 'AndroidBible source inspection motivates scope; no unchanged whole AndroidBible file, full application, APK/device or full Kotlin compatibility claim. Upstream CoroutineHelpers requires generic Continuation, Result value class and property support beyond this scope.'])
 
     def save():
         report['counts'] = dict(Counter(case['outcome'] for case in report['cases']))
@@ -129,6 +129,8 @@ def main():
         save()
 
     try:
+        members = ROOT / 'tests/anonymous_members'
+        exercise('own-members', [members / 'Members.kt'], members / 'Check.java', 'Check', ['anonymousmembers.Counted', 'anonymousmembers.MembersKt', 'anonymousmembers.Parent', 'anonymousmembers.Outer'])
         exercise('source', [FIXTURES / 'Objects.kt'], FIXTURES / 'ObjectCheck.java', 'ObjectCheck', ['anonymousprobe.Counter', 'anonymousprobe.ObjectsKt', 'anonymousprobe.Owner', 'anonymousprobe.FactoryOwner', 'anonymousprobe.Wide'], FIXTURES / 'Consumer.kt')
         exercise('inline-method-return', [FIXTURES / 'InlineReturns.kt'], FIXTURES / 'InlineReturnCheck.java', 'InlineReturnCheck', ['anonymousinline.Value', 'anonymousinline.InlineReturnsKt'])
         library = work / 'library'
@@ -158,7 +160,7 @@ def main():
             assert (oracle.returncode == 0) == (path.stem in UNSUPPORTED), (path, oracle.stderr)
             report['cases'].append({'id': 'boundary/' + path.stem, 'outcome': 'unsupported_language' if path.stem in UNSUPPORTED else 'invalid_rejected', 'oracle_exit_code': oracle.returncode, 'candidate_exit_code': result.returncode, 'diagnostic': diagnostics, 'rejection_check': 'pass'})
         report['cases'].append({'id': 'application/DevotionDownloadBackend', 'outcome': 'not_run', 'source': relative(apps[0]), 'reason': 'Request anonymous interface shape assessed; unchanged whole source requires additional application, HTTP and Android dependency support. No compile claim.'})
-        report['cases'].append({'id': 'application/DevotionActivity', 'outcome': 'not_run', 'source': relative(apps[1]), 'reason': 'rootListener extends a class and declares mutable properties, explicitly outside the supported interface-only shape.'})
+        report['cases'].append({'id': 'application/DevotionActivity', 'outcome': 'not_run', 'source': relative(apps[1]), 'reason': 'rootListener extends a class and declares mutable properties; unchanged whole-source compilation still requires Android and application dependencies.'})
         report['cases'].append({'id': 'upstream/CoroutineHelpers', 'outcome': 'not_run', 'source': relative(helpers), 'reason': 'Anonymous Continuation implementations require parameterized interface, properties and Result value-class semantics.'})
         assert all(sha(Path(path) if Path(path).is_absolute() else ROOT / path) == digest for path, digest in frozen.items()), 'Frozen inputs changed during harness run'
         report['status'] = 'passed'

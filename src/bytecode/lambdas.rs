@@ -88,6 +88,7 @@ fn emit_in(
             .supertypes
             .iter()
             .chain(lambda.captures.iter().map(|(_, ty)| ty))
+            .chain(parent.property_fields.iter().map(|(_, ty)| ty))
         {
             anonymous_context::parameters(ty, &mut parameters);
         }
@@ -150,6 +151,15 @@ fn emit_in(
             class_field(&mut pool, name, ty, 0x1010)?
         });
     }
+    if let Some(parent) = &lambda.anonymous_super {
+        for (name, ty) in &parent.property_fields {
+            fields.extend(if enclosing.is_some() {
+                class_field_scoped(&mut pool, name, ty, 0x0002)?
+            } else {
+                class_field(&mut pool, name, ty, 0x0002)?
+            });
+        }
+    }
     let constructor_descriptor = format!(
         "({})V",
         lambda
@@ -192,6 +202,14 @@ fn emit_in(
         .as_ref()
         .map_or("()V", |parent| parent.descriptor.as_str());
     constructor.reference(0xb7, pool.method(parent_owner, "<init>", super_descriptor)?);
+    if lambda.anonymous_methods.as_ref().is_some_and(|methods| {
+        methods
+            .iter()
+            .any(|method| method.name == "$initProperties")
+    }) {
+        constructor.bytes.push(0x2a);
+        constructor.reference(0xb7, pool.method(owner, "$initProperties", "()V")?);
+    }
     constructor.bytes.push(0xb1);
     let constructor = simple_method(
         &mut pool,
@@ -287,7 +305,7 @@ fn emit_in(
         });
         let implementation = simple_method(
             &mut pool,
-            0x0011,
+            if function.private { 0x0012 } else { 0x0011 },
             function.jvm_name(),
             &function.descriptor(),
             completed,
@@ -295,6 +313,9 @@ fn emit_in(
             nonnull(function.physical_result()),
         )?;
         methods.push(implementation);
+        if lambda.anonymous_methods.is_some() && function.private {
+            methods.push(private_method_bridge(&mut pool, owner, function, false)?);
+        }
     }
     let (bridge_name, bridge_descriptor) = lambda.interface.as_ref().map_or_else(
         || {
@@ -457,7 +478,14 @@ fn emit_in(
     for interface_class in interface_classes {
         u2(&mut bytes, interface_class);
     }
-    u2(&mut bytes, lambda.captures.len() as u16);
+    u2(
+        &mut bytes,
+        (lambda.captures.len()
+            + lambda
+                .anonymous_super
+                .as_ref()
+                .map_or(0, |parent| parent.property_fields.len())) as u16,
+    );
     bytes.extend(fields);
     u2(&mut bytes, methods.len() as u16);
     for method in methods {

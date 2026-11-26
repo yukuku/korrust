@@ -109,6 +109,7 @@ pub struct DeclarationAnnotation {
 
 pub struct AnonymousSuper {
     pub supertypes: Vec<Type>,
+    pub property_fields: Vec<(String, Type)>,
     pub bridges: Vec<GenericBridge>,
     pub owner: String,
     pub descriptor: String,
@@ -4435,8 +4436,10 @@ impl Checker<'_> {
             ExprKind::AnonymousObject {
                 supertypes,
                 methods,
+                own_methods,
+                properties,
             } => {
-                return self.anonymous_object(supertypes, methods, offset);
+                return self.anonymous_object(supertypes, methods, own_methods, properties, offset);
             }
             ExprKind::Lambda(_)
             | ExprKind::LambdaWithParams { .. }
@@ -6610,6 +6613,8 @@ fn call_names(expr: &Expr, names: &mut HashSet<String>) {
         ExprKind::AnonymousObject {
             supertypes,
             methods,
+            own_methods,
+            properties,
         } => {
             for (_, arguments) in supertypes {
                 if let Some(arguments) = arguments {
@@ -6618,7 +6623,16 @@ fn call_names(expr: &Expr, names: &mut HashSet<String>) {
                     }
                 }
             }
-            for method in methods {
+            for property in properties {
+                if let Some(value) = &property.initializer {
+                    call_names(value, names);
+                }
+                body_call_names(&property.body, names);
+                if let Some((_, body)) = &property.setter {
+                    body_call_names(body, names);
+                }
+            }
+            for method in methods.iter().chain(own_methods) {
                 body_call_names(&method.body, names);
             }
         }
