@@ -185,7 +185,10 @@ impl Code<'_> {
             .and_then(|library| library.code.as_ref())
             .ok_or_else(|| failure("Compiled inline bytecode unavailable"))?;
         let body = decode(code)?;
-        let (params, erased_result) = invocation_types(&method.descriptor)?;
+        let (mut params, erased_result) = invocation_types(&method.descriptor)?;
+        if method.access & 8 == 0 {
+            params.insert(0, Type::Java(method.owner.clone()));
+        }
         if params.len() != args.len() || lambda_bases.len() != args.len() {
             return Err(failure("Compiled inline argument count mismatch"));
         }

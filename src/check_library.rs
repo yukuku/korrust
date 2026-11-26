@@ -1036,84 +1036,7 @@ impl Checker<'_> {
             method
         };
         let kind = if inline && mask == 0 {
-            let code = method
-                .library
-                .as_ref()
-                .and_then(|l| l.code.as_ref())
-                .ok_or_else(|| Diagnostic::new(offset, "Compiled inline bytecode unavailable"))?;
-            let local_base = self.next;
-            self.next = self
-                .next
-                .checked_add(code.max_locals)
-                .ok_or_else(|| Diagnostic::new(offset, "Inline locals overflow"))?;
-            let mut lambda_bases = Vec::new();
-            for (index, value) in values.iter().enumerate() {
-                if method.library.as_ref().is_some_and(|library| {
-                    library.parameter_modes.get(index)
-                        == Some(&syntax::InlineParameterMode::Noinline)
-                }) {
-                    lambda_bases.push(None);
-                    continue;
-                }
-                let owner = match &value.kind {
-                    ValueKind::Lambda { owner, .. } => Some(owner),
-                    ValueKind::Local(slot) => {
-                        lets.iter()
-                            .find_map(|(saved, initializer)| match &initializer.kind {
-                                ValueKind::Lambda { owner, .. } if saved == slot => Some(owner),
-                                _ => None,
-                            })
-                    }
-                    _ => None,
-                };
-                if let Some(owner) = owner {
-                    let lambdas = self.lambdas.borrow();
-                    let lambda = lambdas.iter().find(|l| l.owner == *owner).ok_or_else(|| {
-                        Diagnostic::new(offset, "Inline lambda declaration missing")
-                    })?;
-                    lambda_bases.push(Some((owner.clone(), self.next)));
-                    self.next = self
-                        .next
-                        .checked_add(lambda.function.locals)
-                        .ok_or_else(|| Diagnostic::new(offset, "Inline lambda locals overflow"))?;
-                } else {
-                    lambda_bases.push(None);
-                }
-            }
-            if self.next > 256 {
-                return Err(Diagnostic::new(
-                    offset,
-                    "Compiled inline locals exceed current limit",
-                ));
-            }
-            let reified_temp = if method
-                .library
-                .as_ref()
-                .is_some_and(|library| !library.reified_arguments.is_empty())
-            {
-                if self.next >= 256 {
-                    return Err(Diagnostic::new(
-                        offset,
-                        "Reified inline locals exceed the current JVM slot limit",
-                    )
-                    .with_kind(
-                        crate::DiagnosticKind::UnsupportedLanguage,
-                        "COMPILED_INLINE_LOCALS_UNSUPPORTED",
-                    ));
-                }
-                let slot = self.next;
-                self.next += 1;
-                Some(slot)
-            } else {
-                None
-            };
-            ValueKind::CompiledInline {
-                method,
-                args: values,
-                local_base,
-                lambda_bases,
-                reified_temp,
-            }
+            self.compiled_inline_body(method, values, &lets, offset)?
         } else if mask == 0 {
             ValueKind::JavaCall {
                 method,
@@ -1172,6 +1095,95 @@ impl Checker<'_> {
         Ok(Self::wrap_lets(Value { ty: result, kind }, lets))
     }
 
+    pub(super) fn compiled_inline_body(
+        &mut self,
+        method: JavaMethod,
+        values: Vec<Value>,
+        lets: &[(u8, Value)],
+        offset: usize,
+    ) -> Result<ValueKind> {
+        let code = method
+            .library
+            .as_ref()
+            .and_then(|l| l.code.as_ref())
+            .ok_or_else(|| Diagnostic::new(offset, "Compiled inline bytecode unavailable"))?;
+        let local_base = self.next;
+        self.next = self
+            .next
+            .checked_add(code.max_locals)
+            .ok_or_else(|| Diagnostic::new(offset, "Inline locals overflow"))?;
+        let mut lambda_bases = Vec::new();
+        for (index, value) in values.iter().enumerate() {
+            if method.library.as_ref().is_some_and(|library| {
+                index
+                    .checked_sub(usize::from(method.access & 8 == 0))
+                    .and_then(|i| library.parameter_modes.get(i))
+                    == Some(&syntax::InlineParameterMode::Noinline)
+            }) {
+                lambda_bases.push(None);
+                continue;
+            }
+            let owner = match &value.kind {
+                ValueKind::Lambda { owner, .. } => Some(owner),
+                ValueKind::Local(slot) => {
+                    lets.iter()
+                        .find_map(|(saved, initializer)| match &initializer.kind {
+                            ValueKind::Lambda { owner, .. } if saved == slot => Some(owner),
+                            _ => None,
+                        })
+                }
+                _ => None,
+            };
+            if let Some(owner) = owner {
+                let lambdas = self.lambdas.borrow();
+                let lambda = lambdas
+                    .iter()
+                    .find(|l| l.owner == *owner)
+                    .ok_or_else(|| Diagnostic::new(offset, "Inline lambda declaration missing"))?;
+                lambda_bases.push(Some((owner.clone(), self.next)));
+                self.next = self
+                    .next
+                    .checked_add(lambda.function.locals)
+                    .ok_or_else(|| Diagnostic::new(offset, "Inline lambda locals overflow"))?;
+            } else {
+                lambda_bases.push(None);
+            }
+        }
+        if self.next > 256 {
+            return Err(Diagnostic::new(
+                offset,
+                "Compiled inline locals exceed current limit",
+            ));
+        }
+        let reified_temp = if method
+            .library
+            .as_ref()
+            .is_some_and(|library| !library.reified_arguments.is_empty())
+        {
+            if self.next >= 256 {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Reified inline locals exceed the current JVM slot limit",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "COMPILED_INLINE_LOCALS_UNSUPPORTED",
+                ));
+            }
+            let slot = self.next;
+            self.next += 1;
+            Some(slot)
+        } else {
+            None
+        };
+        Ok(ValueKind::CompiledInline {
+            method,
+            args: values,
+            local_base,
+            lambda_bases,
+            reified_temp,
+        })
+    }
     pub(super) fn extension_call(
         &mut self,
         receiver: Value,

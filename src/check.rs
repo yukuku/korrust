@@ -2427,8 +2427,32 @@ impl Checker<'_> {
         let args = labeled.as_slice();
         let normalized = self.vararg_arguments(&method, args, offset)?;
         let args = normalized.as_slice();
-        let (mut values, mut lets, mut mask) =
-            self.arguments(&params, &defaults, args, self.method_named(&method), offset)?;
+        let reified_member = method
+            .library
+            .as_ref()
+            .is_some_and(|l| l.inline && !l.reified_arguments.is_empty());
+        let (mut values, mut lets, mut mask) = if reified_member {
+            let library = method.library.as_ref().unwrap();
+            let previous_modes = std::mem::replace(
+                &mut self.inline_argument_modes,
+                library.parameter_modes.clone(),
+            );
+            let previous_result = self.inline_result.clone();
+            if self.allow_return || self.nonlocal_result.is_some() {
+                self.inline_result = Some(
+                    self.nonlocal_result
+                        .clone()
+                        .unwrap_or_else(|| self.result.clone()),
+                );
+            }
+            let checked =
+                self.arguments(&params, &defaults, args, self.method_named(&method), offset);
+            self.inline_argument_modes = previous_modes;
+            self.inline_result = previous_result;
+            checked?
+        } else {
+            self.arguments(&params, &defaults, args, self.method_named(&method), offset)?
+        };
         if extension {
             mask >>= 1;
         }
@@ -2515,7 +2539,20 @@ impl Checker<'_> {
         } else {
             None
         };
-        let kind = if mask == 0 {
+        let kind = if reified_member && !method.inline_value_dispatch() {
+            if mask != 0 {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Reified instance member default bridge expansion is unsupported",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "REIFIED_MEMBER_DEFAULT_UNSUPPORTED",
+                ));
+            }
+            crate::compiled_inline::validate_access(&method, self.classpath, &self.lambda_owner)?;
+            self.compiled_inline_body(method, values, &lets, offset)?
+        } else if mask == 0 {
             if method
                 .library
                 .as_ref()
