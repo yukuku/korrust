@@ -855,30 +855,51 @@ impl Checker<'_> {
         types: &[Type],
         offset: usize,
     ) -> Result<Option<Value>> {
-        let Some(function) = self.member_property_value(receiver, name, offset)? else {
-            return Ok(None);
-        };
-        if !types.is_empty() {
-            return Err(Diagnostic::new(
-                offset,
-                "Function properties do not accept explicit type arguments",
-            ));
+        let next = self.next;
+        let initialized = self.initialized.clone();
+        let refinements = self.refinements.clone();
+        let cells = self.cells.clone();
+        let cell_names = self.cell_names.clone();
+        let contract_registration = self.contract_registration;
+        let contract_facts = self.contract_facts.clone();
+        let count = self.lambdas.borrow().len();
+        let result = (|| {
+            let Some(function) = self.member_property_value(receiver, name, offset)? else {
+                return Ok(None);
+            };
+            if !types.is_empty() {
+                return Err(Diagnostic::new(
+                    offset,
+                    "Function properties do not accept explicit type arguments",
+                ));
+            }
+            if !matches!(
+                function.ty.base(),
+                Type::Function { .. }
+                    | Type::ReceiverFunction { .. }
+                    | Type::SuspendFunction { .. }
+                    | Type::Nullable(_)
+            ) {
+                return Err(
+                    Diagnostic::new(offset, "Property is not callable").with_kind(
+                        crate::DiagnosticKind::InvalidKotlin,
+                        "PROPERTY_NOT_CALLABLE",
+                    ),
+                );
+            }
+            self.function_invoke(function, args, offset).map(Some)
+        })();
+        if result.is_err() {
+            self.next = next;
+            self.initialized = initialized;
+            self.refinements = refinements;
+            self.cells = cells;
+            self.cell_names = cell_names;
+            self.contract_registration = contract_registration;
+            self.contract_facts = contract_facts;
+            self.lambdas.borrow_mut().truncate(count);
         }
-        if !matches!(
-            function.ty.base(),
-            Type::Function { .. }
-                | Type::ReceiverFunction { .. }
-                | Type::SuspendFunction { .. }
-                | Type::Nullable(_)
-        ) {
-            return Err(
-                Diagnostic::new(offset, "Property is not callable").with_kind(
-                    crate::DiagnosticKind::InvalidKotlin,
-                    "PROPERTY_NOT_CALLABLE",
-                ),
-            );
-        }
-        self.function_invoke(function, args, offset).map(Some)
+        result
     }
 
     pub(super) fn function_invoke(

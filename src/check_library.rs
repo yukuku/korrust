@@ -505,10 +505,25 @@ impl Checker<'_> {
         if applicable.is_empty() {
             if self.dispatch_receiver.is_some() {
                 let receiver = self.dispatch_receiver_value(offset)?;
-                if let Some(value) =
-                    self.member_property_invoke(receiver, name, args, explicit, offset)?
-                {
-                    return Ok(Some(value));
+                match self.member_property_invoke(receiver.clone(), name, args, explicit, offset) {
+                    Ok(Some(value)) => return Ok(Some(value)),
+                    Ok(None) => {}
+                    Err(error)
+                        if error.kind == crate::DiagnosticKind::UnsupportedLanguage
+                            || error.message.contains("Ambiguous") =>
+                    {
+                        return Err(error);
+                    }
+                    Err(_) if !explicit.is_empty() => {
+                        return self
+                            .extension_call(receiver, name, args, explicit, offset)
+                            .map(Some);
+                    }
+                    Err(error) => {
+                        return self
+                            .member_extension_fallback(receiver, name, args, error)
+                            .map(Some);
+                    }
                 }
             }
             if let Some(error) = failures.into_iter().next() {

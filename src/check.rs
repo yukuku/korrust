@@ -2990,10 +2990,19 @@ impl Checker<'_> {
             })
             .collect::<Vec<_>>();
         if methods.is_empty() {
-            if let Some(value) =
-                self.member_property_invoke(receiver.clone(), name, args, types, offset)?
-            {
-                return Ok(value);
+            match self.member_property_invoke(receiver.clone(), name, args, types, offset) {
+                Ok(Some(value)) => return Ok(value),
+                Ok(None) => {}
+                Err(error)
+                    if error.kind == crate::DiagnosticKind::UnsupportedLanguage
+                        || error.message.contains("Ambiguous") =>
+                {
+                    return Err(error);
+                }
+                Err(_) if !types.is_empty() => {
+                    return self.extension_call(receiver, name, args, types, offset);
+                }
+                Err(error) => return self.member_extension_fallback(receiver, name, args, error),
             }
             if !types.is_empty() {
                 return self.extension_call(receiver, name, args, types, offset);
@@ -3052,10 +3061,18 @@ impl Checker<'_> {
                 return self.extension_call(receiver, name, args, types, offset);
             }
             Err(error) => {
-                if let Some(value) =
-                    self.member_property_invoke(receiver.clone(), name, args, types, offset)?
-                {
-                    return Ok(value);
+                match self.member_property_invoke(receiver.clone(), name, args, types, offset) {
+                    Ok(Some(value)) => return Ok(value),
+                    Ok(None) => {}
+                    Err(error)
+                        if error.kind == crate::DiagnosticKind::UnsupportedLanguage
+                            || error.message.contains("Ambiguous") =>
+                    {
+                        return Err(error);
+                    }
+                    Err(property_error) => {
+                        return self.member_extension_fallback(receiver, name, args, property_error);
+                    }
                 }
                 return self.member_extension_fallback(receiver, name, args, error);
             }
