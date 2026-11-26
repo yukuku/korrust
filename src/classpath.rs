@@ -9,6 +9,7 @@ mod metadata;
 pub(crate) mod nested;
 mod package_info;
 mod signature;
+mod singletons;
 mod source;
 mod static_imports;
 mod value_names;
@@ -83,6 +84,7 @@ pub(crate) struct Classpath {
         std::cell::RefCell<std::collections::HashMap<(String, String, String), Vec<String>>>,
     package_names: std::cell::RefCell<std::collections::HashMap<String, Vec<String>>>,
     sources: std::cell::RefCell<std::collections::HashSet<String>>,
+    singletons: std::cell::RefCell<std::collections::HashSet<String>>,
     package_index: std::cell::RefCell<std::collections::HashMap<String, PackageIndex>>,
 }
 
@@ -980,7 +982,12 @@ impl Classpath {
             .flatten()
     }
     pub(crate) fn source_header(&self, module: &crate::syntax::Module, owner: &str) -> Result<()> {
-        self.register_source(source::header(module, owner, self)?);
+        let header = source::header(module, owner, self)?;
+        self.singletons.borrow_mut().remove(owner);
+        if module.object_decl.is_some() {
+            self.singletons.borrow_mut().insert(owner.into());
+        }
+        self.register_source(header);
         Ok(())
     }
     #[cfg(test)]
@@ -1020,6 +1027,7 @@ impl Classpath {
             exception_contracts: Default::default(),
             package_names: Default::default(),
             sources: Default::default(),
+            singletons: Default::default(),
             package_index: Default::default(),
         })
     }
@@ -1219,6 +1227,11 @@ impl Classpath {
             .iter()
             .find(|annotation| annotation.name == "Lkotlin/Metadata;")
         {
+            self.singletons.borrow_mut().remove(expected);
+            if metadata::class_is_singleton(annotation)? {
+                self.singletons.borrow_mut().insert(expected.into());
+            }
+
             self.cache
                 .borrow_mut()
                 .insert(expected.into(), class.clone());

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "ordinary-instance",
+    "source": "import singleton.library.Ordinary.decorate\nfun bad(): String = \"x\".decorate()"
+  },
+  {
+    "id": "private-extension",
+    "source": "import singleton.library.Words.secret\nfun bad(): String = \"x\".secret()"
+  },
+  {
+    "id": "nullable-receiver",
+    "source": "import singleton.library.Words.decorate\nfun bad(value: String?): String = value.decorate()"
+  },
+  {
+    "id": "hidden-original-alias",
+    "source": "import singleton.library.Words.decorate as renamed\nfun bad(): String = \"x\".decorate()"
+  },
+  {
+    "id": "inherited-receiver",
+    "source": "import singleton.library.Words.inherited\nfun bad(): Int = 7.inherited()"
+  },
+  {
+    "id": "ordinary-instance-field",
+    "source": "import singleton.library.Pretender.mimic\nfun bad(): String = \"x\".mimic()"
+  }
+]

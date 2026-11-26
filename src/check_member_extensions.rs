@@ -66,6 +66,81 @@ pub(super) fn labeled_call(expr: &Expr) -> Option<Expr> {
 }
 
 impl Checker<'_> {
+    pub(super) fn imported_singleton_extension_candidates(
+        &self,
+        name: &str,
+        property: bool,
+    ) -> Result<Vec<JavaMethod>> {
+        let Some((owner, member)) = self
+            .imports
+            .get(name)
+            .and_then(|binding| binding.rsplit_once("::"))
+        else {
+            return Ok(Vec::new());
+        };
+        if self.classpath.singleton_field(owner)?.is_none() {
+            return Ok(Vec::new());
+        }
+        let class = self.classpath.load(owner)?;
+        let dispatch = Type::Java(owner.into());
+        Ok(self
+            .classpath
+            .methods(owner)?
+            .into_iter()
+            .filter(|method| {
+                method.access & 8 == 0
+                    && self.lexical_method_visible(method)
+                    && method
+                        .library
+                        .as_ref()
+                        .is_some_and(|library| library.receiver.is_some())
+                    && if property {
+                        method.source_property.as_deref() == Some(member)
+                    } else {
+                        method.source_property.is_none() && method.source_name() == member
+                    }
+            })
+            .map(|method| library::specialize_receiver(method, &dispatch, &class, self.classpath))
+            .collect())
+    }
+
+    pub(super) fn imported_singleton_receiver(&self, name: &str, offset: usize) -> Result<Value> {
+        let owner = self
+            .imports
+            .get(name)
+            .and_then(|binding| binding.rsplit_once("::"))
+            .map(|(owner, _)| owner)
+            .ok_or_else(|| {
+                Diagnostic::new(
+                    offset,
+                    "Imported singleton extension has no declaring owner",
+                )
+            })?;
+        self.classpath
+            .check_classifier_visibility(&self.lambda_owner, owner, offset)?;
+        let field = self.classpath.singleton_field(owner)?.ok_or_else(|| {
+            Diagnostic::new(
+                offset,
+                "Imported member extension has no singleton receiver",
+            )
+        })?;
+        if field.access & 1 == 0 {
+            return Err(Diagnostic::new(
+                offset,
+                "Imported singleton receiver is inaccessible",
+            ));
+        }
+        Ok(Value {
+            ty: Type::Java(owner.into()),
+            kind: ValueKind::StaticField {
+                owner: field.owner,
+                name: field.name,
+            },
+        })
+    }
+}
+
+impl Checker<'_> {
     pub(super) fn select_extension_accessor(
         &mut self,
         methods: &[JavaMethod],

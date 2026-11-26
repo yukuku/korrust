@@ -1,0 +1,7 @@
+$ /workspace/korrust/references/kotlinc/bin/kotlinc /workspace/korrust/target/checks/2026-11-26T024106909884Z-imported-singleton-extensions/ordinary-instance-field.kt -cp /workspace/korrust/target/checks/2026-11-26T024106909884Z-imported-singleton-extensions/events:/workspace/korrust/target/checks/2026-11-26T024106909884Z-imported-singleton-extensions/library:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/korrust/target/checks/2026-11-26T024106909884Z-imported-singleton-extensions/invalid-official
+target/checks/2026-11-26T024106909884Z-imported-singleton-extensions/ordinary-instance-field.kt:1:36: error: cannot import 'mimic'. Functions and properties can only be imported from packages or objects.
+import singleton.library.Pretender.mimic
+                                   ^^^^^
+target/checks/2026-11-26T024106909884Z-imported-singleton-extensions/ordinary-instance-field.kt:2:25: error: unresolved reference 'mimic'.
+fun bad(): String = "x".mimic()
+                        ^^^^^

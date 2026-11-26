@@ -329,10 +329,7 @@ pub(super) fn static_import_owner(
                     .load(&method.owner)
                     .is_ok_and(|declaring| declaring.access & 0x0200 == 0))
     });
-    if class
-        .fields
-        .iter()
-        .any(|field| field.name == "INSTANCE" && field.descriptor == format!("L{};", class.name))
+    let matching_extension = classpath.singleton_field(owner)?.is_some()
         && methods.iter().any(|method| {
             method.access & 9 == 1
                 && method
@@ -341,17 +338,7 @@ pub(super) fn static_import_owner(
                     .is_some_and(|library| library.receiver.is_some())
                 && (method.source_name() == member
                     || method.source_property.as_deref() == Some(member))
-        })
-    {
-        return Err(Diagnostic::new(
-            offset,
-            "Explicit imports of singleton member extensions are unsupported",
-        )
-        .with_kind(
-            crate::DiagnosticKind::UnsupportedLanguage,
-            "SINGLETON_EXTENSION_IMPORT_UNSUPPORTED",
-        ));
-    }
+        });
     if class
         .library
         .as_ref()
@@ -374,7 +361,7 @@ pub(super) fn static_import_owner(
         .field_candidates(owner, member)?
         .iter()
         .any(|field| field.access & 9 == 9);
-    if !matching_method && !matching_field {
+    if !matching_method && !matching_field && !matching_extension {
         return Ok(None);
     }
     if matching_method && class.access & 0x0200 != 0 {

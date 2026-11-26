@@ -454,10 +454,7 @@ pub fn compile_batch_with_options(
                 *path = normalized.clone();
                 continue;
             }
-            if let Some((parent, member)) = path
-                .rsplit_once('/')
-                .filter(|(parent, _)| parent.ends_with("/Companion"))
-            {
+            if let Some((parent, member)) = path.rsplit_once('/') {
                 if let Some(class) = classpath.kotlin_classifier(parent) {
                     *path = format!("{}/{member}", class.name);
                     continue;
@@ -2223,7 +2220,22 @@ fn validate_source_imports(
                                 methods.iter().any(|method| {
                                     method.source_name() == member && method.access & 9 == 9
                                 })
-                            }))
+                            })
+                            || classpath
+                                .singleton_field(package)
+                                .is_ok_and(|field| field.is_some())
+                                && classpath.methods(package).is_ok_and(|methods| {
+                                    methods.iter().any(|method| {
+                                        method.access & 9 == 1
+                                            && (method.source_name() == member
+                                                || method.source_property.as_deref()
+                                                    == Some(member))
+                                            && method
+                                                .library
+                                                .as_ref()
+                                                .is_some_and(|library| library.receiver.is_some())
+                                    })
+                                }))
                 }) {
                     continue;
                 }

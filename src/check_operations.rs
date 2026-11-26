@@ -1390,7 +1390,7 @@ impl Checker<'_> {
                 })
                 && !self.callable_is_renamed(name, &method.owner)
         };
-        let imported = self
+        let mut imported = self
             .library_candidates(name)
             .into_iter()
             .filter(|m| {
@@ -1398,6 +1398,7 @@ impl Checker<'_> {
                     && m.source_property.is_some() == property
             })
             .collect::<Vec<_>>();
+        imported.extend(self.imported_singleton_extension_candidates(name, property)?);
         let package = self
             .lambda_owner
             .rsplit_once('/')
@@ -1610,6 +1611,7 @@ impl Checker<'_> {
             kind: ExprKind::Name(local_name),
         }];
         all_args.extend_from_slice(args);
+        let mut dispatch_binding = None;
         let result = (|| {
             let mut applicable_groups = Vec::new();
             let mut failures = Vec::new();
@@ -1762,13 +1764,29 @@ impl Checker<'_> {
                     "GENERIC_VALUE_EXTENSION_ABI_UNSUPPORTED",
                 ));
             }
-            let method =
+            let mut method =
                 self.select_method_expected(candidates, &all_args, types, expected, offset)?;
-            self.library_static_call(method, &all_args, offset)
+            if method.instance_dispatch() {
+                let dispatch = self.imported_singleton_receiver(name, offset)?;
+                let dispatch_slot = self.allocate_typed_slot(&dispatch.ty, offset)?;
+                let local = Value {
+                    ty: dispatch.ty.clone(),
+                    kind: ValueKind::Local(dispatch_slot),
+                };
+                dispatch_binding = Some((dispatch_slot, dispatch));
+                method.library.as_mut().unwrap().receiver = None;
+                self.member_call_with_extension(method, local, &all_args, true, offset)
+            } else {
+                self.library_static_call(method, &all_args, offset)
+            }
         })();
         self.scopes.pop();
         self.remap_contract_receiver(offset, slot, &receiver);
-        result.map(|value| Self::wrap_lets(value, vec![(slot, receiver)]))
+        result.map(|value| {
+            let mut bindings = dispatch_binding.into_iter().collect::<Vec<_>>();
+            bindings.push((slot, receiver));
+            Self::wrap_lets(value, bindings)
+        })
     }
 
     pub(super) fn member_extension_fallback(
