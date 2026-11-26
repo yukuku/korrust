@@ -19,6 +19,24 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def public_signatures(output):
+    result = callable_signatures(output)
+    current = descriptor = None
+    for line in output.splitlines():
+        if line.startswith(('  public ', '  protected ')):
+            current = line.strip().split('(', 1)[0].rsplit(' ', 1)[-1] if '(' in line else None
+            descriptor = None
+        elif line.startswith(('  private ', '  static ')):
+            current = None
+        elif current and line.strip().startswith('descriptor:'):
+            descriptor = line.strip().removeprefix('descriptor:').strip()
+        elif current and descriptor and line.strip().startswith('flags:') and 'ACC_SYNTHETIC' in line:
+            result.pop(current + descriptor, None)
+        elif line == '}':
+            current = None
+    return result
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--skip-html', action='store_true')
@@ -48,7 +66,7 @@ def main():
     with zipfile.ZipFile(bundle,'w',zipfile.ZIP_DEFLATED) as archive:
         for path in inputs:
             if path.is_file(): archive.writestr(rel(path),path.read_bytes())
-    report = dict(schema_version=1, kind='correctness', created_at=now.isoformat(), status='running', compiler=dict(binary=rel(candidate), binary_sha256=sha(candidate), source_revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip() if source_root==ROOT else None,source_root=rel(source_root)), reference_compiler=dict(version=pin['version'],archive_sha256=pin['archive_sha256'],compiler_jar_sha256=sha(reference / 'lib/kotlin-compiler.jar')), inputs=dict(files_sha256=frozen,stdlib_sha256=sha(stdlib)),source_archive=dict(path=rel(bundle),sha256=sha(bundle)), commands=[],cases=[], evidence=[], reproduction_commands=[['python3','tools/check_sam_constructors.py','--candidate',str(candidate),'--reference-root',str(reference_root),'--source-root',str(source_root)]], limitations=['Explicit constructors accept literal lambdas for supported Kotlin fun interfaces and Java functional interfaces. Same-package, imported, qualified, generic and source classifiers are covered, including private captures and interface default dispatch. Function values and callable references remain explicit unsupported boundaries. No Android runtime or full-app claim.'])
+    report = dict(schema_version=1, kind='correctness', created_at=now.isoformat(), status='running', compiler=dict(binary=rel(candidate), binary_sha256=sha(candidate), source_revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip() if source_root==ROOT else None,source_root=rel(source_root)), reference_compiler=dict(version=pin['version'],archive_sha256=pin['archive_sha256'],compiler_jar_sha256=sha(reference / 'lib/kotlin-compiler.jar')), inputs=dict(files_sha256=frozen,stdlib_sha256=sha(stdlib)),source_archive=dict(path=rel(bundle),sha256=sha(bundle)), commands=[],cases=[], evidence=[], reproduction_commands=[['python3','tools/check_sam_constructors.py','--candidate',str(candidate),'--reference-root',str(reference_root),'--source-root',str(source_root)]], limitations=['Explicit constructors accept literal lambdas for supported Kotlin fun interfaces and Java functional interfaces. Same-package, imported, qualified, generic and source classifiers are covered, including private captures and interface default dispatch. Function values and callable references remain explicit unsupported boundaries. Public nonsynthetic JVM callable signatures are compared; private layouts and synthetic accessors are outside ABI parity claims. No Android runtime or full-app claim.'])
     def run(label, command, accepted=(0,)):
         result = subprocess.run(list(map(str,command)),cwd=ROOT,text=True,capture_output=True,timeout=180)
         item = dict(label=label,argv=list(map(str,command)),exit_code=result.returncode)
@@ -84,8 +102,8 @@ def main():
             signatures[provider]={}
             for class_name in ['samconstructors.UseKt','samconstructors.Local']:
                 sig=run('JVM callable signatures '+provider+'/'+class_name,[jdk/'javap','-p','-s','-v','-cp',cp(output,dependency),class_name])
-                signatures[provider][class_name]=callable_signatures(sig.stdout)
-        case('JVM-public-callable-signatures',signatures['official']==signatures['candidate'])
+                signatures[provider][class_name]=public_signatures(sig.stdout)
+        case('JVM-public-nonsynthetic-callable-signatures',signatures['official']==signatures['candidate'])
         for item in json.loads((FIXTURES/'Rejections.json').read_text()):
             source=work/(item['id']+'.kt');source.write_text(item['source'])
             oracle=run('boundary official/'+item['id'],[kotlin,source,'-cp',cp(dependency,stdlib),'-d',work/('boundary-official-'+item['id'])],(0,1))
