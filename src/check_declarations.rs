@@ -2835,7 +2835,7 @@ fn infer_source_results_impl(
     }
     for property in &mut source.properties {
         if property.inferred {
-            if let Some(expr) = &property.initializer {
+            if let Some(expr) = property.inference_expression() {
                 let inferred = context.checker(false, 0, Type::Unit).value(expr);
                 if let Err(error) = &inferred {
                     errors.push(error.clone());
@@ -2903,9 +2903,13 @@ fn infer_source_results_impl(
         }
         for property in &mut class.properties {
             if property.inferred {
-                if let Some(expr) = &property.initializer {
+                if let Some(expr) = property.inference_expression() {
                     let mut checker = context.checker(true, 1, Type::Unit);
-                    for (name, ty) in &class.params {
+                    for (name, ty) in class
+                        .params
+                        .iter()
+                        .filter(|_| property.initializer.is_some())
+                    {
                         if let Ok(ty) =
                             resolve_type_checked(ty, &imports, class.offset, classpath, &classes)
                         {

@@ -664,6 +664,20 @@ pub struct PropertyDecl {
     pub open: bool,
 }
 impl PropertyDecl {
+    pub(crate) fn inference_expression(&self) -> Option<&Expr> {
+        self.initializer
+            .as_ref()
+            .or_else(|| match self.body.as_slice() {
+                [
+                    Statement {
+                        kind: StatementKind::Return(Some(expr)),
+                        ..
+                    },
+                ] => Some(expr),
+                _ => None,
+            })
+    }
+
     pub fn visibility(&self) -> PropertyVisibility {
         if self.private {
             PropertyVisibility::Private
@@ -4459,7 +4473,8 @@ impl Parser {
                 getter_visibility = accessor_visibility;
                 if self.at("(") {
                     let getter_offset = self.tokens[self.pos - 1].offset;
-                    body = self.getter_body()?;
+                    body = self
+                        .getter_body(ty.is_none() && initializer.is_none() && delegate.is_none())?;
                     if body.is_empty() {
                         let known_non_unit = !matches!(
                             ty.as_ref(),
@@ -5030,7 +5045,7 @@ impl Parser {
                                 "Mutable interface properties require abstract default accessors",
                             ));
                         }
-                        Some(self.getter_body()?)
+                        Some(self.getter_body(false)?)
                     } else {
                         self.pos = after_type;
                         None
@@ -5059,7 +5074,7 @@ impl Parser {
         self.type_parameters.truncate(scope);
         Ok(declaration)
     }
-    fn getter_body(&mut self) -> Result<Vec<Statement>> {
+    fn getter_body(&mut self, infer_from_expression: bool) -> Result<Vec<Statement>> {
         self.expect("(")?;
         self.expect(")")?;
         self.lines();
@@ -5069,6 +5084,9 @@ impl Parser {
                 offset: self.token().offset,
                 kind: StatementKind::Return(Some(self.expression_body()?)),
             }])
+        } else if infer_from_expression {
+            Err(self
+                .error("A block-bodied property getter requires an explicit type or initializer"))
         } else {
             self.block()
         }
