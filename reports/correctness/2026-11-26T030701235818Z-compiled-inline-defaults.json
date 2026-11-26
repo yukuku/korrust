@@ -1,0 +1,511 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T03:07:01.235818+00:00",
+  "status": "complete",
+  "compiler": {
+    "path": "target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/korrust-frozen",
+    "sha256": "68c5c4ce4b6b7351abcc8fc43df8bcb1384b0421bfcafd56b282678aede0c301",
+    "source_revision": "c1a1258b2637ca0954a81962242cc2e3bb146314",
+    "source_patch": {
+      "path": "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults/source.patch",
+      "sha256": "4f5e4cb7fe2fafc89c742223e0c031f4eca5c58461bc1a4ea4d2db4feaaec497"
+    },
+    "source_snapshot": "Pinned base revision plus source.patch; every compiled Rust source and fixture is frozen in inputs.zip"
+  },
+  "reference_compiler": {
+    "schema_version": 1,
+    "installed_at": "2026-10-23T02:43:55.924832+00:00",
+    "version": "2.3.21",
+    "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+    "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+    "path": "references/kotlinc",
+    "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+  },
+  "frozen_input_hashes": {
+    "src/annotation_declarations.rs": "68824921ba8a6cac0425cfd3c574eb87bc78c478575ade5f0fc5d7d31bb8fecc",
+    "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+    "src/bytecode/annotation_files.rs": "0fe8ebba7bbd2c80fcdd6fda797b448ca8cd63945b100781361bf1e3ace02eaa",
+    "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+    "src/bytecode/anonymous_context.rs": "e48d7aba57745c9e3ecb0a2317ea627f3b6d9b2d86805563bae680d79a301910",
+    "src/bytecode/class_companion.rs": "7463d1e739919160b82ed1137a195ebc3a36037ed8b5419a26c1f38889b533a7",
+    "src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+    "src/bytecode/defaults.rs": "d092d8a420cfb719f92dbb9a3bcc58f7c644d67bf9b3c611c72949122c22e827",
+    "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+    "src/bytecode/frames.rs": "1659d0401bfa59f751e3b6db250a2395a827ccad13c156f19f62c76773983b48",
+    "src/bytecode/inline.rs": "ca8a4f4da8f11e405a3cdcbcf87c3bfde49635e331f9712fb7b2f4aca0f84d25",
+    "src/bytecode/interfaces.rs": "5456ea3de3402ee3ead9920bb2cb0e7c0baab4f6eb7b211e481a16bf9ad3207b",
+    "src/bytecode/lambdas.rs": "80d29fe68d378de0b0458e601dec4cc6daaa539a64ce137a7d9f3c10e19f2d98",
+    "src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+    "src/bytecode/suspend.rs": "dfac0ad895edaf45c25655df1fad6c1828fe3fc767fd936dabe6e45357dd96d7",
+    "src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+    "src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+    "src/bytecode.rs": "4a64af005a11fd9a87467750b5acf485aa9e6e1057a4249fa52258e41b76d712",
+    "src/check.rs": "79931f85d0347454bebcefa0d050d3320186f565f1552e20ca8c060e289e43fc",
+    "src/check_annotation_placements.rs": "027e77c6a6db60f98262fbaf0f44be170c53b58b03d64ae6e8cc43cdb2dc1579",
+    "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+    "src/check_anonymous.rs": "8261dfdd18f10b4862fbe14aaf16ad45ca202d9e3664a06d0f46b3e3e87f86da",
+    "src/check_captures.rs": "f752d88bb81c26576caad658160a332fa21946e7275e6faf331bfd73f6a84479",
+    "src/check_class_delegation.rs": "171fec70b3ce6632bbbd704ea92e040f1ef841fbebd02659388fe88ba97135f2",
+    "src/check_classes.rs": "eaa5547ca75d6f4bef4f21d200a050bb8a47362c9c7ea3e4f47b3a66e1cca4b3",
+    "src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+    "src/check_control.rs": "23bcd78c9f4a12b2665110ed5565c4cfe63c0c00f148463ef28c608336fa38b9",
+    "src/check_declarations.rs": "ae99e68ac05ca61a2193bc50c2e9eec9ff6aa62113001664a7d30efd4254e121",
+    "src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+    "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+    "src/check_functions.rs": "eef3107baa96ea9a9183226506ac12b1f7dbe9b7365b47d85db6e7712c2c3da4",
+    "src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+    "src/check_interfaces.rs": "952fcff0409a30bd5b505706e466c5b3e003011d778b0b26a9a1f52f94bec5f8",
+    "src/check_ir_walk.rs": "caaeeea794075c7e23b17fc9e2d06ace5a02d366c9abffbdc9393d3c8a1a2e96",
+    "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+    "src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+    "src/check_library.rs": "7f7455a669221cb50daa01e68d3d92e56edfaff2edc560fc0d100ed638ff43f7",
+    "src/check_local_annotations.rs": "fb09702bd1697d0d16561e69d37150105b22f656ec26ca7a0f631a2705e6631a",
+    "src/check_member_extensions.rs": "cfca4c6c2b51effce735dd6ef1132d6490e6cf2cf358e43a3ab471e72a92d71e",
+    "src/check_objects.rs": "9af6682c6ebbdd918b3376521bbb67047526b1c1cc97053bd67b9d25907dc766",
+    "src/check_operations.rs": "c7c48d4f7a93a69ca02f8e397ae099889c88673ec31e78864fe9d3e8ee7e1f7a",
+    "src/check_overloads.rs": "03618a927df2d30db9bc245df9a57e99001e9a525a49c089968cd22cb1f0671e",
+    "src/check_references.rs": "61a780d0816443007725e52f992c717eeab828f7b971749ed3242318a8d80077",
+    "src/check_relations.rs": "3f234446519167454f472bed281af7232674bb3c146416f9bfca56b8d5e88336",
+    "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+    "src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+    "src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+    "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+    "src/check_varargs.rs": "a7dd5e1acfc35df5ed0de0632b2232bee62766cc8dd7abd7ae73030d4e4a0836",
+    "src/check_variant_signatures.rs": "ea8be16effafa3af58d46e0e732d196feeca4ef1468d4b373c2e1c29ee984ed3",
+    "src/classpath/aliases.rs": "2ad31713a22f8eb0607ed96d838aa96fecedf7a6b261f07473aef66b8bdb8827",
+    "src/classpath/archive.rs": "835e4a79bbbc5c7328ce6a540ed1a2ca975fc526278fe7c31fd9433e08cc56d5",
+    "src/classpath/import_classes.rs": "65a1563c6df2772ac3d71602a54e7fd1b64bab1ab51d6053e74bdb65b2bf5f4e",
+    "src/classpath/inline_defaults.rs": "7f3801938414c155a47fb7e82e2a2a7dda1d2cf1d0e9f92e9cdb686ab7324f2f",
+    "src/classpath/jdk_modules.rs": "cd1a350e7f8e03cda618a1d919d4e6ee49aba7e9a26728178ebad5f73c4bd8f8",
+    "src/classpath/jvm_builtins.rs": "b8c6e4789a998c1b3737da4879a15d74eb453170c4b03542d4c8ae13f6e40e86",
+    "src/classpath/metadata.rs": "d19012be79f602c6474a7e66b4962065ad1e8ce18c2ad4c7073d0fb24a53c4fb",
+    "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+    "src/classpath/package_info.rs": "f3bd436a8c64d48216bae3a55a2a3e82a903d354a42b629928fe1af95197061a",
+    "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+    "src/classpath/signature.rs": "5dd5097b24b9bce36682ac24d649a4d39703175cf8d9680cb5cbea995c2e03cc",
+    "src/classpath/singletons.rs": "836fe172f37cc9282e259ba446688b3d2d6bf34fde25ddc3973c1800f29c71a5",
+    "src/classpath/source.rs": "2ab37dbad2094f9b66c3307e026d0805c36c1c34f844491b1746bbffb2aec7c0",
+    "src/classpath/source_enums.rs": "1b6719565931913df35f26994fb0077985f1f5c89614fb1b5d4009e63957933d",
+    "src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+    "src/classpath/value_names.rs": "92bce0a6418edd333df08b6f388636648a2967560f8757c4bb00b1479236cae2",
+    "src/classpath.rs": "31928b7a6fa6829c10d2f25d8edf8cb78b33a7dd883649b07e2afc7354ce91b6",
+    "src/compiled_inline/defaults.rs": "89d95d8b98e4af043bc3c592ba7588bffb7924bc86bdae57d457c0b420cbde37",
+    "src/compiled_inline.rs": "dfb645a407c5bcab272665430a59d4d511a9920b76bcf465bb073c03e56b5b82",
+    "src/const_eval.rs": "bc6a053823a41c822bcc5af603023019a6ace1895c9fae75bf0372f02381dacf",
+    "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+    "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+    "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+    "src/lib.rs": "3c19e2b8c95ebce9fda8d5282c9caf48bcf98f2a93dc80370d314e73432f27e1",
+    "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+    "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+    "src/metadata.rs": "b3579828d0fcecc950ffa5a01bb3c34e710f52127185036c46055e18caafce34",
+    "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+    "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+    "src/source_inline.rs": "50bee0804aaea9cd3e2b8c8e0f162784e0e0e0b16b9e0770dd8c27fca764add2",
+    "src/syntax.rs": "74166c3abc3aaee195fe6568456534a287c609746eef28b558f31b2f49057dfb",
+    "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+    "src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525",
+    "tests/compiled_inline_defaults/Calls.java": "82fe1092bdf2b346e16498be5d2a1b6088e1f0a4158adc53e12f773c9a4c33e3",
+    "tests/compiled_inline_defaults/CleanupInitial.kt": "5a9f7d06a56376a4cf1eccbbbfe5c6df1e4089b2eb44542fbc5d35fdeb8f3336",
+    "tests/compiled_inline_defaults/CleanupUpdated.kt": "93238d8178bbd443c16ce8bfd52dd55c989af47262e086c3eed759be9e3e87b8",
+    "tests/compiled_inline_defaults/Consumer.kt": "100b3b41fb1ac636e20bad70abc174da0a9ee575e991625523b123def105eca7",
+    "tests/compiled_inline_defaults/Library.kt": "2e6475a05411b9cbcdc5835d524ba6ded55e25071f57ac7d47cf5a4a4bf5d4cd",
+    "tests/compiled_inline_defaults/MockKCalls.java": "ace88296cd21815b8306f79628f55ebbe50338d3a2bf0084d80dbd18ac19e759",
+    "tests/compiled_inline_defaults/MockKSmoke.kt": "ace218f84ed9cb010d6448286000480ededccd29ba26756d067124c01e553cef",
+    "tests/compiled_inline_defaults/UnsupportedLambda.kt": "d9770b61b5ec35c974867b89e8b96f40e1bd18cb3b2d88faafcd37a5eb40aa43",
+    "tests/compiled_inline_defaults.rs": "28984593e54c4bd2e2dbade5acf69badb507d16378043123cd49f947acbcea13",
+    "tools/check_compiled_inline_defaults.py": "0a1caceb3369344e0ff50908a079ab3f499bc0a932951807b1c084381c941295",
+    "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+    "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+    "references/compiler.json": "744068a0e5bed0ad05dd366e826e74dd1b768b4682390d03352681768be7978c",
+    "references/sources.json": "3e4f8080eee2c7238248b4c8100b2eb14ed9471b54c3d5afb6222a81632b10ec",
+    "target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/korrust-frozen": "68c5c4ce4b6b7351abcc8fc43df8bcb1384b0421bfcafd56b282678aede0c301",
+    "references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "references/kotlinc/lib/kotlin-compiler.jar": "e4348091143f7077be6816f75992216bc94c065649441f9f7f6af0eed0a9b3a7",
+    "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-jvm/1.13.13/eb46a802b52a43ee2ec1286055b651473e6fd4bf/mockk-jvm-1.13.13.jar": "56c6a9a276f537ed1efba54873dc02b6b131b6534c1463b4adfbdd83005daffd",
+    "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-dsl-jvm/1.13.13/5d34d7f20048e8c2d06bb4ba6b38be8534a91a43/mockk-dsl-jvm-1.13.13.jar": "ab430d2b9ddbc9fb1ba021e78245cf32536d090729adc45d68885791791e9ebb",
+    "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-agent-jvm/1.13.13/58dd7d1c0e9726d16a7d6f15f38f436d84c9d360/mockk-agent-jvm-1.13.13.jar": "a016a7d678a37966ef6a91dd3f5c0d901e1fd087ea3a664b8aaade02edbb0428",
+    "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-agent-api-jvm/1.13.13/2149adf5a1d176fe0bbcfb8b19c92662401453b4/mockk-agent-api-jvm-1.13.13.jar": "6aba1cfaba319bdbf624990a3a795ec59d8f71ca7f1bfc34487660fd9f403724",
+    "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-core-jvm/1.13.13/28655203d85e9a869e65b6e29123e8f3d47ac602/mockk-core-jvm-1.13.13.jar": "479ea81bfaa3307dee3b5458198ceea0ade0684aaa25db5e5c27c09eb2054714",
+    "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar": "7b0f19724082cbfcbc66e5abea2b9bc92cf08a1ea11e191933ed43801eb3cd05",
+    "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+    "/workspace/korrust/references/kotlinc/lib/kotlin-reflect.jar": "33e37d9dfa86c7a29ab34e975b5f4a1287b458878611051f3485652220c1a2cb",
+    "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.14.17/a8d08f3c1e75ecc7f38a8cfd7e9fa47919096373/byte-buddy-1.14.17.jar": "cde8f8f8e07bff3694aace0d9944ba755665a583b05d9153d41062285e9a8a61",
+    "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.14.17/e3c251a39dc90badaf71c83427ba46840f219d8d/byte-buddy-agent-1.14.17.jar": "461ec3017f1445b0af42d4e5f08eb6f5032fa4039ad737f3fcc4b2a12a38f984",
+    "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.objenesis/objenesis/3.3/1049c09f1de4331e8193e579448d0916d75b7631/objenesis-3.3.jar": "02dfd0b0439a5591e35b708ed2f5474eb0948f53abf74637e959b8e4ef69bfeb",
+    "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.10.2/4a9f78ef49483748e2c129f3d124b8fa249dafbf/kotlinx-coroutines-core-jvm-1.10.2.jar": "5ca175b38df331fd64155b35cd8cae1251fa9ee369709b36d42e0a288ccce3fd"
+  },
+  "input_bundle": {
+    "path": "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults/inputs.zip",
+    "sha256": "3b7c77c67a1e0518197a81c165118b75784186be400fc75e35c78b5e574ec31e"
+  },
+  "scope": "Compiled static Kotlin inline defaults: real dispatcher evaluation order, dependent defaults, lambda substitution, non-local returns through finally, reified defaults, capture-free default lambda regeneration, private JVM inline-only stdlib functions, class property initializers, output cleanup and optional live MockK execution",
+  "limitations": [
+    "Default dispatcher guards are bounded to the Kotlin synthetic mask-prefix form",
+    "Default lambda regeneration is bounded to public capture-free function singletons; lambda bodies requiring reified specialization remain explicitly unsupported",
+    "Existing inline body, JVM access and local-slot limits apply; no full MockK suite or application compatibility claim"
+  ],
+  "effective_options": {
+    "language_version": "2.3",
+    "api_version": "2.3",
+    "jvm_target": "1.8"
+  },
+  "cases": [
+    {
+      "id": "official_compile",
+      "outcome": "pass",
+      "detail": "Same unmodified source, compiled dependency and standard library"
+    },
+    {
+      "id": "candidate_compile",
+      "outcome": "pass",
+      "detail": "Same unmodified source, compiled dependency and standard library"
+    },
+    {
+      "id": "fixed_java_caller_both_providers",
+      "outcome": "pass",
+      "detail": {
+        "caller_sha256": {
+          "defaults/consumer/Calls.class": "0101802c77509178d4e1a5b7208343ef21b7d5c6af60133d2c7b28659250c38c"
+        },
+        "assertions": "Dependent defaults evaluated as 1 then 2; explicit argument evaluated before default (order 51); non-local return and finally order 29; reified Class default; regenerated generic identity lambda; unused reified default discarded; stdlib default UTF-8 charset; two mask words including bit 31 with evaluation order 123; regenerated default lambda used by an ordinary class property initializer"
+      }
+    },
+    {
+      "id": "public_jvm_signatures",
+      "outcome": "pass",
+      "detail": "Compiled from \"Consumer.kt\"\npublic final class defaults.consumer.ConsumerKt {\n  public static final int omitted();\n    descriptor: ()I\n\n  public static final int reordered();\n    descriptor: ()I\n\n  public static final int nonlocal();\n    descriptor: ()I\n\n  public static final int finalizer();\n    descriptor: ()I\n\n  public static final java.lang.String reified();\n    descriptor: ()Ljava/lang/String;\n\n  public static final java.lang.String lambdaDefault();\n    descriptor: ()Ljava/lang/String;\n\n  public static final java.lang.String suppliedLambda();\n    descriptor: ()Ljava/lang/String;\n\n  public static final int encoded();\n    descriptor: ()I\n\n  public static final int wideMask();\n    descriptor: ()I\n\n  public static final java.lang.String fieldDefault();\n    descriptor: ()Ljava/lang/String;\n}\n"
+    },
+    {
+      "id": "reified_default_lambda_regeneration_boundary",
+      "outcome": "unsupported_language",
+      "detail": {
+        "diagnostic": {
+          "source_identity": "/workspace/work/interop159-inline-freeze/tests/compiled_inline_defaults/UnsupportedLambda.kt",
+          "offset": 62,
+          "category": "unsupported_language",
+          "code": "INLINE_DEFAULT_LAMBDA_UNSUPPORTED",
+          "message": "Default lambda body requires reified class regeneration",
+          "path": "/workspace/work/interop159-inline-freeze/tests/compiled_inline_defaults/UnsupportedLambda.kt",
+          "line": 2,
+          "column": 26
+        }
+      }
+    },
+    {
+      "id": "regenerated_lambda_output_cleanup",
+      "outcome": "pass",
+      "detail": {
+        "before": {
+          "defaults/cleanup/CleanupKt$inlineDefault$87$0bc1e5f3ab2700a6.class": "3c5baca2245e67e47ffe26801b8384f2862353d027abc647aafcdee08657fcc8",
+          "defaults/cleanup/CleanupKt.class": "d4b2bd40919888bcd510353385c7bcb4cb5cc8e036cef59a459651cb0ea3a783"
+        },
+        "after": {
+          "defaults/cleanup/CleanupKt.class": "b1d03510ad2d68928ec3f35b25bfe5aefbcf13d60dce221b062c985e8b3dee8d"
+        }
+      }
+    },
+    {
+      "id": "live_mockk_default_dispatch_and_stubbing",
+      "outcome": "pass",
+      "detail": {
+        "caller_sha256": {
+          "defaults/mocking/MockKCalls.class": "0ee7ea2f0dd4ce99c35e43aab26f1e7f7dae4c970071c743de3ca727e7583ea5"
+        },
+        "dependencies": {
+          "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-jvm/1.13.13/eb46a802b52a43ee2ec1286055b651473e6fd4bf/mockk-jvm-1.13.13.jar": "56c6a9a276f537ed1efba54873dc02b6b131b6534c1463b4adfbdd83005daffd",
+          "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-dsl-jvm/1.13.13/5d34d7f20048e8c2d06bb4ba6b38be8534a91a43/mockk-dsl-jvm-1.13.13.jar": "ab430d2b9ddbc9fb1ba021e78245cf32536d090729adc45d68885791791e9ebb",
+          "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-agent-jvm/1.13.13/58dd7d1c0e9726d16a7d6f15f38f436d84c9d360/mockk-agent-jvm-1.13.13.jar": "a016a7d678a37966ef6a91dd3f5c0d901e1fd087ea3a664b8aaade02edbb0428",
+          "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-agent-api-jvm/1.13.13/2149adf5a1d176fe0bbcfb8b19c92662401453b4/mockk-agent-api-jvm-1.13.13.jar": "6aba1cfaba319bdbf624990a3a795ec59d8f71ca7f1bfc34487660fd9f403724",
+          "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-core-jvm/1.13.13/28655203d85e9a869e65b6e29123e8f3d47ac602/mockk-core-jvm-1.13.13.jar": "479ea81bfaa3307dee3b5458198ceea0ade0684aaa25db5e5c27c09eb2054714",
+          "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar": "7b0f19724082cbfcbc66e5abea2b9bc92cf08a1ea11e191933ed43801eb3cd05",
+          "/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a",
+          "/workspace/korrust/references/kotlinc/lib/kotlin-reflect.jar": "33e37d9dfa86c7a29ab34e975b5f4a1287b458878611051f3485652220c1a2cb",
+          "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.14.17/a8d08f3c1e75ecc7f38a8cfd7e9fa47919096373/byte-buddy-1.14.17.jar": "cde8f8f8e07bff3694aace0d9944ba755665a583b05d9153d41062285e9a8a61",
+          "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.14.17/e3c251a39dc90badaf71c83427ba46840f219d8d/byte-buddy-agent-1.14.17.jar": "461ec3017f1445b0af42d4e5f08eb6f5032fa4039ad737f3fcc4b2a12a38f984",
+          "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.objenesis/objenesis/3.3/1049c09f1de4331e8193e579448d0916d75b7631/objenesis-3.3.jar": "02dfd0b0439a5591e35b708ed2f5474eb0948f53abf74637e959b8e4ef69bfeb",
+          "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.10.2/4a9f78ef49483748e2c129f3d124b8fa249dafbf/kotlinx-coroutines-core-jvm-1.10.2.jar": "5ca175b38df331fd64155b35cd8cae1251fa9ee369709b36d42e0a288ccce3fd"
+        },
+        "assertions": "Real relaxed mock returns zero before stubbing and 17 after stubbing; real strict mock with all defaults returns 19 after stubbing"
+      }
+    },
+    {
+      "id": "frozen_inputs",
+      "outcome": "pass",
+      "changed": []
+    }
+  ],
+  "commands": [
+    {
+      "label": "official dependency with metadata 1.7",
+      "argv": [
+        "/workspace/work/interop159-inline-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-inline-freeze/tests/compiled_inline_defaults/Library.kt",
+        "-d",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/dependency",
+        "-Xmetadata-version=1.7.0",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults/000.txt"
+    },
+    {
+      "label": "official consumer",
+      "argv": [
+        "/workspace/work/interop159-inline-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-inline-freeze/tests/compiled_inline_defaults/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/dependency:/workspace/work/interop159-inline-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults/001.txt"
+    },
+    {
+      "label": "candidate consumer",
+      "argv": [
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/korrust-frozen",
+        "/workspace/work/interop159-inline-freeze/tests/compiled_inline_defaults/Consumer.kt",
+        "-cp",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/dependency:/workspace/work/interop159-inline-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults/002.txt"
+    },
+    {
+      "label": "fixed Java caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/official:/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/dependency:/workspace/work/interop159-inline-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/caller",
+        "/workspace/work/interop159-inline-freeze/tests/compiled_inline_defaults/Calls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults/003.txt"
+    },
+    {
+      "label": "official independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/caller:/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/official:/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/dependency:/workspace/work/interop159-inline-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "defaults.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults/004.txt"
+    },
+    {
+      "label": "candidate independent runtime assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/caller:/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/candidate:/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/dependency:/workspace/work/interop159-inline-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "defaults.consumer.Calls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults/005.txt"
+    },
+    {
+      "label": "official public JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/official",
+        "defaults.consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults/006.txt"
+    },
+    {
+      "label": "candidate public JVM signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-public",
+        "-s",
+        "-classpath",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/candidate",
+        "defaults.consumer.ConsumerKt"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults/007.txt"
+    },
+    {
+      "label": "official reified default lambda boundary",
+      "argv": [
+        "/workspace/work/interop159-inline-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-inline-freeze/tests/compiled_inline_defaults/UnsupportedLambda.kt",
+        "-cp",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/dependency:/workspace/work/interop159-inline-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/official-unsupported-lambda",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults/008.txt"
+    },
+    {
+      "label": "candidate reified default lambda boundary",
+      "argv": [
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/korrust-frozen",
+        "/workspace/work/interop159-inline-freeze/tests/compiled_inline_defaults/UnsupportedLambda.kt",
+        "-cp",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/dependency:/workspace/work/interop159-inline-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/candidate-unsupported-lambda",
+        "--diagnostic-format",
+        "json"
+      ],
+      "exit_code": 1,
+      "log": "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults/009.txt"
+    },
+    {
+      "label": "candidate initial default lambda ownership",
+      "argv": [
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/korrust-frozen",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/Cleanup.kt",
+        "-cp",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/dependency:/workspace/work/interop159-inline-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/cleanup"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults/010.txt"
+    },
+    {
+      "label": "candidate default lambda removal",
+      "argv": [
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/korrust-frozen",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/Cleanup.kt",
+        "-cp",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/dependency:/workspace/work/interop159-inline-freeze/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/cleanup"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults/011.txt"
+    },
+    {
+      "label": "official live MockK compile",
+      "argv": [
+        "/workspace/work/interop159-inline-freeze/references/kotlinc/bin/kotlinc",
+        "/workspace/work/interop159-inline-freeze/tests/compiled_inline_defaults/MockKSmoke.kt",
+        "-cp",
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-jvm/1.13.13/eb46a802b52a43ee2ec1286055b651473e6fd4bf/mockk-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-dsl-jvm/1.13.13/5d34d7f20048e8c2d06bb4ba6b38be8534a91a43/mockk-dsl-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-agent-jvm/1.13.13/58dd7d1c0e9726d16a7d6f15f38f436d84c9d360/mockk-agent-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-agent-api-jvm/1.13.13/2149adf5a1d176fe0bbcfb8b19c92662401453b4/mockk-agent-api-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-core-jvm/1.13.13/28655203d85e9a869e65b6e29123e8f3d47ac602/mockk-core-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-reflect.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.14.17/a8d08f3c1e75ecc7f38a8cfd7e9fa47919096373/byte-buddy-1.14.17.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.14.17/e3c251a39dc90badaf71c83427ba46840f219d8d/byte-buddy-agent-1.14.17.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.objenesis/objenesis/3.3/1049c09f1de4331e8193e579448d0916d75b7631/objenesis-3.3.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.10.2/4a9f78ef49483748e2c129f3d124b8fa249dafbf/kotlinx-coroutines-core-jvm-1.10.2.jar",
+        "-d",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/mockk-official",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults/012.txt"
+    },
+    {
+      "label": "candidate live MockK compile",
+      "argv": [
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/korrust-frozen",
+        "/workspace/work/interop159-inline-freeze/tests/compiled_inline_defaults/MockKSmoke.kt",
+        "-cp",
+        "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-jvm/1.13.13/eb46a802b52a43ee2ec1286055b651473e6fd4bf/mockk-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-dsl-jvm/1.13.13/5d34d7f20048e8c2d06bb4ba6b38be8534a91a43/mockk-dsl-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-agent-jvm/1.13.13/58dd7d1c0e9726d16a7d6f15f38f436d84c9d360/mockk-agent-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-agent-api-jvm/1.13.13/2149adf5a1d176fe0bbcfb8b19c92662401453b4/mockk-agent-api-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-core-jvm/1.13.13/28655203d85e9a869e65b6e29123e8f3d47ac602/mockk-core-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-reflect.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.14.17/a8d08f3c1e75ecc7f38a8cfd7e9fa47919096373/byte-buddy-1.14.17.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.14.17/e3c251a39dc90badaf71c83427ba46840f219d8d/byte-buddy-agent-1.14.17.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.objenesis/objenesis/3.3/1049c09f1de4331e8193e579448d0916d75b7631/objenesis-3.3.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.10.2/4a9f78ef49483748e2c129f3d124b8fa249dafbf/kotlinx-coroutines-core-jvm-1.10.2.jar",
+        "-d",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/mockk-candidate"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults/013.txt"
+    },
+    {
+      "label": "fixed Java MockK caller against official",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "-cp",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/mockk-official:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-jvm/1.13.13/eb46a802b52a43ee2ec1286055b651473e6fd4bf/mockk-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-dsl-jvm/1.13.13/5d34d7f20048e8c2d06bb4ba6b38be8534a91a43/mockk-dsl-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-agent-jvm/1.13.13/58dd7d1c0e9726d16a7d6f15f38f436d84c9d360/mockk-agent-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-agent-api-jvm/1.13.13/2149adf5a1d176fe0bbcfb8b19c92662401453b4/mockk-agent-api-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-core-jvm/1.13.13/28655203d85e9a869e65b6e29123e8f3d47ac602/mockk-core-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-reflect.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.14.17/a8d08f3c1e75ecc7f38a8cfd7e9fa47919096373/byte-buddy-1.14.17.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.14.17/e3c251a39dc90badaf71c83427ba46840f219d8d/byte-buddy-agent-1.14.17.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.objenesis/objenesis/3.3/1049c09f1de4331e8193e579448d0916d75b7631/objenesis-3.3.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.10.2/4a9f78ef49483748e2c129f3d124b8fa249dafbf/kotlinx-coroutines-core-jvm-1.10.2.jar",
+        "-d",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/mockk-callers",
+        "/workspace/work/interop159-inline-freeze/tests/compiled_inline_defaults/MockKCalls.java"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults/014.txt"
+    },
+    {
+      "label": "official live MockK independent assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/mockk-callers:/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/mockk-official:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-jvm/1.13.13/eb46a802b52a43ee2ec1286055b651473e6fd4bf/mockk-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-dsl-jvm/1.13.13/5d34d7f20048e8c2d06bb4ba6b38be8534a91a43/mockk-dsl-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-agent-jvm/1.13.13/58dd7d1c0e9726d16a7d6f15f38f436d84c9d360/mockk-agent-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-agent-api-jvm/1.13.13/2149adf5a1d176fe0bbcfb8b19c92662401453b4/mockk-agent-api-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-core-jvm/1.13.13/28655203d85e9a869e65b6e29123e8f3d47ac602/mockk-core-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-reflect.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.14.17/a8d08f3c1e75ecc7f38a8cfd7e9fa47919096373/byte-buddy-1.14.17.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.14.17/e3c251a39dc90badaf71c83427ba46840f219d8d/byte-buddy-agent-1.14.17.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.objenesis/objenesis/3.3/1049c09f1de4331e8193e579448d0916d75b7631/objenesis-3.3.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.10.2/4a9f78ef49483748e2c129f3d124b8fa249dafbf/kotlinx-coroutines-core-jvm-1.10.2.jar",
+        "defaults.mocking.MockKCalls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults/015.txt"
+    },
+    {
+      "label": "candidate live MockK independent assertions",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/mockk-callers:/workspace/work/interop159-inline-freeze/target/checks/2026-11-26T030701235818Z-compiled-inline-defaults/mockk-candidate:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-jvm/1.13.13/eb46a802b52a43ee2ec1286055b651473e6fd4bf/mockk-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-dsl-jvm/1.13.13/5d34d7f20048e8c2d06bb4ba6b38be8534a91a43/mockk-dsl-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-agent-jvm/1.13.13/58dd7d1c0e9726d16a7d6f15f38f436d84c9d360/mockk-agent-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-agent-api-jvm/1.13.13/2149adf5a1d176fe0bbcfb8b19c92662401453b4/mockk-agent-api-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-core-jvm/1.13.13/28655203d85e9a869e65b6e29123e8f3d47ac602/mockk-core-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-reflect.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.14.17/a8d08f3c1e75ecc7f38a8cfd7e9fa47919096373/byte-buddy-1.14.17.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.14.17/e3c251a39dc90badaf71c83427ba46840f219d8d/byte-buddy-agent-1.14.17.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.objenesis/objenesis/3.3/1049c09f1de4331e8193e579448d0916d75b7631/objenesis-3.3.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.10.2/4a9f78ef49483748e2c129f3d124b8fa249dafbf/kotlinx-coroutines-core-jvm-1.10.2.jar",
+        "defaults.mocking.MockKCalls"
+      ],
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults/016.txt"
+    }
+  ],
+  "reproduction_command": [
+    "python3",
+    "tools/check_compiled_inline_defaults.py",
+    "--candidate",
+    "/tmp/interop159-inline-freeze-build/debug/korrust",
+    "--output",
+    "target/checks/2026-11-26T030701235818Z-compiled-inline-defaults",
+    "--evidence-directory",
+    "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults",
+    "--mockk-classpath",
+    "/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-jvm/1.13.13/eb46a802b52a43ee2ec1286055b651473e6fd4bf/mockk-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-dsl-jvm/1.13.13/5d34d7f20048e8c2d06bb4ba6b38be8534a91a43/mockk-dsl-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-agent-jvm/1.13.13/58dd7d1c0e9726d16a7d6f15f38f436d84c9d360/mockk-agent-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-agent-api-jvm/1.13.13/2149adf5a1d176fe0bbcfb8b19c92662401453b4/mockk-agent-api-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/io.mockk/mockk-core-jvm/1.13.13/28655203d85e9a869e65b6e29123e8f3d47ac602/mockk-core-jvm-1.13.13.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar:/workspace/korrust/references/kotlinc/lib/kotlin-stdlib.jar:/workspace/korrust/references/kotlinc/lib/kotlin-reflect.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.14.17/a8d08f3c1e75ecc7f38a8cfd7e9fa47919096373/byte-buddy-1.14.17.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.14.17/e3c251a39dc90badaf71c83427ba46840f219d8d/byte-buddy-agent-1.14.17.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.objenesis/objenesis/3.3/1049c09f1de4331e8193e579448d0916d75b7631/objenesis-3.3.jar:/workspace/work/deps33/gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.10.2/4a9f78ef49483748e2c129f3d124b8fa249dafbf/kotlinx-coroutines-core-jvm-1.10.2.jar"
+  ],
+  "counts": {
+    "pass": 7,
+    "unsupported_language": 1
+  },
+  "validation": {
+    "rust_integration_tests": "Compiled inline defaults, prior nonfinal varargs and Java static wildcard suites passed",
+    "clippy": {
+      "command": "cargo clippy --all-targets --locked --offline -- -D warnings",
+      "exit_code": 0,
+      "log": "reports/correctness/2026-11-26T030701235818Z-compiled-inline-defaults/clippy.txt"
+    },
+    "report_generator_tests": {
+      "command": "python3 -m unittest discover -s tests -p 'test_reports.py'",
+      "passed": 8
+    }
+  }
+}

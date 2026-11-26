@@ -1,0 +1,1257 @@
+diff --git a/src/annotation_declarations.rs b/src/annotation_declarations.rs
+index f58c6a531..c7048f51f 100644
+--- a/src/annotation_declarations.rs
++++ b/src/annotation_declarations.rs
+@@ -1158,6 +1158,7 @@ pub(crate) fn header(
+                 kotlin_result: Some(logical),
+                 kotlin_internal: false,
+                 library: Some(LibraryMethod {
++                    default_code: None,
+                     vararg_index: None,
+                     contracts: Vec::new(),
+                     value_dispatch: false,
+diff --git a/src/check_declarations.rs b/src/check_declarations.rs
+index 85166ff6f..25ce7cfef 100644
+--- a/src/check_declarations.rs
++++ b/src/check_declarations.rs
+@@ -1112,6 +1112,7 @@ pub(super) fn check_class_with_constants(
+                     .iter()
+                     .find(|m| m.function.offset == *offset && m.function.name == *name)
+                     .map(|m| -> Result<_> { Ok(crate::classpath::LibraryMethod {
++            default_code: None,
+             vararg_index: None,
+             contracts: Vec::new(),
+             value_dispatch: false,
+diff --git a/src/check_functions.rs b/src/check_functions.rs
+index 759bb7237..24d4655fa 100644
+--- a/src/check_functions.rs
++++ b/src/check_functions.rs
+@@ -993,6 +993,7 @@ mod shadowing_tests {
+                 kotlin_interface: false,
+                 methods: vec![JavaMethod {
+                     library: Some(crate::classpath::LibraryMethod {
++                        default_code: None,
+                         vararg_index: None,
+                         contracts: Vec::new(),
+                         value_dispatch: false,
+diff --git a/src/check_interfaces.rs b/src/check_interfaces.rs
+index 078654b3d..25701005e 100644
+--- a/src/check_interfaces.rs
++++ b/src/check_interfaces.rs
+@@ -387,6 +387,7 @@ fn register_classes(
+                     || function.operator
+                     || !function.type_params.is_empty())
+                 .then(|| crate::classpath::LibraryMethod {
++                    default_code: None,
+                     vararg_index: None,
+                     contracts: Vec::new(),
+                     value_dispatch: false,
+diff --git a/src/check_library.rs b/src/check_library.rs
+index 7a54afc65..bb6903ef6 100644
+--- a/src/check_library.rs
++++ b/src/check_library.rs
+@@ -959,7 +959,6 @@ impl Checker<'_> {
+                 .file_private_visible(&self.lambda_owner, &method)
+             && method.owner != self.lambda_owner
+             && (!inline_declaration
+-                || mask != 0
+                 || !method
+                     .library
+                     .as_ref()
+@@ -987,6 +986,42 @@ impl Checker<'_> {
+         {
+             mask >>= 1;
+         }
++        let method = if inline && mask != 0 {
++            let parameters = params.len()
++                - usize::from(
++                    method
++                        .library
++                        .as_ref()
++                        .is_some_and(|library| library.receiver.is_some()),
++                );
++            let method = crate::compiled_inline::with_defaults(
++                method,
++                mask,
++                parameters,
++                self.classpath,
++                &self.lambda_owner,
++                offset,
++            )
++            .map_err(|mut error| {
++                error.offset = offset;
++                error
++            })?;
++            for word in 0..parameters.div_ceil(32) {
++                values.push(Value {
++                    ty: Type::Int,
++                    kind: ValueKind::Int((mask >> (word * 32)) as i32),
++                });
++            }
++            values.push(Value {
++                ty: Type::Java("java/lang/Object".into()),
++                kind: ValueKind::Null,
++            });
++            crate::compiled_inline::validate_access(&method, self.classpath, &self.lambda_owner)?;
++            mask = 0;
++            method
++        } else {
++            method
++        };
+         let kind = if inline && mask == 0 {
+             let code = method
+                 .library
+diff --git a/src/check_objects.rs b/src/check_objects.rs
+index 641ecd180..c37625060 100644
+--- a/src/check_objects.rs
++++ b/src/check_objects.rs
+@@ -122,6 +122,7 @@ fn legacy_check(
+         }
+         overloads.push(JavaMethod {
+             library: function.infix.then(|| crate::classpath::LibraryMethod {
++                default_code: None,
+                 vararg_index: None,
+                 contracts: Vec::new(),
+                 value_dispatch: false,
+@@ -656,6 +657,7 @@ pub(super) fn check(
+             kotlin_result: Some(result),
+             kotlin_internal: function.internal,
+             library: Some(crate::classpath::LibraryMethod {
++                default_code: None,
+                 vararg_index: None,
+                 contracts: Vec::new(),
+                 value_dispatch: false,
+diff --git a/src/check_relations.rs b/src/check_relations.rs
+index d0c8b3933..2f973deec 100644
+--- a/src/check_relations.rs
++++ b/src/check_relations.rs
+@@ -1286,6 +1286,7 @@ impl Checker<'_> {
+             ),
+             kotlin_result: Some(result.clone()),
+             library: Some(crate::classpath::LibraryMethod {
++                default_code: None,
+                 vararg_index: None,
+                 contracts: Vec::new(),
+                 value_dispatch: false,
+diff --git a/src/classpath.rs b/src/classpath.rs
+index cd3a4ad16..ddba4fabe 100644
+--- a/src/classpath.rs
++++ b/src/classpath.rs
+@@ -4,6 +4,7 @@ use std::path::PathBuf;
+ mod aliases;
+ mod archive;
+ mod import_classes;
++mod inline_defaults;
+ mod jdk_modules;
+ pub(crate) mod jvm_builtins;
+ mod metadata;
+@@ -69,6 +70,7 @@ type ClassMissKey = (String, Option<std::ffi::OsString>);
+ pub(crate) struct Classpath {
+     paths: Vec<PathBuf>,
+     archives: std::rc::Rc<std::cell::RefCell<archive::Index>>,
++    inline_default_classes: std::cell::RefCell<std::collections::BTreeMap<String, Vec<u8>>>,
+     cache_class_misses: bool,
+     missing_classes: std::cell::RefCell<std::collections::HashMap<ClassMissKey, Diagnostic>>,
+     module_name: String,
+@@ -217,6 +219,7 @@ pub(crate) struct LibraryTypeAlias {
+ 
+ #[derive(Clone, Debug)]
+ pub(crate) struct LibraryMethod {
++    pub default_code: Option<JavaCode>,
+     pub vararg_index: Option<usize>,
+     pub contracts: Vec<ContractEffect>,
+     pub value_dispatch: bool,
+@@ -1015,6 +1018,7 @@ impl Classpath {
+         Ok(Self {
+             paths: paths.to_vec(),
+             archives: std::rc::Rc::new(std::cell::RefCell::new(archives)),
++            inline_default_classes: Default::default(),
+             cache_class_misses: paths.iter().all(|path| !path.is_dir()),
+             missing_classes: Default::default(),
+             module_name: options.module_name.clone(),
+diff --git a/src/classpath/inline_defaults.rs b/src/classpath/inline_defaults.rs
+new file mode 100644
+index 000000000..c40df5b4b
+--- /dev/null
++++ b/src/classpath/inline_defaults.rs
+@@ -0,0 +1,287 @@
++use super::*;
++
++fn unsupported(message: &str) -> Diagnostic {
++    Diagnostic::new(0, message).with_kind(
++        crate::DiagnosticKind::UnsupportedLanguage,
++        "INLINE_DEFAULT_LAMBDA_UNSUPPORTED",
++    )
++}
++
++fn encoded(text: &str) -> Result<Vec<u8>> {
++    let mut bytes = Vec::new();
++    for unit in text.encode_utf16() {
++        match unit {
++            1..=127 => bytes.push(unit as u8),
++            0..=2047 => bytes.extend([0xc0 | (unit >> 6) as u8, 0x80 | (unit & 63) as u8]),
++            _ => bytes.extend([
++                0xe0 | (unit >> 12) as u8,
++                0x80 | ((unit >> 6) & 63) as u8,
++                0x80 | (unit & 63) as u8,
++            ]),
++        }
++    }
++    let size = u16::try_from(bytes.len())
++        .map_err(|_| unsupported("Regenerated lambda name exceeds classfile UTF-8 limit"))?;
++    let mut result = vec![1];
++    result.extend(size.to_be_bytes());
++    result.extend(bytes);
++    Ok(result)
++}
++
++fn rewrite(bytes: &[u8], owner: &str, renamed: &str, removals: &[Vec<usize>]) -> Result<Vec<u8>> {
++    let mut reader = Reader { bytes, offset: 8 };
++    let count = reader.u2()?;
++    let mut pool = vec![Vec::new(); usize::from(count)];
++    let mut names = std::collections::BTreeMap::new();
++    let mut literals = std::collections::BTreeSet::new();
++    let mut index = 1;
++    while index < count {
++        let start = reader.offset;
++        let tag = reader.u1()?;
++        match tag {
++            1 => {
++                let size = usize::from(reader.u2()?);
++                let name = String::from_utf16_lossy(&modified_utf8_units(reader.take(size)?)?);
++                names.insert(index, name);
++            }
++            3 | 4 | 9..=12 | 17 | 18 => {
++                reader.take(4)?;
++            }
++            5 | 6 => {
++                reader.take(8)?;
++            }
++            8 => {
++                literals.insert(reader.u2()?);
++            }
++            7 | 16 | 19 | 20 => {
++                reader.take(2)?;
++            }
++            15 => {
++                reader.take(3)?;
++            }
++            _ => return Err(invalid()),
++        }
++        pool[usize::from(index)] = bytes[start..reader.offset].to_vec();
++        index += if matches!(tag, 5 | 6) { 2 } else { 1 };
++    }
++    for (index, name) in &names {
++        let new = if name == owner {
++            renamed.to_owned()
++        } else {
++            name.replace(&format!("L{owner};"), &format!("L{renamed};"))
++        };
++        if new != *name {
++            if literals.contains(index) {
++                return Err(unsupported(
++                    "Default lambda shares a class-name constant with a string literal",
++                ));
++            }
++            pool[usize::from(*index)] = encoded(&new)?;
++        }
++    }
++    let mut output = bytes[..10].to_vec();
++    for entry in pool {
++        output.extend(entry);
++    }
++    let start = reader.offset;
++    reader.take(6)?;
++    let interfaces = usize::from(reader.u2()?);
++    reader.take(interfaces * 2)?;
++    output.extend(&bytes[start..reader.offset]);
++    for methods in [false, true] {
++        let count = reader.u2()?;
++        output.extend(count.to_be_bytes());
++        let mut method_removals = removals.iter();
++        for _ in 0..count {
++            let empty = Vec::new();
++            let removed = if methods {
++                method_removals.next().ok_or_else(invalid)?
++            } else {
++                &empty
++            };
++            let start = reader.offset;
++            reader.take(6)?;
++            let attributes = reader.u2()?;
++            output.extend(&bytes[start..reader.offset]);
++            for _ in 0..attributes {
++                let name = reader.u2()?;
++                let size = usize::try_from(reader.u4()?).map_err(|_| invalid())?;
++                let mut payload = reader.take(size)?.to_vec();
++                if methods && names.get(&name).is_some_and(|name| name == "Code") {
++                    for offset in removed {
++                        payload[8 + offset..8 + offset + 3].fill(0);
++                    }
++                }
++                output.extend(name.to_be_bytes());
++                output.extend((size as u32).to_be_bytes());
++                output.extend(payload);
++            }
++        }
++    }
++    let mut attributes = Vec::new();
++    for _ in 0..reader.u2()? {
++        let name = reader.u2()?;
++        let size = usize::try_from(reader.u4()?).map_err(|_| invalid())?;
++        let payload = reader.take(size)?;
++        if names.get(&name).is_some_and(|name| {
++            matches!(
++                name.as_str(),
++                "InnerClasses" | "EnclosingMethod" | "NestHost" | "NestMembers"
++            )
++        }) {
++            continue;
++        }
++        attributes.push((name, payload));
++    }
++    output.extend((attributes.len() as u16).to_be_bytes());
++    for (name, payload) in attributes {
++        output.extend(name.to_be_bytes());
++        output.extend((payload.len() as u32).to_be_bytes());
++        output.extend(payload);
++    }
++    Ok(output)
++}
++
++impl Classpath {
++    pub(crate) fn regenerate_inline_default_lambda(
++        &self,
++        owner: &str,
++        caller: &str,
++        offset: usize,
++    ) -> Result<String> {
++        use std::hash::{Hash, Hasher};
++        let mut hash = std::collections::hash_map::DefaultHasher::new();
++        owner.hash(&mut hash);
++        let renamed = format!("{caller}$inlineDefault${offset}${:016x}", hash.finish());
++        if self.inline_default_classes.borrow().contains_key(&renamed) {
++            return Ok(renamed);
++        }
++        let mut input = None;
++        for path in &self.paths {
++            if let Some(bytes) = self.read_resource(path, &format!("{owner}.class"))? {
++                input = Some(bytes);
++                break;
++            }
++        }
++        let bytes = input.ok_or_else(|| unsupported("Default lambda class is unavailable"))?;
++        let (class, _, attributes, _) = parse_details_impl(&bytes, owner, false)?;
++        if class.access & 0x11 != 0x11
++            || attributes
++                .iter()
++                .any(|attributes| attributes.code.is_none())
++            || !matches!(
++                class.super_name.as_deref(),
++                Some("java/lang/Object" | "kotlin/jvm/internal/Lambda")
++            )
++            || class.fields.len() != 1
++            || class.fields[0].name != "INSTANCE"
++            || class.fields[0].descriptor != format!("L{owner};")
++            || class.fields[0].access & 0x19 != 0x19
++            || class.interfaces.len() != 1
++            || !class.interfaces[0].starts_with("kotlin/jvm/functions/Function")
++            || !class.methods.iter().any(|method| {
++                method.name == "<init>" && method.descriptor == "()V" && method.access & 1 != 0
++            })
++            || class
++                .methods
++                .iter()
++                .any(|method| !matches!(method.name.as_str(), "invoke" | "<init>" | "<clinit>"))
++        {
++            return Err(unsupported(
++                "Default lambda regeneration requires a public capture-free function singleton",
++            ));
++        }
++        let mut removals = Vec::new();
++        for (method, attributes) in class.methods.iter().zip(attributes) {
++            let mut removed = Vec::new();
++            if let Some(code) = &attributes.code {
++                for instruction in crate::compiled_inline::decode(code)?.instructions {
++                    if let crate::compiled_inline::InlineOp::Reference {
++                        opcode: 0xb8,
++                        constant: InlineConstant::Method { owner, name, .. },
++                        ..
++                    } = instruction.kind
++                        && owner == "kotlin/jvm/internal/Intrinsics"
++                    {
++                        if name == "reifiedOperationMarker"
++                            || name == "needClassReification" && method.name != "<clinit>"
++                        {
++                            return Err(unsupported(
++                                "Default lambda body requires reified class regeneration",
++                            ));
++                        }
++                        if name == "needClassReification" {
++                            removed.push(instruction.offset);
++                        }
++                    }
++                }
++                let mut validation = method.clone();
++                validation.access |= 8;
++                validation.library = Some(LibraryMethod {
++                    default_code: None,
++                    vararg_index: None,
++                    contracts: Vec::new(),
++                    value_dispatch: false,
++                    suspend_: false,
++                    kotlin_declared: false,
++                    has_annotations: false,
++                    parameter_modes: Vec::new(),
++                    reified_arguments: Vec::new(),
++                    abstract_: false,
++                    builtin_array: false,
++                    kotlin_public: true,
++                    source_name: method.name.clone(),
++                    type_parameters: Vec::new(),
++                    receiver: None,
++                    infix: false,
++                    operator: false,
++                    inline: true,
++                    code: Some(code.clone()),
++                });
++                crate::compiled_inline::validate_access(&validation, self, &renamed)?;
++            }
++            removals.push(removed);
++        }
++        let output = rewrite(&bytes, owner, &renamed, &removals)?;
++        let class = parse_details_impl(&output, &renamed, false)?.0;
++        self.cache.borrow_mut().insert(renamed.clone(), class);
++        self.inline_default_classes
++            .borrow_mut()
++            .insert(renamed.clone(), output);
++        Ok(renamed)
++    }
++
++    pub(crate) fn inline_default_outputs(
++        &self,
++        files: &[crate::ClassFile],
++    ) -> Result<Vec<crate::ClassFile>> {
++        let generated = self.inline_default_classes.borrow();
++        if generated.is_empty() {
++            return Ok(Vec::new());
++        }
++        let mut used = std::collections::BTreeSet::new();
++        for file in files {
++            let (_, _, methods, _) = parse_details_impl(&file.bytes, &file.internal_name, false)?;
++            for code in methods.into_iter().filter_map(|method| method.code) {
++                for constant in code.constants.values() {
++                    let owner = match constant {
++                        InlineConstant::Class(owner)
++                        | InlineConstant::Field { owner, .. }
++                        | InlineConstant::Method { owner, .. } => owner,
++                        _ => continue,
++                    };
++                    if generated.contains_key(owner) {
++                        used.insert(owner.clone());
++                    }
++                }
++            }
++        }
++        Ok(used
++            .into_iter()
++            .map(|owner| crate::ClassFile {
++                bytes: generated[&owner].clone(),
++                internal_name: owner,
++            })
++            .collect())
++    }
++}
+diff --git a/src/classpath/metadata.rs b/src/classpath/metadata.rs
+index e086c9390..76f109c76 100644
+--- a/src/classpath/metadata.rs
++++ b/src/classpath/metadata.rs
+@@ -626,6 +626,7 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
+             kotlin_result: Some(array),
+             kotlin_internal: false,
+             library: Some(LibraryMethod {
++                default_code: None,
+                 vararg_index: None,
+                 contracts: Vec::new(),
+                 value_dispatch: false,
+@@ -853,6 +854,7 @@ fn builtin_declarations(
+             kotlin_result: Some(returned),
+             kotlin_internal: false,
+             library: requested_name.map(|_| LibraryMethod {
++                default_code: None,
+                 vararg_index: None,
+                 contracts: Vec::new(),
+                 value_dispatch: false,
+@@ -1390,6 +1392,7 @@ fn attach_member(
+             return Err(invalid());
+         }
+     }
++    let mut default_code = None;
+     if params.iter().any(|(_, _, default)| *default) {
+         if params.len() > 64 {
+             return Err(invalid());
+@@ -1420,11 +1423,16 @@ fn attach_member(
+                 ),
+             )
+         };
+-        if !class.methods.iter().any(|m| {
+-            m.name == bridge_name && m.descriptor == bridge_descriptor && m.access & 0x1000 != 0
+-        }) {
+-            return Err(invalid());
+-        }
++        let bridge = class
++            .methods
++            .iter()
++            .position(|method| {
++                method.name == bridge_name
++                    && method.descriptor == bridge_descriptor
++                    && method.access & 0x1000 != 0
++            })
++            .ok_or_else(invalid)?;
++        default_code = attributes[bridge].code.clone();
+     }
+     let observed = &attributes[*index].only_input_type_parameters;
+     if observed
+@@ -1449,6 +1457,7 @@ fn attach_member(
+         parameter_modes.insert(0, crate::syntax::InlineParameterMode::Ordinary);
+     }
+     method.library = Some(LibraryMethod {
++        default_code,
+         vararg_index,
+         contracts,
+         value_dispatch,
+@@ -1499,6 +1508,7 @@ fn remember_callable(
+             && method.library.is_none()
+         {
+             method.library = Some(LibraryMethod {
++                default_code: None,
+                 vararg_index: None,
+                 contracts: Vec::new(),
+                 value_dispatch: false,
+diff --git a/src/classpath/signature.rs b/src/classpath/signature.rs
+index 22405b485..0cae64617 100644
+--- a/src/classpath/signature.rs
++++ b/src/classpath/signature.rs
+@@ -580,6 +580,7 @@ pub(super) fn attach_with_declarations(
+                     method.kotlin_params = Some(params);
+                     method.kotlin_result = Some(result);
+                     method.library = Some(LibraryMethod {
++                        default_code: None,
+                         vararg_index: None,
+                         contracts: Vec::new(),
+                         value_dispatch: false,
+diff --git a/src/classpath/source.rs b/src/classpath/source.rs
+index 95f237ecf..d040f4d22 100644
+--- a/src/classpath/source.rs
++++ b/src/classpath/source.rs
+@@ -143,6 +143,7 @@ fn method(
+     );
+     JavaMethod {
+         library: Some(LibraryMethod {
++            default_code: None,
+             vararg_index: None,
+             contracts: Vec::new(),
+             value_dispatch: false,
+@@ -659,6 +660,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
+                 let name = format!("component{}", index + 1);
+                 class.methods.push(JavaMethod {
+                     library: Some(LibraryMethod {
++                        default_code: None,
+                         vararg_index: None,
+                         contracts: Vec::new(),
+                         value_dispatch: false,
+@@ -782,6 +784,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
+             if !p.annotations.is_empty() {
+                 for method in &mut methods {
+                     method.library = Some(LibraryMethod {
++                        default_code: None,
+                         vararg_index: None,
+                         contracts: Vec::new(),
+                         value_dispatch: false,
+@@ -1070,6 +1073,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
+                     library.code = None;
+                 } else {
+                     method.library = Some(LibraryMethod {
++                        default_code: None,
+                         vararg_index: None,
+                         contracts: Vec::new(),
+                         value_dispatch: false,
+diff --git a/src/classpath/source_enums.rs b/src/classpath/source_enums.rs
+index 73cbdcfe1..726e4595e 100644
+--- a/src/classpath/source_enums.rs
++++ b/src/classpath/source_enums.rs
+@@ -60,6 +60,7 @@ pub(super) fn header(module: &Module, owner: &str, cp: &Classpath) -> Result<Jav
+     ] {
+         class.methods.push(JavaMethod {
+             library: Some(LibraryMethod {
++                default_code: None,
+                 vararg_index: None,
+                 contracts: Vec::new(),
+                 value_dispatch: false,
+diff --git a/src/compiled_inline.rs b/src/compiled_inline.rs
+index adbb84958..893c843ab 100644
+--- a/src/compiled_inline.rs
++++ b/src/compiled_inline.rs
+@@ -1,3 +1,6 @@
++mod defaults;
++pub(crate) use defaults::with_defaults;
++
+ use std::collections::{BTreeMap, BTreeSet, VecDeque};
+ 
+ use crate::classpath::{InlineConstant, JavaCode, JavaExceptionHandler, JavaMethod};
+@@ -1056,6 +1059,7 @@ mod tests {
+     fn inline_method(code: JavaCode) -> JavaMethod {
+         JavaMethod {
+             library: Some(crate::classpath::LibraryMethod {
++                default_code: None,
+                 vararg_index: None,
+                 contracts: Vec::new(),
+                 value_dispatch: false,
+diff --git a/src/compiled_inline/defaults.rs b/src/compiled_inline/defaults.rs
+new file mode 100644
+index 000000000..2ad9d50db
+--- /dev/null
++++ b/src/compiled_inline/defaults.rs
+@@ -0,0 +1,177 @@
++use super::*;
++use crate::classpath::Classpath;
++
++fn integer(instruction: &InlineInstruction) -> Option<i32> {
++    match &instruction.kind {
++        InlineOp::Constant(InlineConstant::Integer(value)) => Some(*value),
++        InlineOp::Raw { opcode, operands }
++            if (0x02..=0x08).contains(opcode) && operands.is_empty() =>
++        {
++            Some(i32::from(*opcode) - 3)
++        }
++        InlineOp::Raw {
++            opcode: 0x10,
++            operands,
++        } if operands.len() == 1 => Some(i32::from(operands[0] as i8)),
++        InlineOp::Raw {
++            opcode: 0x11,
++            operands,
++        } if operands.len() == 2 => Some(i32::from(i16::from_be_bytes([operands[0], operands[1]]))),
++        _ => None,
++    }
++}
++
++pub(crate) fn with_defaults(
++    mut method: JavaMethod,
++    mask: u64,
++    parameters: usize,
++    classpath: &Classpath,
++    caller: &str,
++    offset: usize,
++) -> Result<JavaMethod> {
++    let mut code = method
++        .library
++        .as_ref()
++        .and_then(|library| library.default_code.clone())
++        .ok_or_else(|| unsupported("default dispatcher bytecode is unavailable"))?;
++    let (widths, _) = descriptor_widths(&method.descriptor)?;
++    let first_mask = widths.iter().map(|width| u16::from(*width)).sum::<u16>();
++    let words = parameters.div_ceil(32);
++    let masks = (0..words)
++        .map(|word| (first_mask + word as u16, (mask >> (word * 32)) as u32))
++        .collect::<BTreeMap<_, _>>();
++    let body = decode(&code)?;
++    let indices = body
++        .instructions
++        .iter()
++        .enumerate()
++        .map(|(index, instruction)| (instruction.offset, index))
++        .collect::<BTreeMap<_, _>>();
++    let mut cursor = 0;
++    let mut recognized = 0u64;
++    let mut erased = Vec::new();
++    while cursor + 4 < body.instructions.len() {
++        let instructions = &body.instructions[cursor..];
++        let InlineOp::Local { opcode: 0x15, slot } = instructions[0].kind else {
++            break;
++        };
++        let Some(mask_word) = masks.get(&slot) else {
++            break;
++        };
++        let Some(bit) = integer(&instructions[1])
++            .map(|value| value as u32)
++            .filter(|bit| bit.is_power_of_two())
++        else {
++            break;
++        };
++        if !matches!(instructions[2].kind, InlineOp::Raw { opcode: 0x7e, .. }) {
++            break;
++        }
++        let InlineOp::Branch {
++            opcode: 0x99,
++            target,
++        } = instructions[3].kind
++        else {
++            break;
++        };
++        let start = instructions[0].offset;
++        let value_start = instructions[4].offset;
++        if target <= value_start {
++            return Err(unsupported("default guard has no forward value region"));
++        }
++        let word = usize::from(slot - first_mask);
++        recognized |= u64::from(bit) << (word * 32);
++        code.bytes[start..value_start].fill(0);
++        if mask_word & bit == 0 {
++            code.bytes[value_start..target].fill(0);
++            erased.push((value_start, target));
++        }
++        cursor = indices[&target];
++    }
++    if mask & !recognized != 0 {
++        return Err(unsupported(
++            "default dispatcher does not have supported mask guards",
++        ));
++    }
++    for handler in &code.exception_handlers {
++        if erased
++            .iter()
++            .any(|(start, end)| *start <= handler.handler && handler.handler < *end)
++            && !erased
++                .iter()
++                .any(|(start, end)| *start <= handler.start && handler.end <= *end)
++        {
++            return Err(unsupported(
++                "default dispatcher exception handler crosses a removed value region",
++            ));
++        }
++    }
++    code.exception_handlers.retain(|handler| {
++        !erased
++            .iter()
++            .any(|(start, end)| *start <= handler.start && handler.end <= *end)
++    });
++    let body = decode(&code)?;
++    for (index, instruction) in body.instructions.iter().enumerate() {
++        if matches!(&instruction.kind, InlineOp::Reference { opcode: 0xb8, constant: InlineConstant::Method { owner, name, descriptor, .. }, .. }
++            if owner == "kotlin/jvm/internal/Intrinsics" && name == "needClassReification" && descriptor == "()V")
++        {
++            let Some(next) = body.instructions.get(index + 1) else {
++                return Err(unsupported("default lambda reification has no value"));
++            };
++            let InlineOp::Reference {
++                opcode: 0xb2,
++                constant:
++                    InlineConstant::Field {
++                        owner,
++                        name,
++                        descriptor,
++                    },
++                ..
++            } = &next.kind
++            else {
++                return Err(unsupported("default lambda requires class regeneration"));
++            };
++            if name != "INSTANCE" || descriptor != &format!("L{owner};") {
++                return Err(unsupported("default lambda requires class regeneration"));
++            }
++            let renamed = classpath.regenerate_inline_default_lambda(owner, caller, offset)?;
++            for constant in std::sync::Arc::make_mut(&mut code.constants).values_mut() {
++                match constant {
++                    InlineConstant::Class(class) if class == owner => *class = renamed.clone(),
++                    InlineConstant::Field {
++                        owner: declaring,
++                        descriptor,
++                        ..
++                    }
++                    | InlineConstant::Method {
++                        owner: declaring,
++                        descriptor,
++                        ..
++                    } => {
++                        if declaring == owner {
++                            *declaring = renamed.clone();
++                        }
++                        *descriptor =
++                            descriptor.replace(&format!("L{owner};"), &format!("L{renamed};"));
++                    }
++                    _ => {}
++                }
++            }
++            code.bytes[instruction.offset..next.offset].fill(0);
++        }
++    }
++    let closing = method
++        .descriptor
++        .find(')')
++        .ok_or_else(|| unsupported("default dispatcher descriptor is malformed"))?;
++    method.descriptor = format!(
++        "({}{}Ljava/lang/Object;){}",
++        &method.descriptor[1..closing],
++        "I".repeat(words),
++        &method.descriptor[closing + 1..]
++    );
++    method.name.push_str("$default");
++    method.library.as_mut().unwrap().code = Some(code);
++    Ok(method)
++}
+diff --git a/src/lib.rs b/src/lib.rs
+index 94138b9ea..4c50d701c 100644
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -1413,6 +1413,7 @@ fn emit_unit(
+             file.bytes = bytecode::annotation_files::apply(&file.bytes, annotations)?;
+         }
+     }
++    files.extend(classpath.inline_default_outputs(&files)?);
+     Ok(files)
+ }
+ 
+diff --git a/tests/compiled_inline_defaults.rs b/tests/compiled_inline_defaults.rs
+new file mode 100644
+index 000000000..4ae11882a
+--- /dev/null
++++ b/tests/compiled_inline_defaults.rs
+@@ -0,0 +1,79 @@
++use korrust::{SourceInput, compile_batch_with_classpath};
++use std::path::PathBuf;
++use std::process::{Command, Output};
++
++fn run(command: &mut Command) -> Output {
++    let output = command.output().unwrap();
++    assert!(
++        output.status.success(),
++        "{command:?}\n{}\n{}",
++        String::from_utf8_lossy(&output.stdout),
++        String::from_utf8_lossy(&output.stderr)
++    );
++    output
++}
++
++#[test]
++fn compiled_inline_defaults_preserve_evaluation_and_control_flow() {
++    std::thread::Builder::new()
++        .stack_size(32 * 1024 * 1024)
++        .spawn(check_compiled_compiled_inline_defaults)
++        .unwrap()
++        .join()
++        .unwrap();
++}
++
++fn check_compiled_compiled_inline_defaults() {
++    let project = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
++    let fixtures = project.join("tests/compiled_inline_defaults");
++    let standard = project.join("references/kotlinc/lib/kotlin-stdlib.jar");
++    let root = std::env::temp_dir().join(format!("korrust-inline-defaults-{}", std::process::id()));
++    std::fs::create_dir_all(&root).unwrap();
++    let dependency = root.join("dependency");
++    let official = root.join("official");
++    let candidate = root.join("candidate");
++    let kotlinc = project.join("references/kotlinc/bin/kotlinc");
++    run(Command::new(&kotlinc)
++        .arg(fixtures.join("Library.kt"))
++        .args(["-jvm-target", "1.8", "-Xmetadata-version=1.7.0", "-d"])
++        .arg(&dependency));
++    let classpath = std::env::join_paths([&dependency, &standard]).unwrap();
++    run(Command::new(&kotlinc)
++        .arg(fixtures.join("Consumer.kt"))
++        .args(["-jvm-target", "1.8", "-cp"])
++        .arg(&classpath)
++        .arg("-d")
++        .arg(&official));
++    let input = SourceInput {
++        identity: fixtures.join("Consumer.kt").display().to_string(),
++        file_name: "Consumer.kt".into(),
++        source: std::fs::read_to_string(fixtures.join("Consumer.kt")).unwrap(),
++    };
++    for output in compile_batch_with_classpath(
++        &[input],
++        &[dependency.clone(), standard.clone()],
++        "compiled_inline_defaults",
++    )
++    .unwrap()
++    {
++        let path = candidate.join(output.output.relative_path);
++        std::fs::create_dir_all(path.parent().unwrap()).unwrap();
++        std::fs::write(path, output.output.bytes).unwrap();
++    }
++    let callers = root.join("callers");
++    run(Command::new("javac")
++        .arg("-cp")
++        .arg(std::env::join_paths([&official, &dependency, &standard]).unwrap())
++        .arg("-d")
++        .arg(&callers)
++        .arg(fixtures.join("Calls.java")));
++    for provider in [&official, &candidate] {
++        let output = run(Command::new("java")
++            .arg("-Xverify:all")
++            .arg("-cp")
++            .arg(std::env::join_paths([&callers, provider, &dependency, &standard]).unwrap())
++            .arg("defaults.consumer.Calls"));
++        assert_eq!(output.stdout, b"inline-defaults-ok\n");
++    }
++    std::fs::remove_dir_all(root).unwrap();
++}
+diff --git a/tests/compiled_inline_defaults/Calls.java b/tests/compiled_inline_defaults/Calls.java
+new file mode 100644
+index 000000000..890076dd2
+--- /dev/null
++++ b/tests/compiled_inline_defaults/Calls.java
+@@ -0,0 +1,21 @@
++package defaults.consumer;
++
++public class Calls {
++    public static void main(String[] args) {
++        defaults.library.LibraryKt.setOrder(0);
++        if (ConsumerKt.omitted() != 13 || defaults.library.LibraryKt.getOrder() != 12) throw new AssertionError("dependent defaults");
++        defaults.library.LibraryKt.setOrder(0);
++        if (ConsumerKt.reordered() != 6 || defaults.library.LibraryKt.getOrder() != 51) throw new AssertionError("argument/default order");
++        if (ConsumerKt.nonlocal() != 23) throw new AssertionError("non-local return");
++        defaults.library.LibraryKt.setOrder(0);
++        if (ConsumerKt.finalizer() != 7 || defaults.library.LibraryKt.getOrder() != 29) throw new AssertionError("finally");
++        if (!ConsumerKt.reified().equals("java.lang.String")) throw new AssertionError("reified default");
++        if (!ConsumerKt.lambdaDefault().equals("kept")) throw new AssertionError("default lambda");
++        if (!ConsumerKt.suppliedLambda().equals("2provided")) throw new AssertionError("unused reified default");
++        if (ConsumerKt.encoded() != 3) throw new AssertionError("stdlib charset default");
++        defaults.library.LibraryKt.setOrder(0);
++        if (ConsumerKt.wideMask() != 6 || defaults.library.LibraryKt.getOrder() != 123) throw new AssertionError("two mask words / sign bit");
++        if (!ConsumerKt.fieldDefault().equals("field")) throw new AssertionError("class property initializer");
++        System.out.println("inline-defaults-ok");
++    }
++}
+diff --git a/tests/compiled_inline_defaults/CleanupInitial.kt b/tests/compiled_inline_defaults/CleanupInitial.kt
+new file mode 100644
+index 000000000..a9731fd0d
+--- /dev/null
++++ b/tests/compiled_inline_defaults/CleanupInitial.kt
+@@ -0,0 +1,3 @@
++package defaults.cleanup
++import defaults.library.defaultBlock
++fun retained(): String = defaultBlock("kept")
+diff --git a/tests/compiled_inline_defaults/CleanupUpdated.kt b/tests/compiled_inline_defaults/CleanupUpdated.kt
+new file mode 100644
+index 000000000..c0602e22c
+--- /dev/null
++++ b/tests/compiled_inline_defaults/CleanupUpdated.kt
+@@ -0,0 +1,2 @@
++package defaults.cleanup
++fun retained(): Int = 9
+diff --git a/tests/compiled_inline_defaults/Consumer.kt b/tests/compiled_inline_defaults/Consumer.kt
+new file mode 100644
+index 000000000..e060ef935
+--- /dev/null
++++ b/tests/compiled_inline_defaults/Consumer.kt
+@@ -0,0 +1,32 @@
++package defaults.consumer
++
++import defaults.library.accumulate
++import defaults.library.defaultBlock
++import defaults.library.guarded
++import defaults.library.name
++import defaults.library.record
++import defaults.library.reifiedBlock
++import defaults.library.wide
++
++fun omitted(): Int = accumulate { it + 10 }
++fun reordered(): Int = accumulate(next = record(5)) { it }
++fun nonlocal(): Int {
++    accumulate { return it + 20 }
++    return -1
++}
++fun finalizer(): Int {
++    guarded { return 7 }
++    return -1
++}
++fun reified(): String = name<String>()
++fun lambdaDefault(): String = defaultBlock("kept")
++fun suppliedLambda(): String = reifiedBlock<Int> { "provided" }
++fun encoded(): Int = "hé".toByteArray().size
++
++fun wideMask(): Int = wide { it }
++
++class Holder {
++    val stored: String = defaultBlock("field")
++}
++
++fun fieldDefault(): String = Holder().stored
+diff --git a/tests/compiled_inline_defaults/Library.kt b/tests/compiled_inline_defaults/Library.kt
+new file mode 100644
+index 000000000..df30d99de
+--- /dev/null
++++ b/tests/compiled_inline_defaults/Library.kt
+@@ -0,0 +1,58 @@
++package defaults.library
++
++var order: Int = 0
++fun record(value: Int): Int {
++    order = order * 10 + value
++    return value
++}
++
++inline fun accumulate(start: Int = record(1), next: Int = record(start + 1), block: (Int) -> Int): Int = block(start + next)
++
++inline fun guarded(value: Int = record(2), block: () -> Int): Int {
++    try {
++        return value + block()
++    } finally {
++        record(9)
++    }
++}
++
++inline fun <reified T> name(type: Class<*> = T::class.java): String = type.name
++inline fun <reified T> defaultBlock(seed: T, block: (T) -> T = { it }): T = block(seed)
++inline fun <reified T> reifiedBlock(seed: Int = 2, block: () -> String = { T::class.java.name }): String = seed.toString() + block()
++
++inline fun wide(
++    p0: Int = record(1),
++    p1: Int = 0,
++    p2: Int = 0,
++    p3: Int = 0,
++    p4: Int = 0,
++    p5: Int = 0,
++    p6: Int = 0,
++    p7: Int = 0,
++    p8: Int = 0,
++    p9: Int = 0,
++    p10: Int = 0,
++    p11: Int = 0,
++    p12: Int = 0,
++    p13: Int = 0,
++    p14: Int = 0,
++    p15: Int = 0,
++    p16: Int = 0,
++    p17: Int = 0,
++    p18: Int = 0,
++    p19: Int = 0,
++    p20: Int = 0,
++    p21: Int = 0,
++    p22: Int = 0,
++    p23: Int = 0,
++    p24: Int = 0,
++    p25: Int = 0,
++    p26: Int = 0,
++    p27: Int = 0,
++    p28: Int = 0,
++    p29: Int = 0,
++    p30: Int = 0,
++    p31: Int = record(2),
++    p32: Int = record(3),
++    block: (Int) -> Int,
++): Int = block(p0 + p31 + p32)
+diff --git a/tests/compiled_inline_defaults/MockKCalls.java b/tests/compiled_inline_defaults/MockKCalls.java
+new file mode 100644
+index 000000000..865e06d10
+--- /dev/null
++++ b/tests/compiled_inline_defaults/MockKCalls.java
+@@ -0,0 +1,9 @@
++package defaults.mocking;
++
++public class MockKCalls {
++    public static void main(String[] args) {
++        if (MockKSmokeKt.relaxed() != 17) throw new AssertionError("relaxed/default block");
++        if (MockKSmokeKt.strict() != 19) throw new AssertionError("strict/default flags");
++        System.out.println("mockk-inline-defaults-ok");
++    }
++}
+diff --git a/tests/compiled_inline_defaults/MockKSmoke.kt b/tests/compiled_inline_defaults/MockKSmoke.kt
+new file mode 100644
+index 000000000..1a350660b
+--- /dev/null
++++ b/tests/compiled_inline_defaults/MockKSmoke.kt
+@@ -0,0 +1,21 @@
++package defaults.mocking
++
++import io.mockk.every
++import io.mockk.mockk
++
++interface Sample {
++    fun count(): Int
++}
++
++fun relaxed(): Int {
++    val sample = mockk<Sample>(relaxed = true)
++    val initial = sample.count()
++    every { sample.count() } returns 17
++    return initial * 100 + sample.count()
++}
++
++fun strict(): Int {
++    val sample = mockk<Sample>()
++    every { sample.count() } returns 19
++    return sample.count()
++}
+diff --git a/tests/compiled_inline_defaults/UnsupportedLambda.kt b/tests/compiled_inline_defaults/UnsupportedLambda.kt
+new file mode 100644
+index 000000000..69290b4d0
+--- /dev/null
++++ b/tests/compiled_inline_defaults/UnsupportedLambda.kt
+@@ -0,0 +1,2 @@
++import defaults.library.reifiedBlock
++fun boundary(): String = reifiedBlock<String>()
+diff --git a/tools/check_compiled_inline_defaults.py b/tools/check_compiled_inline_defaults.py
+new file mode 100644
+index 000000000..1ad649a1c
+--- /dev/null
++++ b/tools/check_compiled_inline_defaults.py
+@@ -0,0 +1,166 @@
++#!/usr/bin/env python3
++import argparse
++from collections import Counter
++from datetime import datetime, timezone
++import hashlib
++import json
++import os
++from pathlib import Path
++import shutil
++import subprocess
++import zipfile
++
++ROOT = Path(__file__).resolve().parents[1]
++FIXTURES = ROOT / 'tests/compiled_inline_defaults'
++
++
++def sha(path):
++    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
++
++
++def relative(path):
++    path = Path(path).absolute()
++    return str(path.relative_to(ROOT)) if path.is_relative_to(ROOT) else str(path)
++
++
++def main():
++    parser = argparse.ArgumentParser()
++    parser.add_argument('--candidate', type=Path, default=ROOT / 'target/release/korrust')
++    parser.add_argument('--output', type=Path)
++    parser.add_argument('--evidence-directory', type=Path)
++    parser.add_argument('--mockk-classpath', help='Optional complete MockK runtime JAR classpath')
++    args = parser.parse_args()
++    created = datetime.now(timezone.utc)
++    stamp = created.strftime('%Y-%m-%dT%H%M%S%fZ') + '-compiled-inline-defaults'
++    directory = (args.output or ROOT / 'target/checks' / stamp).absolute()
++    evidence = (args.evidence_directory or ROOT / 'reports/correctness' / stamp).absolute()
++    directory.mkdir(parents=True, exist_ok=False)
++    evidence.mkdir(parents=True, exist_ok=False)
++    candidate = directory / 'korrust-frozen'
++    shutil.copy2(args.candidate.resolve(), candidate)
++    official = ROOT / 'references/kotlinc/bin/kotlinc'
++    standard = ROOT / 'references/kotlinc/lib/kotlin-stdlib.jar'
++    java = Path(os.environ['JAVA_HOME']) / 'bin'
++    options = ['-language-version', '2.3', '-api-version', '2.3', '-jvm-target', '1.8']
++    inputs = [*sorted((ROOT / 'src').rglob('*.rs')), *sorted(FIXTURES.iterdir()), ROOT / 'tests/compiled_inline_defaults.rs', Path(__file__), ROOT / 'Cargo.toml', ROOT / 'Cargo.lock', ROOT / 'references/compiler.json', ROOT / 'references/sources.json']
++    dependency_inputs = [Path(path).absolute() for path in args.mockk_classpath.split(os.pathsep)] if args.mockk_classpath else []
++    frozen = {relative(path): sha(path) for path in [*inputs, candidate, standard, ROOT / 'references/kotlinc/lib/kotlin-compiler.jar', *dependency_inputs]}
++    with zipfile.ZipFile(evidence / 'inputs.zip', 'w', zipfile.ZIP_DEFLATED) as archive:
++        for path in inputs:
++            archive.writestr(relative(path), path.read_bytes())
++    report_path = evidence.with_suffix('.json')
++    report = dict(schema_version=1, kind='correctness', created_at=created.isoformat(), status='running',
++        compiler=dict(path=relative(candidate), sha256=sha(candidate), source_revision=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()),
++        reference_compiler=json.loads((ROOT / 'references/compiler.json').read_text()),
++        frozen_input_hashes=frozen, input_bundle=dict(path=relative(evidence / 'inputs.zip'), sha256=sha(evidence / 'inputs.zip')),
++        scope='Compiled static Kotlin inline defaults: real dispatcher evaluation order, dependent defaults, lambda substitution, non-local returns through finally, reified defaults, capture-free default lambda regeneration, private JVM inline-only stdlib functions, class property initializers, output cleanup and optional live MockK execution',
++        limitations=['Default dispatcher guards are bounded to the Kotlin synthetic mask-prefix form', 'Default lambda regeneration is bounded to public capture-free function singletons; lambda bodies requiring reified specialization remain explicitly unsupported', 'Existing inline body, JVM access and local-slot limits apply; no full MockK suite or application compatibility claim'],
++        effective_options=dict(language_version='2.3', api_version='2.3', jvm_target='1.8'),
++        cases=[], commands=[], reproduction_command=['python3', relative(__file__), '--candidate', relative(args.candidate), '--output', relative(directory), '--evidence-directory', relative(evidence)])
++
++    def save():
++        report['counts'] = dict(Counter(case['outcome'] for case in report['cases']))
++        report_path.write_text(json.dumps(report, indent=2) + '\n')
++
++    def run(label, command):
++        command = [str(part) for part in command]
++        result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=360)
++        log = evidence / f'{len(report["commands"]):03d}.txt'
++        log.write_text('$ ' + ' '.join(command) + '\n' + result.stdout + result.stderr)
++        report['commands'].append(dict(label=label, argv=command, exit_code=result.returncode, log=relative(log)))
++        save()
++        assert result.returncode == 0, label + ': ' + result.stdout + result.stderr
++        return result
++
++    def case(name, operation):
++        try:
++            detail = operation()
++            outcome = detail.pop('outcome', 'pass') if isinstance(detail, dict) else 'pass'
++            report['cases'].append(dict(id=name, outcome=outcome, detail=detail))
++        except Exception as error:
++            report['cases'].append(dict(id=name, outcome='correctness_failure', detail=str(error)))
++        save()
++
++    if args.mockk_classpath:
++        report['reproduction_command'].extend(['--mockk-classpath', args.mockk_classpath])
++    save()
++    dependency = directory / 'dependency'
++    run('official dependency with metadata 1.7', [official, FIXTURES / 'Library.kt', '-d', dependency, '-Xmetadata-version=1.7.0', *options])
++    cp = os.pathsep.join(map(str, [dependency, standard]))
++    providers = [('official', directory / 'official'), ('candidate', directory / 'candidate')]
++    for name, output in providers:
++        def compile_consumer(name=name, output=output):
++            run(name + ' consumer', [(official if name == 'official' else candidate), FIXTURES / 'Consumer.kt', '-cp', cp, '-d', output, *(options if name == 'official' else [])])
++            return 'Same unmodified source, compiled dependency and standard library'
++        case(name + '_compile', compile_consumer)
++    def runtime():
++        caller = directory / 'caller'
++        run('fixed Java caller against official', [java / 'javac', '-cp', os.pathsep.join(map(str, [providers[0][1], dependency, standard])), '-d', caller, FIXTURES / 'Calls.java'])
++        hashes = {str(path.relative_to(caller)): sha(path) for path in caller.rglob('*.class')}
++        for name, output in providers:
++            result = run(name + ' independent runtime assertions', [java / 'java', '-Xverify:all', '-cp', os.pathsep.join(map(str, [caller, output, dependency, standard])), 'defaults.consumer.Calls'])
++            assert result.stdout == 'inline-defaults-ok\n', result.stdout
++        return dict(caller_sha256=hashes, assertions='Dependent defaults evaluated as 1 then 2; explicit argument evaluated before default (order 51); non-local return and finally order 29; reified Class default; regenerated generic identity lambda; unused reified default discarded; stdlib default UTF-8 charset; two mask words including bit 31 with evaluation order 123; regenerated default lambda used by an ordinary class property initializer')
++    case('fixed_java_caller_both_providers', runtime)
++    def signatures():
++        listings = []
++        for name, output in providers:
++            result = run(name + ' public JVM signatures', [java / 'javap', '-public', '-s', '-classpath', output, 'defaults.consumer.ConsumerKt'])
++            listings.append(result.stdout)
++        assert listings[0] == listings[1], listings
++        return listings[0]
++    case('public_jvm_signatures', signatures)
++    def unsupported_lambda():
++        source = FIXTURES / 'UnsupportedLambda.kt'
++        run('official reified default lambda boundary', [official, source, '-cp', cp, '-d', directory / 'official-unsupported-lambda', *options])
++        command = [str(part) for part in [candidate, source, '-cp', cp, '-d', directory / 'candidate-unsupported-lambda', '--diagnostic-format', 'json']]
++        result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=360)
++        log = evidence / f'{len(report["commands"]):03d}.txt'
++        log.write_text('$ ' + ' '.join(command) + '\n' + result.stdout + result.stderr)
++        report['commands'].append(dict(label='candidate reified default lambda boundary', argv=command, exit_code=result.returncode, log=relative(log)))
++        save()
++        assert result.returncode == 1, result.stdout + result.stderr
++        diagnostic = json.loads(result.stderr)
++        assert diagnostic['category'] == 'unsupported_language', diagnostic
++        return dict(outcome='unsupported_language', diagnostic=diagnostic)
++    case('reified_default_lambda_regeneration_boundary', unsupported_lambda)
++    def cleanup():
++        source = directory / 'Cleanup.kt'
++        output = directory / 'cleanup'
++        source.write_bytes((FIXTURES / 'CleanupInitial.kt').read_bytes())
++        run('candidate initial default lambda ownership', [candidate, source, '-cp', cp, '-d', output])
++        before = {str(path.relative_to(output)): sha(path) for path in output.rglob('*.class')}
++        assert any('$inlineDefault$' in name for name in before), before
++        source.write_bytes((FIXTURES / 'CleanupUpdated.kt').read_bytes())
++        run('candidate default lambda removal', [candidate, source, '-cp', cp, '-d', output])
++        after = {str(path.relative_to(output)): sha(path) for path in output.rglob('*.class')}
++        assert not any('$inlineDefault$' in name for name in after), after
++        assert set(after) == {'defaults/cleanup/CleanupKt.class'}, after
++        return dict(before=before, after=after)
++    case('regenerated_lambda_output_cleanup', cleanup)
++    def mockk():
++        if not args.mockk_classpath:
++            return dict(outcome='not_run', reason='Provide --mockk-classpath with MockK and all runtime JAR dependencies')
++        model = FIXTURES / 'MockKSmoke.kt'
++        outputs = [('official', directory / 'mockk-official'), ('candidate', directory / 'mockk-candidate')]
++        for name, output in outputs:
++            run(name + ' live MockK compile', [(official if name == 'official' else candidate), model, '-cp', args.mockk_classpath, '-d', output, *(options if name == 'official' else [])])
++        callers = directory / 'mockk-callers'
++        run('fixed Java MockK caller against official', [java / 'javac', '-cp', os.pathsep.join([str(outputs[0][1]), args.mockk_classpath]), '-d', callers, FIXTURES / 'MockKCalls.java'])
++        caller_hashes = {str(path.relative_to(callers)): sha(path) for path in callers.rglob('*.class')}
++        for name, output in outputs:
++            result = run(name + ' live MockK independent assertions', [java / 'java', '-Xverify:all', '-cp', os.pathsep.join([str(callers), str(output), args.mockk_classpath]), 'defaults.mocking.MockKCalls'])
++            assert result.stdout == 'mockk-inline-defaults-ok\n', result.stdout
++        return dict(caller_sha256=caller_hashes, dependencies={relative(path): sha(path) for path in dependency_inputs}, assertions='Real relaxed mock returns zero before stubbing and 17 after stubbing; real strict mock with all defaults returns 19 after stubbing')
++    case('live_mockk_default_dispatch_and_stubbing', mockk)
++    changed = [name for name, digest in frozen.items() if sha(ROOT / name) != digest]
++    report['cases'].append(dict(id='frozen_inputs', outcome='correctness_failure' if changed else 'pass', changed=changed))
++    report['status'] = 'failed' if any(case['outcome'] == 'correctness_failure' for case in report['cases']) else 'complete'
++    save()
++    subprocess.run(['python3', ROOT / 'tools/reports.py'], cwd=ROOT, check=True)
++    print(json.dumps(dict(report=relative(report_path), status=report['status'], counts=report['counts'])))
++    return report['status'] != 'complete'
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())
