@@ -1,0 +1,605 @@
+{
+  "schema_version": 1,
+  "kind": "correctness",
+  "created_at": "2026-11-26T02:50:35.430094+00:00",
+  "status": "pass",
+  "selection": "Qualified Java static fields and Kotlin object/companion properties, assignments and updates; qualified calls; lexical, captured, inherited and imported field/property alias shadowing; same-package compiled nested constructors. Fixed official Java caller executed against both outputs with JVM verification. No full-app or performance claim.",
+  "compiler": {
+    "binary_sha256": "89bfe4bf9d9f079e7e94b366c08994a118b2706a9bfb655d574cbeeaed4b27a9",
+    "source_base_revision": "b03178aba",
+    "source_snapshot": "/workspace/work/targets159/qualified-freeze2",
+    "source_state": "Immutable source snapshot; signature member order is normalized and all declaration/type descriptors retained."
+  },
+  "reference_compiler": {
+    "pin": {
+      "schema_version": 1,
+      "installed_at": "2026-10-23T02:43:55.924832+00:00",
+      "version": "2.3.21",
+      "url": "https://github.com/JetBrains/kotlin/releases/download/v2.3.21/kotlin-compiler-2.3.21.zip",
+      "archive_sha256": "a8cfc1d62cd4d0de4d04f42575e40135bd620588c17d568a20eb9c7c259af14f",
+      "path": "references/kotlinc",
+      "version_output": "info: kotlinc-jvm 2.3.21 (JRE 21.0.11)\n"
+    }
+  },
+  "inputs": {
+    "files_sha256": {
+      "src/annotation_declarations.rs": "68824921ba8a6cac0425cfd3c574eb87bc78c478575ade5f0fc5d7d31bb8fecc",
+      "src/bytecode/annotation_classes.rs": "dfa9c0235d1686eab68ecd3f26231f37b8154eccabf355f0899264d00960d929",
+      "src/bytecode/annotation_files.rs": "0fe8ebba7bbd2c80fcdd6fda797b448ca8cd63945b100781361bf1e3ace02eaa",
+      "src/bytecode/annotations.rs": "c72dc6225a51cee01c30db9affd6ce8d4030de028a0392657080ddc0ad47902b",
+      "src/bytecode/anonymous_context.rs": "e48d7aba57745c9e3ecb0a2317ea627f3b6d9b2d86805563bae680d79a301910",
+      "src/bytecode/class_companion.rs": "7463d1e739919160b82ed1137a195ebc3a36037ed8b5419a26c1f38889b533a7",
+      "src/bytecode/data.rs": "5c1287744ed93fc6b0331e38865fb140f72bbbb49ee47841d593189dc1b2b34f",
+      "src/bytecode/defaults.rs": "d092d8a420cfb719f92dbb9a3bcc58f7c644d67bf9b3c611c72949122c22e827",
+      "src/bytecode/enums.rs": "87d9429e68ddccd75463d56edf1b3f0d5d5a6069620e9517231ab89ee3f49822",
+      "src/bytecode/frames.rs": "1659d0401bfa59f751e3b6db250a2395a827ccad13c156f19f62c76773983b48",
+      "src/bytecode/inline.rs": "ca8a4f4da8f11e405a3cdcbcf87c3bfde49635e331f9712fb7b2f4aca0f84d25",
+      "src/bytecode/interfaces.rs": "5456ea3de3402ee3ead9920bb2cb0e7c0baab4f6eb7b211e481a16bf9ad3207b",
+      "src/bytecode/lambdas.rs": "80d29fe68d378de0b0458e601dec4cc6daaa539a64ce137a7d9f3c10e19f2d98",
+      "src/bytecode/objects.rs": "c2c00f0cf4447dff49feab49e9ca2edde43fb44e2b99fcc53bb2d51e91ea9116",
+      "src/bytecode/suspend.rs": "dfac0ad895edaf45c25655df1fad6c1828fe3fc767fd936dabe6e45357dd96d7",
+      "src/bytecode/suspend_regions.rs": "19ac422aeab6a5f83ea9f833409ab3a73c2272f6cda88283581660378a7e02d1",
+      "src/bytecode/value_classes.rs": "5584d8e46ede77efe00b4fe359b1c55e5e928b38a0307f72b8b9a092f6afebcc",
+      "src/bytecode.rs": "4a64af005a11fd9a87467750b5acf485aa9e6e1057a4249fa52258e41b76d712",
+      "src/check.rs": "8a6abe6dec0d254f7db2a9d824e68b32dfe893f1e9a65393b1162be20e9296d0",
+      "src/check_annotation_placements.rs": "027e77c6a6db60f98262fbaf0f44be170c53b58b03d64ae6e8cc43cdb2dc1579",
+      "src/check_annotations.rs": "6c12d2aeb44ee137075714e348a7891086fe2a488bdfa35711a351517d8dff60",
+      "src/check_anonymous.rs": "8261dfdd18f10b4862fbe14aaf16ad45ca202d9e3664a06d0f46b3e3e87f86da",
+      "src/check_captures.rs": "f752d88bb81c26576caad658160a332fa21946e7275e6faf331bfd73f6a84479",
+      "src/check_class_delegation.rs": "171fec70b3ce6632bbbd704ea92e040f1ef841fbebd02659388fe88ba97135f2",
+      "src/check_classes.rs": "eaa5547ca75d6f4bef4f21d200a050bb8a47362c9c7ea3e4f47b3a66e1cca4b3",
+      "src/check_contracts.rs": "450249001be76c44224cb4e46866c5870e694dc3363c9cdebce7e9a56ff6e0c0",
+      "src/check_control.rs": "23bcd78c9f4a12b2665110ed5565c4cfe63c0c00f148463ef28c608336fa38b9",
+      "src/check_declarations.rs": "ae99e68ac05ca61a2193bc50c2e9eec9ff6aa62113001664a7d30efd4254e121",
+      "src/check_delegates.rs": "9dcce9239aa1437f7aed63c0169e1431d2e284090460de2f4978cbac646b59e9",
+      "src/check_enums.rs": "77d15869b2ad5d90b406c4c34b6a862d52df25760638c448a62cddb8df119008",
+      "src/check_functions.rs": "eef3107baa96ea9a9183226506ac12b1f7dbe9b7365b47d85db6e7712c2c3da4",
+      "src/check_inner_classes.rs": "28cf90c0795025a9ac2a8eb4506e6be396fefbe2ffe4fa35936d634be1be3a20",
+      "src/check_interfaces.rs": "952fcff0409a30bd5b505706e466c5b3e003011d778b0b26a9a1f52f94bec5f8",
+      "src/check_ir_walk.rs": "caaeeea794075c7e23b17fc9e2d06ace5a02d366c9abffbdc9393d3c8a1a2e96",
+      "src/check_java_properties.rs": "1a163483d5271f918ec50f46a824ccaf7918b9e335cc6af48567aa4bd80e63f0",
+      "src/check_jvm_fields.rs": "9f07daaad48c7c13dc59aa763842680c83ee7b9ebb3569ff9c37462720586584",
+      "src/check_library.rs": "9ace578b1393d4286f84a74ee4819dde126e0701600d6ba6c84f13dd5826c35f",
+      "src/check_member_extensions.rs": "cfca4c6c2b51effce735dd6ef1132d6490e6cf2cf358e43a3ab471e72a92d71e",
+      "src/check_objects.rs": "9af6682c6ebbdd918b3376521bbb67047526b1c1cc97053bd67b9d25907dc766",
+      "src/check_operations.rs": "c7c48d4f7a93a69ca02f8e397ae099889c88673ec31e78864fe9d3e8ee7e1f7a",
+      "src/check_overloads.rs": "03618a927df2d30db9bc245df9a57e99001e9a525a49c089968cd22cb1f0671e",
+      "src/check_references.rs": "61a780d0816443007725e52f992c717eeab828f7b971749ed3242318a8d80077",
+      "src/check_relations.rs": "ff6431d753401998348bb223c456190fb607115da9a4118e2a632307c4ab9bbb",
+      "src/check_sealed.rs": "53ae55db5be491fd47f41cdf73d7b25b46b64d52818fceae53ee6b996f4377c3",
+      "src/check_singletons.rs": "61fc4f5ed84a15570469c98916705e19aaa3793e6ed3753af3fa4f4dfed03d92",
+      "src/check_stable_properties.rs": "c0a1b2e1114a4b248cce1402c72e2321d9491f2a1fa2a1f9ff6e5b9ba470defa",
+      "src/check_unsigned.rs": "789b5adc6919553aa1cad719fad1753cbe80cdfa37d22f8767f283e0a6059095",
+      "src/check_varargs.rs": "a7dd5e1acfc35df5ed0de0632b2232bee62766cc8dd7abd7ae73030d4e4a0836",
+      "src/check_variant_signatures.rs": "ea8be16effafa3af58d46e0e732d196feeca4ef1468d4b373c2e1c29ee984ed3",
+      "src/classpath/aliases.rs": "2ad31713a22f8eb0607ed96d838aa96fecedf7a6b261f07473aef66b8bdb8827",
+      "src/classpath/archive.rs": "835e4a79bbbc5c7328ce6a540ed1a2ca975fc526278fe7c31fd9433e08cc56d5",
+      "src/classpath/jdk_modules.rs": "cd1a350e7f8e03cda618a1d919d4e6ee49aba7e9a26728178ebad5f73c4bd8f8",
+      "src/classpath/jvm_builtins.rs": "b8c6e4789a998c1b3737da4879a15d74eb453170c4b03542d4c8ae13f6e40e86",
+      "src/classpath/metadata.rs": "cd83ca54bc69e6f44b626250dc41409d4255ef13e64b9e3968f788c43c18345a",
+      "src/classpath/nested.rs": "d6f14b7ae16671749b4a61889eaaa13e40f1a8407a53e31c95e5a6e65574b2ef",
+      "src/classpath/package_info.rs": "f3bd436a8c64d48216bae3a55a2a3e82a903d354a42b629928fe1af95197061a",
+      "src/classpath/sealed.rs": "585f2b041d3f1632031543c0d7cc91382b22a90373b26dcdae4afb81ce8a0261",
+      "src/classpath/signature.rs": "7855e2ef99b5db953c5183f0af12d1aa80f96fd5389d5ec34664c0240b99b771",
+      "src/classpath/singletons.rs": "836fe172f37cc9282e259ba446688b3d2d6bf34fde25ddc3973c1800f29c71a5",
+      "src/classpath/source.rs": "2ab37dbad2094f9b66c3307e026d0805c36c1c34f844491b1746bbffb2aec7c0",
+      "src/classpath/source_enums.rs": "1b6719565931913df35f26994fb0077985f1f5c89614fb1b5d4009e63957933d",
+      "src/classpath/static_imports.rs": "7deee91322fdbc03edd91a904ab42399c37ceaaaf99b81a026c936767937fc27",
+      "src/classpath/value_names.rs": "a0798cfa02230410ee554e39dc09057bc9a41bf1a366f9159b73604270f83728",
+      "src/classpath.rs": "dc3196f71277c004f2bcd0d8a08fe90f9c8e0069ffb2104e0684102618ed2cd0",
+      "src/compiled_inline/defaults.rs": "7810498d9f299906c4dde01a71c2c0633399e2943f9caf5ee3c4644e18d49a65",
+      "src/compiled_inline.rs": "dfb645a407c5bcab272665430a59d4d511a9920b76bcf465bb073c03e56b5b82",
+      "src/const_eval.rs": "bc6a053823a41c822bcc5af603023019a6ace1895c9fae75bf0372f02381dacf",
+      "src/diagnostic.rs": "668c17e3b9b411e30c031a430f4acaadb5381cdb95b58e7c50453da9c48a6aa8",
+      "src/inner_classes.rs": "59fb1426026d20b26e7ceaf362ce2487c150d113f265de0116514f3abc2f2215",
+      "src/jvm_descriptor.rs": "321b15a294ddc3c4c2c35f97e30dd1dc34767ff8ef7f44924af1a59db18c3887",
+      "src/lib.rs": "9ad87644b0542b4d982845bb2158b4737abed57d4cc29961020aea1ddf3016e7",
+      "src/main.rs": "91fdf59f65c51446fc628039f2e1108177cdcf17c1dd3158ca2f80554651a951",
+      "src/metadata/enums.rs": "5e716893f906016ca428b14df2d027fcd9fbd3da5f3d1e661cdc8543cd3911dd",
+      "src/metadata.rs": "b3579828d0fcecc950ffa5a01bb3c34e710f52127185036c46055e18caafce34",
+      "src/object_lowering.rs": "173e450d7f023b8e25c73277584adc89530de35663a265becd96e58a92455733",
+      "src/output.rs": "f88d5b12bf85f10f210c46e8a297682dcd66098f2e8324e6b27af9333e0e5e6d",
+      "src/source_inline.rs": "50bee0804aaea9cd3e2b8c8e0f162784e0e0e0b16b9e0770dd8c27fca764add2",
+      "src/syntax.rs": "86039794f9068dd1f6ba3cbf57a1a1f696e3185a3efa7a91e11fce737e686570",
+      "src/value_abi.rs": "ff6f7a5a2b466542b52d5080181d538a98ced411c566df1689f47756743d4844",
+      "src/visibility.rs": "7337c9b35868fe1d684e30dceb48aec12b7d4224312a941cd1b431febf113525",
+      "tests/qualified_values/Alias.kt": "5f4fbd78693256137a8ffa83795754f07075c26931b08a112fd45780d0a6b48e",
+      "tests/qualified_values/Calls.java": "2d1505053a5e415572159ac1963c4bb3a6ec7229f731537417db0db56a494e3d",
+      "tests/qualified_values/Definitions.kt": "59006568d4567c90d8ee2a68a96154ac2f32f020f0261f7c31abfe03949e8272",
+      "tests/qualified_values/Holder.java": "147be7d6c3ad654c0c9f1ccbd9a211878a4817b7a42cad0391f70d70af8729b6",
+      "tests/qualified_values/InvalidFinal.kt": "853918b14c2d674149e1806d0fa0fd215e777c7b8eb139aaec82bd78cb7da752",
+      "tests/qualified_values/InvalidShadow.kt": "94c16dd65eaaf66548aa13660aac0f940043d2b9bcda49825701a630c8c49176",
+      "tests/qualified_values/Nested.kt": "e77edf271575a05bea09a90733a697cf2104184c987e38a6c608c3d7a53008a6",
+      "tests/qualified_values/PropertyAlias.kt": "eacaa4b9faa2db69ec4ed3af41a0cccda417d7ddbdfd8e2967befa5ede99ec13",
+      "tests/qualified_values/Root.java": "d315249838bebb4bf90171ce8dcf95308c5c04e06423472fb9c3f4f6f1cd249c",
+      "tests/qualified_values/Segment.java": "2a18911bd521b6fb8a7c4110776f5233c4122649d8c3bcd2ac932e5323249ed9",
+      "tests/qualified_values/State.java": "0d45d2eb8911db6dee3cbf596c400ff133bf011849705fc21f75529c36bf8871",
+      "tests/qualified_values/Uses.kt": "a00d9e6824509e2f377057b04c53e325340045856f5e3a3a27aa03bcc5d331f3",
+      "Cargo.toml": "8c7147eda50052f63b4ced7d7774e0fe9c078c672f68ee20b02337eaf2fa1439",
+      "Cargo.lock": "a3b6480a33ddd60d819d813985896a3e8debe2b9fb85b5ee2cb3f07d41972d4d",
+      "tests/qualified_values.rs": "7cb07f6610b6ef81a13cdbce453e2d5711872bfac2b537b619c100a3c7e75eb3",
+      "tools/check_qualified_values.py": "ecaebbf9c54889105667e5828ee8bde466ee5a2c1499f0c0cc7a1e25f5c3b7c3"
+    }
+  },
+  "dependencies": {
+    "/workspace/work/targets159/qualified-freeze2/references/kotlinc/lib/kotlin-stdlib.jar": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+  },
+  "commands": [
+    {
+      "id": "java-dependency",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "--release",
+        "8",
+        "-d",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/dependency",
+        "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/State.java",
+        "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/Root.java",
+        "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/Segment.java",
+        "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/Holder.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T025035430094Z-qualified-values/000-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T025035430094Z-qualified-values/000-stderr.txt"
+    },
+    {
+      "id": "official/dependency",
+      "argv": [
+        "/workspace/work/targets159/qualified-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/Definitions.kt",
+        "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/Nested.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/dependency:/workspace/work/targets159/qualified-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/dependency"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T025035430094Z-qualified-values/001-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T025035430094Z-qualified-values/001-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/qualified-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/Uses.kt",
+        "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/Alias.kt",
+        "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/PropertyAlias.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/dependency:/workspace/work/targets159/qualified-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/official"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T025035430094Z-qualified-values/002-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T025035430094Z-qualified-values/002-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/korrust-frozen",
+        "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/Uses.kt",
+        "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/Alias.kt",
+        "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/PropertyAlias.kt",
+        "-cp",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/dependency:/workspace/work/targets159/qualified-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "qualifiedvalues",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/candidate"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T025035430094Z-qualified-values/003-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T025035430094Z-qualified-values/003-stderr.txt"
+    },
+    {
+      "id": "fixed-java-caller",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javac",
+        "--release",
+        "8",
+        "-cp",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/official:/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/dependency:/workspace/work/targets159/qualified-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/caller",
+        "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/Calls.java"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T025035430094Z-qualified-values/004-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T025035430094Z-qualified-values/004-stderr.txt"
+    },
+    {
+      "id": "official/runtime",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/caller:/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/official:/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/dependency:/workspace/work/targets159/qualified-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "qualifiedcheck.Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T025035430094Z-qualified-values/005-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T025035430094Z-qualified-values/005-stderr.txt"
+    },
+    {
+      "id": "official/signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/official:/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/dependency",
+        "qualifiedconsumer.UsesKt",
+        "qualifiedconsumer.MemberShadow",
+        "qualifiedconsumer.ShadowBase",
+        "qualifiedconsumer.InheritedShadow",
+        "qualifiedalias.AliasKt",
+        "qualifiedpropertyalias.PropertyAliasKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T025035430094Z-qualified-values/006-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T025035430094Z-qualified-values/006-stderr.txt"
+    },
+    {
+      "id": "candidate/runtime",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/java",
+        "-Xverify:all",
+        "-cp",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/caller:/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/candidate:/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/dependency:/workspace/work/targets159/qualified-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "qualifiedcheck.Calls"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T025035430094Z-qualified-values/007-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T025035430094Z-qualified-values/007-stderr.txt"
+    },
+    {
+      "id": "candidate/signatures",
+      "argv": [
+        "/workspace/korrust-setup/jdk-21/bin/javap",
+        "-protected",
+        "-s",
+        "-classpath",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/candidate:/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/dependency",
+        "qualifiedconsumer.UsesKt",
+        "qualifiedconsumer.MemberShadow",
+        "qualifiedconsumer.ShadowBase",
+        "qualifiedconsumer.InheritedShadow",
+        "qualifiedalias.AliasKt",
+        "qualifiedpropertyalias.PropertyAliasKt"
+      ],
+      "exit_code": 0,
+      "stdout": "reports/correctness/2026-11-26T025035430094Z-qualified-values/008-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T025035430094Z-qualified-values/008-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/qualified-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/InvalidFinal.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/dependency:/workspace/work/targets159/qualified-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/InvalidFinal/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T025035430094Z-qualified-values/009-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T025035430094Z-qualified-values/009-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/korrust-frozen",
+        "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/InvalidFinal.kt",
+        "-cp",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/dependency:/workspace/work/targets159/qualified-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "qualifiedvalues",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/InvalidFinal/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T025035430094Z-qualified-values/010-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T025035430094Z-qualified-values/010-stderr.txt"
+    },
+    {
+      "id": "official/official",
+      "argv": [
+        "/workspace/work/targets159/qualified-freeze2/references/kotlinc/bin/kotlinc",
+        "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/InvalidShadow.kt",
+        "-language-version",
+        "2.3",
+        "-api-version",
+        "2.3",
+        "-jvm-target",
+        "1.8",
+        "-classpath",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/dependency:/workspace/work/targets159/qualified-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "-d",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/InvalidShadow/official"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T025035430094Z-qualified-values/011-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T025035430094Z-qualified-values/011-stderr.txt"
+    },
+    {
+      "id": "candidate/candidate",
+      "argv": [
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/korrust-frozen",
+        "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/InvalidShadow.kt",
+        "-cp",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/dependency:/workspace/work/targets159/qualified-freeze2/references/kotlinc/lib/kotlin-stdlib.jar",
+        "--module-name",
+        "qualifiedvalues",
+        "--diagnostic-format",
+        "json",
+        "-d",
+        "/workspace/work/targets159/qualified-freeze2/target/checks/2026-11-26T025035430094Z-qualified-values/InvalidShadow/candidate"
+      ],
+      "exit_code": 1,
+      "stdout": "reports/correctness/2026-11-26T025035430094Z-qualified-values/012-stdout.txt",
+      "stderr": "reports/correctness/2026-11-26T025035430094Z-qualified-values/012-stderr.txt"
+    }
+  ],
+  "cases": [
+    {
+      "id": "java-dependency",
+      "outcome": "pass"
+    },
+    {
+      "id": "kotlin-dependency",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/compile",
+      "outcome": "pass"
+    },
+    {
+      "id": "caller/compile-official",
+      "outcome": "pass"
+    },
+    {
+      "id": "official/runtime",
+      "outcome": "pass",
+      "observed": "qualified-values-ok"
+    },
+    {
+      "id": "official/signatures-read",
+      "outcome": "pass"
+    },
+    {
+      "id": "candidate/runtime",
+      "outcome": "pass",
+      "observed": "qualified-values-ok"
+    },
+    {
+      "id": "candidate/signatures-read",
+      "outcome": "pass"
+    },
+    {
+      "id": "signatures/match",
+      "outcome": "pass"
+    },
+    {
+      "id": "InvalidFinal",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/InvalidFinal.kt",
+          "offset": 34,
+          "category": "invalid_kotlin",
+          "code": "FINAL_JAVA_FIELD_ASSIGNMENT_INVALID",
+          "message": "Cannot assign a final Java field",
+          "path": "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/InvalidFinal.kt",
+          "line": 2,
+          "column": 14
+        }
+      ]
+    },
+    {
+      "id": "InvalidShadow",
+      "outcome": "invalid_rejected",
+      "diagnostics": [
+        {
+          "source_identity": "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/InvalidShadow.kt",
+          "offset": 42,
+          "category": "unclassified",
+          "code": "UNRESOLVED_VALUE",
+          "message": "Unsupported property: p",
+          "path": "/workspace/work/targets159/qualified-freeze2/tests/qualified_values/InvalidShadow.kt",
+          "line": 2,
+          "column": 21
+        }
+      ]
+    }
+  ],
+  "fixed_java_caller_hashes": {
+    "qualifiedcheck/Calls.class": "cee854c3daf89f704d384dcd908238663292ed26e372d3eeaef1d59f89e33e91"
+  },
+  "official_signatures": "Compiled from \"Uses.kt\"\npublic final class qualifiedconsumer.UsesKt {\n  public static final int javaWork();\n    descriptor: ()I\n\n  public static final int kotlinWork();\n    descriptor: ()I\n\n  public static final int parameterShadow(qv.p.Root);\n    descriptor: (Lqv/p/Root;)I\n\n  public static final int captureShadow(qv.p.Root);\n    descriptor: (Lqv/p/Root;)I\n\n  public static final int nestedWork();\n    descriptor: ()I\n}\nCompiled from \"Uses.kt\"\npublic final class qualifiedconsumer.MemberShadow {\n  public qualifiedconsumer.MemberShadow(qv.p.Root);\n    descriptor: (Lqv/p/Root;)V\n\n  public final qv.p.Root getQv();\n    descriptor: ()Lqv/p/Root;\n\n  public final int work();\n    descriptor: ()I\n}\nCompiled from \"Uses.kt\"\npublic class qualifiedconsumer.ShadowBase {\n  public qualifiedconsumer.ShadowBase(qv.p.Root);\n    descriptor: (Lqv/p/Root;)V\n\n  public final qv.p.Root getQv();\n    descriptor: ()Lqv/p/Root;\n}\nCompiled from \"Uses.kt\"\npublic final class qualifiedconsumer.InheritedShadow extends qualifiedconsumer.ShadowBase {\n  public qualifiedconsumer.InheritedShadow(qv.p.Root);\n    descriptor: (Lqv/p/Root;)V\n\n  public final int work();\n    descriptor: ()I\n}\nCompiled from \"Alias.kt\"\npublic final class qualifiedalias.AliasKt {\n  public static final int work();\n    descriptor: ()I\n}\nCompiled from \"PropertyAlias.kt\"\npublic final class qualifiedpropertyalias.PropertyAliasKt {\n  public static final int work();\n    descriptor: ()I\n}\n",
+  "candidate_signatures": "Compiled from \"Uses.kt\"\npublic final class qualifiedconsumer.UsesKt {\n  public static final int javaWork();\n    descriptor: ()I\n\n  public static final int kotlinWork();\n    descriptor: ()I\n\n  public static final int parameterShadow(qv.p.Root);\n    descriptor: (Lqv/p/Root;)I\n\n  public static final int captureShadow(qv.p.Root);\n    descriptor: (Lqv/p/Root;)I\n\n  public static final int nestedWork();\n    descriptor: ()I\n}\nCompiled from \"Uses.kt\"\npublic final class qualifiedconsumer.MemberShadow {\n  public qualifiedconsumer.MemberShadow(qv.p.Root);\n    descriptor: (Lqv/p/Root;)V\n\n  public final int work();\n    descriptor: ()I\n\n  public final qv.p.Root getQv();\n    descriptor: ()Lqv/p/Root;\n}\nCompiled from \"Uses.kt\"\npublic class qualifiedconsumer.ShadowBase {\n  public qualifiedconsumer.ShadowBase(qv.p.Root);\n    descriptor: (Lqv/p/Root;)V\n\n  public final qv.p.Root getQv();\n    descriptor: ()Lqv/p/Root;\n}\nCompiled from \"Uses.kt\"\npublic final class qualifiedconsumer.InheritedShadow extends qualifiedconsumer.ShadowBase {\n  public qualifiedconsumer.InheritedShadow(qv.p.Root);\n    descriptor: (Lqv/p/Root;)V\n\n  public final int work();\n    descriptor: ()I\n}\nCompiled from \"Alias.kt\"\npublic final class qualifiedalias.AliasKt {\n  public static final int work();\n    descriptor: ()I\n}\nCompiled from \"PropertyAlias.kt\"\npublic final class qualifiedpropertyalias.PropertyAliasKt {\n  public static final int work();\n    descriptor: ()I\n}\n",
+  "signature_contracts": {
+    "official": {
+      "public final class qualifiedconsumer.UsesKt {": [
+        [
+          "public static final int captureShadow(qv.p.Root);",
+          "descriptor: (Lqv/p/Root;)I"
+        ],
+        [
+          "public static final int javaWork();",
+          "descriptor: ()I"
+        ],
+        [
+          "public static final int kotlinWork();",
+          "descriptor: ()I"
+        ],
+        [
+          "public static final int nestedWork();",
+          "descriptor: ()I"
+        ],
+        [
+          "public static final int parameterShadow(qv.p.Root);",
+          "descriptor: (Lqv/p/Root;)I"
+        ]
+      ],
+      "public final class qualifiedconsumer.MemberShadow {": [
+        [
+          "public final int work();",
+          "descriptor: ()I"
+        ],
+        [
+          "public final qv.p.Root getQv();",
+          "descriptor: ()Lqv/p/Root;"
+        ],
+        [
+          "public qualifiedconsumer.MemberShadow(qv.p.Root);",
+          "descriptor: (Lqv/p/Root;)V"
+        ]
+      ],
+      "public class qualifiedconsumer.ShadowBase {": [
+        [
+          "public final qv.p.Root getQv();",
+          "descriptor: ()Lqv/p/Root;"
+        ],
+        [
+          "public qualifiedconsumer.ShadowBase(qv.p.Root);",
+          "descriptor: (Lqv/p/Root;)V"
+        ]
+      ],
+      "public final class qualifiedconsumer.InheritedShadow extends qualifiedconsumer.ShadowBase {": [
+        [
+          "public final int work();",
+          "descriptor: ()I"
+        ],
+        [
+          "public qualifiedconsumer.InheritedShadow(qv.p.Root);",
+          "descriptor: (Lqv/p/Root;)V"
+        ]
+      ],
+      "public final class qualifiedalias.AliasKt {": [
+        [
+          "public static final int work();",
+          "descriptor: ()I"
+        ]
+      ],
+      "public final class qualifiedpropertyalias.PropertyAliasKt {": [
+        [
+          "public static final int work();",
+          "descriptor: ()I"
+        ]
+      ]
+    },
+    "candidate": {
+      "public final class qualifiedconsumer.UsesKt {": [
+        [
+          "public static final int captureShadow(qv.p.Root);",
+          "descriptor: (Lqv/p/Root;)I"
+        ],
+        [
+          "public static final int javaWork();",
+          "descriptor: ()I"
+        ],
+        [
+          "public static final int kotlinWork();",
+          "descriptor: ()I"
+        ],
+        [
+          "public static final int nestedWork();",
+          "descriptor: ()I"
+        ],
+        [
+          "public static final int parameterShadow(qv.p.Root);",
+          "descriptor: (Lqv/p/Root;)I"
+        ]
+      ],
+      "public final class qualifiedconsumer.MemberShadow {": [
+        [
+          "public final int work();",
+          "descriptor: ()I"
+        ],
+        [
+          "public final qv.p.Root getQv();",
+          "descriptor: ()Lqv/p/Root;"
+        ],
+        [
+          "public qualifiedconsumer.MemberShadow(qv.p.Root);",
+          "descriptor: (Lqv/p/Root;)V"
+        ]
+      ],
+      "public class qualifiedconsumer.ShadowBase {": [
+        [
+          "public final qv.p.Root getQv();",
+          "descriptor: ()Lqv/p/Root;"
+        ],
+        [
+          "public qualifiedconsumer.ShadowBase(qv.p.Root);",
+          "descriptor: (Lqv/p/Root;)V"
+        ]
+      ],
+      "public final class qualifiedconsumer.InheritedShadow extends qualifiedconsumer.ShadowBase {": [
+        [
+          "public final int work();",
+          "descriptor: ()I"
+        ],
+        [
+          "public qualifiedconsumer.InheritedShadow(qv.p.Root);",
+          "descriptor: (Lqv/p/Root;)V"
+        ]
+      ],
+      "public final class qualifiedalias.AliasKt {": [
+        [
+          "public static final int work();",
+          "descriptor: ()I"
+        ]
+      ],
+      "public final class qualifiedpropertyalias.PropertyAliasKt {": [
+        [
+          "public static final int work();",
+          "descriptor: ()I"
+        ]
+      ]
+    }
+  },
+  "input_integrity": {
+    "status": "unchanged"
+  },
+  "counts": {
+    "pass": 10,
+    "invalid_rejected": 2
+  },
+  "supplementary_validation": {
+    "rust_test": {
+      "outcome": "pass",
+      "log": "reports/correctness/2026-11-26T025035430094Z-qualified-values/qualified-test4.log"
+    },
+    "clippy": {
+      "outcome": "pass",
+      "log": "reports/correctness/2026-11-26T025035430094Z-qualified-values/qualified-clippy.log"
+    }
+  }
+}

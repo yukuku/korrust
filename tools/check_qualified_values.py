@@ -17,6 +17,23 @@ def sha(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
+def signature_contract(output):
+    classes = {}
+    owner = None
+    member = None
+    for line in output.splitlines():
+        text = line.strip()
+        if text.endswith('{'):
+            owner = text
+            classes[owner] = []
+        elif text.startswith('descriptor:'):
+            classes[owner].append((member, text))
+            member = None
+        elif text and text != '}' and not text.startswith('Compiled from'):
+            member = text
+    return {owner: sorted(members) for owner, members in classes.items()}
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--compiler', type=Path, default=ROOT / 'target/release/korrust')
@@ -82,7 +99,8 @@ def main():
             case(provider + '/signatures-read', result.returncode == 0)
             report[provider + '_signatures'] = result.stdout
         if 'candidate_signatures' in report:
-            case('signatures/match', report['official_signatures'] == report['candidate_signatures'])
+            report['signature_contracts'] = {provider: signature_contract(report[provider + '_signatures']) for provider in ['official', 'candidate']}
+            case('signatures/match', report['signature_contracts']['official'] == report['signature_contracts']['candidate'])
         for source in sorted(FIXTURES.glob('Invalid*.kt')):
             results = {provider: compile(provider, [source], work / source.stem / provider, [dependency]) for provider in ['official', 'candidate']}
             diagnostics = [json.loads(line) for line in results['candidate'].stderr.splitlines() if line.startswith('{')]
