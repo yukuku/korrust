@@ -4570,7 +4570,32 @@ mod tests {
     fn kotlin_metadata_keeps_internal_class_and_member_visibility_restricted() {
         let files =
             crate::compile_all("internal class Hidden(val value: Int)", "Hidden.kt").unwrap();
-        assert!(parse(&files[0].bytes, "Hidden").unwrap().unsupported);
+        let parsed = parse(&files[0].bytes, "Hidden").unwrap();
+        assert!(!parsed.unsupported);
+        assert_eq!(parsed.library.unwrap().kotlin_visibility, Some(0));
+        let dependency = std::env::temp_dir().join(format!(
+            "korrust-internal-class-visibility-{}",
+            std::process::id()
+        ));
+        std::fs::create_dir_all(&dependency).unwrap();
+        std::fs::write(dependency.join("Hidden.class"), &files[0].bytes).unwrap();
+        let unrelated = Classpath::new(std::slice::from_ref(&dependency)).unwrap();
+        assert!(!unrelated.classifier_visible("Consumer", "Hidden"));
+        let friend = Classpath::with_options(
+            std::slice::from_ref(&dependency),
+            &crate::CompileOptions {
+                module_name: "consumer".into(),
+                friend_paths: vec![dependency.clone()],
+            },
+        )
+        .unwrap();
+        assert!(friend.classifier_visible("Consumer", "Hidden"));
+        assert!(
+            friend
+                .check_public_type_visibility(&Type::Java("Hidden".into()), 0)
+                .is_err()
+        );
+        std::fs::remove_dir_all(dependency).unwrap();
         let (metadata, class, attributes) = fixture_metadata(false, &[], 550, 0, 32);
         let (methods, _) = kotlin_typed_class(&metadata, &class, &attributes).unwrap();
         assert!(
