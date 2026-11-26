@@ -551,6 +551,49 @@ impl Checker<'_> {
                 let Ok(class) = self.classpath.load(&owner) else {
                     continue;
                 };
+                if let Some(companion_name) = class
+                    .library
+                    .as_ref()
+                    .and_then(|l| l.companion_name.as_ref())
+                {
+                    let companion_owner = format!("{owner}${companion_name}");
+                    let methods = ordinary_member_methods(
+                        self.classpath,
+                        &companion_owner,
+                        name,
+                        args.len(),
+                    )?
+                    .into_iter()
+                    .filter(|m| {
+                        m.source_name() == name
+                            && m.instance_dispatch()
+                            && m.source_property.is_none()
+                            && m.library.as_ref().is_none_or(|l| l.receiver.is_none())
+                            && self.lexical_method_visible(m)
+                    })
+                    .collect::<Vec<_>>();
+                    if !methods.is_empty() {
+                        match self
+                            .select_method_expected(&methods, args, explicit, expected, offset)
+                        {
+                            Ok(method) => {
+                                if let Some(receiver) = self.companion_receiver(&owner, offset)? {
+                                    return self
+                                        .member_call(method, receiver, args, offset)
+                                        .map(Some);
+                                }
+                            }
+                            Err(error)
+                                if matches!(
+                                    error.code,
+                                    "NO_APPLICABLE_OVERLOAD"
+                                        | "ARGUMENT_MAPPING_MISMATCH"
+                                        | "TYPE_MISMATCH"
+                                ) => {}
+                            Err(error) => return Err(error),
+                        }
+                    }
+                }
                 let mut parent = class.super_name;
                 let mut overloads = Vec::new();
                 let mut signatures = HashSet::new();
