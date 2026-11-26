@@ -1393,6 +1393,47 @@ impl Checker<'_> {
             if matches!(&arg.kind, ExprKind::VarargArray { elements, .. } if elements.is_empty()) {
                 continue;
             }
+            if let ExprKind::VarargArray { array, elements } = &arg.kind
+                && let Some(pattern) = array.array_element()
+                && !matches!(pattern.base(), Type::Parameter { .. })
+                && library
+                    .type_parameters
+                    .iter()
+                    .any(|p| !fixed.contains(&p.name) && mentions(&pattern, &p.name))
+            {
+                if library
+                    .type_parameters
+                    .iter()
+                    .any(|p| p.only_input_types && mentions(&pattern, &p.name))
+                {
+                    return Err(Diagnostic::new(
+                        offset,
+                        "OnlyInputTypes inference through a nested vararg is unsupported",
+                    )
+                    .with_kind(
+                        crate::DiagnosticKind::UnsupportedLanguage,
+                        "ONLY_INPUT_TYPES_SHAPE_UNSUPPORTED",
+                    ));
+                }
+                for element in elements {
+                    let actual = if let ExprKind::Unary(op, spread) = &element.kind
+                        && op == "*"
+                    {
+                        self.value(spread)?.ty.array_element().ok_or_else(|| {
+                            Diagnostic::new(spread.offset, "Spread argument requires an array")
+                        })?
+                    } else {
+                        self.value(element)?.ty
+                    };
+                    if !self.infer_constraints(&pattern, &actual, &mut substitutions, &fixed, 0) {
+                        return Err(Diagnostic::new(
+                            element.offset,
+                            "Conflicting generic vararg element constraints",
+                        ));
+                    }
+                }
+                continue;
+            }
             let specialized_array;
             let arg = if let ExprKind::VarargArray { array, elements } = &arg.kind {
                 let fixed_types = substitutions
