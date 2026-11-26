@@ -1,0 +1,404 @@
+Classfile /workspace/korrust/target/checks/2026-11-26T030705601353Z-inherited-java-properties/official/EffectsKt.class
+  Last modified Nov 26, 2026; size 2831 bytes
+  SHA-256 checksum 292e62255e8dfbd09bd75c126c2e87aaa84663a63900d955eb54e57bed7a73ac
+  Compiled from "Effects.kt"
+public final class EffectsKt
+  minor version: 0
+  major version: 52
+  flags: (0x0031) ACC_PUBLIC, ACC_FINAL, ACC_SUPER
+  this_class: #2                          // EffectsKt
+  super_class: #4                         // java/lang/Object
+  interfaces: 0, fields: 0, methods: 9, attributes: 2
+Constant pool:
+    #1 = Utf8               EffectsKt
+    #2 = Class              #1            // EffectsKt
+    #3 = Utf8               java/lang/Object
+    #4 = Class              #3            // java/lang/Object
+    #5 = Utf8               read
+    #6 = Utf8               (LChild;)Ljava/lang/String;
+    #7 = Utf8               Lorg/jetbrains/annotations/NotNull;
+    #8 = Utf8               value
+    #9 = String             #8            // value
+   #10 = Utf8               kotlin/jvm/internal/Intrinsics
+   #11 = Class              #10           // kotlin/jvm/internal/Intrinsics
+   #12 = Utf8               checkNotNullParameter
+   #13 = Utf8               (Ljava/lang/Object;Ljava/lang/String;)V
+   #14 = NameAndType        #12:#13       // checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+   #15 = Methodref          #11.#14       // kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+   #16 = Utf8               Child
+   #17 = Class              #16           // Child
+   #18 = Utf8               getName
+   #19 = Utf8               ()Ljava/lang/String;
+   #20 = NameAndType        #18:#19       // getName:()Ljava/lang/String;
+   #21 = Methodref          #17.#20       // Child.getName:()Ljava/lang/String;
+   #22 = Utf8               getName(...)
+   #23 = String             #22           // getName(...)
+   #24 = Utf8               checkNotNullExpressionValue
+   #25 = NameAndType        #24:#13       // checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+   #26 = Methodref          #11.#25       // kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+   #27 = Utf8               LChild;
+   #28 = Utf8               write
+   #29 = Utf8               (LChild;Ljava/lang/String;)V
+   #30 = Utf8               name
+   #31 = String             #30           // name
+   #32 = Utf8               setName
+   #33 = Utf8               (Ljava/lang/String;)V
+   #34 = NameAndType        #32:#33       // setName:(Ljava/lang/String;)V
+   #35 = Methodref          #17.#34       // Child.setName:(Ljava/lang/String;)V
+   #36 = Utf8               Ljava/lang/String;
+   #37 = Utf8               optional
+   #38 = Utf8               Lorg/jetbrains/annotations/Nullable;
+   #39 = Utf8               getOptional
+   #40 = NameAndType        #39:#19       // getOptional:()Ljava/lang/String;
+   #41 = Methodref          #17.#40       // Child.getOptional:()Ljava/lang/String;
+   #42 = Utf8               writeOptional
+   #43 = Utf8               setOptional
+   #44 = NameAndType        #43:#33       // setOptional:(Ljava/lang/String;)V
+   #45 = Methodref          #17.#44       // Child.setOptional:(Ljava/lang/String;)V
+   #46 = Utf8               text
+   #47 = Utf8               url
+   #48 = Utf8               getURL
+   #49 = NameAndType        #48:#19       // getURL:()Ljava/lang/String;
+   #50 = Methodref          #17.#49       // Child.getURL:()Ljava/lang/String;
+   #51 = Utf8               getURL(...)
+   #52 = String             #51           // getURL(...)
+   #53 = Utf8               overridden
+   #54 = Utf8               (LOverriding;Ljava/lang/String;)Ljava/lang/String;
+   #55 = String             #46           // text
+   #56 = Utf8               Overriding
+   #57 = Class              #56           // Overriding
+   #58 = Methodref          #57.#34       // Overriding.setName:(Ljava/lang/String;)V
+   #59 = Methodref          #57.#20       // Overriding.getName:()Ljava/lang/String;
+   #60 = Utf8               LOverriding;
+   #61 = Utf8               getterOverride
+   #62 = Utf8               (LGetterOverride;Ljava/lang/String;)Ljava/lang/String;
+   #63 = Utf8               GetterOverride
+   #64 = Class              #63           // GetterOverride
+   #65 = Methodref          #64.#34       // GetterOverride.setName:(Ljava/lang/String;)V
+   #66 = Methodref          #64.#20       // GetterOverride.getName:()Ljava/lang/String;
+   #67 = Utf8               LGetterOverride;
+   #68 = Utf8               kotlinSetter
+   #69 = Utf8               (LKotlinSetter;Ljava/lang/String;)V
+   #70 = Utf8               KotlinSetter
+   #71 = Class              #70           // KotlinSetter
+   #72 = Utf8               setReadOnly
+   #73 = NameAndType        #72:#33       // setReadOnly:(Ljava/lang/String;)V
+   #74 = Methodref          #71.#73       // KotlinSetter.setReadOnly:(Ljava/lang/String;)V
+   #75 = Utf8               LKotlinSetter;
+   #76 = Utf8               generic
+   #77 = Utf8               (LGenericChild;Ljava/lang/String;)Ljava/lang/String;
+   #78 = Utf8               GenericChild
+   #79 = Class              #78           // GenericChild
+   #80 = Utf8               setValue
+   #81 = Utf8               (Ljava/lang/Object;)V
+   #82 = NameAndType        #80:#81       // setValue:(Ljava/lang/Object;)V
+   #83 = Methodref          #79.#82       // GenericChild.setValue:(Ljava/lang/Object;)V
+   #84 = Utf8               getValue
+   #85 = Utf8               ()Ljava/lang/Object;
+   #86 = NameAndType        #84:#85       // getValue:()Ljava/lang/Object;
+   #87 = Methodref          #79.#86       // GenericChild.getValue:()Ljava/lang/Object;
+   #88 = Utf8               getValue(...)
+   #89 = String             #88           // getValue(...)
+   #90 = Utf8               java/lang/String
+   #91 = Class              #90           // java/lang/String
+   #92 = Utf8               LGenericChild;
+   #93 = Utf8               Lkotlin/Metadata;
+   #94 = Utf8               mv
+   #95 = Integer            2
+   #96 = Integer            3
+   #97 = Integer            0
+   #98 = Utf8               k
+   #99 = Utf8               xi
+  #100 = Integer            48
+  #101 = Utf8               d1
+  #102 = Utf8               \u0000.\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\u001a\u000e\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u0003\u001a\u0016\u0010\u0004\u001a\u00020\u00052\u0006\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0006\u001a\u00020\u0001\u001a\u0010\u0010\u0007\u001a\u0004\u0018\u00010\u00012\u0006\u0010\u0002\u001a\u00020\u0003\u001a\u0018\u0010\b\u001a\u00020\u00052\u0006\u0010\u0002\u001a\u00020\u00032\b\u0010\t\u001a\u0004\u0018\u00010\u0001\u001a\u000e\u0010\n\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u0003\u001a\u0016\u0010\u000b\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\f2\u0006\u0010\t\u001a\u00020\u0001\u001a\u0016\u0010\r\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u000e2\u0006\u0010\t\u001a\u00020\u0001\u001a\u0016\u0010\u000f\u001a\u00020\u00052\u0006\u0010\u0002\u001a\u00020\u00102\u0006\u0010\t\u001a\u00020\u0001\u001a\u0016\u0010\u0011\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u00122\u0006\u0010\t\u001a\u00020\u0001¨\u0006\u0013
+  #103 = Utf8               d2
+  #104 = Utf8
+  #105 = Utf8               inherited_java_properties
+  #106 = Utf8               Effects.kt
+  #107 = Utf8               Code
+  #108 = Utf8               LineNumberTable
+  #109 = Utf8               LocalVariableTable
+  #110 = Utf8               RuntimeInvisibleAnnotations
+  #111 = Utf8               RuntimeInvisibleParameterAnnotations
+  #112 = Utf8               SourceFile
+  #113 = Utf8               RuntimeVisibleAnnotations
+{
+  public static final java.lang.String read(Child);
+    descriptor: (LChild;)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #9                  // String value
+         3: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokevirtual #21                 // Method Child.getName:()Ljava/lang/String;
+        10: dup
+        11: ldc           #23                 // String getName(...)
+        13: invokestatic  #26                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+        16: areturn
+      LineNumberTable:
+        line 21: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      17     0 value   LChild;
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+
+  public static final void write(Child, java.lang.String);
+    descriptor: (LChild;Ljava/lang/String;)V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload_0
+         1: ldc           #9                  // String value
+         3: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_1
+         7: ldc           #31                 // String name
+         9: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+        12: aload_0
+        13: aload_1
+        14: invokevirtual #35                 // Method Child.setName:(Ljava/lang/String;)V
+        17: return
+      LineNumberTable:
+        line 22: 12
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      18     0 value   LChild;
+            0      18     1  name   Ljava/lang/String;
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+      parameter 1:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String optional(Child);
+    descriptor: (LChild;)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #9                  // String value
+         3: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokevirtual #41                 // Method Child.getOptional:()Ljava/lang/String;
+        10: areturn
+      LineNumberTable:
+        line 23: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      11     0 value   LChild;
+    RuntimeInvisibleAnnotations:
+      0: #38()
+        org.jetbrains.annotations.Nullable
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+
+  public static final void writeOptional(Child, java.lang.String);
+    descriptor: (LChild;Ljava/lang/String;)V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload_0
+         1: ldc           #9                  // String value
+         3: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: aload_1
+         8: invokevirtual #45                 // Method Child.setOptional:(Ljava/lang/String;)V
+        11: return
+      LineNumberTable:
+        line 24: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      12     0 value   LChild;
+            0      12     1  text   Ljava/lang/String;
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+      parameter 1:
+        0: #38()
+          org.jetbrains.annotations.Nullable
+
+  public static final java.lang.String url(Child);
+    descriptor: (LChild;)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=1, args_size=1
+         0: aload_0
+         1: ldc           #9                  // String value
+         3: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_0
+         7: invokevirtual #50                 // Method Child.getURL:()Ljava/lang/String;
+        10: dup
+        11: ldc           #52                 // String getURL(...)
+        13: invokestatic  #26                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+        16: areturn
+      LineNumberTable:
+        line 25: 6
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      17     0 value   LChild;
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String overridden(Overriding, java.lang.String);
+    descriptor: (LOverriding;Ljava/lang/String;)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload_0
+         1: ldc           #9                  // String value
+         3: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_1
+         7: ldc           #55                 // String text
+         9: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+        12: aload_0
+        13: aload_1
+        14: invokevirtual #58                 // Method Overriding.setName:(Ljava/lang/String;)V
+        17: aload_0
+        18: invokevirtual #59                 // Method Overriding.getName:()Ljava/lang/String;
+        21: areturn
+      LineNumberTable:
+        line 26: 12
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      22     0 value   LOverriding;
+            0      22     1  text   Ljava/lang/String;
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+      parameter 1:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String getterOverride(GetterOverride, java.lang.String);
+    descriptor: (LGetterOverride;Ljava/lang/String;)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload_0
+         1: ldc           #9                  // String value
+         3: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_1
+         7: ldc           #55                 // String text
+         9: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+        12: aload_0
+        13: aload_1
+        14: invokevirtual #65                 // Method GetterOverride.setName:(Ljava/lang/String;)V
+        17: aload_0
+        18: invokevirtual #66                 // Method GetterOverride.getName:()Ljava/lang/String;
+        21: areturn
+      LineNumberTable:
+        line 27: 12
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      22     0 value   LGetterOverride;
+            0      22     1  text   Ljava/lang/String;
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+      parameter 1:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+
+  public static final void kotlinSetter(KotlinSetter, java.lang.String);
+    descriptor: (LKotlinSetter;Ljava/lang/String;)V
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload_0
+         1: ldc           #9                  // String value
+         3: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_1
+         7: ldc           #55                 // String text
+         9: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+        12: aload_0
+        13: aload_1
+        14: invokevirtual #74                 // Method KotlinSetter.setReadOnly:(Ljava/lang/String;)V
+        17: return
+      LineNumberTable:
+        line 28: 12
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      18     0 value   LKotlinSetter;
+            0      18     1  text   Ljava/lang/String;
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+      parameter 1:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+
+  public static final java.lang.String generic(GenericChild, java.lang.String);
+    descriptor: (LGenericChild;Ljava/lang/String;)Ljava/lang/String;
+    flags: (0x0019) ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    Code:
+      stack=3, locals=2, args_size=2
+         0: aload_0
+         1: ldc           #9                  // String value
+         3: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+         6: aload_1
+         7: ldc           #55                 // String text
+         9: invokestatic  #15                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullParameter:(Ljava/lang/Object;Ljava/lang/String;)V
+        12: aload_0
+        13: aload_1
+        14: invokevirtual #83                 // Method GenericChild.setValue:(Ljava/lang/Object;)V
+        17: aload_0
+        18: invokevirtual #87                 // Method GenericChild.getValue:()Ljava/lang/Object;
+        21: dup
+        22: ldc           #89                 // String getValue(...)
+        24: invokestatic  #26                 // Method kotlin/jvm/internal/Intrinsics.checkNotNullExpressionValue:(Ljava/lang/Object;Ljava/lang/String;)V
+        27: checkcast     #91                 // class java/lang/String
+        30: areturn
+      LineNumberTable:
+        line 29: 12
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      31     0 value   LGenericChild;
+            0      31     1  text   Ljava/lang/String;
+    RuntimeInvisibleAnnotations:
+      0: #7()
+        org.jetbrains.annotations.NotNull
+    RuntimeInvisibleParameterAnnotations:
+      parameter 0:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+      parameter 1:
+        0: #7()
+          org.jetbrains.annotations.NotNull
+}
+SourceFile: "Effects.kt"
+RuntimeVisibleAnnotations:
+  0: #93(#94=[I#95,I#96,I#97],#98=I#95,#99=I#100,#101=[s#102],#103=[s#5,s#104,s#8,s#27,s#28,s#104,s#30,s#37,s#42,s#46,s#47,s#53,s#60,s#61,s#67,s#68,s#75,s#76,s#92,s#105])
+    kotlin.Metadata(
+      mv=[2,3,0]
+      k=2
+      xi=48
+      d1=["\u0000.\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\u001a\u000e\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u0003\u001a\u0016\u0010\u0004\u001a\u00020\u00052\u0006\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0006\u001a\u00020\u0001\u001a\u0010\u0010\u0007\u001a\u0004\u0018\u00010\u00012\u0006\u0010\u0002\u001a\u00020\u0003\u001a\u0018\u0010\b\u001a\u00020\u00052\u0006\u0010\u0002\u001a\u00020\u00032\b\u0010\t\u001a\u0004\u0018\u00010\u0001\u001a\u000e\u0010\n\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u0003\u001a\u0016\u0010\u000b\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\f2\u0006\u0010\t\u001a\u00020\u0001\u001a\u0016\u0010\r\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u000e2\u0006\u0010\t\u001a\u00020\u0001\u001a\u0016\u0010\u000f\u001a\u00020\u00052\u0006\u0010\u0002\u001a\u00020\u00102\u0006\u0010\t\u001a\u00020\u0001\u001a\u0016\u0010\u0011\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u00122\u0006\u0010\t\u001a\u00020\u0001¨\u0006\u0013"]
+      d2=["read","","value","LChild;","write","","name","optional","writeOptional","text","url","overridden","LOverriding;","getterOverride","LGetterOverride;","kotlinSetter","LKotlinSetter;","generic","LGenericChild;","inherited_java_properties"]
+    )

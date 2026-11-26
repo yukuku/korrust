@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "kind": "features",
+  "created_at": "2026-11-26T03:22:25.612822+00:00",
+  "status": "complete",
+  "compiler": {
+    "implementation_revision": "55e6ec502",
+    "source_base_revision": "d9e115e73c4f4f04e7015ac28f7ac9c933145c54",
+    "source_archive_sha256": "52b4021f012305076d31b13daef269e54a7bbb40db8a72fabca21f4620d08ade",
+    "binary_sha256": "633c1a722aeec1a7dfd494ac04664085c499c1a774322696698441c8076c570e"
+  },
+  "reference_compiler": "Kotlin 2.3.21",
+  "reference_source": {
+    "path": "references/kotlin/compiler/frontend.java/src/org/jetbrains/kotlin/synthetic/JavaSyntheticPropertiesScope.kt",
+    "sha256": "bb312f0a1b4394882e42bfc069c97c3516d7888ef563d00f01bbd23dfcc0fc2e"
+  },
+  "evidence": [
+    "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties.json",
+    "reports/features/2026-11-26T032225038393Z-inherited-java-properties/VerseItem-case167.json",
+    "reports/features/2026-11-26T032225038393Z-inherited-java-properties/VerseItem-typed-diagnostic.json",
+    "reports/features/2026-11-26T032225038393Z-inherited-java-properties/build.log",
+    "reports/features/2026-11-26T032225038393Z-inherited-java-properties/compiler-source.tar.gz",
+    "reports/features/2026-11-26T032225038393Z-inherited-java-properties/rust-tests.log"
+  ],
+  "features": [
+    {
+      "name": "Java-origin properties on ordinary Kotlin subclasses",
+      "status": "supported",
+      "scope": "Inherited Java getters/setters retain property syntax on source and compiled Kotlin subclasses, including virtual overrides, Boolean/acronym names, nullable/nonnull contracts, generic parents and Kotlin-added exact-type setters on Java-origin getters.",
+      "restrictions": [
+        "Pure Kotlin getter-shaped functions stay ordinary methods. Mapped, interface and enum receivers remain bounded.",
+        "Implicit class-body assignments without explicit this receivers are outside the added write scope."
+      ],
+      "evidence": [
+        "reports/correctness/2026-11-26T030705601353Z-inherited-java-properties.json"
+      ]
+    }
+  ],
+  "androidbible": {
+    "case167_outcome": "unsupported_language",
+    "remaining_boundary": "Expected-result inference for implicit generic Java member call findViewById at line135."
+  },
+  "limitations": [
+    "No Android runtime or full-app claim. The source archive is the exact tested compiler tree based on the recorded revision plus this bounded feature."
+  ]
+}
