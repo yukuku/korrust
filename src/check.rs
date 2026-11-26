@@ -43,6 +43,8 @@ mod anonymous;
 mod captures;
 #[path = "check_classes.rs"]
 mod classes;
+#[path = "check_constructor_inference.rs"]
+mod constructor_inference;
 #[path = "check_contracts.rs"]
 mod contracts;
 #[path = "check_control.rs"]
@@ -5737,6 +5739,11 @@ impl Checker<'_> {
                             offset,
                         )?;
                         return self.library_static_call(method, args, offset);
+                    }
+                    if let Some(value) =
+                        self.inferred_generic_constructor(name, args, None, offset)?
+                    {
+                        return Ok(value);
                     }
                     if let Some((owner, params, defaults)) = self.constructor {
                         if self.imports.get(name).is_some_and(|n| n == owner) {

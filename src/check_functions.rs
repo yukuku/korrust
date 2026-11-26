@@ -172,6 +172,12 @@ impl Checker<'_> {
                 {
                     return self.coerce(value, expected.clone(), expr.offset);
                 }
+                if explicit.is_empty()
+                    && let Some(value) =
+                        self.inferred_generic_constructor(name, args, Some(expected), expr.offset)?
+                {
+                    return self.coerce(value, expected.clone(), expr.offset);
+                }
                 let methods = self
                     .library_call_candidates(name)
                     .into_iter()
