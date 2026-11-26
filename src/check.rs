@@ -6098,9 +6098,13 @@ impl Checker<'_> {
                                 | Type::SuspendFunction { .. }
                                 | Type::SuspendReceiverFunction { .. }
                         ) {
-                            if let Some(value) =
-                                self.implicit_extension_receiver_call(name, args, &[], offset)?
-                            {
+                            if let Some(value) = self.implicit_extension_receiver_call(
+                                name,
+                                args,
+                                &[],
+                                expected_result,
+                                offset,
+                            )? {
                                 return Ok(value);
                             }
                         }

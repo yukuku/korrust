@@ -456,7 +456,9 @@ impl Checker<'_> {
         if self.local(name).is_some() || self.captured.contains_key(name) {
             return Ok(None);
         }
-        if let Some(value) = self.implicit_extension_receiver_call(name, args, explicit, offset)? {
+        if let Some(value) =
+            self.implicit_extension_receiver_call(name, args, explicit, expected, offset)?
+        {
             return Ok(Some(value));
         }
         let mut methods = self.object_methods.get(name).cloned().unwrap_or_default();
