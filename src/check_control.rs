@@ -257,30 +257,7 @@ impl Checker<'_> {
                 self.value(value)
             }
             ExprKind::LabeledReturn(label, value) => {
-                if !self
-                    .scopes
-                    .iter()
-                    .any(|scope| scope.contains_key(&format!("<return@{label}>")))
-                {
-                    return Err(Diagnostic::new(
-                        offset,
-                        format!("Unresolved return label: {label}"),
-                    ));
-                }
-                let value = if let Some(value) = value {
-                    self.expected_value(value, &self.result.clone())?
-                } else if self.result == Type::Unit {
-                    Value {
-                        ty: Type::Unit,
-                        kind: ValueKind::Unit,
-                    }
-                } else {
-                    return Err(Diagnostic::new(offset, "Labeled return requires a value"));
-                };
-                Ok(Value {
-                    ty: self.result.clone(),
-                    kind: ValueKind::Abrupt(vec![Statement::Return(value)]),
-                })
+                self.labeled_return(label, value.as_deref(), offset)
             }
             ExprKind::Try {
                 body,
