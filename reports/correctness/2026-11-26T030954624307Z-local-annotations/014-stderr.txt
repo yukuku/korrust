@@ -1,0 +1,6 @@
+target/checks/2026-11-26T030954624307Z-local-annotations/use-site.kt:1:18: error: '@get:' annotations can only be applied to property declarations.
+fun bad(): Int { @get:Suppress("UNCHECKED_CAST") val value = 1; return value }
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+target/checks/2026-11-26T030954624307Z-local-annotations/use-site.kt:1:18: error: this annotation is not applicable to target 'local variable' and use-site target '@get'. Applicable targets: class, annotation class, type parameter, property, field, local variable, value parameter, constructor, function, getter, setter, type usage, expression, file, typealias
+fun bad(): Int { @get:Suppress("UNCHECKED_CAST") val value = 1; return value }
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
