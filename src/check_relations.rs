@@ -1224,6 +1224,10 @@ impl Checker<'_> {
                 ));
             }
         };
+        let output = substitute(result, substitutions);
+        if !parameters.iter().any(|name| mentions(&output, name)) {
+            return Ok(());
+        }
         let params = params
             .iter()
             .map(|ty| substitute(ty, substitutions))
@@ -1236,10 +1240,6 @@ impl Checker<'_> {
                 expr.offset,
                 "Cannot infer lambda parameter types from the available constraints",
             ));
-        }
-        let output = substitute(result, substitutions);
-        if !parameters.iter().any(|name| mentions(&output, name)) {
-            return Ok(());
         }
         let saved_contract_registration = self.contract_registration;
         let saved_contract_facts = self.contract_facts.clone();
