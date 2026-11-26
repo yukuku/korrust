@@ -3,6 +3,7 @@ use std::path::PathBuf;
 
 mod aliases;
 mod archive;
+mod jdk_modules;
 pub(crate) mod jvm_builtins;
 mod metadata;
 pub(crate) mod nested;
@@ -60,12 +61,14 @@ pub(crate) fn kotlin_mapped_classifier(owner: &str) -> Option<&'static str> {
     })
 }
 
+type ClassMissKey = (String, Option<std::ffi::OsString>);
+
 #[derive(Clone)]
 pub(crate) struct Classpath {
     paths: Vec<PathBuf>,
     archives: std::rc::Rc<std::cell::RefCell<archive::Index>>,
     cache_class_misses: bool,
-    missing_classes: std::cell::RefCell<std::collections::HashMap<String, Diagnostic>>,
+    missing_classes: std::cell::RefCell<std::collections::HashMap<ClassMissKey, Diagnostic>>,
     module_name: String,
     friends: std::collections::HashSet<PathBuf>,
     value_scopes: std::cell::RefCell<std::collections::HashMap<String, value_names::ValueScope>>,
@@ -898,7 +901,9 @@ impl Classpath {
     }
 
     pub(crate) fn register_source(&self, class: JavaClass) {
-        self.missing_classes.borrow_mut().remove(&class.name);
+        self.missing_classes
+            .borrow_mut()
+            .retain(|(owner, _), _| owner != &class.name);
         if !self.source_files.borrow().contains_key(&class.name) {
             if let Some(parent) = class.name.strip_suffix("$Companion") {
                 let origin = { self.source_files.borrow().get(parent).cloned() };
@@ -1104,24 +1109,21 @@ impl Classpath {
         if let Some(class) = self.cache.borrow().get(internal_name) {
             return Ok(class.clone());
         }
-        // Directory dependencies can gain files during a compilation. JDK
-        // fallback also depends on the current JAVA_HOME, so keep those misses live.
-        let cache_miss = self.cache_class_misses
-            && !internal_name.starts_with("java/")
-            && !internal_name.starts_with("javax/");
-        if cache_miss && let Some(error) = self.missing_classes.borrow().get(internal_name) {
+        // Directory dependencies can gain files during a compilation.
+        let cache_miss = self.cache_class_misses;
+        let miss_key = (internal_name.to_owned(), std::env::var_os("JAVA_HOME"));
+        if cache_miss && let Some(error) = self.missing_classes.borrow().get(&miss_key) {
             return Err(error.clone());
         }
-        let class = self.load_uncached(internal_name).map_err(|error| {
+        let class = self.load_uncached(internal_name).inspect_err(|error| {
             if cache_miss
                 && error.kind == crate::DiagnosticKind::MissingDependency
                 && error.code == "CLASS_NOT_FOUND"
             {
                 self.missing_classes
                     .borrow_mut()
-                    .insert(internal_name.into(), error.clone());
+                    .insert(miss_key, error.clone());
             }
-            error
         })?;
         self.cache
             .borrow_mut()
@@ -1166,17 +1168,8 @@ impl Classpath {
                 return Ok(class);
             }
         }
-        if internal_name.starts_with("java/") || internal_name.starts_with("javax/") {
-            if let Some(java_home) = std::env::var_os("JAVA_HOME") {
-                let jmod = PathBuf::from(java_home).join("jmods/java.base.jmod");
-                if jmod.is_file() {
-                    if let Some(bytes) =
-                        self.read_resource(&jmod, &format!("classes/{internal_name}.class"))?
-                    {
-                        return self.parse_with_declarations(&bytes, internal_name);
-                    }
-                }
-            }
+        if let Some(bytes) = self.read_jdk_class(internal_name, true)? {
+            return self.parse_with_declarations(&bytes, internal_name);
         }
         Err(Diagnostic::new(
             0,
@@ -1464,13 +1457,8 @@ impl Classpath {
                 break;
             }
         }
-        if bytes.is_none()
-            && let Some(java_home) = std::env::var_os("JAVA_HOME")
-        {
-            let jmod = PathBuf::from(java_home).join("jmods/java.base.jmod");
-            if jmod.is_file() {
-                bytes = self.read_resource(&jmod, &format!("classes/{resource}"))?;
-            }
+        if bytes.is_none() {
+            bytes = self.read_jdk_class(owner, false)?;
         }
         let Some(bytes) = bytes else {
             return Ok(true);
@@ -1517,13 +1505,8 @@ impl Classpath {
                 break;
             }
         }
-        if bytes.is_none() && (owner.starts_with("java/") || owner.starts_with("javax/")) {
-            if let Some(home) = std::env::var_os("JAVA_HOME") {
-                bytes = self.read_resource(
-                    &PathBuf::from(home).join("jmods/java.base.jmod"),
-                    &format!("classes/{resource}"),
-                )?;
-            }
+        if bytes.is_none() {
+            bytes = self.read_jdk_class(owner, true)?;
         }
         let Some(bytes) = bytes else {
             return Ok(None);
@@ -3817,7 +3800,7 @@ mod tests {
             classpath
                 .missing_classes
                 .borrow()
-                .contains_key(&file.internal_name)
+                .contains_key(&(file.internal_name.clone(), std::env::var_os("JAVA_HOME")))
         );
         assert_ne!(
             classpath.load("bad//name").unwrap_err().code,
@@ -3830,12 +3813,14 @@ mod tests {
             classpath.load(&file.internal_name).unwrap().name,
             file.internal_name
         );
-        // JDK misses never enter this cache, preserving the live fallback path.
         assert_eq!(
             classpath.load("java/cachetest/Missing").unwrap_err().code,
             "CLASS_NOT_FOUND"
         );
-        assert!(classpath.missing_classes.borrow().is_empty());
+        assert!(classpath.missing_classes.borrow().contains_key(&(
+            "java/cachetest/Missing".into(),
+            std::env::var_os("JAVA_HOME"),
+        )));
     }
 
     #[test]

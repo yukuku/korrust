@@ -179,6 +179,10 @@ impl Index {
         Ok(Some(bytes))
     }
 
+    pub(super) fn system_module_descriptor(&mut self, path: &Path) -> Result<Option<Vec<u8>>> {
+        self.archive(path)?.read(path, "classes/module-info.class")
+    }
+
     pub(super) fn names(&mut self, path: &Path, package: &str) -> Result<Vec<String>> {
         if let Some(archive) = self.archives.get(path) {
             return Ok(archive.names(package));

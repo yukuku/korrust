@@ -26,7 +26,7 @@ Open the [HTML reports](target/reports-html/index.html); see [report generation 
 
 Use [feature reports](reports/features/) to assess the tested subset and limitations. Run `python3 tools/check_declarations_twenty.py` after a release build for the declaration, control-flow, and operator milestone checks.
 
-The Korrust CLI accepts one or more source files and an output directory. Pass all sources for a module together, followed by `-d <output-directory>` and `--module-name <name>`. Pass dependency directories or JAR files with `-cp <classpath>`; separate entries with the platform path separator (`:` on macOS/Linux). JDK classes are read from `JAVA_HOME/jmods/java.base.jmod` after explicit dependencies. The differential harness prepares its dependencies automatically.
+The Korrust CLI accepts one or more source files and an output directory. Pass all sources for a module together, followed by `-d <output-directory>` and `--module-name <name>`. Pass dependency directories or JAR files with `-cp <classpath>`; separate entries with the platform path separator (`:` on macOS/Linux). JDK classes are read from unqualified exported packages of the default resolved modules in `JAVA_HOME/jmods` after explicit dependencies. The differential harness prepares its dependencies automatically.
 
 Use `--friend-paths <classpath>` to allow access to internal declarations in the listed dependency outputs. Diagnostics use readable text by default; pass `--diagnostic-format json` for structured diagnostics on standard error. Source offsets count UTF-8 bytes from zero. Lines and Unicode character columns count from one.
 
