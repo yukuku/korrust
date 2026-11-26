@@ -1,0 +1,51 @@
+--- a/src/check_functions.rs
++++ b/src/check_functions.rs
+@@ -1288,6 +1288,8 @@
+                 kotlin_interface: false,
+                 methods: vec![JavaMethod {
+                     library: Some(crate::classpath::LibraryMethod {
++                        compose: None,
++                        stable_result: false,
+                         default_code: None,
+                         vararg_index: None,
+                         contracts: Vec::new(),
+--- a/src/compiled_inline.rs
++++ b/src/compiled_inline.rs
+@@ -1112,6 +1112,8 @@
+     fn inline_method(code: JavaCode) -> JavaMethod {
+         JavaMethod {
+             library: Some(crate::classpath::LibraryMethod {
++                compose: None,
++                stable_result: false,
+                 default_code: None,
+                 vararg_index: None,
+                 contracts: Vec::new(),
+--- a/src/syntax.rs
++++ b/src/syntax.rs
+@@ -674,17 +674,15 @@
+ }
+ impl PropertyDecl {
+     pub(crate) fn inference_expression(&self) -> Option<&Expr> {
+-        self.initializer
+-            .as_ref()
+-            .or_else(|| match self.body.as_slice() {
+-                [
+-                    Statement {
+-                        kind: StatementKind::Return(Some(expr)),
+-                        ..
+-                    },
+-                ] => Some(expr),
+-                _ => None,
+-            })
++        self.initializer.as_ref().or(match self.body.as_slice() {
++            [
++                Statement {
++                    kind: StatementKind::Return(Some(expr)),
++                    ..
++                },
++            ] => Some(expr),
++            _ => None,
++        })
+     }
+
+     pub fn visibility(&self) -> PropertyVisibility {
