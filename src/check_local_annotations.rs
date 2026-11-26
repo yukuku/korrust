@@ -76,6 +76,22 @@ pub(crate) fn validate(source: &syntax::Module, classpath: &Classpath, scope: &s
                 }
             }
         }
+        for annotation in annotations {
+            if annotation
+                .arguments
+                .iter()
+                .any(|(_, value)| !literal(value))
+            {
+                return Err(Diagnostic::new(
+                    annotation.offset,
+                    "Local annotation arguments currently require literal constant expressions",
+                )
+                .with_kind(
+                    crate::DiagnosticKind::UnsupportedLanguage,
+                    "LOCAL_ANNOTATION_ARGUMENT_CONTEXT_UNSUPPORTED",
+                ));
+            }
+        }
         let emitted = annotations::declaration_annotations(
             annotations,
             classpath,
@@ -95,20 +111,6 @@ pub(crate) fn validate(source: &syntax::Module, classpath: &Classpath, scope: &s
             ));
         }
         for annotation in annotations {
-            if annotation
-                .arguments
-                .iter()
-                .any(|(_, value)| !literal(value))
-            {
-                return Err(Diagnostic::new(
-                    annotation.offset,
-                    "Local annotation arguments currently require literal constant expressions",
-                )
-                .with_kind(
-                    crate::DiagnosticKind::UnsupportedLanguage,
-                    "LOCAL_ANNOTATION_ARGUMENT_CONTEXT_UNSUPPORTED",
-                ));
-            }
             if annotations::annotation_owner(&annotation.name, classpath, &imports)
                 != "kotlin/Suppress"
             {
