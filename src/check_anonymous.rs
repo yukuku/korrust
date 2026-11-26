@@ -1014,6 +1014,7 @@ impl Checker<'_> {
                 }],
                 receiver_labels: HashMap::new(),
                 lambdas: self.lambdas.clone(),
+                local_defaults: self.captured_default_signatures(&captured),
                 captured: captured.clone(),
                 captured_cells: captured_cells.clone(),
                 cells: HashMap::new(),

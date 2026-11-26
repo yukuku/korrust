@@ -2135,6 +2135,7 @@ mod tests {
             receiver_labels: HashMap::new(),
             lambdas: Rc::new(RefCell::new(Vec::new())),
             captured: HashMap::new(),
+            local_defaults: HashMap::new(),
             captured_cells: HashMap::new(),
             cells: HashMap::new(),
             cell_names: HashSet::new(),

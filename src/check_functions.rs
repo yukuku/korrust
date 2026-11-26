@@ -527,6 +527,7 @@ impl Checker<'_> {
             extension_receivers: Vec::new(),
             receiver_labels: HashMap::new(),
             lambdas: self.lambdas.clone(),
+            local_defaults: self.captured_default_signatures(&captured),
             captured,
             captured_cells,
             cells: HashMap::new(),
@@ -955,6 +956,66 @@ impl Checker<'_> {
         result
     }
 
+    pub(super) fn local_default_signature(&self, name: &str) -> Option<Rc<LocalFunctionDefaults>> {
+        let binding = self.local(name).map(|local| local.slot);
+        self.local_defaults
+            .get(&(binding, name.to_owned()))
+            .cloned()
+    }
+
+    pub(super) fn captured_default_signatures(
+        &self,
+        captures: &HashMap<String, (String, Type)>,
+    ) -> LocalDefaultBindings {
+        captures
+            .keys()
+            .filter_map(|name| {
+                self.local_default_signature(name)
+                    .map(|signature| ((None, name.clone()), signature))
+            })
+            .collect()
+    }
+
+    pub(super) fn defaulted_local_call(
+        &mut self,
+        function: Value,
+        signature: &LocalFunctionDefaults,
+        args: &[Expr],
+        offset: usize,
+    ) -> Result<Value> {
+        let Type::Function { result, .. } = function.ty.base() else {
+            return Err(Diagnostic::new(
+                offset,
+                "Local function binding has a non-function type",
+            ));
+        };
+        let result = result.as_ref().clone();
+        let optional = signature
+            .values
+            .iter()
+            .map(Option::is_some)
+            .collect::<Vec<_>>();
+        let (mut values, lets, mask) =
+            self.arguments(&signature.params, &optional, args, true, offset)?;
+        for (i, default) in signature.values.iter().enumerate() {
+            if mask & (1u64 << i) != 0
+                && let Some(default) = default
+            {
+                values[i] = default.clone();
+            }
+        }
+        Ok(Self::wrap_lets(
+            Value {
+                ty: result,
+                kind: ValueKind::FunctionInvoke {
+                    function: Box::new(function),
+                    args: values,
+                },
+            },
+            lets,
+        ))
+    }
+
     pub(super) fn function_invoke(
         &mut self,
         function: Value,
@@ -1367,6 +1428,7 @@ mod shadowing_tests {
             receiver_labels: HashMap::new(),
             lambdas: Rc::new(RefCell::new(Vec::new())),
             captured: HashMap::new(),
+            local_defaults: HashMap::new(),
             captured_cells: HashMap::new(),
             cells: HashMap::new(),
             cell_names: HashSet::new(),
@@ -1468,13 +1530,10 @@ impl Checker<'_> {
             return Err(Diagnostic::new(function.offset, "Generic, extension, defaulted, vararg, inline, and annotated local suspend functions are unsupported")
                 .with_kind(crate::DiagnosticKind::UnsupportedLanguage, "SUSPEND_LOCAL_DECLARATION_SHAPE_UNSUPPORTED"));
         }
-        if !function.type_params.is_empty()
-            || function.receiver.is_some()
-            || function.defaults.iter().any(Option::is_some)
-        {
+        if !function.type_params.is_empty() || function.receiver.is_some() {
             return Err(Diagnostic::new(
                 function.offset,
-                "Generic local functions, local extension functions, and local default arguments are unsupported",
+                "Generic and extension local functions are unsupported",
             ));
         }
         let params = function
@@ -1526,6 +1585,30 @@ impl Checker<'_> {
         } else {
             self.resolve(&function.result, function.offset)?
         };
+        let signature = if function.defaults.iter().any(Option::is_some) {
+            let mut values = Vec::with_capacity(params.len());
+            for (default, ty) in function.defaults.iter().zip(&params) {
+                let value = match default {
+                    Some(expr) if matches!(expr.kind, ExprKind::Int(_) | ExprKind::Long(_) | ExprKind::Float(_) | ExprKind::Double(_) | ExprKind::String(_) | ExprKind::Char(_) | ExprKind::Boolean(_) | ExprKind::Null) => {
+                        Some(self.expected_value(expr, ty)?)
+                    }
+                    Some(expr) => return Err(Diagnostic::new(expr.offset, "Local function default expressions that require declaration-scope evaluation are unsupported").with_kind(crate::DiagnosticKind::UnsupportedLanguage, "LOCAL_DEFAULT_EXPRESSION_UNSUPPORTED")),
+                    None => None,
+                };
+                values.push(value);
+            }
+            Some(Rc::new(LocalFunctionDefaults {
+                params: function
+                    .params
+                    .iter()
+                    .zip(&params)
+                    .map(|((name, _), ty)| (name.clone(), ty.clone()))
+                    .collect(),
+                values,
+            }))
+        } else {
+            None
+        };
         let ty = if function.suspend_ {
             Type::SuspendFunction {
                 params,
@@ -1538,6 +1621,10 @@ impl Checker<'_> {
             }
         };
         let slot = self.declare(&function.name, ty.clone(), false, function.offset)?;
+        if let Some(signature) = signature {
+            self.local_defaults
+                .insert((Some(slot), function.name.clone()), signature);
+        }
         let owner = Self::cell_owner(&ty);
         self.cells.insert(slot, owner.clone());
         let cell = Value {

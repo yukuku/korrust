@@ -735,6 +735,13 @@ type ConstructorSignature<'a> = (&'a str, &'a Vec<(String, Type)>, &'a Vec<Optio
 type CheckedArguments = (Vec<Value>, Vec<(u8, Value)>, u64);
 type CallableParameters = (Vec<(String, Type)>, Vec<bool>);
 #[derive(Clone)]
+struct LocalFunctionDefaults {
+    params: Vec<(String, Type)>,
+    values: Vec<Option<Value>>,
+}
+type LocalDefaultBindings = HashMap<(Option<u8>, String), Rc<LocalFunctionDefaults>>;
+
+#[derive(Clone)]
 struct Checker<'a> {
     composer: Option<Local>,
     composable_target: Option<String>,
@@ -748,6 +755,7 @@ struct Checker<'a> {
     lambdas: Rc<RefCell<Vec<LambdaDecl>>>,
     captured: HashMap<String, (String, Type)>,
     captured_cells: HashMap<String, Type>,
+    local_defaults: LocalDefaultBindings,
     cells: HashMap<u8, String>,
     cell_names: HashSet<String>,
     changing_cells: HashSet<u8>,
@@ -3978,6 +3986,7 @@ impl Checker<'_> {
             ));
         }
         let slot = self.allocate_typed_slot(&ty, offset)?;
+        self.local_defaults.remove(&(Some(slot), name.to_owned()));
         self.initialized.insert(slot);
         self.scopes
             .last_mut()
@@ -6123,6 +6132,9 @@ impl Checker<'_> {
                             )? {
                                 return Ok(value);
                             }
+                        }
+                        if let Some(signature) = self.local_default_signature(name) {
+                            return self.defaulted_local_call(function, &signature, args, offset);
                         }
                         return self.function_invoke(function, args, offset);
                     }
@@ -8371,6 +8383,7 @@ pub fn check_with_owner(
             receiver_labels: HashMap::new(),
             lambdas: lambdas.clone(),
             captured: HashMap::new(),
+            local_defaults: HashMap::new(),
             captured_cells: HashMap::new(),
             cells: HashMap::new(),
             cell_names: HashSet::new(),
