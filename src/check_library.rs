@@ -953,7 +953,12 @@ impl Checker<'_> {
                 ));
             }
             let mut value = values.remove(0);
-            if matches!((value.ty.base(), result.base()), (Type::OutArray(actual), Type::Array(expected)) if actual == expected)
+            if method.name == "arrayOfNulls" && value.ty == Type::Int {
+                value = Value {
+                    ty: result.clone(),
+                    kind: ValueKind::NewArray(result, Box::new(value)),
+                };
+            } else if matches!((value.ty.base(), result.base()), (Type::OutArray(actual), Type::Array(expected)) if actual == expected)
             {
                 value.ty = result;
             } else {

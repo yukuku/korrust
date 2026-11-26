@@ -618,7 +618,9 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
             continue;
         };
         let parameter = Proto::parse(parameter)?;
-        if parameter.bytes(4)?.is_none() && parameter.integer(6)?.is_none() {
+        let vararg = parameter.bytes(4)?.is_some() || parameter.integer(6)?.is_some();
+        let name = metadata_name(&strings, function.integer(2)?)?.to_owned();
+        if !vararg && name != "arrayOfNulls" {
             continue;
         }
         let flags = function.integer(9)?.unwrap_or(6);
@@ -632,26 +634,34 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
         context.set_table(&function)?;
         let type_parameters = context.type_parameters_with_reified(&function, 4, true)?;
         let array = context.field(&parameter, 3, 5)?;
-        let element = context.field(&parameter, 4, 6)?;
         let returned = context.field(&function, 3, 7)?;
-        let component = match &array {
-            array if array.array_element().is_some() => array.array_element().unwrap(),
-            _ => continue,
-        };
-        if component != element
-            || returned.array_element().as_ref() != Some(&element)
-            || returned.descriptor() != array.descriptor()
-        {
-            continue;
+        if vararg {
+            let element = context.field(&parameter, 4, 6)?;
+            if array.array_element().as_ref() != Some(&element)
+                || returned.array_element().as_ref() != Some(&element)
+                || returned.descriptor() != array.descriptor()
+            {
+                continue;
+            }
+        } else {
+            let [parameter] = type_parameters.as_slice() else {
+                continue;
+            };
+            if !parameter.reified
+                || array != Type::Int
+                || !matches!(&returned,
+                Type::Array(element) if matches!(element.as_ref(), Type::Nullable(t) if matches!(t.as_ref(), Type::Parameter {name, ..} if name == &parameter.name)))
+            {
+                continue;
+            }
         }
-        let name = metadata_name(&strings, function.integer(2)?)?.to_owned();
         let parameter_name = metadata_name(&strings, parameter.integer(2)?)?.to_owned();
         let descriptor = format!("({}){}", array.descriptor(), returned.descriptor());
         result.push(JavaMethod {
             owner: "kotlin/<builtins>".into(),
             name: name.clone(),
             descriptor,
-            access: 0x89,
+            access: if vararg { 0x89 } else { 0x09 },
             unsupported: false,
             source_property: None,
             kotlin_params: Some(vec![(parameter_name, array.clone(), false)]),
@@ -2429,6 +2439,7 @@ mod tests {
                 .collect::<Vec<_>>(),
             [
                 "arrayOf",
+                "arrayOfNulls",
                 "booleanArrayOf",
                 "byteArrayOf",
                 "charArrayOf",
@@ -2441,6 +2452,12 @@ mod tests {
         );
         for method in &methods {
             assert_eq!(method.owner, "kotlin/<builtins>");
+            if method.name == "arrayOfNulls" {
+                assert_eq!(method.access, 0x09);
+                assert_eq!(method.descriptor, "(I)[Ljava/lang/Object;");
+                assert!(method.library.as_ref().unwrap().type_parameters[0].reified);
+                continue;
+            }
             assert_eq!(method.access, 0x89);
             assert!(method.library.as_ref().unwrap().builtin_array);
             assert_eq!(method.kotlin_params.as_ref().unwrap()[0].0, "elements");
