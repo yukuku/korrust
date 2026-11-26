@@ -1,0 +1,22 @@
+[
+  {
+    "id": "explicit-instance",
+    "source": "import fields.Base\nfun invalid(value: Base): Int = value.CODE"
+  },
+  {
+    "id": "interface-inheritance",
+    "source": "import fields.Marks\nclass Invalid : Marks { fun invalid(): Int = MARK }"
+  },
+  {
+    "id": "private-field",
+    "source": "import fields.Base\nclass Invalid : Base() { fun invalid(): Int = SECRET }"
+  },
+  {
+    "id": "wrong-type",
+    "source": "import fields.Base\nclass Invalid : Base() { fun invalid(): String = CODE }"
+  },
+  {
+    "id": "synthetic-kotlin-instance",
+    "source": "object Invalid { fun value(): Invalid = INSTANCE }"
+  }
+]

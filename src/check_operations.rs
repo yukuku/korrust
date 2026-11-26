@@ -2756,6 +2756,45 @@ impl Checker<'_> {
 }
 
 impl Checker<'_> {
+    pub(super) fn lexical_java_static_field(
+        &mut self,
+        name: &str,
+        offset: usize,
+    ) -> Result<Option<Value>> {
+        let Some(mut owner) = self
+            .dispatch_receiver
+            .as_ref()
+            .and_then(|receiver| library::type_owner(&receiver.ty))
+            .map(str::to_owned)
+        else {
+            return Ok(None);
+        };
+        let mut seen = HashSet::new();
+        while seen.insert(owner.clone()) {
+            let class = self
+                .classes
+                .get(&owner)
+                .cloned()
+                .map(Ok)
+                .unwrap_or_else(|| self.classpath.load(&owner))?;
+            if let Some(field) = class.fields.iter().find(|field| field.name == name) {
+                if !class.kotlin_class
+                    && class.access & 0x0200 == 0
+                    && field.access & 9 == 9
+                    && field.kotlin.is_none()
+                {
+                    return self.java_field(&class.name, name, None, offset).map(Some);
+                }
+                return Ok(None);
+            }
+            let Some(parent) = class.super_name else {
+                break;
+            };
+            owner = parent;
+        }
+        Ok(None)
+    }
+
     pub(super) fn receiver_property(&mut self, name: &str, offset: usize) -> Result<Value> {
         let result = if let Some(receiver) = self.dispatch_receiver.clone() {
             let receiver_slot = receiver.slot;

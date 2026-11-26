@@ -5282,6 +5282,20 @@ impl Checker<'_> {
                 if let Some(value) = self.lexical_companion_property(name, None, offset)? {
                     return Ok(value);
                 }
+                if self.local(name).is_none()
+                    && !self.captured.contains_key(name)
+                    && !self.fields.contains_key(name)
+                    && !self.members.values().any(|method| {
+                        method.source_property.as_deref() == Some(name)
+                            && method
+                                .library
+                                .as_ref()
+                                .is_none_or(|library| library.receiver.is_none())
+                    })
+                    && let Some(value) = self.lexical_java_static_field(name, offset)?
+                {
+                    return Ok(value);
+                }
                 if let Some(value) = self.imported_value(name, offset)? {
                     return Ok(value);
                 }
