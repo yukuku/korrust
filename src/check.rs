@@ -6164,6 +6164,24 @@ impl Checker<'_> {
                         self.refinements = saved_refinements;
                         self.lambdas.borrow_mut().truncate(saved_lambdas);
                     }
+                    if name == "values"
+                        && args.is_empty()
+                        && let Some(class) = self.value_classifier(receiver)?
+                        && class.kotlin_class
+                        && class.access & 0x4000 != 0
+                    {
+                        let result = Type::Array(Box::new(Type::Java(class.name.clone())));
+                        let descriptor = format!("(){}", result.descriptor());
+                        if let Some(mut method) = class.methods.into_iter().find(|method| {
+                            method.name == "values"
+                                && method.descriptor == descriptor
+                                && method.access & 9 == 9
+                        }) {
+                            method.kotlin_result = Some(result);
+                            method.kotlin_params = Some(Vec::new());
+                            return self.library_static_call(method, args, offset);
+                        }
+                    }
                     if let Some(owner) = self.qualified_java_class(receiver)? {
                         return self.java_static(&owner, name, args, offset);
                     }
