@@ -1,0 +1,7 @@
+$ /workspace/work/targets159/constructor-committed/references/kotlinc/bin/kotlinc -language-version 2.3 -api-version 2.3 -jvm-target 1.8 /workspace/work/targets159/constructor-committed/target/checks/2026-11-26T040340855696Z-constructor-inference/constructor-own-bound.kt -cp /workspace/work/targets159/constructor-committed/target/checks/2026-11-26T040340855696Z-constructor-inference/official:/workspace/work/targets159/constructor-committed/target/checks/2026-11-26T040340855696Z-constructor-inference/java:/workspace/work/targets159/constructor-committed/target/checks/2026-11-26T040340855696Z-constructor-inference/dependencies:/workspace/work/targets159/constructor-committed/references/kotlinc/lib/kotlin-stdlib.jar -d /workspace/work/targets159/constructor-committed/target/checks/2026-11-26T040340855696Z-constructor-inference/invalid-official
+target/checks/2026-11-26T040340855696Z-constructor-inference/constructor-own-bound.kt:2:26: error: cannot infer type for type parameter 'T'. Specify it explicitly.
+fun bad(): Shadow<Int> = Shadow(7)
+                         ^^^^^^
+target/checks/2026-11-26T040340855696Z-constructor-inference/constructor-own-bound.kt:2:33: error: argument type mismatch: actual type is 'Int', but 'uninferred T! (of constructor<T : Any!, T : CharSequence!>: JavaTypes.Shadow<T>)' was expected.
+fun bad(): Shadow<Int> = Shadow(7)
+                                ^
