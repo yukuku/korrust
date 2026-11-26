@@ -4,6 +4,85 @@ pub(crate) const COMPOSER: &str = "androidx/compose/runtime/Composer";
 pub(crate) const FACTORY: &str = "androidx/compose/runtime/internal/ComposableLambdaKt";
 pub(crate) const WRAPPER: &str = "androidx/compose/runtime/internal/ComposableLambda";
 
+#[derive(Clone, Debug)]
+pub(crate) struct Call {
+    pub changed_words: usize,
+    pub default_words: usize,
+    pub target: Option<String>,
+}
+
+pub(super) fn callable(
+    attributes: &Attributes,
+    method: &JavaMethod,
+    logical: &[Type],
+    result: &Type,
+    flags: u64,
+    generic: bool,
+    defaults: bool,
+) -> Result<Option<Call>> {
+    let marked = attributes
+        .annotations
+        .iter()
+        .filter(|annotation| annotation.name == "Landroidx/compose/runtime/Composable;")
+        .collect::<Vec<_>>();
+    if marked.is_empty() {
+        return Ok(None);
+    }
+    let unsupported = || {
+        Diagnostic::new(0, "Unsupported transformed Compose call signature").with_kind(
+            crate::DiagnosticKind::UnsupportedLanguage,
+            "COMPOSE_CALL_ABI_UNSUPPORTED",
+        )
+    };
+    if marked.len() != 1
+        || !marked[0].values.is_empty()
+        || method.access & 9 != 9
+        || result != &Type::Unit
+        || flags & (1024 | (1 << 13)) != 0
+        || generic
+        || logical.len() > 64
+        || logical.iter().any(contains)
+    {
+        return Err(unsupported());
+    }
+    let changed_words = logical.len().div_ceil(10).max(1);
+    let default_words = if defaults {
+        logical.len().div_ceil(32)
+    } else {
+        0
+    };
+    let descriptor = format!(
+        "({}L{COMPOSER};{})V",
+        logical.iter().map(Type::descriptor).collect::<String>(),
+        "I".repeat(changed_words + default_words),
+    );
+    if descriptor != method.descriptor {
+        return Err(unsupported());
+    }
+    let mut target = None;
+    for annotation in &attributes.annotations {
+        match annotation.name.as_str() {
+            "Landroidx/compose/runtime/ComposableTarget;" => {
+                let [(name, AnnotationValue::String(value))] = annotation.values.as_slice() else {
+                    return Err(unsupported());
+                };
+                if name != "applier" || value.is_empty() || target.replace(value.clone()).is_some()
+                {
+                    return Err(unsupported());
+                }
+            }
+            "Landroidx/compose/runtime/ComposableInferredTarget;"
+            | "Landroidx/compose/runtime/ComposableOpenTarget;" => return Err(unsupported()),
+            _ => {}
+        }
+    }
+    Ok(Some(Call {
+        changed_words,
+        default_words,
+        target,
+    }))
+}
+
 pub(crate) fn contains(ty: &Type) -> bool {
     match ty {
         Type::ComposableUnitFunction => true,

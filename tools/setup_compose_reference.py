@@ -14,17 +14,12 @@ def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--artifact', type=Path)
-    args = parser.parse_args()
-    pin = json.loads((ROOT / 'references/compose-runtime.json').read_text())
-    output = ROOT / 'references/compose/runtime.jar'
+def install(pin, output, artifact):
     if output.is_file() and sha(output.read_bytes()) == pin['classes_sha256']:
         print(output)
         return
-    if args.artifact:
-        data = args.artifact.read_bytes()
+    if artifact:
+        data = artifact.read_bytes()
     else:
         with urllib.request.urlopen(pin['url'], timeout=60) as response:
             data = response.read(32 * 1024 * 1024 + 1)
@@ -39,6 +34,16 @@ def main():
     temporary.write_bytes(classes)
     temporary.replace(output)
     print(output)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--artifact', type=Path)
+    parser.add_argument('--annotation-artifact', type=Path)
+    args = parser.parse_args()
+    pin = json.loads((ROOT / 'references/compose-runtime.json').read_text())
+    install(pin, ROOT / 'references/compose/runtime.jar', args.artifact)
+    install(pin['annotations'], ROOT / 'references/compose/annotations.jar', args.annotation_artifact)
 
 
 if __name__ == '__main__':

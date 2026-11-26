@@ -666,6 +666,8 @@ pub(super) fn attach_with_declarations(
                     method.kotlin_params = Some(params);
                     method.kotlin_result = Some(result);
                     method.library = Some(LibraryMethod {
+                        compose: None,
+                        stable_result: false,
                         default_code: None,
                         vararg_index: None,
                         contracts: Vec::new(),

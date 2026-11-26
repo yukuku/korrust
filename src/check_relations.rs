@@ -1349,6 +1349,8 @@ impl Checker<'_> {
             ),
             kotlin_result: Some(result.clone()),
             library: Some(crate::classpath::LibraryMethod {
+                compose: None,
+                stable_result: false,
                 default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),
@@ -2064,6 +2066,8 @@ mod tests {
 
     fn with_checker(cp: &Classpath, action: impl FnOnce(&mut Checker<'_>)) {
         let mut checker = Checker {
+            composer: None,
+            composable_target: None,
             composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,

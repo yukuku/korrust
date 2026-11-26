@@ -970,6 +970,8 @@ impl Checker<'_> {
                 method_members.insert("#backing".into(), backing);
             }
             let mut checker = Checker {
+                composer: None,
+                composable_target: None,
                 composable_body: false,
                 inline_argument_modes: Vec::new(),
                 inline_analysis: false,

@@ -47,6 +47,8 @@ mod assignment_flow;
 mod captures;
 #[path = "check_classes.rs"]
 mod classes;
+#[path = "check_compose.rs"]
+mod compose;
 #[path = "check_constructor_aliases.rs"]
 mod constructor_aliases;
 #[path = "check_constructor_bridges.rs"]
@@ -731,6 +733,8 @@ type CheckedArguments = (Vec<Value>, Vec<(u8, Value)>, u64);
 type CallableParameters = (Vec<(String, Type)>, Vec<bool>);
 #[derive(Clone)]
 struct Checker<'a> {
+    composer: Option<Local>,
+    composable_target: Option<String>,
     composable_body: bool,
     inline_argument_modes: Vec<syntax::InlineParameterMode>,
     inline_analysis: bool,
@@ -8284,6 +8288,8 @@ pub fn check_with_owner(
     for (id, function) in source.functions.iter().enumerate() {
         let (params, return_type) = signatures[id].clone();
         let mut checker = Checker {
+            composer: None,
+            composable_target: None,
             composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,

@@ -16,6 +16,15 @@ fun localReturn(registry: Registry, value: Int) {
 }
 fun exceptional(registry: Registry) { registry.accept { Events.fail() } }
 fun lookalike() { ordinaryAccept { Events.hit(31) } }
+fun binaryCaptured(registry: Registry, amount: Int) { registry.accept { paint(amount, "abc") } }
+fun binaryStable(registry: Registry) { registry.accept { paint(stableAmount(), "abc") } }
+fun binaryDefaults(registry: Registry) { registry.accept { paint() } }
+fun binaryOrdered(registry: Registry) {
+    registry.accept { paint(label = BinaryEvents.text("q"), amount = BinaryEvents.number(7)) }
+}
+fun binaryMany(registry: Registry) {
+    registry.accept { many(0,1,2,3,4,5,6,7,8,9,10) }
+}
 
 class Controller : LexicalBase() {
     val initial: Int = activity

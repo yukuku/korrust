@@ -285,6 +285,21 @@ impl<'a> Context<'a> {
                             annotation.allowed(&[1])?;
                             composable = true;
                         }
+                        if matches!(
+                            name,
+                            "androidx/compose/runtime/ComposableTarget"
+                                | "androidx/compose/runtime/ComposableOpenTarget"
+                                | "androidx/compose/runtime/ComposableInferredTarget"
+                        ) {
+                            return Err(Diagnostic::new(
+                                0,
+                                "Composable callback target schemes are unsupported",
+                            )
+                            .with_kind(
+                                crate::DiagnosticKind::UnsupportedLanguage,
+                                "COMPOSE_TARGET_TYPE_UNSUPPORTED",
+                            ));
+                        }
                     }
                     if composable {
                         if name != "kotlin/Function0"
@@ -712,6 +727,8 @@ fn parse_builtin_array_factories(bytes: &[u8]) -> Result<Vec<JavaMethod>> {
             kotlin_result: Some(returned),
             kotlin_internal: false,
             library: Some(LibraryMethod {
+                compose: None,
+                stable_result: false,
                 default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),
@@ -940,6 +957,8 @@ fn builtin_declarations(
             kotlin_result: Some(returned),
             kotlin_internal: false,
             library: requested_name.map(|_| LibraryMethod {
+                compose: None,
+                stable_result: false,
                 default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),
@@ -1463,7 +1482,42 @@ fn attach_member(
         && class.methods.iter().any(|method| {
             method.name == "<init>" && method.descriptor == physical && method.access & 2 != 0
         });
-    if jvm_descriptor != descriptor && jvm_descriptor != physical && !constructor_marker {
+    let compose = super::compose_abi::callable(
+        &attributes[*index],
+        &class.methods[*index],
+        &logical,
+        &result,
+        flags,
+        receiver.is_some()
+            || value_dispatch
+            || !type_parameters.is_empty()
+            || own.is_some()
+            || class
+                .library
+                .as_ref()
+                .is_none_or(|library| library.package.is_none())
+            || vararg_index.is_some(),
+        params.iter().any(|(_, _, default)| *default),
+    );
+    let compose = match compose {
+        Ok(compose) => compose,
+        Err(error) => {
+            let method = &mut class.methods[*index];
+            method.kotlin_params = Some(params.clone());
+            method.kotlin_result = Some(result.clone());
+            method.source_property = property.clone();
+            if let Some(library) = &mut method.library {
+                library.receiver = receiver.clone();
+                library.type_parameters = type_parameters.clone();
+            }
+            return Err(error);
+        }
+    };
+    if compose.is_none()
+        && jvm_descriptor != descriptor
+        && jvm_descriptor != physical
+        && !constructor_marker
+    {
         let (logical_parameters, _) = descriptor.split_once(')').ok_or_else(invalid)?;
         let (physical_parameters, physical_result) =
             jvm_descriptor.split_once(')').ok_or_else(invalid)?;
@@ -1525,7 +1579,7 @@ fn attach_member(
         }
     }
     let mut default_code = None;
-    if params.iter().any(|(_, _, default)| *default) {
+    if compose.is_none() && params.iter().any(|(_, _, default)| *default) {
         if params.len() > 64 {
             return Err(invalid());
         }
@@ -1594,6 +1648,11 @@ fn attach_member(
         parameter_modes.insert(0, crate::syntax::InlineParameterMode::Ordinary);
     }
     method.library = Some(LibraryMethod {
+        compose,
+        stable_result: attributes[*index]
+            .annotations
+            .iter()
+            .any(|annotation| annotation.name == "Landroidx/compose/runtime/Stable;"),
         default_code,
         vararg_index,
         contracts,
@@ -1645,6 +1704,8 @@ fn remember_callable(
             && method.library.is_none()
         {
             method.library = Some(LibraryMethod {
+                compose: None,
+                stable_result: false,
                 default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),

@@ -41,7 +41,7 @@ pub(super) fn emit(
     let parent = pool.class("java/lang/Object")?;
     let function2 = pool.class("kotlin/jvm/functions/Function2")?;
     let body_type = Type::Function {
-        params: Vec::new(),
+        params: vec![Type::Java(COMPOSER.into())],
         result: Box::new(Type::Unit),
     };
     let mut fields = class_field(&mut pool, "body", &body_type, 0x0012)?;
@@ -52,14 +52,14 @@ pub(super) fn emit(
     constructor.bytes.extend([0x2a, 0x2b]);
     constructor.reference(
         0xb5,
-        pool.field(&owner, "body", "Lkotlin/jvm/functions/Function0;")?,
+        pool.field(&owner, "body", "Lkotlin/jvm/functions/Function1;")?,
     );
     constructor.bytes.push(0xb1);
     methods.push(simple_method(
         &mut pool,
         0x0001,
         "<init>",
-        "(Lkotlin/jvm/functions/Function0;)V",
+        "(Lkotlin/jvm/functions/Function1;)V",
         constructor,
         None,
         false,
@@ -103,17 +103,18 @@ pub(super) fn emit(
     invoke.bytes.push(0x2a);
     invoke.reference(
         0xb4,
-        pool.field(&owner, "body", "Lkotlin/jvm/functions/Function0;")?,
+        pool.field(&owner, "body", "Lkotlin/jvm/functions/Function1;")?,
     );
+    invoke.bytes.push(0x2b);
     invoke.reference(
         0xb9,
         pool.interface_method(
-            "kotlin/jvm/functions/Function0",
+            "kotlin/jvm/functions/Function1",
             "invoke",
-            "()Ljava/lang/Object;",
+            "(Ljava/lang/Object;)Ljava/lang/Object;",
         )?,
     );
-    invoke.bytes.extend([1, 0, 0x57]);
+    invoke.bytes.extend([2, 0, 0x57]);
     invoke.reference(
         0xb8,
         pool.method(
@@ -192,7 +193,7 @@ pub(super) fn emit(
         initialize.reference(0xb7, pool.method(&lambda.owner, "<init>", "()V")?);
         initialize.reference(
             0xb7,
-            pool.method(&owner, "<init>", "(Lkotlin/jvm/functions/Function0;)V")?,
+            pool.method(&owner, "<init>", "(Lkotlin/jvm/functions/Function1;)V")?,
         );
         initialize.reference(
             0xb8,

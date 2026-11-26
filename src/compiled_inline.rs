@@ -1112,6 +1112,8 @@ mod tests {
     fn inline_method(code: JavaCode) -> JavaMethod {
         JavaMethod {
             library: Some(crate::classpath::LibraryMethod {
+                compose: None,
+                stable_result: false,
                 default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),

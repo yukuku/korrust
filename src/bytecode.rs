@@ -1918,7 +1918,7 @@ impl Code<'_> {
                             0xb7,
                             &adapter,
                             "<init>",
-                            "(Lkotlin/jvm/functions/Function0;)V",
+                            "(Lkotlin/jvm/functions/Function1;)V",
                         )?;
                         self.method_reference(
                             0xb8,

@@ -293,8 +293,7 @@ impl Checker<'_> {
                 ));
             }
             crate::classpath::compose_abi::validate_runtime(self.classpath, expr.offset)?;
-            self.composable_body = true;
-            let checked = self.lambda_context(
+            let checked = self.ordinary_lambda_context(
                 expr,
                 &Type::Function {
                     params: Vec::new(),
@@ -303,8 +302,8 @@ impl Checker<'_> {
                 None,
                 local_return,
                 label,
+                true,
             );
-            self.composable_body = false;
             let mut value = checked?;
             let ValueKind::Lambda { owner, .. } = &value.kind else {
                 unreachable!()
@@ -318,6 +317,18 @@ impl Checker<'_> {
             value.ty = expected.clone();
             return Ok(value);
         }
+        self.ordinary_lambda_context(expr, expected, interface, local_return, label, false)
+    }
+
+    fn ordinary_lambda_context(
+        &mut self,
+        expr: &Expr,
+        expected: &Type,
+        interface: Option<JavaMethod>,
+        local_return: bool,
+        label: Option<&str>,
+        composable: bool,
+    ) -> Result<Value> {
         let (params, result, receiver_type) = match expected.base() {
             Type::Function { params, result } | Type::SuspendFunction { params, result } => {
                 (params, result, None)
@@ -502,7 +513,9 @@ impl Checker<'_> {
             }
         }
         let mut checker = Checker {
-            composable_body: self.composable_body,
+            composer: None,
+            composable_target: None,
+            composable_body: composable,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
             public_inline_body: self.public_inline_body,
@@ -569,6 +582,16 @@ impl Checker<'_> {
             .into_iter()
             .zip(params.iter().cloned())
             .collect::<Vec<_>>();
+        if composable {
+            let ty = Type::Java(crate::classpath::compose_abi::COMPOSER.into());
+            let slot = checker.allocate_typed_slot(&ty, expr.offset)?;
+            checker.initialized.insert(slot);
+            checker.composer = Some(Local {
+                slot,
+                ty,
+                mutable: false,
+            });
+        }
         if let Some(receiver) = receiver_type {
             function_params.insert(0, ("this".into(), receiver));
         }
@@ -595,6 +618,15 @@ impl Checker<'_> {
                     checker.receiver_labels.insert(label.into(), receiver);
                 }
             }
+        }
+        if composable {
+            function_params.insert(
+                0,
+                (
+                    "<composer>".into(),
+                    Type::Java(crate::classpath::compose_abi::COMPOSER.into()),
+                ),
+            );
         }
         let suspend_ = matches!(
             expected.base(),
@@ -679,7 +711,8 @@ impl Checker<'_> {
             })),
             None => return Err(Diagnostic::new(expr.offset, "Lambda must produce a result")),
         }
-        if self.composable_body {
+        if composable {
+            self.validate_composable_groups(&mut body, expr.offset)?;
             let mut used = HashSet::new();
             let mut creates_function = false;
             ir_walk::statements(&mut body, &owner, &mut |value: &mut Value, _: &str| {
@@ -1263,6 +1296,8 @@ mod shadowing_tests {
                 kotlin_interface: false,
                 methods: vec![JavaMethod {
                     library: Some(crate::classpath::LibraryMethod {
+                        compose: None,
+                        stable_result: false,
                         default_code: None,
                         vararg_index: None,
                         contracts: Vec::new(),
@@ -1296,6 +1331,8 @@ mod shadowing_tests {
             },
         )]);
         let mut checker = Checker {
+            composer: None,
+            composable_target: None,
             composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,

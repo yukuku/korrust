@@ -123,6 +123,8 @@ fn legacy_check(
         }
         overloads.push(JavaMethod {
             library: function.infix.then(|| crate::classpath::LibraryMethod {
+                compose: None,
+                stable_result: false,
                 default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),
@@ -246,6 +248,8 @@ fn legacy_check(
         let signatures = Vec::new();
         let extensions = HashSet::new();
         let mut checker = Checker {
+            composer: None,
+            composable_target: None,
             composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
@@ -341,6 +345,8 @@ fn legacy_check(
             classes,
         )?;
         let mut checker = Checker {
+            composer: None,
+            composable_target: None,
             composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
@@ -662,6 +668,8 @@ pub(super) fn check(
             kotlin_result: Some(result),
             kotlin_internal: function.internal,
             library: Some(crate::classpath::LibraryMethod {
+                compose: None,
+                stable_result: false,
                 default_code: None,
                 vararg_index: None,
                 contracts: Vec::new(),

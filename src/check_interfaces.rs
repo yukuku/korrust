@@ -387,6 +387,8 @@ fn register_classes(
                     || function.operator
                     || !function.type_params.is_empty())
                 .then(|| crate::classpath::LibraryMethod {
+                    compose: None,
+                    stable_result: false,
                     default_code: None,
                     vararg_index: None,
                     contracts: Vec::new(),
@@ -1073,6 +1075,8 @@ fn check_function(
     let signatures = Vec::new();
     let extensions = HashSet::new();
     let mut checker = Checker {
+        composer: None,
+        composable_target: None,
         composable_body: false,
         inline_argument_modes: Vec::new(),
         inline_analysis: false,
@@ -1458,6 +1462,8 @@ interface Catalog {
                 panic!()
             };
             let mut checker = Checker {
+                composer: None,
+                composable_target: None,
                 composable_body: false,
                 inline_argument_modes: Vec::new(),
                 inline_analysis: false,

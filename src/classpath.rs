@@ -222,6 +222,8 @@ pub(crate) struct LibraryTypeAlias {
 
 #[derive(Clone, Debug, Default)]
 pub(crate) struct LibraryMethod {
+    pub compose: Option<compose_abi::Call>,
+    pub stable_result: bool,
     pub default_code: Option<JavaCode>,
     pub vararg_index: Option<usize>,
     pub contracts: Vec<ContractEffect>,

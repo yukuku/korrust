@@ -1,17 +1,132 @@
 [
-  {"id":"argument", "source":"fun unsupported(s: composeprobe.ArgumentSink) { s.accept { value -> println(value) } }", "oracle":"accept", "code":"LIBRARY_DECLARATION_UNSUPPORTED"},
-  {"id":"result", "source":"fun unsupported(s: composeprobe.ResultSink) { s.accept { 42 } }", "oracle":"accept", "code":"LIBRARY_DECLARATION_UNSUPPORTED"},
-  {"id":"receiver", "source":"fun unsupported(s: composeprobe.ReceiverSink) { s.accept { println(this) } }", "oracle":"accept", "code":"LIBRARY_DECLARATION_UNSUPPORTED"},
-  {"id":"nullable", "source":"fun unsupported(s: composeprobe.NullableSink) { s.accept {} }", "oracle":"accept", "code":"LIBRARY_DECLARATION_UNSUPPORTED"},
-  {"id":"nested-type", "source":"fun unsupported(s: composeprobe.NestedSink) { s.accept(emptyList()) }", "oracle":"accept", "code":"LIBRARY_DECLARATION_UNSUPPORTED"},
-  {"id":"inline", "source":"fun unsupported(s: composeprobe.InlineSink) { s.accept {} }", "oracle":"accept", "code":"LIBRARY_DECLARATION_UNSUPPORTED"},
-  {"id":"generic", "source":"fun unsupported(s: composeprobe.GenericSink) { s.accept(1) {} }", "oracle":"accept", "code":"LIBRARY_DECLARATION_UNSUPPORTED"},
-  {"id":"nonliteral", "source":"fun unsupported(s: composeprobe.Registry, b: @androidx.compose.runtime.Composable () -> Unit) { s.accept(b) }", "oracle":"accept", "code":"ANNOTATION_TYPE_USE_UNSUPPORTED"},
-  {"id":"nested-callback", "source":"fun unsupported(s: composeprobe.Registry) { s.accept { s.accept {} } }", "oracle":"accept", "code":"COMPOSE_NESTED_CALLBACK_UNSUPPORTED"},
-  {"id":"composable-declaration", "source":"@androidx.compose.runtime.Composable fun unsupported() {}", "oracle":"accept", "code":"COMPILER_PLUGIN_UNSUPPORTED"},
-  {"id":"hidden-composer-call", "source":"import androidx.compose.runtime.SideEffect\nfun unsupported(s: composeprobe.Registry) { s.accept { SideEffect {} } }", "oracle":"accept", "code":"LIBRARY_DECLARATION_UNSUPPORTED"},
-  {"id":"wrong-lambda-arity", "source":"fun invalid(s: composeprobe.Registry) { s.accept { value -> println(value) } }", "oracle":"reject"},
-  {"id":"nonlocal-return", "source":"fun invalid(s: composeprobe.Registry) { s.accept { return } }", "oracle":"reject"},
-  {"id":"ordinary-body-lambda", "source":"import composeprobe.execute\nfun unsupported(s: composeprobe.Registry) { s.accept { execute {} } }", "oracle":"accept", "code":"COMPOSE_BODY_LAMBDA_UNSUPPORTED"},
-  {"id":"ordinary-body-reference", "source":"import composeprobe.execute\nimport composeprobe.globalHit\nfun unsupported(s: composeprobe.Registry) { s.accept { execute(::globalHit) } }", "oracle":"accept", "code":"COMPOSE_BODY_LAMBDA_UNSUPPORTED"}
+  {
+    "id": "argument",
+    "source": "fun unsupported(s: composeprobe.ArgumentSink) { s.accept { value -> println(value) } }",
+    "oracle": "accept",
+    "code": "LIBRARY_DECLARATION_UNSUPPORTED"
+  },
+  {
+    "id": "result",
+    "source": "fun unsupported(s: composeprobe.ResultSink) { s.accept { 42 } }",
+    "oracle": "accept",
+    "code": "LIBRARY_DECLARATION_UNSUPPORTED"
+  },
+  {
+    "id": "receiver",
+    "source": "fun unsupported(s: composeprobe.ReceiverSink) { s.accept { println(this) } }",
+    "oracle": "accept",
+    "code": "LIBRARY_DECLARATION_UNSUPPORTED"
+  },
+  {
+    "id": "nullable",
+    "source": "fun unsupported(s: composeprobe.NullableSink) { s.accept {} }",
+    "oracle": "accept",
+    "code": "LIBRARY_DECLARATION_UNSUPPORTED"
+  },
+  {
+    "id": "nested-type",
+    "source": "fun unsupported(s: composeprobe.NestedSink) { s.accept(emptyList()) }",
+    "oracle": "accept",
+    "code": "LIBRARY_DECLARATION_UNSUPPORTED"
+  },
+  {
+    "id": "inline",
+    "source": "fun unsupported(s: composeprobe.InlineSink) { s.accept {} }",
+    "oracle": "accept",
+    "code": "LIBRARY_DECLARATION_UNSUPPORTED"
+  },
+  {
+    "id": "generic",
+    "source": "fun unsupported(s: composeprobe.GenericSink) { s.accept(1) {} }",
+    "oracle": "accept",
+    "code": "LIBRARY_DECLARATION_UNSUPPORTED"
+  },
+  {
+    "id": "nonliteral",
+    "source": "fun unsupported(s: composeprobe.Registry, b: @androidx.compose.runtime.Composable () -> Unit) { s.accept(b) }",
+    "oracle": "accept",
+    "code": "ANNOTATION_TYPE_USE_UNSUPPORTED"
+  },
+  {
+    "id": "nested-callback",
+    "source": "fun unsupported(s: composeprobe.Registry) { s.accept { s.accept {} } }",
+    "oracle": "accept",
+    "code": "COMPOSE_NESTED_CALLBACK_UNSUPPORTED"
+  },
+  {
+    "id": "composable-declaration",
+    "source": "@androidx.compose.runtime.Composable fun unsupported() {}",
+    "oracle": "accept",
+    "code": "COMPILER_PLUGIN_UNSUPPORTED"
+  },
+  {
+    "id": "hidden-composer-call",
+    "source": "import androidx.compose.runtime.SideEffect\nfun unsupported(s: composeprobe.Registry) { s.accept { SideEffect {} } }",
+    "oracle": "accept",
+    "code": "COMPOSE_BODY_LAMBDA_UNSUPPORTED"
+  },
+  {
+    "id": "wrong-lambda-arity",
+    "source": "fun invalid(s: composeprobe.Registry) { s.accept { value -> println(value) } }",
+    "oracle": "reject"
+  },
+  {
+    "id": "nonlocal-return",
+    "source": "fun invalid(s: composeprobe.Registry) { s.accept { return } }",
+    "oracle": "reject"
+  },
+  {
+    "id": "ordinary-body-lambda",
+    "source": "import composeprobe.execute\nfun unsupported(s: composeprobe.Registry) { s.accept { execute {} } }",
+    "oracle": "accept",
+    "code": "COMPOSE_BODY_LAMBDA_UNSUPPORTED"
+  },
+  {
+    "id": "ordinary-body-reference",
+    "source": "import composeprobe.execute\nimport composeprobe.globalHit\nfun unsupported(s: composeprobe.Registry) { s.accept { execute(::globalHit) } }",
+    "oracle": "accept",
+    "code": "COMPOSE_BODY_LAMBDA_UNSUPPORTED"
+  },
+  {
+    "id": "generic-composable",
+    "source": "import composeprobe.genericPaint\nfun unsupported(s: composeprobe.Registry) { s.accept { genericPaint(1) } }",
+    "oracle": "accept",
+    "code": "LIBRARY_DECLARATION_UNSUPPORTED"
+  },
+  {
+    "id": "result-composable",
+    "source": "import composeprobe.resultPaint\nfun unsupported(s: composeprobe.Registry) { s.accept { resultPaint() } }",
+    "oracle": "accept",
+    "code": "LIBRARY_DECLARATION_UNSUPPORTED"
+  },
+  {
+    "id": "conditional-composable",
+    "source": "import composeprobe.paint\nfun unsupported(s: composeprobe.Registry, flag: Boolean) { s.accept { if (flag) paint() } }",
+    "oracle": "accept",
+    "code": "COMPOSE_CONTROL_FLOW_UNSUPPORTED"
+  },
+  {
+    "id": "outside-composable",
+    "source": "import composeprobe.paint\nfun invalid() { paint() }",
+    "oracle": "reject",
+    "code": "COMPOSE_CALL_CONTEXT_UNSUPPORTED"
+  },
+  {
+    "id": "mixed-appliers",
+    "source": "import composeprobe.paint\nimport composeprobe.otherPaint\nfun unsupported(s: composeprobe.Registry) { s.accept { paint(); otherPaint() } }",
+    "oracle": "accept",
+    "code": "COMPOSE_APPLIER_MISMATCH"
+  },
+  {
+    "id": "object-composable",
+    "source": "import composeprobe.ObjectPaint\nfun unsupported(s: composeprobe.Registry) { s.accept { ObjectPaint.show(1) } }",
+    "oracle": "accept",
+    "code": "LIBRARY_DECLARATION_UNSUPPORTED"
+  },
+  {
+    "id": "fixed-callback-target",
+    "source": "fun unsupported(s: composeprobe.FixedRegistry) { s.accept {} }",
+    "oracle": "accept",
+    "code": "LIBRARY_DECLARATION_UNSUPPORTED"
+  }
 ]

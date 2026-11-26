@@ -37,10 +37,13 @@ def main():
     kotlin = ROOT / 'references/kotlinc/bin/kotlinc'
     standard = ROOT / 'references/kotlinc/lib/kotlin-stdlib.jar'
     runtime = ROOT / 'references/compose/runtime.jar'
+    annotations = ROOT / 'references/compose/annotations.jar'
     plugin = ROOT / 'references/kotlinc/lib/compose-compiler-plugin.jar'
+    compiler_jar = ROOT / 'references/kotlinc/lib/kotlin-compiler.jar'
     pin = json.loads((ROOT / 'references/compose-runtime.json').read_text())
     assert runtime.is_file(), 'Run python3 tools/setup_compose_reference.py first'
     assert sha(runtime) == pin['classes_sha256'], 'Compose runtime checksum mismatch'
+    assert annotations.is_file() and sha(annotations) == pin['annotations']['classes_sha256'], 'Run python3 tools/setup_compose_reference.py for pinned stability annotations'
     jdk = Path(os.environ['JAVA_HOME']) / 'bin'
 
     def rel(path):
@@ -79,9 +82,13 @@ def main():
     try:
         dependencies = work / 'dependency'
         run('compile Java lexical superclass', [jdk / 'javac', '-d', dependencies, FIXTURES / 'LexicalBase.java'])
-        library_sources = [FIXTURES / name for name in ['Library.kt', 'Lookalike.kt', 'LexicalLibrary.kt']]
-        run('compile transformed binary dependency', [kotlin, *library_sources, *options, '-cp', cp(runtime, standard), '-d', dependencies])
-        dependency_cp = cp(dependencies, runtime, standard)
+        run('compile hidden-argument recorder', [jdk / 'javac', '-cp', cp(runtime, standard), '-d', dependencies, FIXTURES / 'Capture.java'])
+        library_sources = [FIXTURES / name for name in ['Library.kt', 'Lookalike.kt', 'LexicalLibrary.kt', 'Binary.kt']]
+        run('compile transformed binary dependency', [kotlin, *library_sources, *options, '-cp', cp(runtime, annotations, standard), '-d', dependencies])
+        instrumenter = work / 'instrumenter'
+        run('compile descriptor-preserving entry probe', [jdk / 'javac', '-cp', compiler_jar, '-d', instrumenter, FIXTURES / 'Instrument.java'])
+        run('instrument pinned binary method arguments', [jdk / 'java', '-cp', cp(instrumenter, compiler_jar), 'Instrument', dependencies / 'composeprobe/BinaryKt.class'])
+        dependency_cp = cp(dependencies, runtime, annotations, standard)
         if args.baseline:
             baseline = work / 'baseline-frozen'
             shutil.copy2(args.baseline.resolve(), baseline)
@@ -95,7 +102,7 @@ def main():
             run('compile callback consumer ' + provider, [*command, FIXTURES / 'Consumer.kt', '-cp', dependency_cp, '-d', output])
             case('compile/' + provider, True)
         callers = work / 'callers'
-        run('fixed Java caller against official', [jdk / 'javac', '-cp', cp(outputs['official'], dependency_cp), '-d', callers, FIXTURES / 'ProtocolCheck.java'])
+        run('fixed Java caller against official', [jdk / 'javac', '-cp', cp(outputs['official'], dependency_cp), '-d', callers, FIXTURES / 'ProtocolCheck.java', FIXTURES / 'BinaryProtocol.java'])
         signatures = []
         for provider, output in outputs.items():
             result = run('verified runtime protocol ' + provider, [jdk / 'java', '-Xverify:all', '-cp', cp(callers, output, dependency_cp), 'composeprobe.ProtocolCheck'])
@@ -123,7 +130,7 @@ def main():
         case('missing-runtime', diagnostic['code'] == 'COMPOSE_RUNTIME_ABI_UNSUPPORTED', diagnostic=diagnostic)
         untransformed = work / 'untransformed'
         plain_options = ['-no-stdlib', '-language-version', '2.3', '-api-version', '2.3', '-jvm-target', '1.8']
-        run('untransformed binary dependency', [kotlin, *library_sources, *plain_options, '-cp', cp(runtime, standard), '-d', untransformed])
+        run('untransformed binary dependency', [kotlin, *library_sources, *plain_options, '-cp', cp(runtime, annotations, standard), '-d', untransformed])
         result = run('reject untransformed callback ABI', [candidate, '--diagnostic-format', 'json', source, '-cp', cp(untransformed, runtime, standard), '-d', work / 'untransformed-candidate'], (1,))
         diagnostic = json.loads(result.stderr or result.stdout)
         case('untransformed-callback', diagnostic['code'] == 'LIBRARY_DECLARATION_UNSUPPORTED', diagnostic=diagnostic)

@@ -634,6 +634,8 @@ pub(super) fn check_class_with_constants(
     }
     let mut mutable_fields: HashSet<_> = source.mutable_params.iter().cloned().collect();
     let mut initializer_checker = Checker {
+        composer: None,
+        composable_target: None,
         composable_body: false,
         inline_argument_modes: Vec::new(),
         inline_analysis: false,
@@ -820,6 +822,8 @@ pub(super) fn check_class_with_constants(
         }
         if let Some(expr) = &property.initializer {
             let mut checker = Checker {
+                composer: None,
+                composable_target: None,
                 composable_body: false,
                 inline_argument_modes: Vec::new(),
                 inline_analysis: false,
@@ -1126,6 +1130,8 @@ pub(super) fn check_class_with_constants(
                     .iter()
                     .find(|m| m.function.offset == *offset && m.function.name == *name)
                     .map(|m| -> Result<_> { Ok(crate::classpath::LibraryMethod {
+                        compose: None,
+                        stable_result: false,
             default_code: None,
             vararg_index: None,
             contracts: Vec::new(),
@@ -1312,6 +1318,8 @@ pub(super) fn check_class_with_constants(
             }
         }
         let mut checker = Checker {
+            composer: None,
+            composable_target: None,
             composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
@@ -2302,6 +2310,8 @@ impl<'a> DeclarationContext<'a> {
     }
     pub fn checker(&self, receiver: bool, next: u16, result: Type) -> Checker<'_> {
         Checker {
+            composer: None,
+            composable_target: None,
             composable_body: false,
             inline_argument_modes: Vec::new(),
             inline_analysis: false,

@@ -1160,6 +1160,8 @@ pub(crate) fn header(
                 kotlin_result: Some(logical),
                 kotlin_internal: false,
                 library: Some(LibraryMethod {
+                    compose: None,
+                    stable_result: false,
                     default_code: None,
                     vararg_index: None,
                     contracts: Vec::new(),

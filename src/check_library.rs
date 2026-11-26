@@ -1121,6 +1121,16 @@ impl Checker<'_> {
         if method
             .library
             .as_ref()
+            .is_some_and(|library| library.compose.is_some())
+        {
+            let value = self.composable_call(method, values, lets, mask, offset)?;
+            self.contract_registration = Some(offset);
+            self.contract_facts.insert(offset, contract_facts);
+            return Ok(value);
+        }
+        if method
+            .library
+            .as_ref()
             .is_some_and(|library| library.builtin_array)
         {
             if mask != 0 || values.len() != 1 {
