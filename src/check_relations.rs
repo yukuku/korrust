@@ -1102,6 +1102,13 @@ impl Checker<'_> {
             ExprKind::LambdaWithParams { params, body } => (params.clone(), body.clone()),
             _ => return Ok(()),
         };
+        if self.nonlocal_result.is_some()
+            && body
+                .last()
+                .is_some_and(|statement| matches!(statement.kind, StatementKind::Return(_)))
+        {
+            return Ok(());
+        }
         let names = match declared {
             Some(declared) => {
                 if declared.len() != params.len() {
