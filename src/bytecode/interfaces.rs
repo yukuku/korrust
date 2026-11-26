@@ -802,7 +802,8 @@ fn collect_block(body: &[Statement], accesses: &mut HashSet<(String, String)>) {
             Statement::Store(_, value)
             | Statement::Expression(value)
             | Statement::Return(value)
-            | Statement::NonLocalReturn(value) => collect_value(value, accesses),
+            | Statement::NonLocalReturn(value)
+            | Statement::TargetReturn { value, .. } => collect_value(value, accesses),
             Statement::ThrowValue(value) => collect_value(value, accesses),
             Statement::If(condition, yes, no) => {
                 collect_value(condition, accesses);

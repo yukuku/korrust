@@ -912,7 +912,7 @@ struct Code<'a> {
     max_stack: usize,
     lambdas: &'a [crate::check::LambdaDecl],
     inline_local_maps: Vec<Vec<u16>>,
-    inline_returns: Vec<(usize, usize)>,
+    inline_returns: Vec<(String, usize, usize)>,
     in_lambda: bool,
 }
 #[derive(Clone)]
@@ -920,7 +920,7 @@ struct FinallyFrame {
     body: FinallyBody,
     exclusions: Rc<RefCell<Vec<(usize, usize)>>>,
     local_maps: Vec<Vec<u16>>,
-    inline_returns: Vec<(usize, usize)>,
+    inline_returns: Vec<(String, usize, usize)>,
     loops: Vec<(usize, usize, usize)>,
     loop_depths: Vec<usize>,
     loop_names: Vec<Option<String>>,
@@ -946,6 +946,7 @@ fn terminal_block(body: &[Statement]) -> bool {
         Some(
             Statement::Return(_)
             | Statement::NonLocalReturn(_)
+            | Statement::TargetReturn { .. }
             | Statement::ThrowValue(_)
             | Statement::ThrowException { .. }
             | Statement::Break
@@ -2885,6 +2886,20 @@ impl Code<'_> {
                         self.return_with_finalizers(&value.ty)?;
                     }
                 }
+                Statement::TargetReturn { target, value } => {
+                    if self.inline_return_to(value, Some(target))? {
+                        continue;
+                    }
+                    let value = if self.coroutine {
+                        suspend::boxed_return(value)
+                    } else {
+                        value.clone()
+                    };
+                    self.value(&value)?;
+                    if !terminal_value(&value) {
+                        self.return_with_finalizers(&value.ty)?;
+                    }
+                }
                 Statement::NonLocalReturn(value) => {
                     self.value(value)?;
                     if !terminal_value(value) {
@@ -3959,7 +3974,7 @@ fn protected_lambda_calls(
 ) -> HashSet<(String, String, String)> {
     let mut calls = HashSet::new();
     for lambda in lambdas {
-        if inline::contains_nonlocal(&lambda.function, lambdas) {
+        if inline::contains_nonlocal(&lambda.function, lambdas, &lambda.owner) {
             continue;
         }
         let mut body = lambda.function.body.clone();

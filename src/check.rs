@@ -1,3 +1,6 @@
+#[path = "check_return_targets.rs"]
+mod return_targets;
+use return_targets::ReturnContext;
 #[path = "check_annotation_placements.rs"]
 mod annotation_placements;
 #[path = "check_companion_properties.rs"]
@@ -402,6 +405,10 @@ pub enum Statement {
     Expression(Value),
     Return(Value),
     NonLocalReturn(Value),
+    TargetReturn {
+        target: String,
+        value: Value,
+    },
     If(Value, Vec<Statement>, Vec<Statement>),
     While(Value, Vec<Statement>),
     DoWhile(Value, Vec<Statement>),
@@ -748,6 +755,7 @@ struct Checker<'a> {
     composer: Option<Local>,
     composable_target: Option<String>,
     composable_body: bool,
+    label_returns: ReturnContext,
     inline_argument_modes: Vec<syntax::InlineParameterMode>,
     inline_analysis: bool,
     public_inline_body: bool,
@@ -1206,6 +1214,7 @@ impl Checker<'_> {
         let mapping = Self::argument_mapping(params, defaults, args, named, offset)?;
         let saved_contract_registration = self.contract_registration;
         let saved_contract_facts = self.contract_facts.clone();
+        let return_checkpoint = self.label_returns.checkpoint();
         let before = self.next;
         let refinements = self.refinements.clone();
         let initialized = self.initialized.clone();
@@ -1229,6 +1238,7 @@ impl Checker<'_> {
             }
             Ok(score * 64 + params.len().saturating_sub(args.len()))
         })();
+        ReturnContext::restore(return_checkpoint);
         self.lambdas.borrow_mut().truncate(lambda_count);
         self.contract_facts = saved_contract_facts;
         self.contract_registration = saved_contract_registration;
@@ -1410,6 +1420,11 @@ impl Checker<'_> {
                     continue;
                 }
             };
+            let previous_labels_inline = self.label_returns.inline_call;
+            self.label_returns.inline_call = method
+                .library
+                .as_ref()
+                .is_some_and(|library| library.inline);
             let previous = self.inline_result.clone();
             self.inline_result = if method.library.as_ref().is_some_and(|l| l.inline)
                 && (self.allow_return || self.nonlocal_result.is_some())
@@ -1437,6 +1452,7 @@ impl Checker<'_> {
                 self.method_named(&method),
                 offset,
             );
+            self.label_returns.inline_call = previous_labels_inline;
             self.inline_result = previous;
             self.inline_argument_modes = previous_modes;
             match score {
@@ -1786,6 +1802,7 @@ impl Checker<'_> {
         ty: &Type,
         index: usize,
     ) -> Result<Value> {
+        let old_labels_inline = self.label_returns.inline_call;
         let old = self.inline_result.clone();
         if self
             .inline_argument_modes
@@ -1793,9 +1810,11 @@ impl Checker<'_> {
             .is_some_and(|mode| *mode != syntax::InlineParameterMode::Ordinary)
         {
             self.inline_result = None;
+            self.label_returns.inline_call = false;
         }
         let result = self.argument_value(expression, ty);
         self.inline_result = old;
+        self.label_returns.inline_call = old_labels_inline;
         result
     }
     fn arguments(
@@ -2597,39 +2616,49 @@ impl Checker<'_> {
             .library
             .as_ref()
             .is_some_and(|l| l.inline && !l.reified_arguments.is_empty());
-        let (mut values, mut lets, mut mask) = if reified_member {
-            let library = method.library.as_ref().unwrap();
-            let previous_modes = std::mem::replace(
-                &mut self.inline_argument_modes,
-                library.parameter_modes.clone(),
-            );
-            let previous_result = self.inline_result.clone();
-            if self.allow_return || self.nonlocal_result.is_some() {
-                self.inline_result = Some(
-                    self.nonlocal_result
-                        .clone()
-                        .unwrap_or_else(|| self.result.clone()),
+        let old_labels_inline = self.label_returns.inline_call;
+        self.label_returns.inline_call = method
+            .library
+            .as_ref()
+            .is_some_and(|library| library.inline);
+        let checked_arguments = {
+            if reified_member {
+                let library = method.library.as_ref().unwrap();
+                let previous_modes = std::mem::replace(
+                    &mut self.inline_argument_modes,
+                    library.parameter_modes.clone(),
                 );
+                let previous_result = self.inline_result.clone();
+                if self.allow_return || self.nonlocal_result.is_some() {
+                    self.inline_result = Some(
+                        self.nonlocal_result
+                            .clone()
+                            .unwrap_or_else(|| self.result.clone()),
+                    );
+                }
+                let checked =
+                    self.arguments(&params, &defaults, args, self.method_named(&method), offset);
+                self.inline_argument_modes = previous_modes;
+                self.inline_result = previous_result;
+                checked
+            } else {
+                self.arguments_checked(
+                    &params,
+                    &defaults,
+                    args,
+                    self.method_named(&method),
+                    java_variance
+                        && method
+                            .library
+                            .as_ref()
+                            .is_some_and(|library| !library.kotlin_declared),
+                    offset,
+                )
             }
-            let checked =
-                self.arguments(&params, &defaults, args, self.method_named(&method), offset);
-            self.inline_argument_modes = previous_modes;
-            self.inline_result = previous_result;
-            checked?
-        } else {
-            self.arguments_checked(
-                &params,
-                &defaults,
-                args,
-                self.method_named(&method),
-                java_variance
-                    && method
-                        .library
-                        .as_ref()
-                        .is_some_and(|library| !library.kotlin_declared),
-                offset,
-            )?
         };
+        self.label_returns.inline_call = old_labels_inline;
+        let (mut values, mut lets, mut mask) = checked_arguments?;
+
         if extension {
             mask >>= 1;
         }
@@ -8428,6 +8457,7 @@ pub fn check_with_owner(
             composer: None,
             composable_target: None,
             composable_body: false,
+            label_returns: ReturnContext::default(),
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
             public_inline_body: function.inline && !function.private && !function.internal,

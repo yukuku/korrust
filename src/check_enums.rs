@@ -719,7 +719,8 @@ fn uninitialized_body<'a>(
         | Statement::Store(_, first)
         | Statement::Expression(first)
         | Statement::Return(first)
-        | Statement::NonLocalReturn(first) => value(first),
+        | Statement::NonLocalReturn(first)
+        | Statement::TargetReturn { value: first, .. } => value(first),
         Statement::Labeled {
             body: statements, ..
         } => body(statements),

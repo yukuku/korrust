@@ -1071,6 +1071,7 @@ impl Checker<'_> {
             && matches!(
                 inner.base(),
                 Type::Function { .. }
+                    | Type::SuspendFunction { .. }
                     | Type::ReceiverFunction { .. }
                     | Type::SuspendReceiverFunction { .. }
             )
@@ -1153,7 +1154,9 @@ impl Checker<'_> {
             self.initialized = initialized;
             return inferred;
         }
-        let Type::Function { params, result } = pattern.base() else {
+        let (Type::Function { params, result } | Type::SuspendFunction { params, result }) =
+            pattern.base()
+        else {
             if let Some((_, function)) = self.sam_function(pattern, expr.offset)? {
                 return self.infer_lambda_result(
                     &function,
@@ -1234,6 +1237,14 @@ impl Checker<'_> {
                 "Cannot infer lambda parameter types from the available constraints",
             ));
         }
+        let previous_returns = self.label_returns.clone();
+        let return_types = Rc::new(RefCell::new(Vec::new()));
+        self.label_returns = self.label_returns.lambda(
+            format!("{}$infer${}", self.lambda_owner, expr.offset),
+            label,
+            None,
+            Some(return_types.clone()),
+        );
         let saved_contract_registration = self.contract_registration;
         let saved_contract_facts = self.contract_facts.clone();
         let next = self.next;
@@ -1252,10 +1263,13 @@ impl Checker<'_> {
                 self.declare(name, ty, false, expr.offset)?;
             }
             let Some((last, prefix)) = body.split_last() else {
-                return Ok(Type::Unit);
+                return Ok(Some(Type::Unit));
             };
             let (_, returns) = self.block_scoped(prefix, false)?;
             if returns {
+                if !return_types.borrow().is_empty() {
+                    return Ok(None);
+                }
                 return Err(Diagnostic::new(
                     expr.offset,
                     "Cannot infer a generic lambda result after unconditional termination",
@@ -1266,13 +1280,16 @@ impl Checker<'_> {
                 ));
             }
             match &last.kind {
-                StatementKind::Expression(value) => Ok(self.value(value)?.ty),
-                // The target is checked when the lambda is checked against the
-                // selected overload, including inline/crossinline restrictions.
-                StatementKind::Return(_) => Ok(Type::Java("kotlin/Nothing".into())),
-                _ => Ok(Type::Unit),
+                StatementKind::Expression(value) => {
+                    let checked = self.value(value)?;
+                    Ok((!control::expression_terminates(value)).then_some(checked.ty))
+                }
+                // The selected overload checks the return target and inline restrictions.
+                StatementKind::Return(_) => Ok(Some(Type::Java("kotlin/Nothing".into()))),
+                _ => Ok(Some(Type::Unit)),
             }
         })();
+        self.label_returns = previous_returns;
         self.scopes.truncate(scopes_len);
         self.allow_return = allow_return;
         self.contract_facts = saved_contract_facts;
@@ -1285,6 +1302,13 @@ impl Checker<'_> {
         self.changing_cells = changing_cells;
         self.lambdas.borrow_mut().truncate(count);
         let inferred = inferred?;
+        let mut inferred_types = return_types.borrow().clone();
+        inferred_types.extend(inferred);
+        let mut types = inferred_types.into_iter();
+        let mut inferred = types.next().unwrap_or(Type::Java("kotlin/Nothing".into()));
+        for ty in types {
+            inferred = self.join_when_results(&inferred, &ty, expr.offset)?;
+        }
         if !self.infer_constraints(result, &inferred, substitutions, fixed, 0) {
             return Err(Diagnostic::new(
                 expr.offset,
@@ -1431,6 +1455,29 @@ impl Checker<'_> {
         self.argument_value(arg, &expected)
     }
     fn specialize_method_named(
+        &mut self,
+        method: &JavaMethod,
+        args: &[Expr],
+        explicit: &[Type],
+        offset: usize,
+        named: bool,
+        expected: Option<&Type>,
+    ) -> Result<JavaMethod> {
+        let previous_inline = self.label_returns.inline_call;
+        let checkpoint = self.label_returns.checkpoint();
+        self.label_returns.inline_call = method
+            .library
+            .as_ref()
+            .is_some_and(|library| library.inline);
+        let checked =
+            self.specialize_method_named_inner(method, args, explicit, offset, named, expected);
+        self.label_returns.inline_call = previous_inline;
+        ReturnContext::restore(checkpoint);
+        checked
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn specialize_method_named_inner(
         &mut self,
         method: &JavaMethod,
         args: &[Expr],
@@ -2120,6 +2167,7 @@ mod tests {
             composer: None,
             composable_target: None,
             composable_body: false,
+            label_returns: ReturnContext::default(),
             inline_argument_modes: Vec::new(),
             inline_analysis: false,
             public_inline_body: false,

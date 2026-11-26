@@ -1113,6 +1113,8 @@ impl Checker<'_> {
                 .map(|library| library.parameter_modes.clone())
                 .unwrap_or_default(),
         );
+        let old_labels_inline = self.label_returns.inline_call;
+        self.label_returns.inline_call = inline_declaration;
         let checked = self.arguments_checked(
             &params,
             &defaults,
@@ -1124,6 +1126,7 @@ impl Checker<'_> {
                 .is_some_and(|library| !library.kotlin_declared),
             offset,
         );
+        self.label_returns.inline_call = old_labels_inline;
         self.inline_result = old_inline;
         self.inline_argument_modes = old_modes;
         let (mut values, lets, mut mask) = checked?;

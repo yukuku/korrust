@@ -157,7 +157,19 @@ impl Code<'_> {
     }
 
     pub(super) fn inline_return(&mut self, value: &Value) -> Result<bool> {
-        let Some((label, depth)) = self.inline_returns.last().copied() else {
+        self.inline_return_to(value, None)
+    }
+
+    pub(super) fn inline_return_to(&mut self, value: &Value, target: Option<&str>) -> Result<bool> {
+        let selected = if let Some(target) = target {
+            self.inline_returns
+                .iter()
+                .rev()
+                .find(|(owner, _, _)| owner == target)
+        } else {
+            self.inline_returns.last()
+        };
+        let Some((_, label, depth)) = selected.cloned() else {
             return Ok(false);
         };
         self.value(value)?;
@@ -412,7 +424,7 @@ impl Code<'_> {
                     if !seen.insert(handler.handler) || self.finalizers.iter().any(|frame| matches!(&frame.body, FinallyBody::Compiled { expansion: active, handler: active_handler, .. } if Rc::ptr_eq(active, expansion) && *active_handler == handler.handler)) { continue; }
                     let Some((start, end)) = expansion.finalizers.get(&handler.handler).copied()
                     else {
-                        if contains_nonlocal(&lambda.function, self.lambdas) {
+                        if contains_nonlocal(&lambda.function, self.lambdas, &lambda.owner) {
                             return Err(Diagnostic::new(
                                 0,
                                 "Non-local return crosses an unsupported compiled finally region",
@@ -660,7 +672,8 @@ impl Code<'_> {
         ]);
         let end = self.label();
         self.inline_local_maps.push(map);
-        self.inline_returns.push((end, self.finalizers.len()));
+        self.inline_returns
+            .push((lambda.owner.clone(), end, self.finalizers.len()));
         let saved_loops = std::mem::take(&mut self.loops);
         let saved_loop_depths = std::mem::take(&mut self.loop_finally_depths);
         let saved_loop_names = std::mem::take(&mut self.loop_names);
@@ -743,64 +756,84 @@ impl Code<'_> {
 pub(super) fn contains_nonlocal(
     function: &crate::check::Function,
     lambdas: &[crate::check::LambdaDecl],
+    boundary: &str,
 ) -> bool {
-    nonlocal_block(&function.body, lambdas)
+    nonlocal_block(
+        &function.body,
+        lambdas,
+        &BTreeSet::from([boundary.to_owned()]),
+    )
 }
-fn nonlocal_block(body: &[Statement], lambdas: &[crate::check::LambdaDecl]) -> bool {
+fn nonlocal_block(
+    body: &[Statement],
+    lambdas: &[crate::check::LambdaDecl],
+    boundary: &BTreeSet<String>,
+) -> bool {
     body.iter().any(|statement| match statement {
         Statement::NonLocalReturn(_) => true,
-        Statement::ThrowValue(value) => nonlocal_value(value, lambdas),
+        Statement::TargetReturn { target, value } => {
+            !boundary.contains(target) || nonlocal_value(value, lambdas, boundary)
+        }
+        Statement::ThrowValue(value) => nonlocal_value(value, lambdas, boundary),
         Statement::If(value, yes, no) => {
-            nonlocal_value(value, lambdas)
-                || nonlocal_block(yes, lambdas)
-                || nonlocal_block(no, lambdas)
+            nonlocal_value(value, lambdas, boundary)
+                || nonlocal_block(yes, lambdas, boundary)
+                || nonlocal_block(no, lambdas, boundary)
         }
         Statement::While(value, body) | Statement::DoWhile(value, body) => {
-            nonlocal_value(value, lambdas) || nonlocal_block(body, lambdas)
+            nonlocal_value(value, lambdas, boundary) || nonlocal_block(body, lambdas, boundary)
         }
         Statement::ForUntil {
             start, end, body, ..
         } => {
-            nonlocal_value(start, lambdas)
-                || nonlocal_value(end, lambdas)
-                || nonlocal_block(body, lambdas)
+            nonlocal_value(start, lambdas, boundary)
+                || nonlocal_value(end, lambdas, boundary)
+                || nonlocal_block(body, lambdas, boundary)
         }
         Statement::ForEach { iterable, body, .. }
         | Statement::ForIterator { iterable, body, .. } => {
-            nonlocal_value(iterable, lambdas) || nonlocal_block(body, lambdas)
+            nonlocal_value(iterable, lambdas, boundary) || nonlocal_block(body, lambdas, boundary)
         }
         Statement::Store(_, value) | Statement::Return(value) | Statement::Expression(value) => {
-            nonlocal_value(value, lambdas)
+            nonlocal_value(value, lambdas, boundary)
         }
         Statement::ThrowException { message, .. } => message
             .as_ref()
-            .is_some_and(|value| nonlocal_value(value, lambdas)),
+            .is_some_and(|value| nonlocal_value(value, lambdas, boundary)),
         Statement::IndexStore(a, b, c) => {
-            nonlocal_value(a, lambdas) || nonlocal_value(b, lambdas) || nonlocal_value(c, lambdas)
+            nonlocal_value(a, lambdas, boundary)
+                || nonlocal_value(b, lambdas, boundary)
+                || nonlocal_value(c, lambdas, boundary)
         }
         Statement::FieldStore {
             receiver, value, ..
-        } => nonlocal_value(receiver, lambdas) || nonlocal_value(value, lambdas),
+        } => {
+            nonlocal_value(receiver, lambdas, boundary) || nonlocal_value(value, lambdas, boundary)
+        }
         Statement::JavaFieldStore {
             receiver, value, ..
         } => {
             receiver
                 .as_ref()
-                .is_some_and(|value| nonlocal_value(value, lambdas))
-                || nonlocal_value(value, lambdas)
+                .is_some_and(|value| nonlocal_value(value, lambdas, boundary))
+                || nonlocal_value(value, lambdas, boundary)
         }
         Statement::Continue
         | Statement::Break
         | Statement::ContinueLabel(_)
         | Statement::BreakLabel(_) => false,
-        Statement::Labeled { body, .. } => nonlocal_block(body, lambdas),
+        Statement::Labeled { body, .. } => nonlocal_block(body, lambdas, boundary),
     })
 }
 
-fn nonlocal_value(value: &Value, lambdas: &[crate::check::LambdaDecl]) -> bool {
+fn nonlocal_value(
+    value: &Value,
+    lambdas: &[crate::check::LambdaDecl],
+    boundary: &BTreeSet<String>,
+) -> bool {
     match &value.kind {
         ValueKind::Block(body, result) => {
-            nonlocal_block(body, lambdas) || nonlocal_value(result, lambdas)
+            nonlocal_block(body, lambdas, boundary) || nonlocal_value(result, lambdas, boundary)
         }
         ValueKind::Try {
             body,
@@ -809,22 +842,28 @@ fn nonlocal_value(value: &Value, lambdas: &[crate::check::LambdaDecl]) -> bool {
             finally,
             ..
         } => {
-            nonlocal_block(body, lambdas)
-                || nonlocal_value(result, lambdas)
-                || nonlocal_block(finally, lambdas)
+            nonlocal_block(body, lambdas, boundary)
+                || nonlocal_value(result, lambdas, boundary)
+                || nonlocal_block(finally, lambdas, boundary)
                 || catches.iter().any(|catch| {
-                    nonlocal_block(&catch.body, lambdas) || nonlocal_value(&catch.result, lambdas)
+                    nonlocal_block(&catch.body, lambdas, boundary)
+                        || nonlocal_value(&catch.result, lambdas, boundary)
                 })
         }
         ValueKind::ArrayInitialize {
             size, initializer, ..
-        } => nonlocal_value(size, lambdas) || nonlocal_value(initializer, lambdas),
-        ValueKind::Abrupt(body) => nonlocal_block(body, lambdas),
+        } => {
+            nonlocal_value(size, lambdas, boundary)
+                || nonlocal_value(initializer, lambdas, boundary)
+        }
+        ValueKind::Abrupt(body) => nonlocal_block(body, lambdas, boundary),
         ValueKind::If(a, b, c) => {
-            nonlocal_value(a, lambdas) || nonlocal_value(b, lambdas) || nonlocal_value(c, lambdas)
+            nonlocal_value(a, lambdas, boundary)
+                || nonlocal_value(b, lambdas, boundary)
+                || nonlocal_value(c, lambdas, boundary)
         }
         ValueKind::Let { value, body, .. } => {
-            nonlocal_value(value, lambdas) || nonlocal_value(body, lambdas)
+            nonlocal_value(value, lambdas, boundary) || nonlocal_value(body, lambdas, boundary)
         }
         ValueKind::Box(value)
         | ValueKind::Unbox(value)
@@ -844,30 +883,38 @@ fn nonlocal_value(value: &Value, lambdas: &[crate::check::LambdaDecl]) -> bool {
         | ValueKind::Field(_, value)
         | ValueKind::Negate(value)
         | ValueKind::Not(value)
-        | ValueKind::Length(value) => nonlocal_value(value, lambdas),
+        | ValueKind::Length(value) => nonlocal_value(value, lambdas, boundary),
         ValueKind::StringConcat(a, b)
         | ValueKind::ListGet(a, b)
         | ValueKind::ThreadLocalSet(a, b)
         | ValueKind::CopyOf(a, b)
         | ValueKind::Binary(_, a, b)
         | ValueKind::Index(a, b)
-        | ValueKind::Compare(a, b) => nonlocal_value(a, lambdas) || nonlocal_value(b, lambdas),
+        | ValueKind::Compare(a, b) => {
+            nonlocal_value(a, lambdas, boundary) || nonlocal_value(b, lambdas, boundary)
+        }
         ValueKind::ListSet(a, b, c) => {
-            nonlocal_value(a, lambdas) || nonlocal_value(b, lambdas) || nonlocal_value(c, lambdas)
+            nonlocal_value(a, lambdas, boundary)
+                || nonlocal_value(b, lambdas, boundary)
+                || nonlocal_value(c, lambdas, boundary)
         }
         ValueKind::FunctionInvoke { function, args } => {
-            nonlocal_value(function, lambdas)
-                || args.iter().any(|value| nonlocal_value(value, lambdas))
+            nonlocal_value(function, lambdas, boundary)
+                || args
+                    .iter()
+                    .any(|value| nonlocal_value(value, lambdas, boundary))
         }
         ValueKind::CompiledInline { args, .. } => args.iter().any(|value| {
             if let ValueKind::Lambda { owner, .. } = &value.kind {
                 if let Some(lambda) = lambdas.iter().find(|lambda| &lambda.owner == owner) {
-                    if contains_nonlocal(&lambda.function, lambdas) {
+                    let mut local = (*boundary).clone();
+                    local.insert(lambda.owner.clone());
+                    if nonlocal_block(&lambda.function.body, lambdas, &local) {
                         return true;
                     }
                 }
             }
-            nonlocal_value(value, lambdas)
+            nonlocal_value(value, lambdas, boundary)
         }),
         ValueKind::SuperCall { args, .. }
         | ValueKind::New { args, .. }
@@ -877,18 +924,18 @@ fn nonlocal_value(value: &Value, lambdas: &[crate::check::LambdaDecl]) -> bool {
         | ValueKind::CopyInto(args)
         | ValueKind::StringCall(_, args)
         | ValueKind::Call(_, args)
-        | ValueKind::DefaultCall(_, args, _) => {
-            args.iter().any(|value| nonlocal_value(value, lambdas))
-        }
+        | ValueKind::DefaultCall(_, args, _) => args
+            .iter()
+            .any(|value| nonlocal_value(value, lambdas, boundary)),
         ValueKind::JavaField { receiver, .. } => receiver
             .as_deref()
-            .is_some_and(|value| nonlocal_value(value, lambdas)),
-        ValueKind::ListFactory { elements, .. } => {
-            elements.iter().any(|value| nonlocal_value(value, lambdas))
-        }
-        ValueKind::Lambda { captures, .. } => {
-            captures.iter().any(|value| nonlocal_value(value, lambdas))
-        }
+            .is_some_and(|value| nonlocal_value(value, lambdas, boundary)),
+        ValueKind::ListFactory { elements, .. } => elements
+            .iter()
+            .any(|value| nonlocal_value(value, lambdas, boundary)),
+        ValueKind::Lambda { captures, .. } => captures
+            .iter()
+            .any(|value| nonlocal_value(value, lambdas, boundary)),
         _ => false,
     }
 }

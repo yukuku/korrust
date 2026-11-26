@@ -53,6 +53,7 @@ impl ir_walk::Visitor for Groups {
                         statement,
                         Statement::Return(_)
                             | Statement::NonLocalReturn(_)
+                            | Statement::TargetReturn { .. }
                             | Statement::Break
                             | Statement::Continue
                             | Statement::BreakLabel(_)
