@@ -2871,6 +2871,17 @@ impl Checker<'_> {
         types: &[Type],
         offset: usize,
     ) -> Result<Value> {
+        self.java_call_types_expected(receiver, name, args, types, None, offset)
+    }
+    fn java_call_types_expected(
+        &mut self,
+        receiver: Value,
+        name: &str,
+        args: &[Expr],
+        types: &[Type],
+        expected: Option<&Type>,
+        offset: usize,
+    ) -> Result<Value> {
         if !types.is_empty()
             && (receiver.ty.is_nullable() || library::type_owner(&receiver.ty).is_none())
         {
@@ -2970,7 +2981,7 @@ impl Checker<'_> {
                 "Cannot write through an out or star type projection",
             ));
         }
-        let method = match self.select_method_types(&methods, args, types, offset) {
+        let method = match self.select_method_expected(&methods, args, types, expected, offset) {
             Ok(method) => method,
             Err(_) if projected => {
                 return Err(Diagnostic::new(
@@ -4391,15 +4402,18 @@ impl Checker<'_> {
         Ok((body, returns))
     }
     fn value(&mut self, expr: &Expr) -> Result<Value> {
+        self.value_expected(expr, None)
+    }
+    fn value_expected(&mut self, expr: &Expr, expected: Option<&Type>) -> Result<Value> {
         if let Some(labeled) = member_extensions::labeled_call(expr) {
-            return self.value(&labeled);
+            return self.value_expected(&labeled, expected);
         }
         if !matches!(expr.kind, ExprKind::Call(..)) {
-            let value = self.value_untracked(expr)?;
+            let value = self.value_untracked(expr, expected)?;
             return self.refined_property_value(expr, value);
         }
         let previous = self.contract_registration.take();
-        let result = self.value_untracked(expr);
+        let result = self.value_untracked(expr, expected);
         if result.is_err() || self.contract_registration != Some(expr.offset) {
             self.contract_facts.remove(&expr.offset);
         }
@@ -4407,7 +4421,7 @@ impl Checker<'_> {
         result
     }
 
-    fn value_untracked(&mut self, expr: &Expr) -> Result<Value> {
+    fn value_untracked(&mut self, expr: &Expr, expected_result: Option<&Type>) -> Result<Value> {
         let offset = expr.offset;
         if let ExprKind::Call(target, args) = &expr.kind {
             if let Some(value) = self.qualified_constructor(target, args, offset)? {
@@ -5606,7 +5620,9 @@ impl Checker<'_> {
             ExprKind::Call(target, args) => match &target.kind {
                 ExprKind::Generic(target, types) => {
                     if let ExprKind::Name(name) = &target.kind {
-                        if let Some(value) = self.lexical_call(name, args, types, None, offset)? {
+                        if let Some(value) =
+                            self.lexical_call(name, args, types, expected_result, offset)?
+                        {
                             return Ok(value);
                         }
                     }
@@ -5651,18 +5667,36 @@ impl Checker<'_> {
                                                 m.source_name() == name && m.access & 9 == 9
                                             })
                                             .collect::<Vec<_>>();
-                                        let method = self
-                                            .select_method_types(&methods, args, types, offset)?;
+                                        let method = self.select_method_expected(
+                                            &methods,
+                                            args,
+                                            types,
+                                            expected_result,
+                                            offset,
+                                        )?;
                                         return self.library_static_call(method, args, offset);
                                     }
                                 }
                             }
                             let value = self.value(receiver)?;
-                            return self.java_call_types(value, name, args, types, offset);
+                            return self.java_call_types_expected(
+                                value,
+                                name,
+                                args,
+                                types,
+                                expected_result,
+                                offset,
+                            );
                         }
                         _ => Vec::new(),
                     };
-                    let method = self.select_method_types(&methods, args, types, offset)?;
+                    let method = self.select_method_expected(
+                        &methods,
+                        args,
+                        types,
+                        expected_result,
+                        offset,
+                    )?;
                     return self.library_static_call(method, args, offset);
                 }
                 ExprKind::SafeProperty(receiver, name) => {
@@ -5688,7 +5722,9 @@ impl Checker<'_> {
                         }
                         return self.function_invoke(function, args, offset);
                     }
-                    if let Some(value) = self.lexical_call(name, args, &[], None, offset)? {
+                    if let Some(value) =
+                        self.lexical_call(name, args, &[], expected_result, offset)?
+                    {
                         return Ok(value);
                     }
                     let imported = self
@@ -5847,7 +5883,13 @@ impl Checker<'_> {
                             .filter(|m| m.source_name() == name)
                             .cloned()
                             .collect::<Vec<_>>();
-                        let method = self.select_method(&candidates, args, offset)?;
+                        let method = self.select_method_expected(
+                            &candidates,
+                            args,
+                            &[],
+                            expected_result,
+                            offset,
+                        )?;
                         if method.source_property.is_some() {
                             return Err(Diagnostic::new(
                                 offset,
@@ -5861,7 +5903,12 @@ impl Checker<'_> {
                         || self.enclosing_receiver(offset)?.is_some())
                         && !self.functions.contains_key(name)
                     {
-                        if let Ok(call) = self.implicit_receiver_call(name, args, offset) {
+                        if let Ok(call) = self.implicit_receiver_call_expected(
+                            name,
+                            args,
+                            expected_result,
+                            offset,
+                        ) {
                             return Ok(call);
                         }
                     }
@@ -5906,7 +5953,12 @@ impl Checker<'_> {
                         || self.enclosing_receiver(offset)?.is_some())
                         && !self.functions.contains_key(name)
                     {
-                        if let Ok(call) = self.implicit_receiver_call(name, args, offset) {
+                        if let Ok(call) = self.implicit_receiver_call_expected(
+                            name,
+                            args,
+                            expected_result,
+                            offset,
+                        ) {
                             return Ok(call);
                         }
                     }
@@ -6231,7 +6283,13 @@ impl Checker<'_> {
                             })
                             .cloned()
                             .collect::<Vec<_>>();
-                        let selected = self.select_method(&candidates, args, offset);
+                        let selected = self.select_method_expected(
+                            &candidates,
+                            args,
+                            &[],
+                            expected_result,
+                            offset,
+                        );
                         if let Err(error) = &selected {
                             if error.message.contains("Ambiguous") {
                                 return Err(error.clone());
@@ -6261,7 +6319,14 @@ impl Checker<'_> {
                     if library::type_owner(&receiver.ty).is_some()
                         && receiver.ty.base() != &Type::String
                     {
-                        return self.java_call(receiver, name, args, offset);
+                        return self.java_call_types_expected(
+                            receiver,
+                            name,
+                            args,
+                            &[],
+                            expected_result,
+                            offset,
+                        );
                     }
                     if self
                         .function_names
@@ -6288,7 +6353,14 @@ impl Checker<'_> {
                     if library::type_owner(&receiver.ty).is_some()
                         && receiver.ty.base() != &Type::String
                     {
-                        return self.java_call(receiver, name, args, offset);
+                        return self.java_call_types_expected(
+                            receiver,
+                            name,
+                            args,
+                            &[],
+                            expected_result,
+                            offset,
+                        );
                     }
                     if receiver.ty.base() == &Type::IntArray && name == "copyInto" {
                         if args.len() != 4 {
@@ -6365,7 +6437,16 @@ impl Checker<'_> {
                             ),
                             "substring" => (StringMethod::Substring, &[Type::Int], Type::String),
                             "compareTo" => (StringMethod::CompareTo, &[Type::String], Type::Int),
-                            _ => return self.java_call(receiver, name, args, offset),
+                            _ => {
+                                return self.java_call_types_expected(
+                                    receiver,
+                                    name,
+                                    args,
+                                    &[],
+                                    expected_result,
+                                    offset,
+                                );
+                            }
                         };
                         if args.len() != expected.len() {
                             return Err(Diagnostic::new(

@@ -1,0 +1,18 @@
+[
+  {
+    "id": "incompatible_fixed_result",
+    "source": "fun invalid(value: contextcalls.Service): String = value.fixedLeaf()"
+  },
+  {
+    "id": "incompatible_implicit_explicit_bound",
+    "source": "class Holder : contextcalls.Service() { fun invalid(): String = lookup<String>(1) }"
+  },
+  {
+    "id": "bad_argument",
+    "source": "fun invalid(value: contextcalls.Service): contextcalls.Leaf = value.lookup(true)"
+  },
+  {
+    "id": "explicit_bound",
+    "source": "fun invalid(value: contextcalls.Service): String = value.lookup<String>(1)"
+  }
+]

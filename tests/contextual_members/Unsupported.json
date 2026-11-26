@@ -1,0 +1,14 @@
+[
+  {
+    "id": "incompatible_result_bound",
+    "source": "fun invalid(value: contextcalls.Service): String = value.lookup(1)",
+    "official": "accept_with_warning",
+    "scope": "Expected-only constraints with incompatible class bounds require unsupported intersection or Nothing inference; pinned Kotlin warns under KT-51221."
+  },
+  {
+    "id": "incompatible_implicit_bound",
+    "source": "class Holder : contextcalls.Service() { fun invalid(): String = lookup(1) }",
+    "official": "accept_with_warning",
+    "scope": "Expected-only constraints with incompatible class bounds require unsupported intersection or Nothing inference; pinned Kotlin warns under KT-51221."
+  }
+]
