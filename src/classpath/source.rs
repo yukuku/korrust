@@ -19,8 +19,14 @@ pub(super) fn resolve(ty: &Type, module: &Module, cp: &Classpath) -> Type {
                 return format!("{owner}${}", nested.replace('/', "$"));
             }
             let parts = name.split('/').collect::<Vec<_>>();
-            for split in (1..parts.len()).rev() {
-                let Ok(mut class) = cp.load(&parts[..split].join("/")) else {
+            let package = module.package.replace('.', "/");
+            let relative = (!package.is_empty()).then(|| (format!("{package}/{root}"), 1));
+            for (owner, split) in relative.into_iter().chain(
+                (1..parts.len())
+                    .rev()
+                    .map(|split| (parts[..split].join("/"), split)),
+            ) {
+                let Ok(mut class) = cp.load(&owner) else {
                     continue;
                 };
                 for member in &parts[split..] {
