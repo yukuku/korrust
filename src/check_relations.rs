@@ -1077,6 +1077,33 @@ impl Checker<'_> {
         {
             return self.infer_lambda_result(inner, expr, substitutions, fixed, parameters, label);
         }
+        if matches!(expr.kind, ExprKind::CallableReference { .. })
+            && let Type::Function { params, result } = pattern.base()
+            && parameters
+                .iter()
+                .any(|name| mentions(&substitute(result, substitutions), name))
+            && !params.iter().any(|param| {
+                parameters
+                    .iter()
+                    .any(|name| mentions(&substitute(param, substitutions), name))
+            })
+        {
+            let mut probe = self.clone();
+            let count = self.lambdas.borrow().len();
+            let inferred = probe.with_reference_target(expr, pattern, |checker, lambda, _| {
+                checker.infer_lambda_result(
+                    pattern,
+                    lambda,
+                    substitutions,
+                    fixed,
+                    parameters,
+                    label,
+                )
+            });
+            self.lambdas.borrow_mut().truncate(count);
+            inferred?;
+            return Ok(());
+        }
         if !matches!(
             expr.kind,
             ExprKind::Lambda(_) | ExprKind::LambdaWithParams { .. }
