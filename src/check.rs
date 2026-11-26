@@ -3170,7 +3170,12 @@ impl Checker<'_> {
                         return Err(error);
                     }
                     Err(property_error) => {
-                        return self.member_extension_fallback(receiver, name, args, property_error);
+                        return self.member_extension_fallback(
+                            receiver,
+                            name,
+                            args,
+                            property_error,
+                        );
                     }
                 }
                 return self.member_extension_fallback(receiver, name, args, error);
