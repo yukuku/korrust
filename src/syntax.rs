@@ -9058,10 +9058,15 @@ fun h(): String = target(prefix = "named") label@{ return@label "tail" }"#,
     fn new_class_forms_preserve_unsupported_boundaries() {
         for text in [
             "class C { companion object Named {} }",
-            "fun f(x: Unit?): Unit {}",
+            "fun f(x: Unit?): Unit = ",
         ] {
             assert!(parse(text).is_err(), "unexpected acceptance: {text}");
         }
+        let module = parse("fun f(x: Unit?): Unit {}").unwrap();
+        assert_eq!(
+            module.functions[0].params[0].1,
+            Type::Nullable(Box::new(Type::Unit))
+        );
         let deep = format!(
             "fun f(x: {}Int{}): Unit {{}}",
             "List<".repeat(129),
