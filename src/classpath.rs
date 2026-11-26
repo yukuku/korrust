@@ -1559,11 +1559,12 @@ impl Classpath {
         else {
             return Ok(());
         };
-        if metadata::attach(
+        if metadata::attach_with_values(
             annotation,
             &mut companion,
             &companion_methods,
             &companion_fields,
+            &self.value_classes(),
         )
         .is_err()
             || companion.unsupported

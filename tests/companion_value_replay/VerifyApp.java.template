@@ -1,0 +1,13 @@
+import __APP_CLASS__;
+public final class VerifyApp {
+    public static void main(String[] names) throws Exception {
+        Class<?> root = __APP_CLASS__.class;
+        if (root.getDeclaredMethods().length == 0) throw new AssertionError("missing source methods");
+        for (String name : names) {
+            Class<?> type = Class.forName(name, false, root.getClassLoader());
+            type.getDeclaredMethods();
+            type.getDeclaredConstructors();
+        }
+        System.out.println("app-classes-verified");
+    }
+}
