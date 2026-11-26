@@ -4,3 +4,4 @@ fun interface Action {
     fun twice(value: Int): Int = run(value) + run(value)
 }
 fun interface Mapper<T> { fun apply(value: T): T }
+fun interface Nearby { fun run(value: Int): Int }
