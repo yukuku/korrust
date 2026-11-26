@@ -7671,6 +7671,7 @@ pub fn check_with_owner(
     let mut extensions = HashSet::new();
     for (i, function) in source.functions.iter().enumerate() {
         declarations::validate_operator(function, false)?;
+        declarations::validate_vararg_type(function, classpath, &imports, &classes)?;
         for parameter in &function.type_params {
             for bound in &parameter.bounds {
                 resolve_type_checked(bound, &imports, function.offset, classpath, &classes)?;
