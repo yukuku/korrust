@@ -3024,8 +3024,7 @@ impl Checker<'_> {
             if !self.mutable_fields.contains(name) {
                 return Err(Diagnostic::new(offset, "Cannot reassign val property"));
             }
-            let value = self.value(expr)?;
-            let value = self.coerce(value, self.fields[name].clone(), offset)?;
+            let value = self.expected_value(expr, &self.fields[name].clone())?;
             return Ok(Statement::FieldStore {
                 name: name.into(),
                 receiver: self.dispatch_receiver_value(offset)?,
@@ -3267,8 +3266,7 @@ impl Checker<'_> {
         } else {
             java_parameter(self.java_type(&field.descriptor, &mut cursor, offset)?)
         };
-        let value = self.value(expr)?;
-        let value = self.coerce(value, ty.clone(), offset)?;
+        let value = self.expected_value(expr, &ty)?;
         let store = Statement::JavaFieldStore {
             owner: if field.kotlin.is_some() {
                 field.owner.clone()
@@ -4074,8 +4072,7 @@ impl Checker<'_> {
                                 format!("Cannot reassign val or parameter: {name}"),
                             ));
                         }
-                        let value = self.value(expr)?;
-                        let value = self.coerce(value, self.fields[name].clone(), offset)?;
+                        let value = self.expected_value(expr, &self.fields[name].clone())?;
                         let receiver = self.dispatch_receiver_value(offset)?;
                         body.push(Statement::FieldStore {
                             name: name.clone(),
@@ -4109,8 +4106,7 @@ impl Checker<'_> {
                             format!("Cannot reassign val or parameter: {name}"),
                         ));
                     }
-                    let value = self.value(expr)?;
-                    let value = self.coerce(value, local.ty, offset)?;
+                    let value = self.expected_value(expr, &local.ty)?;
                     self.initialized.insert(local.slot);
                     Statement::Store(local.slot, value)
                 }
