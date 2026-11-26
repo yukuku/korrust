@@ -5,6 +5,7 @@ use std::collections::HashMap;
 
 #[derive(Default)]
 pub(crate) struct MemberAnnotations {
+    pub field_access: u16,
     pub synthetic_property: bool,
     pub name: String,
     pub descriptor: String,
@@ -264,6 +265,13 @@ fn members(
         reader.attributes()?;
         let mut member = reader.bytes[start..reader.offset].to_vec();
         if let Some(addition) = requested.remove(&(name, descriptor)) {
+            if addition.field_access != 0 {
+                if is_method {
+                    return Err(failure("Field modifiers cannot target JVM methods"));
+                }
+                let access = u16::from_be_bytes([member[0], member[1]]) | addition.field_access;
+                member[..2].copy_from_slice(&access.to_be_bytes());
+            }
             if addition.synthetic_property {
                 return Err(failure(
                     "Synthetic property annotation method conflicts with an existing declaration",
@@ -485,6 +493,7 @@ mod tests {
             &ClassAnnotations {
                 annotations: vec![mark(true)],
                 fields: vec![MemberAnnotations {
+                    field_access: 0,
                     synthetic_property: false,
                     name: "value".into(),
                     descriptor: "Ljava/lang/String;".into(),
@@ -492,6 +501,7 @@ mod tests {
                     parameters: Vec::new(),
                 }],
                 methods: vec![MemberAnnotations {
+                    field_access: 0,
                     synthetic_property: false,
                     name: "echo".into(),
                     descriptor: "(Ljava/lang/String;JD)Ljava/lang/String;".into(),

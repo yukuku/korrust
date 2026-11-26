@@ -1,0 +1,7 @@
+[
+  {"id":"immutable","source":"@Volatile val value: Int = 1"},
+  {"id":"companion_immutable","source":"class Box { companion object { @Volatile val value: Int = 1 } }"},
+  {"id":"computed","source":"class Box { @Volatile var value: Int get() = 1; set(value) {} }"},
+  {"id":"accessor_target","source":"class Box { @get:Volatile var value: Int = 1 }"},
+  {"id":"repeated","source":"@Volatile @Volatile var value: Int = 1"}
+]

@@ -343,10 +343,38 @@ pub(crate) fn annotation_placements(
                         &mut output,
                     )?;
                 } else if !property.annotations.is_empty() {
-                    return Err(Diagnostic::new(
-                        property.offset,
-                        "Annotations on companion properties require unsupported split backing-field placement",
-                    ).with_kind(crate::DiagnosticKind::UnsupportedLanguage, "ANNOTATION_COMPANION_PROPERTY_UNSUPPORTED"));
+                    if !property.annotations.iter().all(|annotation| {
+                        matches!(
+                            annotations::annotation_owner(&annotation.name, classpath, &imports)
+                                .as_str(),
+                            "kotlin/jvm/Volatile" | "kotlin/concurrent/Volatile"
+                        ) && matches!(annotation.use_site.as_deref(), None | Some("field"))
+                    }) {
+                        return Err(Diagnostic::new(
+                            property.offset,
+                            "Annotations on companion properties require unsupported split backing-field placement",
+                        ).with_kind(crate::DiagnosticKind::UnsupportedLanguage, "ANNOTATION_COMPANION_PROPERTY_UNSUPPORTED"));
+                    }
+                    let ty = property.ty.as_ref().ok_or_else(|| {
+                        Diagnostic::new(
+                            property.offset,
+                            "Cannot place annotations on unresolved property",
+                        )
+                    })?;
+                    property_annotations(
+                        owner,
+                        &property.annotations,
+                        &property.name,
+                        ty,
+                        property.mutable,
+                        property.private,
+                        property.initializer.is_some()
+                            || property.lateinit
+                            || property.body.is_empty() && property.delegate.is_none(),
+                        classpath,
+                        &imports,
+                        &mut output,
+                    )?;
                 }
             }
             result.insert(companion_owner, companion_output);
@@ -642,6 +670,7 @@ fn member<'a>(
         .position(|member| member.name == name && member.descriptor == descriptor)
         .unwrap_or_else(|| {
             members.push(MemberAnnotations {
+                field_access: 0,
                 synthetic_property: false,
                 name: name.into(),
                 descriptor: descriptor.into(),
@@ -898,6 +927,22 @@ fn property_annotations(
                     "FIELD",
                     site.as_deref(),
                 )?;
+                if matches!(
+                    annotations::annotation_owner(&annotation.name, classpath, imports).as_str(),
+                    "kotlin/jvm/Volatile" | "kotlin/concurrent/Volatile"
+                ) {
+                    if !mutable {
+                        return Err(Diagnostic::new(
+                            annotation.offset,
+                            "Volatile requires a mutable property backing field",
+                        )
+                        .with_kind(
+                            crate::DiagnosticKind::InvalidKotlin,
+                            "VOLATILE_REQUIRES_VAR",
+                        ));
+                    }
+                    member(&mut output.fields, name, &ty.descriptor()).field_access |= 0x0040;
+                }
                 if !values.is_empty() {
                     member(&mut output.fields, name, &ty.descriptor())
                         .annotations
