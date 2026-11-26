@@ -2056,11 +2056,17 @@ impl Checker<'_> {
             },
         })
     }
-    fn elvis(&mut self, left: &Expr, right: &Expr, offset: usize) -> Result<Value> {
+    fn elvis(
+        &mut self,
+        left: &Expr,
+        right: &Expr,
+        expected: Option<&Type>,
+        offset: usize,
+    ) -> Result<Value> {
         let source_left = left;
         let left = self.value(left)?;
         if left.ty == Type::Null {
-            let body = self.value(right)?;
+            let body = self.value_expected(right, expected)?;
             let slot = self.allocate_slot(offset)?;
             return Ok(Value {
                 ty: body.ty.clone(),
@@ -2081,7 +2087,7 @@ impl Checker<'_> {
                 ));
             }
         };
-        let right = self.value(right)?;
+        let right = self.value_expected(right, expected.or(Some(&inner)))?;
         let abrupt = matches!(right.kind, ValueKind::Abrupt(_));
         if abrupt {
             if let ExprKind::Name(name) = &source_left.kind {
@@ -5064,7 +5070,7 @@ impl Checker<'_> {
             }
             ExprKind::Binary(op, a, b) => {
                 if op == "?:" {
-                    return self.elvis(a, b, offset);
+                    return self.elvis(a, b, expected_result, offset);
                 }
                 if op == "in" || op == "!in" {
                     let value = self.value(a)?;
